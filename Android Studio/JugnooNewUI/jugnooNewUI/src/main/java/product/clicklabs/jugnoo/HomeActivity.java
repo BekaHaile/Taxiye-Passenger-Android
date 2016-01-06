@@ -137,6 +137,7 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
@@ -412,6 +413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -630,34 +632,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onPromoListFetched(int totalPromoCoupons) {
                 promoOpened = true;
-				textViewRRMinFare.setText("Minimum Fare " + getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+                textViewRRMinFare.setText("Minimum Fare " + getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
                 imageViewMenu.setVisibility(View.GONE);
                 imageViewBack.setVisibility(View.VISIBLE);
 //                genieLayout.setVisibility(View.GONE);
                 centreLocationRl.setVisibility(View.VISIBLE);
                 linearLayoutPromo.setVisibility(View.VISIBLE);
-				initialMyLocationBtn.setVisibility(View.GONE);
-				imageViewRideNow.setVisibility(View.GONE);
+                initialMyLocationBtn.setVisibility(View.GONE);
+                imageViewRideNow.setVisibility(View.GONE);
 
                 setGoogleMapPadding(40);
-				updatePreferredPaymentOptionUI();
+                updatePreferredPaymentOptionUI();
 
-                if(totalPromoCoupons > 0){
+                if (totalPromoCoupons > 0) {
                     listViewPromotions.setVisibility(View.VISIBLE);
-					listViewPromotions.setSelection(0);
-					imageViewListViewPromotionsSep.setVisibility(View.VISIBLE);
-					if(totalPromoCoupons > 3){
-						LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
-						layoutParamsList.height = (int) (ASSL.Yscale() * 300.0f);
-						listViewPromotions.setLayoutParams(layoutParamsList);
-					}
-					else{
-						Utils.expandListForVariableHeight(listViewPromotions);
-					}
-                }
-                else{
-					listViewPromotions.setVisibility(View.GONE);
-					imageViewListViewPromotionsSep.setVisibility(View.GONE);
+                    listViewPromotions.setSelection(0);
+                    imageViewListViewPromotionsSep.setVisibility(View.VISIBLE);
+                    if (totalPromoCoupons > 3) {
+                        LinearLayout.LayoutParams layoutParamsList = (LinearLayout.LayoutParams) listViewPromotions.getLayoutParams();
+                        layoutParamsList.height = (int) (ASSL.Yscale() * 300.0f);
+                        listViewPromotions.setLayoutParams(layoutParamsList);
+                    } else {
+                        Utils.expandListForVariableHeight(listViewPromotions);
+                    }
+                } else {
+                    listViewPromotions.setVisibility(View.GONE);
+                    imageViewListViewPromotionsSep.setVisibility(View.GONE);
                 }
             }
 
@@ -1054,8 +1054,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+				startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(WALLET_MENU);
             }
@@ -1279,8 +1280,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					fireIntent = true;
 				}
 				if(fireIntent){
-					PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-					startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                    Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+                    startActivity(intent);
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(WALLET_BEFORE_REQUEST_RIDE);
 				}
@@ -1445,8 +1447,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			@Override
 			public void onClick(View v) {
-				PaymentActivity.addPaymentPath = AddPaymentPath.FROM_IN_RIDE;
-				startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                startActivity(intent);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
 					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
@@ -1913,8 +1916,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
-
-
 
     }
 
@@ -5858,7 +5859,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             }
                                         } else {
                                             int flag = jObj.getInt("flag");
-
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
                                                 Log.e("ASSIGNING_DRIVERS log", "=" + log);
@@ -5898,6 +5898,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 															pickupDropZoomed = false;
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                                             switchPassengerScreen(passengerScreenMode);
+                                                        }
+                                                    }
+                                                });
+                                            } else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag){
+                                                final String message = jObj.optString(KEY_MESSAGE, "");
+                                                final double userDebt = jObj.optDouble(KEY_USER_DEBT, 0);
+                                                Log.e("USER_IN_DEBT message", "=" + message);
+                                                cancelTimerRequestRide();
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+                                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                            switchPassengerScreen(passengerScreenMode);
+                                                            promotionsListAdapter.callOnPromoListFetched();
+                                                            new UserDebtDialog(HomeActivity.this, Data.userData).showUserDebtDialog(userDebt, message);
                                                         }
                                                     }
                                                 });
@@ -6787,8 +6803,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
-						PaymentActivity.addPaymentPath = AddPaymentPath.FROM_WALLET;
-						startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
+                        Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                        intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+                        startActivity(intent);
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 						FlurryEventLogger.event(WALLET_VIA_TUTORIAL);
 					}

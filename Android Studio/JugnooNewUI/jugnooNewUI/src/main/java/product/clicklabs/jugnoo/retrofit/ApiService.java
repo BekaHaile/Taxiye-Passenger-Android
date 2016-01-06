@@ -1,9 +1,13 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import java.util.Map;
+
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.Field;
+import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 
@@ -24,5 +28,10 @@ public interface ApiService {
     void leaderboardActivityServerCall(@Field("access_token") String accessToken,
                                @Field("client_id") String clientId,
                                Callback<LeaderboardActivityResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/paytm/wallet/adjust_money")
+    void adjustUserDebt(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
 
 }

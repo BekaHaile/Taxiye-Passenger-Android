@@ -237,7 +237,8 @@ public class DialogPopup {
 		}
 	}
 	
-	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
+	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
+											  final View.OnClickListener onClickListener) {
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
@@ -256,7 +257,7 @@ public class DialogPopup {
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			dialog.setCancelable(false);
 			dialog.setCanceledOnTouchOutside(false);
-			
+
 			
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
@@ -268,22 +269,32 @@ public class DialogPopup {
 			textMessage.setText(message);
 			
 			textHead.setVisibility(View.GONE);
-			
+
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			
+
+			if(buttonText.length() > 0){
+				btnOk.setText(buttonText);
+			}
+
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					onClickListener.onClick(view);
+					if(onClickListener != null) {
+						onClickListener.onClick(view);
+					}
 				}
 				
 			});
-			
+
 			dialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
+		alertPopupWithListener(activity, title, message, "", onClickListener);
 	}
 
 

@@ -131,4 +131,5 @@ public class UserData {
 		this.paytmError = 0;
 		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 	}
+
 }

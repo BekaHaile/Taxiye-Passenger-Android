@@ -308,6 +308,11 @@
 	<string name="insert_sd_card">Please insert SD Card to use this app</string>
 
 
+	<!-- User Debt-->
+	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
+	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
+	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
+
 	
 	<string-array name="CountryCodes" >
 <item>93,AF</item>

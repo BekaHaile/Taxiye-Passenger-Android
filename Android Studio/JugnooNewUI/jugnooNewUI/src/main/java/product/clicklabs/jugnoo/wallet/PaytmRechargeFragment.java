@@ -25,6 +25,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
@@ -81,6 +82,10 @@ public class PaytmRechargeFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(getActivity());
+	}
+
+	public int getButtonRemoveWalletVisiblity(){
+		return buttonRemoveWallet.getVisibility();
 	}
 
 	@Override
@@ -182,7 +187,9 @@ public class PaytmRechargeFragment extends Fragment {
 							DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
 						}
 						else{
-							addBalance(editTextAmount.getText().toString().trim());
+							if(Data.userData != null) {
+								addBalance(editTextAmount.getText().toString().trim());
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -252,7 +259,7 @@ public class PaytmRechargeFragment extends Fragment {
 			}
 		});
 
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
 			@Override
 			public void keyboardOpened() {
 				if (!scrolled) {
@@ -270,7 +277,10 @@ public class PaytmRechargeFragment extends Fragment {
 			public void keyBoardClosed() {
 				scrolled = false;
 			}
-		}));
+		});
+
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+		keyboardLayoutListener.setResizeTextView(false);
 
 		paymentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -349,15 +359,25 @@ public class PaytmRechargeFragment extends Fragment {
 	 * Method used to remove fragment from stack
 	 */
 	public void performBackPressed() {
+
 		if(buttonRemoveWallet.getVisibility() == View.VISIBLE){
 			linearLayoutInner.setVisibility(View.VISIBLE);
 			buttonRemoveWallet.setVisibility(View.GONE);
 			textViewTitleEdit.setVisibility(View.VISIBLE);
 			textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.grey_dark_more));
 		} else {
-			getActivity().getSupportFragmentManager().popBackStack("PaytmRechargeFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+			paymentActivity.getSupportFragmentManager()
+					.popBackStack(PaytmRechargeFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
+				paymentActivity.getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
+						.addToBackStack(WalletFragment.class.getName())
+						.commitAllowingStateLoss();
+			}
 		}
+
 	}
+
 
 
 	@Override
@@ -609,7 +629,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 			try{
 				if(Data.paytmPaymentState == PaytmPaymentState.SUCCESS) {
-					if(AddPaymentPath.FROM_IN_RIDE == PaymentActivity.addPaymentPath){
+					if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
 						HomeActivity.rechargedOnce = true;
 					}
 					DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");

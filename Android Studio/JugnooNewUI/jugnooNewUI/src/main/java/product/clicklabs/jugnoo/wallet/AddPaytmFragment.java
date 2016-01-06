@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -35,7 +36,6 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -184,17 +184,17 @@ public class AddPaytmFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-
-			}
-
-			@Override
-			public void keyBoardClosed() {
-
-			}
-		}));
+//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+//			@Override
+//			public void keyboardOpened() {
+//
+//			}
+//
+//			@Override
+//			public void keyBoardClosed() {
+//
+//			}
+//		}));
 
 		setInitialUI();
 
@@ -261,7 +261,14 @@ public class AddPaytmFragment extends Fragment {
 	 * Method used to remove fragment from stack
 	 */
 	public void performBackPressed() {
-		getActivity().getSupportFragmentManager().popBackStack("AddPaytmFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		paymentActivity.getSupportFragmentManager()
+				.popBackStack(AddPaytmFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+		if(AddPaymentPath.ADD_PAYTM.getOrdinal() == paymentActivity.addPaymentPathInt){
+			paymentActivity.getSupportFragmentManager().beginTransaction()
+					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
+					.addToBackStack(WalletFragment.class.getName())
+					.commitAllowingStateLoss();
+		}
 	}
 
 
