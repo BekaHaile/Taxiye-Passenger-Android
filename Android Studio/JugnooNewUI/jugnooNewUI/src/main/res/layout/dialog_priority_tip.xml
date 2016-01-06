@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <RelativeLayout
+        android:layout_width="620px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/innerRl"
+        android:layout_width="620px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/button_yellow_normal"
+        android:splitMotionEvents="false">
+
+        <TextView
+            android:id="@+id/textHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25px"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"
+            android:text="@string/priority_tip"/>
+
+        <LinearLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7px"
+            android:layout_marginLeft="7px"
+            android:layout_marginRight="7px"
+            android:layout_marginTop="126px"
+            android:background="@drawable/button_white_normal"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+            <TextView
+                android:id="@+id/textMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="180px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="@string/priority_tip_message"
+                android:textColor="@color/grey_dark_more"
+                android:textSize="34px"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutLowPriority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textHead"
+                android:layout_marginTop="50px"
+                android:layout_marginBottom="50px"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/btnOk"
+                    android:layout_width="400px"
+                    android:layout_height="70px"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button_yellow"
+                    android:singleLine="true"
+                    android:text="@string/ok"
+                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textSize="34px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutHighPriority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textHead"
+                android:layout_marginTop="40px"
+                android:layout_marginBottom="50px"
+                android:visibility="visible"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/grey_dark"/>
+
+                <TextView
+                    android:id="@+id/textViewHighPriority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="10px"
+                    android:text="@string/priority_tip_message"
+                    android:textColor="@color/grey_dark_more"
+                    android:textSize="34px"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/editTextValue1"
+                        android:layout_width="100px"
+                        android:layout_height="100px"
+                        android:layout_marginRight="10px"
+                        android:hint="1"
+                        android:maxLength="1"
+                        android:gravity="center"
+                        android:cursorVisible="false"
+                        android:textColor="@color/yellow"
+                        android:textSize="77px"
+                        android:inputType="number"
+                        android:background="@drawable/background_white_bordered"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/yellow"
+                        android:textSize="52px"
+                        android:layout_marginTop="15px"
+                        android:text="."/>
+
+                    <EditText
+                        android:id="@+id/editTextValue2"
+                        android:layout_width="100px"
+                        android:layout_height="100px"
+                        android:layout_marginLeft="10px"
+                        android:hint="8"
+                        android:maxLength="2"
+                        android:cursorVisible="false"
+                        android:textColor="@color/yellow"
+                        android:gravity="center"
+                        android:textSize="77px"
+                        android:inputType="number"
+                        android:background="@drawable/background_white_bordered"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="208px"
+            android:layout_height="208px"
+            android:tag="mwar"
+            android:layout_marginTop="77px"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:background="@drawable/surge_circle"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewTipValue"
+                android:layout_width="180px"
+                android:layout_height="wrap_content"
+                android:text="1.25X"
+                android:singleLine="true"
+                android:textSize="66px"
+                android:gravity="center"
+                android:layout_marginTop="50px"
+                android:textColor="@color/yellow"/>
+
+            <TextView
+                android:id="@+id/textViewNormalFair"
+                android:layout_width="180px"
+                android:layout_height="wrap_content"
+                android:text="@string/the_normal_fare"
+                android:textSize="16px"
+                android:layout_marginTop="5px"
+                android:gravity="center"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="65px"
+        android:layout_height="65px"
+        android:paddingLeft="20px"
+        android:paddingBottom="20px"
+        android:layout_alignParentRight="true"
+        android:tag="mwar"
+        android:src="@drawable/close_icon_selector" />
+
+    </RelativeLayout>
+
+</FrameLayout>
