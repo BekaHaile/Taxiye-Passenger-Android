@@ -304,7 +304,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     FeedbackReasonsAdapter feedbackReasonsAdapter;
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
-    TextView textViewRSScroll;
+    TextView textViewRSScroll, textViewMinFareValue;
 
     /*ScrollView scrollViewEndRide;
 
@@ -770,7 +770,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.latoRegular(this));
 
 
-
+        //SlidingUp Layout
+        ((TextView)findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(this));
+        textViewMinFareValue = (TextView)findViewById(R.id.textViewMinFareValue);textViewMinFareValue.setTypeface(Fonts.mavenRegular(this));
 
 
 
