@@ -304,6 +304,17 @@
 	<string name="nl_min_fare">MIN FARE</string>
 	<string name="nl_offers">OFFERS</string>
 
+	<!-- NL Forgot Passowrd screen-->
+	<string name="nl_forgot_password">Forgot Password</string>
+	<string name="nl_forgot_password_help">Please provide your email id or phone number. We will send you the instructions to reset your password.</string>
+
+
+	<!-- NL Splash screen-->
+	<string name="nl_splash_already_have_account">Already have an account?</string>
+	<string name="nl_splash_terms">By Signing up agree to our <u>Terms of Use</u></string>
+	<string name="nl_splash_policy">and <u>Private Policy</u></string>
+
+
 	
 	<string-array name="CountryCodes" >
 <item>93,AF</item>

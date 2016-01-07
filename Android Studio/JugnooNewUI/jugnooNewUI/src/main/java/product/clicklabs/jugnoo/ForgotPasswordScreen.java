@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -85,17 +84,17 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
 
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.mavenLight(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         textViewForgotPasswordHelp = (TextView) findViewById(R.id.textViewForgotPasswordHelp);
-        textViewForgotPasswordHelp.setTypeface(Fonts.latoRegular(this));
+        textViewForgotPasswordHelp.setTypeface(Fonts.mavenLight(this));
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextEmail.setTypeface(Fonts.latoRegular(this));
 
         buttonSendEmail = (Button) findViewById(R.id.buttonSendEmail);
-        buttonSendEmail.setTypeface(Fonts.latoRegular(getApplicationContext()));
+        buttonSendEmail.setTypeface(Fonts.mavenLight(this));
 
         extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
@@ -252,7 +251,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
      * ASync for register from server
      */
     public void forgotPasswordAsync(final Activity activity, final String email, boolean isPhoneNumber) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (AppStatus.getInstance(activity).isOnline(activity)) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 

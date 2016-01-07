@@ -21,17 +21,12 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -81,11 +76,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	LinearLayout relative;
 
-	ImageView imageViewJugnooLogo;
+	ImageView imageViewJugnooLogo, imageViewJugnooTop, imageViewLoginSignupButtonsTop;
 	ImageView imageViewDebug1, imageViewDebug2;
 
-	RelativeLayout relativeLayoutLoginSignupButtons;
+	LinearLayout linearLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
+	TextView textViewTerms, textViewPrivacy;
 
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
@@ -265,30 +261,38 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
 
 
+		imageViewJugnooTop = (ImageView) findViewById(R.id.imageViewJugnooTop);
 		imageViewJugnooLogo = (ImageView) findViewById(R.id.imageViewJugnooLogo);
+		imageViewLoginSignupButtonsTop = (ImageView) findViewById(R.id.imageViewLoginSignupButtonsTop);
 
 		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
 		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 
 
-		relativeLayoutLoginSignupButtons = (RelativeLayout) findViewById(R.id.relativeLayoutLoginSignupButtons);
+		linearLayoutLoginSignupButtons = (LinearLayout) findViewById(R.id.linearLayoutLoginSignupButtons);
 		buttonLogin = (Button) findViewById(R.id.buttonLogin);
-		buttonLogin.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonLogin.setTypeface(Fonts.mavenLight(this));
 		buttonRegister = (Button) findViewById(R.id.buttonRegister);
-		buttonRegister.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonRegister.setTypeface(Fonts.mavenLight(this));
+		textViewTerms = (TextView) findViewById(R.id.textViewTerms);
+		textViewTerms.setTypeface(Fonts.latoRegular(this));
+		textViewPrivacy = (TextView) findViewById(R.id.textViewPrivacy);
+		textViewPrivacy.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.latoRegular(this));
 
 		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
 		textViewNoNet.setTypeface(Fonts.latoRegular(this));
 		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
-		buttonNoNetCall.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonNoNetCall.setTypeface(Fonts.mavenLight(this));
 		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
-		buttonRefresh.setTypeface(Fonts.latoRegular(getApplicationContext()), Typeface.BOLD);
+		buttonRefresh.setTypeface(Fonts.mavenLight(this));
 
 		//buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
 
 
-		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+		imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
+		linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 		linearLayoutNoNet.setVisibility(View.GONE);
 
 
@@ -338,7 +342,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				if (!loginDataFetched) {
-					getDeviceToken();
+//					getDeviceToken();
 				}
 			}
 		});
@@ -478,15 +482,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		if (getIntent().hasExtra("no_anim")) {
 			FacebookLoginHelper.logoutFacebook();
-			imageViewJugnooLogo.clearAnimation();
+			imageViewJugnooTop.setVisibility(View.GONE);
+			imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
 			getDeviceToken();
 		} else {
-			Animation animation = new AlphaAnimation(0, 1);
-			animation.setFillAfter(true);
-			animation.setDuration(1000);
-			animation.setInterpolator(new AccelerateDecelerateInterpolator());
-			animation.setAnimationListener(new ShowAnimListener());
-			imageViewJugnooLogo.startAnimation(animation);
+			imageViewJugnooTop.setVisibility(View.VISIBLE);
+			imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					imageViewJugnooTop.setVisibility(View.GONE);
+					getDeviceToken();
+				}
+			}, 500);
+
 		}
 
 
@@ -548,7 +557,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		}
 		else{
-			relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+			if(imageViewLoginSignupButtonsTop.getVisibility() != View.GONE) {
+				imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
+			}
+			linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 			linearLayoutNoNet.setVisibility(View.GONE);
 			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
 			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
@@ -621,30 +633,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	class ShowAnimListener implements AnimationListener {
-
-		public ShowAnimListener() {
-		}
-
-		@Override
-		public void onAnimationStart(Animation animation) {
-			Log.i("onAnimationStart", "onAnimationStart");
-		}
-
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			Log.i("onAnimationStart", "onAnimationStart");
-			imageViewJugnooLogo.clearAnimation();
-			getDeviceToken();
-		}
-
-		@Override
-		public void onAnimationRepeat(Animation animation) {
-		}
-
-	}
-
-
 	/**
 	 * ASync for access token login from server
 	 */
@@ -652,7 +640,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 
-		relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
+		if(imageViewLoginSignupButtonsTop.getVisibility() != View.GONE) {
+			imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
+		}
+		linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 		linearLayoutNoNet.setVisibility(View.GONE);
 
 		if (!"".equalsIgnoreCase(pair.first)) {
@@ -710,15 +701,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							}
 						});
 			} else {
+				imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
+				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 			}
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+				imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
+				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
-				relativeLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 			} else{
+				imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
+				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
-				relativeLayoutLoginSignupButtons.setVisibility(View.GONE);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
@@ -771,6 +766,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 		DialogPopup.dismissLoadingDialog();
 		linearLayoutNoNet.setVisibility(View.VISIBLE);
+		linearLayoutLoginSignupButtons.setVisibility(View.GONE);
+		imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
 	}
 
 
