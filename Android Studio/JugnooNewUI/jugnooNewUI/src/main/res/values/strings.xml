@@ -300,6 +300,9 @@
 
 	<string name="insert_sd_card">Please insert SD Card to use this app</string>
 
+	<!-- NL Home Screen -->
+	<string name="nl_min_fare">MIN FARE</string>
+	<string name="nl_offers">OFFERS</string>
 
 	
 	<string-array name="CountryCodes" >

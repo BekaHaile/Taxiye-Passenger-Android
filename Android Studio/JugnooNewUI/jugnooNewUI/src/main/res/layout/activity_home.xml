@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:gravity="bottom"
             sothree:umanoFadeColor="@color/transparent"
-            sothree:umanoPanelHeight="100px"
+            sothree:umanoPanelHeight="110px"
             sothree:umanoShadowHeight="10px">
 
         <RelativeLayout
@@ -77,16 +77,16 @@
 
                             <ImageView
                                 android:id="@+id/centreLocationPin"
-                                android:layout_width="77px"
-                                android:layout_height="105px"
+                                android:layout_width="68px"
+                                android:layout_height="122px"
                                 android:background="@drawable/ic_centre_pin_big"
                                 android:tag="mwar"/>
 
                             <TextView
                                 android:id="@+id/textViewCentrePinETA"
-                                android:layout_width="77px"
+                                android:layout_width="68px"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="11px"
+                                android:layout_marginTop="6px"
                                 android:gravity="center"
                                 android:text="-"
                                 android:textColor="@color/white"
@@ -95,7 +95,7 @@
 
                             <TextView
                                 android:id="@+id/textViewCentrePinETAMin"
-                                android:layout_width="77px"
+                                android:layout_width="68px"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/textViewCentrePinETA"
                                 android:layout_marginTop="-6px"
@@ -309,8 +309,8 @@
 
                     <Button
                         android:id="@+id/initialMyLocationBtn"
-                        android:layout_width="80px"
-                        android:layout_height="80px"
+                        android:layout_width="83px"
+                        android:layout_height="83px"
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="127px"
                         android:layout_marginLeft="92px"
@@ -320,8 +320,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewRideNow"
-                        android:layout_width="180px"
-                        android:layout_height="180px"
+                        android:layout_width="187px"
+                        android:layout_height="187px"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="90px"
@@ -331,8 +331,8 @@
 
                     <Button
                         android:id="@+id/initialMyLocationBtnChangeLoc"
-                        android:layout_width="80px"
-                        android:layout_height="80px"
+                        android:layout_width="83px"
+                        android:layout_height="83px"
                         android:layout_above="@+id/changeLocalityBtn"
                         android:layout_marginBottom="40px"
                         android:layout_marginLeft="50px"
@@ -724,8 +724,8 @@
 
                     <Button
                         android:id="@+id/assigningMyLocationBtn"
-                        android:layout_width="80px"
-                        android:layout_height="80px"
+                        android:layout_width="83px"
+                        android:layout_height="83px"
                         android:layout_above="@+id/linearLayoutAssigningButtons"
                         android:layout_marginBottom="40px"
                         android:layout_marginLeft="50px"
@@ -896,8 +896,8 @@
 
                     <Button
                         android:id="@+id/customerInRideMyLocationBtn"
-                        android:layout_width="80px"
-                        android:layout_height="80px"
+                        android:layout_width="83px"
+                        android:layout_height="83px"
                         android:layout_above="@+id/linearLayoutInRideDriverInfo"
                         android:layout_marginBottom="65px"
                         android:layout_marginLeft="50px"
@@ -1188,26 +1188,7 @@
 
         </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/slidingBottom"
-                android:layout_width="match_parent"
-                android:layout_height="500px"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|top"
-                    android:text="The Awesome Sliding Up Panel"
-                    android:textSize="34px" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="100px"
-                    android:layout_margin="50px"
-                    android:background="@drawable/button_theme"/>
-
-            </LinearLayout>
+            <include layout="@layout/layout_home_activity_sliding_bottom"/>
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
     </FrameLayout>

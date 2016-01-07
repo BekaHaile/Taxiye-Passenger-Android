@@ -146,6 +146,7 @@
  <!-- NEW LOOK COLORS -->
  <color name="theme_color">#ff8162</color>
  <color name="theme_color_pressed">#99fd8e59</color>
+ <color name="text_color">#595968</color>
 
 
  <integer-array name="gplus_colors">

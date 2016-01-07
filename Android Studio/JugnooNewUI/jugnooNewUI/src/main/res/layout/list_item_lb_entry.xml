@@ -24,7 +24,7 @@
             android:tag="mwar"
             android:text="1"
             android:textColor="@color/grey_dark_more_receipt"
-            android:textSize="@dimen/share_lb_text_size"
+            android:textSize="@dimen/text_size_34"
             />
 
     </RelativeLayout>
@@ -38,7 +38,7 @@
         android:layout_marginLeft="150px"
         android:text="@string/lb_name"
         android:textColor="@color/grey_dark_more_receipt"
-        android:textSize="@dimen/share_lb_text_size"
+        android:textSize="@dimen/text_size_34"
         android:singleLine="true"
         />
 
@@ -52,7 +52,7 @@
         android:gravity="center_vertical|right"
         android:text="100"
         android:textColor="@color/grey_black"
-        android:textSize="@dimen/share_lb_text_size"
+        android:textSize="@dimen/text_size_34"
         />
 
     <ImageView

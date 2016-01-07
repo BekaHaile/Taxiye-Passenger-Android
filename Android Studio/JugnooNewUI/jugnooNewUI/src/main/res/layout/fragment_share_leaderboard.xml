@@ -55,7 +55,7 @@
             android:gravity="center"
             android:text="@string/daily_leaderboard"
             android:textColor="@color/white"
-            android:textSize="@dimen/share_lb_text_size"
+            android:textSize="@dimen/text_size_34"
             android:background="@drawable/nl_background_theme"
             />
         <TextView
@@ -65,7 +65,7 @@
             android:gravity="center"
             android:text="@string/weekly_leaderboard"
             android:textColor="@drawable/text_color_grey_dark_white_selector"
-            android:textSize="@dimen/share_lb_text_size"
+            android:textSize="@dimen/text_size_34"
             android:layout_alignParentRight="true"
             android:background="@drawable/background_white_bordered"
             />
@@ -86,7 +86,7 @@
             android:gravity="center"
             android:text="@string/lb_rank"
             android:textColor="@color/grey_dark_less"
-            android:textSize="@dimen/share_lb_text_size_medium"
+            android:textSize="@dimen/text_size_30"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30px"
             />
@@ -97,7 +97,7 @@
             android:gravity="center"
             android:text="@string/lb_name"
             android:textColor="@color/grey_dark_less"
-            android:textSize="@dimen/share_lb_text_size_medium"
+            android:textSize="@dimen/text_size_30"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             />
@@ -109,7 +109,7 @@
             android:gravity="center"
             android:text="@string/lb_no_downloads"
             android:textColor="@color/grey_dark_less"
-            android:textSize="@dimen/share_lb_text_size_small"
+            android:textSize="@dimen/text_size_26"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20px"
