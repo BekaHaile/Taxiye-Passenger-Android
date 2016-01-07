@@ -299,7 +299,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 				Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
 				startActivity(intent);
-				finish();
+				ActivityCompat.finishAffinity(SplashNewActivity.this);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -312,7 +312,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 				startActivity(intent);
-				finish();
+				ActivityCompat.finishAffinity(SplashNewActivity.this);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -511,7 +511,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 			intent.putExtra("referral_code", referralCode);
 			startActivity(intent);
-			finish();
+			ActivityCompat.finishAffinity(SplashNewActivity.this);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 	}
@@ -542,7 +542,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							finish();
+							ActivityCompat.finishAffinity(SplashNewActivity.this);
 						}
 					}, false, false);
 
@@ -887,7 +887,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View view) {
 					dialog.dismiss();
 					if (isForced == 1) {
-						activity.finish();
+						ActivityCompat.finishAffinity(activity);
 					}
 				}
 			});
@@ -900,7 +900,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
 					activity.startActivity(intent);
-					activity.finish();
+					ActivityCompat.finishAffinity(activity);
 				}
 
 			});
@@ -1014,7 +1014,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							dialog.dismiss();
 							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							activity.finish();
+							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
 							etCode.setError("Code not matched.");
@@ -1061,6 +1061,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 			dialog.show();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Utils.showSoftKeyboard(SplashNewActivity.this, etCode);
+				}
+			}, 100);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
