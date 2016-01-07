@@ -130,7 +130,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="6px"
+        android:layout_height="2px"
         android:layout_below="@+id/topRl"
         android:background="@drawable/shadow_down"
         />

@@ -216,14 +216,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Initial layout
     RelativeLayout initialLayout;
 
-    TextView textViewNearestDriverETA;
+    TextView textViewInitialInstructions;
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
 	ImageView imageViewRideNow;
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
-	LinearLayout linearLayoutRequestInfo;
     Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn;
 
 
@@ -304,7 +303,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     FeedbackReasonsAdapter feedbackReasonsAdapter;
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
-    TextView textViewRSScroll, textViewMinFareValue;
+    TextView textViewRSScroll, textViewMinFareValue, textViewOffersValue, textViewCashValue;
 
     /*ScrollView scrollViewEndRide;
 
@@ -415,6 +414,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
     private SlidingUpPanelLayout slidingUpPanelLayout;
+    private LinearLayout linearLayoutCash;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -550,7 +550,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewAbout.setTypeface(Fonts.latoRegular(this));
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slidingLayout);
-        slidingUpPanelLayout.setParallaxOffset((int) (96 * ASSL.Yscale()));
+        slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
+        slidingUpPanelLayout.setPanelHeight((int) (110 * ASSL.Yscale()));
+        //slidingUpPanelLayout.setTouchEnabled(false);
+
+        linearLayoutCash = (LinearLayout)findViewById(R.id.linearLayoutCash);
+        linearLayoutCash.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                } else{
+                    Log.v("on click", "linearLayoutCash");
+                }
+            }
+        });
 
 
 
@@ -571,9 +585,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Initial layout
         initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
-        textViewNearestDriverETA = (TextView) findViewById(R.id.textViewNearestDriverETA);
-        textViewNearestDriverETA.setTypeface(Fonts.latoRegular(this));
-		textViewNearestDriverETA.setVisibility(View.GONE);
+        textViewInitialInstructions = (TextView) findViewById(R.id.textViewInitialInstructions);
+        textViewInitialInstructions.setTypeface(Fonts.mavenLight(this));
+        textViewInitialInstructions.setVisibility(View.GONE);
 
         relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
         textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor);
@@ -591,7 +605,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
 
-        linearLayoutRequestInfo = (LinearLayout) findViewById(R.id.linearLayoutRequestInfo);
 
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -773,6 +786,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //SlidingUp Layout
         ((TextView)findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(this));
         textViewMinFareValue = (TextView)findViewById(R.id.textViewMinFareValue);textViewMinFareValue.setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(this));
+        textViewOffersValue = (TextView)findViewById(R.id.textViewOffersValue);textViewOffersValue.setTypeface(Fonts.mavenRegular(this));
+        textViewCashValue = (TextView)findViewById(R.id.textViewCashValue);textViewCashValue.setTypeface(Fonts.mavenRegular(this));
+
+        textViewCashValue.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space)
+                , Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
+        textViewMinFareValue.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space)
+                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
 
 
@@ -908,18 +929,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
 
         // menu events
         linearLayoutProfile.setOnClickListener(new OnClickListener() {
@@ -1212,7 +1221,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			public void onClick(View v) {
 				textViewInitialSearch.setText("");
 				relativeLayoutLocationError.setVisibility(View.GONE);
-				linearLayoutRequestInfo.setVisibility(View.VISIBLE);
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 				centreLocationRl.setVisibility(View.VISIBLE);
@@ -1228,7 +1236,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewInitialSearch.setText("");
                 relativeLayoutInitialSearchBar.performClick();
                 relativeLayoutLocationError.setVisibility(View.GONE);
-                linearLayoutRequestInfo.setVisibility(View.VISIBLE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 centreLocationRl.setVisibility(View.VISIBLE);
@@ -1842,6 +1849,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onPanelExpanded(View panel) {
                 Log.i(TAG, "onPanelExpanded");
+                //slidingUpPanelLayout.setTouchEnabled(false);
 
             }
 
@@ -2504,8 +2512,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             relativeLayoutInitialSearchBar.setVisibility(View.GONE);
                         }
 
-						textViewNearestDriverETA.setVisibility(View.GONE);
-//						textViewNearestDriverETA.setText("Finding nearby drivers...");
+                        textViewInitialInstructions.setVisibility(View.GONE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
 
@@ -2552,7 +2559,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						if(Data.locationSettingsNoPressed){
 							relativeLayoutLocationError.setVisibility(View.VISIBLE);
-							linearLayoutRequestInfo.setVisibility(View.GONE);
 							initialMyLocationBtn.setVisibility(View.GONE);
 							imageViewRideNow.setVisibility(View.GONE);
 //							genieLayout.setVisibility(View.GONE);
@@ -2562,7 +2568,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 						else{
 							relativeLayoutLocationError.setVisibility(View.GONE);
-							linearLayoutRequestInfo.setVisibility(View.VISIBLE);
 							initialMyLocationBtn.setVisibility(View.VISIBLE);
 							imageViewRideNow.setVisibility(View.VISIBLE);
 //							genieLayout.setVisibility(View.VISIBLE);
@@ -3227,22 +3232,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
                     relativeLayoutInitialFareFactor.setVisibility(View.VISIBLE);
                     textViewCurrentFareFactor.setText(decimalFormat.format(Data.userData.fareFactor) + "x");
-					if(textViewNearestDriverETA.getVisibility() == View.VISIBLE){
-						setBottomMarginOfView(initialMyLocationBtn, 177f);
-						setBottomMarginOfView(imageViewRideNow, 140f);
-						setBottomMarginOfView(changeLocalityBtn, 170f);
-					}
-					else{
-						setBottomMarginOfView(initialMyLocationBtn, 127f);
-						setBottomMarginOfView(imageViewRideNow, 90f);
-						setBottomMarginOfView(changeLocalityBtn, 120f);
-					}
                 } else {
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
-					setBottomMarginOfView(initialMyLocationBtn, 127f);
-					setBottomMarginOfView(imageViewRideNow, 90f);
-					setBottomMarginOfView(changeLocalityBtn, 120f);
                 }
+                setBottomMarginOfView(initialMyLocationBtn, 127f);
+                setBottomMarginOfView(imageViewRideNow, 90f);
+                setBottomMarginOfView(changeLocalityBtn, 120f);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3869,8 +3864,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void run() {
                         addCurrentLocationAddressMarker(destination);
-						textViewNearestDriverETA.setVisibility(View.GONE);
-//                        textViewNearestDriverETA.setText("Finding nearby drivers...");
+                        textViewInitialInstructions.setVisibility(View.GONE);
                         dontCallRefreshDriver = false;
                     }
                 });
@@ -3980,21 +3974,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 								if (!"error".equalsIgnoreCase(result)) {
 									if (Data.driverInfos.size() == 0) {
-										textViewNearestDriverETA.setVisibility(View.VISIBLE);
-										textViewNearestDriverETA.setText("No drivers nearby");
+                                        textViewInitialInstructions.setVisibility(View.VISIBLE);
+                                        textViewInitialInstructions.setText("No drivers nearby");
 										textViewCentrePinETA.setText("-");
 									} else {
-										textViewNearestDriverETA.setVisibility(View.GONE);
-										if ("1".equalsIgnoreCase(etaMinutes)) {
-											textViewNearestDriverETA.setText("Nearest driver is " + etaMinutes + " minute away");
-										} else {
-											textViewNearestDriverETA.setText("Nearest driver is " + etaMinutes + " minutes away");
-										}
+                                        textViewInitialInstructions.setVisibility(View.GONE);
 										textViewCentrePinETA.setText(etaMinutes);
 									}
 								} else {
-									textViewNearestDriverETA.setVisibility(View.VISIBLE);
-									textViewNearestDriverETA.setText("Couldn't find drivers nearby.");
+                                    textViewInitialInstructions.setVisibility(View.VISIBLE);
+                                    textViewInitialInstructions.setText("Couldn't find drivers nearby.");
 									textViewCentrePinETA.setText("-");
 								}
 
@@ -4017,7 +4006,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void checkForGoogleLogoVisibilityBeforeRide(){
 		try{
 			float padding = 0;
-			if(textViewNearestDriverETA.getVisibility() == View.VISIBLE){
+			if(textViewInitialInstructions.getVisibility() == View.VISIBLE){
 				padding = padding + 58;
 			}
 			if(relativeLayoutInitialFareFactor.getVisibility() == View.VISIBLE){
@@ -4032,8 +4021,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
 		if (!"".equalsIgnoreCase(farAwayCity)) {
-			textViewNearestDriverETA.setVisibility(View.VISIBLE);
-			textViewNearestDriverETA.setText(farAwayCity);
+            textViewInitialInstructions.setVisibility(View.VISIBLE);
+            textViewInitialInstructions.setText(farAwayCity);
 
 			imageViewRideNow.setVisibility(View.GONE);
 
@@ -5670,7 +5659,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
 					&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
 				relativeLayoutLocationError.setVisibility(View.GONE);
-				linearLayoutRequestInfo.setVisibility(View.VISIBLE);
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 				imageViewRideNow.setVisibility(View.VISIBLE);
 //				genieLayout.setVisibility(View.VISIBLE);

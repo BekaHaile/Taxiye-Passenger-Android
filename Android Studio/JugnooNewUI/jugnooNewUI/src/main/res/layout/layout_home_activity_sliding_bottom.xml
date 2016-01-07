@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/slidingBottom"
     android:layout_width="match_parent"
-    android:layout_height="500px"
+    android:layout_height="434px"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,10 +11,27 @@
         android:layout_height="110px"
         android:orientation="horizontal">
         <LinearLayout
+            android:id="@+id/linearLayoutCash"
             android:layout_width="238px"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center"
             android:background="@color/white">
+            
+            <ImageView
+                android:layout_width="68px"
+                android:layout_height="22px"
+                android:src="@drawable/paytm_home_icon"/>
+
+            <TextView
+                android:id="@+id/textViewCashValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="5px"
+                android:textSize="@dimen/text_size_40"
+                android:textColor="@color/text_color"
+                android:text="200"/>
 
         </LinearLayout>
 
@@ -24,6 +41,7 @@
             android:src="@color/grey_light"/>
 
         <LinearLayout
+            android:id="@+id/linearLayoutFair"
             android:layout_width="240px"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -44,6 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="5px"
                 android:textSize="@dimen/text_size_40"
                 android:textColor="@color/text_color"
                 android:text="20"/>
@@ -56,10 +75,31 @@
             android:src="@color/grey_light"/>
 
         <LinearLayout
+            android:id="@+id/linearLayoutOffers"
             android:layout_width="238px"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center"
             android:background="@color/white">
+
+            <TextView
+                android:id="@+id/textViewOffers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_26"
+                android:textColor="@color/text_color"
+                android:text="@string/nl_offers"/>
+
+            <TextView
+                android:id="@+id/textViewOffersValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="5px"
+                android:textSize="@dimen/text_size_40"
+                android:textColor="@color/text_color"
+                android:text="2"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -67,5 +107,12 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:src="@color/grey_light"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="324px"
+        android:background="@color/sliding_bottom_bg_color"
+        android:orientation="vertical">
+
+    </LinearLayout>
 
 </LinearLayout>
