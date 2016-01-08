@@ -413,8 +413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     CallbackManager callbackManager;
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
-    private SlidingUpPanelLayout slidingUpPanelLayout;
-    private LinearLayout linearLayoutCash;
+    private SlidingBottomPanel slidingBottomPanel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -549,7 +548,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.latoRegular(this));
 
-        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slidingLayout);
+        slidingBottomPanel = new SlidingBottomPanel(HomeActivity.this, drawerLayout);
+
+        /*slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
         slidingUpPanelLayout.setPanelHeight((int) (110 * ASSL.Yscale()));
         //slidingUpPanelLayout.setTouchEnabled(false);
@@ -564,7 +565,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Log.v("on click", "linearLayoutCash");
                 }
             }
-        });
+        });*/
 
 
 
@@ -1667,7 +1668,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapTouched() {
                     // Map touched
                     hideAnims();
-                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
 
                 @Override
@@ -1840,7 +1841,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
         //slidingUpPanelLayout.setOverlayed(true);
-        slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+        /*slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
@@ -1868,8 +1869,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onPanelHidden(View panel) {
                 Log.i(TAG, "onPanelHidden");
             }
-        });
+        });*/
 
+    }
+
+    public void slideOnClick(View v){
+        slidingBottomPanel.slideOnClick(v);
     }
 
     private void setupTopBarWithState(PassengerScreenMode passengerScreenMode){
@@ -2932,9 +2937,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setSlidingUpPanelLayoutState(PassengerScreenMode passengerScreenMode){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else{
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }
     }
 
