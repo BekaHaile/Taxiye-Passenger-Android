@@ -18,6 +18,7 @@
     <color name="black_translucent_less">#99000000</color>
    <color name="black_translucent">#77000000</color>
     <color name="black_translucent_level_2">#44000000</color>
+ <color name="black_translucent_level_3">#33000000</color>
     <color name="black_translucent_more">#BB000000</color>
    
    
@@ -149,6 +150,13 @@
  <color name="text_color">#595968</color>
  <color name="white_alpha_33">#33FFFFFF</color>
  <color name="sliding_bottom_bg_color">#f7f7f7</color>
+    <color name="text_color_hint">#BCBCBC</color>
+
+
+
+ <color name="red_google">#CF5D3A</color>
+ <color name="red_google_alpha">#99CF5D3A</color>
+
 
 
 

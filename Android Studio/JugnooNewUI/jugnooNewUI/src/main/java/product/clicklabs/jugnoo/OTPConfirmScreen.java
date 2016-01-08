@@ -925,7 +925,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			startActivity(intent);
 		}
 		else{
-			Intent intent = new Intent(OTPConfirmScreen.this, SplashLogin.class);
+			Intent intent = new Intent(OTPConfirmScreen.this, LoginActivity.class);
 			intent.putExtra("back_from_otp", true);
 			startActivity(intent);
 		}

@@ -103,7 +103,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ForgotPasswordScreen.this, SplashLogin.class));
+                startActivity(new Intent(ForgotPasswordScreen.this, LoginActivity.class));
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 finish();
             }
@@ -286,7 +286,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
 
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(ForgotPasswordScreen.this, SplashLogin.class);
+                                        Intent intent = new Intent(ForgotPasswordScreen.this, LoginActivity.class);
                                         intent.putExtra("forgot_login_email", email);
                                         startActivity(intent);
                                         overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -324,7 +324,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(ForgotPasswordScreen.this, SplashLogin.class));
+        startActivity(new Intent(ForgotPasswordScreen.this, LoginActivity.class));
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
         finish();
         super.onBackPressed();

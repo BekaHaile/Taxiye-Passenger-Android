@@ -207,7 +207,7 @@ public class MultipleAccountsActivity extends BaseActivity {
                 public void onClick(View v) {
                     holder = (ViewHolderPreviousAccount) v.getTag();
                     String previousEmail = Data.previousAccountInfoList.get(holder.id).userEmail;
-                    Intent intent = new Intent(MultipleAccountsActivity.this, SplashLogin.class);
+                    Intent intent = new Intent(MultipleAccountsActivity.this, LoginActivity.class);
                     intent.putExtra("previous_login_email", previousEmail);
                     startActivity(intent);
                     finish();

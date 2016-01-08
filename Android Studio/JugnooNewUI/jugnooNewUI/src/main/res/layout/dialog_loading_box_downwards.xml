@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="740px"
         android:tag="mwar"
-        wheel:matProg_barColor="@color/yellow"
+        wheel:matProg_barColor="@color/theme_color"
         wheel:matProg_fillRadius="true"
         wheel:matProg_progressIndeterminate="false"></product.clicklabs.jugnoo.utils.ProgressWheel>
 
@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40px"
         android:text="Loading..."
-        android:textColor="@color/yellow"
+        android:textColor="@color/theme_color"
         android:textSize="30px" />
 
 

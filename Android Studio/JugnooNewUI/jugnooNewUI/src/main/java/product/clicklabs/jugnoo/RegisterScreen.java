@@ -1179,7 +1179,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         }
     };
     private void goToLoginScreen(){
-        Intent intent = new Intent(this, SplashLogin.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.right_in, R.anim.right_out);

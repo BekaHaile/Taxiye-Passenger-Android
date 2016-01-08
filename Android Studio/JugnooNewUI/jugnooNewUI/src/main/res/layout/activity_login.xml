@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/bg_img"
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
@@ -13,16 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="96px"
         android:splitMotionEvents="false">
-
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="LOGIN"
-            android:textColor="@color/black_text"
-            android:textSize="@dimen/top_bar_title_text_size"/>
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -58,33 +48,6 @@
                 android:src="@drawable/jugnoo_icon_small_yellow"
                 android:tag="mwar"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40px"
-                android:orientation="horizontal"
-                android:splitMotionEvents="false"
-                >
-
-                <ImageView
-                    android:id="@+id/imageViewFacebookLogin"
-                    android:layout_width="@dimen/social_button_width"
-                    android:layout_height="@dimen/social_button_height"
-                    android:src="@drawable/ic_fb_button_selector"
-                    android:tag="mwar"
-                    />
-
-                <ImageView
-                    android:id="@+id/imageViewGoogleLogin"
-                    android:layout_width="@dimen/social_button_width"
-                    android:layout_height="@dimen/social_button_height"
-                    android:src="@drawable/ic_google_button_selector"
-                    android:tag="mwar"
-                    android:layout_marginLeft="@dimen/social_button_google_left_margin"
-                    />
-
-            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/orDivRl"
@@ -125,7 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20px"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/background_white_shadow"
+                >
 
                 <AutoCompleteTextView
                     android:id="@+id/editTextEmail"
@@ -154,7 +119,6 @@
                     android:id="@+id/editTextPassword"
                     android:layout_width="628px"
                     android:layout_height="70px"
-                    android:layout_marginTop="20px"
                     android:background="#0000"
                     android:gravity="center_vertical"
                     android:hint="Password"
@@ -168,33 +132,56 @@
                     android:textSize="30px"
                     />
 
-                <ImageView
-                    android:layout_width="628px"
-                    android:layout_height="2px"
-                    android:src="@color/yellow_alpha"/>
             </LinearLayout>
 
             <Button
                 android:id="@+id/buttonEmailLogin"
-                android:layout_width="648px"
-                android:layout_height="100px"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="50px"
-                android:background="@drawable/button_yellow"
-                android:text="LOGIN"
+                android:background="@drawable/button_theme_alpha_white_stroke_selector"
+                android:text="@string/nl_login"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size"/>
+                android:textSize="@dimen/text_size_40"
+                android:textAllCaps="true"
+                />
+
+            <Button
+                android:id="@+id/buttonFacebookLogin"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40px"
+                android:background="@drawable/button_blue"
+                android:text="@string/nl_login_facebook"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_40"
+                />
+
+            <Button
+                android:id="@+id/buttonGoogleLogin"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:background="@drawable/button_red_google"
+                android:text="@string/nl_login_google"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_40"
+                />
+
 
             <TextView
                 android:id="@+id/textViewForgotPassword"
                 android:layout_width="400px"
                 android:layout_height="70px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
+                android:layout_marginTop="0px"
                 android:gravity="center"
-                android:text="Forgot Password?"
-                android:textColor="@drawable/text_color_yellow_alpha_selector"
-                android:textSize="28px"/>
+                android:text="@string/forgot_password"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_26"/>
 
 
             <TextView

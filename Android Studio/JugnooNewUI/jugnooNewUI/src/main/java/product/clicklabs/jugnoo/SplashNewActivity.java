@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -57,7 +58,6 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -74,27 +74,34 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	//adding drop location
 
-	LinearLayout relative;
+	RelativeLayout root;
 
-	ImageView imageViewJugnooLogo, imageViewJugnooTop, imageViewLoginSignupButtonsTop;
-	ImageView imageViewDebug1, imageViewDebug2;
+	ImageView viewInitJugnoo, viewSplashLS, viewInitSplashJugnoo;
+	RelativeLayout relativeLayoutJugnooLogo;
+	ImageView imageViewBack, imageViewJugnooLogo, imageViewDebug1, imageViewDebug2;
 
+	RelativeLayout relativeLayoutLS;
 	LinearLayout linearLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
 	TextView textViewTerms, textViewPrivacy;
-
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
 	Button buttonNoNetCall, buttonRefresh;
+
+	LinearLayout linearLayoutLogin;
+	EditText editTextEmail, editTextPassword;
+	TextView textViewEmailRequired, textViewPasswordRequired, textViewLoginOr, textViewForgotPassword;
+	Button buttonEmailLogin, buttonFacebookLogin, buttonGoogleLogin;
+
 
 	boolean loginDataFetched = false, resumed = false;
 
 	boolean touchedDown1 = false, touchedDown2 = false;
 	int debugState = 0;
 
+	private State state = State.SPLASH_LS;
 
 
-	// *****************************Used for flurry work***************//
 
 	@Override
 	protected void onStop() {
@@ -257,18 +264,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		touchedDown2 = false;
 		debugState = 0;
 
-		relative = (LinearLayout) findViewById(R.id.relative);
-		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
+		root = (RelativeLayout) findViewById(R.id.root);
+		new ASSL(SplashNewActivity.this, root, 1134, 720, false);
 
 
-		imageViewJugnooTop = (ImageView) findViewById(R.id.imageViewJugnooTop);
+		viewInitJugnoo = (ImageView) findViewById(R.id.viewInitJugnoo);
+		viewInitSplashJugnoo = (ImageView) findViewById(R.id.viewInitSplashJugnoo);
+		viewSplashLS = (ImageView) findViewById(R.id.viewSplashLS);
+
+		relativeLayoutJugnooLogo = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLogo);
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		imageViewJugnooLogo = (ImageView) findViewById(R.id.imageViewJugnooLogo);
-		imageViewLoginSignupButtonsTop = (ImageView) findViewById(R.id.imageViewLoginSignupButtonsTop);
-
 		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
 		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 
-
+		relativeLayoutLS = (RelativeLayout) findViewById(R.id.relativeLayoutLS);
 		linearLayoutLoginSignupButtons = (LinearLayout) findViewById(R.id.linearLayoutLoginSignupButtons);
 		buttonLogin = (Button) findViewById(R.id.buttonLogin);
 		buttonLogin.setTypeface(Fonts.mavenLight(this));
@@ -288,23 +298,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
 		buttonRefresh.setTypeface(Fonts.mavenLight(this));
 
-		//buttonNoNetCall.setText("Call on " + Config.getSupportNumber(SplashNewActivity.this) + " to book your ride");
+		linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
 
 
-		imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
-		linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-		linearLayoutNoNet.setVisibility(View.GONE);
 
 
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-				Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
-				startActivity(intent);
-				finish();
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+//				Intent intent = new Intent(SplashNewActivity.this, LoginActivity.class);
+//				startActivity(intent);
+//				finish();
+//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+				changeUIState(State.LOGIN);
 			}
 		});
 
@@ -333,37 +342,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRefresh.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				relative.performClick();
-			}
-		});
-
-		relative.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (!loginDataFetched) {
-//					getDeviceToken();
+				if(!loginDataFetched){
+					getDeviceToken();
 				}
 			}
 		});
 
-//		imageViewJugnooLogo.setOnLongClickListener(new View.OnLongClickListener() {
-//
-//			@Override
-//			public boolean onLongClick(View v) {
-//				confirmDebugPasswordPopup(SplashNewActivity.this);
-//				FlurryEventLogger.debugPressed("no_token");
-//				return false;
-//			}
-//		});
-//
-//        imageViewJugnooLogo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(State.LOGIN == state){
+					changeUIState(State.SPLASH_LS);
+				}
+			}
+		});
 
 		imageViewDebug1.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -379,11 +372,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void run() {
 					if (touchedDown1) {
 						debugState = 1;
-						relative.setBackgroundColor(getResources().getColor(R.color.yellow_alpha));
+						root.setBackgroundColor(getResources().getColor(R.color.white_more_translucent));
 						new Handler().postDelayed(new Runnable() {
 							@Override
 							public void run() {
-								relative.setBackgroundColor(getResources().getColor(R.color.yellow));
+								root.setBackgroundResource(R.drawable.bg_img);
 							}
 						}, 200);
 					}
@@ -447,70 +440,113 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							break;
 					}
 				}
-
 				return false;
 			}
 		});
 
 
-		try {                                                                                        // to get AppVersion, OS version, country code and device name
-			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			Data.appVersion = pInfo.versionCode;
-			Log.i("appVersion", Data.appVersion + "..");
-			Data.osVersion = android.os.Build.VERSION.RELEASE;
-			Log.i("osVersion", Data.osVersion + "..");
-			Data.country = getApplicationContext().getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
-			Log.i("countryCode", Data.country + "..");
-			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
-			Log.i("deviceName", Data.deviceName + "..");
 
-			if(Config.getConfigMode() == ConfigMode.LIVE){
-				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+
+
+		changeUIState(State.SPLASH_INIT);
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				getDeviceToken();
 			}
-			else{
-				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
-			}
-
-			Log.e("Data.uniqueDeviceId = ", "=" + Data.uniqueDeviceId);
-
-			Utils.generateKeyHash(this);
-
-		} catch (Exception e) {
-			Log.e("error in fetching appVersion and gcm key", ".." + e.toString());
-		}
+		}, 500);
 
 
-		if (getIntent().hasExtra("no_anim")) {
-			FacebookLoginHelper.logoutFacebook();
-			imageViewJugnooTop.setVisibility(View.GONE);
-			imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
-			getDeviceToken();
-		} else {
-			imageViewJugnooTop.setVisibility(View.VISIBLE);
-			imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					imageViewJugnooTop.setVisibility(View.GONE);
-					getDeviceToken();
-				}
-			}, 500);
+//		if (getIntent().hasExtra("no_anim")) {
+//			FacebookLoginHelper.logoutFacebook();
+//			viewInitJugnoo.setVisibility(View.GONE);
+//			viewSplashLS.setVisibility(View.GONE);
+//			getDeviceToken();
+//		} else {
+//			viewInitJugnoo.setVisibility(View.VISIBLE);
+//			viewSplashLS.setVisibility(View.VISIBLE);
+//			new Handler().postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					viewInitJugnoo.setVisibility(View.GONE);
+//					getDeviceToken();
+//				}
+//			}, 500);
+//
+//		}
 
-		}
-
-
+		initiateDeviceInfoVariables();
 		startService(new Intent(this, PushPendingCallsService.class));
-
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-		if (resp != ConnectionResult.SUCCESS) {
-			Log.e("Google Play Service Error ", "=" + resp);
-			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
-		} else {
-			LocationInit.showLocationAlertDialog(this);
-		}
-
-
+		showLocationEnableDialog();
 	}
+
+	private void changeUIState(State state){
+		switch(state){
+			case SPLASH_INIT:
+				viewInitJugnoo.setVisibility(View.VISIBLE);
+				viewInitSplashJugnoo.setVisibility(View.VISIBLE);
+				viewSplashLS.setVisibility(View.VISIBLE);
+
+				imageViewBack.setVisibility(View.GONE);
+
+				relativeLayoutLS.setVisibility(View.VISIBLE);
+				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
+				linearLayoutNoNet.setVisibility(View.GONE);
+
+				linearLayoutLogin.setVisibility(View.VISIBLE);
+				break;
+
+			case SPLASH_LS:
+				viewInitJugnoo.setVisibility(View.GONE);
+				viewInitSplashJugnoo.setVisibility(View.VISIBLE);
+				viewSplashLS.setVisibility(View.GONE);
+
+				imageViewBack.setVisibility(View.GONE);
+
+				relativeLayoutLS.setVisibility(View.VISIBLE);
+				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
+				linearLayoutNoNet.setVisibility(View.GONE);
+
+				linearLayoutLogin.setVisibility(View.VISIBLE);
+				break;
+
+			case SPLASH_NO_NET:
+				viewInitJugnoo.setVisibility(View.GONE);
+				viewInitSplashJugnoo.setVisibility(View.VISIBLE);
+				viewSplashLS.setVisibility(View.GONE);
+
+				imageViewBack.setVisibility(View.GONE);
+
+				relativeLayoutLS.setVisibility(View.VISIBLE);
+				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
+				linearLayoutNoNet.setVisibility(View.VISIBLE);
+
+				linearLayoutLogin.setVisibility(View.VISIBLE);
+				break;
+
+			case LOGIN:
+				viewInitJugnoo.setVisibility(View.GONE);
+				viewInitSplashJugnoo.setVisibility(View.GONE);
+				viewSplashLS.setVisibility(View.GONE);
+
+				imageViewBack.setVisibility(View.VISIBLE);
+
+				relativeLayoutLS.setVisibility(View.GONE);
+				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
+				linearLayoutNoNet.setVisibility(View.GONE);
+
+				linearLayoutLogin.setVisibility(View.VISIBLE);
+				break;
+
+			case SIGNUP:
+
+				break;
+
+		}
+		this.state = state;
+	}
+
 
 	private void sendToRegisterThroughSms(String referralCode){
 		if(!"".equalsIgnoreCase(referralCode)) {
@@ -557,11 +593,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		}
 		else{
-			if(imageViewLoginSignupButtonsTop.getVisibility() != View.GONE) {
-				imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
-			}
-			linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-			linearLayoutNoNet.setVisibility(View.GONE);
 			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
 			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
@@ -575,7 +606,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							Data.deviceToken = regId;
 							Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
 							accessTokenLogin(SplashNewActivity.this);
-
 							FlurryEventLogger.appStarted(regId);
 						}
 					});
@@ -604,7 +634,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	public void retryAccessTokenLogin() {
 		if (resumed) {
-			relative.performClick();
+			buttonRefresh.performClick();
 		}
 	}
 
@@ -637,15 +667,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	 * ASync for access token login from server
 	 */
 	public void accessTokenLogin(final Activity activity) {
-
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
-
-		if(imageViewLoginSignupButtonsTop.getVisibility() != View.GONE) {
-			imageViewLoginSignupButtonsTop.setVisibility(View.VISIBLE);
-		}
-		linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-		linearLayoutNoNet.setVisibility(View.GONE);
-
 		if (!"".equalsIgnoreCase(pair.first)) {
 			String accessToken = pair.first;
 
@@ -701,19 +723,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							}
 						});
 			} else {
-				imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
-				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
-				linearLayoutNoNet.setVisibility(View.VISIBLE);
+				changeUIState(State.SPLASH_NO_NET);
 			}
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-				imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
-				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
-				linearLayoutNoNet.setVisibility(View.GONE);
+				changeUIState(State.SPLASH_LS);
 			} else{
-				imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
-				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
-				linearLayoutNoNet.setVisibility(View.VISIBLE);
+				changeUIState(State.SPLASH_NO_NET);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
 		}
@@ -767,7 +783,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		DialogPopup.dismissLoadingDialog();
 		linearLayoutNoNet.setVisibility(View.VISIBLE);
 		linearLayoutLoginSignupButtons.setVisibility(View.GONE);
-		imageViewLoginSignupButtonsTop.setVisibility(View.GONE);
+		viewSplashLS.setVisibility(View.GONE);
 	}
 
 
@@ -960,7 +976,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		ASSL.closeActivity(relative);
+		ASSL.closeActivity(root);
 		System.gc();
 	}
 
@@ -1072,6 +1088,48 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
+	private void showLocationEnableDialog(){
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		if (resp != ConnectionResult.SUCCESS) {
+			Log.e("Google Play Service Error ", "=" + resp);
+			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
+		} else {
+			LocationInit.showLocationAlertDialog(this);
+		}
+	}
 
+	private void initiateDeviceInfoVariables(){
+		try {                                                                                        // to get AppVersion, OS version, country code and device name
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			Data.appVersion = pInfo.versionCode;
+			Log.i("appVersion", Data.appVersion + "..");
+			Data.osVersion = android.os.Build.VERSION.RELEASE;
+			Log.i("osVersion", Data.osVersion + "..");
+			Data.country = getApplicationContext().getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
+			Log.i("countryCode", Data.country + "..");
+			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
+			Log.i("deviceName", Data.deviceName + "..");
+
+			if(Config.getConfigMode() == ConfigMode.LIVE){
+				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+			}
+			else{
+				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
+			}
+
+			Log.e("Data.uniqueDeviceId = ", "=" + Data.uniqueDeviceId);
+
+			Utils.generateKeyHash(this);
+
+		} catch (Exception e) {
+			Log.e("error in fetching appVersion and gcm key", ".." + e.toString());
+		}
+	}
+
+
+	public enum State{
+		SPLASH_INIT, SPLASH_LS, SPLASH_NO_NET, LOGIN, SIGNUP
+
+	}
 
 }

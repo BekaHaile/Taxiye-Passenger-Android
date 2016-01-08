@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,10 +59,9 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
+public class LoginActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
     RelativeLayout topRl;
-	TextView textViewTitle;
 	ImageView imageViewBack;
 
     ImageView imageViewFacebookLogin, imageViewGoogleLogin;
@@ -134,18 +132,17 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_splash_login);
+		setContentView(R.layout.activity_login);
 		
 		resetFlags();
 		
 		enteredEmail = "";
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
-		new ASSL(SplashLogin.this, relative, 1134, 720, false);
+		new ASSL(LoginActivity.this, relative, 1134, 720, false);
 
 
         topRl = (RelativeLayout) findViewById(R.id.topRl);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         imageViewFacebookLogin = (ImageView) findViewById(R.id.imageViewFacebookLogin);
@@ -169,8 +166,8 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		String[] emails = Database.getInstance(this).getEmails();
 		Database.getInstance(this).close();
 		
-		Database2.getInstance(SplashLogin.this).updateDriverServiceFast("no");
-		Database2.getInstance(SplashLogin.this).close();
+		Database2.getInstance(LoginActivity.this).updateDriverServiceFast("no");
+		Database2.getInstance(LoginActivity.this).close();
 		
 		ArrayAdapter<String> adapter;
 		
@@ -190,7 +187,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
 			@Override
 			public void onClick(View v) {
-				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+				Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
 				String email = editTextEmail.getText().toString().trim();
 				String password = editTextPassword.getText().toString().trim();
 				if ("".equalsIgnoreCase(email)) {
@@ -209,13 +206,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 								editTextEmail.setError("Please enter valid phone number");
 							} else {
 								email = "+91" + email;
-								sendLoginValues(SplashLogin.this, email, password, true);
+								sendLoginValues(LoginActivity.this, email, password, true);
 								phoneNoLogin = true;
 							}
 						} else {
 							if (isEmailValid(email)) {
 								enteredEmail = email;
-								sendLoginValues(SplashLogin.this, email, password, false);
+								sendLoginValues(LoginActivity.this, email, password, false);
 								phoneNoLogin = false;
 							} else {
 								editTextEmail.requestFocus();
@@ -262,9 +259,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
 			@Override
 			public void onClick(View v) {
-				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+				Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
 				ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
-				startActivity(new Intent(SplashLogin.this, ForgotPasswordScreen.class));
+				startActivity(new Intent(LoginActivity.this, ForgotPasswordScreen.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				finish();
 				FlurryEventLogger.event(FORGOT_PASSWORD);
@@ -275,7 +272,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
                 performBackPressed();
             }
         });
@@ -331,7 +328,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
-				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+				Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
 				loginDataFetched = false;
 				facebookLoginHelper.openFacebookSession();
 			}
@@ -341,9 +338,9 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
                 loginDataFetched = false;
-                startActivityForResult(new Intent(SplashLogin.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+                startActivityForResult(new Intent(LoginActivity.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
             }
         });
 
@@ -354,7 +351,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
             @Override
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 Data.facebookUserData = facebookUserData;
-                sendFacebookLoginValues(SplashLogin.this);
+                sendFacebookLoginValues(LoginActivity.this);
                 FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
             }
 
@@ -367,13 +364,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
         linearLayoutMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
             }
         });
         topRl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+                Utils.hideSoftKeyboard(LoginActivity.this, editTextEmail);
             }
         });
 		
@@ -496,13 +493,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		super.onResume();
 		
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(SplashLogin.this, 1000, 1);
+			Data.locationFetcher = new LocationFetcher(LoginActivity.this, 1000, 1);
 		}
 
 		int resp = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
 		if(resp != ConnectionResult.SUCCESS){
 			Log.e("Google Play Service Error ","="+resp);
-			DialogPopup.showGooglePlayErrorAlert(SplashLogin.this);
+			DialogPopup.showGooglePlayErrorAlert(LoginActivity.this);
 		}
 
 		HomeActivity.checkForAccessTokenChange(this);
@@ -531,14 +528,14 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	
 	public void performBackPressed(){
         if(fromPreviousAccounts){
-            Intent intent = new Intent(SplashLogin.this, MultipleAccountsActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MultipleAccountsActivity.class);
             startActivity(intent);
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
         }
         else {
             FacebookLoginHelper.logoutFacebook();
-            Intent intent = new Intent(SplashLogin.this, SplashNewActivity.class);
+            Intent intent = new Intent(LoginActivity.this, SplashNewActivity.class);
             intent.putExtra("no_anim", "yes");
             startActivity(intent);
             finish();
@@ -644,7 +641,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
 											new JSONParser().parseAccessTokenLoginData(activity, response);
-											Database.getInstance(SplashLogin.this).insertEmail(emailId);
+											Database.getInstance(LoginActivity.this).insertEmail(emailId);
 											loginDataFetched = true;
 										}
 									}
@@ -764,7 +761,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 											new JSONParser().parseAccessTokenLoginData(activity, response);
 											loginDataFetched = true;
 											
-											Database.getInstance(SplashLogin.this).insertEmail(Data.facebookUserData.userEmail);
+											Database.getInstance(LoginActivity.this).insertEmail(Data.facebookUserData.userEmail);
 										}
 									}
 									else{
@@ -876,7 +873,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 											new JSONParser().parseAccessTokenLoginData(activity, response);
 											loginDataFetched = true;
 
-											Database.getInstance(SplashLogin.this).insertEmail(Data.googleSignInAccount.getEmail());
+											Database.getInstance(LoginActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
 										}
 									}
 									else{
@@ -911,7 +908,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 	 *  flag 0 for email, 1 for Facebook
 	 */
 	public void sendIntentToOtpScreen(){
-		DialogPopup.alertPopupWithListener(SplashLogin.this, "", otpErrorMsg, new View.OnClickListener() {
+		DialogPopup.alertPopupWithListener(LoginActivity.this, "", otpErrorMsg, new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -937,7 +934,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
 				}
 
-				Intent intent = new Intent(SplashLogin.this, OTPConfirmScreen.class);
+				Intent intent = new Intent(LoginActivity.this, OTPConfirmScreen.class);
 				intent.putExtra("show_timer", 0);
 				startActivity(intent);
 				finish();
@@ -953,7 +950,7 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 			@Override
 			public void onClick(View v) {
 				RegisterScreen.registerationType = registerationType;
-				startActivity(new Intent(SplashLogin.this, RegisterScreen.class));
+				startActivity(new Intent(LoginActivity.this, RegisterScreen.class));
 				finish();
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
@@ -989,15 +986,15 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 		
 		if(hasFocus && loginDataFetched){
 			
-			Database2.getInstance(SplashLogin.this).updateDriverLastLocationTime();
-			Database2.getInstance(SplashLogin.this).close();
+			Database2.getInstance(LoginActivity.this).updateDriverLastLocationTime();
+			Database2.getInstance(LoginActivity.this).close();
 	        
 			Map<String, String> articleParams = new HashMap<String, String>();
 			articleParams.put("username", Data.userData.userName);
 			FlurryAgent.logEvent("App Login", articleParams);
 			
 			loginDataFetched = false;
-			Intent intent = new Intent(SplashLogin.this, HomeActivity.class);
+			Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 			intent.setData(Data.splashIntentUri);
 			startActivity(intent);
 			ActivityCompat.finishAffinity(this);
