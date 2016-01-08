@@ -98,7 +98,7 @@ public class PriorityTipDialog {
 //                editTextValue2.setHint(part2);
             }
 
-            textViewTipValue.setText(String.valueOf(fareFactor)+"X");
+            textViewTipValue.setText(String.valueOf(fareFactor) + "X");
 
             textMessage.setMovementMethod(new ScrollingMovementMethod());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -127,10 +127,10 @@ public class PriorityTipDialog {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(s.toString().equals(part1)){
+                    if (s.toString().equals(part1)) {
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.yellow));
                         editTextValue2.requestFocus();
-                    } else{
+                    } else {
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.red));
                     }
                 }
@@ -149,15 +149,15 @@ public class PriorityTipDialog {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    Log.v("character is", "--> "+s.toString());
-                    if(s.toString().equals(part2)){
+                    Log.v("character is", "--> " + s.toString());
+                    if (s.toString().equals(part2)) {
                         Log.v("code matched", "code matched");
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.yellow));
                         callback.onConfirmed();
                         dialog.dismiss();
                         Utils.hideSoftKeyboard(activity, editTextValue2);
-                    } else{
-                        if(part2.startsWith(s.toString())){
+                    } else {
+                        if (part2.startsWith(s.toString())) {
                             editTextValue2.setTextColor(activity.getResources().getColor(R.color.yellow));
                         } else {
                             editTextValue2.setTextColor(activity.getResources().getColor(R.color.red));
@@ -190,6 +190,9 @@ public class PriorityTipDialog {
 
 
             dialog.show();
+            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            close.requestFocus();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
