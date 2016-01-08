@@ -29,9 +29,9 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class PriorityTipDialog {
 
-    Activity activity;
-    double fareFactor;
-    int priorityTipCategory;
+    private Activity activity;
+    private double fareFactor;
+    private int priorityTipCategory;
     private Callback callback;
 
     public PriorityTipDialog(Activity activity, double fareFactor, int priorityTipCategory, Callback callback) {
@@ -39,16 +39,20 @@ public class PriorityTipDialog {
         this.fareFactor = fareFactor;
         this.priorityTipCategory = priorityTipCategory;
         this.callback = callback;
+    }
+
+    public Dialog showDialog(){
         if((priorityTipCategory == PriorityTipCategory.LOW_PRIORITY_DIALOG.getOrdinal() ||
                 (priorityTipCategory == PriorityTipCategory.HIGH_PRIORITY_DIALOG.getOrdinal()))){
-            showPriorityTipDialog(activity, fareFactor, priorityTipCategory);
+            return showPriorityTipDialog(activity, fareFactor, priorityTipCategory);
         }
         else{
             callback.onConfirmed();
+            return null;
         }
     }
 
-    private void showPriorityTipDialog(final Activity activity, double fareFactor, int priorityTipCategory){
+    private Dialog showPriorityTipDialog(final Activity activity, double fareFactor, int priorityTipCategory){
         try {
             final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
@@ -192,9 +196,10 @@ public class PriorityTipDialog {
             dialog.show();
             activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             close.requestFocus();
-
+            return dialog;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 

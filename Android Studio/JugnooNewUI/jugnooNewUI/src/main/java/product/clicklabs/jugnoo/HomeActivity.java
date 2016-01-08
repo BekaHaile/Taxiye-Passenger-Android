@@ -413,6 +413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
 
+    private Dialog dialogPriorityTip;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -626,6 +627,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
+                    if(dialogPriorityTip != null){
+                        dialogPriorityTip.dismiss();
+                    }
                 }
             }
 
@@ -2091,7 +2095,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
-            new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
+            dialogPriorityTip = new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
                     new PriorityTipDialog.Callback() {
                         @Override
                         public void onConfirmed() {
@@ -2122,7 +2126,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void onCancelled() {
                             Log.v("Request of Ride", "Aborted");
                         }
-                    });
+                    }).showDialog();
         } else {
             Data.cEngagementId = "";
             switchRequestRideUI();
