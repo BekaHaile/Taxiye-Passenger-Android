@@ -551,44 +551,20 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
                                 baseFair = jObj.optString("base_fare");
                                 fairPerKM = jObj.optString("fare_per_km");
                                 fairPerMin = jObj.optString("fare_per_min");
-                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
-                                        && (Integer.parseInt(eta) != 0)){
+                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) && (Integer.parseInt(eta) != 0)){
+                                    if(relativeLayoutJeaniePopup != null && relativeLayoutJeaniePopup.isShown()) {
+                                        windowManager.removeView(relativeLayoutJeaniePopup);
+                                    }
                                     chatheadView.setVisibility(View.VISIBLE);
 									FlurryEventLogger.event(JUGNOO_STICKY_OPENED);
                                 }
 
                             }  catch (Exception exception) {
                                 exception.printStackTrace();
+                                chatheadView.setVisibility(View.GONE);
                             }
                         }
 
-                        /*@Override
-                        public void onFailure(Throwable arg3) {
-                            chatheadView.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Response find_a_driver", "response = " + response);
-                            try {
-                                JSONObject jObj = new JSONObject(response);
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
-                                eta = jObj.optString("eta");
-                                baseFair = jObj.optString("base_fare");
-                                fairPerKM = jObj.optString("fare_per_km");
-                                fairPerMin = jObj.optString("fare_per_min");
-                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
-                                        && (Integer.parseInt(eta) != 0)){
-                                    chatheadView.setVisibility(View.VISIBLE);
-                                }
-
-                            }  catch (Exception exception) {
-                                exception.printStackTrace();
-                            }
-
-
-                        }*/
                     });
         } else {
 
@@ -1681,7 +1657,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
 				getNearestDriver();
 				Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
-				//chatheadView.setVisibility(View.VISIBLE);
 				locationFetcherBG.destroy();
 			}
 			else{
@@ -1694,7 +1669,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
 					getNearestDriver();
 					Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
-					//chatheadView.setVisibility(View.VISIBLE);
 					locationFetcherBG.destroy();
 
 				}

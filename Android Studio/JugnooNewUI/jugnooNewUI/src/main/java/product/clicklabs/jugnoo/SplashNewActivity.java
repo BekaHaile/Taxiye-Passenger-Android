@@ -501,6 +501,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 
+		if (Data.locationFetcher == null) {
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		}
+
 	}
 
 	private void sendToRegisterThroughSms(String referralCode){
@@ -576,9 +580,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onResume() {
-		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
-		}
+
+		Data.locationFetcher.connect();
 
 
 		super.onResume();
@@ -601,7 +604,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	protected void onPause() {
 		try {
 			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

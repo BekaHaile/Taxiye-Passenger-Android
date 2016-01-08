@@ -76,7 +76,7 @@ public class UserDebtDialog {
 							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
 						}
 					}
-				});
+				}, true);
 	}
 
 	private void settleUserDebt(final Activity activity) {

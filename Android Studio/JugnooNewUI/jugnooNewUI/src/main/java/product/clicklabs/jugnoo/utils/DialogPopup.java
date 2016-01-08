@@ -238,14 +238,22 @@ public class DialogPopup {
 	}
 	
 	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
-											  final View.OnClickListener onClickListener) {
+											  final View.OnClickListener onClickListener, boolean newInstance) {
 		try {
 			dismissAlertPopup();
 			if("".equalsIgnoreCase(title)){
 				title = activity.getResources().getString(R.string.alert);
 			}
-			
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+
+			Dialog dialogI = null;
+			if(newInstance){
+				dialogI = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			}
+			else{
+				DialogPopup.dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialogI = DialogPopup.dialog;
+			}
+			final Dialog dialog = dialogI;
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_custom_one_button);
 
@@ -294,7 +302,7 @@ public class DialogPopup {
 	}
 
 	public static void alertPopupWithListener(Activity activity, String title, String message, final View.OnClickListener onClickListener) {
-		alertPopupWithListener(activity, title, message, "", onClickListener);
+		alertPopupWithListener(activity, title, message, "", onClickListener, false);
 	}
 
 
