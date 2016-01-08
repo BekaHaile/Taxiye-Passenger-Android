@@ -79,6 +79,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -98,6 +99,7 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
+import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
@@ -110,6 +112,10 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
+import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
+import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -137,6 +143,10 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
@@ -303,7 +313,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     FeedbackReasonsAdapter feedbackReasonsAdapter;
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
-    TextView textViewRSScroll, textViewMinFareValue, textViewOffersValue, textViewCashValue;
+    TextView textViewRSScroll;
 
     /*ScrollView scrollViewEndRide;
 
@@ -341,7 +351,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static PassengerScreenMode passengerScreenMode;
 
 
-    FindDriversETAAsync findDriversETAAsync;
 	String etaMinutes = "5", farAwayCity = "";
 
 
@@ -414,6 +423,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
     private SlidingBottomPanel slidingBottomPanel;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -784,17 +794,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.latoRegular(this));
 
 
-        //SlidingUp Layout
-        ((TextView)findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(this));
-        textViewMinFareValue = (TextView)findViewById(R.id.textViewMinFareValue);textViewMinFareValue.setTypeface(Fonts.mavenRegular(this));
-        ((TextView)findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(this));
-        textViewOffersValue = (TextView)findViewById(R.id.textViewOffersValue);textViewOffersValue.setTypeface(Fonts.mavenRegular(this));
-        textViewCashValue = (TextView)findViewById(R.id.textViewCashValue);textViewCashValue.setTypeface(Fonts.mavenRegular(this));
 
-        textViewCashValue.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space)
-                , Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
-        textViewMinFareValue.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space)
-                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
 
 
@@ -1694,10 +1694,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapUnsettled() {
                     // Map unsettled
                     if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-                        if (findDriversETAAsync != null) {
-                            findDriversETAAsync.cancel(true);
-                            findDriversETAAsync = null;
-                        }
+
                     }
                 }
 
@@ -2113,8 +2110,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
-                        findDriversETAAsync = new FindDriversETAAsync(Data.pickupLatLng);
-                        findDriversETAAsync.execute();
+                        callFindADriverAndShowPromotionsAPIS(Data.pickupLatLng);
                     }
                 }
             }
@@ -2304,12 +2300,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchUserScreen() {
 
-        if (findDriversETAAsync != null) {
-            findDriversETAAsync.cancel(true);
-            findDriversETAAsync = null;
-        }
-
-
         Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_PASSENGER);
 
         passengerMainLayout.setVisibility(View.VISIBLE);
@@ -2497,12 +2487,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } catch (Exception e) {
                         }
 
-
-
-                        if (findDriversETAAsync != null) {
-                            findDriversETAAsync.cancel(true);
-                            findDriversETAAsync = null;
-                        }
 
 
                         initialLayout.setVisibility(View.VISIBLE);
@@ -3851,162 +3835,172 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
+    private void callFindADriverAndShowPromotionsAPIS(LatLng requestLatLng){
+        promoCouponSelectedForRide = null;
 
-	class FindDriversETAAsync extends AsyncTask<Void, Void, String> {
+        findDriversETACall(Data.pickupLatLng);
+        fetchPromotionsAPI(this, Data.pickupLatLng);
+    }
 
-        LatLng destination;
-
-        public FindDriversETAAsync(LatLng destination) {
-            this.destination = destination;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    private void findDriversETACall(final LatLng destination){
+        try {
             if (userMode == UserMode.PASSENGER) {
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        addCurrentLocationAddressMarker(destination);
-                        textViewInitialInstructions.setVisibility(View.GONE);
-                        dontCallRefreshDriver = false;
-                    }
-                });
+                addCurrentLocationAddressMarker(destination);
+                textViewInitialInstructions.setVisibility(View.GONE);
+                dontCallRefreshDriver = false;
                 etaMinutes = "5";
             }
-        }
 
+            HashMap<String, String> params = new HashMap<>();
+            params.put("access_token", Data.userData.accessToken);
+            params.put("latitude", "" + destination.latitude);
+            params.put("longitude", "" + destination.longitude);
 
-        @Override
-        protected String doInBackground(Void... params) {
-            if (userMode == UserMode.PASSENGER) {
-                try {
-                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-                    nameValuePairs.add(new BasicNameValuePair("latitude", "" + destination.latitude));
-                    nameValuePairs.add(new BasicNameValuePair("longitude", "" + destination.longitude));
+            if (1 == showAllDrivers) {
+                params.put("show_all", "1");
+            }
+            if(1 == showDriverInfo){
+                params.put("show_phone_no", "1");
+            }
 
-                    if (1 == showAllDrivers) {
-                        nameValuePairs.add(new BasicNameValuePair("show_all", "1"));
-                    }
-					if(1 == showDriverInfo){
-						nameValuePairs.add(new BasicNameValuePair("show_phone_no", "1"));
-					}
+            Log.i("params in find_a_driver", "=" + params);
 
-                    Log.i("nameValuePairs in find_a_driver", "=" + nameValuePairs);
+            RestClient.getApiServices().findADriverCall(params, new Callback<FindADriverResponse>() {
+                @Override
+                public void success(FindADriverResponse findADriverResponse, Response response) {
+                    try {
+                        Data.driverInfos.clear();
+                        for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
+                            Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
+                                    "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0));
+                        }
+                        etaMinutes = String.valueOf(findADriverResponse.getEta());
+                        Data.userData.fareFactor = findADriverResponse.getFareFactor();
+                        if (findADriverResponse.getFarAwayCity() == null) {
+                            farAwayCity = "";
+                        } else {
+                            farAwayCity = findADriverResponse.getFarAwayCity();
+                        }
 
-                    HttpRequester simpleJSONParser = new HttpRequester();
-                    String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/find_a_driver", nameValuePairs);
-                    Log.i("result in find_a_driver", "=" + result);
-                    simpleJSONParser = null;
-                    nameValuePairs = null;
+                        if (relativeLayoutLocationError.getVisibility() == View.GONE) {
+                            showDriverMarkersAndPanMap(destination);
+                            dontCallRefreshDriver = true;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dontCallRefreshDriver = false;
+                                }
+                            }, 300);
 
-//                    {
-//                        "flag": 175,
-//                        "drivers": [
-//                        {
-//                            "user_id": 1164,
-//                            "user_name": "Driver 2",
-//                            "phone_no": "",
-//                            "latitude": 30.692124,
-//                            "longitude": 76.840996,
-//                            "vehicle_type": 1,
-//                            "distance": 4045.59,
-//                            "rating": 4.609195402298851
-//                        },
-//                        {
-//                            "user_id": 1110,
-//                            "user_name": "Dss",
-//                            "phone_no": "",
-//                            "latitude": 30.759017,
-//                            "longitude": 76.783457,
-//                            "vehicle_type": 1,
-//                            "distance": 5276.76,
-//                            "rating": 4.510989010989011
-//                        }
-//                        ],
-//                        "eta": 24,
-//                        "fare_factor": 1
-//                    }
-
-                    if (result.contains(HttpRequester.SERVER_TIMEOUT)) {
-                    } else {
-                        try {
-                            JSONObject jObj = new JSONObject(result);
-                            new JSONParser().parseDriversToShow(jObj, "drivers");
-                            etaMinutes = jObj.getString("eta");
-                            Data.userData.fareFactor = jObj.getDouble("fare_factor");
-
-                            if (jObj.has("far_away_city")) {
-                                farAwayCity = jObj.getString("far_away_city");
+                            if (Data.driverInfos.size() == 0) {
+                                textViewInitialInstructions.setVisibility(View.VISIBLE);
+                                textViewInitialInstructions.setText("No drivers nearby");
+                                textViewCentrePinETA.setText("-");
+                            } else {
+                                textViewInitialInstructions.setVisibility(View.GONE);
+                                textViewCentrePinETA.setText(etaMinutes);
                             }
-							else{
-								farAwayCity = "";
-							}
-                        } catch (Exception e) {
-                            e.printStackTrace();
+
+                            setServiceAvailablityUI(farAwayCity);
                         }
+                        setFareFactorToInitialState();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                    return etaMinutes;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-            return "error";
-        }
 
-        @Override
-        protected void onPostExecute(final String result) {
-            super.onPostExecute(result);
-            if (userMode == UserMode.PASSENGER) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-							if(relativeLayoutLocationError.getVisibility() == View.GONE) {
-								showDriverMarkersAndPanMap(destination);
-								dontCallRefreshDriver = true;
-								new Handler().postDelayed(new Runnable() {
-									@Override
-									public void run() {
-										dontCallRefreshDriver = false;
-									}
-								}, 300);
-
-
-								if (!"error".equalsIgnoreCase(result)) {
-									if (Data.driverInfos.size() == 0) {
-                                        textViewInitialInstructions.setVisibility(View.VISIBLE);
-                                        textViewInitialInstructions.setText("No drivers nearby");
-										textViewCentrePinETA.setText("-");
-									} else {
-                                        textViewInitialInstructions.setVisibility(View.GONE);
-										textViewCentrePinETA.setText(etaMinutes);
-									}
-								} else {
-                                    textViewInitialInstructions.setVisibility(View.VISIBLE);
-                                    textViewInitialInstructions.setText("Couldn't find drivers nearby.");
-									textViewCentrePinETA.setText("-");
-								}
-
-								setServiceAvailablityUI(farAwayCity);
-							}
-
-							setFareFactorToInitialState();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-
-
+                @Override
+                public void failure(RetrofitError error) {
+                    textViewInitialInstructions.setVisibility(View.VISIBLE);
+                    textViewInitialInstructions.setText("Couldn't find drivers nearby.");
+                    textViewCentrePinETA.setText("-");
+                    setServiceAvailablityUI(farAwayCity);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+    private void fetchPromotionsAPI(final Activity activity, LatLng promoLatLng) {
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("access_token", Data.userData.accessToken);
+            params.put("latitude", "" + promoLatLng.latitude);
+            params.put("longitude", "" + promoLatLng.longitude);
+            Log.i("params", "=" + params);
+
+            RestClient.getApiServices().showAvailablePromotionsCall(params, new Callback<ShowPromotionsResponse>() {
+                @Override
+                public void success(ShowPromotionsResponse showPromotionsResponse, Response response) {
+
+                    try {
+                        String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+                        JSONObject jObj = new JSONObject(jsonString);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            if (ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == showPromotionsResponse.getFlag()) {
+                                ArrayList<PromoCoupon> promoCoupons = new ArrayList<PromoCoupon>();
+                                for (ShowPromotionsResponse.Coupon coupon : showPromotionsResponse.getCoupons()) {
+                                    promoCoupons.add(new CouponInfo(coupon.getAccountId(),
+                                            coupon.getCouponType(),
+                                            coupon.getStatus(),
+                                            coupon.getTitle(),
+                                            coupon.getSubtitle(),
+                                            coupon.getDescription(),
+                                            coupon.getImage(),
+                                            coupon.getRedeemedOn(),
+                                            coupon.getExpiryDate(), "", ""));
+                                }
+                                for (ShowPromotionsResponse.Promotion promotion : showPromotionsResponse.getPromotions()) {
+                                    promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
+                                            promotion.getTitle(),
+                                            promotion.getTermsNConds()));
+                                }
+
+                                double fareFactor = Double.parseDouble(showPromotionsResponse.getDynamicFactor());
+                                for(ShowPromotionsResponse.FareStructure fareStructure : showPromotionsResponse.getFareStructure()){
+                                    String startTime = fareStructure.getStartTime();
+                                    String endTime = fareStructure.getEndTime();
+                                    String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
+                                    String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
+                                    long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
+                                    long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
+                                    double convenienceCharges = 0;
+                                    if(fareStructure.getConvenienceCharge() != null){
+                                        convenienceCharges = fareStructure.getConvenienceCharge();
+                                    }
+                                    if(diffStart >= 0 && diffEnd <= 0){
+                                        Data.fareStructure = new FareStructure(fareStructure.getFareFixed(),
+                                                fareStructure.getFareThresholdDistance(),
+                                                fareStructure.getFarePerKm(),
+                                                fareStructure.getFarePerMin(),
+                                                fareStructure.getFareThresholdTime(),
+                                                fareStructure.getFarePerWaitingMin(),
+                                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges);
+                                        Data.fareStructure.fareFactor = fareFactor;
+                                        break;
+                                    }
+                                }
+
+                                slidingBottomPanel.update(promoCoupons);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 	private void checkForGoogleLogoVisibilityBeforeRide(){
 		try{
@@ -5685,11 +5679,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (userMode == UserMode.PASSENGER) {
             if (passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
 
-                if (findDriversETAAsync != null) {
-                    findDriversETAAsync.cancel(true);
-                    findDriversETAAsync = null;
-                }
-
                 if (Data.pickupLatLng.latitude == 0 && Data.pickupLatLng.longitude == 0) {
                     Data.pickupLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -5700,8 +5689,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     editor.commit();
 
 					if (myLocation != null) {
-						findDriversETAAsync = new FindDriversETAAsync(Data.pickupLatLng);
-						findDriversETAAsync.execute();
+                        callFindADriverAndShowPromotionsAPIS(Data.pickupLatLng);
 					}
                 }
             } else if (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {

@@ -1,9 +1,14 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import java.util.Map;
+
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import retrofit.Callback;
 import retrofit.http.Field;
+import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 
@@ -24,5 +29,15 @@ public interface ApiService {
     void leaderboardActivityServerCall(@Field("access_token") String accessToken,
                                @Field("client_id") String clientId,
                                Callback<LeaderboardActivityResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/find_a_driver")
+    void findADriverCall(@FieldMap Map<String, String> params,
+                                       Callback<FindADriverResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/show_available_promotions")
+    void showAvailablePromotionsCall(@FieldMap Map<String, String> params,
+                         Callback<ShowPromotionsResponse> callback);
 
 }
