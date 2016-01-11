@@ -305,6 +305,9 @@
 	<string name="nl_min_fare">MIN FARE</string>
 	<string name="nl_offers">OFFERS</string>
 	<string name="nl_change_locality">CHANGE LOCALITY</string>
+	<string name="nl_get_fare_estimate">Get fare estimate</string>
+	<string name="nl_per_km">Per Km</string>
+	<string name="nl_per_min">Per Min</string>
 
 	<!-- NL Forgot Passowrd screen-->
 	<string name="nl_forgot_password">Forgot Password</string>

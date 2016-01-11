@@ -2927,6 +2927,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    public SlidingBottomPanel getSlidingBottomPanel(){
+        return slidingBottomPanel;
+    }
+
 
     private BroadcastReceiver receiver;
     private void registerDialogDismissReceiver() {
@@ -3981,6 +3985,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         break;
                                     }
                                 }
+
+                                Data.fareStructure.fareFactor = Data.userData.fareFactor;
 
                                 slidingBottomPanel.update(promoCoupons);
                             }

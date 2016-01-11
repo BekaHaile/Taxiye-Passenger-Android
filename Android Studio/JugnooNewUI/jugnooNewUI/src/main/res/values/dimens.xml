@@ -125,6 +125,8 @@
 
     <!-- NL dimensions-->
     <dimen name="button_stroke_width">1dp</dimen>
+    <dimen name="nl_sliding_bottom_without_tabs">278px</dimen>
+    <dimen name="nl_button_size">87px</dimen>
 
     <!-- NL splash screen-->
     <dimen name="splash_button_width">300px</dimen>

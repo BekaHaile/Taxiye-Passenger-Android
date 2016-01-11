@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
     android:background="@color/sliding_bottom_bg_color"
     android:orientation="vertical">
 
@@ -10,9 +11,8 @@
         <LinearLayout
             android:id="@+id/linearLayoutPromotion1"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="@dimen/nl_button_size"
             android:gravity="center_vertical"
-            android:layout_marginTop="25px"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
             android:background="@drawable/background_white_rounded_bordered"
@@ -42,7 +42,7 @@
     <LinearLayout
         android:id="@+id/linearLayoutPromotion2"
         android:layout_width="match_parent"
-        android:layout_height="100px"
+        android:layout_height="@dimen/nl_button_size"
         android:layout_marginTop="25px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"

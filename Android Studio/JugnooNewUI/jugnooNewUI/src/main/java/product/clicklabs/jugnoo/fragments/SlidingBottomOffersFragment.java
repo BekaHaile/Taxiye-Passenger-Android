@@ -52,6 +52,11 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         linearLayoutPromotion1.setOnClickListener(this);
         linearLayoutPromotion2.setOnClickListener(this);
 
+        try {
+            update(activity.getSlidingBottomPanel().getPromoCoupons());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return rootView;
     }

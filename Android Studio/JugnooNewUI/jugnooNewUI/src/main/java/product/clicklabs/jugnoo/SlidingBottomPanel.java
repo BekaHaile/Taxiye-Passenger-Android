@@ -1,21 +1,16 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
-import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
-
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
 import java.util.ArrayList;
-
-import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
 import product.clicklabs.jugnoo.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -38,6 +33,8 @@ public class SlidingBottomPanel {
 
     private PromoCoupon selectedCoupon;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+    private ArrayList<PromoCoupon> promoCoupons;
+
 
     public SlidingBottomPanel(FragmentActivity activity, View view) {
         this.activity = activity;
@@ -119,6 +116,7 @@ public class SlidingBottomPanel {
     }
 
     public void update(ArrayList<PromoCoupon> promoCoupons){
+        this.promoCoupons = promoCoupons;
         textViewCashValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
         textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)
@@ -135,12 +133,28 @@ public class SlidingBottomPanel {
             textViewOffersValue.setText("0");
         }
 
-        Fragment frag = slidingBottomFragmentAdapter.getItem(2);
+        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
         if(frag != null && frag instanceof SlidingBottomOffersFragment){
             ((SlidingBottomOffersFragment)frag).update(promoCoupons);
         }
 
+        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
+        if(frag1 != null && frag1 instanceof SlidingBottomFareFragment){
+            ((SlidingBottomFareFragment)frag1).update();
+        }
 
+//        Fragment page = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
+//        if (page != null) {
+//            if(frag != null && frag instanceof SlidingBottomOffersFragment){
+//                ((SlidingBottomOffersFragment)frag).update(promoCoupons);
+//            }
+//        }
+
+
+    }
+
+    public ArrayList<PromoCoupon> getPromoCoupons(){
+        return promoCoupons;
     }
 
     public SlidingUpPanelLayout getSlidingUpPanelLayout(){
