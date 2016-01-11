@@ -15,6 +15,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -22,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -89,9 +92,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	Button buttonNoNetCall, buttonRefresh;
 
 	LinearLayout linearLayoutLogin;
-	EditText editTextEmail, editTextPassword;
+	AutoCompleteTextView editTextEmail;
+	EditText editTextPassword;
 	TextView textViewEmailRequired, textViewPasswordRequired, textViewLoginOr, textViewForgotPassword;
 	Button buttonEmailLogin, buttonFacebookLogin, buttonGoogleLogin;
+
+	LinearLayout linearLayoutSignup;
 
 
 	boolean loginDataFetched = false, resumed = false;
@@ -299,15 +305,34 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRefresh.setTypeface(Fonts.mavenLight(this));
 
 		linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
+		editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
+		editTextEmail.setTypeface(Fonts.latoRegular(this));
+		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+		editTextPassword.setTypeface(Fonts.latoRegular(this), Typeface.ITALIC);
+		textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
+		textViewEmailRequired.setTypeface(Fonts.latoRegular(this));
+		textViewPasswordRequired = (TextView) findViewById(R.id.textViewPasswordRequired);
+		textViewPasswordRequired.setTypeface(Fonts.latoRegular(this));
+		textViewLoginOr = (TextView) findViewById(R.id.textViewLoginOr);
+		textViewLoginOr.setTypeface(Fonts.latoRegular(this));
+		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
+		textViewForgotPassword.setTypeface(Fonts.mavenRegular(this));
+		buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin);
+		buttonEmailLogin.setTypeface(Fonts.mavenLight(this));
+		buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin);
+		buttonFacebookLogin.setTypeface(Fonts.mavenLight(this));
+		buttonGoogleLogin = (Button) findViewById(R.id.buttonGoogleLogin);
+		buttonGoogleLogin.setTypeface(Fonts.mavenLight(this));
 
 
+		linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
 
 
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-//				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 //				Intent intent = new Intent(SplashNewActivity.this, LoginActivity.class);
 //				startActivity(intent);
 //				finish();
@@ -322,11 +347,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(SIGNUP);
-				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
-				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
-				startActivity(intent);
-				finish();
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
+//				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+//				startActivity(intent);
+//				finish();
+//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+				changeUIState(State.SIGNUP);
+			}
+		});
+		textViewTerms.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		textViewPrivacy.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
 			}
 		});
 
@@ -352,7 +391,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(State.LOGIN == state){
+				if(State.LOGIN == state || State.SIGNUP == state){
 					changeUIState(State.SPLASH_LS);
 				}
 			}
@@ -448,6 +487,71 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 
+
+
+
+
+		editTextEmail.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				textViewEmailRequired.setVisibility(editTextEmail.getText().length() > 0 ? View.GONE : View.VISIBLE);
+			}
+		});
+		editTextPassword.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				textViewPasswordRequired.setVisibility(editTextPassword.getText().length() > 0 ? View.GONE : View.VISIBLE);
+			}
+		});
+
+		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+
+
+
+
 		changeUIState(State.SPLASH_INIT);
 
 		new Handler().postDelayed(new Runnable() {
@@ -489,12 +593,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				viewSplashLS.setVisibility(View.VISIBLE);
 
 				imageViewBack.setVisibility(View.GONE);
+				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
 
 				relativeLayoutLS.setVisibility(View.VISIBLE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
+				linearLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SPLASH_LS:
@@ -503,12 +609,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				viewSplashLS.setVisibility(View.GONE);
 
 				imageViewBack.setVisibility(View.GONE);
+				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
 
 				relativeLayoutLS.setVisibility(View.VISIBLE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
+				linearLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SPLASH_NO_NET:
@@ -517,12 +625,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				viewSplashLS.setVisibility(View.GONE);
 
 				imageViewBack.setVisibility(View.GONE);
+				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
 
 				relativeLayoutLS.setVisibility(View.VISIBLE);
 				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
+				linearLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case LOGIN:
@@ -531,16 +641,30 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				viewSplashLS.setVisibility(View.GONE);
 
 				imageViewBack.setVisibility(View.VISIBLE);
+				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
 
 				relativeLayoutLS.setVisibility(View.GONE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
+				linearLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SIGNUP:
+				viewInitJugnoo.setVisibility(View.GONE);
+				viewInitSplashJugnoo.setVisibility(View.GONE);
+				viewSplashLS.setVisibility(View.GONE);
 
+				imageViewBack.setVisibility(View.VISIBLE);
+				relativeLayoutJugnooLogo.setVisibility(View.GONE);
+
+				relativeLayoutLS.setVisibility(View.GONE);
+				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
+				linearLayoutNoNet.setVisibility(View.GONE);
+
+				linearLayoutLogin.setVisibility(View.GONE);
+				linearLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 		}
@@ -980,6 +1104,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		System.gc();
 	}
 
+	@Override
+	public void onBackPressed() {
+		if(State.LOGIN == state || State.SIGNUP == state){
+			changeUIState(State.SPLASH_LS);
+		} else{
+			super.onBackPressed();
+		}
+	}
 
 	public void confirmDebugPasswordPopup(final Activity activity) {
 
