@@ -20,7 +20,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
- * Created by socomo on 1/8/16.
+ * Created by Ankit on 1/8/16.
  */
 public class SlidingBottomOffersFragment extends Fragment implements View.OnClickListener{
 

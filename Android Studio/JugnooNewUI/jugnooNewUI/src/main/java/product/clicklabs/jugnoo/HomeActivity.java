@@ -1080,7 +1080,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
 				try {
 					if(map != null){
-						callAnAutoClicked(map.getCameraPosition().target);
+						//callAnAutoClicked(map.getCameraPosition().target);
+                        updatePreferredPaymentOptionUI();
+                        buttonGetARide.performClick();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3228,9 +3230,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
                 }
-                setBottomMarginOfView(initialMyLocationBtn, 127f);
-                setBottomMarginOfView(imageViewRideNow, 90f);
-                setBottomMarginOfView(changeLocalityBtn, 120f);
+                setBottomMarginOfView(initialMyLocationBtn, 80f);
+                setBottomMarginOfView(imageViewRideNow, 40f);
+                setBottomMarginOfView(changeLocalityBtn, 100f);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4017,7 +4019,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(relativeLayoutInitialFareFactor.getVisibility() == View.VISIBLE){
 				padding = padding + 62;
 			}
-			setGoogleMapPadding(padding);
+			setGoogleMapPadding(20);
 		} catch(Exception e){
 			e.printStackTrace();
 		}

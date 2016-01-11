@@ -333,12 +333,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-//				Intent intent = new Intent(SplashNewActivity.this, LoginActivity.class);
-//				startActivity(intent);
-//				finish();
-//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				Intent intent = new Intent(SplashNewActivity.this, LoginActivity.class);
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
-				changeUIState(State.LOGIN);
+//				changeUIState(State.LOGIN);
 			}
 		});
 
@@ -347,13 +347,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(SIGNUP);
-//				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
-//				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
-//				startActivity(intent);
-//				finish();
-//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
+				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
-				changeUIState(State.SIGNUP);
+//				changeUIState(State.SIGNUP);
 			}
 		});
 		textViewTerms.setOnClickListener(new View.OnClickListener() {

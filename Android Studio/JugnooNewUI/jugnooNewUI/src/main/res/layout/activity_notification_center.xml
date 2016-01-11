@@ -11,7 +11,7 @@
         android:id="@+id/topBar"
         android:layout_width="720px"
         android:layout_height="96px"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"

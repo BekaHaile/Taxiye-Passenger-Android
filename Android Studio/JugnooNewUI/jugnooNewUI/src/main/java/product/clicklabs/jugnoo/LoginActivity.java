@@ -64,7 +64,7 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
     RelativeLayout topRl;
 	ImageView imageViewBack;
 
-    ImageView imageViewFacebookLogin, imageViewGoogleLogin;
+    Button buttonFacebookLogin, buttonGoogleLogin;
 	
 	TextView orText;
 	
@@ -145,8 +145,8 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
         topRl = (RelativeLayout) findViewById(R.id.topRl);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        imageViewFacebookLogin = (ImageView) findViewById(R.id.imageViewFacebookLogin);
-        imageViewGoogleLogin = (ImageView) findViewById(R.id.imageViewGoogleLogin);
+        buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin);
+        buttonGoogleLogin = (Button) findViewById(R.id.buttonGoogleLogin);
 
 		orText = (TextView) findViewById(R.id.orText); orText.setTypeface(Fonts.latoRegular(this));
 		
@@ -324,7 +324,7 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
         });
 
 
-        imageViewFacebookLogin.setOnClickListener(new View.OnClickListener() {
+        buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
@@ -334,7 +334,7 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
 			}
 		});
 
-        imageViewGoogleLogin.setOnClickListener(new View.OnClickListener() {
+		buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.event(LOGIN_VIA_GOOGLE);

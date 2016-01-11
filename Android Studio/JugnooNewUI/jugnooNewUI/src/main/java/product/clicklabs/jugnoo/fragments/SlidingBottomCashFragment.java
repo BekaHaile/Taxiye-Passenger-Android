@@ -22,7 +22,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
- * Created by socomo on 1/8/16.
+ * Created by Ankit on 1/8/16.
  */
 public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener{
 

@@ -161,4 +161,19 @@ public class SlidingBottomPanel {
         return slidingUpPanelLayout;
     }
 
+    public PromoCoupon getSelectedCoupon(){
+        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
+        if(frag != null && frag instanceof SlidingBottomOffersFragment){
+            ((SlidingBottomOffersFragment)frag).update(promoCoupons);
+        }
+
+        return null;
+    }
+
+    public void setSelectedCoupon(int position){
+        if(position > -1 && position < promoCoupons.size()){
+            selectedCoupon = promoCoupons.get(position);
+        }
+    }
+
 }

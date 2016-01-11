@@ -27,7 +27,7 @@
                 android:layout_width="33px"
                 android:layout_height="33px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/search_icon"
                 android:tag="mwar" />
 
@@ -129,10 +129,20 @@
             android:animateLayoutChanges="true"
             android:visibility="visible">
 
+            <ImageView
+                android:id="@+id/imageViewPriorityTip"
+                android:layout_width="36px"
+                android:layout_height="41px"
+                android:layout_marginLeft="30px"
+                android:layout_centerVertical="true"
+                android:src="@drawable/surge_icon_top"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/imageViewPriorityTip"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -177,7 +187,7 @@
         android:layout_height="83px"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="127px"
+        android:layout_marginBottom="100px"
         android:layout_marginRight="92px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar" />
@@ -188,7 +198,7 @@
         android:layout_height="187px"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="90px"
+        android:layout_marginBottom="60px"
         android:src="@drawable/auto_icon_r_selector"
         android:tag="mwar" />
 

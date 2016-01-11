@@ -162,9 +162,9 @@
 
 
  <integer-array name="gplus_colors">
-  <item>@color/yellow</item>
+  <item>@color/theme_color</item>
   <item>@color/transparent</item>
-  <item>@color/yellow</item>
+  <item>@color/theme_color</item>
   <item>@color/transparent</item>
  </integer-array>
     
