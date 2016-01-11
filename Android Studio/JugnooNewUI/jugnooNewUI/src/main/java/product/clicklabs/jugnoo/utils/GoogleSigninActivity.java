@@ -49,7 +49,7 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
-		android.util.Log.d(TAG, "onConnectionFailed:" + connectionResult);
+		Log.d(TAG, "onConnectionFailed:" + connectionResult);
 		Intent intent = new Intent();
 		intent.putExtra(KEY_ERROR, connectionResult.getErrorMessage());
 		setResult(RESULT_CANCELED, intent);
@@ -69,7 +69,7 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 
 	private void handleSignInResult(GoogleSignInResult result) {
 		try {
-			android.util.Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+			Log.d(TAG, "handleSignInResult:" + result.isSuccess());
 			if (result.isSuccess()) {
 				// Signed in successfully, show authenticated UI.
 				GoogleSignInAccount acct = result.getSignInAccount();
