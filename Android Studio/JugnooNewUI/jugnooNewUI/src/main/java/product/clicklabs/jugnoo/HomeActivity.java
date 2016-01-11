@@ -1175,7 +1175,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 
-
 				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(promotionsListAdapter.getSelectedCoupon());
 				if(proceed) {
 					boolean callRequestRide = true;
@@ -1183,11 +1182,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						if (Data.userData.getPaytmBalance() > 0) {
 							callRequestRide = true;
 							if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
-								DialogPopup.dialogBanner(activity, getResources().getString(R.string.paytm_low_cash));
+								DialogPopup.dialogBanner(HomeActivity.this, getResources().getString(R.string.paytm_low_cash));
 							}
 						} else {
 							callRequestRide = false;
-							DialogPopup.alertPopup(activity, "", getResources().getString(R.string.paytm_no_cash));
+                            if(Data.userData.getPaytmError() == 1){
+                                DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_error_cash_select_cash));
+                            } else{
+                                DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_no_cash));
+                            }
 						}
 						FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
 					} else {
@@ -6743,8 +6746,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						Prefs.with(HomeActivity.this).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
 						setSelectedPaymentOptionUI(Data.pickupPaymentOption);
 						dialogSelectPaymentOption.dismiss();
-					} else{
-						DialogPopup.alertPopup(activity, "", "You do not have Paytm cash, Please select payment method as Cash");
+					} else if(Data.userData.getPaytmError() == 1){
+                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+                    } else{
+						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_no_cash));
 					}
 				}
 			});

@@ -62,6 +62,8 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class RegisterScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
 
+    private final String TAG = RegisterScreen.class.getSimpleName();
+
     RelativeLayout topBar;
     TextView textViewTitle;
     ImageView imageViewBack;
@@ -179,9 +181,13 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
-                Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
-                facebookLoginHelper.openFacebookSession();
+                if(AppStatus.getInstance(RegisterScreen.this).isOnline(RegisterScreen.this)) {
+                    FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
+                    Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
+                    facebookLoginHelper.openFacebookSession();
+                } else{
+                    DialogPopup.alertPopup(RegisterScreen.this, "", Data.CHECK_INTERNET_MSG);
+                }
             }
         });
 
@@ -189,9 +195,13 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
-				Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
-				startActivityForResult(new Intent(RegisterScreen.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+                if(AppStatus.getInstance(RegisterScreen.this).isOnline(RegisterScreen.this)) {
+                    FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
+                    Utils.hideSoftKeyboard(RegisterScreen.this, editTextUserName);
+                    startActivityForResult(new Intent(RegisterScreen.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+                } else{
+                    DialogPopup.alertPopup(RegisterScreen.this, "", Data.CHECK_INTERNET_MSG);
+                }
 			}
 		});
 
@@ -205,6 +215,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                 performBackPressed();
             }
         });
+
+        editTextUserName.setLongClickable(false);
 
         editTextUserName.setOnFocusChangeListener(onFocusChangeListener);
         editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
@@ -308,10 +320,9 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
                 String phoneNo = editTextPhone.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
 
-
                 if ("".equalsIgnoreCase(name)) {
                     editTextUserName.requestFocus();
-                    editTextUserName.setError("Please enter name");
+                    editTextUserName.setError("Please enter a name");
                 } else if (!Utils.hasAlphabets(name)) {
                     editTextUserName.requestFocus();
                     editTextUserName.setError("Please enter at least one alphabet");

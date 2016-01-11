@@ -313,7 +313,7 @@
 	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
-	
+
 	<string-array name="CountryCodes" >
 <item>93,AF</item>
 <item>355,AL</item>
@@ -523,6 +523,10 @@
 <item>263,ZW</item>
 </string-array>
 
+	<string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
+	<string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,\\ </string>
+
+
     <string name="payment_option_dialog_title">Select preferred payment option</string>
     <string name="paytm">Paytm</string>
     <string name="cash">Cash</string>
@@ -533,6 +537,7 @@
     <string name="paytm_low_cash">Your Paytm cash is low</string>
     <string name="paytm_no_cash">You do not have Paytm cash, Please select payment method as Cash</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
+	<string name="paytm_error_cash_select_cash">We are not able to connect to Paytm, Please select payment method as Cash</string>
 
     <string name="who_are_we">Who are we?</string>
     <string name="about_caps">ABOUT</string>
