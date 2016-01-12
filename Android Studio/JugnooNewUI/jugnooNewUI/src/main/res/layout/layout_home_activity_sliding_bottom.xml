@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/slidingBottom"
     android:layout_width="match_parent"
-    android:layout_height="388px"
+    android:layout_height="@dimen/nl_sliding_bottom_with_tabs"
     android:orientation="vertical">
 
     <RelativeLayout
