@@ -52,7 +52,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
+public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
 	private final String TAG = "OTPConfirmScreen";
 
@@ -921,12 +921,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public void performBackPressed(){
 		if(intentFromRegister){
 			Intent intent = new Intent(OTPConfirmScreen.this, RegisterScreen.class);
-			intent.putExtra("back_from_otp", true);
+			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
 		else{
-			Intent intent = new Intent(OTPConfirmScreen.this, LoginActivity.class);
-			intent.putExtra("back_from_otp", true);
+			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
+			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
 		finish();

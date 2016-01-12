@@ -48,7 +48,10 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/jugnoo_logo_big_white"
                 android:tag="mwar"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                />
 
             <ImageView
                 android:id="@+id/imageViewDebug1"
@@ -233,7 +236,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="182px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
@@ -412,6 +415,7 @@
         </LinearLayout>
 
 
+        <!-- Signup layout-->
         <LinearLayout
             android:id="@+id/linearLayoutSignup"
             android:layout_width="match_parent"
@@ -422,7 +426,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="464px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
@@ -547,16 +551,28 @@
                         android:tag="mwar"
                         />
 
+                    <TextView
+                        android:id="@+id/textViewSPhone91"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"
+                        android:text="@string/nl_signup_plus91"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="84px"
+                        />
+
                     <EditText
                         android:id="@+id/editTextSPhone"
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="64px"
+                        android:layout_toRightOf="@+id/textViewSPhone91"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/phone_number"
-                        android:inputType="phone"
+                        android:inputType="number"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
                         android:singleLine="true"
@@ -564,6 +580,7 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
+                        android:maxLength="10"
                         />
 
                     <TextView

@@ -167,16 +167,12 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
 		Database.getInstance(this).close();
 		
 		Database2.getInstance(LoginActivity.this).updateDriverServiceFast("no");
-		Database2.getInstance(LoginActivity.this).close();
-		
+
 		ArrayAdapter<String> adapter;
-		
 		if (emails == null) {																			// if emails from database are not null
 			emails = new String[]{};
-			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
-		} else {																						// else reinitializing emails to be empty
-			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
 		}
+		adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
 		
 		adapter.setDropDownViewResource(R.layout.dropdown_textview);					// setting email array to EditText DropDown list
 		editTextEmail.setAdapter(adapter);
@@ -380,7 +376,7 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
 		
 		
 		try {
-			if(getIntent().hasExtra("back_from_otp") && RegisterScreen.RegisterationType.EMAIL == RegisterScreen.registerationType){
+			if(getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterScreen.RegisterationType.EMAIL == RegisterScreen.registerationType){
 				if(phoneNoLogin) {
 					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
 				}
@@ -405,8 +401,8 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
 
 
         try {
-            if (getIntent().hasExtra("previous_login_email")) {
-                String previousLoginEmail = getIntent().getStringExtra("previous_login_email");
+            if (getIntent().hasExtra(KEY_PREVIOUS_LOGIN_EMAIL)) {
+                String previousLoginEmail = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
                 editTextEmail.setText(previousLoginEmail);
                 editTextEmail.setSelection(editTextEmail.getText().length());
                 fromPreviousAccounts = true;
@@ -420,8 +416,8 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
         }
 
         try {
-            if (getIntent().hasExtra("forgot_login_email")) {
-                String forgotLoginEmail = getIntent().getStringExtra("forgot_login_email");
+            if (getIntent().hasExtra(KEY_FORGOT_LOGIN_EMAIL)) {
+                String forgotLoginEmail = getIntent().getStringExtra(KEY_FORGOT_LOGIN_EMAIL);
                 editTextEmail.setText(forgotLoginEmail);
                 editTextEmail.setSelection(editTextEmail.getText().length());
             }
@@ -429,19 +425,6 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
             e.printStackTrace();
         }
 
-
-//        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyBoardStateHandler() {
-//            @Override
-//            public void keyboardOpened() {
-//
-//            }
-//
-//            @Override
-//            public void keyBoardClosed() {
-//
-//            }
-//        }));
-		
 	}
 
     private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
@@ -674,7 +657,7 @@ public class LoginActivity extends BaseActivity implements LocationUpdate, Flurr
 	
 	
 	/**
-	 * ASync for login from server
+	 * ASync for facebook login from server
 	 */
 	public void sendFacebookLoginValues(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {

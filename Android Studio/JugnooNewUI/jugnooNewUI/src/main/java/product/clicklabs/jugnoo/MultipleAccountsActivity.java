@@ -108,7 +108,7 @@ public class MultipleAccountsActivity extends BaseActivity {
 	
 	public void performBackPressed(){
         Intent intent = new Intent(MultipleAccountsActivity.this, RegisterScreen.class);
-        intent.putExtra("back_from_otp", true);
+        intent.putExtra(Constants.KEY_BACK_FROM_OTP, true);
         startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -207,8 +207,9 @@ public class MultipleAccountsActivity extends BaseActivity {
                 public void onClick(View v) {
                     holder = (ViewHolderPreviousAccount) v.getTag();
                     String previousEmail = Data.previousAccountInfoList.get(holder.id).userEmail;
-                    Intent intent = new Intent(MultipleAccountsActivity.this, LoginActivity.class);
-                    intent.putExtra("previous_login_email", previousEmail);
+                    Intent intent = new Intent(MultipleAccountsActivity.this, SplashNewActivity.class);
+					intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
+                    intent.putExtra(Constants.KEY_PREVIOUS_LOGIN_EMAIL, previousEmail);
                     startActivity(intent);
                     finish();
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);

@@ -34,4 +34,9 @@ public interface Constants {
 
 	String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
 
+	String KEY_SPLASH_STATE = "splash_state";
+	String KEY_FORGOT_LOGIN_EMAIL = "forgot_login_email";
+	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
+	String KEY_BACK_FROM_OTP = "back_from_otp";
+
 }

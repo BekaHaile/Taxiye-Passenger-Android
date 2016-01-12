@@ -326,11 +326,15 @@
 	<string name="nl_login">Login</string>
 	<string name="nl_login_facebook">Facebook</string>
 	<string name="nl_login_google">Google</string>
+	<string name="nl_login_email_empty_error">Please enter email or phone number</string>
+	<string name="nl_login_empty_password_error">Please enter password</string>
+	<string name="nl_login_invalid_email_error">Please enter valid phone number</string>
 
 	<!-- NL Signup-->
 	<string name="nl_signup_name">Name</string>
 	<string name="nl_signup_email">Email</string>
 	<string name="nl_signup_promocode">Promocode (optional)</string>
+	<string name="nl_signup_plus91">+91</string>
 	
 	<string-array name="CountryCodes" >
 <item>93,AF</item>

@@ -435,7 +435,7 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 
 
         try {
-            if (getIntent().hasExtra("back_from_otp")) {
+            if (getIntent().hasExtra(KEY_BACK_FROM_OTP)) {
                 if (RegisterationType.FACEBOOK == registerationType) {
                     editTextReferralCode.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
                     editTextPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
@@ -1179,7 +1179,8 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
         }
     };
     private void goToLoginScreen(){
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, SplashNewActivity.class);
+        intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.right_in, R.anim.right_out);

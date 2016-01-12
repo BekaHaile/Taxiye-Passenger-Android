@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
@@ -24,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,8 +35,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
@@ -46,7 +50,9 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -54,6 +60,9 @@ import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
+import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
+import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -61,9 +70,13 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.LocationInit;
@@ -73,7 +86,7 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames {
+public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
 
 	//adding drop location
 
@@ -94,11 +107,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	LinearLayout linearLayoutLogin;
 	AutoCompleteTextView editTextEmail;
 	EditText editTextPassword;
-	TextView textViewEmailRequired, textViewPasswordRequired, textViewLoginOr, textViewForgotPassword;
+	TextView textViewEmailRequired, textViewPasswordRequired, textViewForgotPassword;
 	Button buttonEmailLogin, buttonFacebookLogin, buttonGoogleLogin;
 
 	LinearLayout linearLayoutSignup;
-
+	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo;
+	TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired,
+			textViewSPromoRequired;
+	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
+	TextView textViewSTerms, textViewSPrivacy;
 
 	boolean loginDataFetched = false, resumed = false;
 
@@ -107,6 +124,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private State state = State.SPLASH_LS;
 
+
+
+	CallbackManager callbackManager;
+	FacebookLoginHelper facebookLoginHelper;
+	boolean facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
+	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
+	private String enteredEmail = "";
+	public static boolean phoneNoLogin = false;
+	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
+	public void resetFlags(){
+		loginDataFetched = false;
+		facebookRegister = false;
+		googleRegister = false;
+		sendToOtpScreen = false;
+		RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
+		phoneNoOfUnverifiedAccount = "";
+		otpErrorMsg = "";
+		notRegisteredMsg = "";
+	}
 
 
 	@Override
@@ -263,12 +299,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 
-		loginDataFetched = false;
 		resumed = false;
 
 		touchedDown1 = false;
 		touchedDown2 = false;
 		debugState = 0;
+
+		resetFlags();
+		enteredEmail = "";
 
 		root = (RelativeLayout) findViewById(R.id.root);
 		new ASSL(SplashNewActivity.this, root, 1134, 720, false);
@@ -304,17 +342,23 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
 		buttonRefresh.setTypeface(Fonts.mavenLight(this));
 
+
+		String[] emails = Database.getInstance(this).getEmails();
+		ArrayAdapter<String> adapter;
+		if (emails == null) { emails = new String[]{}; }
+		adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
+		adapter.setDropDownViewResource(R.layout.dropdown_textview);
+
 		linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
 		editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
-		editTextEmail.setTypeface(Fonts.latoRegular(this));
+		editTextEmail.setTypeface(Fonts.latoRegular(this)); editTextEmail.setAdapter(adapter);
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextPassword.setTypeface(Fonts.latoRegular(this), Typeface.ITALIC);
 		textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
 		textViewEmailRequired.setTypeface(Fonts.latoRegular(this));
 		textViewPasswordRequired = (TextView) findViewById(R.id.textViewPasswordRequired);
 		textViewPasswordRequired.setTypeface(Fonts.latoRegular(this));
-		textViewLoginOr = (TextView) findViewById(R.id.textViewLoginOr);
-		textViewLoginOr.setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewLoginOr)).setTypeface(Fonts.latoRegular(this));
 		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
 		textViewForgotPassword.setTypeface(Fonts.mavenRegular(this));
 		buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin);
@@ -326,6 +370,23 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 		linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
+		editTextSName = (EditText) findViewById(R.id.editTextSName); editTextSName.setTypeface(Fonts.latoRegular(this));
+		editTextSEmail = (EditText) findViewById(R.id.editTextSEmail); editTextSEmail.setTypeface(Fonts.latoRegular(this));
+		editTextSPhone = (EditText) findViewById(R.id.editTextSPhone); editTextSPhone.setTypeface(Fonts.latoRegular(this));
+		editTextSPassword = (EditText) findViewById(R.id.editTextSPassword); editTextSPassword.setTypeface(Fonts.latoRegular(this));
+		editTextSPromo = (EditText) findViewById(R.id.editTextSPromo); editTextSPromo.setTypeface(Fonts.latoRegular(this));
+		textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired); textViewSNameRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired); textViewSEmailRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired); textViewSPhoneRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired); textViewSPasswordRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSPromoRequired = (TextView) findViewById(R.id.textViewSPromoRequired); textViewSPromoRequired.setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.latoRegular(this));
+		buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup); buttonEmailSignup.setTypeface(Fonts.mavenLight(this));
+		buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup); buttonFacebookSignup.setTypeface(Fonts.mavenLight(this));
+		buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup); buttonGoogleSignup.setTypeface(Fonts.mavenLight(this));
+		textViewSTerms = (TextView) findViewById(R.id.textViewSTerms); textViewSTerms.setTypeface(Fonts.latoRegular(this));
+		textViewSPrivacy = (TextView) findViewById(R.id.textViewSPrivacy); textViewSPrivacy.setTypeface(Fonts.latoRegular(this));
 
 
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -333,12 +394,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-				Intent intent = new Intent(SplashNewActivity.this, LoginActivity.class);
-				startActivity(intent);
-				finish();
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
-//				changeUIState(State.LOGIN);
+				changeUIState(State.LOGIN);
 			}
 		});
 
@@ -348,12 +404,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public void onClick(View v) {
 				FlurryEventLogger.event(SIGNUP);
 				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
-				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
-				startActivity(intent);
-				finish();
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+//				startActivity(intent);
+//				finish();
+//				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
-//				changeUIState(State.SIGNUP);
+				changeUIState(State.SIGNUP);
 			}
 		});
 		textViewTerms.setOnClickListener(new View.OnClickListener() {
@@ -391,8 +447,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(State.LOGIN == state || State.SIGNUP == state){
-					changeUIState(State.SPLASH_LS);
+				if (State.LOGIN == state) {
+					performLoginBackPressed();
+				} else if (State.SIGNUP == state) {
+
 				}
 			}
 		});
@@ -491,6 +549,50 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 
+		editTextEmail.addTextChangedListener(new CustomTextWatcher(textViewEmailRequired));
+		editTextPassword.addTextChangedListener(new CustomTextWatcher(textViewPasswordRequired));
+
+		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+				String email = editTextEmail.getText().toString().trim();
+				String password = editTextPassword.getText().toString().trim();
+				if ("".equalsIgnoreCase(email)) {
+					editTextEmail.requestFocus();
+					editTextEmail.setError(getResources().getString(R.string.nl_login_email_empty_error));
+				} else {
+					if ("".equalsIgnoreCase(password)) {
+						editTextPassword.requestFocus();
+						editTextPassword.setError(getResources().getString(R.string.nl_login_empty_password_error));
+					} else {
+						boolean onlyDigits = Utils.checkIfOnlyDigits(email);
+						if (onlyDigits) {
+							email = Utils.retrievePhoneNumberTenChars(email);
+							if (!Utils.validPhoneNumber(email)) {
+								editTextEmail.requestFocus();
+								editTextEmail.setError(getResources().getString(R.string.nl_login_invalid_email_error));
+							} else {
+								email = "+91" + email;
+								sendLoginValues(SplashNewActivity.this, email, password, true);
+								phoneNoLogin = true;
+							}
+						} else {
+							if (Utils.isEmailValid(email)) {
+								enteredEmail = email;
+								sendLoginValues(SplashNewActivity.this, email, password, false);
+								phoneNoLogin = false;
+							} else {
+								editTextEmail.requestFocus();
+								editTextEmail.setError("Please enter valid email");
+							}
+						}
+
+						FlurryEventLogger.event(LOGIN_VIA_EMAIL);
+					}
+				}
+			}
+		});
 		editTextEmail.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -504,88 +606,146 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				textViewEmailRequired.setVisibility(editTextEmail.getText().length() > 0 ? View.GONE : View.VISIBLE);
-			}
-		});
-		editTextPassword.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				textViewPasswordRequired.setVisibility(editTextPassword.getText().length() > 0 ? View.GONE : View.VISIBLE);
+				if (Utils.checkIfOnlyDigits(s.toString())) {
+					InputFilter[] fArray = new InputFilter[1];
+					fArray[0] = new InputFilter.LengthFilter(10);
+					editTextEmail.setFilters(fArray);
+				} else {
+					InputFilter[] fArray = new InputFilter[1];
+					fArray[0] = new InputFilter.LengthFilter(1000);
+					editTextEmail.setFilters(fArray);
+				}
 			}
 		});
 
-		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
 
-			}
-		});
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+				facebookLoginHelper.openFacebookSession();
 			}
 		});
 		buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
+						GOOGLE_SIGNIN_REQ_CODE_LOGIN);
 			}
 		});
 		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+				ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
+				startActivity(new Intent(SplashNewActivity.this, ForgotPasswordScreen.class));
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				finish();
+				FlurryEventLogger.event(FORGOT_PASSWORD);
+			}
+		});
 
+		callbackManager = CallbackManager.Factory.create();
+
+		facebookLoginHelper = new FacebookLoginHelper(this, callbackManager, new FacebookLoginCallback() {
+			@Override
+			public void facebookLoginDone(FacebookUserData facebookUserData) {
+				Data.facebookUserData = facebookUserData;
+				sendFacebookLoginValues(SplashNewActivity.this);
+				FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
+			}
+
+			@Override
+			public void facebookLoginError(String message) {
+				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+			}
+		});
+
+		editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				editTextPassword.requestFocus();
+				return true;
+			}
+		});
+		editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				int result = actionId & EditorInfo.IME_MASK_ACTION;
+				switch (result) {
+					case EditorInfo.IME_ACTION_DONE:
+						buttonEmailLogin.performClick();
+						break;
+
+					case EditorInfo.IME_ACTION_NEXT:
+						break;
+
+					default:
+				}
+				return true;
 			}
 		});
 
 
 
 
-		changeUIState(State.SPLASH_INIT);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				getDeviceToken();
+		try{
+			if(getIntent().hasExtra(KEY_SPLASH_STATE)){
+				int stateInt = getIntent().getIntExtra(KEY_SPLASH_STATE, State.SPLASH_INIT.getOrdinal());
+				if(State.LOGIN.getOrdinal() == stateInt){
+					state = State.LOGIN;
+				}
+				else if(State.SIGNUP.getOrdinal() == stateInt){
+					state = State.SIGNUP;
+				}
+				else if(State.SPLASH_LS.getOrdinal() == stateInt){
+					state = State.SPLASH_LS;
+				}
+				else{
+					state = State.SPLASH_INIT;
+				}
 			}
-		}, 500);
+			else{
+				state = State.SPLASH_INIT;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			state = State.SPLASH_INIT;
+		}
+
+		changeUIState(state);
+
+		if(State.SPLASH_INIT == state) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					getDeviceToken();
+				}
+			}, 500);
+		}
 
 
-//		if (getIntent().hasExtra("no_anim")) {
-//			FacebookLoginHelper.logoutFacebook();
-//			viewInitJugnoo.setVisibility(View.GONE);
-//			viewSplashLS.setVisibility(View.GONE);
-//			getDeviceToken();
-//		} else {
-//			viewInitJugnoo.setVisibility(View.VISIBLE);
-//			viewSplashLS.setVisibility(View.VISIBLE);
-//			new Handler().postDelayed(new Runnable() {
-//				@Override
-//				public void run() {
-//					viewInitJugnoo.setVisibility(View.GONE);
-//					getDeviceToken();
-//				}
-//			}, 500);
-//
-//		}
 
 		initiateDeviceInfoVariables();
 		startService(new Intent(this, PushPendingCallsService.class));
 		showLocationEnableDialog();
+
+
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+		// set email screen values according to intent
+		setLoginScreenValuesOnCreate();
+
 	}
 
 	private void changeUIState(State state){
+		imageViewJugnooLogo.requestFocus();
 		switch(state){
 			case SPLASH_INIT:
 				viewInitJugnoo.setVisibility(View.VISIBLE);
@@ -742,22 +902,24 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onResume() {
-		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
-		}
-
-
 		super.onResume();
 		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;
 
 		AppEventsLogger.activateApp(this);
+
+		if(Data.locationFetcher != null){
+			Data.locationFetcher.connect();
+		}
+		else{
+			Data.locationFetcher = new LocationFetcher(this, 1000, 1);
+		}
 	}
 
 
 	public void retryAccessTokenLogin() {
-		if (resumed) {
+		if (State.LOGIN != state && State.SIGNUP != state && resumed) {
 			buttonRefresh.performClick();
 		}
 	}
@@ -767,7 +929,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	protected void onPause() {
 		try {
 			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -778,11 +939,24 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
-			if (0 == resultCode) {
-				Data.locationSettingsNoPressed = true;
+		try {
+			super.onActivityResult(requestCode, resultCode, data);
+			if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
+				if (0 == resultCode) {
+					Data.locationSettingsNoPressed = true;
+				}
 			}
+			else if(requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN){
+				if(RESULT_OK == resultCode){
+					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
+					sendGoogleLoginValues(this);
+				}
+			}
+			else{
+				callbackManager.onActivityResult(requestCode, resultCode, data);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1083,13 +1257,43 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
-					loginDataFetched = false;
-					Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
-					intent.setData(getIntent().getData());
-					startActivity(intent);
-					ActivityCompat.finishAffinity(SplashNewActivity.this);
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				if(State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
+					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
+						loginDataFetched = false;
+						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
+						intent.setData(getIntent().getData());
+						startActivity(intent);
+						ActivityCompat.finishAffinity(SplashNewActivity.this);
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					}
+				}
+				else if(State.LOGIN == state){
+					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
+						Database2.getInstance(SplashNewActivity.this).updateDriverLastLocationTime();
+						Database2.getInstance(SplashNewActivity.this).close();
+
+						Map<String, String> articleParams = new HashMap<String, String>();
+						articleParams.put("username", Data.userData.userName);
+						FlurryAgent.logEvent("App Login", articleParams);
+
+						loginDataFetched = false;
+						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
+						intent.setData(Data.splashIntentUri);
+						startActivity(intent);
+						ActivityCompat.finishAffinity(SplashNewActivity.this);
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					}
+					else if(SplashNewActivity.this.hasWindowFocus() && facebookRegister){
+						facebookRegister = false;
+						sendIntentToRegisterScreen(RegisterScreen.RegisterationType.FACEBOOK);
+					}
+					else if(SplashNewActivity.this.hasWindowFocus() && googleRegister){
+						googleRegister = false;
+						sendIntentToRegisterScreen(RegisterScreen.RegisterationType.GOOGLE);
+					}
+					else if(SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen){
+						sendIntentToOtpScreen();
+					}
 				}
 			}
 		}, 500);
@@ -1106,9 +1310,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	public void onBackPressed() {
-		if(State.LOGIN == state || State.SIGNUP == state){
-			changeUIState(State.SPLASH_LS);
-		} else{
+		if(State.LOGIN == state){
+			performLoginBackPressed();
+		}
+		else if(State.SIGNUP == state){
+
+		}
+		else{
 			super.onBackPressed();
 		}
 	}
@@ -1260,8 +1468,487 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	public enum State{
-		SPLASH_INIT, SPLASH_LS, SPLASH_NO_NET, LOGIN, SIGNUP
+		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4);
 
+		private int ordinal;
+		State(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+	}
+
+
+	public class CustomTextWatcher implements TextWatcher {
+		private TextView textViewRequired;
+		public CustomTextWatcher(TextView textViewRequired){
+			this.textViewRequired = textViewRequired;
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			textViewRequired.setVisibility(s.length() > 0 ? View.GONE : View.VISIBLE);
+		}
+	}
+
+
+	private void setLoginScreenValuesOnCreate(){
+		// set email screen values according to intent
+		try {
+			if(getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterScreen.RegisterationType.EMAIL == RegisterScreen.registerationType){
+				if(phoneNoLogin) {
+					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
+				}
+				else{
+					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (getIntent().hasExtra(KEY_PREVIOUS_LOGIN_EMAIL)) {
+				String previousLoginEmail = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
+				editTextEmail.setText(previousLoginEmail);
+				editTextEmail.setSelection(editTextEmail.getText().length());
+				fromPreviousAccounts = true;
+			}
+			else{
+				fromPreviousAccounts = false;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			fromPreviousAccounts = false;
+		}
+
+		try {
+			if (getIntent().hasExtra(KEY_FORGOT_LOGIN_EMAIL)) {
+				String forgotLoginEmail = getIntent().getStringExtra(KEY_FORGOT_LOGIN_EMAIL);
+				editTextEmail.setText(forgotLoginEmail);
+				editTextEmail.setSelection(editTextEmail.getText().length());
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+
+	public void performLoginBackPressed(){
+		if(fromPreviousAccounts){
+			Intent intent = new Intent(SplashNewActivity.this, MultipleAccountsActivity.class);
+			startActivity(intent);
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		}
+		else {
+			FacebookLoginHelper.logoutFacebook();
+			changeUIState(State.SPLASH_LS);
+		}
+	}
+
+
+	/**
+	 * ASync for login from server
+	 */
+	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			resetFlags();
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			RequestParams params = new RequestParams();
+
+			if(Data.locationFetcher != null){
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			if(isPhoneNumber){
+				params.put("phone_no", emailId);
+			}
+			else{
+				params.put("email", emailId);
+			}
+			params.put("password", password);
+			params.put("device_token", Data.getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", ""+Data.loginLatitude);
+			params.put("longitude", ""+Data.loginLongitude);
+			params.put("client_id", Config.getClientId());
+
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
+
+			Log.i("params", "="+params);
+
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
+					new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+
+							try {
+								jObj = new JSONObject(response);
+
+								int flag = jObj.getInt("flag");
+
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										DialogPopup.alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										DialogPopup.alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										if(isPhoneNumber){
+											enteredEmail = jObj.getString("user_email");
+										}
+										else{
+											enteredEmail = emailId;
+										}
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										accessToken = jObj.getString("access_token");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+										otpErrorMsg = jObj.getString("error");
+										RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
+											Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
+											loginDataFetched = true;
+										}
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									DialogPopup.dismissLoadingDialog();
+								}
+
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+						}
+					});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+
+	public void sendFacebookLoginValues(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			resetFlags();
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			RequestParams params = new RequestParams();
+
+			if(Data.locationFetcher != null){
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+
+			params.put("user_fb_id", Data.facebookUserData.fbId);
+			params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			params.put("fb_access_token", Data.facebookUserData.accessToken);
+			params.put("fb_mail", Data.facebookUserData.userEmail);
+			params.put("username", Data.facebookUserData.userName);
+
+			params.put("device_token", Data.getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", ""+Data.loginLatitude);
+			params.put("longitude", ""+Data.loginLongitude);
+			params.put("client_id", Config.getClientId());
+
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			}
+			else{
+				params.put("device_rooted", "0");
+			}
+
+
+			Log.i("params", ""+params);
+
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getServerUrl() + "/login_using_facebook", params,
+					new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+
+							try {
+								jObj = new JSONObject(response);
+
+								int flag = jObj.getInt("flag");
+
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										facebookRegister = true;
+										notRegisteredMsg = error;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										DialogPopup.alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										accessToken = jObj.getString("access_token");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+										otpErrorMsg = jObj.getString("error");
+										RegisterScreen.registerationType = RegisterScreen.RegisterationType.FACEBOOK;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
+											loginDataFetched = true;
+
+											Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
+										}
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									DialogPopup.dismissLoadingDialog();
+								}
+
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+
+						}
+					});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+
+	public void sendGoogleLoginValues(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			resetFlags();
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			RequestParams params = new RequestParams();
+
+			if(Data.locationFetcher != null){
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
+
+			params.put("device_token", Data.getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", ""+Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", ""+Data.loginLatitude);
+			params.put("longitude", ""+Data.loginLongitude);
+			params.put("client_id", Config.getClientId());
+
+			if(Utils.isDeviceRooted()){
+				params.put("device_rooted", "1");
+			} else{
+				params.put("device_rooted", "0");
+			}
+
+
+			Log.i("params", ""+params);
+
+			AsyncHttpClient client = Data.getClient();
+			client.post(Config.getServerUrl() + "/login_using_google", params,
+					new CustomAsyncHttpResponseHandler() {
+						private JSONObject jObj;
+
+						@Override
+						public void onFailure(Throwable arg3) {
+							Log.e("request fail", arg3.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						}
+
+						@Override
+						public void onSuccess(String response) {
+							Log.i("Server response", "response = " + response);
+
+							try {
+								jObj = new JSONObject(response);
+
+								int flag = jObj.getInt("flag");
+
+								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										googleRegister = true;
+										notRegisteredMsg = error;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+										String error = jObj.getString("error");
+										DialogPopup.alertPopup(activity, "", error);
+									}
+									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+										accessToken = jObj.getString("access_token");
+										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+										otpErrorMsg = jObj.getString("error");
+										RegisterScreen.registerationType = RegisterScreen.RegisterationType.GOOGLE;
+										sendToOtpScreen = true;
+									}
+									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+											new JSONParser().parseAccessTokenLoginData(activity, response);
+											loginDataFetched = true;
+
+											Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
+										}
+									}
+									else{
+										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									}
+									DialogPopup.dismissLoadingDialog();
+								}
+								else{
+									DialogPopup.dismissLoadingDialog();
+								}
+
+							}  catch (Exception exception) {
+								exception.printStackTrace();
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.dismissLoadingDialog();
+							}
+
+						}
+					});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+
+
+	/**
+	 * Send intent to otp screen by making required data objects
+	 *  flag 0 for email, 1 for Facebook
+	 */
+	public void sendIntentToOtpScreen(){
+		DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				DialogPopup.dismissAlertPopup();
+				OTPConfirmScreen.intentFromRegister = false;
+				if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+					OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
+							Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
+							Data.facebookUserData.accessToken,
+							Data.facebookUserData.userEmail,
+							Data.facebookUserData.userName,
+							phoneNoOfUnverifiedAccount, "", "", accessToken);
+				}
+				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
+							Data.googleSignInAccount.getDisplayName(),
+							Data.googleSignInAccount.getEmail(),
+							"",
+							phoneNoOfUnverifiedAccount, "", "", accessToken);
+				}
+				else{
+					OTPConfirmScreen.intentFromRegister = false;
+					OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
+				}
+
+				Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+				intent.putExtra("show_timer", 0);
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+	}
+
+
+	public void sendIntentToRegisterScreen(final RegisterScreen.RegisterationType registerationType){
+		DialogPopup.alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				RegisterScreen.registerationType = registerationType;
+				startActivity(new Intent(SplashNewActivity.this, RegisterScreen.class));
+				finish();
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
 	}
 
 }
