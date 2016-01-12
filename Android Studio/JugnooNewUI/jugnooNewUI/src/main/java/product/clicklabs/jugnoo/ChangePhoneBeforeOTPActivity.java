@@ -95,11 +95,11 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
                 String previousPhoneNumber = "", accessToken = "";
-                if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+                if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
                     previousPhoneNumber = OTPConfirmScreen.facebookRegisterData.phoneNo;
                     accessToken = OTPConfirmScreen.facebookRegisterData.accessToken;
                 }
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					previousPhoneNumber = OTPConfirmScreen.googleRegisterData.phoneNo;
 					accessToken = OTPConfirmScreen.googleRegisterData.accessToken;
 				}
@@ -211,10 +211,10 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
                                 }
                                 else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
                                     String message = jObj.getString("message");
-									if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+									if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
                                         OTPConfirmScreen.facebookRegisterData.phoneNo = updatedField;
                                     }
-									else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+									else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 										OTPConfirmScreen.googleRegisterData.phoneNo = updatedField;
 									}
                                     else{

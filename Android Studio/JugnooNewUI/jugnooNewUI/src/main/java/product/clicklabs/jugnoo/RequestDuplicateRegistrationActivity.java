@@ -100,12 +100,12 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                 String email = "";
                 String phone = "";
 
-                if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+                if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
                     name = OTPConfirmScreen.facebookRegisterData.fbName;
                     email = OTPConfirmScreen.facebookRegisterData.fbUserEmail;
                     phone = OTPConfirmScreen.facebookRegisterData.phoneNo;
                 }
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					name = OTPConfirmScreen.googleRegisterData.name;
 					email = OTPConfirmScreen.googleRegisterData.email;
 					phone = OTPConfirmScreen.googleRegisterData.phoneNo;
@@ -123,12 +123,12 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 
 
         try{
-			if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+			if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
                 textViewRegisterNameValue.setText(OTPConfirmScreen.facebookRegisterData.fbName);
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.facebookRegisterData.fbUserEmail);
                 textViewRegisterPhoneValue.setText(OTPConfirmScreen.facebookRegisterData.phoneNo);
             }
-			else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+			else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 				textViewRegisterNameValue.setText(OTPConfirmScreen.googleRegisterData.name);
 				textViewRegisterEmailValue.setText(OTPConfirmScreen.googleRegisterData.email);
 				textViewRegisterPhoneValue.setText(OTPConfirmScreen.googleRegisterData.phoneNo);
@@ -229,8 +229,8 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			params.put("client_id", Config.getClientId());
 
             try {
-                if (RegisterScreen.multipleCaseJSON != null) {
-                    params.put("users", RegisterScreen.multipleCaseJSON.getJSONArray("users"));
+                if (SplashNewActivity.multipleCaseJSON != null) {
+                    params.put("users", SplashNewActivity.multipleCaseJSON.getJSONArray("users"));
                 }
             } catch(Exception e){
                 e.printStackTrace();

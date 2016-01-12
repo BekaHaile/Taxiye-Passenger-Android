@@ -198,10 +198,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
-					if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
 					}
-					else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode);
 					}
 					else {
@@ -252,10 +252,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			@Override
 			public void onClick(View v) {
-				if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+				if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 					initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
 				}
-				else if (RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType) {
+				else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 					initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
 				}
 				else {
@@ -302,20 +302,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				String otp = data.getQueryParameter("otp");
 
 				String registrationMode = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE,
-						"" + RegisterScreen.registerationType);
+						"" + SplashNewActivity.registerationType);
 				String registerData = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
-				if((""+RegisterScreen.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
+				if((""+SplashNewActivity.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					facebookRegisterData = gson.fromJson(registerData, FacebookRegisterData.class);
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
 				}
-				else if((""+RegisterScreen.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
+				else if((""+SplashNewActivity.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					googleRegisterData = gson.fromJson(registerData, GoogleRegisterData.class);
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
 				}
-				else if((""+RegisterScreen.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
+				else if((""+SplashNewActivity.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					emailRegisterData = gson.fromJson(registerData, EmailRegisterData.class);
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
@@ -327,19 +327,19 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				}
 			}
 			else{
-				if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+				if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + RegisterScreen.RegisterationType.FACEBOOK);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + SplashNewActivity.RegisterationType.FACEBOOK);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(facebookRegisterData, FacebookRegisterData.class));
 				}
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.GOOGLE);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.GOOGLE);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(googleRegisterData, GoogleRegisterData.class));
 				}
 				else{
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.EMAIL);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.EMAIL);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(emailRegisterData, EmailRegisterData.class));
 				}
 			}
@@ -920,7 +920,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	
 	public void performBackPressed(){
 		if(intentFromRegister){
-			Intent intent = new Intent(OTPConfirmScreen.this, RegisterScreen.class);
+			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP);
 			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
