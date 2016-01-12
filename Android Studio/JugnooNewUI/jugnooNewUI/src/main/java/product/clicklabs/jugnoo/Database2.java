@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.NotificationData;
@@ -118,6 +121,12 @@ public class Database2 {                                                        
     private static final String NOTIFICATION_IMAGE = "notification_image";
 
 
+
+
+    private static final String TABLE_LINKS = "table_links";
+    private static final String LINK = "link";
+    private static final String LINK_TIME = "link_time";
+
     /**
      * Creates and opens database for the application use
      *
@@ -214,6 +223,11 @@ public class Database2 {                                                        
                 + TIME_TILL_DISPLAY + " TEXT, "
                 + NOTIFICATION_IMAGE + " TEXT"
                 + ");");
+
+            database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_LINKS + " ("
+            + LINK + " TEXT, "
+            + LINK_TIME + " TEXT"
+            + ");");
         
     }
 
@@ -1017,6 +1031,59 @@ public class Database2 {                                                        
 
     }
 
+
+
+
+
+
+    public void insertLink(String link) {
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(LINK, link);
+            contentValues.put(LINK_TIME, ""+System.currentTimeMillis());
+            database.insert(TABLE_LINKS, null, contentValues);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteLinks(){
+        try{
+            database.execSQL("delete from " + TABLE_LINKS);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String getSavedLinksUpToTime(long timeDiff){
+        long currTime = System.currentTimeMillis();
+        JSONArray linksArr = new JSONArray();
+        try {
+            String[] columns = new String[] { LINK, LINK_TIME };
+            Cursor cursor = database.query(TABLE_LINKS, columns, null, null, null, null, null);
+            if (cursor.getCount() > 0) {
+                int in0 = cursor.getColumnIndex(LINK);
+                int in1 = cursor.getColumnIndex(LINK_TIME);
+
+                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                    try {
+                        long savedTime = Long.parseLong(cursor.getString(in1));
+                        if(Math.abs(currTime - savedTime) <= timeDiff){
+                            JSONObject jObj = new JSONObject();
+                            jObj.put("link", cursor.getString(in0));
+                            jObj.put("timestamp", cursor.getString(in1));
+                            linksArr.put(jObj);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return linksArr.toString();
+    }
 
 
 }

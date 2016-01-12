@@ -9,8 +9,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.SyncHttpClient;
 
-import org.json.JSONObject;
-
 import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -22,8 +20,8 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -199,8 +197,8 @@ public class Data {
 
 	public static LatLng lastRefreshLatLng;
 
-	public static JSONObject branchReferringParams = null;
-	public static String branchReferringLink = "";
+	public static final long BRANCH_LINK_TIME_DIFF = 7 * 24 * 60 * 60 * 1000;
+
 
 
 	public static int TRANSFER_FROM_JEANIE = 0;

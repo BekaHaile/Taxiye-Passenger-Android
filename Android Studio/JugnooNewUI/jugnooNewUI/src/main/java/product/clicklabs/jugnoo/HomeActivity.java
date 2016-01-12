@@ -5763,8 +5763,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
                                 }
 
-								if(Data.branchReferringLink != null){
-									nameValuePairs.add(new BasicNameValuePair("branch_referring_link", Data.branchReferringLink));
+
+                                String links = Database2.getInstance(HomeActivity.this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+								if(links != null){
+                                    if(!"[]".equalsIgnoreCase(links)) {
+                                        nameValuePairs.add(new BasicNameValuePair("branch_referring_links", links));
+                                    }
 								}
 
 								nameValuePairs.add(new BasicNameValuePair("preferred_payment_mode", "" + Data.pickupPaymentOption));

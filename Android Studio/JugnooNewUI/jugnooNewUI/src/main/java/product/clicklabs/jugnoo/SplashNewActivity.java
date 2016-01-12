@@ -141,8 +141,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						Data.branchReferringParams = referringParams;
-						Data.branchReferringLink = referringParams.optString("link", "");
+						String link = referringParams.optString("link", "");
+						if(!"".equalsIgnoreCase(link)){
+							Database2.getInstance(SplashNewActivity.this).insertLink(link);
+						}
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
