@@ -31,7 +31,7 @@ public class SlidingBottomPanel {
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
 
-    private PromoCoupon selectedCoupon;
+    private PromoCoupon selectedCoupon = new CouponInfo(0, "");
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
     private ArrayList<PromoCoupon> promoCoupons;
 
@@ -162,17 +162,14 @@ public class SlidingBottomPanel {
     }
 
     public PromoCoupon getSelectedCoupon(){
-        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-        if(frag != null && frag instanceof SlidingBottomOffersFragment){
-            ((SlidingBottomOffersFragment)frag).update(promoCoupons);
-        }
-
-        return null;
+        return selectedCoupon;
     }
 
     public void setSelectedCoupon(int position){
         if(position > -1 && position < promoCoupons.size()){
             selectedCoupon = promoCoupons.get(position);
+        } else{
+            selectedCoupon = noSelectionCoupon;
         }
     }
 

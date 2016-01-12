@@ -62,8 +62,12 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
     }
 
     private void promotionSelection(ImageView selected, ImageView unSelected){
-        selected.setImageResource(R.drawable.radio_selected_icon);
-        unSelected.setImageResource(R.drawable.radio_unselected_icon);
+        if(selected != null){
+            selected.setImageResource(R.drawable.radio_selected_icon);
+        }
+        if(unSelected != null) {
+            unSelected.setImageResource(R.drawable.radio_unselected_icon);
+        }
     }
 
     public void update(ArrayList<PromoCoupon> promoCoupons){
@@ -90,7 +94,8 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
     }
 
     private void setPromoCouponText(TextView textView, PromoCoupon promoCoupon){
-        if(promoCoupon instanceof CouponInfo){
+        textView.setTag(promoCoupon.id);
+        if(promoCoupon instanceof CouponInfo) {
             textView.setText(((CouponInfo)promoCoupon).title);
         } else if(promoCoupon instanceof PromotionInfo){
             textView.setText(((PromotionInfo)promoCoupon).title);
@@ -102,11 +107,23 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.linearLayoutPromotion1:
-                promotionSelection(radioPromotion1, radioPromotion2);
+                if(activity.getSlidingBottomPanel().getSelectedCoupon().id == (int)textViewPromotion1.getTag()){
+                    promotionSelection(null, radioPromotion1);
+                    activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+                } else {
+                    promotionSelection(radioPromotion1, radioPromotion2);
+                    activity.getSlidingBottomPanel().setSelectedCoupon(0);
+                }
                 break;
 
             case R.id.linearLayoutPromotion2:
-                promotionSelection(radioPromotion2, radioPromotion1);
+                if(activity.getSlidingBottomPanel().getSelectedCoupon().id == (int)textViewPromotion2.getTag()){
+                    promotionSelection(null, radioPromotion2);
+                    activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+                } else {
+                    promotionSelection(radioPromotion2, radioPromotion1);
+                    activity.getSlidingBottomPanel().setSelectedCoupon(1);
+                }
                 break;
         }
     }

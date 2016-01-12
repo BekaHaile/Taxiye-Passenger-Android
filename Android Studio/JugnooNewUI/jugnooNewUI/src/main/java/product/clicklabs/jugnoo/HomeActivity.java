@@ -1093,7 +1093,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		buttonGetARide.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(promotionsListAdapter.getSelectedCoupon());
+                if(slidingBottomPanel.getSelectedCoupon() instanceof CouponInfo){
+                    Log.v(TAG, "selected coupon: "+((CouponInfo)slidingBottomPanel.getSelectedCoupon()).title);
+                } else if(slidingBottomPanel.getSelectedCoupon() instanceof PromotionInfo){
+                    Log.v(TAG, "selected promo: "+((PromotionInfo)slidingBottomPanel.getSelectedCoupon()).title);
+                }
+				boolean proceed = displayAlertAndCheckForSelectedPaytmCoupon(slidingBottomPanel.getSelectedCoupon());
 				if(proceed) {
 					boolean callRequestRide = true;
 					if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
@@ -1112,7 +1117,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						callRequestRide = true;
 					}
 					if (callRequestRide) {
-						promoCouponSelectedForRide = promotionsListAdapter.getSelectedCoupon();
+						promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
 						callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
 						FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
 						if (promoCouponSelectedForRide.id > 0) {
@@ -5165,7 +5170,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             cached = bundle.getBoolean("cached");
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
                     }
                     if (cached) {
                         //Location accuracy is low. Are you sure you want to request an auto to pick you at this location
