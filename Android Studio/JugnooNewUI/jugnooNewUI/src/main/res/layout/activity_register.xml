@@ -135,6 +135,7 @@
                     android:background="#0000"
                     android:capitalize="words"
                     android:gravity="center_vertical"
+                    android:digits="@string/digits_characters_numbers"
                     android:hint="Name"
                     android:paddingLeft="20px"
                     android:paddingRight="20px"
@@ -142,7 +143,8 @@
                     android:textColor="@color/black_text"
                     android:textColorHint="@color/black_text_alpha"
                     android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:textSize="30px"
+                    android:maxLength="50" />
 
                 <ImageView
                     android:layout_width="628px"
@@ -230,7 +232,8 @@
                     android:textColor="@color/black_text"
                     android:textColorHint="@color/black_text_alpha"
                     android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:textSize="30px"
+                    android:maxLength="20" />
 
                 <ImageView
                     android:layout_width="628px"
@@ -245,13 +248,19 @@
                     android:background="#0000"
                     android:gravity="center_vertical"
                     android:hint="Promocode (optional)"
+                    android:inputType="textCapCharacters"
+                    android:textAllCaps="true"
+                    android:capitalize="characters"
+                    android:digits="@string/digits_characters_caps_numbers"
                     android:paddingLeft="20px"
                     android:paddingRight="20px"
                     android:singleLine="true"
                     android:textColor="@color/black_text"
                     android:textColorHint="@color/black_text_alpha"
                     android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:textSize="30px"
+                    android:maxLength="56"
+                    />
 
                 <ImageView
                     android:layout_width="628px"

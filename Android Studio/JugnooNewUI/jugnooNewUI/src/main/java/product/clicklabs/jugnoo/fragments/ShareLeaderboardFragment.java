@@ -68,7 +68,13 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
         activity = (ShareActivity) getActivity();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
-		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+		try {
+			if(linearLayoutRoot != null) {
+				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		buttonLocal = (Button)rootView.findViewById(R.id.buttonLocal);
 		buttonLocal.setTypeface(Fonts.latoRegular(activity));

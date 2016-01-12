@@ -96,6 +96,10 @@ public class UserData {
 		this.paytmError = paytmError;
 	}
 
+	public int getPaytmError(){
+		return paytmError;
+	}
+
 	public void setPaytmBalance(double paytmBalance) {
 		this.paytmBalance = paytmBalance;
 		setTotalWalletBalance();
@@ -131,4 +135,5 @@ public class UserData {
 		this.paytmError = 0;
 		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 	}
+
 }

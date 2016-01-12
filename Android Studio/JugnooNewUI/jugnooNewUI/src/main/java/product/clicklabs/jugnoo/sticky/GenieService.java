@@ -355,7 +355,9 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
                         layoutParams.x = x_cord_Destination;
                         layoutParams.y = y_cord_Destination;
 
-                        windowManager.updateViewLayout(chatheadView, layoutParams);
+                        if(chatheadView.isShown()) {
+                            windowManager.updateViewLayout(chatheadView, layoutParams);
+                        }
 
                         break;
                     case MotionEvent.ACTION_UP:
@@ -449,10 +451,15 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         }
 
         String s;
-        if(Integer.parseInt(eta) == 1){
-            s = eta+" \nmin";
-        }else{
-            s = eta+" \nmins";
+        try {
+            if(Integer.parseInt(eta) == 1){
+				s = eta+" \nmin";
+			}else{
+				s = eta+" \nmins";
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            s = eta;
         }
         SpannableString ss=  new SpannableString(s);
         ss.setSpan(new RelativeSizeSpan(1.75f), 0, 2, 0); // set size
@@ -474,8 +481,9 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         linearLayoutInner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //finish();
-                windowManager.removeView(relativeLayoutJeaniePopup);
+                if(relativeLayoutJeaniePopup.isShown()) {
+                    windowManager.removeView(relativeLayoutJeaniePopup);
+                }
                 stopSelf();
                 Intent intent = new Intent(GenieService.this, SplashNewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -488,7 +496,9 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         imageViewClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                windowManager.removeView(relativeLayoutJeaniePopup);
+                if(relativeLayoutJeaniePopup.isShown()) {
+                    windowManager.removeView(relativeLayoutJeaniePopup);
+                }
                 chatheadView.setVisibility(View.VISIBLE);
             }
         });
@@ -541,44 +551,20 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
                                 baseFair = jObj.optString("base_fare");
                                 fairPerKM = jObj.optString("fare_per_km");
                                 fairPerMin = jObj.optString("fare_per_min");
-                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
-                                        && (Integer.parseInt(eta) != 0)){
+                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) && (Integer.parseInt(eta) != 0)){
+                                    if(relativeLayoutJeaniePopup != null && relativeLayoutJeaniePopup.isShown()) {
+                                        windowManager.removeView(relativeLayoutJeaniePopup);
+                                    }
                                     chatheadView.setVisibility(View.VISIBLE);
 									FlurryEventLogger.event(JUGNOO_STICKY_OPENED);
                                 }
 
                             }  catch (Exception exception) {
                                 exception.printStackTrace();
+                                chatheadView.setVisibility(View.GONE);
                             }
                         }
 
-                        /*@Override
-                        public void onFailure(Throwable arg3) {
-                            chatheadView.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Response find_a_driver", "response = " + response);
-                            try {
-                                JSONObject jObj = new JSONObject(response);
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
-                                eta = jObj.optString("eta");
-                                baseFair = jObj.optString("base_fare");
-                                fairPerKM = jObj.optString("fare_per_km");
-                                fairPerMin = jObj.optString("fare_per_min");
-                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag)
-                                        && (Integer.parseInt(eta) != 0)){
-                                    chatheadView.setVisibility(View.VISIBLE);
-                                }
-
-                            }  catch (Exception exception) {
-                                exception.printStackTrace();
-                            }
-
-
-                        }*/
                     });
         } else {
 
@@ -749,12 +735,16 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
             public void onTick(long t) {
                 long step = (500 - t) / 5;
                 mParams.x = (int) (double) bounceValue(step, x);
-                windowManager.updateViewLayout(chatheadView, mParams);
+                if(chatheadView.isShown()) {
+                    windowManager.updateViewLayout(chatheadView, mParams);
+                }
             }
 
             public void onFinish() {
                 mParams.x = 0;
-                windowManager.updateViewLayout(chatheadView, mParams);
+                if(chatheadView.isShown()) {
+                    windowManager.updateViewLayout(chatheadView, mParams);
+                }
 
                 saveGenieParams(mParams);
 
@@ -806,12 +796,16 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 //                long step = Math.abs((t - 500) / 5);
                 mParams.x = szWindow.x + (int) (double
                         ) bounceValue(step, x) - chatheadView.getWidth();
-                windowManager.updateViewLayout(chatheadView, mParams);
+                if(chatheadView.isShown()) {
+                    windowManager.updateViewLayout(chatheadView, mParams);
+                }
             }
 
             public void onFinish() {
                 mParams.x = szWindow.x - chatheadView.getWidth();
-                windowManager.updateViewLayout(chatheadView, mParams);
+                if(chatheadView.isShown()) {
+                    windowManager.updateViewLayout(chatheadView, mParams);
+                }
 
                 saveGenieParams(mParams);
 
@@ -1619,7 +1613,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
         @Override
         public void run() {
-            // TODO Auto-generated method stub
             if (txtView != null) {
                 txtView.setVisibility(View.GONE);
             }
@@ -1628,7 +1621,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /*// TODO Auto-generated method stub
+        /*//
         Log.d(Utility.LogTag, "ChatHeadService.onStartCommand() -> iLife=" + iLife);
 
         Bundle bd = intent.getExtras();
@@ -1643,7 +1636,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
                     @Override
                     public void run() {
-                        // TODO Auto-generated method stub
                         showMsg(sMsg);
                     }
                 }, 300);
@@ -1652,35 +1644,37 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
         iLife++;*/
 
-        if(intent.hasExtra("package_name")) {
-            packageName = intent.getStringExtra("package_name");
-            Log.d("package name in service","--> "+packageName);
-        }
+        try {
+            if(intent.hasExtra("package_name")) {
+				packageName = intent.getStringExtra("package_name");
+				Log.d("package name in service","--> "+packageName);
+			}
 
-        if(intent.hasExtra("latitude")){
-            double latitude  = intent.getDoubleExtra("latitude", 0);
-            double longitude  = intent.getDoubleExtra("longitude", 0);
-            latLng = new LatLng(latitude, longitude);
+            if(intent.hasExtra("latitude")){
+				double latitude  = intent.getDoubleExtra("latitude", 0);
+				double longitude  = intent.getDoubleExtra("longitude", 0);
+				latLng = new LatLng(latitude, longitude);
 
-            getNearestDriver();
-            Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
-            //chatheadView.setVisibility(View.VISIBLE);
-            locationFetcherBG.destroy();
-        }
-        else{
-            if(Utils.compareDouble(LocationFetcher.getSavedLatFromSP(this), 0) != 0
-                    && Utils.compareDouble(LocationFetcher.getSavedLngFromSP(this), 0) != 0 ){
+				getNearestDriver();
+				Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
+				locationFetcherBG.destroy();
+			}
+			else{
+				if(Utils.compareDouble(LocationFetcher.getSavedLatFromSP(this), 0) != 0
+						&& Utils.compareDouble(LocationFetcher.getSavedLngFromSP(this), 0) != 0 ){
 
-                double latitude  = LocationFetcher.getSavedLatFromSP(this);
-                double longitude  = LocationFetcher.getSavedLngFromSP(this);
-                latLng = new LatLng(latitude, longitude);
+					double latitude  = LocationFetcher.getSavedLatFromSP(this);
+					double longitude  = LocationFetcher.getSavedLngFromSP(this);
+					latLng = new LatLng(latitude, longitude);
 
-                getNearestDriver();
-                Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
-                //chatheadView.setVisibility(View.VISIBLE);
-                locationFetcherBG.destroy();
+					getNearestDriver();
+					Log.v("sticky latlng", "--> " + latitude + ", " + longitude);
+					locationFetcherBG.destroy();
 
-            }
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return START_STICKY;
@@ -1691,7 +1685,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         FlurryAgent.onEndSession(this);
         Prefs.with(this).save("remove_chat_head", packageName);

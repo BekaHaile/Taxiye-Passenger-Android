@@ -330,20 +330,28 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
         imageViewFacebookLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
-				Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
-				loginDataFetched = false;
-				facebookLoginHelper.openFacebookSession();
+				if(AppStatus.getInstance(SplashLogin.this).isOnline(SplashLogin.this)) {
+					FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+					Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+					loginDataFetched = false;
+					facebookLoginHelper.openFacebookSession();
+				} else{
+					DialogPopup.alertPopup(SplashLogin.this, "", Data.CHECK_INTERNET_MSG);
+				}
 			}
 		});
 
         imageViewGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
-                Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
-                loginDataFetched = false;
-                startActivityForResult(new Intent(SplashLogin.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+				if(AppStatus.getInstance(SplashLogin.this).isOnline(SplashLogin.this)) {
+					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+					Utils.hideSoftKeyboard(SplashLogin.this, editTextEmail);
+					loginDataFetched = false;
+					startActivityForResult(new Intent(SplashLogin.this, GoogleSigninActivity.class), GOOGLE_SIGNIN_REQ_CODE);
+				} else{
+					DialogPopup.alertPopup(SplashLogin.this, "", Data.CHECK_INTERNET_MSG);
+				}
             }
         });
 

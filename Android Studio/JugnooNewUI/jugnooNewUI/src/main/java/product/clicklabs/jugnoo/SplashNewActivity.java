@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -82,7 +81,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	LinearLayout relative;
 
 	ImageView imageViewJugnooLogo;
-	ImageView imageViewDebug1, imageViewDebug2;
+	ImageView imageViewDebug1, imageViewDebug2, imageViewDebug3;
 
 	RelativeLayout relativeLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
@@ -93,8 +92,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	boolean loginDataFetched = false, resumed = false;
 
-	boolean touchedDown1 = false, touchedDown2 = false;
 	int debugState = 0;
+	boolean hold1 = false, hold2 = false;
 
 
 
@@ -142,8 +141,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						Data.branchReferringParams = referringParams;
-						Data.branchReferringLink = referringParams.optString("link", "");
+						String link = referringParams.optString("link", "");
+						if(!"".equalsIgnoreCase(link)){
+							Database2.getInstance(SplashNewActivity.this).insertLink(link);
+						}
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
@@ -257,9 +258,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		loginDataFetched = false;
 		resumed = false;
 
-		touchedDown1 = false;
-		touchedDown2 = false;
 		debugState = 0;
+
+		hold1 = false; hold2 = false;
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
@@ -269,6 +270,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
 		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
+		imageViewDebug3 = (ImageView) findViewById(R.id.imageViewDebug3);
 
 
 		relativeLayoutLoginSignupButtons = (RelativeLayout) findViewById(R.id.relativeLayoutLoginSignupButtons);
@@ -299,7 +301,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 				Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
 				startActivity(intent);
-				finish();
+				ActivityCompat.finishAffinity(SplashNewActivity.this);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -312,7 +314,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
 				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 				startActivity(intent);
-				finish();
+				ActivityCompat.finishAffinity(SplashNewActivity.this);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -361,92 +363,36 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 //        });
 
 
-		imageViewDebug1.setOnClickListener(new View.OnClickListener() {
+		imageViewDebug1.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
-			public void onClick(View v) {
-				touchedDown1 = false;
-			}
-		});
-
-		imageViewDebug1.setOnTouchListener(new View.OnTouchListener() {
-			Handler handler = new Handler();
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					if (touchedDown1) {
-						debugState = 1;
-						relative.setBackgroundColor(getResources().getColor(R.color.yellow_alpha));
-						new Handler().postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								relative.setBackgroundColor(getResources().getColor(R.color.yellow));
-							}
-						}, 200);
-					}
-				}
-			};
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				int action = event.getAction();
-				switch (action) {
-					case MotionEvent.ACTION_DOWN:
-						debugState = 0;
-						touchedDown1 = true;
-						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 4000);
-						break;
-
-					case MotionEvent.ACTION_UP:
-						touchedDown1 = false;
-						break;
-				}
-
+			public boolean onLongClick(View v) {
+				hold1 = true;
+				callAfterBothHoldSuccessfully();
 				return false;
 			}
 		});
 
-
-		imageViewDebug2.setOnClickListener(new View.OnClickListener() {
+		imageViewDebug2.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
-			public void onClick(View v) {
-				touchedDown2 = false;
+			public boolean onLongClick(View v) {
+				hold2 = true;
+				callAfterBothHoldSuccessfully();
+				return false;
 			}
 		});
 
-		imageViewDebug2.setOnTouchListener(new View.OnTouchListener() {
-			Handler handler = new Handler();
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					if (touchedDown2 && debugState == 1) {
-						debugState = 0;
-						confirmDebugPasswordPopup(SplashNewActivity.this);
-					}
-				}
-			};
-
+		imageViewDebug3.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				int action = event.getAction();
+			public boolean onLongClick(View v) {
 				if (debugState == 1) {
-					switch (action) {
-						case MotionEvent.ACTION_DOWN:
-							touchedDown2 = true;
-							handler.removeCallbacks(runnable);
-							handler.postDelayed(runnable, 4000);
-							break;
-
-						case MotionEvent.ACTION_UP:
-							touchedDown2 = false;
-							debugState = 0;
-							break;
-					}
+					confirmDebugPasswordPopup(SplashNewActivity.this);
+					resetDebugFlags();
 				}
-
 				return false;
 			}
 		});
+
+
 
 
 		try {                                                                                        // to get AppVersion, OS version, country code and device name
@@ -501,6 +447,31 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 
+		if (Data.locationFetcher == null) {
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		}
+
+	}
+
+	private void callAfterBothHoldSuccessfully(){
+		if(hold1 && hold2) {
+			debugState = 1;
+			relative.setBackgroundColor(getResources().getColor(R.color.yellow_alpha));
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					relative.setBackgroundColor(getResources().getColor(R.color.yellow));
+				}
+			}, 200);
+			hold1 = false;
+			hold2 = false;
+		}
+	}
+
+	private void resetDebugFlags(){
+		hold1 = false;
+		hold2 = false;
+		debugState = 0;
 	}
 
 	private void sendToRegisterThroughSms(String referralCode){
@@ -511,7 +482,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
 			intent.putExtra("referral_code", referralCode);
 			startActivity(intent);
-			finish();
+			ActivityCompat.finishAffinity(SplashNewActivity.this);
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		}
 	}
@@ -542,7 +513,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							finish();
+							ActivityCompat.finishAffinity(SplashNewActivity.this);
 						}
 					}, false, false);
 
@@ -576,9 +547,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onResume() {
-		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
-		}
+
+		Data.locationFetcher.connect();
 
 
 		super.onResume();
@@ -601,7 +571,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	protected void onPause() {
 		try {
 			Data.locationFetcher.destroy();
-			Data.locationFetcher = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -887,7 +856,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View view) {
 					dialog.dismiss();
 					if (isForced == 1) {
-						activity.finish();
+						ActivityCompat.finishAffinity(activity);
 					}
 				}
 			});
@@ -900,7 +869,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
 					activity.startActivity(intent);
-					activity.finish();
+					ActivityCompat.finishAffinity(activity);
 				}
 
 			});
@@ -1014,7 +983,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							dialog.dismiss();
 							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							activity.finish();
+							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
 							etCode.setError("Code not matched.");
@@ -1061,6 +1030,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 			dialog.show();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Utils.showSoftKeyboard(SplashNewActivity.this, etCode);
+				}
+			}, 100);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

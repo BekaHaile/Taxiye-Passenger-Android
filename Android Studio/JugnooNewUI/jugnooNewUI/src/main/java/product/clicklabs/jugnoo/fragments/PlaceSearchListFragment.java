@@ -63,6 +63,10 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	private final int ADD_HOME = 2, ADD_WORK = 3;
 
+	public PlaceSearchListFragment(){
+
+	}
+
 	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler, GoogleApiClient mGoogleApiClient){
 		this.searchListActionsHandler = searchListActionsHandler;
 		this.mGoogleApiClient = mGoogleApiClient;

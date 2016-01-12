@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -280,7 +281,13 @@ public class SearchListAdapter extends BaseAdapter{
 			@Override
 			public void run() {
 				if (autoCompleteSearchResultsForSearch.size() == 0) {
-                    autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult("No results found", "", ""));
+                    if(AppStatus.getInstance(context).isOnline(context)) {
+                        autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(context.getResources()
+                                .getString(R.string.no_results_found), "", ""));
+                    } else{
+                        autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(context.getResources()
+                                .getString(R.string.no_internet_connection), "", ""));
+                    }
                 }
                 SearchListAdapter.this.setResults(autoCompleteSearchResultsForSearch);
                 searchListActionsHandler.onSearchPost();
