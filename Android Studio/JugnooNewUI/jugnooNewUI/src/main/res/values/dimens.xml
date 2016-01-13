@@ -11,7 +11,7 @@
 
     <dimen name="top_bar_height">96px</dimen>
 
-    <dimen name="top_bar_title_text_size">32px</dimen>
+    <dimen name="top_bar_title_text_size">34px</dimen>
 
 
     <dimen name="button_corner_radius">5dp</dimen>
@@ -19,7 +19,7 @@
     <dimen name="wallet_button_corner_radius">2dp</dimen>
     <dimen name="image_bg_corner_radius">5dp</dimen>
     <dimen name="image_bg_stroke">1dp</dimen>
-    <dimen name="button_text_size">36px</dimen>
+    <dimen name="button_text_size">34px</dimen>
     <dimen name="button_small_text_size">30px</dimen>
     <dimen name="menu_width">495px</dimen>
 

@@ -720,9 +720,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
         gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
-        editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback); editTextRSFeedback.setTypeface(Fonts.latoRegular(this));
-        buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.latoRegular(this));
-        buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback); buttonRSSkipFeedback.setTypeface(Fonts.latoRegular(this));
+        editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback); editTextRSFeedback.setTypeface(Fonts.mavenLight(this));
+        buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(this));
+        buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback); buttonRSSkipFeedback.setTypeface(Fonts.mavenLight(this));
         textViewRSScroll = (TextView) findViewById(R.id.textViewRSScroll);
 
         textViewRSWhatImprove.setVisibility(View.GONE);
