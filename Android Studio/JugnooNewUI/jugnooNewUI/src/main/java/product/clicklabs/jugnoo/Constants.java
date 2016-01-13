@@ -38,5 +38,14 @@ public interface Constants {
 	String KEY_FORGOT_LOGIN_EMAIL = "forgot_login_email";
 	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
 	String KEY_BACK_FROM_OTP = "back_from_otp";
+	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+
+	String POST_DATA = "post_data";
+
+
+	String KEY_USER_DEBT = "user_debt";
+	String KEY_CLIENT_ID = "client_id";
+	String KEY_IP_ADDRESS= "ip_addr";
+
 
 }

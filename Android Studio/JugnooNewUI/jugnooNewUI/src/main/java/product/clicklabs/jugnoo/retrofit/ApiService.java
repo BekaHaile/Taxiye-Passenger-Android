@@ -6,6 +6,7 @@ import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FieldMap;
@@ -39,5 +40,10 @@ public interface ApiService {
     @POST("/show_available_promotions")
     void showAvailablePromotionsCall(@FieldMap Map<String, String> params,
                          Callback<ShowPromotionsResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/paytm/wallet/adjust_money")
+    void adjustUserDebt(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
 
 }

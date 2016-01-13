@@ -59,6 +59,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
 
         progressBar = (ProgressWheel) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.latoRegular(this));
 
@@ -185,6 +186,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             textViewInfo.setVisibility(View.VISIBLE);
             textViewInfo.setText(data);
             webview.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         } else {
             textViewInfo.setVisibility(View.GONE);
             webview.setVisibility(View.VISIBLE);

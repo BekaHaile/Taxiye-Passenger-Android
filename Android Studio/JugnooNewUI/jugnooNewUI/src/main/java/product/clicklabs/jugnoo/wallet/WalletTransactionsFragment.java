@@ -388,7 +388,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	 */
 	public void performBackPressed() {
 		try {
-			paymentActivity.getSupportFragmentManager().popBackStack ("WalletTransactionsFragment", getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+			paymentActivity.getSupportFragmentManager().popBackStack(WalletTransactionsFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
