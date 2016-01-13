@@ -15,7 +15,7 @@
             android:layout_height="96px"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@color/yellow" >
+            android:background="@drawable/nl_background_theme_color" >
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -93,7 +93,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -121,7 +121,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -169,7 +169,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -197,7 +197,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -226,7 +226,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -254,7 +254,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -282,7 +282,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -311,7 +311,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked_new"
+                        android:src="@drawable/check_box_checked"
                         android:tag="mwar"
                         />
                 </RelativeLayout>
@@ -337,7 +337,7 @@
                         android:layout_height="100px"
                         android:layout_marginRight="45px"
                         android:layout_alignParentRight="true"
-                        android:background="@drawable/button_yellow_white_border_selector"
+                        android:background="@drawable/button_theme"
                         android:text="SAVE"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/button_text_size" />
@@ -347,7 +347,7 @@
                         android:layout_width="280px"
                         android:layout_height="100px"
                         android:layout_marginLeft="45px"
-                        android:background="@drawable/button_yellow_white_border_selector"
+                        android:background="@drawable/button_theme"
                         android:text="CANCEL"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/button_text_size" />

@@ -644,18 +644,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		linearLayoutInRideDriverInfo = (LinearLayout) findViewById(R.id.linearLayoutInRideDriverInfo);
         imageViewInRideDriver = (ImageView) findViewById(R.id.imageViewInRideDriver);
         textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName);
-        textViewInRideDriverName.setTypeface(Fonts.latoRegular(this));
+        textViewInRideDriverName.setTypeface(Fonts.mavenLight(this));
         textViewInRideDriverCarNumber = (TextView) findViewById(R.id.textViewInRideDriverCarNumber);
-        textViewInRideDriverCarNumber.setTypeface(Fonts.latoRegular(this));
+        textViewInRideDriverCarNumber.setTypeface(Fonts.mavenLight(this));
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
-        textViewInRideState.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        textViewInRideState.setTypeface(Fonts.mavenLight(this));
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
-        buttonCancelRide.setTypeface(Fonts.latoRegular(this));
+        buttonCancelRide.setTypeface(Fonts.mavenLight(this));
 		buttonAddPaytmCash = (Button) findViewById(R.id.buttonAddPaytmCash);
-		buttonAddPaytmCash.setTypeface(Fonts.latoRegular(this));
+		buttonAddPaytmCash.setTypeface(Fonts.mavenLight(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
-        buttonCallDriver.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        buttonCallDriver.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
 
@@ -663,7 +663,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		linearLayoutInRideBottom = (LinearLayout) findViewById(R.id.linearLayoutInRideBottom);
 		relativeLayoutIRPaymentOption = (RelativeLayout) findViewById(R.id.relativeLayoutIRPaymentOption);
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.latoRegular(this));
-		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.latoRegular(this));
+		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenRegular(this));
 		textViewInRideMinimumFare = (TextView) findViewById(R.id.textViewInRideMinimumFare); textViewInRideMinimumFare.setTypeface(Fonts.latoRegular(this));
 		imageViewIRPaymentOptionPaytm = (ImageView) findViewById(R.id.imageViewIRPaymentOptionPaytm);
 		imageViewIRPaymentOptionCash = (ImageView) findViewById(R.id.imageViewIRPaymentOptionCash);
@@ -1647,7 +1647,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewMenu = (ImageView) root.findViewById(R.id.imageViewMenu);
         imageViewSearchCancel = (ImageView) root.findViewById(R.id.imageViewSearchCancel);
         imageViewBack = (ImageView) root.findViewById(R.id.imageViewBack);
-        title = (TextView) root.findViewById(R.id.title);title.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        title = (TextView) root.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(this));
         checkServerBtn = (Button) root.findViewById(R.id.checkServerBtn);
         imageViewHelp = (ImageView) root.findViewById(R.id.imageViewHelp);
         jugnooShopImageView = (ImageView) root.findViewById(R.id.jugnooShopImageView);
@@ -2142,7 +2142,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-
+                        slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2320,7 +2320,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Log.i("marker added", "REQUEST_FINAL");
                         }
 
-
+                        slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);

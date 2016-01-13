@@ -83,7 +83,7 @@
     <dimen name="line_width">2px</dimen>
 
     <dimen name="dialog_border_width">2px</dimen>
-    <dimen name="button_width">648px</dimen>
+    <dimen name="button_width">400px</dimen>
     <dimen name="button_height">80px</dimen>
 
 
@@ -116,6 +116,7 @@
     <dimen name="share_lb_button_height">80px</dimen>
     <dimen name="share_lb_text_view_layout_height">80px</dimen>
     <dimen name="text_size_40">40px</dimen>
+    <dimen name="text_size_38">38px</dimen>
     <dimen name="text_size_34">34px</dimen>
     <dimen name="text_size_32">32px</dimen>
     <dimen name="text_size_26">26px</dimen>

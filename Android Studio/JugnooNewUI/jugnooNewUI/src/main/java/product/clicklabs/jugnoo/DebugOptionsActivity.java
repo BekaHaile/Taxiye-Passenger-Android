@@ -183,20 +183,20 @@ public class DebugOptionsActivity extends BaseActivity {
 
         if(showAllDriversValue == 1){
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked_new);
+            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
         }
         else{
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
         }
 
         if(showDriverInfoValue == 1){
             relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
-            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked_new);
+            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
         }
         else{
             relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
-            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
         }
 
         setServerUI(selectedServer);
@@ -209,11 +209,11 @@ public class DebugOptionsActivity extends BaseActivity {
 				if (showAllDriversValue == 0) {
 					showAllDriversValue = 1;
 					relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked_new);
+					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
 				} else {
 					showAllDriversValue = 0;
 					relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked_new);
+					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
 				}
 			}
 		});
@@ -225,12 +225,12 @@ public class DebugOptionsActivity extends BaseActivity {
                 if(showDriverInfoValue == 0){
                     showDriverInfoValue = 1;
                     relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
-                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked_new);
+                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
                 }
                 else{
                     showDriverInfoValue = 0;
                     relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
-                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked_new);
+                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
                 }
             }
         });
@@ -334,12 +334,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDevServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -349,12 +349,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -364,12 +364,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -379,12 +379,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -394,12 +394,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.WHITE);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_checked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_checked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
 		else{
 			relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -409,12 +409,12 @@ public class DebugOptionsActivity extends BaseActivity {
 			relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.WHITE);
 
-			imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_checked_new);
+			imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_checked);
 
 			editTextCustom.setText(selectedServer);
 			editTextCustom.setSelection(editTextCustom.getText().toString().length());

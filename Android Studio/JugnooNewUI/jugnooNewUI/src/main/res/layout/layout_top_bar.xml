@@ -50,7 +50,7 @@
             android:gravity="center"
             android:text="JUGNOO"
             android:textColor="@color/white"
-            android:textSize="32px"/>
+            android:textSize="@dimen/text_size_34"/>
 
 
         <LinearLayout

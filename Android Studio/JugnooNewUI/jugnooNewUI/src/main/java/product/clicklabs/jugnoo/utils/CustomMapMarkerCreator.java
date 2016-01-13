@@ -95,8 +95,8 @@ public class CustomMapMarkerCreator {
 		final Rect boundsText = new Rect();
 
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(86.0f * 0.85 * scale);
-		int height = (int)(117.0f * 0.85 * scale);
+		int width = (int)(77.0f * 0.85 * scale);
+		int height = (int)(130.0f * 0.85 * scale);
 
 		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);

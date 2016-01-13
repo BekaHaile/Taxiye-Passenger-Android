@@ -41,6 +41,12 @@
             android:textColor="@color/grey_dark"
             android:textSize="28px" />
     </RelativeLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/relativeLayoutInRideInfo"
+        android:rotation="180"
+        android:src="@drawable/shadow_up" />
 
     <LinearLayout
         android:id="@+id/linearLayoutFinalDropLocationClick"
@@ -119,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
+                android:layout_marginLeft="50px"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -150,8 +156,8 @@
                 android:layout_marginLeft="10px"
                 android:layout_toRightOf="@+id/linearLayoutIRPaymentOption"
                 android:text="PAYTM WALLET"
-                android:textColor="@color/grey_dark"
-                android:textSize="30px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
 
             <TextView
                 android:id="@+id/textViewIRPaymentOptionValue"
@@ -162,8 +168,8 @@
                 android:layout_marginRight="20px"
                 android:gravity="right"
                 android:text="Rs. 0"
-                android:textColor="@color/grey_dark"
-                android:textSize="30px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -190,8 +196,8 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="Driver Name"
-                android:textColor="@color/grey_dark"
-                android:textSize="30px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
 
             <TextView
                 android:id="@+id/textViewInRideDriverCarNumber"
@@ -202,8 +208,8 @@
                 android:maxLines="2"
                 android:text="Car Number"
                 android:layout_marginLeft="10px"
-                android:textColor="@color/grey_dark"
-                android:textSize="26px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideDriverImage"
@@ -240,8 +246,8 @@
                 android:gravity="center"
                 android:maxLines="2"
                 android:text="Driver\nEnroute"
-                android:textColor="@color/grey_dark"
-                android:textSize="30px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
 
         </RelativeLayout>
 
@@ -261,11 +267,11 @@
                 android:id="@+id/buttonCancelRide"
                 android:layout_width="359px"
                 android:layout_height="match_parent"
-                android:background="@drawable/button_white_yellow_blr_selector"
+                android:background="@drawable/bg_theme_color_to_white_selector"
                 android:singleLine="true"
                 android:text="Cancel Ride"
                 android:textColor="@drawable/text_color_yellow_white_selector"
-                android:textSize="30px"
+                android:textSize="@dimen/text_size_32"
                 android:visibility="gone" />
 
             <Button
@@ -276,7 +282,7 @@
                 android:singleLine="true"
                 android:text="Add Paytm Cash"
                 android:textColor="@drawable/text_color_yellow_white_selector"
-                android:textSize="30px"
+                android:textSize="@dimen/text_size_32"
                 android:visibility="visible" />
 
 
@@ -297,7 +303,7 @@
                 android:singleLine="true"
                 android:text="Call Driver"
                 android:textColor="@drawable/text_color_yellow_white_selector"
-                android:textSize="30px" />
+                android:textSize="@dimen/text_size_32" />
 
         </LinearLayout>
     </LinearLayout>

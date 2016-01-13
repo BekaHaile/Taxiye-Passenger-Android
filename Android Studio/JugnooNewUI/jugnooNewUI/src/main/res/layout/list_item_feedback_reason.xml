@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/relative"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="720px"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:splitMotionEvents="false">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="720px"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:splitMotionEvents="false">
 
 
     <ImageView
         android:id="@+id/imageViewFeedbackReasonCheck"
-        android:layout_width="40px"
-        android:layout_height="40px"
+        android:layout_width="24px"
+        android:layout_height="24px"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30px"
-        android:src="@drawable/check_box_checked_new"
-        android:tag="mwar"
-        />
+        android:src="@drawable/check_box_checked"
+        android:tag="mwar" />
 
 
     <TextView
@@ -26,7 +26,7 @@
         android:padding="14px"
         android:text="Reason"
         android:textColor="@color/grey_dark_more"
-        android:textSize="28px"/>
+        android:textSize="28px" />
 
 
 </LinearLayout>
