@@ -52,9 +52,9 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
+public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
-	private final String TAG = "OTPConfirmScreen";
+	private final String TAG = OTPConfirmScreen.class.getSimpleName();
 
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -107,30 +107,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-
-		try {
-			String otp = "";
-			if(intent.hasExtra("message")){
-				String message = intent.getStringExtra("message");
-				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
-				otp = arr[1];
-				otp = otp.replaceAll("\\.", "");
-			} else if(intent.hasExtra("otp")){
-				otp = intent.getStringExtra("otp");
-			}
-
-			if(Utils.checkIfOnlyDigits(otp)){
-				if(!"".equalsIgnoreCase(otp)) {
-					editTextOTP.setText(otp);
-					editTextOTP.setSelection(editTextOTP.getText().length());
-					buttonVerify.performClick();
-				}
-			}
-
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
+		retrieveOTPFromSMS(intent);
 		super.onNewIntent(intent);
 	}
 
@@ -291,6 +268,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+
 		//new start
 		try {
 			//jungooautos-verify://app?otp=1234
@@ -404,19 +382,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		OTP_SCREEN_OPEN = "yes";
 
 
-//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-//			@Override
-//			public void keyboardOpened() {
-//
-//			}
-//
-//			@Override
-//			public void keyBoardClosed() {
-//
-//			}
-//		}));
-
-
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				retrieveOTPFromSMS(getIntent());
+			}
+		});
 
 	}
 
@@ -989,6 +960,32 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	};
 
+
+
+
+	private void retrieveOTPFromSMS(Intent intent){
+		try {
+			String otp = "";
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+				otp = arr[1];
+				otp = otp.replaceAll("\\.", "");
+			} else if(intent.hasExtra(KEY_OTP)){
+				otp = intent.getStringExtra(KEY_OTP);
+			}
+
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					editTextOTP.setText(otp);
+					editTextOTP.setSelection(editTextOTP.getText().length());
+					buttonVerify.performClick();
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	
 }

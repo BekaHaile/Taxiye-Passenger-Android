@@ -44,4 +44,6 @@ public interface Constants {
 	String KEY_IP_ADDRESS= "ip_addr";
 
 
+	String KEY_OTP = "otp";
+
 }

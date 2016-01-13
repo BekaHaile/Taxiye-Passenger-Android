@@ -74,7 +74,7 @@ import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames {
+public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
 
 	//adding drop location
 
@@ -120,7 +120,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
-
 							if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
 								Data.deepLinkPickup = 1;
 								Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
@@ -136,7 +135,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									}
 								}
 							}
-
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -145,6 +143,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						if(!"".equalsIgnoreCase(link)){
 							Database2.getInstance(SplashNewActivity.this).insertLink(link);
 						}
+
+						fetchPhoneNoOtpFromBranchParams(referringParams);
+
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
@@ -159,6 +160,23 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		FlurryAgent.init(this, Config.getFlurryKey());
 		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 		FlurryAgent.onEvent("Splash started");
+	}
+
+
+	private void fetchPhoneNoOtpFromBranchParams(JSONObject referringParams){
+		try {
+			String phoneNumber = referringParams.optString(KEY_PHONE_NO, "");
+			String otp = referringParams.optString(KEY_OTP, "");
+			if(!"".equalsIgnoreCase(phoneNumber) && !"".equalsIgnoreCase(otp)){
+				Intent intent = new Intent(this, SplashLogin.class);
+				intent.putExtra(KEY_PHONE_NO, phoneNumber);
+				intent.putExtra(KEY_OTP, otp);
+				startActivity(intent);
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
