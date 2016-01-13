@@ -22,9 +22,9 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="0px"
             android:gravity="center"
-            android:text="Please enter the One Time Password sent to"
-            android:textColor="@color/black_text"
-            android:textSize="32px"/>
+            android:text="@string/nl_otp_please_enter_otp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_32"/>
 
 
         <LinearLayout
@@ -41,9 +41,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="+919999999999"
+                android:text=""
                 android:textColor="@color/black_text"
-                android:textSize="32px"/>
+                android:textSize="@dimen/text_size_32"/>
 
             <ImageView
                 android:id="@+id/imageViewSep"
@@ -73,9 +73,9 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="60px"
             android:gravity="center"
-            android:text="Enter One Time Password"
-            android:textColor="@color/black_text_alpha"
-            android:textSize="30px"
+            android:text="@string/nl_otp_enter_otp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30"
             />
 
         <EditText
@@ -92,16 +92,16 @@
             android:maxLength="4"
             android:paddingLeft="20px"
             android:paddingRight="20px"
-            android:textColor="@color/black_text"
-            android:textColorHint="@color/black_text_alpha"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
             android:textCursorDrawable="@null"
-            android:textSize="30px"/>
+            android:textSize="@dimen/text_size_30"/>
 
         <ImageView
             android:layout_width="400px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
-            android:src="@color/black_translucent"/>
+            android:src="@color/theme_color"/>
 
 
         <LinearLayout
@@ -111,7 +111,7 @@
             android:layout_marginTop="120px"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             >
 
             <TextView
@@ -120,9 +120,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="Waiting to automatically detect OTP"
-                android:textColor="@color/grey_dark_more"
-                android:textSize="32px"/>
+                android:text="@string/nl_otp_waiting_to_detect_otp"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -138,7 +138,7 @@
                     android:id="@+id/imageViewYellowLoadingBar"
                     android:layout_width="530px"
                     android:layout_height="20px"
-                    android:src="@drawable/yellow_loading_bar"
+                    android:src="@drawable/theme_color_loading_bar"
                     android:tag="mwar"/>
 
             </RelativeLayout>
@@ -151,8 +151,8 @@
                 android:layout_marginTop="15px"
                 android:gravity="center"
                 android:text="0:30"
-                android:textColor="@drawable/text_color_black_alpha_selector"
-                android:textSize="30px"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30"/>
 
         </LinearLayout>
 
@@ -163,10 +163,10 @@
             android:layout_height="100px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="110px"
-            android:background="@drawable/button_yellow"
-            android:text="VERIFY ME"
+            android:background="@drawable/button_theme"
+            android:text="@string/nl_otp_verify"
             android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size"
+            android:textSize="@dimen/text_size_40"
             />
 
 
@@ -181,7 +181,6 @@
                 android:id="@+id/relativeLayoutOTPThroughCall"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-
                 android:background="@color/white_light_grey"
                 android:visibility="visible"
                 >
@@ -193,9 +192,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="35px"
                     android:gravity="center"
-                    android:text="Receive the OTP via call"
-                    android:textColor="@color/black_text"
-                    android:textSize="30px"/>
+                    android:text="@string/nl_otp_receive_otp_via_call"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30"/>
 
 
                 <ImageView
@@ -212,7 +211,7 @@
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center_horizontal"
-                    android:src="@color/yellow_alpha"/>
+                    android:src="@color/theme_color"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -229,8 +228,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="OR"
-                    android:textSize="30px"
+                    android:textColor="@color/text_color"
+                    android:text="@string/or"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/text_size_30"
                     />
             </RelativeLayout>
 
@@ -249,9 +250,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="35px"
                     android:gravity="center"
-                    android:text="Give us a missed call to verify"
-                    android:textColor="@color/black_text"
-                    android:textSize="30px"/>
+                    android:text="@string/nl_otp_give_missed_call"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30"/>
 
 
                 <ImageView
@@ -268,7 +269,7 @@
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center_horizontal"
-                    android:src="@color/yellow_alpha"/>
+                    android:src="@color/theme_color"/>
             </RelativeLayout>
 
         </LinearLayout>

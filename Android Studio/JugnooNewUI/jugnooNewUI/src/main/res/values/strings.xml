@@ -319,6 +319,7 @@
 	<!-- NL Forgot Passowrd screen-->
 	<string name="nl_forgot_password">Forgot Password</string>
 	<string name="nl_forgot_password_help">Please provide your email id or phone number. We will send you the instructions to reset your password.</string>
+	<string name="nl_forgot_reset_password">Reset Password</string>
 
 
 	<!-- NL Splash screen-->
@@ -342,6 +343,17 @@
 	<string name="nl_signup_email">Email</string>
 	<string name="nl_signup_promocode">Promocode (optional)</string>
 	<string name="nl_signup_plus91">+91</string>
+
+
+	<!-- NL OTP-->
+	<string name="nl_otp_verification">Verification</string>
+	<string name="nl_otp_please_enter_otp">Please enter the One Time Password sent to</string>
+	<string name="nl_otp_enter_otp">Enter One Time Password</string>
+	<string name="nl_otp_waiting_to_detect_otp">Waiting to automatically detect OTP</string>
+	<string name="nl_otp_verify">Verify Me</string>
+	<string name="nl_otp_receive_otp_via_call">Receive the OTP via call</string>
+	<string name="nl_otp_give_missed_call">Give us a missed call to verify</string>
+
 	
 
 	<!-- User Debt-->

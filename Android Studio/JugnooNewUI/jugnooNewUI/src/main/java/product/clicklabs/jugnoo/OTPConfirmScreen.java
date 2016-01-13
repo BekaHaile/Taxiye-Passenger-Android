@@ -148,7 +148,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenLight(this));
 
 		//new start
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
@@ -159,21 +159,21 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
 		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
 		//new end
 		
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
 		
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenLight(this));
 
 
 		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
 		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
-		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.latoLight(this));
+		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.mavenLight(this));
 		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
+		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.mavenLight(this));
 		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
 
 

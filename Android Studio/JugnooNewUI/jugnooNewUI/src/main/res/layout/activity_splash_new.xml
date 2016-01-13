@@ -47,10 +47,10 @@
                 android:layout_height="317px"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/jugnoo_logo_big_white"
-                android:tag="mwar"
-                android:visibility="visible"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:tag="mwar"
+                android:visibility="visible"
                 />
 
             <ImageView
@@ -439,8 +439,8 @@
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="120px"
-                android:orientation="vertical"
                 android:background="@drawable/background_white_shadow"
+                android:orientation="vertical"
                 >
 
                 <RelativeLayout
@@ -487,6 +487,7 @@
                         />
 
                 </RelativeLayout>
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
@@ -539,6 +540,7 @@
                         />
 
                 </RelativeLayout>
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
@@ -563,12 +565,12 @@
                         android:id="@+id/textViewSPhone91"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"
-                        android:text="@string/nl_signup_plus91"
-                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="84px"
+                        android:gravity="center_vertical"
+                        android:text="@string/nl_signup_plus91"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"
                         />
 
                     <EditText
@@ -581,6 +583,7 @@
                         android:gravity="center_vertical"
                         android:hint="@string/phone_number"
                         android:inputType="number"
+                        android:maxLength="10"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
                         android:singleLine="true"
@@ -588,7 +591,6 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
-                        android:maxLength="10"
                         />
 
                     <TextView
@@ -604,6 +606,7 @@
                         />
 
                 </RelativeLayout>
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
@@ -655,6 +658,7 @@
                         />
 
                 </RelativeLayout>
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
@@ -682,6 +686,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="64px"
                         android:background="#0000"
+                        android:capitalize="characters"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_promocode"
                         android:paddingLeft="20px"
@@ -691,7 +696,6 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
-                        android:capitalize="characters"
                         />
 
                     <TextView
@@ -707,6 +711,7 @@
                         />
 
                 </RelativeLayout>
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
@@ -768,22 +773,22 @@
                 android:id="@+id/textViewSTerms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20px"
                 android:text="@string/nl_splash_terms"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_26"
-                android:layout_gravity="center_horizontal"
                 />
 
             <TextView
                 android:id="@+id/textViewSPrivacy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0px"
                 android:text="@string/nl_splash_policy"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_26"
-                android:layout_gravity="center_horizontal"
                 />
 
         </LinearLayout>

@@ -627,17 +627,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonEmailLogin.performClick();
-						break;
-
-					case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-					default:
-				}
+				buttonEmailLogin.performClick();
 				return true;
 			}
 		});
@@ -747,17 +737,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		editTextSPromo.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonEmailSignup.performClick();
-						break;
-
-					case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-					default:
-				}
+				buttonEmailSignup.performClick();
 				return true;
 			}
 		});
