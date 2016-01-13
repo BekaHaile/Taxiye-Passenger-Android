@@ -16,7 +16,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="130px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -131,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/rate_your_ride"
-                android:textSize="34px"
+                android:textSize="@dimen/text_size_26"
                 android:textColor="@color/text_color"/>
 
             <ImageView
@@ -160,16 +161,17 @@
             android:id="@+id/textViewRSWhatImprove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="40px"
             android:layout_marginTop="15px"
             android:text="@string/what_could_we_improve"
-            android:textColor="@color/grey_dark_more"
+            android:textColor="@color/text_color"
             android:textSize="30px"/>
 
         <product.clicklabs.jugnoo.utils.NonScrollGridView
             android:id="@+id/gridViewRSFeedbackReasons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
             android:layout_marginTop="20px"
             android:divider="@color/transparent"
             android:dividerHeight="0px"

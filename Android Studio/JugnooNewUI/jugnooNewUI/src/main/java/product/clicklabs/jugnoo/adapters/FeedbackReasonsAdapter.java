@@ -68,7 +68,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
             holder = new ViewHolderFeedbackReason();
             convertView = mInflater.inflate(R.layout.list_item_feedback_reason, null);
 
-            holder.textViewFeedbackReason = (TextView) convertView.findViewById(R.id.textViewFeedbackReason); holder.textViewFeedbackReason.setTypeface(Fonts.latoRegular(context));
+            holder.textViewFeedbackReason = (TextView) convertView.findViewById(R.id.textViewFeedbackReason); holder.textViewFeedbackReason.setTypeface(Fonts.mavenLight(context));
             holder.imageViewFeedbackReasonCheck = (ImageView) convertView.findViewById(R.id.imageViewFeedbackReasonCheck);
 
             holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);

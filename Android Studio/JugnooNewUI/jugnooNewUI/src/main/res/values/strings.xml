@@ -260,8 +260,8 @@
 	<string name="assigning_state_edit_text_hint">Set drop location</string>
 
 	<!-- Ride Summary New Strings -->
-	<string name="total_fare">Total Fare</string>
-	<string name="Cash_to_be_paid">Cash to be paid</string>
+	<string name="total_fare">TOTAL FARE</string>
+	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">RATE YOUR RIDE</string>
 	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
