@@ -141,7 +141,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		facebookRegister = false;
 		googleRegister = false;
 		sendToOtpScreen = false;
-		SplashNewActivity.registerationType = RegisterationType.EMAIL;
 		phoneNoOfUnverifiedAccount = "";
 		otpErrorMsg = "";
 		notRegisteredMsg = "";
@@ -2315,7 +2314,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 							try {
 								jObj = new JSONObject(response);
-
+								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 										int flag = jObj.getInt("flag");
@@ -2431,7 +2430,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 							try {
 								jObj = new JSONObject(response);
-
+								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 										int flag = jObj.getInt("flag");
@@ -2538,7 +2537,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 							try {
 								jObj = new JSONObject(response);
-
+								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 										int flag = jObj.getInt("flag");

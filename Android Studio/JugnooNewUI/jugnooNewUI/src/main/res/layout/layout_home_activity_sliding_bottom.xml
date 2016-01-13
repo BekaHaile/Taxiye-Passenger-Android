@@ -36,9 +36,11 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imageViewPaymentOp"
                     android:layout_width="68px"
                     android:layout_height="22px"
-                    android:src="@drawable/paytm_home_icon" />
+                    android:src="@drawable/cash_home_icon"
+                    android:tag="mwar"/>
 
                 <TextView
                     android:id="@+id/textViewCashValue"

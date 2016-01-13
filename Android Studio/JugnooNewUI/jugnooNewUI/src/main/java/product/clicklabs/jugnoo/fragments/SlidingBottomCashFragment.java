@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,8 +17,10 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -29,8 +30,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     private View rootView;
     private LinearLayout linearLayoutRoot, linearLayoutCash;
     private ImageView radioBtnPaytm, radioBtnCash;
-    private TextView textViewPaytmValue;
+    private TextView textViewPaytm, textViewPaytmValue;
     private RelativeLayout relativeLayoutPaytm;
+    private ProgressWheel progressBarPaytm;
     private HomeActivity activity;
 
     @Override
@@ -51,17 +53,15 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         radioBtnPaytm = (ImageView)rootView.findViewById(R.id.radio_paytm);
         radioBtnCash = (ImageView)rootView.findViewById(R.id.radio_cash);
         textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenRegular(getActivity()), Typeface.BOLD);
-        ((TextView)rootView.findViewById(R.id.textViewPaytm)).setTypeface(Fonts.mavenLight(getActivity()));
+        textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(getActivity()));
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(getActivity()));
-        textViewPaytmValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+        progressBarPaytm = (ProgressWheel) rootView.findViewById(R.id.progressBarPaytm);
+
+
         relativeLayoutPaytm.setOnClickListener(this);
         linearLayoutCash.setOnClickListener(this);
 
-        if(PaymentOption.PAYTM.getOrdinal() == Prefs.with(activity).getInt(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal())){
-            paymentSelection(radioBtnPaytm, radioBtnCash);
-        } else{
-            paymentSelection(radioBtnCash, radioBtnPaytm);
-        }
+        updatePreferredPaymentOptionUI();
 
         return rootView;
     }
@@ -76,12 +76,89 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.relativeLayoutPaytm:
-                paymentSelection(radioBtnPaytm, radioBtnCash);
+                if(Data.userData.getPaytmBalance() > 0) {
+                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                    Prefs.with(activity).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
+                    setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+                } else if(Data.userData.getPaytmError() == 1){
+                    DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+                } else{
+                    if(Data.userData.paytmEnabled == 1
+                            && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_no_cash));
+                    }
+                    else{
+                        activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
+                    }
+                }
                 break;
 
             case R.id.linearLayoutCash:
-                paymentSelection(radioBtnCash, radioBtnPaytm);
+                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                Prefs.with(activity).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.CASH.getOrdinal());
+                setSelectedPaymentOptionUI(Data.pickupPaymentOption);
                 break;
         }
     }
+
+    public void updatePreferredPaymentOptionUI(){
+        try{
+            int preferredPaymentOption = Prefs.with(activity).getInt(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
+            if(PaymentOption.PAYTM.getOrdinal() == preferredPaymentOption){
+                if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                    progressBarPaytm.setVisibility(View.GONE);
+                }
+                else if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)){
+                    Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                    progressBarPaytm.setVisibility(View.GONE);
+                }
+                else{
+                    Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                    progressBarPaytm.setVisibility(View.VISIBLE);
+                }
+            }
+            else{
+                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                progressBarPaytm.setVisibility(View.GONE);
+            }
+
+            textViewPaytmValue.setText(String.format(activity.getResources()
+                    .getString(R.string.ruppes_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+
+            if(Data.userData.paytmEnabled == 1){
+                textViewPaytmValue.setVisibility(View.VISIBLE);
+                textViewPaytm.setText(activity.getResources().getString(R.string.nl_paytm_wallet));
+            }
+            else{
+                textViewPaytmValue.setVisibility(View.GONE);
+                textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
+            }
+
+            setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setPaytmLoadingVisiblity(int visiblity){
+        progressBarPaytm.setVisibility(visiblity);
+        if(visiblity == View.VISIBLE) {
+            textViewPaytmValue.setVisibility(View.GONE);
+        }
+    }
+
+    private void setSelectedPaymentOptionUI(int pickupPaymentOption){
+        if(PaymentOption.PAYTM.getOrdinal() == pickupPaymentOption){
+            paymentSelection(radioBtnPaytm, radioBtnCash);
+        } else{
+            paymentSelection(radioBtnCash, radioBtnPaytm);
+        }
+        activity.getSlidingBottomPanel().updatePaymentOption();
+    }
+
+
+
+
+
 }
