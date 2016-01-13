@@ -10,84 +10,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40px"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:splitMotionEvents="false">
 
-        <TextView
-            android:id="@+id/otpHelpText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="0px"
-            android:gravity="center"
-            android:text="@string/nl_otp_please_enter_otp"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32"/>
-
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:background="@color/nl_white_less_dark"
             >
 
             <TextView
-                android:id="@+id/textViewOtpNumber"
+                android:id="@+id/otpHelpText"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="45px"
                 android:gravity="center"
-                android:text=""
-                android:textColor="@color/black_text"
-                android:textSize="@dimen/text_size_32"/>
-
-            <ImageView
-                android:id="@+id/imageViewSep"
-                android:layout_width="2px"
-                android:layout_height="40px"
-                android:layout_marginLeft="10px"
-                android:background="@color/black_translucent"
+                android:text="@string/nl_otp_please_enter_otp"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
                 />
 
 
-            <ImageView
-                android:id="@+id/imageViewChangePhoneNumber"
-                android:layout_width="68px"
-                android:layout_height="68px"
-                android:padding="15px"
-                android:src="@drawable/edit_icon_selector"
-                android:tag="mwar"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
 
+                <TextView
+                    android:id="@+id/textViewOtpNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32"/>
+
+                <ImageView
+                    android:id="@+id/imageViewSep"
+                    android:layout_width="2px"
+                    android:layout_height="35px"
+                    android:layout_marginLeft="10px"
+                    android:background="@color/black_translucent"
+                    />
+
+
+                <ImageView
+                    android:id="@+id/imageViewChangePhoneNumber"
+                    android:layout_width="58px"
+                    android:layout_height="58px"
+                    android:padding="15px"
+                    android:src="@drawable/ic_otp_edit_number_selector"
+                    android:tag="mwar"/>
+
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="45px"
+                android:background="@color/grey_light"
+                />
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/textViewEnterOTP"
-            android:layout_width="400px"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="60px"
-            android:gravity="center"
-            android:text="@string/nl_otp_enter_otp"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"
-            />
 
         <EditText
             android:id="@+id/editTextOTP"
             android:layout_width="400px"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10px"
-            android:layout_marginTop="5px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="45px"
             android:background="#0000"
             android:gravity="center"
-            android:hint=""
+            android:hint="@string/nl_otp_enter_otp"
             android:inputType="number"
             android:maxLength="4"
             android:paddingLeft="20px"
@@ -108,7 +113,7 @@
             android:id="@+id/linearLayoutWaiting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120px"
+            android:layout_marginTop="140px"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="visible"
@@ -128,16 +133,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px">
+                android:layout_marginTop="30px">
+
                 <ImageView
-                    android:layout_width="530px"
-                    android:layout_height="20px"
-                    android:src="@drawable/white_loading_bar"
+                    android:layout_width="600px"
+                    android:layout_height="12px"
+                    android:src="@drawable/grey_loading_bar"
                     android:tag="mwar"/>
+
                 <ImageView
                     android:id="@+id/imageViewYellowLoadingBar"
-                    android:layout_width="530px"
-                    android:layout_height="20px"
+                    android:layout_width="600px"
+                    android:layout_height="12px"
                     android:src="@drawable/theme_color_loading_bar"
                     android:tag="mwar"/>
 
@@ -148,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15px"
+                android:layout_marginTop="25px"
                 android:gravity="center"
                 android:text="0:30"
                 android:textColor="@color/text_color"
@@ -159,10 +166,10 @@
 
         <Button
             android:id="@+id/buttonVerify"
-            android:layout_width="648px"
-            android:layout_height="100px"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="110px"
+            android:layout_marginTop="100px"
             android:background="@drawable/button_theme"
             android:text="@string/nl_otp_verify"
             android:textColor="@drawable/text_color_white_alpha_selector"
@@ -170,109 +177,20 @@
             />
 
 
-        <LinearLayout
-            android:id="@+id/linearLayoutOTPOptions"
-            android:layout_width="match_parent"
+
+        <Button
+            android:id="@+id/buttonGiveAMissedCall"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="100px">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35px"
+            android:gravity="center"
+            android:text="@string/nl_otp_give_missed_call"
+            android:textColor="@color/text_color_theme_selector"
+            android:textSize="@dimen/text_size_32"
+            android:background="@drawable/background_transparent"
+            />
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutOTPThroughCall"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:background="@color/white_light_grey"
-                android:visibility="visible"
-                >
-
-                <TextView
-                    android:id="@+id/textViewOTPNotReceived"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:gravity="center"
-                    android:text="@string/nl_otp_receive_otp_via_call"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30"/>
-
-
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar"/>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@color/theme_color"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutOr"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
-                android:layout_marginBottom="20px"
-                android:background="@drawable/ring_black_border"
-                android:tag="mwar"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textColor="@color/text_color"
-                    android:text="@string/or"
-                    android:textAllCaps="true"
-                    android:textSize="@dimen/text_size_30"
-                    />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutMissCall"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:background="@color/white_light_grey"
-                android:visibility="visible"
-                >
-
-                <TextView
-                    android:id="@+id/textViewMissCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:gravity="center"
-                    android:text="@string/nl_otp_give_missed_call"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30"/>
-
-
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar"/>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@color/theme_color"/>
-            </RelativeLayout>
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewScroll"

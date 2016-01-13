@@ -152,7 +152,8 @@
  <color name="white_alpha_33">#33FFFFFF</color>
  <color name="sliding_bottom_bg_color">#f7f7f7</color>
  <color name="text_color_hint">#BCBCBC</color>
-
+    <color name="nl_white_less_dark">#F7F7F7</color>
+    <color name="nl_white_dark">#E0E0E0</color>
 
 
  <color name="red_google">#CF5D3A</color>

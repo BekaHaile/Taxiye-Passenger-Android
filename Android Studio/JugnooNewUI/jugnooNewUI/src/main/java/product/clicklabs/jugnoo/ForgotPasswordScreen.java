@@ -2,15 +2,12 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -46,8 +43,6 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
     TextView textViewForgotPasswordHelp;
     EditText editTextEmail;
     Button buttonSendEmail;
-
-    TextView extraTextForScroll;
 
     LinearLayout relative;
 
@@ -96,7 +91,6 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
         buttonSendEmail = (Button) findViewById(R.id.buttonSendEmail);
         buttonSendEmail.setTypeface(Fonts.mavenLight(this));
 
-        extraTextForScroll = (TextView) findViewById(R.id.extraTextForScroll);
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -203,43 +197,6 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
         editTextEmail.setText(emailAlready);
         editTextEmail.setSelection(editTextEmail.getText().toString().length());
 
-        final View activityRootView = findViewById(R.id.mainLinear);
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new OnGlobalLayoutListener() {
-
-                @Override
-                public void onGlobalLayout() {
-                    Rect r = new Rect();
-                    // r will be populated with the coordinates of your view
-                    // that area still visible.
-                    activityRootView.getWindowVisibleDisplayFrame(r);
-
-                    int heightDiff = activityRootView.getRootView()
-                        .getHeight() - (r.bottom - r.top);
-                    if (heightDiff > 100) { // if more than 100 pixels, its
-                        // probably a keyboard...
-
-                        /************** Adapter for the parent List *************/
-
-                        ViewGroup.LayoutParams params_12 = extraTextForScroll
-                            .getLayoutParams();
-
-                        params_12.height = (int) (heightDiff);
-
-                        extraTextForScroll.setLayoutParams(params_12);
-                        extraTextForScroll.requestLayout();
-
-                    } else {
-
-                        ViewGroup.LayoutParams params = extraTextForScroll
-                            .getLayoutParams();
-                        params.height = 0;
-                        extraTextForScroll.setLayoutParams(params);
-                        extraTextForScroll.requestLayout();
-
-                    }
-                }
-            });
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 

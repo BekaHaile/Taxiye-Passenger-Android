@@ -108,7 +108,7 @@ public class MultipleAccountsActivity extends BaseActivity {
 	
 	public void performBackPressed(){
         Intent intent = new Intent(MultipleAccountsActivity.this, SplashNewActivity.class);
-		intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP);
+		intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
         intent.putExtra(Constants.KEY_BACK_FROM_OTP, true);
         startActivity(intent);
 		finish();

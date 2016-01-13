@@ -472,6 +472,8 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
+                        android:digits="@string/digits_characters_numbers"
+                        android:maxLength="50"
                         />
 
                     <TextView
@@ -643,6 +645,8 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
+                        android:inputType="textPassword"
+                        android:maxLength="20"
                         />
 
                     <TextView
@@ -686,7 +690,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="64px"
                         android:background="#0000"
-                        android:capitalize="characters"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_promocode"
                         android:paddingLeft="20px"
@@ -696,6 +699,10 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
+                        android:inputType="textCapCharacters"
+                        android:textAllCaps="true"
+                        android:capitalize="characters"
+                        android:digits="@string/digits_characters_caps_numbers"
                         />
 
                     <TextView

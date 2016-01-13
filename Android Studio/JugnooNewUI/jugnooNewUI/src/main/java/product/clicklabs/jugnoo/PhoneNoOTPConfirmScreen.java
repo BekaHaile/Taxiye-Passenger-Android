@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -42,7 +41,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
-	TextView textViewOtpNumber, textViewEnterOTP;
+	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
@@ -50,13 +49,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
 
-	Button buttonVerify;
+	Button buttonVerify, buttonGiveAMissedCall;
 
-	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutOTPThroughCall, relativeLayoutMissCall, relativeLayoutOr;
-	TextView textViewOTPNotReceived, textViewMissCall;
-	
-	
+
 	LinearLayout relative;
 
 	ScrollView scrollView;
@@ -122,31 +117,24 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenLight(this));
 
-		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
-		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
+		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber); imageViewChangePhoneNumber.setVisibility(View.GONE);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
-		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
 
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
 
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenLight(this));
+		buttonGiveAMissedCall = (Button) findViewById(R.id.buttonGiveAMissedCall); buttonGiveAMissedCall.setTypeface(Fonts.latoRegular(this));
 
-
-		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
-		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.latoLight(this));
-		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
-		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -180,14 +168,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 		});
 
-		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.showSoftKeyboard(PhoneNoOTPConfirmScreen.this, editTextOTP);
-				editTextOTP.requestFocus();
-			}
-		});
-		
+
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
@@ -208,15 +189,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		});
 		
 		
-		relativeLayoutOTPThroughCall.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
-			}
-		});
-
-		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
+		buttonGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -242,31 +216,17 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 
 		linearLayoutWaiting.setVisibility(View.GONE);
-		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 
 		try{
-			if(Data.otpViaCallEnabled == 1){
-				relativeLayoutOTPThroughCall.setVisibility(View.VISIBLE);
-			}
-			else{
-				relativeLayoutOTPThroughCall.setVisibility(View.GONE);
-			}
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				if(Data.otpViaCallEnabled == 1){
-					relativeLayoutOr.setVisibility(View.VISIBLE);
-				} else{
-					relativeLayoutOr.setVisibility(View.GONE);
-				}
-				relativeLayoutMissCall.setVisibility(View.VISIBLE);
+				buttonGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
-				relativeLayoutOr.setVisibility(View.GONE);
-				relativeLayoutMissCall.setVisibility(View.GONE);
+				buttonGiveAMissedCall.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			relativeLayoutOr.setVisibility(View.GONE);
-			relativeLayoutMissCall.setVisibility(View.GONE);
+			buttonGiveAMissedCall.setVisibility(View.GONE);
 		}
 
 

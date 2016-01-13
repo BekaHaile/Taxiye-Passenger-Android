@@ -636,6 +636,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 
+
+
+		editTextSName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired));
+		editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));
+		editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
+		editTextSPassword.addTextChangedListener(new CustomTextWatcher(textViewSPasswordRequired));
+		editTextSPromo.addTextChangedListener(new CustomTextWatcher(textViewSPromoRequired));
+
 		buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -742,7 +750,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		});
 
 
+		initiateDeviceInfoVariables();
+		startService(new Intent(this, PushPendingCallsService.class));
+		showLocationEnableDialog();
 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
 
@@ -781,21 +793,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				}
 			}, 500);
 		}
-
-
-
-		initiateDeviceInfoVariables();
-		startService(new Intent(this, PushPendingCallsService.class));
-		showLocationEnableDialog();
-
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-		// set login screen values according to intent
-		setLoginScreenValuesOnCreate();
-
-
-		// set signupscreen values according to intent
-		setSignupScreenValuesOnCreate();
+		else if(State.LOGIN == state){
+			// set login screen values according to intent
+			setLoginScreenValuesOnCreate();
+		}
+		else if(State.SIGNUP == state) {
+			// set signupscreen values according to intent
+			setSignupScreenValuesOnCreate();
+		}
 
 	}
 
@@ -2117,7 +2122,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		if (Data.previousAccountInfoList == null) {
 			Data.previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 		}
-		Data.previousAccountInfoList.clear();
 
 
 		new ReadSMSAsync().execute();
