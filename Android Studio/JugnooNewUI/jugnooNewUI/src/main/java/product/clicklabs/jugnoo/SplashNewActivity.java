@@ -46,6 +46,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import io.branch.referral.Branch;
@@ -56,12 +57,15 @@ import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -72,6 +76,10 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
@@ -165,14 +173,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void fetchPhoneNoOtpFromBranchParams(JSONObject referringParams){
 		try {
-			String phoneNumber = referringParams.optString(KEY_PHONE_NO, "");
-			String otp = referringParams.optString(KEY_OTP, "");
-			if(!"".equalsIgnoreCase(phoneNumber) && !"".equalsIgnoreCase(otp)){
-				Intent intent = new Intent(this, SplashLogin.class);
-				intent.putExtra(KEY_PHONE_NO, phoneNumber);
-				intent.putExtra(KEY_OTP, otp);
-				startActivity(intent);
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+			if ("".equalsIgnoreCase(pair.first)) {
+				String email = referringParams.optString(KEY_EMAIL, "");
+				String phoneNumber = referringParams.optString(KEY_PHONE_NO, "");
+				String otp = referringParams.optString(KEY_OTP, "");
+				if (!"".equalsIgnoreCase(otp)) {
+					verifyOtpViaEmail(this, email, phoneNumber, otp);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1069,5 +1077,96 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 
+
+
+	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			params.put("email", email);
+			params.put("password", "");
+			params.put("device_token", Data.getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", "" + Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getClientId());
+			params.put("otp", otp);
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+
+			Log.i("params", "" + params.toString());
+
+			RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+
+					try {
+						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response", "jsonString = " + jsonString);
+						JSONObject jObj = new JSONObject(jsonString);
+
+						int flag = jObj.getInt("flag");
+
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									new JSONParser().parseAccessTokenLoginData(activity, jsonString);
+									Database.getInstance(activity).insertEmail(email);
+									Database.getInstance(activity).close();
+									loginDataFetched = true;
+									BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+									FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+								}
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else {
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+							DialogPopup.dismissLoadingDialog();
+						} else {
+							DialogPopup.dismissLoadingDialog();
+						}
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+		} else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
 
 }

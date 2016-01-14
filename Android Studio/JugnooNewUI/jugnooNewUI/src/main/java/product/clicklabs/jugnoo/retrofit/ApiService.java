@@ -34,4 +34,10 @@ public interface ApiService {
     void adjustUserDebt(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
+
+    @FormUrlEncoded
+    @POST("/verify_otp")
+    void verifyOtp(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
 }

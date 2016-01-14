@@ -453,13 +453,13 @@ public class SplashLogin extends BaseActivity implements LocationUpdate, FlurryE
 //            }
 //        }));
 
-		runOnUiThread(new Runnable() {
+		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				performLoginViaPhoneNoOtpFromBranch();
 			}
-		});
-		
+		}, 100);
+
 	}
 
 	private void performLoginViaPhoneNoOtpFromBranch(){
