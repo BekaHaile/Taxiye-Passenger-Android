@@ -11,7 +11,7 @@
         android:id="@+id/topBar"
         android:layout_width="720px"
         android:layout_height="96px"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -69,15 +69,15 @@
             android:layout_width="628px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
-            android:src="@color/yellow_alpha"/>
+            android:src="@color/theme_color"/>
 
         <Button
             android:id="@+id/buttonApplyPromo"
-            android:layout_width="648px"
-            android:layout_height="76px"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="23px"
-            android:background="@drawable/button_yellow"
+            android:background="@drawable/button_theme"
             android:text="APPLY"
             android:textColor="@drawable/text_color_white_alpha_selector"
             android:textSize="@dimen/button_text_size"/>

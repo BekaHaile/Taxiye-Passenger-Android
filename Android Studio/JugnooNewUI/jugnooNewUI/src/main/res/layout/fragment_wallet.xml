@@ -13,7 +13,7 @@
         android:layout_height="96px"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/yellow_alpha"
+                    android:background="@color/theme_color"
                     />
 
 
@@ -171,7 +171,7 @@
                     android:layout_width="70px"
                     android:layout_height="70px"
                     android:layout_centerInParent="true"
-                    wheel:matProg_barColor="@color/yellow"
+                    wheel:matProg_barColor="@color/theme_color"
                     wheel:matProg_barWidth="3dp"
                     wheel:matProg_fillRadius="true"
                     wheel:matProg_progressIndeterminate="true"
@@ -181,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/yellow_alpha"
+                    android:background="@color/theme_color"
                     />
 
             </RelativeLayout>
@@ -221,7 +221,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/yellow_alpha"
+                    android:background="@color/theme_color"
                     />
 
             </RelativeLayout>
@@ -262,7 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/yellow_alpha"
+                    android:background="@color/theme_color"
                     />
 
             </RelativeLayout>
@@ -312,7 +312,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/yellow_alpha"
+                android:background="@color/theme_color"
                 />
 
 

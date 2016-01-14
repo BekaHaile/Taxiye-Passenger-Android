@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/nl_white_less_dark"
+            android:background="@color/sliding_bottom_bg_color"
             >
 
             <TextView
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_marginTop="45px"
-                android:background="@color/grey_light"
+                android:background="@drawable/shadow_down"
                 />
 
         </LinearLayout>

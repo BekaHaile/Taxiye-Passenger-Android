@@ -56,10 +56,10 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         root = (LinearLayout)findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView)findViewById(R.id.imageViewBack);
 
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
+		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.mavenLight(this));
 		textViewInfo.setVisibility(View.GONE);
 
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);

@@ -95,7 +95,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/yellow"
+        android:background="@color/theme_color"
         android:layout_alignParentBottom="true"
         />
 

@@ -60,6 +60,7 @@
                         android:textSize="34px"
                         android:visibility="visible"/>
 
+                    // Low Priority layout
                     <LinearLayout
                         android:id="@+id/linearLayoutLowPriority"
                         android:layout_width="match_parent"
@@ -72,16 +73,17 @@
 
                         <Button
                             android:id="@+id/btnOk"
-                            android:layout_width="400px"
-                            android:layout_height="70px"
+                            android:layout_width="@dimen/button_width"
+                            android:layout_height="@dimen/button_height"
                             android:layout_gravity="center_horizontal"
-                            android:background="@drawable/button_yellow"
+                            android:background="@drawable/button_theme"
                             android:singleLine="true"
                             android:text="@string/ok"
                             android:textColor="@drawable/text_color_white_alpha_selector"
                             android:textSize="34px"/>
                     </LinearLayout>
 
+                    // High Priority layout
                     <LinearLayout
                         android:id="@+id/linearLayoutHighPriority"
                         android:layout_width="match_parent"
@@ -177,7 +179,7 @@
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="1.25X"
-                        android:textColor="@color/yellow"
+                        android:textColor="@color/theme_color"
                         android:textSize="66px"/>
 
                     <TextView

@@ -72,7 +72,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.latoRegular(activity));
 
 		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.latoRegular(activity));
-		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);
+		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
 			@Override

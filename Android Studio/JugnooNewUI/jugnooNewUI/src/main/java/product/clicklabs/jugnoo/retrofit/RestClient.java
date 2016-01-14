@@ -19,10 +19,11 @@ public class RestClient {
     }
 
     public static void setupRestClient() {
-        RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override public void log(String message) {
+       /* RestAdapter.Log fooLog = new RestAdapter.Log() {
+            @Override
+            public void log(String message) {
             }
-        };
+        };*/
 
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
@@ -32,7 +33,7 @@ public class RestClient {
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())
                 .setClient(new OkClient(okHttpClient))
-                .setLog(fooLog)
+                //.setLog(fooLog)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
         RestAdapter restAdapter = builder.build();

@@ -491,24 +491,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutProfile = (LinearLayout) findViewById(R.id.linearLayoutProfile);
         imageViewProfile = (ImageView) findViewById(R.id.imageViewProfile);
         textViewUserName = (TextView) findViewById(R.id.textViewUserName);
-        textViewUserName.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewUserName.setTypeface(Fonts.mavenRegular(this));
         textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount);
-        textViewViewAccount.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        textViewViewAccount.setTypeface(Fonts.latoRegular(this));
 
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
-        textViewGetRide.setTypeface(Fonts.latoRegular(this));
+        textViewGetRide.setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutJugnooLine = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLine);
-		((TextView) findViewById(R.id.textViewJugnooLine)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewJugnooLine)).setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
         textViewInvite = (TextView) findViewById(R.id.textViewInvite);
-        textViewInvite.setTypeface(Fonts.latoRegular(this));
+        textViewInvite.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutWallet = (RelativeLayout) findViewById(R.id.relativeLayoutWallet);
         textViewWallet = (TextView) findViewById(R.id.textViewWallet);
-        textViewWallet.setTypeface(Fonts.latoRegular(this));
+        textViewWallet.setTypeface(Fonts.mavenLight(this));
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
         textViewWalletValue.setTypeface(Fonts.latoRegular(this));
 		progressBarMenuPaytmWalletLoading = (ProgressWheel) findViewById(R.id.progressBarMenuPaytmWalletLoading);
@@ -516,34 +516,34 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
         textViewPromotions = (TextView) findViewById(R.id.textViewPromotions);
-        textViewPromotions.setTypeface(Fonts.latoRegular(this));
+        textViewPromotions.setTypeface(Fonts.mavenLight(this));
         textViewPromotionsValue = (TextView) findViewById(R.id.textViewPromotionsValue);
         textViewPromotionsValue.setTypeface(Fonts.latoRegular(this));
 		textViewPromotionsValue.setVisibility(View.GONE);
 
         relativeLayoutTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutTransactions);
         textViewTransactions = (TextView) findViewById(R.id.textViewTransactions);
-        textViewTransactions.setTypeface(Fonts.latoRegular(this));
+        textViewTransactions.setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutNotificationMenu = (RelativeLayout) findViewById(R.id.relativeLayoutNotificationMenu);
 		textViewNotificationValueMenu = (TextView) findViewById(R.id.textViewNotificationValueMenu);
-		textViewNotificationValueMenu.setTypeface(Fonts.latoRegular(this));
-		((TextView)findViewById(R.id.textViewNotificationMenu)).setTypeface(Fonts.latoRegular(this));
+		textViewNotificationValueMenu.setTypeface(Fonts.mavenLight(this));
+		((TextView)findViewById(R.id.textViewNotificationMenu)).setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutFareEstimate = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimate);
-		((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
         textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails);
-        textViewFareDetails.setTypeface(Fonts.latoRegular(this));
+        textViewFareDetails.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutSupport = (RelativeLayout) findViewById(R.id.relativeLayoutSupport);
         textViewSupport = (TextView) findViewById(R.id.textViewSupport);
-        textViewSupport.setTypeface(Fonts.latoRegular(this));
+        textViewSupport.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
-        textViewAbout.setTypeface(Fonts.latoRegular(this));
+        textViewAbout.setTypeface(Fonts.mavenLight(this));
 
         slidingBottomPanel = new SlidingBottomPanel(HomeActivity.this, drawerLayout);
 
@@ -3514,6 +3514,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0));
                         }
                         etaMinutes = String.valueOf(findADriverResponse.getEta());
+                        priorityTipCategory = findADriverResponse.getPriorityTipCategory();
                         Data.userData.fareFactor = findADriverResponse.getFareFactor();
                         if (findADriverResponse.getFarAwayCity() == null) {
                             farAwayCity = "";

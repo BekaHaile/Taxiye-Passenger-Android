@@ -94,8 +94,8 @@
 
             <Button
                 android:id="@+id/buttonInvite"
-                android:layout_width="648px"
-                android:layout_height="100px"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="100px"
                 android:layout_marginBottom="30px"

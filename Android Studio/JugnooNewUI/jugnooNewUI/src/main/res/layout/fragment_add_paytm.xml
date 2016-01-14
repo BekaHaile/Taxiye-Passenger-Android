@@ -13,7 +13,7 @@
         android:layout_height="96px"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -89,7 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/yellow_alpha"
+                        android:background="@color/theme_color"
                         />
 
                 </RelativeLayout>
@@ -149,7 +149,7 @@
                         android:layout_width="240px"
                         android:layout_height="2px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@color/yellow"/>
+                        android:src="@color/theme_color"/>
 
 
                 </LinearLayout>
@@ -168,11 +168,11 @@
 
                 <Button
                     android:id="@+id/buttonRequestOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20px"
-                    android:background="@drawable/button_yellow"
+                    android:background="@drawable/button_theme"
                     android:text="REQUEST OTP"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/add_paytm_button_text_size"
@@ -182,11 +182,11 @@
 
                 <Button
                     android:id="@+id/buttonVerifyOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="25px"
-                    android:background="@drawable/button_yellow"
+                    android:background="@drawable/button_theme"
                     android:text="VERIFY"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/add_paytm_button_text_size"
@@ -196,11 +196,11 @@
 
                 <Button
                     android:id="@+id/buttonResendOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20px"
-                    android:background="@drawable/button_yellow"
+                    android:background="@drawable/button_theme"
                     android:text="RESEND OTP"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="@dimen/add_paytm_button_text_size"

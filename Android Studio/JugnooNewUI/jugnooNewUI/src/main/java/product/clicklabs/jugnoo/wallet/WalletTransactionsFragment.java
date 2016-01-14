@@ -97,7 +97,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		textViewRecentTransactions = (TextView) rootView.findViewById(R.id.textViewRecentTransactions);
 		textViewRecentTransactions.setTypeface(Fonts.latoRegular(paymentActivity));
