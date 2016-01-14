@@ -94,7 +94,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);
@@ -104,11 +104,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
-		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.latoRegular(this));
-		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.latoRegular(this));
-		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.latoRegular(this));
+		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenLight(this));
+		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenLight(this));
+		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenLight(this));
 
-        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewInfo)).setTypeface(Fonts.mavenRegular(this));
 
 		imageViewEditName = (ImageView) findViewById(R.id.imageViewEditName);
 		imageViewEditEmail = (ImageView) findViewById(R.id.imageViewEditEmail);
@@ -118,25 +119,25 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		imageViewEmailVerifyStatus = (ImageView) findViewById(R.id.imageViewEmailVerifyStatus);
 		relativeLayoutEmailVerify = (RelativeLayout) findViewById(R.id.relativeLayoutEmailVerify);
-		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Fonts.latoRegular(this));
-		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Fonts.latoRegular(this));
+		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Fonts.mavenLight(this));
+		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
-		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.latoRegular(this));
+		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
-        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
+        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
         imageViewEditHome = (ImageView)findViewById(R.id.imageViewEditHome);
-		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.latoRegular(this));
+		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenLight(this));
         relativeLayoutAddWork = (RelativeLayout) findViewById(R.id.relativeLayoutAddWork);
         imageViewEditWork = (ImageView)findViewById(R.id.imageViewEditWork);
-        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.latoRegular(this));
+        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenLight(this));
 		//relativeLayoutAddFav.setVisibility(View.GONE);
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
-        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.latoRegular(this));
+        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.mavenLight(this));
         relativeLayoutJugnooJeanie.setVisibility(View.GONE);
         if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
             relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
@@ -146,7 +147,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 
-		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.latoRegular(this));
+		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.mavenRegular(this));
 
 
 
@@ -655,7 +656,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
 					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfileImage);
-					Picasso.with(this).load(Data.userData.userImage).transform(new BlurTransform()).into(imageViewUserImageBlur);
+					//Picasso.with(this).load(Data.userData.userImage).transform(new BlurTransform()).into(imageViewUserImageBlur);
 				}
 			} catch(Exception e){
 				e.printStackTrace();

@@ -50,7 +50,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         relativeLayoutRateUs = (RelativeLayout) findViewById(R.id.relativeLayoutRateUs);
@@ -60,15 +60,15 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
 
         textViewRateUs = (TextView) findViewById(R.id.textViewRateUs);
-        textViewRateUs.setTypeface(Fonts.latoRegular(this));
+        textViewRateUs.setTypeface(Fonts.mavenLight(this));
         textViewLikeUs = (TextView) findViewById(R.id.textViewLikeUs);
-        textViewLikeUs.setTypeface(Fonts.latoRegular(this));
+        textViewLikeUs.setTypeface(Fonts.mavenLight(this));
         textViewTNC = (TextView) findViewById(R.id.textViewTNC);
-        textViewTNC.setTypeface(Fonts.latoRegular(this));
+        textViewTNC.setTypeface(Fonts.mavenLight(this));
         textViewPrivacy = (TextView) findViewById(R.id.textViewPrivacy);
-        textViewPrivacy.setTypeface(Fonts.latoRegular(this));
+        textViewPrivacy.setTypeface(Fonts.mavenLight(this));
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
-        textViewAbout.setTypeface(Fonts.latoRegular(this));
+        textViewAbout.setTypeface(Fonts.mavenLight(this));
 
 
         relativeLayoutRateUs.setOnClickListener(new View.OnClickListener() {

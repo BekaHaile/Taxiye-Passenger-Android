@@ -15,7 +15,7 @@
         android:layout_height="96px"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow" >
+        android:background="@drawable/nl_background_theme_color" >
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -162,16 +162,16 @@
 
         <Button
             android:id="@+id/buttonRemove"
-            android:layout_width="648px"
-            android:layout_height="85px"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30px"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_yellow"
+            android:background="@drawable/button_theme"
             android:text="REMOVE "
-            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textColor="@color/white"
             android:textSize="@dimen/button_text_size" />
     </RelativeLayout>
 

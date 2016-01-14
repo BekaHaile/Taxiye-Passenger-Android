@@ -13,7 +13,7 @@
         android:layout_height="96px"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow" >
+        android:background="@drawable/nl_background_theme_color" >
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -70,7 +70,7 @@
             android:layout_height="140px"
             android:layout_centerInParent="true"
             xmlns:wheel="http://schemas.android.com/apk/res-auto"
-            wheel:matProg_barColor="@color/yellow"
+            wheel:matProg_barColor="@color/theme_color"
             wheel:matProg_fillRadius="true"
             wheel:matProg_progressIndeterminate="true"
             />

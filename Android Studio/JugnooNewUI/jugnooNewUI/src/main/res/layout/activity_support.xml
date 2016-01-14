@@ -16,7 +16,7 @@
             android:layout_height="96px"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@color/yellow" >
+            android:background="@drawable/nl_background_theme_color" >
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -66,7 +66,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Send us an Email"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -98,7 +98,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Call Us"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -130,7 +130,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="FAQs"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -146,7 +146,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -162,7 +162,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Feedback"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -178,7 +178,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
         </LinearLayout>
