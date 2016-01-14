@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -1082,7 +1083,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1123,7 +1124,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						JSONObject jObj = new JSONObject(jsonString);
 
 						int flag = jObj.getInt("flag");
-
+						String message = JSONParser.getServerMessage(jObj);
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 								String error = jObj.getString("error");
@@ -1144,23 +1145,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", message);
 							}
-							DialogPopup.dismissLoadingDialog();
-						} else {
-							DialogPopup.dismissLoadingDialog();
 						}
-
 					} catch (Exception exception) {
 						exception.printStackTrace();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-						DialogPopup.dismissLoadingDialog();
 					}
+					if(progressDialog != null) progressDialog.dismiss();
 				}
 
 				@Override
 				public void failure(RetrofitError error) {
-					DialogPopup.dismissLoadingDialog();
+					Log.e("RetrofitError", "error=" + error);
+					if(progressDialog != null) progressDialog.dismiss();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
 			});
