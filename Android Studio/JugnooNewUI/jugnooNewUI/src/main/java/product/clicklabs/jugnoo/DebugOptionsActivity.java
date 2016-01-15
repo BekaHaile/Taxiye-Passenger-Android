@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -68,12 +67,12 @@ public class DebugOptionsActivity extends BaseActivity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
-        ((TextView) findViewById(R.id.textViewDebugOptions)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewServerEnv)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewDebugOptions)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView) findViewById(R.id.textViewServerEnv)).setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutShowAllDrivers = (RelativeLayout) findViewById(R.id.relativeLayoutShowAllDrivers);
         relativeLayoutShowDriverInfo = (RelativeLayout) findViewById(R.id.relativeLayoutShowDriverInfo);
@@ -81,8 +80,8 @@ public class DebugOptionsActivity extends BaseActivity {
         imageViewShowAllDrivers = (ImageView) findViewById(R.id.imageViewShowAllDrivers);
         imageViewShowDriverInfo = (ImageView) findViewById(R.id.imageViewShowDriverInfo);
 
-        ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.mavenLight(this));
 
 
 
@@ -101,17 +100,17 @@ public class DebugOptionsActivity extends BaseActivity {
         imageViewTest8015 = (ImageView) findViewById(R.id.imageViewTest8015);
 		imageViewCustom = (ImageView) findViewById(R.id.imageViewCustom);
 
-		((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
 		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.latoRegular(this));
 
 
-        buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.latoRegular(this));
-        buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.latoRegular(this));
-		buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM); buttonRefreshGCM.setTypeface(Fonts.latoRegular(this));
+        buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.mavenRegular(this));
+        buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.mavenRegular(this));
+		buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM); buttonRefreshGCM.setTypeface(Fonts.mavenRegular(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);

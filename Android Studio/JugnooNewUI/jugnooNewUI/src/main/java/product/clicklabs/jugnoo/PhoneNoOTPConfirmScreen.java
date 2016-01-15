@@ -49,7 +49,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
 
-	Button buttonVerify, buttonGiveAMissedCall;
+	Button buttonVerify;
+	LinearLayout linearLayoutGiveAMissedCall;
 
 
 	LinearLayout relative;
@@ -117,7 +118,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenLight(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -132,9 +133,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
 
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenLight(this));
-		buttonGiveAMissedCall = (Button) findViewById(R.id.buttonGiveAMissedCall); buttonGiveAMissedCall.setTypeface(Fonts.latoRegular(this));
-
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
+		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
+		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -187,10 +188,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				return true;
 			}
 		});
-		
-		
 
-		buttonGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
+
+
+		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -219,14 +220,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		try{
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				buttonGiveAMissedCall.setVisibility(View.VISIBLE);
+				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
-				buttonGiveAMissedCall.setVisibility(View.GONE);
+				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			buttonGiveAMissedCall.setVisibility(View.GONE);
+			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 		}
 
 

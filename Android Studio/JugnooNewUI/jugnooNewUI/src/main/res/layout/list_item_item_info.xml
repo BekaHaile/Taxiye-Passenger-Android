@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
-    android:layout_width="720px"
+    android:layout_width="@dimen/screen_width"
     android:layout_height="wrap_content"
     android:background="@drawable/list_white_selector"
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
     <RelativeLayout
-        android:layout_width="720px"
+        android:layout_width="@dimen/screen_width"
         android:layout_height="360px"
         android:splitMotionEvents="false" >
 

@@ -353,8 +353,12 @@
 	<string name="nl_otp_waiting_to_detect_otp">Waiting to automatically detect OTP</string>
 	<string name="nl_otp_verify">Verify Me</string>
 	<string name="nl_otp_receive_otp_via_call">Receive the OTP via call</string>
-	<string name="nl_otp_give_missed_call">Give us a missed call to verify</string>
+	<string name="nl_otp_give_missed_call">Give a missed call</string>
 
+	<!-- NL Change Phone Number-->
+	<string name="nl_change_phone_number">Change Phone Number</string>
+	<string name="nl_change_phone_number_please_enter">Please enter your new phone number</string>
+	<string name="nl_change_phone_number_enter_new_number">Enter New Phone Number</string>
 	
 
 	<!-- User Debt-->
@@ -362,6 +366,8 @@
 	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
+
+	<string name="debug">Debug</string>
 
 
 	<string name="no_results_found">No results found</string>

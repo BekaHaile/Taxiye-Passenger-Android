@@ -85,7 +85,7 @@
 
         <EditText
             android:id="@+id/editTextOTP"
-            android:layout_width="400px"
+            android:layout_width="410px"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10px"
             android:layout_gravity="center_horizontal"
@@ -100,10 +100,10 @@
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_30"/>
+            android:textSize="@dimen/text_size_32"/>
 
         <ImageView
-            android:layout_width="400px"
+            android:layout_width="410px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
             android:src="@color/theme_color"/>
@@ -159,7 +159,7 @@
                 android:gravity="center"
                 android:text="0:30"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_30"/>
+                android:textSize="@dimen/text_size_32"/>
 
         </LinearLayout>
 
@@ -173,23 +173,55 @@
             android:background="@drawable/button_theme"
             android:text="@string/nl_otp_verify"
             android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/text_size_40"
+            android:textSize="@dimen/text_size_34"
+            android:textAllCaps="true"
             />
 
 
-
-        <Button
-            android:id="@+id/buttonGiveAMissedCall"
+        <TextView
+            android:id="@+id/textViewOr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="35px"
+            android:layout_marginTop="25px"
             android:gravity="center"
-            android:text="@string/nl_otp_give_missed_call"
-            android:textColor="@color/text_color_theme_selector"
-            android:textSize="@dimen/text_size_32"
-            android:background="@drawable/background_transparent"
-            />
+            android:text="@string/or"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/text_size_30"/>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutGiveAMissedCall"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25px"
+            android:background="@drawable/button_white_grey_theme_border_selector"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <ImageView
+                android:layout_width="35px"
+                android:layout_height="26px"
+                android:tag="mwar"
+                android:src="@drawable/ic_otp_missed_call"
+                android:layout_marginLeft="26px"
+                android:layout_marginRight="16px"
+                />
+
+            <TextView
+                android:id="@+id/textViewGiveAMissedCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/nl_otp_give_missed_call"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_theme_selector"
+                android:textSize="@dimen/text_size_30"
+                />
+        </LinearLayout>
 
 
         <TextView

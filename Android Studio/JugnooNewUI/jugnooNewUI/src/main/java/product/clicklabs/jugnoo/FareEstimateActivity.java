@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -125,22 +124,22 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         }
 
         textViewPickupLocation = (TextView) findViewById(R.id.textViewPickupLocation);
-        textViewPickupLocation.setTypeface(Fonts.latoRegular(this));
+        textViewPickupLocation.setTypeface(Fonts.mavenLight(this));
         textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
-        textViewDropLocation.setTypeface(Fonts.latoRegular(this));
+        textViewDropLocation.setTypeface(Fonts.mavenLight(this));
         textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
-        textViewEstimateTime.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateTime.setTypeface(Fonts.mavenLight(this));
         textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
-        textViewEstimateDistance.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateDistance.setTypeface(Fonts.mavenLight(this));
         textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
-        textViewEstimateFare.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateFare.setTypeface(Fonts.mavenRegular(this));
 		textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
-		textViewConvenienceCharge.setTypeface(Fonts.latoRegular(this));
+		textViewConvenienceCharge.setTypeface(Fonts.mavenLight(this));
 		textViewConvenienceCharge.setText("");
         textViewEstimateFareNote = (TextView) findViewById(R.id.textViewEstimateFareNote);
-        textViewEstimateFareNote.setTypeface(Fonts.latoRegular(this));
+        textViewEstimateFareNote.setTypeface(Fonts.mavenLight(this));
         buttonOk = (Button) findViewById(R.id.buttonOk);
-        buttonOk.setTypeface(Fonts.latoRegular(this));
+        buttonOk.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
@@ -385,8 +384,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 											String maxFare = jObj.getString("max_fare");
 											double convenienceCharge = jObj.optDouble("convenience_charge", 0);
 
-											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + " " + minFare + " - " +
-													getResources().getString(R.string.rupee) + " " + maxFare);
+											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
+													getResources().getString(R.string.rupee) + "" + maxFare);
 
 											if(convenienceCharge > 0){
 												textViewConvenienceCharge.setText("Convenience Charges "
