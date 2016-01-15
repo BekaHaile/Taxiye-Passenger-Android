@@ -1008,7 +1008,9 @@ public class JSONParser implements Constants {
 
 
     public static void parseFeedbackReasonArrayList(JSONObject jObj){
-        Data.feedbackReasons = new ArrayList<>();
+        if(Data.feedbackReasons == null) {
+            Data.feedbackReasons = new ArrayList<>();
+        }
 //        Data.feedbackReasons.add(new FeedbackReason("Late Arrival"));
 //        Data.feedbackReasons.add(new FeedbackReason("Speed"));
 //        Data.feedbackReasons.add(new FeedbackReason("Driver Behavior"));

@@ -52,9 +52,9 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames{
+public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
-	private final String TAG = "OTPConfirmScreen";
+	private final String TAG = OTPConfirmScreen.class.getSimpleName();
 
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -73,8 +73,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	Button buttonVerify;
 
 	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutOTPThroughCall, relativeLayoutMissCall, relativeLayoutOr;
-	TextView textViewOTPNotReceived, textViewMissCall;
+	RelativeLayout relativeLayoutMissCall, relativeLayoutOr;
+	TextView textViewMissCall;
 
 
 	LinearLayout relative;
@@ -107,30 +107,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-
-		try {
-			String otp = "";
-			if(intent.hasExtra("message")){
-				String message = intent.getStringExtra("message");
-				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
-				otp = arr[1];
-				otp = otp.replaceAll("\\.", "");
-			} else if(intent.hasExtra("otp")){
-				otp = intent.getStringExtra("otp");
-			}
-
-			if(Utils.checkIfOnlyDigits(otp)){
-				if(!"".equalsIgnoreCase(otp)) {
-					editTextOTP.setText(otp);
-					editTextOTP.setSelection(editTextOTP.getText().length());
-					buttonVerify.performClick();
-				}
-			}
-
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
+		retrieveOTPFromSMS(intent);
 		super.onNewIntent(intent);
 	}
 
@@ -170,8 +147,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 
 		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
-		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.latoLight(this));
 		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
 		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
 		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
@@ -248,22 +223,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		editTextOTP.setOnClickListener(onClickListener);
 
 
-		relativeLayoutOTPThroughCall.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
-					initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-				}
-				else if (RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType) {
-					initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
-				}
-				else {
-					initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
-				}
-				FlurryEventLogger.event(CALL_ME_OTP);
-			}
-		});
 
 		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
 
@@ -290,6 +249,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
 		//new start
 		try {
@@ -364,18 +324,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 		try{
-			if(Data.otpViaCallEnabled == 1){
-				relativeLayoutOTPThroughCall.setVisibility(View.VISIBLE);
-			}
-			else{
-				relativeLayoutOTPThroughCall.setVisibility(View.GONE);
-			}
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				if(Data.otpViaCallEnabled == 1){
-					relativeLayoutOr.setVisibility(View.VISIBLE);
-				} else{
-					relativeLayoutOr.setVisibility(View.GONE);
-				}
+				relativeLayoutOr.setVisibility(View.VISIBLE);
 				relativeLayoutMissCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -404,19 +354,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		OTP_SCREEN_OPEN = "yes";
 
 
-//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-//			@Override
-//			public void keyboardOpened() {
-//
-//			}
-//
-//			@Override
-//			public void keyBoardClosed() {
-//
-//			}
-//		}));
-
-
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				retrieveOTPFromSMS(getIntent());
+			}
+		}, 100);
 
 	}
 
@@ -989,6 +932,32 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	};
 
+
+
+
+	private void retrieveOTPFromSMS(Intent intent){
+		try {
+			String otp = "";
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+				otp = arr[1];
+				otp = otp.replaceAll("\\.", "");
+			} else if(intent.hasExtra(KEY_OTP)){
+				otp = intent.getStringExtra(KEY_OTP);
+			}
+
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					editTextOTP.setText(otp);
+					editTextOTP.setSelection(editTextOTP.getText().length());
+					buttonVerify.performClick();
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	
 }

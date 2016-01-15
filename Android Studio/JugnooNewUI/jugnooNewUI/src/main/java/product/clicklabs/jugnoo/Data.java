@@ -179,7 +179,7 @@ public class Data {
 	public static FareStructure fareStructure;
 	
 	public static CancelOptionsList cancelOptionsList;
-    public static ArrayList<FeedbackReason> feedbackReasons;
+    public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
 
 	public static ReferralMessages referralMessages;
 
