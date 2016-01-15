@@ -277,9 +277,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		setContentView(R.layout.activity_splash_new);
 
-		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
-		}
+
 
 
 		loginDataFetched = false;
@@ -502,15 +500,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	private void sendToRegisterThroughSms(String referralCode){
-		if(!"".equalsIgnoreCase(referralCode)) {
-			Data.deepLinkIndex = -1;
-			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
-			RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
-			Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
-			intent.putExtra("referral_code", referralCode);
-			startActivity(intent);
-			ActivityCompat.finishAffinity(SplashNewActivity.this);
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		try {
+			if(!"".equalsIgnoreCase(referralCode)) {
+				Data.deepLinkIndex = -1;
+				FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
+				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
+				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+				intent.putExtra("referral_code", referralCode);
+				startActivity(intent);
+				ActivityCompat.finishAffinity(SplashNewActivity.this);
+				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -575,7 +577,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	protected void onResume() {
 
-		Data.locationFetcher.connect();
+		if (Data.locationFetcher == null) {
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		} else{
+			Data.locationFetcher.connect();
+		}
 
 
 		super.onResume();
