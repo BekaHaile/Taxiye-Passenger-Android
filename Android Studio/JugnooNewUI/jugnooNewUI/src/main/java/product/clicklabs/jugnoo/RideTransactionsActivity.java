@@ -56,7 +56,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 	
 	ListView listViewRideTransactions;
 	TextView textViewInfo;
-	ProgressWheel progressBarList;
 	Button buttonGetRide;
 	
 	RideTransactionAdapter rideTransactionAdapter;
@@ -103,10 +102,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 		
 		listViewRideTransactions = (ListView) findViewById(R.id.listViewRideTransactions);
 		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
-		progressBarList = (ProgressWheel) findViewById(R.id.progressBarList);
 		buttonGetRide = (Button) findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.latoRegular(this));
 		textViewInfo.setVisibility(View.GONE);
-		progressBarList.setVisibility(View.GONE);
 		buttonGetRide.setVisibility(View.GONE);
 		
 		
@@ -184,7 +181,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 	
 	
 	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
-		progressBarList.setVisibility(View.GONE);
+        DialogPopup.dismissLoadingDialog();
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
 			
 			if(refresh){
@@ -192,8 +189,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				futureSchedule = null;
 			}
 			
-			progressBarList.setVisibility(View.VISIBLE);
-			textViewInfo.setVisibility(View.GONE);
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+            textViewInfo.setVisibility(View.GONE);
 			
 			RequestParams params = new RequestParams();
 		
@@ -209,7 +206,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     public void onFailure(Throwable arg3) {
                         Log.e("request fail", arg3.toString());
                         updateListData("Some error occurred, tap to retry", true);
-                        progressBarList.setVisibility(View.GONE);
+                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override
@@ -291,7 +288,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                             exception.printStackTrace();
                             updateListData("Some error occurred, tap to retry", true);
                         }
-                        progressBarList.setVisibility(View.GONE);
+                        DialogPopup.dismissLoadingDialog();
                     }
                 });
 		}

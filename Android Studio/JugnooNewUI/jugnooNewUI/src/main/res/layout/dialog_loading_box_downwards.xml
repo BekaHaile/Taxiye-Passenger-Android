@@ -3,29 +3,18 @@
     android:id="@+id/dlgProgress"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="bottom"
     android:background="@android:color/transparent">
 
-    <product.clicklabs.jugnoo.utils.ProgressWheel
-        android:id="@+id/progress_wheel"
-        android:layout_width="120px"
-        android:layout_height="120px"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="740px"
-        android:tag="mwar"
-        wheel:matProg_barColor="@color/theme_color"
-        wheel:matProg_fillRadius="true"
-        wheel:matProg_progressIndeterminate="false"></product.clicklabs.jugnoo.utils.ProgressWheel>
 
-    <TextView
-        android:id="@+id/tvProgress"
+    <ImageView
+        android:id="@+id/ivAnimation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/progress_wheel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40px"
-        android:text="Loading..."
-        android:textColor="@color/theme_color"
-        android:textSize="30px" />
+        android:layout_marginBottom="150px"
+        android:layout_marginLeft="240px"
+        android:tag="mwar"
+        android:contentDescription="Animation" />
 
 
 </RelativeLayout>

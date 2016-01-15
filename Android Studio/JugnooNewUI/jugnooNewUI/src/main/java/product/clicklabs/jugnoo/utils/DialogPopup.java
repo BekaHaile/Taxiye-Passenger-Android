@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -576,12 +578,16 @@ public class DialogPopup {
             progressDialog.setContentView(R.layout.dialog_loading_box);
             RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
             new ASSL((Activity) context, frameLayout, 1134, 720, false);
-
-
-            ((ProgressWheel) progressDialog.findViewById(R.id.progress_wheel)).spin();
-            TextView messageText = (TextView) progressDialog.findViewById(R.id.tvProgress);
-            messageText.setTypeface(Fonts.latoRegular(context));
-            messageText.setText(message);
+			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+			animImageView.setBackgroundResource(R.drawable.anim);
+			animImageView.post(new Runnable() {
+				@Override
+				public void run() {
+					AnimationDrawable frameAnimation =
+							(AnimationDrawable) animImageView.getBackground();
+					frameAnimation.start();
+				}
+			});
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -616,12 +622,16 @@ public class DialogPopup {
 			progressDialog.setContentView(R.layout.dialog_loading_box_downwards);
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
-
-
-			((ProgressWheel) progressDialog.findViewById(R.id.progress_wheel)).spin();
-			TextView messageText = (TextView) progressDialog.findViewById(R.id.tvProgress);
-			messageText.setTypeface(Fonts.latoRegular(context));
-			messageText.setText(message);
+			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+			animImageView.setBackgroundResource(R.drawable.anim);
+			animImageView.post(new Runnable() {
+				@Override
+				public void run() {
+					AnimationDrawable frameAnimation =
+							(AnimationDrawable) animImageView.getBackground();
+					frameAnimation.start();
+				}
+			});
 		} catch(Exception e){
 			e.printStackTrace();
 		}
