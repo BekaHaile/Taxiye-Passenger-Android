@@ -153,14 +153,11 @@
 
             <Button
                 android:id="@+id/buttonCancelRide"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
+                style="@style/ButtonTheme"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30px"
-                android:background="@drawable/button_theme"
-                android:text="CANCEL RIDE"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size"/>
+                android:text="@string/cancel_ride"
+                />
 
             <TextView
                 android:id="@+id/textViewCancelInfo"

@@ -168,42 +168,30 @@
 
                 <Button
                     android:id="@+id/buttonRequestOTP"
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="@dimen/button_height"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20px"
-                    android:background="@drawable/button_theme"
-                    android:text="REQUEST OTP"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/add_paytm_button_text_size"
+                    android:text="@string/request_otp"
                     android:visibility="gone"
                     />
 
 
                 <Button
                     android:id="@+id/buttonVerifyOTP"
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="@dimen/button_height"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="25px"
-                    android:background="@drawable/button_theme"
-                    android:text="VERIFY"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/add_paytm_button_text_size"
+                    android:text="@string/verify"
                     android:visibility="visible"
                     />
 
 
                 <Button
                     android:id="@+id/buttonResendOTP"
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="@dimen/button_height"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20px"
-                    android:background="@drawable/button_theme"
-                    android:text="RESEND OTP"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/add_paytm_button_text_size"
+                    android:text="@string/resend_otp"
                     android:visibility="visible"
                     />
 

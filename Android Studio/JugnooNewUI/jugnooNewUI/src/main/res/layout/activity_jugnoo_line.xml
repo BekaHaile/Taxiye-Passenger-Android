@@ -8,10 +8,12 @@
     >
 
     <RelativeLayout
-        android:id="@+id/topBar"
-        android:layout_width="@dimen/screen_width"
+        android:id="@+id/topRl"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/yellow">
+        android:splitMotionEvents="false"
+        android:background="@drawable/nl_background_theme_color"
+        >
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -19,18 +21,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="JUGNOO LINE"
+            android:text="@string/jugnoo_line"
             android:textColor="@color/white"
-            android:textSize="32px"/>
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_34" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
+            android:layout_width="61px"
+            android:layout_height="61px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/back_btn_selector"
+            android:tag="mwar" />
     </RelativeLayout>
 
     <ImageView
@@ -171,7 +174,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/yellow"/>
+            android:background="@color/theme_color"/>
         <RelativeLayout
             android:id="@+id/relativeLayoutFixedFare"
             android:layout_width="match_parent"
@@ -209,7 +212,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/yellow"/>
+            android:background="@color/theme_color"/>
 
 
         <RelativeLayout
@@ -287,7 +290,7 @@
                 android:layout_height="70px"
                 android:layout_centerInParent="true"
                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_fillRadius="true"
                 wheel:matProg_progressIndeterminate="true"
                 wheel:matProg_barWidth="3dp"
@@ -298,14 +301,11 @@
 
         <Button
             android:id="@+id/buttonMakePayment"
-            android:layout_width="620px"
-            android:layout_height="88px"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_yellow"
-            android:text="PAY VIA JUGNOO CASH"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size"/>
+            android:text="@string/pay_via_jugnoo_cash"
+            />
 
 
 

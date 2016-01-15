@@ -35,8 +35,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="******@jugnoo.in"
-                android:textColor="@color/black_text"
-                android:textSize="27px"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
                 android:singleLine="true"
                 />
 
@@ -46,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="******999"
-                android:textColor="@color/black_text"
-                android:textSize="27px"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
                 android:singleLine="true"
                 android:layout_marginTop="5px"
                 />
@@ -64,9 +64,11 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="80px"
             android:gravity="center"
-            android:text="LOGIN"
-            android:textColor="@drawable/text_color_black_alpha_selector"
-            android:textSize="26px" />
+            android:text="@string/nl_login"
+            android:textColor="@color/text_color_light_selector"
+            android:textSize="@dimen/text_size_28"
+            android:textAllCaps="true"
+            />
 
         <ImageView
             android:layout_width="13px"
@@ -82,7 +84,7 @@
             android:layout_height="2px"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal"
-            android:src="@color/yellow_alpha" />
+            android:src="@color/text_color_light" />
 
     </RelativeLayout>
 

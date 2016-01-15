@@ -550,15 +550,12 @@
 
                     <Button
                         android:id="@+id/buttonLogout"
-                        android:layout_width="@dimen/button_width"
-                        android:layout_height="@dimen/button_height"
+                        style="@style/ButtonTheme"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="70px"
                         android:layout_marginTop="70px"
-                        android:background="@drawable/button_theme"
-                        android:text="LOGOUT"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/button_text_size" />
+                        android:text="@string/logout"
+                        />
 
                     <TextView
                         android:id="@+id/textViewScroll"

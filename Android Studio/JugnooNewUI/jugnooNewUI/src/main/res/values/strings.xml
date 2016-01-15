@@ -341,6 +341,7 @@
 	<string name="nl_login_invalid_email_error">Please enter valid phone number</string>
 
 	<!-- NL Signup-->
+	<string name="nl_signup">Signup</string>
 	<string name="nl_signup_name">Name</string>
 	<string name="nl_signup_email">Email</string>
 	<string name="nl_signup_promocode">Promocode (optional)</string>
@@ -366,6 +367,13 @@
 	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
 	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
+
+
+	<!-- NL Signup Multiple Accounts-->
+	<string name="nl_signup_multiple_accounts_already_created_format">%s accounts have already been created on this device</string>
+	<string name="nl_signup_multiple_please_login_through">Please login through one of these accounts</string>
+	<string name="nl_signup_multiple_if_you_still_like_to_create_new">If you would still like to create a new account</string>
+	<string name="nl_signup_multiple_please_contact_customer_care">Please contact our customer care</string>
 
 
 	<string name="debug">Debug</string>
@@ -613,6 +621,15 @@
 	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
 
 	<string name="remove">Remove</string>
+	<string name="change">Change</string>
+	<string name="verify">Verify</string>
+	<string name="apply">Apply</string>
+	<string name="request_otp">Request Otp</string>
+	<string name="resend_otp">Resend Otp</string>
+	<string name="add_paytm_cash">Add Paytm Cash</string>
+	<string name="pay_via_jugnoo_cash">Pay Via Jugnoo Cash</string>
+	<string name="jugnoo_line">Jugnoo Line</string>
+	<string name="mail_us">Mail Us</string>
 
     <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
 

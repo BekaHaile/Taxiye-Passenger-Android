@@ -305,14 +305,11 @@
 
                     <Button
                         android:id="@+id/buttonAddMoney"
-                        android:layout_width="@dimen/button_width"
-                        android:layout_height="@dimen/button_height"
+                        style="@style/ButtonTheme"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="60px"
-                        android:background="@drawable/button_theme"
-                        android:text="ADD PAYTM CASH"
-                        android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="@dimen/button_text_size"/>
+                        android:text="@string/add_paytm_cash"
+                        />
 
 
                     <Button

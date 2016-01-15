@@ -51,4 +51,16 @@
     </style>
 
 
+
+    <style name="ButtonTheme" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">@dimen/button_width</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:background">@drawable/button_theme</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_34</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+
+
 </resources>

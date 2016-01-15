@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,21 +47,21 @@ public class MultipleAccountsActivity extends BaseActivity {
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
 
-        textViewMultipleAccountsCreated = (TextView) findViewById(R.id.textViewMultipleAccountsCreated); textViewMultipleAccountsCreated.setTypeface(Fonts.latoRegular(this));
-        textViewPleaseLogin = (TextView) findViewById(R.id.textViewPleaseLogin); textViewPleaseLogin.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        textViewMultipleAccountsCreated = (TextView) findViewById(R.id.textViewMultipleAccountsCreated); textViewMultipleAccountsCreated.setTypeface(Fonts.mavenLight(this));
+        textViewPleaseLogin = (TextView) findViewById(R.id.textViewPleaseLogin); textViewPleaseLogin.setTypeface(Fonts.mavenLight(this));
 
         listViewPreviousAccounts = (ListView) findViewById(R.id.listViewPreviousAccounts);
 
-        textViewLikeToCreate = (TextView) findViewById(R.id.textViewLikeToCreate); textViewLikeToCreate.setTypeface(Fonts.latoRegular(this));
+        textViewLikeToCreate = (TextView) findViewById(R.id.textViewLikeToCreate); textViewLikeToCreate.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutMailUs = (RelativeLayout) findViewById(R.id.relativeLayoutMailUs);
-        textViewContactUs = (TextView) findViewById(R.id.textViewContactUs); textViewContactUs.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewMailUs = (TextView) findViewById(R.id.textViewMailUs); textViewMailUs.setTypeface(Fonts.latoRegular(this));
+        textViewContactUs = (TextView) findViewById(R.id.textViewContactUs); textViewContactUs.setTypeface(Fonts.mavenLight(this));
+        textViewMailUs = (TextView) findViewById(R.id.textViewMailUs); textViewMailUs.setTypeface(Fonts.mavenRegular(this));
 
 
         previousAccountsAdapter = new PreviousAccountsAdapter(this);
@@ -96,7 +95,9 @@ public class MultipleAccountsActivity extends BaseActivity {
         scrollView.smoothScrollTo(0,0);
 
         try {
-            textViewMultipleAccountsCreated.setText(EnglishNumberToWords.convert(Data.previousAccountInfoList.size()) + " accounts have already been created on this device");
+            textViewMultipleAccountsCreated.setText(String.format(getResources()
+					.getString(R.string.nl_signup_multiple_accounts_already_created_format),
+					EnglishNumberToWords.convert(Data.previousAccountInfoList.size())));
         } catch(Exception e){
             e.printStackTrace();
             performBackPressed();
@@ -179,9 +180,9 @@ public class MultipleAccountsActivity extends BaseActivity {
 				holder = new ViewHolderPreviousAccount();
 				convertView = mInflater.inflate(R.layout.list_item_previous_account, null);
 				
-				holder.textViewAccountEmail = (TextView) convertView.findViewById(R.id.textViewAccountEmail); holder.textViewAccountEmail.setTypeface(Fonts.latoRegular(context));
-				holder.textViewAccountPhone = (TextView) convertView.findViewById(R.id.textViewAccountPhone); holder.textViewAccountPhone.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
-				holder.textViewLogin = (TextView) convertView.findViewById(R.id.textViewLogin); holder.textViewLogin.setTypeface(Fonts.latoRegular(context));
+				holder.textViewAccountEmail = (TextView) convertView.findViewById(R.id.textViewAccountEmail); holder.textViewAccountEmail.setTypeface(Fonts.mavenLight(context));
+				holder.textViewAccountPhone = (TextView) convertView.findViewById(R.id.textViewAccountPhone); holder.textViewAccountPhone.setTypeface(Fonts.mavenLight(context));
+				holder.textViewLogin = (TextView) convertView.findViewById(R.id.textViewLogin); holder.textViewLogin.setTypeface(Fonts.mavenLight(context));
 
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 

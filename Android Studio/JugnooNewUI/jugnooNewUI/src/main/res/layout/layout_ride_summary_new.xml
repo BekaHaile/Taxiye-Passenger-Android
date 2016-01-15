@@ -207,15 +207,12 @@
 
         <Button
             android:id="@+id/buttonRSSubmitFeedback"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10px"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_theme"
             android:text="@string/submit_feedback_caps"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size"/>
+            />
 
         <Button
             android:id="@+id/buttonRSSkipFeedback"

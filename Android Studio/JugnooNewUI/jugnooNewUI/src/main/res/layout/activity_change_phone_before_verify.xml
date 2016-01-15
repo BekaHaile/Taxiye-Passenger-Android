@@ -108,15 +108,11 @@
 
             <Button
                 android:id="@+id/buttonChangePhoneNumber"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
+                style="@style/ButtonTheme"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="70px"
-                android:background="@drawable/button_theme"
                 android:text="@string/submit"
-                android:textAllCaps="true"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"/>
+                />
 
             <TextView
                 android:id="@+id/textViewScroll"

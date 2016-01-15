@@ -165,17 +165,14 @@
 
         <Button
             android:id="@+id/buttonRemove"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30px"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_theme"
-            android:text="REMOVE "
-            android:textColor="@color/white"
-            android:textSize="@dimen/button_text_size" />
+            android:text="@string/remove"
+            />
     </RelativeLayout>
 
         <ImageView

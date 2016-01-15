@@ -166,15 +166,10 @@
 
         <Button
             android:id="@+id/buttonVerify"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="100px"
-            android:background="@drawable/button_theme"
             android:text="@string/nl_otp_verify"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/text_size_34"
-            android:textAllCaps="true"
             />
 
 
