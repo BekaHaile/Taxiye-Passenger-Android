@@ -216,86 +216,7 @@
                     android:src="@color/text_color_hint" />
 
 
-<<<<<<< Updated upstream
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutEC1Delete"
-                        android:layout_width="130px"
-                        android:layout_height="70px"
-                        android:layout_gravity="right"
-                        >
 
-                        <TextView
-                            android:id="@+id/textViewEC1Delete"
-                            android:layout_width="130px"
-                            android:layout_height="70px"
-                            android:padding="0px"
-                            android:text="Delete"
-                            android:textColor="@color/text_color_theme_selector"
-                            android:textSize="28px"
-                            android:gravity="center"
-                            />
-                        <ImageView
-                            android:layout_width="90px"
-                            android:layout_height="4px"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/background_yellow_alpha_selector"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="5px"/>
-
-                    </RelativeLayout>
-
-
-
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutEC1Operations"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="60px"
-                        >
-
-                        <Button
-                            android:id="@+id/buttonVerifyEC1"
-                            style="@style/ButtonTheme"
-                            android:layout_centerHorizontal="true"
-                            android:text="@string/verify"
-                            android:visibility="gone"
-                            />
-
-
-                        <TextView
-                            android:id="@+id/textViewEC1NotVerified"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
-                            android:text="This contact has\nnot been verified."
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
-                            />
-
-
-                        <Button
-                            android:id="@+id/buttonResendSMSEC1"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10px"
-                            android:background="@drawable/button_red_selector"
-                            android:text="RESEND SMS"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"
-                            />
-
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-
-                <!-- top EC2 -->
-=======
->>>>>>> Stashed changes
                 <RelativeLayout
                     android:id="@+id/relativeLayoutEC1Delete"
                     android:layout_width="wrap_content"
@@ -593,51 +514,7 @@
                         android:id="@+id/textViewEC2NotVerified"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-<<<<<<< Updated upstream
-                        android:layout_marginTop="60px"
-                        >
 
-                        <Button
-                            android:id="@+id/buttonVerifyEC2"
-                            style="@style/ButtonTheme"
-                            android:layout_centerHorizontal="true"
-                            android:text="@string/verify"
-                            android:visibility="visible"
-                            />
-
-
-                        <TextView
-                            android:id="@+id/textViewEC2NotVerified"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
-                            android:text="This contact has\nnot been verified."
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
-                            android:visibility="gone"
-                            />
-
-
-                        <Button
-                            android:id="@+id/buttonResendSMSEC2"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10px"
-                            android:background="@drawable/button_red_selector"
-                            android:text="RESEND SMS"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"
-                            android:visibility="gone"
-                            />
-
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-=======
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20px"
                         android:text="This contact has\nnot been verified."
@@ -663,7 +540,6 @@
 
 
             </LinearLayout>
->>>>>>> Stashed changes
 
 
             <TextView
