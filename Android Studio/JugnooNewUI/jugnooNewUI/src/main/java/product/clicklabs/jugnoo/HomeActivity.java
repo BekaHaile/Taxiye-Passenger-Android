@@ -3713,7 +3713,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.snippet("");
         markerOptions1.position(latlng);
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
-        markerOptions1.anchor(0.5f, 0.7f);
+        markerOptions1.anchor(0.5f, 0.5f);
         return markerOptions1;
     }
 

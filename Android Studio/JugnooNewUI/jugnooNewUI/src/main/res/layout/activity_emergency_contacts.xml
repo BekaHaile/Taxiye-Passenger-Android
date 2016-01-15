@@ -10,7 +10,7 @@
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -93,13 +93,13 @@
 
                     <ImageView
                         android:id="@+id/imageViewEmergencyContact1Edit"
-                        android:layout_width="73px"
-                        android:layout_height="73px"
-                        android:padding="20px"
+                        android:layout_width="60px"
+                        android:layout_height="60px"
+                        android:padding="15px"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10px"
-                        android:src="@drawable/emergency_edit_icon"
+                        android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
                         />
 
@@ -157,7 +157,7 @@
                         android:layout_width="620px"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:src="@color/text_color_hint"/>
 
 
                     <RelativeLayout
@@ -201,7 +201,7 @@
                         android:layout_width="620px"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:src="@color/text_color_hint"/>
 
                     <EditText
                         android:id="@+id/editTextEC1Email"
@@ -224,7 +224,7 @@
                         android:layout_width="620px"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:src="@color/text_color_hint"/>
 
 
                     <RelativeLayout
@@ -240,7 +240,7 @@
                             android:layout_height="70px"
                             android:padding="0px"
                             android:text="Delete"
-                            android:textColor="@drawable/text_color_yellow_alpha_selector"
+                            android:textColor="@color/text_color_theme_selector"
                             android:textSize="28px"
                             android:gravity="center"
                             />
@@ -266,12 +266,12 @@
 
                         <Button
                             android:id="@+id/buttonVerifyEC1"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
+                            android:layout_width="@dimen/button_width"
+                            android:layout_height="@dimen/button_height"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/button_yellow"
+                            android:background="@drawable/button_theme"
                             android:text="VERIFY"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
+                            android:textColor="@color/white"
                             android:textSize="@dimen/button_text_size"
                             android:visibility="gone"
                             />
@@ -345,13 +345,13 @@
 
                     <ImageView
                         android:id="@+id/imageViewEmergencyContact2Edit"
-                        android:layout_width="73px"
-                        android:layout_height="73px"
-                        android:padding="20px"
+                        android:layout_width="60px"
+                        android:layout_height="60px"
+                        android:padding="15px"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10px"
-                        android:src="@drawable/emergency_edit_icon"
+                        android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
                         />
 
@@ -410,7 +410,7 @@
                         android:layout_width="620px"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:src="@color/text_color_hint"/>
 
 
                     <RelativeLayout
@@ -454,7 +454,7 @@
                         android:layout_width="620px"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:src="@color/text_color_hint"/>
 
                     <EditText
                         android:id="@+id/editTextEC2Email"
@@ -477,7 +477,7 @@
                         android:layout_width="620px"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:src="@color/text_color_hint"/>
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutEC2Delete"
@@ -492,7 +492,7 @@
                             android:layout_height="70px"
                             android:padding="0px"
                             android:text="Delete"
-                            android:textColor="@drawable/text_color_yellow_alpha_selector"
+                            android:textColor="@color/text_color_theme_selector"
                             android:textSize="28px"
                             android:gravity="center"
                             />
@@ -516,12 +516,12 @@
 
                         <Button
                             android:id="@+id/buttonVerifyEC2"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
+                            android:layout_width="@dimen/button_width"
+                            android:layout_height="@dimen/button_height"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/button_yellow"
+                            android:background="@drawable/button_theme"
                             android:text="VERIFY"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
+                            android:textColor="@color/white"
                             android:textSize="@dimen/button_text_size"
                             android:visibility="visible"
                             />

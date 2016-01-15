@@ -33,11 +33,13 @@
 
             <TextView
                 android:id="@+id/textViewInitialSearch"
-                android:layout_width="520px"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
+                android:padding="5px"
                 android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
+                android:layout_toLeftOf="@+id/progressBarInitialSearch"
                 android:background="@color/transparent"
                 android:gravity="center_vertical"
                 android:hint="Set pick up location"

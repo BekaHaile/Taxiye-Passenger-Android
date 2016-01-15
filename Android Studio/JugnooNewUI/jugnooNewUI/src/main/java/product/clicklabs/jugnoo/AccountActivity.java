@@ -1063,7 +1063,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             String s = "Home \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddHome.setText(ss1);
             imageViewEditHome.setVisibility(View.VISIBLE);
         }
@@ -1076,7 +1076,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             String s = "Work \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddWork.setText(ss1);
             imageViewEditWork.setVisibility(View.VISIBLE);
         }
@@ -1098,7 +1098,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     String s = "Home \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
                     textViewAddHome.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
                     imageViewEditHome.setVisibility(View.VISIBLE);
@@ -1118,7 +1118,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     String s = "Work \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
                     textViewAddWork.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
                     imageViewEditWork.setVisibility(View.VISIBLE);

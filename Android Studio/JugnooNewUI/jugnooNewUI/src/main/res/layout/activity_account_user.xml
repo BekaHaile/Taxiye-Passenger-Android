@@ -454,12 +454,13 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
                             android:maxLines="2"
+                            android:lineSpacingExtra="10px"
                             android:paddingRight="20px"
                             android:layout_toRightOf="@+id/imageViewAddHome"
                             android:layout_toLeftOf="@+id/imageViewEditHome"
                             android:gravity="center_vertical"
                             android:text="@string/add_home"
-                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textColor="@color/text_color_hint"
                             android:textSize="28px" />
 
                         <ImageView
@@ -508,11 +509,12 @@
                             android:layout_marginLeft="20px"
                             android:maxLines="2"
                             android:paddingRight="20px"
+                            android:lineSpacingExtra="10px"
                             android:layout_toRightOf="@+id/imageViewAddWork"
                             android:layout_toLeftOf="@+id/imageViewEditWork"
                             android:gravity="center_vertical"
                             android:text="@string/add_work"
-                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textColor="@color/text_color_hint"
                             android:textSize="28px" />
 
                         <ImageView

@@ -16,7 +16,7 @@
         android:tag="mwar"
         wheel:matProg_barColor="@color/theme_color"
         wheel:matProg_fillRadius="true"
-        wheel:matProg_progressIndeterminate="false"></product.clicklabs.jugnoo.utils.ProgressWheel>
+        wheel:matProg_progressIndeterminate="false"/>
 
     <TextView
         android:id="@+id/tvProgress"
