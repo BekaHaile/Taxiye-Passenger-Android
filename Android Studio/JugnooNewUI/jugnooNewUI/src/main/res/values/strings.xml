@@ -375,6 +375,12 @@
 	<string name="nl_signup_multiple_if_you_still_like_to_create_new">If you would still like to create a new account</string>
 	<string name="nl_signup_multiple_please_contact_customer_care">Please contact our customer care</string>
 
+	<!-- NL Signup Request Duplicate Registration-->
+	<string name="nl_signup_request_registration">Request Registration</string>
+	<string name="nl_signup_request_registration_info">Registration Information</string>
+	<string name="nl_signup_request_registration_you_have_already_format">You have already created %s accounts from this device. Please explain the reason for creating a new account.</string>
+	<string name="nl_signup_request_registration_revert_you">We will revert to you soon</string>
+
 
 	<string name="debug">Debug</string>
 
