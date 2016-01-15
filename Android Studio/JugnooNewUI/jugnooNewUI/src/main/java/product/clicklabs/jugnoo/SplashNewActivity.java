@@ -1144,6 +1144,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
+							} else if(ApiResponseFlags.AUTH_ALREADY_VERIFIED.getOrdinal() == flag){
+								DialogPopup.alertPopupWithListener(activity, "", message,
+										new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
+												intent.putExtra("forgot_login_email", email);
+												startActivity(intent);
+												overridePendingTransition(R.anim.right_in, R.anim.right_out);
+											}
+										});
 							} else {
 								DialogPopup.alertPopup(activity, "", message);
 							}
