@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:id="@+id/linearLayoutRideShortInfo"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180px"
+        >
+
+        <LinearLayout
+            android:layout_width="300px"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/textViewDriverName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color"
+                android:text="Driver Name"
+                android:textSize="@dimen/text_size_30"
+                />
+
+            <TextView
+                android:id="@+id/textViewDriverCarNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color"
+                android:text="PB65AC0123"
+                android:textSize="@dimen/text_size_26"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="300px"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            >
+
+            <TextView
+                android:id="@+id/textViewTripTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color"
+                android:text="Trip Total"
+                android:textSize="@dimen/text_size_30"
+                />
+
+            <TextView
+                android:id="@+id/textViewTripTotalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color"
+                android:text="@string/rupee_0"
+                android:textSize="@dimen/text_size_40"
+                />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:id="@+id/textViewStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="@string/start"
+                android:textSize="@dimen/text_size_26"
+                android:layout_marginTop="20px"
+                android:layout_marginLeft="80px"
+                />
+            <TextView
+                android:id="@+id/textViewStartValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color_light"
+                android:text="1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India"
+                android:textSize="@dimen/text_size_26"
+                android:layout_marginTop="5px"
+                android:layout_marginLeft="80px"
+                />
+
+
+            <TextView
+                android:id="@+id/textViewEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="@string/end"
+                android:textSize="@dimen/text_size_26"
+                android:layout_marginTop="20px"
+                android:layout_marginLeft="80px"
+                />
+            <TextView
+                android:id="@+id/textViewEndValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color_light"
+                android:text="1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India"
+                android:textSize="@dimen/text_size_26"
+                android:layout_marginTop="5px"
+                android:layout_marginLeft="80px"
+                />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/text_color_hint"
+                android:layout_marginTop="25px"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+    
+
+
+
+</LinearLayout>
