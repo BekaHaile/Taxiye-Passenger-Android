@@ -159,6 +159,14 @@
  <color name="red_google">#CF5D3A</color>
  <color name="red_google_alpha">#99CF5D3A</color>
 
+ <!-- Leaderboard Rank Colors -->
+    <color name="rank_1">#FDFDFD</color>
+    <color name="rank_2">#F7F7F7</color>
+    <color name="rank_3">#ECECEC</color>
+    <color name="rank_4">#E4E4E4</color>
+    <color name="rank_5">#D7D7D7</color>
+    <color name="rank_6">#CBCBCB</color>
+
 
 
 

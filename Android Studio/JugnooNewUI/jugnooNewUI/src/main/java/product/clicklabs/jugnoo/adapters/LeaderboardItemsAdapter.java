@@ -54,33 +54,35 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
 
         switch(position){
             case 0:
-                holder.textViewRank.setBackgroundResource(R.drawable.circle_white);
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_1);
                 break;
             case 1:
-                holder.textViewRank.setBackgroundResource(R.drawable.circle_white_60);
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_2);
                 break;
             case 2:
-                holder.textViewRank.setBackgroundResource(R.drawable.circle_white_40);
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_3);
                 break;
             case 3:
-                holder.textViewRank.setBackgroundResource(R.drawable.circle_white_20);
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_4);
+                break;
+            case 4:
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_5);
+                break;
+            case 5:
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_6);
                 break;
             default:
-                holder.textViewRank.setBackgroundResource(R.drawable.background_transparent);
+                holder.relativeLayoutRank.setBackgroundResource(R.color.rank_6);
                 break;
         }
 
         if(leaderboardItem.getIsUser()){
-            holder.textViewRank.setTextColor(activity.getResources().getColor(R.color.grey_black));
-            holder.textViewName.setTextColor(activity.getResources().getColor(R.color.grey_black));
-            holder.textViewRank.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-            holder.textViewName.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            holder.textViewRank.setTypeface(Fonts.mavenRegular(activity));
+            holder.textViewName.setTypeface(Fonts.mavenRegular(activity));
         }
         else{
-            holder.textViewRank.setTextColor(activity.getResources().getColor(R.color.grey_dark_more_receipt));
-            holder.textViewName.setTextColor(activity.getResources().getColor(R.color.grey_dark_more_receipt));
-            holder.textViewRank.setTypeface(Fonts.latoRegular(activity));
-            holder.textViewName.setTypeface(Fonts.latoRegular(activity));
+            holder.textViewRank.setTypeface(Fonts.mavenLight(activity));
+            holder.textViewName.setTypeface(Fonts.mavenLight(activity));
         }
 
 	}
@@ -91,17 +93,18 @@ public class LeaderboardItemsAdapter extends RecyclerView.Adapter<LeaderboardIte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public RelativeLayout relative;
+        public RelativeLayout relative, relativeLayoutRank;
         public TextView textViewRank, textViewName, textViewNoOfDownloads;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+            relativeLayoutRank = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutRank);
             textViewRank = (TextView)itemView.findViewById(R.id.textViewRank);
-            textViewRank.setTypeface(Fonts.latoRegular(activity));
+            textViewRank.setTypeface(Fonts.mavenLight(activity));
             textViewName = (TextView)itemView.findViewById(R.id.textViewName);
-            textViewName.setTypeface(Fonts.latoRegular(activity));
+            textViewName.setTypeface(Fonts.mavenLight(activity));
             textViewNoOfDownloads = (TextView)itemView.findViewById(R.id.textViewNoOfDownloads);
-            textViewNoOfDownloads.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            textViewNoOfDownloads.setTypeface(Fonts.mavenLight(activity));
         }
     }
 }

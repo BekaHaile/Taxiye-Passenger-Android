@@ -77,14 +77,18 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		}
 
 		buttonLocal = (Button)rootView.findViewById(R.id.buttonLocal);
-		buttonLocal.setTypeface(Fonts.latoRegular(activity));
+		buttonLocal.setTypeface(Fonts.mavenRegular(activity));
 		buttonGlobal = (Button)rootView.findViewById(R.id.buttonGlobal);
-		buttonGlobal.setTypeface(Fonts.latoRegular(activity));
+		buttonGlobal.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewDaily = (TextView)rootView.findViewById(R.id.textViewDaily);
-		textViewDaily.setTypeface(Fonts.latoRegular(activity));
+		textViewDaily.setTypeface(Fonts.mavenRegular(activity));
 		textViewWeekly = (TextView)rootView.findViewById(R.id.textViewWeekly);
-		textViewWeekly.setTypeface(Fonts.latoRegular(activity));
+		textViewWeekly.setTypeface(Fonts.mavenRegular(activity));
+
+		((TextView)rootView.findViewById(R.id.textViewRank)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewName)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewNoOfDownloads)).setTypeface(Fonts.mavenLight(activity));
 
 		recyclerViewLb = (RecyclerView)rootView.findViewById(R.id.recyclerViewLb);
 		recyclerViewLb.setLayoutManager(new LinearLayoutManager(activity));
@@ -145,18 +149,14 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 
 			if(LBTimeType.DAILY == lbTimeType){
 				if(this.lbTimeType != lbTimeType) {
-					textViewDaily.setBackgroundResource(R.drawable.nl_background_theme);
-					textViewDaily.setTextColor(getResources().getColor(R.color.white));
-					textViewWeekly.setBackgroundResource(R.drawable.background_white_bordered_yellow_selector);
-					textViewWeekly.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+					textViewDaily.setBackgroundResource(R.color.menu_item_selector_color);
+					textViewWeekly.setBackgroundResource(R.color.white);
 				}
 			}
 			else if(LBTimeType.WEEKLY == lbTimeType){
 				if(this.lbTimeType != lbTimeType) {
-					textViewDaily.setBackgroundResource(R.drawable.background_white_bordered_yellow_selector);
-					textViewDaily.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
-					textViewWeekly.setBackgroundResource(R.drawable.nl_background_theme);
-					textViewWeekly.setTextColor(getResources().getColor(R.color.white));
+					textViewDaily.setBackgroundResource(R.color.white);
+					textViewWeekly.setBackgroundResource(R.color.menu_item_selector_color);
 				}
 			}
 
@@ -164,8 +164,8 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 				if(this.lbLocationType != lbLocationType){
 					buttonLocal.setBackgroundResource(R.drawable.nl_button_theme_normal);
 					buttonLocal.setTextColor(getResources().getColor(R.color.white));
-					buttonGlobal.setBackgroundResource(R.drawable.background_white_bordered_yellow_rounded_selector);
-					buttonGlobal.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+					buttonGlobal.setBackgroundResource(R.drawable.button_white_grey_theme_border_selector);
+					buttonGlobal.setTextColor(getResources().getColorStateList(R.color.text_color_theme_selector));
 				}
 				if(LBTimeType.DAILY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getLocal().getDaily().getRanklist());
@@ -180,8 +180,8 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 			}
 			else if(LBLocationType.GLOBAL == lbLocationType){
 				if(this.lbLocationType != lbLocationType) {
-					buttonLocal.setBackgroundResource(R.drawable.background_white_bordered_yellow_rounded_selector);
-					buttonLocal.setTextColor(getResources().getColorStateList(R.color.text_color_grey_dark_white_selector));
+					buttonLocal.setBackgroundResource(R.drawable.button_white_grey_theme_border_selector);
+					buttonLocal.setTextColor(getResources().getColorStateList(R.color.text_color_theme_selector));
 					buttonGlobal.setBackgroundResource(R.drawable.nl_button_theme_normal);
 					buttonGlobal.setTextColor(getResources().getColor(R.color.white));
 				}

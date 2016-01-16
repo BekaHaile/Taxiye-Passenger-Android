@@ -295,7 +295,7 @@
 	<string name="weekly_leaderboard">Weekly</string>
 	<string name="lb_rank">Rank</string>
 	<string name="lb_name">Name</string>
-	<string name="lb_no_downloads">No. of\nDownloads</string>
+	<string name="lb_no_downloads">Downloads</string>
 
 	<!-- Priority Tip -->
 	<string name="priority_tip">PRIORITY TIP</string>
