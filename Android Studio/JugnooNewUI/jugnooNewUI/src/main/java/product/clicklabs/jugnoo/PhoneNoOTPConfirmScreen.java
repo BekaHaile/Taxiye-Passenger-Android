@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -53,8 +52,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	Button buttonVerify;
 
 	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutOTPThroughCall, relativeLayoutMissCall, relativeLayoutOr;
-	TextView textViewOTPNotReceived, textViewMissCall;
+	RelativeLayout relativeLayoutMissCall, relativeLayoutOr;
+	TextView textViewMissCall;
 	
 	
 	LinearLayout relative;
@@ -142,8 +141,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 
 		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-		relativeLayoutOTPThroughCall = (RelativeLayout) findViewById(R.id.relativeLayoutOTPThroughCall);
-		textViewOTPNotReceived = (TextView) findViewById(R.id.textViewOTPNotReceived); textViewOTPNotReceived.setTypeface(Fonts.latoLight(this));
 		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
 		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
 		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
@@ -208,13 +205,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		});
 		
 		
-		relativeLayoutOTPThroughCall.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
-			}
-		});
 
 		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
 
@@ -245,18 +235,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 
 		try{
-			if(Data.otpViaCallEnabled == 1){
-				relativeLayoutOTPThroughCall.setVisibility(View.VISIBLE);
-			}
-			else{
-				relativeLayoutOTPThroughCall.setVisibility(View.GONE);
-			}
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				if(Data.otpViaCallEnabled == 1){
-					relativeLayoutOr.setVisibility(View.VISIBLE);
-				} else{
-					relativeLayoutOr.setVisibility(View.GONE);
-				}
+				relativeLayoutOr.setVisibility(View.VISIBLE);
 				relativeLayoutMissCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -272,18 +252,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		OTP_SCREEN_OPEN = "yes";
 
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
 
-			}
-
-			@Override
-			public void keyBoardClosed() {
-
-			}
-		}));
-		
 	}
 
 
