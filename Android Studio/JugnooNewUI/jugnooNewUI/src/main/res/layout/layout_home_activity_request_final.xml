@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <!-- promo name fare factor layout-->
     <RelativeLayout
@@ -101,7 +101,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="6px"
+        android:layout_height="4px"
         android:layout_above="@+id/linearLayoutInRideDriverInfo"
         android:src="@drawable/shadow_up"/>
 
@@ -270,7 +270,7 @@
                 android:background="@drawable/bg_theme_color_to_white_selector"
                 android:singleLine="true"
                 android:text="Cancel Ride"
-                android:textColor="@drawable/text_color_yellow_white_selector"
+                android:textColor="@drawable/text_color_grey_white_selector"
                 android:textSize="@dimen/text_size_32"
                 android:visibility="gone" />
 
@@ -281,7 +281,7 @@
                 android:background="@drawable/bg_theme_color_to_white_selector"
                 android:singleLine="true"
                 android:text="Add Paytm Cash"
-                android:textColor="@drawable/text_color_yellow_white_selector"
+                android:textColor="@drawable/text_color_grey_white_selector"
                 android:textSize="@dimen/text_size_32"
                 android:visibility="visible" />
 
@@ -302,7 +302,7 @@
                 android:background="@drawable/bg_theme_color_to_white_selector"
                 android:singleLine="true"
                 android:text="Call Driver"
-                android:textColor="@drawable/text_color_yellow_white_selector"
+                android:textColor="@drawable/text_color_grey_white_selector"
                 android:textSize="@dimen/text_size_32" />
 
         </LinearLayout>

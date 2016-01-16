@@ -42,7 +42,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/yellow_alpha"
+        android:background="@color/theme_color"
         android:layout_alignParentBottom="true"
          />
     

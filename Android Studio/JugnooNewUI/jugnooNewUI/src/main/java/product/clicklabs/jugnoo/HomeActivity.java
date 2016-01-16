@@ -204,10 +204,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Top RL
     RelativeLayout topBarMain;
     RelativeLayout topRl;
-    ImageView imageViewMenu, imageViewSearchCancel, imageViewBack;
+    ImageView imageViewMenu, imageViewSearchCancel;
     TextView title;
     Button checkServerBtn;
-    ImageView jugnooShopImageView;
     ImageView imageViewHelp;
 	RelativeLayout relativeLayoutNotification;
 	TextView textViewNotificationValue;
@@ -744,7 +743,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                hideAnims();
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
             }
 
@@ -909,7 +907,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
 				try {
 					if(map != null) {
-                        hideAnims();
                         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
                             Data.pickupLatLng = map.getCameraPosition().target;
                             FlurryEventLogger.event(AUTO_RIDE_ICON);
@@ -993,7 +990,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 textViewInitialSearch.setText("");
                 relativeLayoutInitialSearchBar.performClick();
-                hideAnims();
             }
         });
 
@@ -1459,7 +1455,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapTouched() {
                     // Map touched
-                    hideAnims();
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
 
@@ -1648,11 +1643,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         topRl = (RelativeLayout) root.findViewById(R.id.topRl);
         imageViewMenu = (ImageView) root.findViewById(R.id.imageViewMenu);
         imageViewSearchCancel = (ImageView) root.findViewById(R.id.imageViewSearchCancel);
-        imageViewBack = (ImageView) root.findViewById(R.id.imageViewBack);
         title = (TextView) root.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(this));
         checkServerBtn = (Button) root.findViewById(R.id.checkServerBtn);
         imageViewHelp = (ImageView) root.findViewById(R.id.imageViewHelp);
-        jugnooShopImageView = (ImageView) root.findViewById(R.id.jugnooShopImageView);
         relativeLayoutNotification = (RelativeLayout) root.findViewById(R.id.relativeLayoutNotification);
         textViewNotificationValue = (TextView) root.findViewById(R.id.textViewNotificationValue);
         textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
@@ -1661,7 +1654,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //Top bar events
         topRl.setOnClickListener(topBarOnClickListener);
         imageViewMenu.setOnClickListener(topBarOnClickListener);
-        imageViewBack.setOnClickListener(topBarOnClickListener);
         checkServerBtn.setOnClickListener(topBarOnClickListener);
 
         checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
@@ -1673,7 +1665,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        jugnooShopImageView.setOnClickListener(topBarOnClickListener);
         imageViewSearchCancel.setOnClickListener(topBarOnClickListener);
         imageViewHelp.setOnClickListener(topBarOnClickListener);
         relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
@@ -1690,7 +1681,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 case R.id.imageViewMenu:
                     drawerLayout.openDrawer(menuLayout);
-                    hideAnims();
                     FlurryEventLogger.event(MENU_LOOKUP);
                     break;
 
@@ -1700,19 +1690,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
 
                 case R.id.checkServerBtn:
-                    hideAnims();
                     break;
 
-                case R.id.jugnooShopImageView:
-                    if (Data.userData != null) {
-                        if (Data.userData.nukkadEnable == 1) {
-                            startActivity(new Intent(HomeActivity.this, ItemInfosListActivity.class));
-                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            FlurryEventLogger.christmasNewScreenOpened(Data.userData.accessToken);
-                        }
-                    }
-                    hideAnims();
-                    break;
 
                 case R.id.imageViewSearchCancel:
                     textViewInitialSearch.setText("");
@@ -1738,9 +1717,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     };
 
 
-//	private void hideMenuDrawer(){
-//		drawerLayout.closeDrawer(menuLayout);
-//	}
 
 	private float googleMapPadding = 0;
 	private void setGoogleMapPadding(float bottomPadding){
@@ -1769,75 +1745,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-
-
-	Handler shakeHandler;
-    Runnable shakeRunnable;
-    int shakeCount = 0;
-    private void startGiftShake(){
-//        imageViewGift.setVisibility(View.VISIBLE);
-        shakeCount = 0;
-        shakeHandler = new Handler();
-        shakeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-//                    imageViewGift.clearAnimation();
-//                    imageViewGift.setVisibility(View.GONE);
-                } else {
-//                    if (View.VISIBLE != imageViewGift.getVisibility()) {
-//                        imageViewGift.setVisibility(View.VISIBLE);
-//                    }
-//                    shakeView(imageViewGift);
-                }
-                if(shakeCount <= 2){
-                    shakeCount++;
-                    shakeHandler.postDelayed(shakeRunnable, 10000);
-                }
-                else{
-                    shakeHandler.removeCallbacks(shakeRunnable);
-                }
-            }
-        };
-
-        shakeHandler.postDelayed(shakeRunnable, 10000);
-    }
-
-
-    private void stopGiftShake(){
-        try{
-//            imageViewGift.clearAnimation();
-//            imageViewGift.setVisibility(View.GONE);
-            shakeCount = 0;
-            shakeHandler.removeCallbacks(shakeRunnable);
-        } catch(Exception e){
-        }
-    }
-
-//    private void shakeView(View v) {
-//        // Create shake effect from xml resource
-//        Animation shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-//        // Perform animation
-//        v.startAnimation(shake);
-//    }
-
-
-    public void enableJugnooShopUI() {
-        if ((UserMode.PASSENGER == userMode) && (Data.userData != null) && (Data.userData.nukkadEnable == 1)) {
-            jugnooShopImageView.setVisibility(View.VISIBLE);
-            try {
-                if (!"".equalsIgnoreCase(Data.userData.nukkadIcon)) {
-                    Picasso.with(HomeActivity.this).load(Data.userData.nukkadIcon).into(jugnooShopImageView);
-                } else {
-                    jugnooShopImageView.setImageResource(R.drawable.gift_button_selector);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            jugnooShopImageView.setVisibility(View.GONE);
-        }
-    }
 
 
     public void callMapTouchedRefreshDrivers() {
@@ -1967,22 +1874,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
                 reconnectLocationFetchers();
             }
-            hideAnims();
             FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
         }
     };
 
-    public void hideAnims() {
-//        if (genieLayout != null) {
-//            genieLayout.hideAnims();
-//        }
-    }
-
-    public void clearAnims() {
-//        if (genieLayout != null) {
-//            genieLayout.clearAllAnims();
-//        }
-    }
 
 
     Handler reconnectionHandler = null;
@@ -2073,7 +1968,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			promoOpened = false;
 
             imageViewMenu.setVisibility(View.VISIBLE);
-            imageViewBack.setVisibility(View.GONE);
 
             if (userMode == UserMode.PASSENGER) {
 
@@ -2116,8 +2010,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
 
-                enableJugnooShopUI();
-
                 setSlidingUpPanelLayoutState(mode);
 
                 switch (mode) {
@@ -2130,7 +2022,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
-                        clearAnims();
 
 						try{ map.clear(); } catch(Exception e){ e.printStackTrace(); }
 
@@ -2180,7 +2071,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-                        startGiftShake();
 						relativeLayoutNotification.setVisibility(View.VISIBLE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -2228,8 +2118,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        jugnooShopImageView.setVisibility(View.GONE);
-                        stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -2286,7 +2174,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setGoogleMapPadding(0);
 
 
-                        startGiftShake();
 						relativeLayoutNotification.setVisibility(View.VISIBLE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -2350,7 +2237,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						updateUIInRideFareInfo();
 						setPaymentOptionInRide();
 
-                        stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -2420,7 +2306,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						updateUIInRideFareInfo();
 						setPaymentOptionInRide();
 
-                        stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -2510,7 +2395,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						updateUIInRideFareInfo();
 						setPaymentOptionInRide();
 
-                        stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -2528,7 +2412,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         imageViewSearchCancel.setVisibility(View.GONE);
-                        stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.VISIBLE);
 						setGoogleMapPadding(0);
@@ -2549,7 +2432,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         endRideReviewRl.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        stopGiftShake();
 						relativeLayoutNotification.setVisibility(View.GONE);
                         imageViewHelp.setVisibility(View.GONE);
                         imageViewSearchCancel.setVisibility(View.GONE);
@@ -3393,8 +3275,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-//        genieLayout.saveGenieParams();
-        clearAnims();
 
         super.onPause();
 

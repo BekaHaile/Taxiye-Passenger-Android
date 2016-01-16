@@ -94,7 +94,7 @@
                 android:layout_height="70px"
                 android:layout_centerVertical="true"
                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_fillRadius="true"
                 android:layout_marginRight="10px"
                 wheel:matProg_progressIndeterminate="true"

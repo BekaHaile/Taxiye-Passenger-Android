@@ -255,7 +255,7 @@
                     android:layout_marginRight="30px"
                     android:layout_alignParentRight="true"
                     android:visibility="gone"
-                    wheel:matProg_barColor="@color/grey_dark_more"
+                    wheel:matProg_barColor="@color/text_color"
                     wheel:matProg_barWidth="2dp"
                     wheel:matProg_fillRadius="true"
                     wheel:matProg_progressIndeterminate="true" />

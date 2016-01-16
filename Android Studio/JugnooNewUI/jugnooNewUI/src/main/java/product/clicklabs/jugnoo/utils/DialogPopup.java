@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -30,8 +29,6 @@ import product.clicklabs.jugnoo.R;
 
 public class DialogPopup {
 
-	
-	
 	public static Dialog dialog;
 	public static void alertPopup(Activity activity, String title, String message) {
 		try {
@@ -54,8 +51,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
@@ -65,7 +62,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -102,8 +99,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -113,7 +110,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -150,8 +147,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 
 
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -161,7 +158,7 @@ public class DialogPopup {
 
 			textHead.setVisibility(View.GONE);
 
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -199,8 +196,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 			
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -213,7 +210,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 			
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -269,8 +266,8 @@ public class DialogPopup {
 			dialog.setCanceledOnTouchOutside(false);
 
 			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.latoRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -280,7 +277,7 @@ public class DialogPopup {
 			
 			textHead.setVisibility(View.GONE);
 
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
 
 			if(buttonText.length() > 0){
 				btnOk.setText(buttonText);
@@ -337,10 +334,10 @@ public class DialogPopup {
             }
 
             TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            textHead.setTypeface(Fonts.mavenRegular(activity));
             TextView textMessage = (TextView) dialog
                 .findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.latoRegular(activity));
+            textMessage.setTypeface(Fonts.mavenLight(activity));
 
             textMessage.setMovementMethod(new ScrollingMovementMethod());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -356,13 +353,13 @@ public class DialogPopup {
             }
 
             Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.latoRegular(activity));
+            btnOk.setTypeface(Fonts.mavenRegular(activity));
             if(!"".equalsIgnoreCase(okText)){
                 btnOk.setText(okText);
             }
 
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-            btnCancel.setTypeface(Fonts.latoRegular(activity));
+            btnCancel.setTypeface(Fonts.mavenRegular(activity));
             if(!"".equalsIgnoreCase(canceltext)){
                 btnCancel.setText(canceltext);
             }
@@ -428,10 +425,10 @@ public class DialogPopup {
 
 
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			textHead.setTypeface(Fonts.mavenRegular(activity));
 			TextView textMessage = (TextView) dialog
 					.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Fonts.latoRegular(activity));
+			textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
 			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -442,13 +439,13 @@ public class DialogPopup {
 
 
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+			btnOk.setTypeface(Fonts.mavenRegular(activity));
 			if(!"".equalsIgnoreCase(okText)){
 				btnOk.setText(okText);
 			}
 
 			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-			btnCancel.setTypeface(Fonts.latoRegular(activity));
+			btnCancel.setTypeface(Fonts.mavenRegular(activity));
 			if(!"".equalsIgnoreCase(canceltext)){
 				btnCancel.setText(canceltext);
 			}
@@ -517,7 +514,7 @@ public class DialogPopup {
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
 
-			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Fonts.latoRegular(activity));
+			TextView textViewBanner = (TextView) dialog.findViewById(R.id.textViewBanner); textViewBanner.setTypeface(Fonts.mavenLight(activity));
 			textViewBanner.setText(message);
 
 			linearLayout.setOnClickListener(new View.OnClickListener() {

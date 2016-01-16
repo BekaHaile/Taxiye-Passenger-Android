@@ -37,7 +37,7 @@
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="Title"
-                android:textColor="@color/grey_dark_more"
+                android:textColor="@color/text_color"
                 android:textSize="50px"
                 android:visibility="gone" />
 
@@ -54,8 +54,8 @@
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:text="Message"
-                android:textColor="@color/grey_dark"
-                android:textSize="36px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
 
 
             <ImageView
@@ -69,10 +69,10 @@
                 android:layout_height="83px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0px"
-                android:background="@drawable/button_white_yellow_br_selector"
+                android:background="@drawable/button_white_theme_br_selector"
                 android:singleLine="true"
                 android:text="OK"
-                android:textColor="@drawable/text_color_yellow_white_selector"
+                android:textColor="@drawable/text_color_grey_white_selector"
                 android:textSize="34px" />
         </LinearLayout>
     </RelativeLayout>

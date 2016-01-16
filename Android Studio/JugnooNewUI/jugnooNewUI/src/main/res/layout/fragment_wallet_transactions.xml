@@ -74,7 +74,7 @@
             android:layout_width="100px"
             android:layout_height="100px"
             android:layout_centerInParent="true"
-            wheel:matProg_barColor="@color/yellow"
+            wheel:matProg_barColor="@color/theme_color"
             wheel:matProg_fillRadius="true"
             wheel:matProg_progressIndeterminate="true"
             android:tag="mwar"

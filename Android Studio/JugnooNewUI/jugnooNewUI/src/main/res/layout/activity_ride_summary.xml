@@ -67,7 +67,7 @@
 
         <product.clicklabs.jugnoo.utils.ProgressWheel
             android:id="@+id/progressWheel"
-            wheel:matProg_barColor="@color/yellow"
+            wheel:matProg_barColor="@color/theme_color"
             wheel:matProg_fillRadius="true"
             wheel:matProg_progressIndeterminate="false"
             android:layout_width="120px"
