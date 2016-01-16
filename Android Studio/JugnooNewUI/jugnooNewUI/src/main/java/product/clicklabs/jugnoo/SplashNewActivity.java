@@ -81,6 +81,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -93,6 +94,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	//adding drop location
 
 	RelativeLayout root;
+	LinearLayout linearLayoutMain;
+	TextView textViewScroll;
 
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
@@ -321,6 +324,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		root = (RelativeLayout) findViewById(R.id.root);
 		new ASSL(SplashNewActivity.this, root, 1134, 720, false);
 
+		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
 		viewInitJugnoo = (ImageView) findViewById(R.id.viewInitJugnoo);
 		viewInitSplashJugnoo = (ImageView) findViewById(R.id.viewInitSplashJugnoo);
@@ -398,6 +403,29 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		textViewSTerms = (TextView) findViewById(R.id.textViewSTerms); textViewSTerms.setTypeface(Fonts.latoRegular(this));
 
 
+		root.setOnClickListener(onClickListenerKeybordHide);
+
+		relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
+
+		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
+				new KeyboardLayoutListener.KeyBoardStateHandler() {
+					@Override
+					public void keyboardOpened() {
+//						if(State.LOGIN == state){
+//							relativeLayoutJugnooLogo.setVisibility(View.GONE);
+//						}
+					}
+
+					@Override
+					public void keyBoardClosed() {
+//						if(State.LOGIN == state){
+//							relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
+//						}
+					}
+				});
+		keyboardLayoutListener.setResizeTextView(false);
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -445,7 +473,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
 				if (State.LOGIN == state) {
 					performLoginBackPressed();
 				} else if (State.SIGNUP == state) {
@@ -455,6 +482,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		});
 
 
+		imageViewDebug1.setOnClickListener(onClickListenerKeybordHide);
+		imageViewDebug2.setOnClickListener(onClickListenerKeybordHide);
+		imageViewDebug3.setOnClickListener(onClickListenerKeybordHide);
 		imageViewDebug1.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -494,6 +524,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		editTextEmail.addTextChangedListener(new CustomTextWatcher(textViewEmailRequired));
 		editTextPassword.addTextChangedListener(new CustomTextWatcher(textViewPasswordRequired));
+		editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
+		editTextPassword.setOnFocusChangeListener(onFocusChangeListener);
 
 		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -631,6 +663,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));
 		editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
 		editTextSPassword.addTextChangedListener(new CustomTextWatcher(textViewSPasswordRequired));
+
+		editTextSName.setOnFocusChangeListener(onFocusChangeListener);
+		editTextSEmail.setOnFocusChangeListener(onFocusChangeListener);
+		editTextSPhone.setOnFocusChangeListener(onFocusChangeListener);
+		editTextSPassword.setOnFocusChangeListener(onFocusChangeListener);
+		editTextSPromo.setOnFocusChangeListener(onFocusChangeListener);
 
 		buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -911,6 +949,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			editTextSPromo.setText(referralCode);
 		}
 	}
+
+	private View.OnClickListener onClickListenerKeybordHide = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+		}
+	};
+
+	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+		@Override
+		public void onFocusChange(View v, boolean hasFocus) {
+			if(!hasFocus && v instanceof EditText){
+				((EditText)v).setError(null);
+			}
+		}
+	};
 
 	public void getDeviceToken() {
 		if(ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){

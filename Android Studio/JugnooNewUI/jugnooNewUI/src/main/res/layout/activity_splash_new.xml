@@ -29,16 +29,17 @@
             android:id="@+id/viewInitSplashJugnoo"
             android:layout_width="match_parent"
             android:layout_height="200px"
-            android:visibility="visible"
+            android:visibility="gone"
             />
 
+        <!-- Jugnoo Logo layout-->
         <RelativeLayout
             android:id="@+id/relativeLayoutJugnooLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80px"
-            android:visibility="visible"
+            android:visibility="gone"
             >
 
             <ImageView
@@ -94,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="150px"
             android:animateLayoutChanges="true"
-            android:visibility="visible"
+            android:visibility="gone"
             >
 
             <LinearLayout
@@ -264,6 +265,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10px"
                         android:layout_toRightOf="@+id/imageViewEmail"
+                        android:layout_toLeftOf="@+id/textViewEmailRequired"
                         android:background="#0000"
                         android:completionThreshold="1"
                         android:gravity="center_vertical"
@@ -322,6 +324,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10px"
                         android:layout_toRightOf="@+id/imageViewPassword"
+                        android:layout_toLeftOf="@+id/textViewPasswordRequired"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/password"
@@ -772,7 +775,13 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewScroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
+
 
     <ImageView
         android:id="@+id/imageViewBack"
