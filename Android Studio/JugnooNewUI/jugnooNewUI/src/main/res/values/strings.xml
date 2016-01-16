@@ -646,6 +646,8 @@
 	<string name="start">Start</string>
 	<string name="end">End</string>
 	<string name="view_previous_trips">View previous trips</string>
+	<string name="support_main_title">How can we help?</string>
+	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
 
 
 </resources>

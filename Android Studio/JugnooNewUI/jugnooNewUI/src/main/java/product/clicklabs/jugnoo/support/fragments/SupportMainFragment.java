@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.fragments;
+package product.clicklabs.jugnoo.support.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SupportActivity;
-import product.clicklabs.jugnoo.adapters.SupportFAQItemsAdapter;
+import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -62,6 +62,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
         rootView = inflater.inflate(R.layout.fragment_support_main, container, false);
 
         activity = (SupportActivity) getActivity();
+		activity.setTitle(activity.getResources().getString(R.string.support_main_title));
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
@@ -96,7 +97,35 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		questionAnswers.add(supportFAQ.new QuestionAnswer("What is account", "this is account"));
 		supportFAQs = new ArrayList<>();
 		supportFAQs.add(supportFAQ);
-		supportFAQItemsAdapter = new SupportFAQItemsAdapter(supportFAQs, activity, R.layout.list_item_support_faq);
+		supportFAQ = new SupportFAQ(2, "General", questionAnswers);
+		questionAnswers.add(supportFAQ.new QuestionAnswer("What is General", "this is General"));
+		supportFAQs.add(supportFAQ);
+		supportFAQ = new SupportFAQ(3, "Usage", questionAnswers);
+		questionAnswers.add(supportFAQ.new QuestionAnswer("What is usage", "this is usage"));
+		supportFAQs.add(supportFAQ);
+		supportFAQ = new SupportFAQ(4, "Biling", questionAnswers);
+		questionAnswers.add(supportFAQ.new QuestionAnswer("What is Biling", "this is Biling"));
+		supportFAQs.add(supportFAQ);
+		supportFAQ = new SupportFAQ(4, "Promotions and Coupons", questionAnswers);
+		questionAnswers.add(supportFAQ.new QuestionAnswer("What is Promotions and Coupons", "this is Promotions and Coupons"));
+		supportFAQs.add(supportFAQ);
+		supportFAQ = new SupportFAQ(4, "Abuse of Service", questionAnswers);
+		questionAnswers.add(supportFAQ.new QuestionAnswer("What is Abuse of Service", "this is Abuse of Service"));
+		supportFAQs.add(supportFAQ);
+
+		supportFAQItemsAdapter = new SupportFAQItemsAdapter(supportFAQs, activity, R.layout.list_item_support_faq,
+				new SupportFAQItemsAdapter.Callback() {
+					@Override
+					public void onClick(int position, SupportFAQ supportFAQ) {
+						activity.getSupportFragmentManager().beginTransaction()
+								.add(activity.getLinearLayoutContainer().getId(),
+										new SupportFAQQuesFragment(supportFAQ), SupportFAQQuesFragment.class.getName())
+								.addToBackStack(SupportFAQQuesFragment.class.getName())
+								.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+										.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+								.commitAllowingStateLoss();
+					}
+				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
 		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
@@ -114,13 +143,18 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		});
 
 
-
-
 		return rootView;
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if (!hidden) {
+			activity.setTitle(activity.getResources().getString(R.string.support_main_title));
+		}
+	}
 
-    @Override
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(root);

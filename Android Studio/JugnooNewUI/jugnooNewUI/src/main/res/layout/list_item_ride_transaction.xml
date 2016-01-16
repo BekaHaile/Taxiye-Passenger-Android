@@ -164,7 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="80px"
             android:layout_marginTop="10px"
-            android:background="@drawable/background_white_white_light_grey_selector"
+            android:background="@drawable/background_white_grey_light_selector"
             android:layout_below="@+id/linearLayoutMain"
             >
 

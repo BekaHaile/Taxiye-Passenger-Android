@@ -1,15 +1,17 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.support;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.fragments.SupportMainFragment;
+import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -17,12 +19,12 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 public class SupportActivity extends BaseFragmentActivity implements FlurryEventNames {
 
-	RelativeLayout relative;
+	private RelativeLayout relative;
+
+	private TextView textViewTitle;
+	private ImageView imageViewBack;
 	
-	TextView textViewTitle;
-	ImageView imageViewBack;
-	
-	LinearLayout linearLayoutContainer;
+	private LinearLayout linearLayoutContainer;
 
 	@Override
 	protected void onResume() {
@@ -36,7 +38,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		setContentView(R.layout.activity_support);
 		
 		relative = (RelativeLayout) findViewById(R.id.relative);
-		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
+		new ASSL(this, relative, 1134, 720, false);
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
 		
@@ -63,15 +65,27 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	
 	public void performBackPressed(){
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		} else {
+			super.onBackPressed();
+		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
 	}
-	
+
+	public void setTitle(String title){
+		textViewTitle.setText(title);
+	}
+
+	public LinearLayout getLinearLayoutContainer(){
+		return linearLayoutContainer;
+	}
+
 	
 	@Override
 	protected void onDestroy() {

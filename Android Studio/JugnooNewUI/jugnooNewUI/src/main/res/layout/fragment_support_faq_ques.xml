@@ -9,30 +9,12 @@
     android:orientation="vertical"
     >
 
-    <include
-        layout="@layout/layout_ride_short_info"
-        />
-
-
-    <TextView
-        android:id="@+id/textViewViewPreviousTrips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30px"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:textColor="@color/text_color_light_selector"
-        android:textSize="@dimen/text_size_30"
-        android:text="@string/view_previous_trips"
-        android:padding="25px"
-        />
-
-
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewSupportFaq"
+        android:id="@+id/recyclerViewSupportFaqQues"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_white_rounded_bordered"
+        android:layout_marginTop="30px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
         android:layout_marginBottom="30px"
