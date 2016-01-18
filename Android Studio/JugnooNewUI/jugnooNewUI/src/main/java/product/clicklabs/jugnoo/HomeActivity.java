@@ -3390,10 +3390,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(FindADriverResponse findADriverResponse, Response response) {
                     try {
+                        Log.e("find_a_driver resp", "resp- "+new String(((TypedByteArray) response.getBody()).getBytes()));
                         Data.driverInfos.clear();
                         for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
+                            double bearing = 0;
+                            if(driver.getBearing() != null){
+                                bearing = driver.getBearing();
+                            }
                             Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-                                    "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0));
+                                    "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
                         }
                         etaMinutes = String.valueOf(findADriverResponse.getEta());
                         priorityTipCategory = findADriverResponse.getPriorityTipCategory();
@@ -3606,6 +3611,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.position(driverInfo.latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
         markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.rotation((float) driverInfo.getBearing());
         map.addMarker(markerOptions);
     }
 
