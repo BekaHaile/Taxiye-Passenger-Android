@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/white"
     android:splitMotionEvents="false">
 
     <RelativeLayout
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="TRANSACTIONS"
+            android:text="RECENT TRANSACTIONS"
             android:textColor="@color/white"
             android:textSize="@dimen/top_bar_title_text_size"/>
 
@@ -42,17 +42,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/topBar"
         android:splitMotionEvents="false">
-
-        <TextView
-            android:id="@+id/textViewRecentTransactions"
-            android:layout_width="match_parent"
-            android:layout_height="90px"
-            android:textSize="34px"
-            android:textColor="@color/grey_black_light"
-            android:gravity="center_vertical"
-            android:text="Recent Transactions"
-            android:paddingLeft="30px"
-            />
 
 
         <ListView

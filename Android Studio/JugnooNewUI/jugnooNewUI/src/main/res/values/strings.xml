@@ -604,6 +604,8 @@
     <string name="payment_option_dialog_title">Select preferred payment option</string>
     <string name="paytm">Paytm</string>
     <string name="cash">Cash</string>
+	<string name="jugnoo_cash">JUGNOO CASH</string>
+	<string name="add_cash">ADD CASH</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
     <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
