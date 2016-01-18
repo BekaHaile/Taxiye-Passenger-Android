@@ -120,6 +120,7 @@
     <dimen name="text_size_54">54px</dimen>
     <dimen name="text_size_50">50px</dimen>
     <dimen name="text_size_40">40px</dimen>
+    <dimen name="text_size_44">44px</dimen>
     <dimen name="text_size_38">38px</dimen>
     <dimen name="text_size_36">36px</dimen>
     <dimen name="text_size_34">34px</dimen>

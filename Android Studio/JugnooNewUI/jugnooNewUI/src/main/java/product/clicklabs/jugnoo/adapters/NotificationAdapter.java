@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RoundBorderTransform;
 
 import java.util.ArrayList;
 
@@ -61,8 +60,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 			}
 			else{
 				holder.notificationImage.setVisibility(View.VISIBLE);
-				Picasso.with(activity).load(notification.getNotificationImage())
-						.transform(new RoundBorderTransform((int) (minRatio * 5f))).into(holder.notificationImage);
+				Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +85,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             //codeTxt = (TextView) itemView.findViewById(R.id.code_text);
             //dateTxt = (TextView)itemView.findViewById(R.id.date_text);
 
-            descriptionTxt.setTypeface(Fonts.latoRegular(activity));
+            descriptionTxt.setTypeface(Fonts.mavenLight(activity));
         }
     }
 }

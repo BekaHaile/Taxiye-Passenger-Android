@@ -29,6 +29,7 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
     private TextView textViewPromotion1, textViewPromotion2;
     private HomeActivity activity;
     private ImageView radioPromotion1, radioPromotion2;
+    private LinearLayout linearLayoutNoOffers;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +52,9 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         radioPromotion2 = (ImageView)rootView.findViewById(R.id.radioPromotion2);
         linearLayoutPromotion1.setOnClickListener(this);
         linearLayoutPromotion2.setOnClickListener(this);
+        linearLayoutNoOffers = (LinearLayout)rootView.findViewById(R.id.linearLayoutNoOffers);
+        ((TextView)rootView.findViewById(R.id.textViewWhoops)).setTypeface(Fonts.mavenRegular(activity));
+        ((TextView)rootView.findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenLight(activity));
 
         try {
             update(activity.getSlidingBottomPanel().getPromoCoupons());
@@ -75,6 +79,7 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             if(promoCoupons != null && promoCoupons.size() >= 2){
                 linearLayoutPromotion1.setVisibility(View.VISIBLE);
                 linearLayoutPromotion2.setVisibility(View.VISIBLE);
+                linearLayoutNoOffers.setVisibility(View.GONE);
 
                 setPromoCouponText(textViewPromotion1, promoCoupons.get(0));
                 setPromoCouponText(textViewPromotion2, promoCoupons.get(1));
@@ -82,11 +87,13 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             } else if(promoCoupons != null && promoCoupons.size() == 1){
                 linearLayoutPromotion1.setVisibility(View.VISIBLE);
                 linearLayoutPromotion2.setVisibility(View.GONE);
+                linearLayoutNoOffers.setVisibility(View.GONE);
 
                 setPromoCouponText(textViewPromotion1, promoCoupons.get(0));
             } else{
                 linearLayoutPromotion1.setVisibility(View.GONE);
                 linearLayoutPromotion2.setVisibility(View.GONE);
+                linearLayoutNoOffers.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
