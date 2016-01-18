@@ -3390,7 +3390,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(FindADriverResponse findADriverResponse, Response response) {
                     try {
-                        Log.e("find_a_driver resp", "resp- "+new String(((TypedByteArray) response.getBody()).getBytes()));
+                        Log.e("find_a_driver resp", "resp- " + new String(((TypedByteArray) response.getBody()).getBytes()));
                         Data.driverInfos.clear();
                         for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
                             double bearing = 0;
@@ -3401,7 +3401,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
                         }
                         etaMinutes = String.valueOf(findADriverResponse.getEta());
-                        priorityTipCategory = findADriverResponse.getPriorityTipCategory();
+                        if(findADriverResponse.getPriorityTipCategory() != null){
+                            priorityTipCategory = findADriverResponse.getPriorityTipCategory();
+                        }
+
                         Data.userData.fareFactor = findADriverResponse.getFareFactor();
                         if (findADriverResponse.getFarAwayCity() == null) {
                             farAwayCity = "";
