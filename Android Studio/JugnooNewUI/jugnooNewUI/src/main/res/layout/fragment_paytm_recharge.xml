@@ -154,10 +154,10 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="250px"
+                            android:layout_width="200px"
                             android:layout_height="2px"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="14px"
+                            android:layout_marginLeft="24px"
                             android:layout_marginRight="14px"
                             android:background="@color/text_color_hint" />
 
@@ -172,11 +172,11 @@
                             android:textSize="36px" />
 
                         <ImageView
-                            android:layout_width="250px"
+                            android:layout_width="200px"
                             android:layout_height="2px"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="14px"
-                            android:layout_marginRight="14px"
+                            android:layout_marginRight="34px"
                             android:background="@color/text_color_hint" />
 
                     </LinearLayout>
