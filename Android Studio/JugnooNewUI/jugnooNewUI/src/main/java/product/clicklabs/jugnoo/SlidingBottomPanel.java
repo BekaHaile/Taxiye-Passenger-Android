@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -44,7 +45,7 @@ public class SlidingBottomPanel {
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private ImageView imageViewPaymentOp;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
-
+    private LinearLayout linearLayoutSlidingBottom;
     private PromoCoupon selectedCoupon = new CouponInfo(0, "");
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
     private ArrayList<PromoCoupon> promoCoupons;
@@ -63,6 +64,7 @@ public class SlidingBottomPanel {
         textViewOffersValue = (TextView)view.findViewById(R.id.textViewOffersValue);textViewOffersValue.setTypeface(Fonts.mavenRegular(activity));
         textViewCashValue = (TextView)view.findViewById(R.id.textViewCashValue);textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
         imageViewPaymentOp = (ImageView)view.findViewById(R.id.imageViewPaymentOp);
+        linearLayoutSlidingBottom = (LinearLayout) view.findViewById(R.id.linearLayoutSlidingBottom);
 
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
@@ -198,6 +200,10 @@ public class SlidingBottomPanel {
         if(frag1 != null && frag1 instanceof SlidingBottomCashFragment){
             ((SlidingBottomCashFragment)frag1).setPaytmLoadingVisiblity(visiblity);
         }
+    }
+
+    public void setLinearLayoutSlidingBottom(int visibility){
+        linearLayoutSlidingBottom.setVisibility(visibility);
     }
 
     public void updatePreferredPaymentOptionUI(){
