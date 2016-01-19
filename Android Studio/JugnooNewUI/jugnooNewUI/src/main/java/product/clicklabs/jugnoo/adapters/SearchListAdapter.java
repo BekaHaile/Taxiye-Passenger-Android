@@ -108,6 +108,7 @@ public class SearchListAdapter extends BaseAdapter{
                     }
                     else{
                         autoCompleteSearchResultsForSearch.clear();
+                        addFavoriteLocations("");
                         setResults(autoCompleteSearchResultsForSearch);
                     }
                 }
@@ -323,7 +324,8 @@ public class SearchListAdapter extends BaseAdapter{
 
 			if(!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
 				if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
-						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())) {
+						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
+                        || searchText.equalsIgnoreCase("")) {
 					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
 							AutoCompleteSearchResult.class);
 					//searchResult.address = searchResult.name+", "+searchResult.address;
@@ -334,7 +336,8 @@ public class SearchListAdapter extends BaseAdapter{
 
 			if(!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
 				if(SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
-						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())) {
+						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
+                        || searchText.equalsIgnoreCase("")) {
 					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
 							AutoCompleteSearchResult.class);
 					//searchResult.address = searchResult.name+", "+searchResult.address;
