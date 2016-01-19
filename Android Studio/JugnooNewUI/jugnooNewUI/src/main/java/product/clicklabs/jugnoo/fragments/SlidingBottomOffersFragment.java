@@ -13,15 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -71,7 +67,7 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 
-        setOfferAdapter(activity.getSlidingBottomPanel().getPromoCoupons(), activity);
+        setOfferAdapter(activity.getSlidingBottomPanel().getPromoCoupons());
 
         try {
             update(activity.getSlidingBottomPanel().getPromoCoupons());
@@ -91,9 +87,10 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         }
     }
 
-    public void setOfferAdapter(ArrayList<PromoCoupon> offerList, HomeActivity activity){
-        offersAdapter = new OffersAdapter(offerList, activity);
+    public void setOfferAdapter(ArrayList<PromoCoupon> offerList){
+        offersAdapter = new OffersAdapter(offerList);
         recyclerViewOffers.setAdapter(offersAdapter);
+        activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
     }
 
     public void update(ArrayList<PromoCoupon> promoCoupons){
@@ -108,17 +105,25 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
 
             } else if(promoCoupons != null && promoCoupons.size() == 1){
                 //linearLayoutPromotion1.setVisibility(View.VISIBLE);
-                linearLayoutPromotion2.setVisibility(View.GONE);
+//                linearLayoutPromotion2.setVisibility(View.GONE);
                 linearLayoutNoOffers.setVisibility(View.GONE);
 
                 setPromoCouponText(textViewPromotion1, promoCoupons.get(0));
             } else{
-                linearLayoutPromotion1.setVisibility(View.GONE);
-                linearLayoutPromotion2.setVisibility(View.GONE);
+//                linearLayoutPromotion1.setVisibility(View.GONE);
+//                linearLayoutPromotion2.setVisibility(View.GONE);
                 //linearLayoutNoOffers.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        offersAdapter.notifyDataSetChanged();
+        if(offersAdapter.getItemCount() > 0){
+            recyclerViewOffers.setVisibility(View.VISIBLE);
+            linearLayoutNoOffers.setVisibility(View.GONE);
+        } else{
+            recyclerViewOffers.setVisibility(View.GONE);
+            linearLayoutNoOffers.setVisibility(View.VISIBLE);
         }
     }
 
@@ -159,15 +164,10 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
 
     public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
-        private Activity activity;
-        private int rowLayout;
-        PromoCoupon promoCoupon;
         private ArrayList<PromoCoupon> offerList = new ArrayList<>();
 
-        public OffersAdapter(ArrayList<PromoCoupon> offerList, Activity activity) {
+        public OffersAdapter(ArrayList<PromoCoupon> offerList) {
             this.offerList = offerList;
-            this.activity = activity;
-            this.rowLayout = rowLayout;
         }
 
         @Override
@@ -183,9 +183,29 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
 
         @Override
         public void onBindViewHolder(OffersAdapter.ViewHolder holder, int position) {
-            promoCoupon = offerList.get(position);
+            PromoCoupon promoCoupon = offerList.get(position);
 
             setPromoCouponText(holder.textViewPromotion1, promoCoupon);
+            if(activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id){
+                holder.radioPromotion1.setImageResource(R.drawable.radio_selected_icon);
+            } else{
+                holder.radioPromotion1.setImageResource(R.drawable.radio_unselected_icon);
+            }
+
+            holder.linearLayoutPromotion1.setTag(position);
+            holder.linearLayoutPromotion1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = (int) v.getTag();
+                    PromoCoupon promoCoupon = offerList.get(position);
+                    if (activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id) {
+                        activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+                    } else {
+                        activity.getSlidingBottomPanel().setSelectedCoupon(position);
+                    }
+                    notifyDataSetChanged();
+                }
+            });
 
         }
 
