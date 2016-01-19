@@ -1,7 +1,11 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +13,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -30,6 +38,8 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
     private HomeActivity activity;
     private ImageView radioPromotion1, radioPromotion2;
     private LinearLayout linearLayoutNoOffers;
+    private RecyclerView recyclerViewOffers;
+    private OffersAdapter offersAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +66,13 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         ((TextView)rootView.findViewById(R.id.textViewWhoops)).setTypeface(Fonts.mavenRegular(activity));
         ((TextView)rootView.findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenLight(activity));
 
+        recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.offers_recycler);
+        recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewOffers.setHasFixedSize(false);
+
+        setOfferAdapter(activity.getSlidingBottomPanel().getPromoCoupons(), activity);
+
         try {
             update(activity.getSlidingBottomPanel().getPromoCoupons());
         } catch (Exception e) {
@@ -74,18 +91,23 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         }
     }
 
+    public void setOfferAdapter(ArrayList<PromoCoupon> offerList, HomeActivity activity){
+        offersAdapter = new OffersAdapter(offerList, activity);
+        recyclerViewOffers.setAdapter(offersAdapter);
+    }
+
     public void update(ArrayList<PromoCoupon> promoCoupons){
         try {
             if(promoCoupons != null && promoCoupons.size() >= 2){
-                linearLayoutPromotion1.setVisibility(View.VISIBLE);
-                linearLayoutPromotion2.setVisibility(View.VISIBLE);
+                //linearLayoutPromotion1.setVisibility(View.VISIBLE);
+                //linearLayoutPromotion2.setVisibility(View.VISIBLE);
                 linearLayoutNoOffers.setVisibility(View.GONE);
 
                 setPromoCouponText(textViewPromotion1, promoCoupons.get(0));
                 setPromoCouponText(textViewPromotion2, promoCoupons.get(1));
 
             } else if(promoCoupons != null && promoCoupons.size() == 1){
-                linearLayoutPromotion1.setVisibility(View.VISIBLE);
+                //linearLayoutPromotion1.setVisibility(View.VISIBLE);
                 linearLayoutPromotion2.setVisibility(View.GONE);
                 linearLayoutNoOffers.setVisibility(View.GONE);
 
@@ -93,7 +115,7 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             } else{
                 linearLayoutPromotion1.setVisibility(View.GONE);
                 linearLayoutPromotion2.setVisibility(View.GONE);
-                linearLayoutNoOffers.setVisibility(View.VISIBLE);
+                //linearLayoutNoOffers.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,6 +154,57 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
                     activity.getSlidingBottomPanel().setSelectedCoupon(1);
                 }
                 break;
+        }
+    }
+
+    public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
+
+        private Activity activity;
+        private int rowLayout;
+        PromoCoupon promoCoupon;
+        private ArrayList<PromoCoupon> offerList = new ArrayList<>();
+
+        public OffersAdapter(ArrayList<PromoCoupon> offerList, Activity activity) {
+            this.offerList = offerList;
+            this.activity = activity;
+            this.rowLayout = rowLayout;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.offers_list_item, parent, false);
+
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
+
+            ASSL.DoMagic(v);
+            return new ViewHolder(v, activity);
+        }
+
+        @Override
+        public void onBindViewHolder(OffersAdapter.ViewHolder holder, int position) {
+            promoCoupon = offerList.get(position);
+
+            setPromoCouponText(holder.textViewPromotion1, promoCoupon);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return offerList == null ? 0 : offerList.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            public LinearLayout linearLayoutPromotion1;
+            public ImageView radioPromotion1;
+            public TextView textViewPromotion1;
+            public ViewHolder(View itemView, Activity activity) {
+                super(itemView);
+                linearLayoutPromotion1 = (LinearLayout) itemView.findViewById(R.id.linearLayoutPromotion1);
+                radioPromotion1 = (ImageView)itemView.findViewById(R.id.radioPromotion1);
+                textViewPromotion1 = (TextView) itemView.findViewById(R.id.textViewPromotion1);
+                textViewPromotion1.setTypeface(Fonts.mavenLight(activity));
+            }
         }
     }
 }

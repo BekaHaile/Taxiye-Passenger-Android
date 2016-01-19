@@ -7,6 +7,12 @@
     android:background="@color/sliding_bottom_bg_color"
     android:orientation="vertical">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/offers_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="20px"
+        />
 
         <LinearLayout
             android:id="@+id/linearLayoutPromotion1"
@@ -81,7 +87,7 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         >
         <ImageView
             android:layout_width="132px"

@@ -159,7 +159,8 @@ public class SlidingBottomPanel {
 
         Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
         if (frag != null && frag instanceof SlidingBottomOffersFragment) {
-            ((SlidingBottomOffersFragment) frag).update(promoCoupons);
+            //((SlidingBottomOffersFragment) frag).update(promoCoupons);
+            ((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons, activity);
         }
         updatePaymentOption();
 
