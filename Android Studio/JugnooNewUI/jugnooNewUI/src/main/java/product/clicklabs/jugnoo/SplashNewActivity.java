@@ -103,6 +103,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
+	boolean holdForBranch = false;
+	int clickCount = 0;
 
 
 
@@ -121,9 +123,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		try {
 			Branch branch = Branch.getInstance(this);
+			holdForBranch = true;
 			branch.initSession(new Branch.BranchReferralInitListener() {
+
 				@Override
 				public void onInitFinished(JSONObject referringParams, BranchError error) {
+					holdForBranch = false;
 					if (error == null) {
 						// params are the deep linked params associated with the link that the user clicked before showing up
 
@@ -194,6 +199,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
+	public boolean isBranchLinkNotClicked(){
+		return (!holdForBranch
+				|| clickCount > 3);
+	}
 
 	public static void initializeServerURL(Context context) {
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
@@ -287,6 +296,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		hold1 = false; hold2 = false;
 
+		holdForBranch = false;
+		clickCount = 0;
+
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(SplashNewActivity.this, relative, 1134, 720, false);
 
@@ -323,11 +335,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-				Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
-				startActivity(intent);
-				ActivityCompat.finishAffinity(SplashNewActivity.this);
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				if(isBranchLinkNotClicked()) {
+					FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+					Intent intent = new Intent(SplashNewActivity.this, SplashLogin.class);
+					startActivity(intent);
+					ActivityCompat.finishAffinity(SplashNewActivity.this);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				} else{
+					clickCount = clickCount + 1;
+				}
 			}
 		});
 
@@ -335,12 +351,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP);
-				RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
-				Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
-				startActivity(intent);
-				ActivityCompat.finishAffinity(SplashNewActivity.this);
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				if(isBranchLinkNotClicked()) {
+					FlurryEventLogger.event(SIGNUP);
+					RegisterScreen.registerationType = RegisterScreen.RegisterationType.EMAIL;
+					Intent intent = new Intent(SplashNewActivity.this, RegisterScreen.class);
+					startActivity(intent);
+					ActivityCompat.finishAffinity(SplashNewActivity.this);
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				} else{
+					clickCount = clickCount + 1;
+				}
 			}
 		});
 

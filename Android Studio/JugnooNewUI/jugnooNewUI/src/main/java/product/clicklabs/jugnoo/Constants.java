@@ -47,4 +47,10 @@ public interface Constants {
 
 	String KEY_OTP = "otp";
 
+	String KEY_BRANCH_REFERRING_USER_IDENTIFIER = "referring_user_identifier";
+	String KEY_DEEPINDEX = "deepindex";
+	String KEY_REFERRAL_CODE = "referral_code";
+	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
+	String FB_LINK_SHARE_NAME = "Jugnoo Autos - Autos on demand";
+
 }

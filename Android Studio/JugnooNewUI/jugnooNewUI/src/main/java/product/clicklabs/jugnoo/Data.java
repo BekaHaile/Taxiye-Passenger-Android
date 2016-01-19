@@ -343,7 +343,7 @@ public class Data {
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
 			try {
 				Intent intent = newIntent;
@@ -370,6 +370,7 @@ public class Data {
 					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
 				}
 			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		}
 

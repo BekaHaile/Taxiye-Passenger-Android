@@ -304,30 +304,6 @@ public class ReferralActions implements FlurryEventNames {
             new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-//                    Intent email = new Intent(Intent.ACTION_SEND);
-//                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-//                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-//                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
-//                            + link); //
-//                    email.setType("message/rfc822");
-//                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
-//                    PackageManager pm = activity.getPackageManager();
-//                    List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
-//                    for(final ResolveInfo app : activityList) {
-//                        Log.i("ShareActivity", "app.actinfo.name: " + app.activityInfo.name);
-//                        if("com.facebook.katana.ShareLinkActivity".equals(app.activityInfo.name)) {
-//                            Log.v("facebook","facebook sdk called");
-//                            break;
-//                        } else {
-//                            break;
-//                        }
-//                    }
-//                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-//                    sharingIntent.setType("text/plain");
-//                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-//                    sharingIntent.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
-//                            + link);
-//                    activity.startActivity(Intent.createChooser(sharingIntent, "Share"));
 
                     shareGeneric(activity, callbackManager,
                             Data.referralMessages.referralEmailSubject,
