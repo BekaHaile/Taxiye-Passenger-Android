@@ -91,6 +91,12 @@ public class BranchMetricsUtils {
             LinkProperties linkProperties = new LinkProperties()
                     .setChannel(channel)
                     .setFeature(Branch.FEATURE_TAG_SHARE);
+//                    .addControlParameter("$desktop_url", Constants.BRANCH_END_LINK)
+//                    .addControlParameter("$android_url", Constants.BRANCH_END_LINK)
+//                    .addControlParameter("$ios_url", Constants.BRANCH_END_LINK)
+//                    .addControlParameter("$fallback_url", Constants.BRANCH_END_LINK)
+
+
             Log.i(TAG, "branchUniversalObject=>"+branchUniversalObject.convertToJson());
             Log.i(TAG, "linkProperties=>"+linkProperties.toString());
 

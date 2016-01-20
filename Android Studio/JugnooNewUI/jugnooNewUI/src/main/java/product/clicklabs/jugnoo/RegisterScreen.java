@@ -1139,7 +1139,6 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
     @Override
     public void onBackPressed() {
         performBackPressed();
-        super.onBackPressed();
     }
 
 

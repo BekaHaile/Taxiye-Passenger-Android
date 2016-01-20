@@ -52,8 +52,11 @@ public interface Constants {
 	String KEY_REFERRAL_CODE = "referral_code";
 	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
 	String FB_LINK_SHARE_NAME = "Jugnoo Autos - Autos on demand";
+//	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
 
 
 	String DOMAIN_SHARE_JUGNOO_IN = "share.jugnoo.in";
+
+
 
 }
