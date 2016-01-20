@@ -111,16 +111,16 @@ public class PriorityTipDialog {
             btnOk.setTypeface(Fonts.mavenRegular(activity));
 
             Spannable word = new SpannableString(activity.getResources().getString(R.string.type));
-            word.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.grey_black_light)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            word.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_color)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             textHighPriority.setText(word);
             Spannable wordTwo = new SpannableString(" ("+fareFactor+")\n");
 
-            wordTwo.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.yellow)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            wordTwo.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.theme_color)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textHighPriority.append(wordTwo);
             Spannable wordThree = new SpannableString(activity.getResources().getString(R.string.type_bottom));
 
-            wordThree.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.grey_black_light)), 0, wordThree.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            wordThree.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.text_color)), 0, wordThree.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textHighPriority.append(wordThree);
 
             editTextValue1.addTextChangedListener(new TextWatcher() {
@@ -132,7 +132,7 @@ public class PriorityTipDialog {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (s.toString().equals(part1)) {
-                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.yellow));
+                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.theme_color));
                         editTextValue2.requestFocus();
                     } else {
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.red));
@@ -156,13 +156,13 @@ public class PriorityTipDialog {
                     Log.v("character is", "--> " + s.toString());
                     if (s.toString().equals(part2)) {
                         Log.v("code matched", "code matched");
-                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.yellow));
+                        editTextValue1.setTextColor(activity.getResources().getColor(R.color.theme_color));
                         callback.onConfirmed();
                         dialog.dismiss();
                         Utils.hideSoftKeyboard(activity, editTextValue2);
                     } else {
                         if (part2.startsWith(s.toString())) {
-                            editTextValue2.setTextColor(activity.getResources().getColor(R.color.yellow));
+                            editTextValue2.setTextColor(activity.getResources().getColor(R.color.theme_color));
                         } else {
                             editTextValue2.setTextColor(activity.getResources().getColor(R.color.red));
                         }

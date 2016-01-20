@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,9 +30,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-/**
- * Created by Ankit on 7/17/15.
- */
 public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactionsAdapter.ViewHolder> {
 
     private Activity activity;
@@ -67,13 +63,11 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactio
 
         holder.id = position;
         holder.relative.setTag(holder);
-        holder.linearLayoutCancel.setTag(holder);
         holder.relativeLayoutRateRide.setTag(holder);
         holder.linearLayoutRideReceipt.setTag(holder);
 
         holder.textViewPickupAt.setVisibility(View.GONE);
         holder.textViewAmount.setVisibility(View.VISIBLE);
-        holder.linearLayoutCancel.setVisibility(View.GONE);
 
         holder.textViewIdValue.setText("" + rideInfo.engagementId);
         holder.textViewFromValue.setText(rideInfo.pickupAddress);
@@ -88,14 +82,12 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactio
                 holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
                         + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
             }
-            holder.textViewAmount.setText(activity.getResources().getString(R.string.rupee) + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+            holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 
             if (1 != rideInfo.isRatedBefore) {
                 holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
-                holder.imageViewDiv.setVisibility(View.GONE);
             } else {
                 holder.relativeLayoutRateRide.setVisibility(View.GONE);
-                holder.imageViewDiv.setVisibility(View.VISIBLE);
             }
             holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
             holder.textViewRideCancelled.setVisibility(View.GONE);
@@ -103,19 +95,12 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactio
         }
         else{
             holder.textViewDetailsValue.setText(rideInfo.date+",");
-            holder.textViewAmount.setText(activity.getResources().getString(R.string.rupee) + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+            holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
             holder.relativeLayoutRateRide.setVisibility(View.GONE);
-            holder.imageViewDiv.setVisibility(View.VISIBLE);
             holder.linearLayoutRideReceipt.setVisibility(View.GONE);
             holder.textViewRideCancelled.setVisibility(View.VISIBLE);
             holder.relativeLayoutTo.setVisibility(View.GONE);
         }
-
-        holder.linearLayoutCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
 
         holder.relativeLayoutRateRide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,11 +152,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactio
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
-                textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel,
+                textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount,
                 textViewRateRide, textViewRideCancelled;
-        public ImageView imageViewDiv;
         public RelativeLayout relativeLayoutTo, relativeLayoutRateRide;
-        public LinearLayout linearLayoutCancel;
         public LinearLayout linearLayoutRideReceipt;
         public RelativeLayout relative;
         public int id;
@@ -188,15 +171,12 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactio
             textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); textViewDetailsValue.setTypeface(Fonts.mavenLight(context));
             textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount);
             textViewAmount.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
-            textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); textViewCancel.setTypeface(Fonts.mavenLight(context));
             textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide); textViewRateRide.setTypeface(Fonts.mavenLight(context));
             textViewRideCancelled = (TextView) convertView.findViewById(R.id.textViewRideCancelled);
             textViewRideCancelled.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
 
-            imageViewDiv = (ImageView) convertView.findViewById(R.id.imageViewDiv);
 
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
-            linearLayoutCancel = (LinearLayout) convertView.findViewById(R.id.linearLayoutCancel);
             relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
             relativeLayoutRateRide = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutRateRide);
             linearLayoutRideReceipt = (LinearLayout) convertView.findViewById(R.id.linearLayoutRideReceipt);

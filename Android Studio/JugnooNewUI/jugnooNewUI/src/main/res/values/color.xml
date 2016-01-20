@@ -150,7 +150,7 @@
  <color name="text_color">#595968</color>
  <color name="text_color_light">#9D9D9D</color>
  <color name="white_alpha_33">#33FFFFFF</color>
- <color name="sliding_bottom_bg_color">#f7f7f7</color>
+ <color name="sliding_bottom_bg_color">#F7F7F7</color>
  <color name="text_color_hint">#BCBCBC</color>
  <color name="nl_white_dark">#E0E0E0</color>
  <color name="menu_item_selector_color">#EEEEEE</color>
@@ -158,6 +158,14 @@
 
  <color name="red_google">#CF5D3A</color>
  <color name="red_google_alpha">#99CF5D3A</color>
+
+ <!-- Leaderboard Rank Colors -->
+    <color name="rank_1">#FDFDFD</color>
+    <color name="rank_2">#F7F7F7</color>
+    <color name="rank_3">#ECECEC</color>
+    <color name="rank_4">#E4E4E4</color>
+    <color name="rank_5">#D7D7D7</color>
+    <color name="rank_6">#CBCBCB</color>
 
 
 

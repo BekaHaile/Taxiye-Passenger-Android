@@ -65,7 +65,7 @@
                 android:layout_height="2px"
                 android:layout_alignParentBottom="true"
                 android:rotation="180"
-                android:src="@drawable/shadow_up" />
+                android:src="@drawable/shadow_down" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -118,7 +118,6 @@
             android:layout_margin="5px"
             android:gravity="center"
             android:text="No drivers available"
-
             android:textColor="@color/grey_dark_less"
             android:textSize="@dimen/text_size_30" />
 
@@ -209,8 +208,9 @@
         android:layout_width="87px"
         android:layout_height="87px"
         android:layout_above="@+id/changeLocalityBtn"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="40px"
-        android:layout_marginLeft="50px"
+        android:layout_marginRight="50px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar"
         android:visibility="gone" />
@@ -305,8 +305,6 @@
             android:tag="mwar" />
 
     </RelativeLayout>
-
-    <!-- promo layout -->
 
 
 </RelativeLayout>

@@ -886,7 +886,8 @@ public class JSONParser implements Constants {
                 String userImage = "";
                 String driverCarImage = "";
                 String carNumber = "";
-                Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
+                double bearing = dataI.optDouble("bearing", 0);
+                Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0, bearing));
             }
         } catch (Exception e) {
             e.printStackTrace();

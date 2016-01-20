@@ -130,7 +130,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private State state = State.SPLASH_LS;
 
 
-
 	CallbackManager callbackManager;
 	FacebookLoginHelper facebookLoginHelper;
 	boolean facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
@@ -138,7 +137,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private String enteredEmail = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
-	public void resetFlags(){
+
+	public void resetFlags() {
 		loginDataFetched = false;
 		facebookRegister = false;
 		googleRegister = false;
@@ -153,7 +153,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private static final int GOOGLE_SIGNIN_REQ_CODE_SIGNUP = 1125;
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
-
 
 
 	@Override
@@ -199,7 +198,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							e.printStackTrace();
 						}
 						String link = referringParams.optString("link", "");
-						if(!"".equalsIgnoreCase(link)){
+						if (!"".equalsIgnoreCase(link)) {
 							Database2.getInstance(SplashNewActivity.this).insertLink(link);
 						}
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
@@ -222,7 +221,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
 	}
-
 
 
 	public static void initializeServerURL(Context context) {
@@ -276,12 +274,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 
-		try{
+		try {
 			Data.TRANSFER_FROM_JEANIE = 0;
-			if(getIntent().hasExtra("transfer_from_jeanie")){
+			if (getIntent().hasExtra("transfer_from_jeanie")) {
 				Data.TRANSFER_FROM_JEANIE = getIntent().getIntExtra("transfer_from_jeanie", 0);
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -319,7 +317,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		resetFlags();
 		enteredEmail = "";
 
-		hold1 = false; hold2 = false;
+		hold1 = false;
+		hold2 = false;
 
 		root = (RelativeLayout) findViewById(R.id.root);
 		new ASSL(SplashNewActivity.this, root, 1134, 720, false);
@@ -346,7 +345,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRegister.setTypeface(Fonts.mavenRegular(this));
 		textViewTerms = (TextView) findViewById(R.id.textViewTerms);
 		textViewTerms.setTypeface(Fonts.latoRegular(this));
-		((TextView)findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.latoRegular(this));
 
 		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
@@ -359,13 +358,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		String[] emails = Database.getInstance(this).getEmails();
 		ArrayAdapter<String> adapter;
-		if (emails == null) { emails = new String[]{}; }
+		if (emails == null) {
+			emails = new String[]{};
+		}
 		adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
 		adapter.setDropDownViewResource(R.layout.dropdown_textview);
 
 		linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
 		editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
-		editTextEmail.setTypeface(Fonts.latoRegular(this)); editTextEmail.setAdapter(adapter);
+		editTextEmail.setTypeface(Fonts.latoRegular(this));
+		editTextEmail.setAdapter(adapter);
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextPassword.setTypeface(Fonts.latoRegular(this), Typeface.ITALIC);
 		textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
@@ -383,24 +385,35 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonGoogleLogin.setTypeface(Fonts.mavenRegular(this));
 
 
-
-
 		linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
-		editTextSName = (EditText) findViewById(R.id.editTextSName); editTextSName.setTypeface(Fonts.latoRegular(this));
-		editTextSEmail = (EditText) findViewById(R.id.editTextSEmail); editTextSEmail.setTypeface(Fonts.latoRegular(this));
-		editTextSPhone = (EditText) findViewById(R.id.editTextSPhone); editTextSPhone.setTypeface(Fonts.latoRegular(this));
-		editTextSPassword = (EditText) findViewById(R.id.editTextSPassword); editTextSPassword.setTypeface(Fonts.latoRegular(this));
-		editTextSPromo = (EditText) findViewById(R.id.editTextSPromo); editTextSPromo.setTypeface(Fonts.latoRegular(this));
-		textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired); textViewSNameRequired.setTypeface(Fonts.latoRegular(this));
-		textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired); textViewSEmailRequired.setTypeface(Fonts.latoRegular(this));
-		textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired); textViewSPhoneRequired.setTypeface(Fonts.latoRegular(this));
-		textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired); textViewSPasswordRequired.setTypeface(Fonts.latoRegular(this));
+		editTextSName = (EditText) findViewById(R.id.editTextSName);
+		editTextSName.setTypeface(Fonts.latoRegular(this));
+		editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
+		editTextSEmail.setTypeface(Fonts.latoRegular(this));
+		editTextSPhone = (EditText) findViewById(R.id.editTextSPhone);
+		editTextSPhone.setTypeface(Fonts.latoRegular(this));
+		editTextSPassword = (EditText) findViewById(R.id.editTextSPassword);
+		editTextSPassword.setTypeface(Fonts.latoRegular(this));
+		editTextSPromo = (EditText) findViewById(R.id.editTextSPromo);
+		editTextSPromo.setTypeface(Fonts.latoRegular(this));
+		textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired);
+		textViewSNameRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired);
+		textViewSEmailRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired);
+		textViewSPhoneRequired.setTypeface(Fonts.latoRegular(this));
+		textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired);
+		textViewSPasswordRequired.setTypeface(Fonts.latoRegular(this));
 		((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.latoRegular(this));
 		((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.latoRegular(this));
-		buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup); buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
-		buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup); buttonFacebookSignup.setTypeface(Fonts.mavenRegular(this));
-		buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup); buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
-		textViewSTerms = (TextView) findViewById(R.id.textViewSTerms); textViewSTerms.setTypeface(Fonts.latoRegular(this));
+		buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
+		buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
+		buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup);
+		buttonFacebookSignup.setTypeface(Fonts.mavenRegular(this));
+		buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup);
+		buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
+		textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
+		textViewSTerms.setTypeface(Fonts.latoRegular(this));
 
 
 		root.setOnClickListener(onClickListenerKeybordHide);
@@ -463,7 +476,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRefresh.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(!loginDataFetched){
+				if (!loginDataFetched) {
 					getDeviceToken();
 				}
 			}
@@ -513,13 +526,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				return false;
 			}
 		});
-
-
-
-
-
-
-
 
 
 		editTextEmail.addTextChangedListener(new CustomTextWatcher(textViewEmailRequired));
@@ -629,10 +635,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void facebookLoginDone(FacebookUserData facebookUserData) {
 				Data.facebookUserData = facebookUserData;
-				if(State.LOGIN == state) {
+				if (State.LOGIN == state) {
 					sendFacebookLoginValues(SplashNewActivity.this);
 					FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
-				} else if(State.SIGNUP == state){
+				} else if (State.SIGNUP == state) {
 					fillSocialAccountInfo(RegisterationType.FACEBOOK);
 					FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
 				}
@@ -653,12 +659,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		});
 
 
-
-
-
-
-
-
 		editTextSName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired));
 		editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));
 		editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
@@ -673,80 +673,80 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
 
-					String name = editTextSName.getText().toString().trim();
-					if (name.length() > 0) {
-						name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-					}
-					String referralCode = editTextSPromo.getText().toString().trim();
-					String emailId = editTextSEmail.getText().toString().trim();
-					boolean noFbEmail = false;
+				String name = editTextSName.getText().toString().trim();
+				if (name.length() > 0) {
+					name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+				}
+				String referralCode = editTextSPromo.getText().toString().trim();
+				String emailId = editTextSEmail.getText().toString().trim();
+				boolean noFbEmail = false;
 
-					if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
-						emailId = "n@n.c";
-						noFbEmail = true;
-					}
-
-
-					String phoneNo = editTextSPhone.getText().toString().trim();
-					String password = editTextSPassword.getText().toString().trim();
+				if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
+					emailId = "n@n.c";
+					noFbEmail = true;
+				}
 
 
-					if ("".equalsIgnoreCase(name)) {
-						editTextSName.requestFocus();
-						editTextSName.setError("Please enter name");
-					} else if (!Utils.hasAlphabets(name)) {
-						editTextSName.requestFocus();
-						editTextSName.setError("Please enter at least one alphabet");
+				String phoneNo = editTextSPhone.getText().toString().trim();
+				String password = editTextSPassword.getText().toString().trim();
+
+
+				if ("".equalsIgnoreCase(name)) {
+					editTextSName.requestFocus();
+					editTextSName.setError("Please enter name");
+				} else if (!Utils.hasAlphabets(name)) {
+					editTextSName.requestFocus();
+					editTextSName.setError("Please enter at least one alphabet");
+				} else {
+					if ("".equalsIgnoreCase(emailId)) {
+						editTextSEmail.requestFocus();
+						editTextSEmail.setError("Please enter email id");
 					} else {
-						if ("".equalsIgnoreCase(emailId)) {
-							editTextSEmail.requestFocus();
-							editTextSEmail.setError("Please enter email id");
+						if ("".equalsIgnoreCase(phoneNo)) {
+							editTextSPhone.requestFocus();
+							editTextSPhone.setError("Please enter phone number");
 						} else {
-							if ("".equalsIgnoreCase(phoneNo)) {
+							phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
+							if (!Utils.validPhoneNumber(phoneNo)) {
 								editTextSPhone.requestFocus();
-								editTextSPhone.setError("Please enter phone number");
+								editTextSPhone.setError("Please enter valid phone number");
 							} else {
-								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
-								if (!Utils.validPhoneNumber(phoneNo)) {
-									editTextSPhone.requestFocus();
-									editTextSPhone.setError("Please enter valid phone number");
+								phoneNo = "+91" + phoneNo;
+								if ("".equalsIgnoreCase(password)) {
+									editTextSPassword.requestFocus();
+									editTextSPassword.setError("Please enter password");
 								} else {
-									phoneNo = "+91" + phoneNo;
-									if ("".equalsIgnoreCase(password)) {
-										editTextSPassword.requestFocus();
-										editTextSPassword.setError("Please enter password");
-									} else {
-										if (Utils.isEmailValid(emailId)) {
-											if (password.length() >= 6) {
+									if (Utils.isEmailValid(emailId)) {
+										if (password.length() >= 6) {
 
-												if (RegisterationType.FACEBOOK == registerationType) {
-													if (noFbEmail) {
-														emailId = "";
-													}
-													sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
-												} else if (RegisterationType.GOOGLE == registerationType) {
-													sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
-												} else {
-													sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password);
+											if (RegisterationType.FACEBOOK == registerationType) {
+												if (noFbEmail) {
+													emailId = "";
 												}
-												FlurryEventLogger.event(SIGNUP_FINAL);
+												sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
+											} else if (RegisterationType.GOOGLE == registerationType) {
+												sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
 											} else {
-												editTextSPassword.requestFocus();
-												editTextSPassword.setError("Password must be of atleast six characters");
+												sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password);
 											}
-
+											FlurryEventLogger.event(SIGNUP_FINAL);
 										} else {
-											editTextSEmail.requestFocus();
-											editTextSEmail.setError("Please enter valid email id");
+											editTextSPassword.requestFocus();
+											editTextSPassword.setError("Password must be of atleast six characters");
 										}
 
+									} else {
+										editTextSEmail.requestFocus();
+										editTextSEmail.setError("Please enter valid email id");
 									}
+
 								}
 							}
 						}
 					}
+				}
 
 			}
 		});
@@ -783,56 +783,48 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-
-
-		try{
-			if(getIntent().hasExtra(KEY_SPLASH_STATE)){
+		try {
+			if (getIntent().hasExtra(KEY_SPLASH_STATE)) {
 				int stateInt = getIntent().getIntExtra(KEY_SPLASH_STATE, State.SPLASH_INIT.getOrdinal());
-				if(State.LOGIN.getOrdinal() == stateInt){
+				if (State.LOGIN.getOrdinal() == stateInt) {
 					state = State.LOGIN;
-				}
-				else if(State.SIGNUP.getOrdinal() == stateInt){
+				} else if (State.SIGNUP.getOrdinal() == stateInt) {
 					state = State.SIGNUP;
-				}
-				else if(State.SPLASH_LS.getOrdinal() == stateInt){
+				} else if (State.SPLASH_LS.getOrdinal() == stateInt) {
 					state = State.SPLASH_LS;
-				}
-				else{
+				} else {
 					state = State.SPLASH_INIT;
 				}
-			}
-			else{
+			} else {
 				state = State.SPLASH_INIT;
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			state = State.SPLASH_INIT;
 		}
 
 		changeUIState(state);
 
-		if(State.SPLASH_INIT == state) {
+		if (State.SPLASH_INIT == state) {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					getDeviceToken();
 				}
 			}, 500);
-		}
-		else if(State.LOGIN == state){
+		} else if (State.LOGIN == state) {
 			// set login screen values according to intent
 			setLoginScreenValuesOnCreate();
-		}
-		else if(State.SIGNUP == state) {
+		} else if (State.SIGNUP == state) {
 			// set signupscreen values according to intent
 			setSignupScreenValuesOnCreate();
 		}
 
 	}
 
-	private void changeUIState(State state){
+	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
-		switch(state){
+		switch (state) {
 			case SPLASH_INIT:
 				viewInitJugnoo.setVisibility(View.VISIBLE);
 				viewInitSplashJugnoo.setVisibility(View.VISIBLE);
@@ -918,8 +910,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	}
 
-	private void callAfterBothHoldSuccessfully(){
-		if(hold1 && hold2) {
+	private void callAfterBothHoldSuccessfully() {
+		if (hold1 && hold2) {
 			debugState = 1;
 			root.setBackgroundColor(getResources().getColor(R.color.theme_color_pressed));
 			new Handler().postDelayed(new Runnable() {
@@ -933,15 +925,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	private void resetDebugFlags(){
+	private void resetDebugFlags() {
 		hold1 = false;
 		hold2 = false;
 		debugState = 0;
 	}
 
 
-	private void sendToRegisterThroughSms(String referralCode){
-		if(!"".equalsIgnoreCase(referralCode)) {
+	private void sendToRegisterThroughSms(String referralCode) {
+		if (!"".equalsIgnoreCase(referralCode)) {
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -960,14 +952,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
-			if(!hasFocus && v instanceof EditText){
-				((EditText)v).setError(null);
+			if (!hasFocus && v instanceof EditText) {
+				((EditText) v).setError(null);
 			}
 		}
 	};
 
 	public void getDeviceToken() {
-		if(ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
+		if (ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
 			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
 					new View.OnClickListener() {
 						@Override
@@ -996,8 +988,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						}
 					}, false, false);
 
-		}
-		else{
+		} else {
 			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
 			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
 
@@ -1030,10 +1021,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		AppEventsLogger.activateApp(this);
 
-		if(Data.locationFetcher != null){
+		if (Data.locationFetcher != null) {
 			Data.locationFetcher.connect();
-		}
-		else{
+		} else {
 			Data.locationFetcher = new LocationFetcher(this, 1000, 1);
 		}
 	}
@@ -1066,20 +1056,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if (0 == resultCode) {
 					Data.locationSettingsNoPressed = true;
 				}
-			}
-			else if(requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN){
-				if(RESULT_OK == resultCode){
+			} else if (requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN) {
+				if (RESULT_OK == resultCode) {
 					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
 					sendGoogleLoginValues(this);
 				}
-			}
-			else if(requestCode == GOOGLE_SIGNIN_REQ_CODE_SIGNUP){
-				if(RESULT_OK == resultCode) {
+			} else if (requestCode == GOOGLE_SIGNIN_REQ_CODE_SIGNUP) {
+				if (RESULT_OK == resultCode) {
 					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
 					fillSocialAccountInfo(RegisterationType.GOOGLE);
 				}
-			}
-			else{
+			} else {
 				callbackManager.onActivityResult(requestCode, resultCode, data);
 			}
 		} catch (Exception e) {
@@ -1120,10 +1107,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "" + pair.second);
 
-				if(Utils.isDeviceRooted()){
+				if (Utils.isDeviceRooted()) {
 					params.put("device_rooted", "1");
-				}
-				else{
+				} else {
 					params.put("device_rooted", "0");
 				}
 
@@ -1153,7 +1139,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				changeUIState(State.SPLASH_LS);
-			} else{
+			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
@@ -1384,7 +1370,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
+				if (State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
 					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 						loginDataFetched = false;
 						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
@@ -1393,9 +1379,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						ActivityCompat.finishAffinity(SplashNewActivity.this);
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
-				}
-				else if(State.LOGIN == state){
-					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
+				} else if (State.LOGIN == state) {
+					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 						Database2.getInstance(SplashNewActivity.this).updateDriverLastLocationTime();
 						Database2.getInstance(SplashNewActivity.this).close();
 
@@ -1409,20 +1394,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						startActivity(intent);
 						ActivityCompat.finishAffinity(SplashNewActivity.this);
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
-					}
-					else if(SplashNewActivity.this.hasWindowFocus() && facebookRegister){
+					} else if (SplashNewActivity.this.hasWindowFocus() && facebookRegister) {
 						facebookRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.FACEBOOK);
-					}
-					else if(SplashNewActivity.this.hasWindowFocus() && googleRegister){
+					} else if (SplashNewActivity.this.hasWindowFocus() && googleRegister) {
 						googleRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.GOOGLE);
-					}
-					else if(SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen){
+					} else if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
 						sendIntentToOtpScreen();
 					}
-				}
-				else if(State.SIGNUP == state){
+				} else if (State.SIGNUP == state) {
 					if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
 						sendIntentToOtpScreen();
 					}
@@ -1442,13 +1423,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	public void onBackPressed() {
-		if(State.LOGIN == state){
+		if (State.LOGIN == state) {
 			performLoginBackPressed();
-		}
-		else if(State.SIGNUP == state){
+		} else if (State.SIGNUP == state) {
 			performSignupBackPressed();
-		}
-		else{
+		} else {
 			super.onBackPressed();
 		}
 	}
@@ -1566,7 +1545,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void showLocationEnableDialog(){
+	private void showLocationEnableDialog() {
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (resp != ConnectionResult.SUCCESS) {
 			Log.e("Google Play Service Error ", "=" + resp);
@@ -1576,7 +1555,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	private void initiateDeviceInfoVariables(){
+	private void initiateDeviceInfoVariables() {
 		try {                                                                                        // to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = pInfo.versionCode;
@@ -1588,10 +1567,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 
-			if(Config.getConfigMode() == ConfigMode.LIVE){
+			if (Config.getConfigMode() == ConfigMode.LIVE) {
 				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
-			}
-			else{
+			} else {
 				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			}
 
@@ -1605,11 +1583,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	public enum State{
+	public enum State {
 		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4);
 
 		private int ordinal;
-		State(int ordinal){
+
+		State(int ordinal) {
 			this.ordinal = ordinal;
 		}
 
@@ -1621,7 +1600,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	public class CustomTextWatcher implements TextWatcher {
 		private TextView textViewRequired;
-		public CustomTextWatcher(TextView textViewRequired){
+
+		public CustomTextWatcher(TextView textViewRequired) {
 			this.textViewRequired = textViewRequired;
 		}
 
@@ -1642,14 +1622,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void setLoginScreenValuesOnCreate(){
+	private void setLoginScreenValuesOnCreate() {
 		// set email screen values according to intent
 		try {
-			if(getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterationType.EMAIL == SplashNewActivity.registerationType){
-				if(phoneNoLogin) {
+			if (getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterationType.EMAIL == SplashNewActivity.registerationType) {
+				if (phoneNoLogin) {
 					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
-				}
-				else{
+				} else {
 					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
 				}
 			}
@@ -1662,11 +1641,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				editTextEmail.setText(previousLoginEmail);
 				editTextEmail.setSelection(editTextEmail.getText().length());
 				fromPreviousAccounts = true;
-			}
-			else{
+			} else {
 				fromPreviousAccounts = false;
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			fromPreviousAccounts = false;
 		}
@@ -1677,21 +1655,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				editTextEmail.setText(forgotLoginEmail);
 				editTextEmail.setSelection(editTextEmail.getText().length());
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-
-	public void performLoginBackPressed(){
-		if(fromPreviousAccounts){
+	public void performLoginBackPressed() {
+		if (fromPreviousAccounts) {
 			Intent intent = new Intent(SplashNewActivity.this, MultipleAccountsActivity.class);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		}
-		else {
+		} else {
 			FacebookLoginHelper.logoutFacebook();
 			changeUIState(State.SPLASH_LS);
 		}
@@ -1708,37 +1684,35 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			RequestParams params = new RequestParams();
 
-			if(Data.locationFetcher != null){
+			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 
-			if(isPhoneNumber){
+			if (isPhoneNumber) {
 				params.put("phone_no", emailId);
-			}
-			else{
+			} else {
 				params.put("email", emailId);
 			}
 			params.put("password", password);
 			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", ""+Data.appVersion);
+			params.put("app_version", "" + Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.loginLatitude);
-			params.put("longitude", ""+Data.loginLongitude);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
-			Log.i("params", "="+params);
+			Log.i("params", "=" + params);
 
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
@@ -1762,20 +1736,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 								int flag = jObj.getInt("flag");
 
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+								if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+									if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 										String error = jObj.getString("error");
 										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+									} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 										String error = jObj.getString("error");
 										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-										if(isPhoneNumber){
+									} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+										if (isPhoneNumber) {
 											enteredEmail = jObj.getString("user_email");
-										}
-										else{
+										} else {
 											enteredEmail = emailId;
 										}
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
@@ -1785,32 +1756,28 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										otpErrorMsg = jObj.getString("error");
 										SplashNewActivity.registerationType = RegisterationType.EMAIL;
 										sendToOtpScreen = true;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+									} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+										if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
 											new JSONParser().parseAccessTokenLoginData(activity, response);
 											Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
 											loginDataFetched = true;
 										}
-									}
-									else{
+									} else {
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
-								}
-								else{
+								} else {
 									DialogPopup.dismissLoadingDialog();
 								}
 
-							}  catch (Exception exception) {
+							} catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
 						}
 					});
-		}
-		else {
+		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
@@ -1823,7 +1790,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			RequestParams params = new RequestParams();
 
-			if(Data.locationFetcher != null){
+			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
@@ -1838,23 +1805,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", ""+Data.appVersion);
+			params.put("app_version", "" + Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.loginLatitude);
-			params.put("longitude", ""+Data.loginLongitude);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
 
-			Log.i("params", ""+params);
+			Log.i("params", "" + params);
 
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_facebook", params,
@@ -1877,17 +1843,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 								int flag = jObj.getInt("flag");
 
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+								if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+									if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 										String error = jObj.getString("error");
 										facebookRegister = true;
 										notRegisteredMsg = error;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+									} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 										String error = jObj.getString("error");
 										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+									} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 										accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
@@ -1895,25 +1859,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										otpErrorMsg = jObj.getString("error");
 										SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 										sendToOtpScreen = true;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+									} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+										if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
 											new JSONParser().parseAccessTokenLoginData(activity, response);
 											loginDataFetched = true;
 
 											Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
 										}
-									}
-									else{
+									} else {
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
-								}
-								else{
+								} else {
 									DialogPopup.dismissLoadingDialog();
 								}
 
-							}  catch (Exception exception) {
+							} catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
@@ -1921,8 +1882,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						}
 					});
-		}
-		else {
+		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
@@ -1935,7 +1895,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			RequestParams params = new RequestParams();
 
-			if(Data.locationFetcher != null){
+			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
@@ -1945,22 +1905,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", ""+Data.appVersion);
+			params.put("app_version", "" + Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.loginLatitude);
-			params.put("longitude", ""+Data.loginLongitude);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			} else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
 
-			Log.i("params", ""+params);
+			Log.i("params", "" + params);
 
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/login_using_google", params,
@@ -1983,17 +1943,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 								int flag = jObj.getInt("flag");
 
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+								if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+									if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 										String error = jObj.getString("error");
 										googleRegister = true;
 										notRegisteredMsg = error;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+									} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 										String error = jObj.getString("error");
 										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+									} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 										accessToken = jObj.getString("access_token");
 										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
@@ -2001,25 +1959,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										otpErrorMsg = jObj.getString("error");
 										SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 										sendToOtpScreen = true;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+									} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+										if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
 											new JSONParser().parseAccessTokenLoginData(activity, response);
 											loginDataFetched = true;
 
 											Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
 										}
-									}
-									else{
+									} else {
 										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 									}
 									DialogPopup.dismissLoadingDialog();
-								}
-								else{
+								} else {
 									DialogPopup.dismissLoadingDialog();
 								}
 
-							}  catch (Exception exception) {
+							} catch (Exception exception) {
 								exception.printStackTrace();
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
@@ -2027,8 +1982,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						}
 					});
-		}
-		else {
+		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 
@@ -2037,10 +1991,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	/**
 	 * Send intent to otp screen by making required data objects
-	 *  flag 0 for email, 1 for Facebook
+	 * flag 0 for email, 1 for Facebook
 	 */
-	public void sendIntentToOtpScreen(){
-		if(State.LOGIN == state) {
+	public void sendIntentToOtpScreen() {
+		if (State.LOGIN == state) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
 
 				@Override
@@ -2072,8 +2026,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 			});
-		}
-		else if(State.SIGNUP == state){
+		} else if (State.SIGNUP == state) {
 			OTPConfirmScreen.intentFromRegister = true;
 			generateOTPRegisterData();
 			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
@@ -2085,7 +2038,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	public void sendIntentToRegisterScreen(final RegisterationType registerationType){
+	public void sendIntentToRegisterScreen(final RegisterationType registerationType) {
 		DialogPopup.alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
 
 			@Override
@@ -2097,31 +2050,27 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-
-
-
-
 	public void performSignupBackPressed() {
 		FacebookLoginHelper.logoutFacebook();
 		changeUIState(State.SPLASH_LS);
 	}
 
-	public enum RegisterationType{
+	public enum RegisterationType {
 		EMAIL(0), FACEBOOK(1), GOOGLE(2);
 
 		private int ordinal;
-		RegisterationType(int ordinal){
+
+		RegisterationType(int ordinal) {
 			this.ordinal = ordinal;
 		}
 
-		public int getOrdinal(){
+		public int getOrdinal() {
 			return ordinal;
 		}
 	}
 
 
-
-	private void setSignupScreenValuesOnCreate(){
+	private void setSignupScreenValuesOnCreate() {
 
 		fillSocialAccountInfo(SplashNewActivity.registerationType);
 
@@ -2132,13 +2081,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					editTextSPromo.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
 					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
 					editTextSPassword.setText(OTPConfirmScreen.facebookRegisterData.password);
-				}
-				else if(RegisterationType.GOOGLE == registerationType){
+				} else if (RegisterationType.GOOGLE == registerationType) {
 					editTextSPromo.setText(OTPConfirmScreen.googleRegisterData.referralCode);
 					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo));
 					editTextSPassword.setText(OTPConfirmScreen.googleRegisterData.password);
-				}
-				else {
+				} else {
 					editTextSName.setText(OTPConfirmScreen.emailRegisterData.name);
 					editTextSEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
 					editTextSPromo.setText(OTPConfirmScreen.emailRegisterData.referralCode);
@@ -2152,12 +2099,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
-		try{
-			if(getIntent().hasExtra("referral_code")){
+		try {
+			if (getIntent().hasExtra("referral_code")) {
 				String referralCode = getIntent().getStringExtra("referral_code");
 				editTextSPromo.setText(referralCode);
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -2171,35 +2118,34 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void fillSocialAccountInfo(RegisterationType registerationType){
+	private void fillSocialAccountInfo(RegisterationType registerationType) {
 		try {
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
 				editTextSEmail.setText(Data.facebookUserData.userEmail);
 
-				if(Data.facebookUserData.firstName != null && !Data.facebookUserData.firstName.equalsIgnoreCase("")){
+				if (Data.facebookUserData.firstName != null && !Data.facebookUserData.firstName.equalsIgnoreCase("")) {
 					editTextSName.setEnabled(false);
-				} else{
+				} else {
 					editTextSName.setEnabled(true);
 				}
-				if(Data.facebookUserData.userEmail != null && !Data.facebookUserData.userEmail.equalsIgnoreCase("")) {
+				if (Data.facebookUserData.userEmail != null && !Data.facebookUserData.userEmail.equalsIgnoreCase("")) {
 					editTextSEmail.setEnabled(false);
 				} else {
 
 					editTextSEmail.setEnabled(true);
 				}
-			}
-			else if(RegisterationType.GOOGLE == SplashNewActivity.registerationType){
+			} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.googleSignInAccount.getDisplayName());
 				editTextSEmail.setText(Data.googleSignInAccount.getEmail());
 
-				if(Data.googleSignInAccount.getDisplayName() != null && !Data.googleSignInAccount.getDisplayName().equalsIgnoreCase("")){
+				if (Data.googleSignInAccount.getDisplayName() != null && !Data.googleSignInAccount.getDisplayName().equalsIgnoreCase("")) {
 					editTextSName.setEnabled(false);
-				} else{
+				} else {
 					editTextSName.setEnabled(true);
 				}
-				if(Data.googleSignInAccount.getEmail() != null && !Data.googleSignInAccount.getEmail().equalsIgnoreCase("")) {
+				if (Data.googleSignInAccount.getEmail() != null && !Data.googleSignInAccount.getEmail().equalsIgnoreCase("")) {
 					editTextSEmail.setEnabled(false);
 				} else {
 
@@ -2212,7 +2158,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private class ReadSMSAsync extends AsyncTask<String, Integer, String>{
+	private class ReadSMSAsync extends AsyncTask<String, Integer, String> {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -2220,7 +2166,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		@Override
 		protected String doInBackground(String... params) {
-			String referralCode = getSmsFindReferralCode(1*60*60*1000);
+			String referralCode = getSmsFindReferralCode(1 * 60 * 60 * 1000);
 			return referralCode;
 		}
 
@@ -2264,18 +2210,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 //                            typeOfSMS = "DRAFT";
 //                            break;
 //                    }
-					Log.e("body", "="+body);
+					Log.e("body", "=" + body);
 					try {
-						if(body.contains("Jugnoo")){
+						if (body.contains("Jugnoo")) {
 							String[] codeArr = body.split("code ");
 							String[] spaceArr = codeArr[1].split(" ");
 							String rCode = spaceArr[0];
-							if(!"".equalsIgnoreCase(rCode)){
+							if (!"".equalsIgnoreCase(rCode)) {
 								referralCode = rCode;
 								break;
 							}
 						}
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 //                    stringBuffer.append("\nPhone Number:--- " + number + " \nMessage Type:--- "
 //                            + typeOfSMS + " \nMessage Date:--- " + smsDayTime
 //                            + " \nMessage Body:--- " + body);
@@ -2284,7 +2231,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				}
 //                DialogPopup.alertPopup(this, "", stringBuffer.toString());
 			}
-			if (cursor != null){
+			if (cursor != null) {
 				cursor.close();
 			}
 		} catch (Exception e) {
@@ -2292,7 +2239,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 		return referralCode;
 	}
-
 
 
 	/**
@@ -2330,11 +2276,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 
 
-
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
@@ -2447,10 +2391,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("client_id", Config.getClientId());
 
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
@@ -2554,10 +2497,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("client_id", Config.getClientId());
 
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
@@ -2628,28 +2570,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void generateOTPRegisterData(){
-		if(RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
+	private void generateOTPRegisterData() {
+		if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 			OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
 					Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
 					Data.facebookUserData.accessToken,
 					Data.facebookUserData.userEmail,
 					Data.facebookUserData.userName,
 					phoneNo, password, referralCode, accessToken);
-		}
-		else if(RegisterationType.GOOGLE == SplashNewActivity.registerationType){
+		} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 			OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
 					Data.googleSignInAccount.getDisplayName(),
 					Data.googleSignInAccount.getEmail(),
 					"",
 					phoneNo, password, referralCode, accessToken);
-		}
-		else{
+		} else {
 			OTPConfirmScreen.intentFromRegister = true;
 			OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
 		}
 	}
-
 
 
 	public void parseDataSendToMultipleAccountsScreen(Activity activity, JSONObject jObj) {
@@ -2671,7 +2610,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			changeUIState(State.LOGIN);
 		}
 	};
-	
 
 
 }

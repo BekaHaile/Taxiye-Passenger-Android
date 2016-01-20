@@ -138,6 +138,9 @@ public class FindADriverResponse {
         @SerializedName("rating")
         @Expose
         private Double rating;
+        @SerializedName("bearing")
+        @Expose
+        private Double bearing;
 
         /**
          * @return The userId
@@ -251,6 +254,13 @@ public class FindADriverResponse {
             this.rating = rating;
         }
 
+        public Double getBearing() {
+            return bearing;
+        }
+
+        public void setBearing(Double bearing) {
+            this.bearing = bearing;
+        }
     }
 
 }

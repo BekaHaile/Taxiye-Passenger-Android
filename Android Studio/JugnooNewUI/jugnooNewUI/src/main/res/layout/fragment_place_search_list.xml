@@ -14,19 +14,16 @@
         android:layout_height="100px"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15px"
-        android:layout_marginLeft="10px"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="15px"
-        android:background="@drawable/dropshadow_grey"
+        android:background="@color/white"
         android:splitMotionEvents="false">
 
         <ImageView
             android:id="@+id/imageViewSearchGPSIcon"
-            android:layout_width="30px"
-            android:layout_height="44px"
+            android:layout_width="33px"
+            android:layout_height="33px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18px"
-            android:src="@drawable/search_location_icon"
+            android:src="@drawable/search_icon"
             android:tag="mwar"/>
 
         <EditText
@@ -69,6 +66,13 @@
             android:padding="20px"
             android:src="@drawable/ic_cross_et"
             android:tag="mwar"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_alignParentBottom="true"
+            android:rotation="180"
+            android:src="@drawable/shadow_down" />
 
     </RelativeLayout>
 

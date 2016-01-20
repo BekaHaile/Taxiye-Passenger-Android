@@ -346,10 +346,10 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 				holder = new ViewHolderCoupon();
 				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
 				
-				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.latoRegular(context));
-				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
-				holder.textViewValidTime = (TextView) convertView.findViewById(R.id.textViewValidTime); holder.textViewValidTime.setTypeface(Fonts.latoRegular(context));
-                ((TextView) convertView.findViewById(R.id.textViewTNC)).setTypeface(Fonts.latoRegular(context));
+				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.mavenLight(context));
+				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.mavenLight(context));
+				holder.textViewValidTime = (TextView) convertView.findViewById(R.id.textViewValidTime); holder.textViewValidTime.setTypeface(Fonts.mavenLight(context));
+                ((TextView) convertView.findViewById(R.id.textViewTNC)).setTypeface(Fonts.mavenLight(context));
 
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				

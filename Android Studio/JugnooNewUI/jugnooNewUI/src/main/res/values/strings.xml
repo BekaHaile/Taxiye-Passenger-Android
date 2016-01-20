@@ -269,8 +269,8 @@
 	<string name="star_required">* Required</string>
 	<string name="leave_a_comment">Leave a comment</string>
 	<string name="what_could_we_improve">What could we improve?</string>
-	<string name="ruppes_value_format">\u20B9 %s</string>
-	<string name="ruppes_value_format_without_space">\u20B9%s</string>
+	<string name="rupees_value_format">\u20B9 %s</string>
+	<string name="rupees_value_format_without_space">\u20B9%s</string>
 	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
@@ -295,7 +295,7 @@
 	<string name="weekly_leaderboard">Weekly</string>
 	<string name="lb_rank">Rank</string>
 	<string name="lb_name">Name</string>
-	<string name="lb_no_downloads">No. of\nDownloads</string>
+	<string name="lb_no_downloads">Downloads</string>
 
 	<!-- Priority Tip -->
 	<string name="priority_tip">PRIORITY TIP</string>
@@ -604,6 +604,8 @@
     <string name="payment_option_dialog_title">Select preferred payment option</string>
     <string name="paytm">Paytm</string>
     <string name="cash">Cash</string>
+	<string name="jugnoo_cash">JUGNOO CASH</string>
+	<string name="add_cash">ADD CASH</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
     <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
@@ -639,7 +641,8 @@
 
     <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
 
-    <string name="loading">"Loading..."</string>
+    <string name="loading">Loading...</string>
+	<string name="whoops">W h o o p s !</string>
 
 
 	<!-- Support Screen-->
@@ -648,6 +651,9 @@
 	<string name="view_previous_trips">View previous trips</string>
 	<string name="support_main_title">How can we help?</string>
 	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
+
+	<!-- Ride transactions-->
+	<string name="rate_this_ride">Rate this ride</string>
 
 
 </resources>

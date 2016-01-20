@@ -947,10 +947,15 @@ public class Database2 {                                                        
 
                 for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
                     try {
-                        long pushArrAndTimeToDisVal = (Long.parseLong(cursor.getString(in4)) + DateOperations.getMilliseconds(cursor.getString(in1)));
-
-						Log.e("cursor.getString(in4)", "---->"+cursor.getString(in4));
-						Log.e("cursor.getString(in5)", "---->"+cursor.getString(in5));
+                        Log.e("cursor.getString(in4)", "---->"+cursor.getString(in4));
+                        Log.e("cursor.getString(in5)", "---->"+cursor.getString(in5));
+                        long savedIn4 = 600000;
+                        try{
+                            savedIn4 = Long.parseLong(cursor.getString(in4));
+                        } catch(Exception e){
+                            e.printStackTrace();
+                        }
+                        long pushArrAndTimeToDisVal = (savedIn4 + DateOperations.getMilliseconds(cursor.getString(in1)));
 
 						boolean added = false;
                         if((!"0".equalsIgnoreCase(cursor.getString(in4))) && (!"".equalsIgnoreCase(cursor.getString(in5)))) { //if both values

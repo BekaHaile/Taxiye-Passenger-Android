@@ -906,6 +906,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 				try {
 					if(map != null) {
                         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -1876,6 +1877,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 reconnectLocationFetchers();
             }
             FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
         }
     };
 
@@ -1991,9 +1995,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Data.feedbackReasons.get(i).checked = false;
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
-                        textViewRSTotalFareValue.setText(String.format(getString(R.string.ruppes_value_format_without_space),
+                        textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                             "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
-                        textViewRSCashPaidValue.setText(String.format(getString(R.string.ruppes_value_format_without_space),
+                        textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                             ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
@@ -3391,13 +3395,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(FindADriverResponse findADriverResponse, Response response) {
                     try {
+                        Log.e("find_a_driver resp", "resp- " + new String(((TypedByteArray) response.getBody()).getBytes()));
                         Data.driverInfos.clear();
                         for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
+                            double bearing = 0;
+                            if(driver.getBearing() != null){
+                                bearing = driver.getBearing();
+                            }
                             Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-                                    "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0));
+                                    "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
                         }
                         etaMinutes = String.valueOf(findADriverResponse.getEta());
-                        priorityTipCategory = findADriverResponse.getPriorityTipCategory();
+                        if(findADriverResponse.getPriorityTipCategory() != null){
+                            priorityTipCategory = findADriverResponse.getPriorityTipCategory();
+                        }
+
                         Data.userData.fareFactor = findADriverResponse.getFareFactor();
                         if (findADriverResponse.getFarAwayCity() == null) {
                             farAwayCity = "";
@@ -3545,6 +3557,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
 		if (!"".equalsIgnoreCase(farAwayCity)) {
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             textViewInitialInstructions.setVisibility(View.VISIBLE);
             textViewInitialInstructions.setText(farAwayCity);
 
@@ -3560,7 +3573,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 			}
-
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 			changeLocalityBtn.setVisibility(View.GONE);
 			initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
@@ -3607,6 +3620,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.position(driverInfo.latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
         markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.rotation((float) driverInfo.getBearing());
         map.addMarker(markerOptions);
     }
 

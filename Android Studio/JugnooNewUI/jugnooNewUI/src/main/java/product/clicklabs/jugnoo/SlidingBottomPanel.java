@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -44,7 +45,7 @@ public class SlidingBottomPanel {
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private ImageView imageViewPaymentOp;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
-
+    private LinearLayout linearLayoutSlidingBottom;
     private PromoCoupon selectedCoupon = new CouponInfo(0, "");
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
     private ArrayList<PromoCoupon> promoCoupons;
@@ -55,14 +56,18 @@ public class SlidingBottomPanel {
         initComponents(view);
     }
 
-    private void initComponents(View view){
+    private void initComponents(View view) {
         //SlidingUp Layout
-        ((TextView)view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
-        textViewMinFareValue = (TextView)view.findViewById(R.id.textViewMinFareValue);textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView)view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(activity));
-        textViewOffersValue = (TextView)view.findViewById(R.id.textViewOffersValue);textViewOffersValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewCashValue = (TextView)view.findViewById(R.id.textViewCashValue);textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
-        imageViewPaymentOp = (ImageView)view.findViewById(R.id.imageViewPaymentOp);
+        ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareValue = (TextView) view.findViewById(R.id.textViewMinFareValue);
+        textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
+        ((TextView) view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(activity));
+        textViewOffersValue = (TextView) view.findViewById(R.id.textViewOffersValue);
+        textViewOffersValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewCashValue = (TextView) view.findViewById(R.id.textViewCashValue);
+        textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
+        imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
+        linearLayoutSlidingBottom = (LinearLayout) view.findViewById(R.id.linearLayoutSlidingBottom);
 
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
@@ -107,126 +112,129 @@ public class SlidingBottomPanel {
         update(null);
     }
 
-    public void slideOnClick(View view){
-        if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+    public void slideOnClick(View view) {
+        if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        } else {
-            switch (view.getId()) {
-                case R.id.linearLayoutCash:
-                        Log.v("on click", "linearLayoutCash");
-                    viewPager.setCurrentItem(0, true);
-                    break;
+        }
+        switch (view.getId()) {
+            case R.id.linearLayoutCash:
+                Log.v("on click", "linearLayoutCash");
+                viewPager.setCurrentItem(0, true);
+                break;
 
-                case R.id.linearLayoutFare:
-                        Log.v("on click", "linearLayoutFare");
-                    viewPager.setCurrentItem(1, true);
-                    break;
+            case R.id.linearLayoutFare:
+                Log.v("on click", "linearLayoutFare");
+                viewPager.setCurrentItem(1, true);
+                break;
 
-                case R.id.linearLayoutOffers:
-                        Log.v("on click", "linearLayoutOffers");
-                    viewPager.setCurrentItem(2, true);
-                    break;
-            }
+            case R.id.linearLayoutOffers:
+                Log.v("on click", "linearLayoutOffers");
+                viewPager.setCurrentItem(2, true);
+                break;
         }
     }
 
-    public void update(ArrayList<PromoCoupon> promoCoupons){
+    public void update(ArrayList<PromoCoupon> promoCoupons) {
         this.promoCoupons = promoCoupons;
 
-        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)
+        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
-        if(promoCoupons != null) {
+        if (promoCoupons != null) {
             if (promoCoupons.size() > 0) {
                 selectedCoupon = noSelectionCoupon;
             } else {
                 selectedCoupon = new CouponInfo(0, "");
             }
-            textViewOffersValue.setText(""+promoCoupons.size());
-        } else{
+            textViewOffersValue.setText("" + promoCoupons.size());
+        } else {
             textViewOffersValue.setText("0");
         }
 
 
         Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
-        if(frag1 != null && frag1 instanceof SlidingBottomFareFragment){
-            ((SlidingBottomFareFragment)frag1).update();
+        if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
+            ((SlidingBottomFareFragment) frag1).update();
         }
 
         Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-        if(frag != null && frag instanceof SlidingBottomOffersFragment){
-            ((SlidingBottomOffersFragment)frag).update(promoCoupons);
+        if (frag != null && frag instanceof SlidingBottomOffersFragment) {
+            ((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
+            ((SlidingBottomOffersFragment) frag).update(promoCoupons);
         }
         updatePaymentOption();
 
     }
 
-    public void updatePaymentOption(){
-        if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
+    public void updatePaymentOption() {
+        if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
             imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
-            textViewCashValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)
+            textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                     , Data.userData.getPaytmBalanceStr()));
-        } else{
+        } else {
             imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
             textViewCashValue.setText(activity.getResources().getString(R.string.cash));
         }
     }
 
-    public ArrayList<PromoCoupon> getPromoCoupons(){
+    public ArrayList<PromoCoupon> getPromoCoupons() {
         return promoCoupons;
     }
 
-    public SlidingUpPanelLayout getSlidingUpPanelLayout(){
+    public SlidingUpPanelLayout getSlidingUpPanelLayout() {
         return slidingUpPanelLayout;
     }
 
-    public PromoCoupon getSelectedCoupon(){
+    public PromoCoupon getSelectedCoupon() {
         return selectedCoupon;
     }
 
-    public void setSelectedCoupon(int position){
-        if(position > -1 && position < promoCoupons.size()){
+    public void setSelectedCoupon(int position) {
+        if (position > -1 && position < promoCoupons.size()) {
             selectedCoupon = promoCoupons.get(position);
-        } else{
+        } else {
             selectedCoupon = noSelectionCoupon;
         }
         displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
     }
 
-    public void setPaytmLoadingVisiblity(int visiblity){
+    public void setPaytmLoadingVisiblity(int visiblity) {
         Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if(frag1 != null && frag1 instanceof SlidingBottomCashFragment){
-            ((SlidingBottomCashFragment)frag1).setPaytmLoadingVisiblity(visiblity);
+        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+            ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
         }
     }
 
-    public void updatePreferredPaymentOptionUI(){
+    public void setLinearLayoutSlidingBottom(int visibility) {
+        linearLayoutSlidingBottom.setVisibility(visibility);
+    }
+
+    public void updatePreferredPaymentOptionUI() {
         Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if(frag1 != null && frag1 instanceof SlidingBottomCashFragment){
-            ((SlidingBottomCashFragment)frag1).updatePreferredPaymentOptionUI();
+        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
         }
     }
 
-    public boolean displayAlertAndCheckForSelectedPaytmCoupon(){
+    public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
         return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
     }
 
-    private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon){
+    private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
         try {
             boolean paytmCouponSelected = false;
-            if(promoCoupon instanceof CouponInfo){
-                if(((CouponInfo)promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(activity.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))){
+            if (promoCoupon instanceof CouponInfo) {
+                if (((CouponInfo) promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(activity.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
                     paytmCouponSelected = true;
                 }
-            }
-            else if(promoCoupon instanceof PromotionInfo){
-                if(((PromotionInfo)promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(activity.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))){
+            } else if (promoCoupon instanceof PromotionInfo) {
+                if (((PromotionInfo) promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(activity.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
                     paytmCouponSelected = true;
                 }
             }
 
-            if(paytmCouponSelected){
-                if(PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption){
+            if (paytmCouponSelected) {
+                if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
                     View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -238,11 +246,11 @@ public class SlidingBottomPanel {
                         public void onClick(View v) {
                         }
                     };
-                    if(Data.userData.paytmEnabled == 1){
+                    if (Data.userData.paytmEnabled == 1) {
                         DialogPopup.alertPopupWithListener(activity, "",
                                 activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
                                 onClickListenerCancel);
-                    } else{
+                    } else {
                         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
                                 activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
                                 activity.getResources().getString(R.string.ok),
@@ -260,8 +268,8 @@ public class SlidingBottomPanel {
         return true;
     }
 
-    public void openPaymentActivityInCaseOfPaytmNotAdded(){
-        if(Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+    public void openPaymentActivityInCaseOfPaytmNotAdded() {
+        if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
             Intent intent = new Intent(activity, PaymentActivity.class);
             intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
             activity.startActivity(intent);

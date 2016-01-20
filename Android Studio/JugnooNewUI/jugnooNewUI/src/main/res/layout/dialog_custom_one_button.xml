@@ -69,10 +69,10 @@
                 android:layout_height="83px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0px"
-                android:background="@drawable/button_white_theme_br_selector"
+                android:background="@drawable/button_white_grey_br_selector"
                 android:singleLine="true"
                 android:text="OK"
-                android:textColor="@drawable/text_color_grey_white_selector"
+                android:textColor="@color/text_color"
                 android:textSize="34px" />
         </LinearLayout>
     </RelativeLayout>

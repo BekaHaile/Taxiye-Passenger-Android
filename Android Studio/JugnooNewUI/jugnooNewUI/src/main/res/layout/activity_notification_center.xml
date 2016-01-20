@@ -41,17 +41,47 @@
             android:id="@+id/my_request_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white_light_grey"/>
+            />
 
-        <TextView
-            android:id="@+id/textViewInfo"
+        <LinearLayout
+            android:id="@+id/linearLayoutNoNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="No notifications currently"
-            android:textColor="@color/grey_black"
-            android:textSize="@dimen/top_bar_title_text_size"
-            />
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="200px"
+            >
+            <ImageView
+                android:layout_width="297px"
+                android:layout_height="347px"
+                android:src="@drawable/ic_no_notifications"
+                />
+
+            <TextView
+                android:id="@+id/textViewWhoops"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/whoops"
+                android:textColor="@color/text_color_hint"
+                android:textSize="@dimen/text_size_44"
+                android:textAllCaps="true"
+                android:layout_marginTop="20px"
+                />
+
+            <TextView
+                android:id="@+id/textViewNoNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="No notifications currently"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                android:layout_marginTop="30px"
+                />
+
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="match_parent"
