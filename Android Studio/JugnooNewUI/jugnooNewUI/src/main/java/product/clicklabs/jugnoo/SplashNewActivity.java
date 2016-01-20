@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
@@ -154,16 +155,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							e.printStackTrace();
 						}
 						String link = referringParams.optString("link", "");
-						if(!"".equalsIgnoreCase(link)){
+						if (!"".equalsIgnoreCase(link)) {
 							Database2.getInstance(SplashNewActivity.this).insertLink(link);
 						}
-
-						fetchPhoneNoOtpFromBranchParams(referringParams);
 
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
 					}
+					fetchPhoneNoOtpFromBranchParams(referringParams);
 				}
 			}, this.getIntent().getData(), this);
 
@@ -186,10 +186,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				String otp = referringParams.optString(KEY_OTP, "");
 				if (!"".equalsIgnoreCase(otp)) {
 					verifyOtpViaEmail(this, email, phoneNumber, otp);
+				} else{
+					throw new Exception();
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			readSMSClickLink();
 		}
 	}
 
@@ -496,6 +498,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
 		}
 
+
+
+	}
+
+	private void readSMSClickLink(){
+		try {
+			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+			if ("".equalsIgnoreCase(pair.first) && !Data.linkFoundOnce) {
+				new ReadSMSClickLinkAsync().execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void callAfterBothHoldSuccessfully(){
@@ -984,6 +999,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onDestroy() {
+		if(!newActivityStarted){
+			Data.linkFoundOnce = false;
+		}
 		super.onDestroy();
 		ASSL.closeActivity(relative);
 		System.gc();
@@ -1203,5 +1221,76 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
+
+
+
+
+
+	private class ReadSMSClickLinkAsync extends AsyncTask<String, Integer, String>{
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String link = getSmsFindVerificationLink(4 * 60 * 60 * 1000);
+			return link;
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
+			if(!s.equalsIgnoreCase("")){
+				if(!SplashNewActivity.this.isFinishing()){
+					Utils.openUrl(SplashNewActivity.this, s);
+					Data.linkFoundOnce = true;
+				}
+			}
+		}
+
+		private String getSmsFindVerificationLink(long diff) {
+			String link = "";
+			try {
+				Uri uri = Uri.parse("content://sms/inbox");
+				long now = System.currentTimeMillis();
+				long last1 = now - diff;    //in millis
+				String[] selectionArgs = new String[]{Long.toString(last1)};
+				String selection = "date" + ">?";
+				Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
+
+				if (cursor != null && cursor.moveToFirst()) {
+					for (int i = 0; i < cursor.getCount(); i++) {
+						String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+						Log.e("body", "="+body);
+						try {
+							if(body.contains(DOMAIN_SHARE_JUGNOO_IN)){
+								String[] arr = body.split(" ");
+								for(String str : arr){
+									if(str.contains(DOMAIN_SHARE_JUGNOO_IN)){
+										link = str;
+										break;
+									}
+								}
+							}
+						} catch (Exception e) {}
+						if(link.equalsIgnoreCase("")){
+							cursor.moveToNext();
+						} else{
+							break;
+						}
+					}
+				}
+				if (cursor != null){
+					cursor.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return link;
+		}
+	}
+
+
 
 }

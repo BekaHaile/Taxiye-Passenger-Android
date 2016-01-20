@@ -44,6 +44,8 @@ public class Data {
 	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
 						PAYTM_STATUS_INACTIVE = "INACTIVE";
 
+	public static boolean linkFoundOnce = false;
+
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
