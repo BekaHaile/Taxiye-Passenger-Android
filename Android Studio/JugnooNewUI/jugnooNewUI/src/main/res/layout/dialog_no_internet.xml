@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <RelativeLayout
+        android:id="@+id/innerRl"
+        android:layout_width="666px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="50px"
+        android:background="@drawable/background_priority_tip"
+        android:splitMotionEvents="false">
+
+
+
+        <LinearLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7px"
+            android:layout_marginLeft="7px"
+            android:layout_marginRight="7px"
+            android:layout_marginTop="7px"
+            android:background="@drawable/button_white_normal"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+            <TextView
+                android:id="@+id/textHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="@string/connection_lost_title"
+                android:textColor="#51515D"
+                android:textSize="@dimen/text_size_42"
+                android:visibility="visible" />
+
+            <ImageView
+                android:layout_width="492px"
+                android:layout_height="147px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30px"
+                android:tag="mwar"
+                android:background="@drawable/popup_connection_illustration" />
+
+
+            <TextView
+                android:id="@+id/textMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="45px"
+                android:gravity="center"
+                android:paddingLeft="40px"
+                android:paddingRight="40px"
+                android:text="@string/connection_lost_desc"
+                android:textColor="#51515D"
+                android:textSize="@dimen/text_size_30" />
+
+            <Button
+                android:id="@+id/btnOk"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40px"
+                android:layout_marginBottom="40px"
+                android:singleLine="true"
+                android:text="@string/connection_lost_try_again" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

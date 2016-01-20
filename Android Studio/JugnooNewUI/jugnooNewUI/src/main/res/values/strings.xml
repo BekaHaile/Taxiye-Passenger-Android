@@ -387,6 +387,9 @@
 
 	<string name="no_results_found">No results found</string>
 	<string name="i_want_to_cancel_my_ride_because">I WANT TO CANCEL MY RIDE BECAUSE</string>
+	<string name="connection_lost_title">CONNECTION LOST</string>
+	<string name="connection_lost_desc">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="connection_lost_try_again">TRY AGAIN</string>
 
 	<string-array name="CountryCodes" >
 <item>93,AF</item>

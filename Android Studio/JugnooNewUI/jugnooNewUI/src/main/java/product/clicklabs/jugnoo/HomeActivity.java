@@ -954,7 +954,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
 
                         } else {
-                            DialogPopup.alertPopup(HomeActivity.this, "", Data.CHECK_INTERNET_MSG);
+                            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
                         }
                     }
                 } catch (Exception e) {
