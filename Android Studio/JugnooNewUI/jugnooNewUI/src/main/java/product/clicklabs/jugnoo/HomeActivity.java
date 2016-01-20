@@ -954,7 +954,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
 
                         } else {
-                            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+                            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                                @Override
+                                public void positiveClick() {
+                                    imageViewRideNow.performClick();
+                                }
+
+                                @Override
+                                public void neutralClick() {
+
+                                }
+
+                                @Override
+                                public void negativeClick() {
+
+                                }
+                            });
                         }
                     }
                 } catch (Exception e) {
@@ -993,15 +1008,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutInitialSearchBar.performClick();
             }
         });
-
-
-
-
-
-
-
-
-
 
 
 		//Location error layout
@@ -2020,6 +2026,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_INITIAL:
 
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         GCMIntentService.clearNotifications(HomeActivity.this);
 
 						Data.dropLatLng = null;
@@ -2038,8 +2045,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } catch (Exception e) {
                         }
 
-
-                        slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2116,6 +2121,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_SEARCH:
 
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.VISIBLE);
@@ -2134,6 +2141,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_ASSIGNING:
 
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.VISIBLE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2189,6 +2197,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_REQUEST_FINAL:
 
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         if (map != null) {
 
                             if (Data.pickupLatLng == null) {
@@ -2213,7 +2222,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Log.i("marker added", "REQUEST_FINAL");
                         }
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2250,6 +2258,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         break;
 
                     case P_DRIVER_ARRIVED:
+
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
                         if (map != null) {
 
@@ -2321,6 +2331,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_IN_RIDE:
 
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         if (map != null) {
                             map.clear();
 
@@ -2409,6 +2420,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_RIDE_END:
 
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2428,7 +2440,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                     default:
-
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);

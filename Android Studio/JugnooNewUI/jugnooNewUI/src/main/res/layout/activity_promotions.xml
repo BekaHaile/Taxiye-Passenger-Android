@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/white"
     android:splitMotionEvents="false">
 
     <RelativeLayout
@@ -143,6 +143,7 @@
                     android:layout_marginRight="36px"
                     android:layout_marginTop="30px"
                     android:text="Ongoing Offers"
+                    android:visibility="gone"
                     android:textColor="@color/grey_black_light"
                     android:textSize="34px"/>
 
@@ -153,6 +154,7 @@
                     android:layout_marginTop="14px"
                     android:background="@color/white"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:splitMotionEvents="false"
                     >
 
@@ -195,9 +197,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30px"
-        android:background="@color/white"
-
+        android:background="@color/sliding_bottom_bg_color"
         >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:src="@color/text_color_light"/>
+
         <TextView
             android:id="@+id/textViewInvite"
             android:layout_width="600px"

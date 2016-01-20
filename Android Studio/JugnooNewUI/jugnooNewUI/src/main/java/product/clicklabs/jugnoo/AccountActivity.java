@@ -1056,6 +1056,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+            textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
             String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
             Gson gson = new Gson();
             AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
@@ -1066,9 +1067,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddHome.setText(ss1);
             imageViewEditHome.setVisibility(View.VISIBLE);
+        } else{
+            textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
         }
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+            textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
             String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
             Gson gson = new Gson();
             AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
@@ -1079,6 +1083,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddWork.setText(ss1);
             imageViewEditWork.setVisibility(View.VISIBLE);
+        } else{
+            textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
         }
     }
 
@@ -1095,6 +1101,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             if (requestCode == ADD_HOME) {
                 if(searchResult != null){
                     //String s = "Home \n" + searchResult.name + " " + searchResult.address;
+                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
                     String s = "Home \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -1110,11 +1117,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 }else {
                     textViewAddHome.setText("Add Home");
                     imageViewEditHome.setVisibility(View.GONE);
+                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
                 }
 
             } else if (requestCode == ADD_WORK) {
                 if(searchResult != null) {
                     //String s = "Work \n" + searchResult.name + " " + searchResult.address;
+                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
                     String s = "Work \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -1130,6 +1139,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 }else{
                     textViewAddWork.setText("Add Work");
                     imageViewEditWork.setVisibility(View.GONE);
+                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
                 }
             } else {
                 Log.v("onActivityResult else part", "onActivityResult else part");

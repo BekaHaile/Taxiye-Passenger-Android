@@ -78,7 +78,7 @@ public class DialogPopup {
 		}
 	}
 
-	public static void dialogNoInternet(Activity activity, String title, String message) {
+	public static void dialogNoInternet(Activity activity, String title, String message, final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface) {
 		try {
 			dismissAlertPopup();
 
@@ -100,19 +100,35 @@ public class DialogPopup {
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
 
 			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 			textHead.setText(title);
 			textMessage.setText(message);
 
 			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
+			ImageView btnClose = (ImageView)dialog.findViewById(R.id.close);
 
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
+					alertCallBackWithButtonsInterface.positiveClick();
 				}
+			});
 
+			btnClose.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					alertCallBackWithButtonsInterface.negativeClick();
+				}
+			});
+
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
 			});
 
 			dialog.show();

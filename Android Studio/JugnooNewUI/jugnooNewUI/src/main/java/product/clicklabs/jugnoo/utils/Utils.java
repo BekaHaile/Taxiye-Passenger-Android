@@ -598,4 +598,12 @@ public class Utils {
 		return dp;
 	}
 
+	public interface AlertCallBackWithButtonsInterface {
+		void positiveClick();
+
+		void neutralClick();
+
+		void negativeClick();
+	}
+
 }

@@ -7,15 +7,18 @@
     android:splitMotionEvents="false">
 
     <RelativeLayout
-        android:id="@+id/innerRl"
-        android:layout_width="666px"
+        android:layout_width="660px"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="50px"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="40px">
+
+    <RelativeLayout
+        android:id="@+id/innerRl"
+        android:layout_width="640px"
+        android:layout_marginTop="20px"
+        android:layout_height="wrap_content"
         android:background="@drawable/background_priority_tip"
         android:splitMotionEvents="false">
-
-
 
         <LinearLayout
             android:id="@+id/rl1"
@@ -75,6 +78,22 @@
                 android:singleLine="true"
                 android:text="@string/connection_lost_try_again" />
         </LinearLayout>
+
+
+    </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="74px"
+            android:layout_height="74px"
+            android:layout_alignParentRight="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingBottom="20px"
+            android:paddingLeft="20px"
+            android:paddingRight="10px"
+            android:src="@drawable/close_icon_selector"
+            android:tag="mwar" />
     </RelativeLayout>
 
 </FrameLayout>

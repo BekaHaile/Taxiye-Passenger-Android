@@ -293,7 +293,21 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 });
 		}
 		else {
-			updateListData("No internet connection, tap to retry", true);
+			//updateListData("No internet connection, tap to retry", true);
+            DialogPopup.dialogNoInternet(RideTransactionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                @Override
+                public void positiveClick() {
+                    getRecentRidesAPI(RideTransactionsActivity.this, true);
+                }
+
+                @Override
+                public void neutralClick() {
+                }
+
+                @Override
+                public void negativeClick() {
+                }
+            });
 		}
 	}
 	

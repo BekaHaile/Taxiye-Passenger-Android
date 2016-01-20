@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -197,7 +198,23 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							}
 						});
 			} else {
-				retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+				//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+				DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick() {
+						getLeaderboardCall();
+					}
+
+					@Override
+					public void neutralClick() {
+
+					}
+
+					@Override
+					public void negativeClick() {
+
+					}
+				});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
