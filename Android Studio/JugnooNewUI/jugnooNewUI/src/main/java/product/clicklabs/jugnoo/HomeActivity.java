@@ -905,6 +905,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 				try {
 					if(map != null) {
                         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -1875,6 +1876,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 reconnectLocationFetchers();
             }
             FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
         }
     };
 
