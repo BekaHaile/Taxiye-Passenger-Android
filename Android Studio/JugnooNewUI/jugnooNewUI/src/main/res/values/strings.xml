@@ -296,9 +296,27 @@
 	<string name="lb_name">Name</string>
 	<string name="lb_no_downloads">No. of\nDownloads</string>
 
+	<!-- Priority Tip -->
+	<string name="priority_tip">PRIORITY TIP</string>
+	<string name="priority_tip_message">Prices would be higher to \ngive priority to your ride request</string>
+	<string name="the_normal_fare">THE NORMAL\nFARE</string>
+	<string name="type">Type </string>
+	<string name="type_bottom">to confirm your fare multiplier</string>
+
 	<string name="retry">Retry</string>
 
-	
+	<string name="insert_sd_card">Please insert SD Card to use this app</string>
+
+
+	<!-- User Debt-->
+	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
+	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
+	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
+
+
+
+	<string name="no_results_found">No results found</string>
+
 	<string-array name="CountryCodes" >
 <item>93,AF</item>
 <item>355,AL</item>
@@ -508,6 +526,10 @@
 <item>263,ZW</item>
 </string-array>
 
+	<string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
+	<string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,\\ </string>
+
+
     <string name="payment_option_dialog_title">Select preferred payment option</string>
     <string name="paytm">Paytm</string>
     <string name="cash">Cash</string>
@@ -518,6 +540,7 @@
     <string name="paytm_low_cash">Your Paytm cash is low</string>
     <string name="paytm_no_cash">You do not have Paytm cash, Please select payment method as Cash</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
+	<string name="paytm_error_cash_select_cash">We are not able to connect to Paytm, Please select payment method as Cash</string>
 
     <string name="who_are_we">Who are we?</string>
     <string name="about_caps">ABOUT</string>

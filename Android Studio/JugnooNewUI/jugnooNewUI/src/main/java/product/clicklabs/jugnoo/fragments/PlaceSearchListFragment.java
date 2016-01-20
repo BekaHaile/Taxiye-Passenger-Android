@@ -63,6 +63,10 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	private final int ADD_HOME = 2, ADD_WORK = 3;
 
+	public PlaceSearchListFragment(){
+
+	}
+
 	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler, GoogleApiClient mGoogleApiClient){
 		this.searchListActionsHandler = searchListActionsHandler;
 		this.mGoogleApiClient = mGoogleApiClient;
@@ -146,15 +150,19 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 					@Override
 					public void onTextChange(String text) {
-						if(text.length() > 0){
-							imageViewSearchCross.setVisibility(View.VISIBLE);
-							hideSearchLayout();
+						try {
+							if(text.length() > 0){
+								imageViewSearchCross.setVisibility(View.VISIBLE);
+								hideSearchLayout();
+							}
+							else{
+								imageViewSearchCross.setVisibility(View.GONE);
+								showSearchLayout();
+							}
+							searchListActionsHandler.onTextChange(text);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-						else{
-							imageViewSearchCross.setVisibility(View.GONE);
-							showSearchLayout();
-						}
-						searchListActionsHandler.onTextChange(text);
 					}
 
 					@Override

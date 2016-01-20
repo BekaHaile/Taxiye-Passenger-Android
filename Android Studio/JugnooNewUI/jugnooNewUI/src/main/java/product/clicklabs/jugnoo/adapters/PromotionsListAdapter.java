@@ -288,16 +288,7 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
                                     promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
                                     JSONParser.parseCurrentFareStructure(jObj);
 
-                                    if(promoCouponList.size() > 0) {
-                                        selectedCoupon = noSelectionCoupon;
-                                        startDismissHandler();
-                                    }
-                                    else{
-                                        selectedCoupon = new CouponInfo(0, "");
-                                    }
-
-                                    PromotionsListAdapter.this.notifyDataSetChanged();
-									promotionListEventHandler.onPromoListFetched(promoCouponList.size());
+                                    callOnPromoListFetched();
                                 }
                                 else{
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -313,6 +304,19 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
                 });
         }
+    }
+
+    public void callOnPromoListFetched(){
+        if(promoCouponList.size() > 0) {
+            selectedCoupon = noSelectionCoupon;
+            startDismissHandler();
+        }
+        else{
+            selectedCoupon = new CouponInfo(0, "");
+        }
+
+        PromotionsListAdapter.this.notifyDataSetChanged();
+        promotionListEventHandler.onPromoListFetched(promoCouponList.size());
     }
 
 

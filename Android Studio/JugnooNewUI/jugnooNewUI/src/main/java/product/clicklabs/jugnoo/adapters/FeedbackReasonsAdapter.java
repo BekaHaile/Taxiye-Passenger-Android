@@ -36,8 +36,12 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.feedbackReasons = feedbackReasons;
 
-        for(int i=0; i<this.feedbackReasons.size(); i++){
-            this.feedbackReasons.get(i).checked = false;
+        try {
+            for(int i=0; i<this.feedbackReasons.size(); i++){
+				this.feedbackReasons.get(i).checked = false;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         this.feedbackReasonsListEventHandler = feedbackReasonsListEventHandler;

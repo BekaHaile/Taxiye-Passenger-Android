@@ -9,8 +9,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.SyncHttpClient;
 
-import org.json.JSONObject;
-
 import java.net.URLDecoder;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -22,8 +20,8 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -45,6 +43,8 @@ public class Data {
 
 	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
 						PAYTM_STATUS_INACTIVE = "INACTIVE";
+
+	public static boolean linkFoundOnce = false;
 
 
 
@@ -181,7 +181,7 @@ public class Data {
 	public static FareStructure fareStructure;
 	
 	public static CancelOptionsList cancelOptionsList;
-    public static ArrayList<FeedbackReason> feedbackReasons;
+    public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
 
 	public static ReferralMessages referralMessages;
 
@@ -199,8 +199,8 @@ public class Data {
 
 	public static LatLng lastRefreshLatLng;
 
-	public static JSONObject branchReferringParams = null;
-	public static String branchReferringLink = "";
+	public static final long BRANCH_LINK_TIME_DIFF = 7 * 24 * 60 * 60 * 1000;
+
 
 
 	public static int TRANSFER_FROM_JEANIE = 0;
@@ -324,9 +324,12 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
+			if(data.getQueryParameter("referral_code") != null){
+				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
+			}
+
 			if(data.getQueryParameter("deepindex") != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
-				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
 			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -342,7 +345,7 @@ public class Data {
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
 			try {
 				Intent intent = newIntent;
@@ -352,10 +355,12 @@ public class Data {
 				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
 				Uri dataTarget = Uri.parse(targetUrl);
 
+				if(dataTarget.getQueryParameter("referral_code") != null){
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
+				}
+
 				if(dataTarget.getQueryParameter("deepindex") != null){
 					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
-					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
-					Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 				}
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
 					Data.deepLinkPickup = 1;
@@ -367,6 +372,7 @@ public class Data {
 					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
 				}
 			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		}
 
