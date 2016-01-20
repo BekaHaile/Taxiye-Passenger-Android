@@ -88,6 +88,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	//adding drop location
 
+	private final String TAG = SplashNewActivity.class.getSimpleName();
+
 	LinearLayout relative;
 
 	ImageView imageViewJugnooLogo;
@@ -1259,10 +1261,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				String selection = "date" + ">?";
 				Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
 
-				if (cursor != null && cursor.moveToFirst()) {
-					for (int i = 0; i < cursor.getCount(); i++) {
+				if (cursor != null) {
+					for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 						String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-						Log.e("body", "="+body);
+						Log.i(TAG, "sms body=>"+body);
 						try {
 							if(body.contains(DOMAIN_SHARE_JUGNOO_IN)){
 								String[] arr = body.split(" ");
@@ -1274,9 +1276,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								}
 							}
 						} catch (Exception e) {}
-						if(link.equalsIgnoreCase("")){
-							cursor.moveToNext();
-						} else{
+						if(!link.equalsIgnoreCase("")){
 							break;
 						}
 					}
