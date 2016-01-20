@@ -205,7 +205,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	public boolean isBranchLinkNotClicked(){
 		return (!holdForBranch
-				|| clickCount > 3);
+				|| clickCount > 1);
 	}
 
 	public static void initializeServerURL(Context context) {
