@@ -1270,6 +1270,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								String[] arr = body.split(" ");
 								for(String str : arr){
 									if(str.contains(DOMAIN_SHARE_JUGNOO_IN)){
+										if(str.charAt(str.length()-1) == '.'){
+											str = str.substring(0, str.length()-1);
+										}
 										link = str;
 										break;
 									}
