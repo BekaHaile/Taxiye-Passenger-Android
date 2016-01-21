@@ -514,14 +514,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 		});
 
-
-
-
-
-
-
-
-
 		editTextEmail.addTextChangedListener(new CustomTextWatcher(textViewEmailRequired));
 		editTextPassword.addTextChangedListener(new CustomTextWatcher(textViewPasswordRequired));
 		editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
@@ -651,13 +643,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				return true;
 			}
 		});
-
-
-
-
-
-
-
 
 		editTextSName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired));
 		editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));

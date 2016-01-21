@@ -590,7 +590,8 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                         });
                 } else {
                     //updateListData("No Internet connection. Tap to retry", true);
-                    DialogPopup.dialogNoInternet(PromotionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                    DialogPopup.dialogNoInternet(PromotionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG
+                            , new Utils.AlertCallBackWithButtonsInterface() {
                         @Override
                         public void positiveClick() {
                             getAccountInfoAsync(PromotionsActivity.this);

@@ -618,11 +618,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //Assigning layout
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
-        textViewFindingDriver.setTypeface(Fonts.latoRegular(this));
+        textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
 		progressBarFindingDriver = (SmoothProgressBar) findViewById(R.id.progressBarFindingDriver);
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
-        initialCancelRideBtn.setTypeface(Fonts.latoRegular(this));
+        initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
         linearLayoutAssigningDropLocationClick = (LinearLayout) findViewById(R.id.linearLayoutAssigningDropLocationClick);
@@ -1056,7 +1056,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-		initialCancelRideBtn.setOnTouchListener(new View.OnTouchListener() {
+        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    if ("".equalsIgnoreCase(Data.cSessionId)) {
+                        if (checkForGPSAccuracyTimer != null) {
+                            if (checkForGPSAccuracyTimer.isRunning) {
+                                checkForGPSAccuracyTimer.stopTimer();
+                                customerUIBackToInitialAfterCancel();
+                            }
+                        }
+                    } else {
+                        FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
+                        cancelCustomerRequestAsync(HomeActivity.this);
+                    }
+            }
+        });
+
+		/*initialCancelRideBtn.setOnTouchListener(new View.OnTouchListener() {
 
             Handler handler = new Handler();
             Runnable runnable = new Runnable() {
@@ -1096,7 +1113,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         progressBarFindingDriver.progressiveStart();
                         progressBarFindingDriver.setSmoothProgressDrawableProgressiveStartSpeed(0.9f);
 
-                        handler.postDelayed(runnable, 2000);
+                        handler.post(runnable);
                         cancelTouchHold = true;
 
                         break;
@@ -1116,7 +1133,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 return true;
             }
-        });
+        });*/
 
         linearLayoutAssigningDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
@@ -1462,7 +1479,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapTouched() {
                     // Map touched
-                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    } else{
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    }
+
+
                 }
 
                 @Override
@@ -2026,7 +2049,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_INITIAL:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         GCMIntentService.clearNotifications(HomeActivity.this);
 
 						Data.dropLatLng = null;
@@ -2121,7 +2143,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_SEARCH:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
@@ -2141,7 +2162,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_ASSIGNING:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.VISIBLE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2197,7 +2217,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_REQUEST_FINAL:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         if (map != null) {
 
                             if (Data.pickupLatLng == null) {
@@ -2259,7 +2278,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_DRIVER_ARRIVED:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
                         if (map != null) {
 
@@ -2331,7 +2349,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_IN_RIDE:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         if (map != null) {
                             map.clear();
 
@@ -2420,7 +2437,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_RIDE_END:
 
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2440,7 +2456,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                     default:
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);

@@ -114,14 +114,14 @@
                         android:id="@+id/listViewCoupons"
                         android:layout_width="match_parent"
                         android:layout_height="100px"
+                        android:gravity="center_horizontal"
                         android:layout_marginTop="0px"
                         android:divider="@drawable/background_transparent"
                         android:dividerHeight="0px"
                         android:listSelector="@drawable/background_transparent"
                         android:numColumns="2"
                         android:splitMotionEvents="false"
-                        >
-                    </product.clicklabs.jugnoo.utils.NonScrollGridView>
+                        />
 
                     <TextView
                         android:id="@+id/textViewCouponInfo"
