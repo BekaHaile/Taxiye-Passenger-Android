@@ -1191,9 +1191,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		DialogPopup.dismissLoadingDialog();
 		DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 		DialogPopup.dismissLoadingDialog();
-		linearLayoutNoNet.setVisibility(View.VISIBLE);
-		linearLayoutLoginSignupButtons.setVisibility(View.GONE);
-		viewInitLS.setVisibility(View.GONE);
+		changeUIState(State.SPLASH_NO_NET);
 	}
 
 
