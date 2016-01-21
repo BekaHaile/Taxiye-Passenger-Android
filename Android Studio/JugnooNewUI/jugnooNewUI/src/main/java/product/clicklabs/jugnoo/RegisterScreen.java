@@ -55,7 +55,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -481,17 +480,17 @@ public class RegisterScreen extends BaseActivity implements LocationUpdate, Flur
 		}
 
 
-        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-            @Override
-            public void keyboardOpened() {
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-
-            }
-        }));
+//        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+//            @Override
+//            public void keyboardOpened() {
+//
+//            }
+//
+//            @Override
+//            public void keyBoardClosed() {
+//
+//            }
+//        }));
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

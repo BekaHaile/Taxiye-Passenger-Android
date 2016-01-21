@@ -144,7 +144,7 @@ public class UserData {
 
 	public void deletePaytm(){
 		this.paytmEnabled = 0;
-		this.paytmBalance = 0;
+		setPaytmBalance(0);
 		this.paytmError = 0;
 		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 	}
