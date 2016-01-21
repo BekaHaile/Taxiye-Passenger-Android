@@ -20,13 +20,16 @@ public class UserData {
 
 	private String branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl;
 
+	private String jugnooCashTNC;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled,
                     int contactSaved, String referAllText, String referAllTitle, int promoSuccess, int showJugnooJeanie,
-					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl){
+					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
+					String jugnooCashTNC){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -77,6 +80,8 @@ public class UserData {
 		this.branchAndroidUrl = branchAndroidUrl;
 		this.branchIosUrl = branchIosUrl;
 		this.branchFallbackUrl = branchFallbackUrl;
+
+		this.jugnooCashTNC = jugnooCashTNC;
 	}
 
 	public double getJugnooBalance() {
@@ -174,5 +179,13 @@ public class UserData {
 
 	public void setBranchFallbackUrl(String branchFallbackUrl) {
 		this.branchFallbackUrl = branchFallbackUrl;
+	}
+
+	public String getJugnooCashTNC() {
+		return jugnooCashTNC;
+	}
+
+	public void setJugnooCashTNC(String jugnooCashTNC) {
+		this.jugnooCashTNC = jugnooCashTNC;
 	}
 }

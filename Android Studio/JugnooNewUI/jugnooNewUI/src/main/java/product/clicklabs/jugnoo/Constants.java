@@ -62,4 +62,6 @@ public interface Constants {
 	String KEY_BRANCH_IOS_URL = "branch_ios_url";
 	String KEY_BRANCH_FALLBACK_URL = "branch_fallback_url";
 
+	String KEY_JUGNOO_CASH_TNC = "jugnoo_cash_tnc";
+
 }

@@ -310,13 +310,17 @@ public class JSONParser implements Constants {
         String branchIosUrl = userData.optString(KEY_BRANCH_IOS_URL, defaultBranchIosUrl);
         String branchFallbackUrl = userData.optString(KEY_BRANCH_FALLBACK_URL, defaultBranchFallbackUrl);
 
+
+        String jugnooCashTNC = userData.optString(KEY_JUGNOO_CASH_TNC,
+                context.getResources().getString(R.string.jugnoo_cash_tnc));
+
 		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
                 contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie,
-                branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl);
+                branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl, jugnooCashTNC);
     }
 
 

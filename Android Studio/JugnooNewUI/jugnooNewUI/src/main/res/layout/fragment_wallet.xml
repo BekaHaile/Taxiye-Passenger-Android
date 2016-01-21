@@ -70,7 +70,7 @@
                 android:id="@+id/relativeLayoutWallet"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
-                android:background="@color/white"
+                android:background="@drawable/background_white_white_light_grey_selector"
                 >
 
 
@@ -84,17 +84,34 @@
                     android:tag="mwar"
                     />
 
-                <TextView
-                    android:id="@+id/textViewJugnooCashBalance"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:layout_toRightOf="@+id/imageViewJugnooCashIcon"
-                    android:text="Jugnoo Cash"
-                    android:textColor="@color/bg_grey_opaque"
-                    android:textSize="30px"
-                    />
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/textViewJugnooCashBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jugnoo Cash"
+                        android:textColor="@color/bg_grey_opaque"
+                        android:textSize="30px"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewJugnooCashTNC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tnc_apply"
+                        android:textColor="@color/black_text_alpha"
+                        android:textSize="18px"
+                        android:layout_marginTop="5px"
+                        />
+                </LinearLayout>
 
 
                 <TextView
