@@ -444,10 +444,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				changeUIState(State.SIGNUP);
 			}
 		});
+
 		textViewTerms.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				try {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+					startActivity(browserIntent);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 
