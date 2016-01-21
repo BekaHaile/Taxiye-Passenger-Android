@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
+import product.clicklabs.jugnoo.retrofit.model.SupportFAq;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -24,10 +24,10 @@ public class SupportFAQQuesAdapter extends RecyclerView.Adapter<SupportFAQQuesAd
 
     private Activity activity;
     private int rowLayout;
-    private ArrayList<SupportFAQ.QuestionAnswer> questionAnswers = new ArrayList<>();
+    private ArrayList<SupportFAq.QuestionAnswer> questionAnswers = new ArrayList<>();
     private Callback callback;
 
-    public SupportFAQQuesAdapter(ArrayList<SupportFAQ.QuestionAnswer> questionAnswers, Activity activity, int rowLayout, Callback callback) {
+    public SupportFAQQuesAdapter(ArrayList<SupportFAq.QuestionAnswer> questionAnswers, Activity activity, int rowLayout, Callback callback) {
         this.questionAnswers = questionAnswers;
         this.activity = activity;
         this.rowLayout = rowLayout;
@@ -47,7 +47,7 @@ public class SupportFAQQuesAdapter extends RecyclerView.Adapter<SupportFAQQuesAd
 
     @Override
     public void onBindViewHolder(SupportFAQQuesAdapter.ViewHolder holder, int position) {
-        SupportFAQ.QuestionAnswer questionAnswer = questionAnswers.get(position);
+        SupportFAq.QuestionAnswer questionAnswer = questionAnswers.get(position);
         holder.textViewFaqItemName.setText(questionAnswer.getQuestion());
         holder.root.setTag(position);
         holder.root.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +84,7 @@ public class SupportFAQQuesAdapter extends RecyclerView.Adapter<SupportFAQQuesAd
 
 
     public interface Callback{
-        void onClick(int position, SupportFAQ.QuestionAnswer questionAnswer);
+        void onClick(int position, SupportFAq.QuestionAnswer questionAnswer);
     }
 
 }

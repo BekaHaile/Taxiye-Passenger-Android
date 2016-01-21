@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
+import product.clicklabs.jugnoo.retrofit.model.SupportFAq;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQQuesAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -34,7 +34,7 @@ public class SupportFAQQuesFragment extends Fragment implements FlurryEventNames
 	private View rootView;
     private SupportActivity activity;
 
-	private SupportFAQ supportFAQ;
+	private SupportFAq supportFAq;
 
     @Override
     public void onStart() {
@@ -50,8 +50,8 @@ public class SupportFAQQuesFragment extends Fragment implements FlurryEventNames
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQQuesFragment(SupportFAQ supportFAQ){
-		this.supportFAQ = supportFAQ;
+	public SupportFAQQuesFragment(SupportFAq supportFAq){
+		this.supportFAq = supportFAq;
 	}
 
     @Override
@@ -60,7 +60,7 @@ public class SupportFAQQuesFragment extends Fragment implements FlurryEventNames
 
         activity = (SupportActivity) getActivity();
 
-		activity.setTitle(supportFAQ.getName());
+		activity.setTitle(supportFAq.getName());
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
@@ -76,11 +76,11 @@ public class SupportFAQQuesFragment extends Fragment implements FlurryEventNames
 		recyclerViewSupportFaqQues.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewSupportFaqQues.setHasFixedSize(false);
 
-		supportFAQQuesAdapter = new SupportFAQQuesAdapter((ArrayList<SupportFAQ.QuestionAnswer>) supportFAQ.getQuestionAnswers(),
+		supportFAQQuesAdapter = new SupportFAQQuesAdapter((ArrayList<SupportFAq.QuestionAnswer>) supportFAq.getQuestionAnswers(),
 				activity, R.layout.list_item_support_faq,
 				new SupportFAQQuesAdapter.Callback() {
 					@Override
-					public void onClick(int position, SupportFAQ.QuestionAnswer questionAnswer) {
+					public void onClick(int position, SupportFAq.QuestionAnswer questionAnswer) {
 						activity.getSupportFragmentManager().beginTransaction()
 								.add(activity.getLinearLayoutContainer().getId(),
 										new SupportFAQQuesAnsFragment(questionAnswer), SupportFAQQuesAnsFragment.class.getName())

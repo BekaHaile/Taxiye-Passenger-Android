@@ -10,11 +10,11 @@
         android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10px"
-        android:layout_marginBottom="10px"
+        android:layout_marginTop="15px"
+        android:layout_marginBottom="15px"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
-        android:background="@drawable/background_white_rounded_bordered"
+        android:background="@drawable/background_white_grey_rb_selector"
         android:orientation="vertical"
         android:splitMotionEvents="false">
 
@@ -166,6 +166,7 @@
         android:layout_below="@+id/linearLayoutMain"
         android:layout_marginTop="0px"
         android:background="@drawable/background_white_grey_light_selector"
+        android:visibility="gone"
         >
 
         <TextView
@@ -200,7 +201,7 @@
         android:layout_marginRight="40px"
         android:layout_marginTop="20px"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="44px"

@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,150 +13,172 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FeedbackActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.RideSummaryActivity;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactionsAdapter.ViewHolder> {
+public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int TYPE_FOOTER = 2;
+    private static final int TYPE_ITEM = 1;
     private Activity activity;
     private int rowLayout;
-    private ArrayList<RideInfo> rideInfosList = new ArrayList<>();
+    private ArrayList<RideInfo> rideInfosList;
     private Callback callback;
 
     private DecimalFormat decimalFormat = new DecimalFormat("#.#");
     private DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
 
-    public RideTransactionsAdapter(ArrayList<RideInfo> rideInfosList, Activity activity, int rowLayout) {
+    public RideTransactionsAdapter(ArrayList<RideInfo> rideInfosList, Activity activity, int rowLayout, Callback callback) {
         this.rideInfosList = rideInfosList;
         this.activity = activity;
         this.rowLayout = rowLayout;
+        this.callback = callback;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_FOOTER) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_show_more, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, RecyclerView.LayoutParams.WRAP_CONTENT);
-        v.setLayoutParams(layoutParams);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, RecyclerView.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
 
-        ASSL.DoMagic(v);
-        return new ViewHolder(v, activity);
-    }
+            ASSL.DoMagic(v);
+            return new ViewFooterHolder(v, activity);
+        } else{
+            View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
 
-    @Override
-    public void onBindViewHolder(RideTransactionsAdapter.ViewHolder holder, int position) {
-        RideInfo rideInfo = rideInfosList.get(position);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, RecyclerView.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
 
-        holder.id = position;
-        holder.relative.setTag(holder);
-        holder.relativeLayoutRateRide.setTag(holder);
-        holder.linearLayoutRideReceipt.setTag(holder);
-
-        holder.textViewPickupAt.setVisibility(View.GONE);
-        holder.textViewAmount.setVisibility(View.VISIBLE);
-
-        holder.textViewIdValue.setText("" + rideInfo.engagementId);
-        holder.textViewFromValue.setText(rideInfo.pickupAddress);
-        holder.textViewToValue.setText(rideInfo.dropAddress);
-        holder.textViewDetails.setText("Details: ");
-
-        if(0 == rideInfo.isCancelledRide) {
-            if (rideInfo.rideTime == 1) {
-                holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                        + decimalFormatNoDec.format(rideInfo.rideTime) + " minute, " + rideInfo.date);
-            } else {
-                holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                        + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
-            }
-            holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
-
-            if (1 != rideInfo.isRatedBefore) {
-                holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
-            } else {
-                holder.relativeLayoutRateRide.setVisibility(View.GONE);
-            }
-            holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
-            holder.textViewRideCancelled.setVisibility(View.GONE);
-            holder.relativeLayoutTo.setVisibility(View.VISIBLE);
+            ASSL.DoMagic(v);
+            return new ViewHolder(v, activity);
         }
-        else{
-            holder.textViewDetailsValue.setText(rideInfo.date+",");
-            holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+    }
+
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
+        if(viewholder instanceof ViewHolder) {
+            RideInfo rideInfo = getItem(position);
+            ViewHolder holder = (ViewHolder) viewholder;
+            holder.relative.setTag(position);
+            holder.relativeLayoutRateRide.setTag(position);
+
+            holder.textViewPickupAt.setVisibility(View.GONE);
+            holder.textViewAmount.setVisibility(View.VISIBLE);
+
+            holder.textViewIdValue.setText("" + rideInfo.engagementId);
+            holder.textViewFromValue.setText(rideInfo.pickupAddress);
+            holder.textViewToValue.setText(rideInfo.dropAddress);
+            holder.textViewDetails.setText("Details: ");
+
+            if (0 == rideInfo.isCancelledRide) {
+                if (rideInfo.rideTime == 1) {
+                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
+                            + decimalFormatNoDec.format(rideInfo.rideTime) + " minute, " + rideInfo.date);
+                } else {
+                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
+                            + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
+                }
+                holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+
+                if (1 != rideInfo.isRatedBefore) {
+                    holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
+                } else {
+                    holder.relativeLayoutRateRide.setVisibility(View.GONE);
+                }
+                holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+                holder.textViewRideCancelled.setVisibility(View.GONE);
+                holder.relativeLayoutTo.setVisibility(View.VISIBLE);
+            } else {
+                holder.textViewDetailsValue.setText(rideInfo.date + ",");
+                holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+                holder.relativeLayoutRateRide.setVisibility(View.GONE);
+                holder.linearLayoutRideReceipt.setVisibility(View.GONE);
+                holder.textViewRideCancelled.setVisibility(View.VISIBLE);
+                holder.relativeLayoutTo.setVisibility(View.GONE);
+            }
             holder.relativeLayoutRateRide.setVisibility(View.GONE);
             holder.linearLayoutRideReceipt.setVisibility(View.GONE);
-            holder.textViewRideCancelled.setVisibility(View.VISIBLE);
-            holder.relativeLayoutTo.setVisibility(View.GONE);
+
+            holder.relativeLayoutRateRide.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int position = (int) v.getTag();
+                        callback.onRateRideClick(position, getItem(position));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            holder.relative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int position = (int) v.getTag();
+                        callback.onClick(position, getItem(position));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
-
-        holder.relativeLayoutRateRide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    RideTransactionsAdapter.ViewHolder holder = (RideTransactionsAdapter.ViewHolder) v.getTag();
-                    Intent intent = new Intent(activity, FeedbackActivity.class);
-                    intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.PAST_RIDE.getOrdinal());
-                    intent.putExtra("position", holder.id);
-                    intent.putExtra("driver_id", rideInfosList.get(holder.id).driverId);
-                    intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
-                    activity.startActivity(intent);
-                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(FlurryEventNames.RIDE_RATED_ON_RIDE_HISTORY);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        else if(viewholder instanceof ViewFooterHolder){
+            ViewFooterHolder holder = (ViewFooterHolder) viewholder;
+            holder.relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onShowMoreClick();
                 }
-            }
-        });
-
-        holder.linearLayoutRideReceipt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if(AppStatus.getInstance(activity).isOnline(activity)) {
-                        RideTransactionsAdapter.ViewHolder holder = (RideTransactionsAdapter.ViewHolder) v.getTag();
-                        Intent intent = new Intent(activity, RideSummaryActivity.class);
-                        intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
-                        activity.startActivity(intent);
-                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    }
-                    else{
-                        DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-                    }
-                    FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+            });
+        }
 
 	}
 
     @Override
     public int getItemCount() {
-        return rideInfosList == null ? 0 : rideInfosList.size();
+        if(rideInfosList == null || rideInfosList.size() == 0){
+            return 0;
+        }
+        else{
+            return rideInfosList.size() + 1;
+        }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionFooter(position)) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ITEM;
+    }
+
+    private boolean isPositionFooter(int position) {
+        return position == rideInfosList.size();
+    }
+
+    private RideInfo getItem(int position){
+        if(isPositionFooter(position)){
+            return null;
+        }
+        return rideInfosList.get(position);
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
                 textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount,
                 textViewRateRide, textViewRideCancelled;
         public RelativeLayout relativeLayoutTo, relativeLayoutRateRide;
         public LinearLayout linearLayoutRideReceipt;
         public RelativeLayout relative;
-        public int id;
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
             textViewPickupAt = (TextView) convertView.findViewById(R.id.textViewPickupAt); textViewPickupAt.setTypeface(Fonts.mavenLight(context));
@@ -183,8 +204,22 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RideTransactio
         }
     }
 
+
+    public class ViewFooterHolder extends RecyclerView.ViewHolder {
+        public RelativeLayout relativeLayoutShowMore;
+        public TextView textViewShowMore;
+        public ViewFooterHolder(View convertView, Activity context) {
+            super(convertView);
+            relativeLayoutShowMore = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutShowMore);
+            textViewShowMore = (TextView) convertView.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.mavenLight(context));
+            textViewShowMore.setText(context.getResources().getString(R.string.show_more));
+        }
+    }
+
     public interface Callback{
-        void onClick(int position, SupportFAQ supportFAQ);
+        void onClick(int position, RideInfo rideInfo);
+        void onShowMoreClick();
+        void onRateRideClick(int position, RideInfo rideInfo);
     }
 
 }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
+import product.clicklabs.jugnoo.retrofit.model.SupportFAq;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -24,11 +24,11 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
 
     private Activity activity;
     private int rowLayout;
-    private ArrayList<SupportFAQ> supportFAQs = new ArrayList<>();
+    private ArrayList<SupportFAq> supportFAqs = new ArrayList<>();
     private Callback callback;
 
-    public SupportFAQItemsAdapter(ArrayList<SupportFAQ> supportFAQs, Activity activity, int rowLayout, Callback callback) {
-        this.supportFAQs = supportFAQs;
+    public SupportFAQItemsAdapter(ArrayList<SupportFAq> supportFAqs, Activity activity, int rowLayout, Callback callback) {
+        this.supportFAqs = supportFAqs;
         this.activity = activity;
         this.rowLayout = rowLayout;
         this.callback = callback;
@@ -47,14 +47,14 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
 
     @Override
     public void onBindViewHolder(SupportFAQItemsAdapter.ViewHolder holder, int position) {
-        SupportFAQ supportFAQ = supportFAQs.get(position);
-        holder.textViewFaqItemName.setText(supportFAQ.getName());
+        SupportFAq supportFAq = supportFAqs.get(position);
+        holder.textViewFaqItemName.setText(supportFAq.getName());
         holder.root.setTag(position);
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int clickedPosition = (int) v.getTag();
-                callback.onClick(clickedPosition, supportFAQs.get(clickedPosition));
+                callback.onClick(clickedPosition, supportFAqs.get(clickedPosition));
             }
         });
         if(position < getItemCount()-1){
@@ -66,7 +66,7 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
 
     @Override
     public int getItemCount() {
-        return supportFAQs == null ? 0 : supportFAQs.size();
+        return supportFAqs == null ? 0 : supportFAqs.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,7 +83,7 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
     }
 
     public interface Callback{
-        void onClick(int position, SupportFAQ supportFAQ);
+        void onClick(int position, SupportFAq supportFAq);
     }
 
 }

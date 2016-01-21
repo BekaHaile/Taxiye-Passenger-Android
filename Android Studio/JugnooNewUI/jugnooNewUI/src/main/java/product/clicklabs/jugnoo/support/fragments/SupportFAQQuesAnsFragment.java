@@ -13,7 +13,7 @@ import com.flurry.android.FlurryAgent;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
+import product.clicklabs.jugnoo.retrofit.model.SupportFAq;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -28,7 +28,7 @@ public class SupportFAQQuesAnsFragment extends Fragment implements FlurryEventNa
 	private View rootView;
     private SupportActivity activity;
 
-	private SupportFAQ.QuestionAnswer questionAnswer;
+	private SupportFAq.QuestionAnswer questionAnswer;
 
     @Override
     public void onStart() {
@@ -44,7 +44,7 @@ public class SupportFAQQuesAnsFragment extends Fragment implements FlurryEventNa
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQQuesAnsFragment(SupportFAQ.QuestionAnswer questionAnswer){
+	public SupportFAQQuesAnsFragment(SupportFAq.QuestionAnswer questionAnswer){
 		this.questionAnswer = questionAnswer;
 	}
 

@@ -20,7 +20,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAQ;
+import product.clicklabs.jugnoo.retrofit.model.SupportFAq;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -37,7 +37,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private RecyclerView recyclerViewSupportFaq;
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
-	private ArrayList<SupportFAQ> supportFAQs;
+	private ArrayList<SupportFAq> supportFAqs;
 
 	private View rootView;
     private SupportActivity activity;
@@ -92,34 +92,34 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		recyclerViewSupportFaq.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewSupportFaq.setHasFixedSize(false);
 
-		ArrayList<SupportFAQ.QuestionAnswer> questionAnswers = new ArrayList<>();
-		SupportFAQ supportFAQ = new SupportFAQ(1, "Account", questionAnswers);
-		questionAnswers.add(supportFAQ.new QuestionAnswer("What is account", "this is account"));
-		supportFAQs = new ArrayList<>();
-		supportFAQs.add(supportFAQ);
-		supportFAQ = new SupportFAQ(2, "General", questionAnswers);
-		questionAnswers.add(supportFAQ.new QuestionAnswer("What is General", "this is General"));
-		supportFAQs.add(supportFAQ);
-		supportFAQ = new SupportFAQ(3, "Usage", questionAnswers);
-		questionAnswers.add(supportFAQ.new QuestionAnswer("What is usage", "this is usage"));
-		supportFAQs.add(supportFAQ);
-		supportFAQ = new SupportFAQ(4, "Biling", questionAnswers);
-		questionAnswers.add(supportFAQ.new QuestionAnswer("What is Biling", "this is Biling"));
-		supportFAQs.add(supportFAQ);
-		supportFAQ = new SupportFAQ(4, "Promotions and Coupons", questionAnswers);
-		questionAnswers.add(supportFAQ.new QuestionAnswer("What is Promotions and Coupons", "this is Promotions and Coupons"));
-		supportFAQs.add(supportFAQ);
-		supportFAQ = new SupportFAQ(4, "Abuse of Service", questionAnswers);
-		questionAnswers.add(supportFAQ.new QuestionAnswer("What is Abuse of Service", "this is Abuse of Service"));
-		supportFAQs.add(supportFAQ);
+		ArrayList<SupportFAq.QuestionAnswer> questionAnswers = new ArrayList<>();
+		SupportFAq supportFAq = new SupportFAq(1, "Account", questionAnswers);
+		questionAnswers.add(supportFAq.new QuestionAnswer("What is account", "this is account"));
+		supportFAqs = new ArrayList<>();
+		supportFAqs.add(supportFAq);
+		supportFAq = new SupportFAq(2, "General", questionAnswers);
+		questionAnswers.add(supportFAq.new QuestionAnswer("What is General", "this is General"));
+		supportFAqs.add(supportFAq);
+		supportFAq = new SupportFAq(3, "Usage", questionAnswers);
+		questionAnswers.add(supportFAq.new QuestionAnswer("What is usage", "this is usage"));
+		supportFAqs.add(supportFAq);
+		supportFAq = new SupportFAq(4, "Biling", questionAnswers);
+		questionAnswers.add(supportFAq.new QuestionAnswer("What is Biling", "this is Biling"));
+		supportFAqs.add(supportFAq);
+		supportFAq = new SupportFAq(4, "Promotions and Coupons", questionAnswers);
+		questionAnswers.add(supportFAq.new QuestionAnswer("What is Promotions and Coupons", "this is Promotions and Coupons"));
+		supportFAqs.add(supportFAq);
+		supportFAq = new SupportFAq(4, "Abuse of Service", questionAnswers);
+		questionAnswers.add(supportFAq.new QuestionAnswer("What is Abuse of Service", "this is Abuse of Service"));
+		supportFAqs.add(supportFAq);
 
-		supportFAQItemsAdapter = new SupportFAQItemsAdapter(supportFAQs, activity, R.layout.list_item_support_faq,
+		supportFAQItemsAdapter = new SupportFAQItemsAdapter(supportFAqs, activity, R.layout.list_item_support_faq,
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
-					public void onClick(int position, SupportFAQ supportFAQ) {
+					public void onClick(int position, SupportFAq supportFAq) {
 						activity.getSupportFragmentManager().beginTransaction()
 								.add(activity.getLinearLayoutContainer().getId(),
-										new SupportFAQQuesFragment(supportFAQ), SupportFAQQuesFragment.class.getName())
+										new SupportFAQQuesFragment(supportFAq), SupportFAQQuesFragment.class.getName())
 								.addToBackStack(SupportFAQQuesFragment.class.getName())
 								.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 										.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
