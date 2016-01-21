@@ -684,7 +684,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					String password = editTextSPassword.getText().toString().trim();
 
 
-					if ("".equalsIgnoreCase(name)) {
+					if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
 						editTextSName.requestFocus();
 						editTextSName.setError("Please enter name");
 					} else if (!Utils.hasAlphabets(name)) {
