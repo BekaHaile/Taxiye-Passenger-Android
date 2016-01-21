@@ -67,6 +67,14 @@
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_34" />
 
+            <ImageView
+                android:id="@+id/findDriverJugnooAnimation"
+                android:layout_width="136px"
+                android:layout_height="92px"
+                android:layout_marginTop="20px"
+                android:background="@drawable/anim"
+                android:layout_gravity="center_horizontal"/>
+
             <Button
                 android:id="@+id/initialCancelRideBtn"
                 style="@style/ButtonTheme"

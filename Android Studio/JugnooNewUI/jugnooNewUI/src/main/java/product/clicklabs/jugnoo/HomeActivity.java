@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -300,6 +301,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll;
+
+    private AnimationDrawable jugnooAnimation;
+    private ImageView findDriverJugnooAnimation;
 
     /*ScrollView scrollViewEndRide;
 
@@ -623,6 +627,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
+        findDriverJugnooAnimation = (ImageView)findViewById(R.id.findDriverJugnooAnimation);
+        jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
+
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
         linearLayoutAssigningDropLocationClick = (LinearLayout) findViewById(R.id.linearLayoutAssigningDropLocationClick);
@@ -2162,6 +2169,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     case P_ASSIGNING:
 
+                        findDriverJugnooAnimation.setVisibility(View.VISIBLE);
+                        jugnooAnimation.start();
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.VISIBLE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -3827,7 +3836,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void cancelCustomerRequestAsync(final Activity activity) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-//            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 
@@ -3854,6 +3863,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void onSuccess(String response) {
                         Log.e("Server response", "response = " + response);
+                        DialogPopup.dismissLoadingDialog();
 
                         try {
                             jObj = new JSONObject(response);
@@ -3873,11 +3883,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
 
-                        DialogPopup.dismissLoadingDialog();
+
                     }
                 });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                @Override
+                public void positiveClick() {
+                    cancelCustomerRequestAsync(HomeActivity.this);
+                }
+
+                @Override
+                public void neutralClick() {
+
+                }
+
+                @Override
+                public void negativeClick() {
+
+                }
+            });
         }
     }
 
@@ -5577,6 +5603,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if ("".equalsIgnoreCase(Data.cSessionId)) {
                     relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
                     initialCancelRideBtn.setVisibility(View.GONE);
+                    findDriverJugnooAnimation.setVisibility(View.VISIBLE);
+                    jugnooAnimation.start();
                 } else {
                     if(Data.dropLatLng == null){
                         linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
@@ -5585,6 +5613,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
                     }
                     initialCancelRideBtn.setVisibility(View.VISIBLE);
+                    jugnooAnimation.stop();
+                    findDriverJugnooAnimation.setVisibility(View.GONE);
                 }
             }
         });

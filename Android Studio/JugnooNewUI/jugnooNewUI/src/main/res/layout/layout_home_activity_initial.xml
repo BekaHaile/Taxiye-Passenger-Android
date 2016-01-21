@@ -115,10 +115,10 @@
             android:id="@+id/textViewInitialInstructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5px"
             android:gravity="center"
+            android:background="@drawable/background_initial_instruction"
             android:text="No drivers available"
-            android:textColor="@color/grey_dark_less"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30" />
 
         <RelativeLayout
