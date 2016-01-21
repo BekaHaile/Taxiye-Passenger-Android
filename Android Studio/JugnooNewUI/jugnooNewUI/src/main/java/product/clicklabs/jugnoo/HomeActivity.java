@@ -2108,6 +2108,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void onConfirmed() {
                             Data.cSessionId = "";
                             Data.cEngagementId = "";
+                            dropLocationSearchText = "";
 
                             if (Data.userData.canChangeLocation == 1) {
                                 if (Data.pickupLatLng == null) {

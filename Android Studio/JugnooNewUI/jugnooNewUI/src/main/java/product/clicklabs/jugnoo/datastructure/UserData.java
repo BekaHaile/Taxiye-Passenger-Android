@@ -18,12 +18,15 @@ public class UserData {
     public String referAllText, referAllTitle;
 	private int promoSuccess;
 
+	private String branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo,
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle, int promoSuccess, int showJugnooJeanie){
+                    int contactSaved, String referAllText, String referAllTitle, int promoSuccess, int showJugnooJeanie,
+					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -69,6 +72,11 @@ public class UserData {
 			this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 		}
 		setTotalWalletBalance();
+
+		this.branchDesktopUrl = branchDesktopUrl;
+		this.branchAndroidUrl = branchAndroidUrl;
+		this.branchIosUrl = branchIosUrl;
+		this.branchFallbackUrl = branchFallbackUrl;
 	}
 
 	public double getJugnooBalance() {
@@ -136,4 +144,35 @@ public class UserData {
 		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 	}
 
+	public String getBranchDesktopUrl() {
+		return branchDesktopUrl;
+	}
+
+	public void setBranchDesktopUrl(String branchDesktopUrl) {
+		this.branchDesktopUrl = branchDesktopUrl;
+	}
+
+	public String getBranchAndroidUrl() {
+		return branchAndroidUrl;
+	}
+
+	public void setBranchAndroidUrl(String branchAndroidUrl) {
+		this.branchAndroidUrl = branchAndroidUrl;
+	}
+
+	public String getBranchIosUrl() {
+		return branchIosUrl;
+	}
+
+	public void setBranchIosUrl(String branchIosUrl) {
+		this.branchIosUrl = branchIosUrl;
+	}
+
+	public String getBranchFallbackUrl() {
+		return branchFallbackUrl;
+	}
+
+	public void setBranchFallbackUrl(String branchFallbackUrl) {
+		this.branchFallbackUrl = branchFallbackUrl;
+	}
 }

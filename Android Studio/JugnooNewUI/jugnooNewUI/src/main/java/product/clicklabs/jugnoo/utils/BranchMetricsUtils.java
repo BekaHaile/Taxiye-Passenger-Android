@@ -7,7 +7,6 @@ import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 
@@ -33,12 +32,34 @@ public class BranchMetricsUtils {
     }
 
     public void getBranchLinkForChannel(String channel, final String spKey, final String userIdentifier,
-                                        final String referralCode, final String referringUserName){
+                                        final String referralCode, final String referringUserName,
+                                        String fbShareDescription, String jugnooFbBanner,
+                                        String branchDesktopUrl, String branchAndroidUrl,
+                                        String branchIosUrl, String branchFallbackUrl){
+
         String existingUrl = Prefs.with(context).getString(spKey, "");
         String existingUserIdentifier = Prefs.with(context).getString(SPLabels.USER_IDENTIFIER, "");
+
+        String existingBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
+        String existingBranchAndroidUrl = Prefs.with(context).getString(SPLabels.BRANCH_ANDROID_URL, "");
+        String existingBranchIosUrl = Prefs.with(context).getString(SPLabels.BRANCH_IOS_URL, "");
+        String existingBranchFallbackUrl = Prefs.with(context).getString(SPLabels.BRANCH_FALLBACK_URL, "");
+
         if(!userIdentifier.equalsIgnoreCase(existingUserIdentifier)){
             existingUrl = "";
         }
+        if(!existingBranchDesktopUrl.equalsIgnoreCase(branchDesktopUrl)
+                    || !existingBranchAndroidUrl.equalsIgnoreCase(branchAndroidUrl)
+                    || !existingBranchIosUrl.equalsIgnoreCase(branchIosUrl)
+                    || !existingBranchFallbackUrl.equalsIgnoreCase(branchFallbackUrl)){
+            existingUrl = "";
+            Prefs.with(context).save(SPLabels.BRANCH_DESKTOP_URL, branchDesktopUrl);
+            Prefs.with(context).save(SPLabels.BRANCH_ANDROID_URL, branchAndroidUrl);
+            Prefs.with(context).save(SPLabels.BRANCH_IOS_URL, branchIosUrl);
+            Prefs.with(context).save(SPLabels.BRANCH_FALLBACK_URL, branchFallbackUrl);
+        }
+
+
         if("".equalsIgnoreCase(existingUrl)){
             DialogPopup.showLoadingDialog(context, context.getResources().getString(R.string.loading));
 
@@ -77,8 +98,8 @@ public class BranchMetricsUtils {
 
                             // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
                     .setTitle(Constants.FB_LINK_SHARE_NAME)
-                    .setContentDescription(Data.referralMessages.fbShareDescription)
-                    .setContentImageUrl(Data.userData.jugnooFbBanner)
+                    .setContentDescription(fbShareDescription)
+                    .setContentImageUrl(jugnooFbBanner)
 
                             // You use this to specify whether this content can be discovered publicly - default is public
                     .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
@@ -91,6 +112,20 @@ public class BranchMetricsUtils {
             LinkProperties linkProperties = new LinkProperties()
                     .setChannel(channel)
                     .setFeature(Branch.FEATURE_TAG_SHARE);
+
+            if(!"".equalsIgnoreCase(branchDesktopUrl)){
+                linkProperties.addControlParameter("$desktop_url", branchDesktopUrl);
+            }
+            if(!"".equalsIgnoreCase(branchAndroidUrl)){
+                linkProperties.addControlParameter("$android_url", branchAndroidUrl);
+            }
+            if(!"".equalsIgnoreCase(branchIosUrl)){
+                linkProperties.addControlParameter("$ios_url", branchIosUrl);
+            }
+            if(!"".equalsIgnoreCase(branchFallbackUrl)){
+                linkProperties.addControlParameter("$fallback_url", branchFallbackUrl);
+            }
+            Log.e(TAG, "linkProperties.getControlParams=>"+linkProperties.getControlParams());
 //                    .addControlParameter("$desktop_url", Constants.BRANCH_END_LINK)
 //                    .addControlParameter("$android_url", Constants.BRANCH_END_LINK)
 //                    .addControlParameter("$ios_url", Constants.BRANCH_END_LINK)
@@ -98,7 +133,6 @@ public class BranchMetricsUtils {
 
 
             Log.i(TAG, "branchUniversalObject=>"+branchUniversalObject.convertToJson());
-            Log.i(TAG, "linkProperties=>"+linkProperties.toString());
 
             branchUniversalObject.generateShortUrl(context, linkProperties, new Branch.BranchLinkCreateListener() {
                 @Override

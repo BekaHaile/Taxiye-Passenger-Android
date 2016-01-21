@@ -26,6 +26,11 @@ public class SPLabels {
     BRANCH_EMAIL_LINK = "branchEmailLink",
             BRANCH_GENERIC_LINK = "branchGenericLink",
 
+    BRANCH_DESKTOP_URL = "branch_desktop_url",
+    BRANCH_ANDROID_URL = "branch_android_url",
+    BRANCH_IOS_URL = "branch_ios_url",
+    BRANCH_FALLBACK_URL = "branch_fallback_url",
+
 
 	SUPPORT_CONTACT = "supportContact",
     ADD_HOME = "Home",

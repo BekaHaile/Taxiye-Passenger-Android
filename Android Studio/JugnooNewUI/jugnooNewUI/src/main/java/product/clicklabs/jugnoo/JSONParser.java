@@ -300,13 +300,23 @@ public class JSONParser implements Constants {
         }
 
 
+        String defaultBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
+        String defaultBranchAndroidUrl = Prefs.with(context).getString(SPLabels.BRANCH_ANDROID_URL, "");
+        String defaultBranchIosUrl = Prefs.with(context).getString(SPLabels.BRANCH_IOS_URL, "");
+        String defaultBranchFallbackUrl = Prefs.with(context).getString(SPLabels.BRANCH_FALLBACK_URL, "");
+
+        String branchDesktopUrl = userData.optString(KEY_BRANCH_DESKTOP_URL, defaultBranchDesktopUrl);
+        String branchAndroidUrl = userData.optString(KEY_BRANCH_ANDROID_URL, defaultBranchAndroidUrl);
+        String branchIosUrl = userData.optString(KEY_BRANCH_IOS_URL, defaultBranchIosUrl);
+        String branchFallbackUrl = userData.optString(KEY_BRANCH_FALLBACK_URL, defaultBranchFallbackUrl);
 
 		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
                 userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie);
+                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie,
+                branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl);
     }
 
 

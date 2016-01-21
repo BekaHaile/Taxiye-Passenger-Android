@@ -51,12 +51,15 @@ public interface Constants {
 	String KEY_DEEPINDEX = "deepindex";
 	String KEY_REFERRAL_CODE = "referral_code";
 	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
-	String FB_LINK_SHARE_NAME = "Jugnoo Autos - Autos on demand";
+	String FB_LINK_SHARE_NAME = "Jugnoo";
 //	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
 
 
 	String DOMAIN_SHARE_JUGNOO_IN = "share.jugnoo.in";
 
-
+	String KEY_BRANCH_DESKTOP_URL = "branch_desktop_url";
+	String KEY_BRANCH_ANDROID_URL = "branch_android_url";
+	String KEY_BRANCH_IOS_URL = "branch_ios_url";
+	String KEY_BRANCH_FALLBACK_URL = "branch_fallback_url";
 
 }
