@@ -52,9 +52,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	Button buttonVerify;
 
 	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutMissCall, relativeLayoutOr;
-	TextView textViewMissCall;
-	
+	RelativeLayout relativeLayoutOtpViaCall, relativeLayoutMissCall, relativeLayoutOr;
+
 	
 	LinearLayout relative;
 
@@ -141,8 +140,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 
 		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
+
+		relativeLayoutOtpViaCall = (RelativeLayout) findViewById(R.id.relativeLayoutOtpViaCall);
+		((TextView) findViewById(R.id.textViewOtpViaCall)).setTypeface(Fonts.latoLight(this));
+		((TextView) findViewById(R.id.textViewOtpViaCallMe)).setTypeface(Fonts.latoLight(this));
+
 		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
+		((TextView) findViewById(R.id.textViewMissCall)).setTypeface(Fonts.latoLight(this));
+
 		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
 
 
@@ -203,15 +208,45 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				return true;
 			}
 		});
-		
-		
+
+		relativeLayoutOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					if (1 == Data.otpViaCallEnabled) {
+						initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-					Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+				try {
+					if (!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+						DialogPopup.alertPopupTwoButtonsWithListeners(PhoneNoOTPConfirmScreen.this, "",
+								getResources().getString(R.string.give_missed_call_dialog_text),
+								getResources().getString(R.string.call_us),
+								getResources().getString(R.string.cancel),
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+									}
+								},
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+
+									}
+								}, false, false);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -223,7 +258,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				phoneNoToVerify = getIntent().getStringExtra("phone_no_verify");
 				textViewOtpNumber.setText(phoneNoToVerify);
 			}
-			else{
+			else {
 				performBackPressed();
 			}
 		} catch (Exception e) {
@@ -235,16 +270,27 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 
 		try{
-			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				relativeLayoutOr.setVisibility(View.VISIBLE);
-				relativeLayoutMissCall.setVisibility(View.VISIBLE);
+			if(1 == Data.otpViaCallEnabled){
+				relativeLayoutOtpViaCall.setVisibility(View.VISIBLE);
+			} else{
+				relativeLayoutOtpViaCall.setVisibility(View.GONE);
 			}
-			else{
-				relativeLayoutOr.setVisibility(View.GONE);
+
+			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+				relativeLayoutMissCall.setVisibility(View.VISIBLE);
+			} else{
 				relativeLayoutMissCall.setVisibility(View.GONE);
+			}
+
+			if(relativeLayoutOtpViaCall.getVisibility() == View.GONE
+					|| relativeLayoutMissCall.getVisibility() == View.GONE){
+				relativeLayoutOr.setVisibility(View.GONE);
+			} else{
+				relativeLayoutOr.setVisibility(View.VISIBLE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
+			relativeLayoutOtpViaCall.setVisibility(View.VISIBLE);
 			relativeLayoutOr.setVisibility(View.GONE);
 			relativeLayoutMissCall.setVisibility(View.GONE);
 		}

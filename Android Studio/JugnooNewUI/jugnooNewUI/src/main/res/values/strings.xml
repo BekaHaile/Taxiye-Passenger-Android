@@ -526,7 +526,7 @@
 <item>263,ZW</item>
 </string-array>
 
-	<string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
+	<string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
 	<string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,\\ </string>
 
 
@@ -559,7 +559,16 @@
 
     <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
 
-    <string name="loading">"Loading..."</string>
+    <string name="loading">Loading...</string>
 
+	<string name="give_missed_call_dialog_text">No Code? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
+	<string name="call_us">Call Us</string>
+	<string name="call_me">Call Me</string>
+	<string name="receive_otp_via_call">Receive the OTP via call</string>
+
+	<string name="tnc_apply">T&amp;C Apply</string>
+	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
+		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
+		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
 </resources>
