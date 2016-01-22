@@ -3,9 +3,8 @@
     android:id="@+id/requestFinalLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <!-- promo name fare factor layout-->
     <RelativeLayout
@@ -336,8 +335,7 @@
         android:id="@+id/relativeLayoutFinalDropLocationParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayoutInRideInfo"
-        android:visibility="gone">
+        android:visibility="visible">
 
     </RelativeLayout>
 

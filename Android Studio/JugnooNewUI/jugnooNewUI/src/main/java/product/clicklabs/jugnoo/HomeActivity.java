@@ -114,7 +114,6 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
-import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -2665,6 +2664,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void relativeLayoutFinalDropLocationParentSetVisibility(int visiblity, String text){
         if(View.VISIBLE == visiblity){
             relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
+            relativeLayoutInRideInfo.setVisibility(View.GONE);
+            linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag == null || frag.isRemoving()) {
                 PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
@@ -2679,6 +2680,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } else{
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
+            relativeLayoutInRideInfo.setVisibility(View.VISIBLE);
+            linearLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag != null) {
                 getSupportFragmentManager().beginTransaction()
