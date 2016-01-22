@@ -44,6 +44,8 @@ public class Data {
 	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
 						PAYTM_STATUS_INACTIVE = "INACTIVE";
 
+	public static boolean linkFoundOnce = false;
+
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
@@ -180,7 +182,7 @@ public class Data {
 	public static FareStructure fareStructure;
 	
 	public static CancelOptionsList cancelOptionsList;
-    public static ArrayList<FeedbackReason> feedbackReasons;
+    public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
 
 	public static ReferralMessages referralMessages;
 
@@ -344,7 +346,7 @@ public class Data {
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
 			try {
 				Intent intent = newIntent;
@@ -371,6 +373,7 @@ public class Data {
 					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
 				}
 			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		}
 

@@ -153,8 +153,12 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	
 	@Override
 	public void onDestroy() {
-        ASSL.closeActivity(linearLayoutRoot);
-        System.gc();
+		try {
+			ASSL.closeActivity(linearLayoutRoot);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.gc();
 		super.onDestroy();
 	}
 

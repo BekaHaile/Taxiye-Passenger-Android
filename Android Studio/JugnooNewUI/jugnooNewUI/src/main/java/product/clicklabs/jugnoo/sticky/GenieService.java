@@ -629,18 +629,22 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
      * all over the screen.
      */
     private void updateAnimLayoutParams() {
-        if (getChatHeadParams().y < szWindow.y / 2) {
-            final WindowManager.LayoutParams paramsA = (WindowManager.LayoutParams) convertView.getLayoutParams();
-            paramsA.x = getChatHeadParams().x + (int) (ASSL.Xscale() * 10);
-            paramsA.y = getChatHeadParams().y;
-            windowManager.updateViewLayout(convertView, paramsA);
-            appsAnim = -1;
-        } else {
-            final WindowManager.LayoutParams paramsA = (WindowManager.LayoutParams) convertView.getLayoutParams();
-            paramsA.x = getChatHeadParams().x + (int) (ASSL.Xscale() * 10);
-            paramsA.y = ((chatheadImg.getHeight() + getChatHeadParams().y - convertView.getHeight()) > 0) ? (chatheadImg.getHeight() + getChatHeadParams().y - convertView.getHeight()) : 0;
-            windowManager.updateViewLayout(convertView, paramsA);
-            appsAnim = 1;
+        try {
+            if (getChatHeadParams().y < szWindow.y / 2) {
+				final WindowManager.LayoutParams paramsA = (WindowManager.LayoutParams) convertView.getLayoutParams();
+				paramsA.x = getChatHeadParams().x + (int) (ASSL.Xscale() * 10);
+				paramsA.y = getChatHeadParams().y;
+				windowManager.updateViewLayout(convertView, paramsA);
+				appsAnim = -1;
+			} else {
+				final WindowManager.LayoutParams paramsA = (WindowManager.LayoutParams) convertView.getLayoutParams();
+				paramsA.x = getChatHeadParams().x + (int) (ASSL.Xscale() * 10);
+				paramsA.y = ((chatheadImg.getHeight() + getChatHeadParams().y - convertView.getHeight()) > 0) ? (chatheadImg.getHeight() + getChatHeadParams().y - convertView.getHeight()) : 0;
+				windowManager.updateViewLayout(convertView, paramsA);
+				appsAnim = 1;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -56,7 +56,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
-	private final String TAG = "OTPConfirmScreen";
+	private final String TAG = OTPConfirmScreen.class.getSimpleName();
 
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -70,8 +70,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
 
-	Button buttonVerify;
+	Button buttonVerify, buttonOtpViaCall;
 	LinearLayout linearLayoutGiveAMissedCall;
+	TextView textViewOr;
 
 
 	LinearLayout relative;
@@ -104,30 +105,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-
-		try {
-			String otp = "";
-			if(intent.hasExtra("message")){
-				String message = intent.getStringExtra("message");
-				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
-				otp = arr[1];
-				otp = otp.replaceAll("\\.", "");
-			} else if(intent.hasExtra("otp")){
-				otp = intent.getStringExtra("otp");
-			}
-
-			if(Utils.checkIfOnlyDigits(otp)){
-				if(!"".equalsIgnoreCase(otp)) {
-					editTextOTP.setText(otp);
-					editTextOTP.setSelection(editTextOTP.getText().length());
-					buttonVerify.performClick();
-				}
-			}
-
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
+		retrieveOTPFromSMS(intent);
 		super.onNewIntent(intent);
 	}
 
@@ -159,8 +137,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
 
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
-		
+
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
@@ -198,7 +178,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					editTextOTP.requestFocus();
 					editTextOTP.setError("Code can't be empty");
 				}
-
 			}
 		});
 
@@ -222,15 +201,32 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		});
 
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try{
+					if (1 == Data.otpViaCallEnabled) {
+						if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+							initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
+						} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+							initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
+						} else {
+							initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
+						}
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+
 		editTextOTP.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
 			}
 
 			@Override
@@ -252,9 +248,29 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			@Override
 			public void onClick(View v) {
-				if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-					Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
-					FlurryEventLogger.event(GIVE_MISSED_CALL);
+				try {
+					if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
+								getResources().getString(R.string.give_missed_call_dialog_text),
+								getResources().getString(R.string.call_us),
+								getResources().getString(R.string.cancel),
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+										FlurryEventLogger.event(GIVE_MISSED_CALL);
+									}
+								},
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+
+									}
+								}, false, false
+						);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -270,8 +286,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
-		
-		
+
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		try {
@@ -350,13 +366,28 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			else{
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
+
+			if(1 == Data.otpViaCallEnabled) {
+				buttonOtpViaCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				buttonOtpViaCall.setVisibility(View.GONE);
+			}
+			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
+					|| buttonOtpViaCall.getVisibility() == View.VISIBLE){
+				textViewOr.setVisibility(View.VISIBLE);
+			} else{
+				textViewOr.setVisibility(View.GONE);
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			buttonOtpViaCall.setVisibility(View.GONE);
+			textViewOr.setVisibility(View.GONE);
 		}
 
 		new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
-			
+
 			@Override
 			public void deviceTokenReceived(final String regId) {
 				Data.deviceToken = regId;
@@ -370,7 +401,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		OTP_SCREEN_OPEN = "yes";
 
 
-
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				retrieveOTPFromSMS(getIntent());
+			}
+		}, 100);
 
 	}
 
@@ -416,7 +452,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	};
 
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -448,7 +484,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
         }
     }
 
-	
+
 	@Override
 	protected void onPause() {
 		try{
@@ -461,10 +497,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		super.onPause();
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * ASync for confirming otp from server
 	 */
@@ -568,10 +604,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
         }
 
 	}
-	
-	
-	
-	
+
+
+
+
 
 	public void verifyOtpViaFB(final Activity activity, String otp) {
         if(!checkIfRegisterDataNull(activity)) {
@@ -777,20 +813,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
-	
+
 	/**
 	 * ASync for initiating OTP Call from server
 	 */
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
+
 			RequestParams params = new RequestParams();
-		
+
 			params.put("phone_no", phoneNo);
 			Log.i("phone_no", ">"+phoneNo);
-		
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/send_otp_via_call", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -806,7 +842,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						@Override
 						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
-	
+
 							try {
 								jObj = new JSONObject(response);
 
@@ -845,13 +881,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 	}
-	
-	
-	
+
+
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		
+
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
@@ -863,15 +899,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			ActivityCompat.finishAffinity(this);
 		}
 	}
-	
+
 
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
 		super.onBackPressed();
 	}
-	
-	
+
+
 	public void performBackPressed(){
 		if(intentFromRegister){
 			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
@@ -888,10 +924,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
-	
-	
-	
+
+
+
+
 	@Override
 	protected void onDestroy() {
 		Utils.disableSMSReceiver(this);
@@ -945,7 +981,33 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	};
 
 
-	
+
+
+	private void retrieveOTPFromSMS(Intent intent){
+		try {
+			String otp = "";
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
+				otp = arr[1];
+				otp = otp.replaceAll("\\.", "");
+			} else if(intent.hasExtra(KEY_OTP)){
+				otp = intent.getStringExtra(KEY_OTP);
+			}
+
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					editTextOTP.setText(otp);
+					editTextOTP.setSelection(editTextOTP.getText().length());
+					buttonVerify.performClick();
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
 }
 
 

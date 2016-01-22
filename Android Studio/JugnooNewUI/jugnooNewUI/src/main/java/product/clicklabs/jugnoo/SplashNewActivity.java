@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -67,14 +68,17 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -87,6 +91,10 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
@@ -96,6 +104,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	RelativeLayout root;
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
+
+	private final String TAG = SplashNewActivity.class.getSimpleName();
 
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
@@ -126,6 +136,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
+	boolean holdForBranch = false;
+	int clickCount = 0;
 
 	private State state = State.SPLASH_LS;
 
@@ -169,15 +181,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		try {
 			Branch branch = Branch.getInstance(this);
+			holdForBranch = true;
 			branch.initSession(new Branch.BranchReferralInitListener() {
+
 				@Override
 				public void onInitFinished(JSONObject referringParams, BranchError error) {
+					holdForBranch = false;
 					if (error == null) {
 						// params are the deep linked params associated with the link that the user clicked before showing up
 
 						Log.e("BranchConfigTest", "deep link data: " + referringParams.toString());
 						try {
-
 							if (referringParams.has("pickup_lat") && referringParams.has("pickup_lng")) {
 								Data.deepLinkPickup = 1;
 								Data.deepLinkPickupLatitude = Double.parseDouble(referringParams.optString("pickup_lat"));
@@ -193,19 +207,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									}
 								}
 							}
-
 							Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						String link = referringParams.optString("link", "");
-						if(!"".equalsIgnoreCase(link)){
+						if (!"".equalsIgnoreCase(link)) {
 							Database2.getInstance(SplashNewActivity.this).insertLink(link);
 						}
+
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
 						// "~channel":"Facebook","~creation_source":"SDK","~feature":"share","~id":"178470536899245547","+match_guaranteed":true,"+click_timestamp":1443850505,
 						// "+is_first_session":false,"+clicked_branch_link":true}
 					}
+					fetchPhoneNoOtpFromBranchParams(referringParams);
 				}
 			}, this.getIntent().getData(), this);
 
@@ -218,12 +233,35 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		FlurryAgent.onEvent("Splash started");
 	}
 
+
+	private void fetchPhoneNoOtpFromBranchParams(JSONObject referringParams){
+		try {
+			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+			if ("".equalsIgnoreCase(pair.first)) {
+				String email = referringParams.optString(KEY_EMAIL, "");
+				String phoneNumber = referringParams.optString(KEY_PHONE_NO, "");
+				String otp = referringParams.optString(KEY_OTP, "");
+				if (!"".equalsIgnoreCase(otp)) {
+					verifyOtpViaEmail(this, email, phoneNumber, otp);
+				} else{
+					throw new Exception();
+				}
+			}
+		} catch (Exception e) {
+			readSMSClickLink();
+		}
+	}
+
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
 	}
 
 
+	public boolean isBranchLinkNotClicked(){
+		return (!holdForBranch
+				|| clickCount > 1);
+	}
 
 	public static void initializeServerURL(Context context) {
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
@@ -307,9 +345,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		setContentView(R.layout.activity_splash_new);
 
-		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
-		}
+
 
 
 		resumed = false;
@@ -323,6 +359,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		root = (RelativeLayout) findViewById(R.id.root);
 		new ASSL(SplashNewActivity.this, root, 1134, 720, false);
+
+		holdForBranch = false;
+		clickCount = 0;
+
 
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -430,8 +470,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-				changeUIState(State.LOGIN);
+				if(isBranchLinkNotClicked()) {
+					FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+					changeUIState(State.LOGIN);
+				} else{
+					clickCount = clickCount + 1;
+				}
 			}
 		});
 
@@ -439,9 +483,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP);
-				SplashNewActivity.registerationType = RegisterationType.EMAIL;
-				changeUIState(State.SIGNUP);
+				if(isBranchLinkNotClicked()) {
+					FlurryEventLogger.event(SIGNUP);
+					SplashNewActivity.registerationType = RegisterationType.EMAIL;
+					changeUIState(State.SIGNUP);
+				} else{
+					clickCount = clickCount + 1;
+				}
 			}
 		});
 
@@ -907,6 +955,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 		this.state = state;
 
+
+
+	}
+
+	private void readSMSClickLink(){
+		try {
+			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
+			if ("".equalsIgnoreCase(pair.first) && !Data.linkFoundOnce) {
+				new ReadSMSClickLinkAsync().execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void callAfterBothHoldSuccessfully(){
@@ -1014,6 +1075,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onResume() {
+
+		if (Data.locationFetcher == null) {
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+		} else{
+			Data.locationFetcher.connect();
+		}
+
+
 		super.onResume();
 		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
@@ -1021,12 +1090,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		AppEventsLogger.activateApp(this);
 
-		if(Data.locationFetcher != null){
-			Data.locationFetcher.connect();
-		}
-		else{
-			Data.locationFetcher = new LocationFetcher(this, 1000, 1);
-		}
 	}
 
 
@@ -1424,6 +1487,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onDestroy() {
+		if(!newActivityStarted){
+			Data.linkFoundOnce = false;
+		}
 		super.onDestroy();
 		ASSL.closeActivity(root);
 		System.gc();
@@ -2661,6 +2727,177 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	};
 	
+
+
+
+	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+			final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			params.put("email", email);
+			params.put("password", "");
+			params.put("device_token", Data.getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", "" + Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getClientId());
+			params.put("otp", otp);
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+
+			Log.i("params", "" + params.toString());
+
+			RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+
+					try {
+						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response", "jsonString = " + jsonString);
+						JSONObject jObj = new JSONObject(jsonString);
+
+						int flag = jObj.getInt("flag");
+						String message = JSONParser.getServerMessage(jObj);
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									new JSONParser().parseAccessTokenLoginData(activity, jsonString);
+									Database.getInstance(activity).insertEmail(email);
+									Database.getInstance(activity).close();
+									loginDataFetched = true;
+									BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+									FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+								}
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if(ApiResponseFlags.AUTH_ALREADY_VERIFIED.getOrdinal() == flag){
+								DialogPopup.alertPopupWithListener(activity, "", message,
+										new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+												changeUIState(State.LOGIN);
+												editTextEmail.setText(email);
+												editTextEmail.setSelection(editTextEmail.getText().length());
+											}
+										});
+							} else {
+								DialogPopup.alertPopup(activity, "", message);
+							}
+						}
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					if(progressDialog != null) progressDialog.dismiss();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("RetrofitError", "error=" + error);
+					if(progressDialog != null) progressDialog.dismiss();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+		} else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
+
+
+
+
+
+	private class ReadSMSClickLinkAsync extends AsyncTask<String, Integer, String>{
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String link = getSmsFindVerificationLink(4 * 60 * 60 * 1000);
+			return link;
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
+			if(!s.equalsIgnoreCase("")){
+				if(!SplashNewActivity.this.isFinishing()){
+					Utils.openUrl(SplashNewActivity.this, s);
+					Data.linkFoundOnce = true;
+				}
+			}
+		}
+
+		private String getSmsFindVerificationLink(long diff) {
+			String link = "";
+			try {
+				Uri uri = Uri.parse("content://sms/inbox");
+				long now = System.currentTimeMillis();
+				long last1 = now - diff;    //in millis
+				String[] selectionArgs = new String[]{Long.toString(last1)};
+				String selection = "date" + ">?";
+				Cursor cursor = getContentResolver().query(uri, null, selection, selectionArgs, null);
+
+				if (cursor != null) {
+					for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+						String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+						Log.i(TAG, "sms body=>"+body);
+						try {
+							if(body.contains(DOMAIN_SHARE_JUGNOO_IN)){
+								String[] arr = body.split(" ");
+								for(String str : arr){
+									if(str.contains(DOMAIN_SHARE_JUGNOO_IN)){
+										if(str.charAt(str.length()-1) == '.'){
+											str = str.substring(0, str.length()-1);
+										}
+										link = str;
+										break;
+									}
+								}
+							}
+						} catch (Exception e) {}
+						if(!link.equalsIgnoreCase("")){
+							break;
+						}
+					}
+				}
+				if (cursor != null){
+					cursor.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return link;
+		}
+	}
+
 
 
 }

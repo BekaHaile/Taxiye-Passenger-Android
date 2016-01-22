@@ -29,7 +29,6 @@ import android.widget.ListView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,7 +49,6 @@ import java.util.List;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 
 
@@ -604,6 +602,12 @@ public class Utils {
 		void neutralClick();
 
 		void negativeClick();
+	}
+
+	public static void openUrl(Context context, String url){
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		context.startActivity(i);
 	}
 
 }

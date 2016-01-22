@@ -1294,42 +1294,46 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonRSSubmitFeedback.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String feedbackStr = editTextRSFeedback.getText().toString().trim();
-                int rating = (int) ratingBarRSFeedback.getRating();
-                rating = Math.abs(rating);
-                Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
+                try {
+                    String feedbackStr = editTextRSFeedback.getText().toString().trim();
+                    int rating = (int) ratingBarRSFeedback.getRating();
+                    rating = Math.abs(rating);
+                    Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
-                String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
-                boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
+                    String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                    boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
-                if (0 == rating) {
-                    DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
-                    FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
-                } else {
-                    if(Data.feedbackReasons.size() > 0 && rating <= 3){
-                        if(feedbackReasons.length() > 0){
-                            if(isLastReasonSelected && feedbackStr.length() == 0){
-                                textViewRSOtherError.setText(getString(R.string.star_required));
-                                return;
-                            }
-                        }
-                        else{
-                            DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
-                            return;
-                        }
-                    }
+                    if (0 == rating) {
+						DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
+						FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+					} else {
+						if(Data.feedbackReasons.size() > 0 && rating <= 3){
+							if(feedbackReasons.length() > 0){
+								if(isLastReasonSelected && feedbackStr.length() == 0){
+									textViewRSOtherError.setText(getString(R.string.star_required));
+									return;
+								}
+							}
+							else{
+								DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
+								return;
+							}
+						}
 
-                    if (feedbackStr.length() > 300) {
-                        editTextRSFeedback.requestFocus();
-                        editTextRSFeedback.setError(getString(R.string.review_must_be_in));
-                    } else {
-                        submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
-                            rating, feedbackStr, feedbackReasons);
-                        FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
-                        if (feedbackStr.length() > 0) {
-                            FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
-                        }
-                    }
+						if (feedbackStr.length() > 300) {
+							editTextRSFeedback.requestFocus();
+							editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+						} else {
+							submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+								rating, feedbackStr, feedbackReasons);
+							FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
+							if (feedbackStr.length() > 0) {
+								FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+							}
+						}
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1843,6 +1847,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void onConfirmed() {
                             Data.cSessionId = "";
                             Data.cEngagementId = "";
+                            dropLocationSearchText = "";
 
                             if (Data.userData.canChangeLocation == 1) {
                                 if (Data.pickupLatLng == null) {
@@ -2513,9 +2518,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(ACTION_LOADING_COMPLETE)) {
-                    DialogPopup.dismissLoadingDialog();
-                    unregisterReceiver(receiver);
+                try {
+                    if (intent.getAction().equals(ACTION_LOADING_COMPLETE)) {
+						DialogPopup.dismissLoadingDialog();
+						unregisterReceiver(receiver);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
