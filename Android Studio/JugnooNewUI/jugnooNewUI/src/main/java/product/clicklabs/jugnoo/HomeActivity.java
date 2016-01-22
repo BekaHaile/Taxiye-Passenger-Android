@@ -1586,7 +1586,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 new NewLookTutorialDialog(HomeActivity.this);
             }
 
-
 			switchUserScreen();
 
             startUIAfterGettingUserStatus();
@@ -3480,9 +3479,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    textViewInitialInstructions.setVisibility(View.VISIBLE);
+                    //textViewInitialInstructions.setVisibility(View.VISIBLE);
                     textViewInitialInstructions.setText("Couldn't find drivers nearby.");
                     textViewCentrePinETA.setText("-");
+                    noDriverNearbyToast("Couldn't find drivers nearby.");
                     setServiceAvailablityUI(farAwayCity);
                 }
             });
@@ -3592,8 +3592,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void setServiceAvailablityUI(String farAwayCity){
 		if (!"".equalsIgnoreCase(farAwayCity)) {
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            textViewInitialInstructions.setVisibility(View.VISIBLE);
+            //textViewInitialInstructions.setVisibility(View.VISIBLE);
             textViewInitialInstructions.setText(farAwayCity);
+            noDriverNearbyToast(farAwayCity);
 
 			imageViewRideNow.setVisibility(View.GONE);
 
@@ -4691,7 +4692,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View view) {
                     dialog.dismiss();
                     if (Data.driverInfos.size() == 0) {
-                        noDriverNearbyToast();
+                        noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                         //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
                     } else{
                         initiateRequestRide(true);
@@ -4766,7 +4767,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             dialog.show();
                         } else {
                             if (Data.driverInfos.size() == 0) {
-                                noDriverNearbyToast();
+                                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                                 //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
                             } else{
                                 initiateRequestRide(true);
@@ -4781,8 +4782,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-    private void noDriverNearbyToast(){
-        Toast toast = Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_SHORT);
+    private void noDriverNearbyToast(String message){
+        Toast toast = Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
         if( v != null) v.setGravity(Gravity.CENTER);
         toast.show();

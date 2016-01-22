@@ -31,7 +31,7 @@ public class NewLookTutorialDialog {
             new ASSL(activity, root, 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-            layoutParams.dimAmount = 0.9f;
+            layoutParams.dimAmount = 0.8f;
             dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);

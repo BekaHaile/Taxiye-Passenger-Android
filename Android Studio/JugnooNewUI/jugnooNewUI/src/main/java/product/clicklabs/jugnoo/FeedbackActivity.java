@@ -399,7 +399,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
     public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText, String feedbackReasons) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 
@@ -501,7 +501,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
     public void submitFeedbackSupportAsync(final Activity activity, int givenRating, String feedbackText) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 

@@ -16,30 +16,21 @@
     
     <ImageView
         android:id="@+id/imageViewOneTapRide"
-        android:layout_width="310px"
-        android:layout_height="62px"
-        android:tag="mwar"
-        android:layout_marginTop="130px"
-        android:layout_marginLeft="50px"
-        android:layout_below="@+id/imageViewHurry"
+        android:layout_width="531px"
+        android:layout_height="169px"
+        android:tag="mlar"
+        android:layout_marginBottom="-70px"
+        android:layout_marginLeft="20px"
+        android:layout_above="@+id/imageViewBoy"
         android:src="@drawable/tutorial_one_tap_ride"/>
     
-    <ImageView
-        android:layout_width="178px"
-        android:layout_height="146px"
-        android:tag="mwar"
-        android:layout_marginLeft="20px"
-        android:layout_marginTop="160px"
-        android:layout_below="@+id/imageViewHurry"
-        android:layout_toRightOf="@+id/imageViewOneTapRide"
-        android:src="@drawable/tutorial_one_tap_arrow"/>
-    
-
 
     <ImageView
+        android:id="@+id/imageViewBoy"
         android:layout_width="330px"
         android:layout_height="342px"
         android:tag="mwar"
+        android:layout_marginBottom="30px"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="50px"
         android:src="@drawable/tutorial_one_tap_boy"/>
@@ -49,9 +40,9 @@
         android:layout_width="187px"
         android:layout_height="187px"
         android:tag="mwar"
-        android:layout_marginTop="70px"
+        android:layout_marginBottom="145px"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imageViewOneTapRide"
         android:src="@drawable/auto_icon_r_normal"/>
 
 </RelativeLayout>
