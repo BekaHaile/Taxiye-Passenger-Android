@@ -325,8 +325,8 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
-			if(data.getQueryParameter("referral_code") != null){
-				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
+			if(data.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
+				Data.deepLinkReferralCode = data.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 			}
 
 			if(data.getQueryParameter("deepindex") != null){
@@ -356,8 +356,8 @@ public class Data {
 				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
 				Uri dataTarget = Uri.parse(targetUrl);
 
-				if(dataTarget.getQueryParameter("referral_code") != null){
-					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
+				if(dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 				}
 
 				if(dataTarget.getQueryParameter("deepindex") != null){

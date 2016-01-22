@@ -651,7 +651,7 @@
 	<string name="give_missed_call_dialog_text">No Code? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
 	<string name="call_us">Call Us</string>
 	<string name="call_me">Call Me</string>
-	<string name="receive_otp_via_call">Receive OTP via call</string>
+	<string name="receive_otp_via_call">Receive the OTP via call</string>
 	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
 
 	<string name="tnc_apply">T&amp;C Apply</string>

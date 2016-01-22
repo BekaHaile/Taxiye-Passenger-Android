@@ -315,7 +315,7 @@ public class JSONParser implements Constants {
                 context.getResources().getString(R.string.jugnoo_cash_tnc));
 
 		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
-                userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
+                userData.getString("user_image"), userData.getString(KEY_REFERRAL_CODE), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,

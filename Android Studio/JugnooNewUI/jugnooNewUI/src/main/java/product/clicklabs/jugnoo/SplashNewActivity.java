@@ -145,19 +145,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	CallbackManager callbackManager;
 	FacebookLoginHelper facebookLoginHelper;
-	boolean facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
-	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "";
+
+	boolean emailRegister = false, facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
+	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "", emailNeedRegister = "";
 	private String enteredEmail = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
 	public void resetFlags(){
 		loginDataFetched = false;
+		emailRegister = false;
 		facebookRegister = false;
 		googleRegister = false;
 		sendToOtpScreen = false;
 		phoneNoOfUnverifiedAccount = "";
 		otpErrorMsg = "";
 		notRegisteredMsg = "";
+		emailNeedRegister = "";
 	}
 
 
@@ -199,7 +202,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							} else {
 								if (Data.deepLinkIndex == -1) {
 									Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
-									Data.deepLinkReferralCode = referringParams.optString("referral_code", "");
+									Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
 									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
 									if ("".equalsIgnoreCase(pair.first)
 											&& !"".equalsIgnoreCase(Data.deviceToken)) {
@@ -780,7 +783,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										editTextSEmail.requestFocus();
 										editTextSEmail.setError("Please enter valid email id");
 									}
-
 								}
 							}
 						}
@@ -855,23 +857,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 		changeUIState(state);
-
-		if(State.SPLASH_INIT == state) {
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					getDeviceToken();
-				}
-			}, 500);
-		}
-		else if(State.LOGIN == state){
-			// set login screen values according to intent
-			setLoginScreenValuesOnCreate();
-		}
-		else if(State.SIGNUP == state) {
-			// set signupscreen values according to intent
-			setSignupScreenValuesOnCreate();
-		}
 
 	}
 
@@ -961,8 +946,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 		this.state = state;
 
-
-
+		if(State.SPLASH_INIT == state) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					getDeviceToken();
+				}
+			}, 500);
+		}
+		else if(State.LOGIN == state){
+			// set login screen values according to intent
+			setLoginScreenValuesOnCreate();
+		}
+		else if(State.SIGNUP == state) {
+			// set signupscreen values according to intent
+			setSignupScreenValuesOnCreate();
+		}
 	}
 
 	private void readSMSClickLink(){
@@ -1003,8 +1002,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
+			setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
 			changeUIState(State.SIGNUP);
-			editTextSPromo.setText(referralCode);
 		}
 	}
 
@@ -1468,6 +1467,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						ActivityCompat.finishAffinity(SplashNewActivity.this);
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
+					else if(SplashNewActivity.this.hasWindowFocus() && emailRegister){
+						emailRegister = false;
+						sendIntentToRegisterScreen(RegisterationType.EMAIL);
+					}
 					else if(SplashNewActivity.this.hasWindowFocus() && facebookRegister){
 						facebookRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.FACEBOOK);
@@ -1721,7 +1724,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			if (getIntent().hasExtra(KEY_PREVIOUS_LOGIN_EMAIL)) {
 				String previousLoginEmail = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
 				editTextEmail.setText(previousLoginEmail);
-				editTextEmail.setSelection(editTextEmail.getText().length());
 				fromPreviousAccounts = true;
 			}
 			else{
@@ -1736,11 +1738,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			if (getIntent().hasExtra(KEY_FORGOT_LOGIN_EMAIL)) {
 				String forgotLoginEmail = getIntent().getStringExtra(KEY_FORGOT_LOGIN_EMAIL);
 				editTextEmail.setText(forgotLoginEmail);
-				editTextEmail.setSelection(editTextEmail.getText().length());
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+
+		try {
+			if (getIntent().hasExtra(KEY_ALREADY_VERIFIED_EMAIL)) {
+				String alreadyVerifiedEmail = getIntent().getStringExtra(KEY_ALREADY_VERIFIED_EMAIL);
+				editTextEmail.setText(alreadyVerifiedEmail);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		editTextEmail.setSelection(editTextEmail.getText().length());
 	}
 
 
@@ -1826,7 +1838,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
+										emailNeedRegister = emailId;
+										emailRegister = true;
+										notRegisteredMsg = error;
 									}
 									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 										String error = jObj.getString("error");
@@ -2214,8 +2228,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 
 		try{
-			if(getIntent().hasExtra("referral_code")){
-				String referralCode = getIntent().getStringExtra("referral_code");
+			if(getIntent().hasExtra(KEY_REFERRAL_CODE)){
+				String referralCode = getIntent().getStringExtra(KEY_REFERRAL_CODE);
 				editTextSPromo.setText(referralCode);
 			}
 		} catch(Exception e){
@@ -2263,8 +2277,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if(Data.googleSignInAccount.getEmail() != null && !Data.googleSignInAccount.getEmail().equalsIgnoreCase("")) {
 					editTextSEmail.setEnabled(false);
 				} else {
-
 					editTextSEmail.setEnabled(true);
+				}
+			}
+			else if(RegisterationType.EMAIL == SplashNewActivity.registerationType){
+				if(Utils.checkIfOnlyDigits(emailNeedRegister)){
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister));
+				} else{
+					editTextSEmail.setText(emailNeedRegister);
 				}
 			}
 		} catch (Exception e) {
@@ -2385,7 +2405,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 
 			params.put("client_id", Config.getClientId());
-			params.put("referral_code", referralCode);
+			params.put(KEY_REFERRAL_CODE, referralCode);
 
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2494,7 +2514,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("phone_no", phoneNo);
 			params.put("password", password);
-			params.put("referral_code", referralCode);
+			params.put(KEY_REFERRAL_CODE, referralCode);
 
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
@@ -2601,7 +2621,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("phone_no", phoneNo);
 			params.put("password", password);
-			params.put("referral_code", referralCode);
+			params.put(KEY_REFERRAL_CODE, referralCode);
 
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
@@ -2806,9 +2826,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 											@Override
 											public void onClick(View v) {
 												FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+												setIntent(new Intent().putExtra(KEY_ALREADY_VERIFIED_EMAIL, email));
 												changeUIState(State.LOGIN);
-												editTextEmail.setText(email);
-												editTextEmail.setSelection(editTextEmail.getText().length());
 											}
 										});
 							} else {
