@@ -419,7 +419,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+						if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
+							scrollView.smoothScrollTo(0, editTextOTP.getTop());
+						} else {
+							scrollView.smoothScrollTo(0, buttonVerify.getTop());
+						}
 					}
 				}, 200);
 			} else {
@@ -439,7 +443,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
+						scrollView.smoothScrollTo(0, editTextOTP.getTop());
+					} else {
+						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					}
 				}
 			}, 200);
 			try {
