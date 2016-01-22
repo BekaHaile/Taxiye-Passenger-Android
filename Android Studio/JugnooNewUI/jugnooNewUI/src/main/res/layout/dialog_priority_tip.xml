@@ -186,7 +186,7 @@
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="1.25X"
-                        android:textColor="#F39E4A"
+                        android:textColor="#FFB552"
                         android:textSize="66px" />
 
                     <TextView

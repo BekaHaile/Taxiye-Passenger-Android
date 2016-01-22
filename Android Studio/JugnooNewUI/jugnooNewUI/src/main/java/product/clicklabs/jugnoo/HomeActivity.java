@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -692,12 +693,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewCentrePinETA.setTypeface(Fonts.latoRegular(this));
 		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.latoRegular(this));
 
-
-
-
-
-
-
         //Review Layout
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
 
@@ -1045,15 +1040,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
-
-
-
-
-
-
-
-
-
         // Assigning layout events
 		assigningLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -1147,11 +1133,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initDropLocationSearchUI(false);
             }
         });
-
-
-
-
-
 
 
         //Search Layout Events
@@ -1591,6 +1572,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 
 
+            // ****** Jugnoo Jeanie Tutorial Screen ****** //
             if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
                     &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
                 Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
@@ -1598,7 +1580,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
             }
 
-
+            // ****** New Look Tutorial Screen ***** //
+//            if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)){
+//                Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
+//                // for tutorial screens
+//                startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
+//            }
+            new NewLookTutorialDialog(HomeActivity.this);
 
 			switchUserScreen();
 
@@ -3471,8 +3459,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, 300);
 
                             if (Data.driverInfos.size() == 0) {
-                                textViewInitialInstructions.setVisibility(View.VISIBLE);
-                                textViewInitialInstructions.setText("No drivers nearby");
+                                //textViewInitialInstructions.setVisibility(View.VISIBLE);
+                                //textViewInitialInstructions.setText("No drivers nearby");
                                 textViewCentrePinETA.setText("-");
                             } else {
                                 textViewInitialInstructions.setVisibility(View.GONE);
@@ -4699,8 +4687,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                    initiateRequestRide(true);
-                    FlurryEventLogger.event(FINAL_CALL_RIDE);
+                    if (Data.driverInfos.size() == 0) {
+                        noDriverNearbyToast();
+                        //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
+                    } else{
+                        initiateRequestRide(true);
+                        FlurryEventLogger.event(FINAL_CALL_RIDE);
+                    }
                 }
 
             });
@@ -4769,7 +4762,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
                             dialog.show();
                         } else {
-                            initiateRequestRide(true);
+                            if (Data.driverInfos.size() == 0) {
+                                noDriverNearbyToast();
+                                //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
+                            } else{
+                                initiateRequestRide(true);
+                            }
                         }
                     }
                 }
@@ -4778,6 +4776,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void noDriverNearbyToast(){
+        Toast toast = Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_SHORT);
+        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+        if( v != null) v.setGravity(Gravity.CENTER);
+        toast.show();
     }
 
     /**

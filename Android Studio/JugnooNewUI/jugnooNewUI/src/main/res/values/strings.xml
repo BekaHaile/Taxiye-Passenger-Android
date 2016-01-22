@@ -652,6 +652,7 @@
 	<string name="call_us">Call Us</string>
 	<string name="call_me">Call Me</string>
 	<string name="receive_otp_via_call">Receive OTP via call</string>
+	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
 
 	<string name="tnc_apply">T&amp;C Apply</string>
 	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
