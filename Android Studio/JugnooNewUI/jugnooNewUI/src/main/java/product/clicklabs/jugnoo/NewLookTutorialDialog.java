@@ -24,7 +24,7 @@ public class NewLookTutorialDialog {
     private Dialog showNewLookDialog(){
         try {
             final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
+            //dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
             dialog.setContentView(R.layout.dialog_new_look);
 
             RelativeLayout root = (RelativeLayout) dialog.findViewById(R.id.root);

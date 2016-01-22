@@ -1573,20 +1573,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             // ****** Jugnoo Jeanie Tutorial Screen ****** //
-            if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
+            /*if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
                     &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
                 Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
                 // for tutorial screens
                 startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
-            }
+            }*/
 
             // ****** New Look Tutorial Screen ***** //
-//            if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)){
-//                Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
-//                // for tutorial screens
-//                startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
-//            }
-            new NewLookTutorialDialog(HomeActivity.this);
+            if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)){
+                Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
+                // for tutorial screens
+                new NewLookTutorialDialog(HomeActivity.this);
+            }
+
 
 			switchUserScreen();
 
