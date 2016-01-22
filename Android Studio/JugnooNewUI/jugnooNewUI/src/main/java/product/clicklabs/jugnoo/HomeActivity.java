@@ -299,8 +299,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     FeedbackReasonsAdapter feedbackReasonsAdapter;
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
-    TextView textViewRSScroll;
+    TextView textViewRSScroll, textViewChangeLocality;
 
+    private LinearLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation;
 
@@ -573,6 +574,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInitialInstructions = (TextView) findViewById(R.id.textViewInitialInstructions);
         textViewInitialInstructions.setTypeface(Fonts.mavenLight(this));
         textViewInitialInstructions.setVisibility(View.GONE);
+        changeLocalityLayout = (LinearLayout)findViewById(R.id.changeLocalityLayout);
+        textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
+
 
         relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
         textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor);
@@ -582,9 +586,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
         initialMyLocationBtnChangeLoc = (Button) findViewById(R.id.initialMyLocationBtnChangeLoc);
         changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn);
-        changeLocalityBtn.setTypeface(Fonts.latoRegular(this));
+        changeLocalityBtn.setTypeface(Fonts.mavenRegular(this));
 
         initialMyLocationBtn.setVisibility(View.VISIBLE);
+        changeLocalityLayout.setVisibility(View.GONE);
         changeLocalityBtn.setVisibility(View.GONE);
         initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
@@ -1001,7 +1006,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         changeLocalityBtn.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 textViewInitialSearch.setText("");
@@ -2082,6 +2086,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
                         changeLocalityBtn.setVisibility(View.GONE);
+                        changeLocalityLayout.setVisibility(View.GONE);
                         initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
                         setFareFactorToInitialState();
@@ -2787,8 +2792,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
                 }
                 setBottomMarginOfView(initialMyLocationBtn, 80f);
-                setBottomMarginOfView(imageViewRideNow, 40f);
-                setBottomMarginOfView(changeLocalityBtn, 100f);
+                //setBottomMarginOfView(imageViewRideNow, 40f);
+                //setBottomMarginOfView(changeLocalityBtn, 100f);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3592,9 +3597,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void setServiceAvailablityUI(String farAwayCity){
 		if (!"".equalsIgnoreCase(farAwayCity)) {
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
             //textViewInitialInstructions.setVisibility(View.VISIBLE);
             textViewInitialInstructions.setText(farAwayCity);
-            noDriverNearbyToast(farAwayCity);
+            changeLocalityLayout.setVisibility(View.VISIBLE);
+            textViewChangeLocality.setText(farAwayCity);
+            //noDriverNearbyToast(farAwayCity);
 
 			imageViewRideNow.setVisibility(View.GONE);
 
@@ -3609,6 +3617,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 			}
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            changeLocalityLayout.setVisibility(View.GONE);
 			changeLocalityBtn.setVisibility(View.GONE);
 			initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
@@ -3746,7 +3755,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
                                 }
                                 else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 5000, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -4620,7 +4629,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 														if(!pickupDropZoomed) {
 															LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, FIX_ZOOM_DIAGONAL);
 															float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-															map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+															map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 500, null);
 															pickupDropZoomed = true;
 														}
 													} catch (Exception e) {
@@ -6524,7 +6533,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             progressBarInitialSearch.setVisibility(View.GONE);
             if (map != null && searchResult != null) {
                 textViewInitialSearch.setText(searchResult.name);
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 1000, null);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 500, null);
                 lastSearchLatLng = searchResult.latLng;
 
                 try {
