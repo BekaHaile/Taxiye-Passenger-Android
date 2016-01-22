@@ -69,5 +69,6 @@ public interface Constants {
 	String KEY_JUGNOO_CASH_TNC = "jugnoo_cash_tnc";
 
 	String KEY_ALREADY_VERIFIED_EMAIL = "already_verified_email";
+	String KEY_ALREADY_REGISTERED_EMAIL = "already_registered_email";
 
 }

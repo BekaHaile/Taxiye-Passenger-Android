@@ -78,7 +78,8 @@ public class DialogPopup {
 		}
 	}
 
-	public static void dialogNoInternet(Activity activity, String title, String message, final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface) {
+	public static void dialogNoInternet(Activity activity, String title, String message,
+										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface) {
 		try {
 			dismissAlertPopup();
 

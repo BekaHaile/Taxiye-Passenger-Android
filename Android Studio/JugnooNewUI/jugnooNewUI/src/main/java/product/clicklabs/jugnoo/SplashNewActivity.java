@@ -147,7 +147,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	FacebookLoginHelper facebookLoginHelper;
 
 	boolean emailRegister = false, facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
-	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "", emailNeedRegister = "";
+	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "",
+			emailNeedRegister = "";
 	private String enteredEmail = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
@@ -646,18 +647,56 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-				facebookLoginHelper.openFacebookSession();
+				if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+					FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					facebookLoginHelper.openFacebookSession();
+				} else{
+					DialogPopup.dialogNoInternet(SplashNewActivity.this,
+							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+							new Utils.AlertCallBackWithButtonsInterface() {
+								@Override
+								public void positiveClick() {
+									buttonFacebookLogin.performClick();
+								}
+
+								@Override
+								public void neutralClick() {
+								}
+
+								@Override
+								public void negativeClick() {
+								}
+							});
+				}
 			}
 		});
 		buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
 				FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
 				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
 						GOOGLE_SIGNIN_REQ_CODE_LOGIN);
+				} else{
+					DialogPopup.dialogNoInternet(SplashNewActivity.this,
+							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+							new Utils.AlertCallBackWithButtonsInterface() {
+								@Override
+								public void positiveClick() {
+									buttonGoogleLogin.performClick();
+								}
+
+								@Override
+								public void neutralClick() {
+								}
+
+								@Override
+								public void negativeClick() {
+								}
+							});
+				}
 			}
 		});
 		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -1751,6 +1790,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		try {
+			if (getIntent().hasExtra(KEY_ALREADY_REGISTERED_EMAIL)) {
+				String alreadyRegisterEmail = getIntent().getStringExtra(KEY_ALREADY_REGISTERED_EMAIL);
+				editTextEmail.setText(alreadyRegisterEmail);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
 
 		editTextEmail.setSelection(editTextEmail.getText().length());
 	}
@@ -2450,6 +2498,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 											DialogPopup.alertPopup(activity, "", error);
 										} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
 											String error = jObj.getString("error");
+											setIntent(new Intent().putExtra(KEY_ALREADY_REGISTERED_EMAIL, emailId));
 											DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 										} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 											SplashNewActivity.this.name = name;
