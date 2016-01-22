@@ -470,10 +470,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			@Override
 			public void onClick(View v) {
-				if(isBranchLinkNotClicked()) {
+				if (isBranchLinkNotClicked()) {
 					FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 					changeUIState(State.LOGIN);
-				} else{
+				} else {
 					clickCount = clickCount + 1;
 				}
 			}
@@ -712,80 +712,80 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
 
-					String name = editTextSName.getText().toString().trim();
-					if (name.length() > 0) {
-						name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-					}
-					String referralCode = editTextSPromo.getText().toString().trim();
-					String emailId = editTextSEmail.getText().toString().trim();
-					boolean noFbEmail = false;
+				String name = editTextSName.getText().toString().trim();
+				if (name.length() > 0) {
+					name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+				}
+				String referralCode = editTextSPromo.getText().toString().trim();
+				String emailId = editTextSEmail.getText().toString().trim();
+				boolean noFbEmail = false;
 
-					if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
-						emailId = "n@n.c";
-						noFbEmail = true;
-					}
-
-
-					String phoneNo = editTextSPhone.getText().toString().trim();
-					String password = editTextSPassword.getText().toString().trim();
+				if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
+					emailId = "n@n.c";
+					noFbEmail = true;
+				}
 
 
-					if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
-						editTextSName.requestFocus();
-						editTextSName.setError("Please enter name");
-					} else if (!Utils.hasAlphabets(name)) {
-						editTextSName.requestFocus();
-						editTextSName.setError("Please enter at least one alphabet");
+				String phoneNo = editTextSPhone.getText().toString().trim();
+				String password = editTextSPassword.getText().toString().trim();
+
+
+				if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
+					editTextSName.requestFocus();
+					editTextSName.setError("Please enter name");
+				} else if (!Utils.hasAlphabets(name)) {
+					editTextSName.requestFocus();
+					editTextSName.setError("Please enter at least one alphabet");
+				} else {
+					if ("".equalsIgnoreCase(emailId)) {
+						editTextSEmail.requestFocus();
+						editTextSEmail.setError("Please enter email id");
 					} else {
-						if ("".equalsIgnoreCase(emailId)) {
-							editTextSEmail.requestFocus();
-							editTextSEmail.setError("Please enter email id");
+						if ("".equalsIgnoreCase(phoneNo)) {
+							editTextSPhone.requestFocus();
+							editTextSPhone.setError("Please enter phone number");
 						} else {
-							if ("".equalsIgnoreCase(phoneNo)) {
+							phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
+							if (!Utils.validPhoneNumber(phoneNo)) {
 								editTextSPhone.requestFocus();
-								editTextSPhone.setError("Please enter phone number");
+								editTextSPhone.setError("Please enter valid phone number");
 							} else {
-								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
-								if (!Utils.validPhoneNumber(phoneNo)) {
-									editTextSPhone.requestFocus();
-									editTextSPhone.setError("Please enter valid phone number");
+								phoneNo = "+91" + phoneNo;
+								if ("".equalsIgnoreCase(password)) {
+									editTextSPassword.requestFocus();
+									editTextSPassword.setError("Please enter password");
 								} else {
-									phoneNo = "+91" + phoneNo;
-									if ("".equalsIgnoreCase(password)) {
-										editTextSPassword.requestFocus();
-										editTextSPassword.setError("Please enter password");
-									} else {
-										if (Utils.isEmailValid(emailId)) {
-											if (password.length() >= 6) {
+									if (Utils.isEmailValid(emailId)) {
+										if (password.length() >= 6) {
 
-												if (RegisterationType.FACEBOOK == registerationType) {
-													if (noFbEmail) {
-														emailId = "";
-													}
-													sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
-												} else if (RegisterationType.GOOGLE == registerationType) {
-													sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
-												} else {
-													sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password);
+											if (RegisterationType.FACEBOOK == registerationType) {
+												if (noFbEmail) {
+													emailId = "";
 												}
-												FlurryEventLogger.event(SIGNUP_FINAL);
+												sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
+											} else if (RegisterationType.GOOGLE == registerationType) {
+												sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
 											} else {
-												editTextSPassword.requestFocus();
-												editTextSPassword.setError("Password must be of atleast six characters");
+												sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password);
 											}
-
+											FlurryEventLogger.event(SIGNUP_FINAL);
 										} else {
-											editTextSEmail.requestFocus();
-											editTextSEmail.setError("Please enter valid email id");
+											editTextSPassword.requestFocus();
+											editTextSPassword.setError("Password must be of atleast six characters");
 										}
 
+									} else {
+										editTextSEmail.requestFocus();
+										editTextSEmail.setError("Please enter valid email id");
 									}
+
 								}
 							}
 						}
 					}
+				}
 
 			}
 		});
@@ -811,6 +811,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
 				buttonEmailSignup.performClick();
 				return true;
+			}
+		});
+		textViewSTerms.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				textViewTerms.performClick();
 			}
 		});
 
