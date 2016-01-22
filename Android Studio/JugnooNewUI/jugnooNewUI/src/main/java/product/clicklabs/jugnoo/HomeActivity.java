@@ -31,7 +31,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -5668,6 +5667,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				firstTimeZoom = false;
 				pickupDropZoomed = false;
 
+                slidingBottomPanel.setSelectedCoupon(null);
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
                 Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
