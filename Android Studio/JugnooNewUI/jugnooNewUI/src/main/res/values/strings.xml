@@ -660,15 +660,22 @@
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
 	<!-- Support Screen-->
+	<string name="issue_with_a_recent_ride">Issue with a recent ride?</string>
+	<string name="date_colon">Date:</string>
 	<string name="start">Start</string>
 	<string name="end">End</string>
-	<string name="view_previous_trips">View previous trips</string>
+	<string name="ride_history">Ride History</string>
 	<string name="support_main_title">How can we help?</string>
 	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
 
 	<!-- Ride transactions-->
 	<string name="rate_this_ride">Rate this ride</string>
 	<string name="show_more">Show more</string>
+
+
+
+	<string name="no_net_title">CONNECTION LOST</string>
+	<string name="no_net_text">Oops! Your Internet in not working.\nPlease try again.</string>
 
 
 </resources>

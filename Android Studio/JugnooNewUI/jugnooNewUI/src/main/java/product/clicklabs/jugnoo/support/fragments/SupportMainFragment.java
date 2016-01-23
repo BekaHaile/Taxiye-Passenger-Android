@@ -15,16 +15,27 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.retrofit.model.SupportFAq;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
@@ -33,11 +44,11 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private LinearLayout linearLayoutRideShortInfo;
 	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
-	private TextView textViewStartValue, textViewEndValue, textViewViewPreviousTrips;
+	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
 
 	private RecyclerView recyclerViewSupportFaq;
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
-	private ArrayList<SupportFAq> supportFAqs;
+	private ShowPanelResponse showPanelResponse;
 
 	private View rootView;
     private SupportActivity activity;
@@ -74,56 +85,46 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		}
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
+		((TextView)rootView.findViewById(R.id.textViewIssueWithRide)).setTypeface(Fonts.mavenRegular(activity));
 		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
-
 		((TextView)rootView.findViewById(R.id.textViewTripTotal)).setTypeface(Fonts.mavenLight(activity));
 		textViewTripTotalValue = (TextView)rootView.findViewById(R.id.textViewTripTotalValue); textViewTripTotalValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 
-		((TextView)rootView.findViewById(R.id.textViewStart)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-		((TextView)rootView.findViewById(R.id.textViewEnd)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-
+		textViewDate = (TextView)rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenRegular(activity));
+		textViewStart = (TextView)rootView.findViewById(R.id.textViewStart); textViewStart.setTypeface(Fonts.mavenRegular(activity));
+		textViewEnd = (TextView)rootView.findViewById(R.id.textViewEnd); textViewEnd.setTypeface(Fonts.mavenRegular(activity));
 		textViewStartValue = (TextView)rootView.findViewById(R.id.textViewStartValue); textViewStartValue.setTypeface(Fonts.mavenLight(activity));
 		textViewEndValue = (TextView)rootView.findViewById(R.id.textViewEndValue); textViewEndValue.setTypeface(Fonts.mavenLight(activity));
-		textViewViewPreviousTrips = (TextView)rootView.findViewById(R.id.textViewViewPreviousTrips); textViewViewPreviousTrips.setTypeface(Fonts.mavenLight(activity));
 
 		recyclerViewSupportFaq = (RecyclerView)rootView.findViewById(R.id.recyclerViewSupportFaq);
 		recyclerViewSupportFaq.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewSupportFaq.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewSupportFaq.setHasFixedSize(false);
 
-		ArrayList<SupportFAq.QuestionAnswer> questionAnswers = new ArrayList<>();
-		SupportFAq supportFAq = new SupportFAq(1, "Account", questionAnswers);
-		questionAnswers.add(supportFAq.new QuestionAnswer("What is account", "this is account"));
-		supportFAqs = new ArrayList<>();
-		supportFAqs.add(supportFAq);
-		supportFAq = new SupportFAq(2, "General", questionAnswers);
-		questionAnswers.add(supportFAq.new QuestionAnswer("What is General", "this is General"));
-		supportFAqs.add(supportFAq);
-		supportFAq = new SupportFAq(3, "Usage", questionAnswers);
-		questionAnswers.add(supportFAq.new QuestionAnswer("What is usage", "this is usage"));
-		supportFAqs.add(supportFAq);
-		supportFAq = new SupportFAq(4, "Biling", questionAnswers);
-		questionAnswers.add(supportFAq.new QuestionAnswer("What is Biling", "this is Biling"));
-		supportFAqs.add(supportFAq);
-		supportFAq = new SupportFAq(4, "Promotions and Coupons", questionAnswers);
-		questionAnswers.add(supportFAq.new QuestionAnswer("What is Promotions and Coupons", "this is Promotions and Coupons"));
-		supportFAqs.add(supportFAq);
-		supportFAq = new SupportFAq(4, "Abuse of Service", questionAnswers);
-		questionAnswers.add(supportFAq.new QuestionAnswer("What is Abuse of Service", "this is Abuse of Service"));
-		supportFAqs.add(supportFAq);
-
-		supportFAQItemsAdapter = new SupportFAQItemsAdapter(supportFAqs, activity, R.layout.list_item_support_faq,
+		supportFAQItemsAdapter = new SupportFAQItemsAdapter(null, activity, R.layout.list_item_support_faq,
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
-					public void onClick(int position, SupportFAq supportFAq) {
-						activity.getSupportFragmentManager().beginTransaction()
-								.add(activity.getLinearLayoutContainer().getId(),
-										new SupportFAQQuesFragment(supportFAq), SupportFAQQuesFragment.class.getName())
-								.addToBackStack(SupportFAQQuesFragment.class.getName())
-								.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-										.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-								.commitAllowingStateLoss();
+					public void onClick(int position, ShowPanelResponse.Item item) {
+						if(ViewType.TEXT_BOX.getOrdinal() == item.getViewType()
+								|| ViewType.CALL_BUTTON.getOrdinal() == item.getViewType()
+								|| ViewType.TEXT_ONLY.getOrdinal() == item.getViewType()) {
+							activity.getSupportFragmentManager().beginTransaction()
+									.add(activity.getLinearLayoutContainer().getId(),
+											new SupportFAQItemFragment(item.getText(), item), SupportFAQItemFragment.class.getName())
+									.addToBackStack(SupportFAQItemFragment.class.getName())
+									.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+											.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+									.commitAllowingStateLoss();
+						} else if(ViewType.LIST_VIEW.getOrdinal() == item.getViewType()) {
+							activity.getSupportFragmentManager().beginTransaction()
+									.add(activity.getLinearLayoutContainer().getId(),
+											new SupportFAQItemsListFragment(item), SupportFAQItemsListFragment.class.getName())
+									.addToBackStack(SupportFAQItemsListFragment.class.getName())
+									.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+											.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+									.commitAllowingStateLoss();
+						}
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -135,12 +136,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			}
 		});
 
-		textViewViewPreviousTrips.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
+		showPanel();
 
 
 		return rootView;
@@ -159,6 +155,59 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		super.onDestroy();
         ASSL.closeActivity(root);
         System.gc();
+	}
+
+
+	private void showPanel() {
+		if(!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+			DialogPopup.showLoadingDialog(activity, "");
+
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+			RestClient.getApiServices().showPanel(params,
+					new Callback<ShowPanelResponse>() {
+						@Override
+						public void success(ShowPanelResponse showPanelResponse, Response response) {
+							DialogPopup.dismissLoadingDialog();
+							try {
+								update(showPanelResponse);
+							} catch (Exception exception) {
+								exception.printStackTrace();
+							}
+						}
+
+						@Override
+						public void failure(RetrofitError error) {
+							DialogPopup.dismissLoadingDialog();
+						}
+					});
+		} else{
+			DialogPopup.dialogNoInternet(activity,
+					activity.getResources().getString(R.string.no_net_title),
+					activity.getResources().getString(R.string.no_net_text),
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick() {
+							showPanel();
+						}
+
+						@Override
+						public void neutralClick() {
+
+						}
+
+						@Override
+						public void negativeClick() {
+
+						}
+					});
+		}
+	}
+
+	private void update(ShowPanelResponse showPanelResponse){
+		this.showPanelResponse = showPanelResponse;
+		supportFAQItemsAdapter.setResults((ArrayList<ShowPanelResponse.Item>) this.showPanelResponse.getMenu());
 	}
 
 

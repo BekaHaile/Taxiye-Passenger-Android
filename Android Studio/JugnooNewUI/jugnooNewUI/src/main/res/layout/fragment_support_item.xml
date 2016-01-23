@@ -16,7 +16,7 @@
 
 
         <TextView
-            android:id="@+id/textViewQuestion"
+            android:id="@+id/textViewSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20px"
@@ -29,7 +29,7 @@
             />
 
         <TextView
-            android:id="@+id/textViewAnswer"
+            android:id="@+id/textViewDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20px"
@@ -38,6 +38,33 @@
             android:text="Answer"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_26"
+            />
+
+        <EditText
+            android:id="@+id/editTextMessage"
+            android:layout_width="match_parent"
+            android:layout_height="250px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="40px"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/dropshadow_grey"
+            android:gravity="left"
+            android:hint="@string/leave_a_comment"
+            android:padding="25px"
+            android:scrollbars="vertical"
+            android:textSize="@dimen/text_size_28"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
+            />
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            style="@style/ButtonTheme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:layout_marginBottom="30px"
+            android:text="@string/submit"
             />
 
 

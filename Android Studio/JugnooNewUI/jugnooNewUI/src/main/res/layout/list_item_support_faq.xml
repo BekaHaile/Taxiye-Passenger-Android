@@ -10,14 +10,11 @@
         android:id="@+id/textViewFaqItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24px"
-        android:layout_marginBottom="24px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
+        android:layout_margin="30px"
         android:maxLines="2"
         android:text="Account"
         android:textColor="@color/text_color_light_selector"
-        android:textSize="@dimen/text_size_30"
+        android:textSize="@dimen/text_size_36"
 
         />
 
