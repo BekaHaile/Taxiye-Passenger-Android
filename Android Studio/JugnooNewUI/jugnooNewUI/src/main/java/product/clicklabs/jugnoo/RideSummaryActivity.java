@@ -110,7 +110,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 		}
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
@@ -156,7 +156,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 		endRideDiscountsAdapter = new EndRideDiscountsAdapter(this);
 		listViewEndRideDiscounts.setAdapter(endRideDiscountsAdapter);
 
-		buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk); buttonEndRideOk.setTypeface(Fonts.latoRegular(this));
+		buttonEndRideOk = (Button) findViewById(R.id.buttonEndRideOk); buttonEndRideOk.setTypeface(Fonts.mavenRegular(this));
 
 
 

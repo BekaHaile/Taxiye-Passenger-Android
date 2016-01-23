@@ -52,7 +52,6 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TextView textViewTitle;
 
 	//Transactions List vars
-	TextView textViewRecentTransactions;
 	ProgressWheel progressBar;
 	ListView listViewTransactions;
 	TransactionListAdapter transactionListAdapter;
@@ -97,11 +96,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		textViewRecentTransactions = (TextView) rootView.findViewById(R.id.textViewRecentTransactions);
-		textViewRecentTransactions.setTypeface(Fonts.latoRegular(paymentActivity));
-		
 		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
 
 		LinearLayout viewF = (LinearLayout) paymentActivity.getLayoutInflater().inflate(R.layout.list_item_show_more, null);
@@ -186,11 +182,9 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		else{
 			if(transactionInfoList.size() == 0){
 				relativeLayoutShowMore.setVisibility(View.GONE);
-				textViewRecentTransactions.setText("No transactions currently");
 			}
 			else{
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
-				textViewRecentTransactions.setText("Recent Transactions");
 			}
 			transactionListAdapter.notifyDataSetChanged();
 		}
@@ -233,16 +227,16 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				holder = new ViewHolderTransaction();
 				convertView = mInflater.inflate(R.layout.list_item_trans_naw, null);
 				
-				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.latoRegular(context));
-				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.latoRegular(context));
-				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.latoLight(context));
-				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.latoLight(context));
-				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.latoLight(context));
+				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenLight(context));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 				
 				holder.relative.setTag(holder);
 				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, 108));
+				holder.relative.setLayoutParams(new ListView.LayoutParams(720, 156));
 				ASSL.DoMagic(holder.relative);
 				
 				convertView.setTag(holder);
@@ -256,7 +250,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			
 			holder.textViewTransactionDate.setText(transactionInfo.date);
 
-			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(transactionInfo.amount));
+			holder.textViewTransactionAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
 			holder.textViewTransactionTime.setText(transactionInfo.time);
 			holder.textViewTransactionType.setText(transactionInfo.transactionText);
 			

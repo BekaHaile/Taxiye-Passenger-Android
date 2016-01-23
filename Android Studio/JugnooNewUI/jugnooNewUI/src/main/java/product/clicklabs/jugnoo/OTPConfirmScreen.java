@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -60,21 +62,17 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewTitle;
 
 
-	//new start
-	TextView textViewOtpNumber, textViewEnterOTP;
+	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
 	LinearLayout linearLayoutWaiting;
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
-	//new end
 
-	Button buttonVerify;
-
-	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutMissCall, relativeLayoutOr;
-	TextView textViewMissCall;
+	Button buttonVerify, buttonOtpViaCall;
+	LinearLayout linearLayoutGiveAMissedCall;
+	TextView textViewOr;
 
 
 	LinearLayout relative;
@@ -125,31 +123,26 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-		//new start
-		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
-		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
+		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
-		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
-		//new end
-		
+
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
-		
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
 
-
-		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
-		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
+		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
+		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -173,13 +166,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
-					if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
-					}
-					else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode);
-					}
-					else {
+					} else {
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode);
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
@@ -187,17 +178,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					editTextOTP.requestFocus();
 					editTextOTP.setError("Code can't be empty");
 				}
-
 			}
 		});
 
-		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.showSoftKeyboard(OTPConfirmScreen.this, editTextOTP);
-				editTextOTP.requestFocus();
-			}
-		});
 
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -218,19 +201,76 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		});
 
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try{
+					if (1 == Data.otpViaCallEnabled) {
+						if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+							initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
+						} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+							initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
+						} else {
+							initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
+						}
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+
+		editTextOTP.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length() > 0){
+					editTextOTP.setTextSize(20);
+				} else{
+					editTextOTP.setTextSize(15);
+				}
+			}
+		});
+
 
 		editTextOTP.setOnFocusChangeListener(onFocusChangeListener);
 		editTextOTP.setOnClickListener(onClickListener);
 
 
-
-		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
+		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-					Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
-					FlurryEventLogger.event(GIVE_MISSED_CALL);
+				try {
+					if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
+								getResources().getString(R.string.give_missed_call_dialog_text),
+								getResources().getString(R.string.call_us),
+								getResources().getString(R.string.cancel),
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+										FlurryEventLogger.event(GIVE_MISSED_CALL);
+									}
+								},
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+
+									}
+								}, false, false
+						);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -246,12 +286,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
-		
-		
+
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
-		//new start
 		try {
 			//jungooautos-verify://app?otp=1234
 			Uri data = getIntent().getData();
@@ -262,20 +300,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				String otp = data.getQueryParameter("otp");
 
 				String registrationMode = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE,
-						"" + RegisterScreen.registerationType);
+						"" + SplashNewActivity.registerationType);
 				String registerData = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
-				if((""+RegisterScreen.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
+				if((""+SplashNewActivity.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					facebookRegisterData = gson.fromJson(registerData, FacebookRegisterData.class);
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
 				}
-				else if((""+RegisterScreen.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
+				else if((""+SplashNewActivity.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					googleRegisterData = gson.fromJson(registerData, GoogleRegisterData.class);
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
 				}
-				else if((""+RegisterScreen.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
+				else if((""+SplashNewActivity.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					emailRegisterData = gson.fromJson(registerData, EmailRegisterData.class);
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
@@ -287,19 +325,19 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				}
 			}
 			else{
-				if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+				if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + RegisterScreen.RegisterationType.FACEBOOK);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + SplashNewActivity.RegisterationType.FACEBOOK);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(facebookRegisterData, FacebookRegisterData.class));
 				}
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.GOOGLE);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.GOOGLE);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(googleRegisterData, GoogleRegisterData.class));
 				}
 				else{
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.EMAIL);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.EMAIL);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(emailRegisterData, EmailRegisterData.class));
 				}
 			}
@@ -311,7 +349,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		try{
 			if(getIntent().getIntExtra("show_timer", 0) == 1){
 				linearLayoutWaiting.setVisibility(View.VISIBLE);
-				linearLayoutOTPOptions.setVisibility(View.GONE);
 				textViewCounter.setText("0:30");
 				countDownTimer.start();
 			}
@@ -320,27 +357,37 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		} catch(Exception e){
 			linearLayoutWaiting.setVisibility(View.GONE);
-			linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 		}
 
 		try{
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				relativeLayoutOr.setVisibility(View.VISIBLE);
-				relativeLayoutMissCall.setVisibility(View.VISIBLE);
+				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
-				relativeLayoutOr.setVisibility(View.GONE);
-				relativeLayoutMissCall.setVisibility(View.GONE);
+				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			}
+
+			if(1 == Data.otpViaCallEnabled) {
+				buttonOtpViaCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				buttonOtpViaCall.setVisibility(View.GONE);
+			}
+			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
+					|| buttonOtpViaCall.getVisibility() == View.VISIBLE){
+				textViewOr.setVisibility(View.VISIBLE);
+			} else{
+				textViewOr.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			relativeLayoutOr.setVisibility(View.GONE);
-			relativeLayoutMissCall.setVisibility(View.GONE);
+			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			buttonOtpViaCall.setVisibility(View.GONE);
+			textViewOr.setVisibility(View.GONE);
 		}
-		//new end
-		
+
 		new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
-			
+
 			@Override
 			public void deviceTokenReceived(final String regId) {
 				Data.deviceToken = regId;
@@ -372,7 +419,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+						if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
+							scrollView.smoothScrollTo(0, editTextOTP.getTop());
+						} else {
+							scrollView.smoothScrollTo(0, buttonVerify.getTop());
+						}
 					}
 				}, 200);
 			} else {
@@ -392,7 +443,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
+						scrollView.smoothScrollTo(0, editTextOTP.getTop());
+					} else {
+						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					}
 				}
 			}, 200);
 			try {
@@ -405,7 +460,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	};
 
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -437,7 +492,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
         }
     }
 
-	
+
 	@Override
 	protected void onPause() {
 		try{
@@ -450,10 +505,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		super.onPause();
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * ASync for confirming otp from server
 	 */
@@ -557,10 +612,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
         }
 
 	}
-	
-	
-	
-	
+
+
+
+
 
 	public void verifyOtpViaFB(final Activity activity, String otp) {
         if(!checkIfRegisterDataNull(activity)) {
@@ -766,20 +821,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
-	
+
 	/**
 	 * ASync for initiating OTP Call from server
 	 */
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
+
 			RequestParams params = new RequestParams();
-		
+
 			params.put("phone_no", phoneNo);
 			Log.i("phone_no", ">"+phoneNo);
-		
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/send_otp_via_call", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -795,7 +850,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						@Override
 						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
-	
+
 							try {
 								jObj = new JSONObject(response);
 
@@ -834,13 +889,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 	}
-	
-	
-	
+
+
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		
+
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
 			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
@@ -852,33 +907,35 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			ActivityCompat.finishAffinity(this);
 		}
 	}
-	
+
 
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
 		super.onBackPressed();
 	}
-	
-	
+
+
 	public void performBackPressed(){
 		if(intentFromRegister){
-			Intent intent = new Intent(OTPConfirmScreen.this, RegisterScreen.class);
-			intent.putExtra("back_from_otp", true);
+			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
+			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
 		else{
-			Intent intent = new Intent(OTPConfirmScreen.this, SplashLogin.class);
-			intent.putExtra("back_from_otp", true);
+			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
+			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
-	
-	
-	
+
+
+
+
 	@Override
 	protected void onDestroy() {
 		Utils.disableSMSReceiver(this);
@@ -928,7 +985,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		@Override
 		public void onFinish() {
 			linearLayoutWaiting.setVisibility(View.GONE);
-			linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 		}
 	};
 
@@ -959,7 +1015,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
-	
+
 }
 
 

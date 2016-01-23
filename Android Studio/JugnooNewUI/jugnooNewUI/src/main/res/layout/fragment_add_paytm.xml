@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/white"
     android:splitMotionEvents="false">
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="PAYTM WALLET"
             android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"/>
+            android:textSize="@dimen/top_bar_title_text_size" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/back_white_selector" />
     </RelativeLayout>
 
     <ScrollView
@@ -45,8 +45,7 @@
             android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
 
             <LinearLayout
@@ -55,21 +54,22 @@
                 android:orientation="vertical">
 
                 <!-- paytm logo rl-->
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/relativeLayoutPaytmLogo"
                     android:layout_width="match_parent"
-                    android:layout_height="250px"
-                    android:background="@color/white">
+                    android:layout_height="192px"
+                    android:background="@color/sliding_bottom_bg_color"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
 
                     <ImageView
                         android:id="@+id/imageViewPaytmIcon"
                         android:layout_width="167px"
                         android:layout_height="53px"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="50px"
                         android:src="@drawable/ic_paytm_logo_big"
-                        android:tag="mwar"
-                        />
+                        android:tag="mwar" />
 
 
                     <TextView
@@ -78,21 +78,18 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="60px"
+                        android:layout_marginTop="10px"
                         android:text="Pay for Jugnoo Rides with a Mobile Wallet"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="28px"
-                        />
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32" />
 
+                </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/yellow_alpha"
-                        />
-
-                </RelativeLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/theme_color" />
 
                 <TextView
                     android:id="@+id/textViewOTPMessage"
@@ -102,8 +99,7 @@
                     android:layout_marginTop="60px"
                     android:text="Sending OTP To"
                     android:textColor="@color/grey_dark"
-                    android:textSize="30px"
-                    />
+                    android:textSize="30px" />
 
                 <TextView
                     android:id="@+id/textViewOTPNumber"
@@ -113,8 +109,7 @@
                     android:layout_marginTop="10px"
                     android:text="+91 0000000000"
                     android:textColor="@color/grey_dark_more"
-                    android:textSize="36px"
-                    />
+                    android:textSize="36px" />
 
                 <!-- opt editText rl-->
                 <LinearLayout
@@ -123,8 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/editTextOTP"
@@ -143,13 +137,13 @@
                         android:textColor="@color/grey_dark_more"
                         android:textColorHint="@color/grey_dark_less"
                         android:textCursorDrawable="@null"
-                        android:textSize="34px"/>
+                        android:textSize="34px" />
 
                     <ImageView
                         android:layout_width="240px"
                         android:layout_height="2px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@color/yellow"/>
+                        android:src="@color/theme_color" />
 
 
                 </LinearLayout>
@@ -162,65 +156,50 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="140px"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
 
                 <Button
                     android:id="@+id/buttonRequestOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20px"
-                    android:background="@drawable/button_yellow"
-                    android:text="REQUEST OTP"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/add_paytm_button_text_size"
-                    android:visibility="gone"
-                    />
+                    android:text="@string/request_otp"
+                    android:visibility="gone" />
 
 
                 <Button
                     android:id="@+id/buttonVerifyOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="25px"
-                    android:background="@drawable/button_yellow"
-                    android:text="VERIFY"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/add_paytm_button_text_size"
-                    android:visibility="visible"
-                    />
+                    android:text="@string/verify"
+                    android:visibility="visible" />
 
 
                 <Button
                     android:id="@+id/buttonResendOTP"
-                    android:layout_width="620px"
-                    android:layout_height="84px"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20px"
-                    android:background="@drawable/button_yellow"
-                    android:text="RESEND OTP"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/add_paytm_button_text_size"
-                    android:visibility="visible"
-                    />
+                    android:text="@string/resend_otp"
+                    android:visibility="visible" />
 
             </LinearLayout>
+
             <TextView
                 android:id="@+id/textViewScroll"
                 android:layout_width="10px"
                 android:layout_height="10px"
-                android:textSize="28px"/>
+                android:textSize="28px" />
 
         </LinearLayout>
     </ScrollView>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:layout_below="@+id/topBar"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 
 </RelativeLayout>

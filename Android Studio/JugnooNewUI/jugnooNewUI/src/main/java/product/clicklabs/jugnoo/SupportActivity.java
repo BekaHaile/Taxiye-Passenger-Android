@@ -47,7 +47,7 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
 		relativeLayoutSendUsEmail = (RelativeLayout) findViewById(R.id.relativeLayoutSendUsEmail);
@@ -55,10 +55,10 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 		relativeLayoutFAQ = (RelativeLayout) findViewById(R.id.relativeLayoutFAQ);
 		relativeLayoutFeedback = (RelativeLayout) findViewById(R.id.relativeLayoutFeedback);
 		
-		textViewSendUsEmail = (TextView) findViewById(R.id.textViewSendUsEmail); textViewSendUsEmail.setTypeface(Fonts.latoRegular(this));
-		textViewCallUs = (TextView) findViewById(R.id.textViewCallUs); textViewCallUs.setTypeface(Fonts.latoRegular(this));
-		textViewFAQ = (TextView) findViewById(R.id.textViewFAQ); textViewFAQ.setTypeface(Fonts.latoRegular(this));
-		textViewFeedback = (TextView) findViewById(R.id.textViewFeedback); textViewFeedback.setTypeface(Fonts.latoRegular(this));
+		textViewSendUsEmail = (TextView) findViewById(R.id.textViewSendUsEmail); textViewSendUsEmail.setTypeface(Fonts.mavenLight(this));
+		textViewCallUs = (TextView) findViewById(R.id.textViewCallUs); textViewCallUs.setTypeface(Fonts.mavenLight(this));
+		textViewFAQ = (TextView) findViewById(R.id.textViewFAQ); textViewFAQ.setTypeface(Fonts.mavenLight(this));
+		textViewFeedback = (TextView) findViewById(R.id.textViewFeedback); textViewFeedback.setTypeface(Fonts.mavenLight(this));
 
 		
 		relativeLayoutSendUsEmail.setOnClickListener(new View.OnClickListener() {

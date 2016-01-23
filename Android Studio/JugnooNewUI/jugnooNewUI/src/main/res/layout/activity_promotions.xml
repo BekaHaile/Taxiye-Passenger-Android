@@ -4,14 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/white"
     android:splitMotionEvents="false">
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
-        android:background="@color/yellow">
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -55,7 +55,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="36px"
             android:background="#0000"
-            android:capitalize="words"
             android:gravity="center_vertical"
             android:hint="Enter Promo Code"
             android:paddingLeft="20px"
@@ -63,24 +62,25 @@
             android:singleLine="true"
             android:textColor="@color/black_text"
             android:textColorHint="@color/black_text_alpha"
+            android:inputType="textCapCharacters"
+            android:textAllCaps="true"
+            android:capitalize="characters"
+            android:digits="@string/digits_characters_caps_numbers"
             android:textSize="30px"/>
 
         <ImageView
             android:layout_width="628px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
-            android:src="@color/yellow_alpha"/>
+            android:src="@color/theme_color"/>
 
         <Button
             android:id="@+id/buttonApplyPromo"
-            android:layout_width="648px"
-            android:layout_height="76px"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="23px"
-            android:background="@drawable/button_yellow"
-            android:text="APPLY"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size"/>
+            android:text="@string/apply"
+            />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -117,14 +117,14 @@
                         android:id="@+id/listViewCoupons"
                         android:layout_width="match_parent"
                         android:layout_height="100px"
+                        android:gravity="center_horizontal"
                         android:layout_marginTop="0px"
                         android:divider="@drawable/background_transparent"
                         android:dividerHeight="0px"
                         android:listSelector="@drawable/background_transparent"
                         android:numColumns="2"
                         android:splitMotionEvents="false"
-                        >
-                    </product.clicklabs.jugnoo.utils.NonScrollGridView>
+                        />
 
                     <TextView
                         android:id="@+id/textViewCouponInfo"
@@ -146,6 +146,7 @@
                     android:layout_marginRight="36px"
                     android:layout_marginTop="30px"
                     android:text="Ongoing Offers"
+                    android:visibility="gone"
                     android:textColor="@color/grey_black_light"
                     android:textSize="34px"/>
 
@@ -156,6 +157,7 @@
                     android:layout_marginTop="14px"
                     android:background="@color/white"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:splitMotionEvents="false"
                     >
 
@@ -198,9 +200,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30px"
-        android:background="@color/white"
-
+        android:background="@color/sliding_bottom_bg_color"
         >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:src="@color/text_color_light"/>
+
         <TextView
             android:id="@+id/textViewInvite"
             android:layout_width="600px"

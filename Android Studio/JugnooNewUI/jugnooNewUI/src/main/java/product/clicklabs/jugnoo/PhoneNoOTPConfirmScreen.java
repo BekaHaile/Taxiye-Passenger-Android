@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -41,7 +40,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
-	TextView textViewOtpNumber, textViewEnterOTP;
+	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
@@ -49,13 +48,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
 
-	Button buttonVerify;
+	Button buttonVerify, buttonOtpViaCall;
+	LinearLayout linearLayoutGiveAMissedCall;
+	TextView textViewOr;
 
-	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutMissCall, relativeLayoutOr;
-	TextView textViewMissCall;
-	
-	
+
 	LinearLayout relative;
 
 	ScrollView scrollView;
@@ -121,29 +118,26 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
-		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
+		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber); imageViewChangePhoneNumber.setVisibility(View.GONE);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
-		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
 
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
 
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
-
-
-		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		textViewMissCall = (TextView) findViewById(R.id.textViewMissCall); textViewMissCall.setTypeface(Fonts.latoLight(this));
-		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
+		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
+		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -177,14 +171,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 		});
 
-		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.showSoftKeyboard(PhoneNoOTPConfirmScreen.this, editTextOTP);
-				editTextOTP.requestFocus();
-			}
-		});
-		
+
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
@@ -203,15 +190,46 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				return true;
 			}
 		});
-		
-		
 
-		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					if (1 == Data.otpViaCallEnabled) {
+						initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+
+		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-					Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+				try {
+					if (!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+						DialogPopup.alertPopupTwoButtonsWithListeners(PhoneNoOTPConfirmScreen.this, "",
+								getResources().getString(R.string.give_missed_call_dialog_text),
+								getResources().getString(R.string.call_us),
+								getResources().getString(R.string.cancel),
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+									}
+								},
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+
+									}
+								}, false, false);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -223,7 +241,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				phoneNoToVerify = getIntent().getStringExtra("phone_no_verify");
 				textViewOtpNumber.setText(phoneNoToVerify);
 			}
-			else{
+			else {
 				performBackPressed();
 			}
 		} catch (Exception e) {
@@ -232,21 +250,32 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 
 		linearLayoutWaiting.setVisibility(View.GONE);
-		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 
 		try{
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				relativeLayoutOr.setVisibility(View.VISIBLE);
-				relativeLayoutMissCall.setVisibility(View.VISIBLE);
+				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
-				relativeLayoutOr.setVisibility(View.GONE);
-				relativeLayoutMissCall.setVisibility(View.GONE);
+				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			}
+
+			if(1 == Data.otpViaCallEnabled) {
+				buttonOtpViaCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				buttonOtpViaCall.setVisibility(View.GONE);
+			}
+			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
+					|| buttonOtpViaCall.getVisibility() == View.VISIBLE){
+				textViewOr.setVisibility(View.VISIBLE);
+			} else{
+				textViewOr.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			relativeLayoutOr.setVisibility(View.GONE);
-			relativeLayoutMissCall.setVisibility(View.GONE);
+			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			buttonOtpViaCall.setVisibility(View.GONE);
+			textViewOr.setVisibility(View.GONE);
 		}
 
 

@@ -56,7 +56,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 	
 	ListView listViewRideTransactions;
 	TextView textViewInfo;
-	ProgressWheel progressBarList;
 	Button buttonGetRide;
 	
 	RideTransactionAdapter rideTransactionAdapter;
@@ -98,15 +97,13 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
 		listViewRideTransactions = (ListView) findViewById(R.id.listViewRideTransactions);
 		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
-		progressBarList = (ProgressWheel) findViewById(R.id.progressBarList);
 		buttonGetRide = (Button) findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.latoRegular(this));
 		textViewInfo.setVisibility(View.GONE);
-		progressBarList.setVisibility(View.GONE);
 		buttonGetRide.setVisibility(View.GONE);
 		
 		
@@ -184,7 +181,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 	
 	
 	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
-		progressBarList.setVisibility(View.GONE);
+        DialogPopup.dismissLoadingDialog();
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
 			
 			if(refresh){
@@ -192,8 +189,8 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				futureSchedule = null;
 			}
 			
-			progressBarList.setVisibility(View.VISIBLE);
-			textViewInfo.setVisibility(View.GONE);
+            DialogPopup.showLoadingDialog(activity, "Loading...");
+            textViewInfo.setVisibility(View.GONE);
 			
 			RequestParams params = new RequestParams();
 		
@@ -209,7 +206,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                     public void onFailure(Throwable arg3) {
                         Log.e("request fail", arg3.toString());
                         updateListData("Some error occurred, tap to retry", true);
-                        progressBarList.setVisibility(View.GONE);
+                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override
@@ -291,12 +288,26 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                             exception.printStackTrace();
                             updateListData("Some error occurred, tap to retry", true);
                         }
-                        progressBarList.setVisibility(View.GONE);
+                        DialogPopup.dismissLoadingDialog();
                     }
                 });
 		}
 		else {
-			updateListData("No internet connection, tap to retry", true);
+			//updateListData("No internet connection, tap to retry", true);
+            DialogPopup.dialogNoInternet(RideTransactionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                @Override
+                public void positiveClick() {
+                    getRecentRidesAPI(RideTransactionsActivity.this, true);
+                }
+
+                @Override
+                public void neutralClick() {
+                }
+
+                @Override
+                public void negativeClick() {
+                }
+            });
 		}
 	}
 	
@@ -330,11 +341,11 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
     class ViewHolderRideTransaction {
         TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
             textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewCancel,
-				textViewRateRide, textViewRideCancelled;
+				textViewRideCancelled;
         ImageView imageViewDiv;
-        RelativeLayout relativeLayoutTo, relativeLayoutRateRide;
+        RelativeLayout relativeLayoutTo;
 		LinearLayout linearLayoutCancel;
-		LinearLayout linearLayoutRideReceipt;
+		LinearLayout linearLayoutRideReceipt, linearLayoutMain;
         RelativeLayout relative;
         int id;
     }
@@ -374,18 +385,18 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder = new ViewHolderRideTransaction();
                 convertView = mInflater.inflate(R.layout.list_item_ride_transaction, null);
 
-                holder.textViewPickupAt = (TextView) convertView.findViewById(R.id.textViewPickupAt); holder.textViewPickupAt.setTypeface(Fonts.latoRegular(context));
-                ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.latoRegular(context));
-                holder.textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); holder.textViewIdValue.setTypeface(Fonts.latoRegular(context));
-                holder.textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); holder.textViewFrom.setTypeface(Fonts.latoRegular(context));
-                holder.textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue); holder.textViewFromValue.setTypeface(Fonts.latoRegular(context));
-                holder.textViewTo = (TextView) convertView.findViewById(R.id.textViewTo); holder.textViewTo.setTypeface(Fonts.latoRegular(context));
-                holder.textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); holder.textViewToValue.setTypeface(Fonts.latoRegular(context));
-                holder.textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); holder.textViewDetails.setTypeface(Fonts.latoRegular(context));
-                holder.textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); holder.textViewDetailsValue.setTypeface(Fonts.latoRegular(context));
-                holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
-                holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Fonts.latoRegular(context));
-                holder.textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide); holder.textViewRateRide.setTypeface(Fonts.latoRegular(context));
+                holder.textViewPickupAt = (TextView) convertView.findViewById(R.id.textViewPickupAt); holder.textViewPickupAt.setTypeface(Fonts.mavenLight(context));
+                ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenLight(context));
+                holder.linearLayoutMain = (LinearLayout)convertView.findViewById(R.id.linearLayoutMain);
+                holder.textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); holder.textViewIdValue.setTypeface(Fonts.mavenLight(context));
+                holder.textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); holder.textViewFrom.setTypeface(Fonts.mavenLight(context));
+                holder.textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue); holder.textViewFromValue.setTypeface(Fonts.mavenLight(context));
+                holder.textViewTo = (TextView) convertView.findViewById(R.id.textViewTo); holder.textViewTo.setTypeface(Fonts.mavenLight(context));
+                holder.textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); holder.textViewToValue.setTypeface(Fonts.mavenLight(context));
+                holder.textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); holder.textViewDetails.setTypeface(Fonts.mavenLight(context));
+                holder.textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); holder.textViewDetailsValue.setTypeface(Fonts.mavenLight(context));
+                holder.textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); holder.textViewAmount.setTypeface(Fonts.mavenLight(context));
+                holder.textViewCancel = (TextView) convertView.findViewById(R.id.textViewCancel); holder.textViewCancel.setTypeface(Fonts.mavenLight(context));
 				holder.textViewRideCancelled = (TextView) convertView.findViewById(R.id.textViewRideCancelled);
 				holder.textViewRideCancelled.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
 
@@ -395,12 +406,11 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
                 holder.linearLayoutCancel = (LinearLayout) convertView.findViewById(R.id.linearLayoutCancel);
                 holder.relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
-                holder.relativeLayoutRateRide = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutRateRide);
 				holder.linearLayoutRideReceipt = (LinearLayout) convertView.findViewById(R.id.linearLayoutRideReceipt);
 
                 holder.relative.setTag(holder);
                 holder.linearLayoutCancel.setTag(holder);
-                holder.relativeLayoutRateRide.setTag(holder);
+                holder.linearLayoutMain.setTag(holder);
 				holder.linearLayoutRideReceipt.setTag(holder);
 
                 holder.relative.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
@@ -419,7 +429,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                 if(position == 0){
                     holder.textViewPickupAt.setVisibility(View.VISIBLE);
                     holder.relativeLayoutTo.setVisibility(View.GONE);
-                    holder.relativeLayoutRateRide.setVisibility(View.GONE);
 					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                     holder.imageViewDiv.setVisibility(View.VISIBLE);
 					holder.textViewRideCancelled.setVisibility(View.GONE);
@@ -459,23 +468,20 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 							holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
 									+ decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
 						}
-						holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+						holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 
 						if (1 != rideInfo.isRatedBefore) {
-							holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
-							holder.imageViewDiv.setVisibility(View.GONE);
+							holder.imageViewDiv.setVisibility(View.VISIBLE);
 						} else {
-							holder.relativeLayoutRateRide.setVisibility(View.GONE);
 							holder.imageViewDiv.setVisibility(View.VISIBLE);
 						}
-						holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 						holder.textViewRideCancelled.setVisibility(View.GONE);
 						holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 					}
 					else{
 						holder.textViewDetailsValue.setText(rideInfo.date+",");
-						holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
-						holder.relativeLayoutRateRide.setVisibility(View.GONE);
+						holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 						holder.imageViewDiv.setVisibility(View.VISIBLE);
 						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 						holder.textViewRideCancelled.setVisibility(View.VISIBLE);
@@ -504,23 +510,20 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
 								+ decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
 					}
-					holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
+					holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 
 					if (1 != rideInfo.isRatedBefore) {
-						holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
-						holder.imageViewDiv.setVisibility(View.GONE);
+						holder.imageViewDiv.setVisibility(View.VISIBLE);
 					} else {
-						holder.relativeLayoutRateRide.setVisibility(View.GONE);
 						holder.imageViewDiv.setVisibility(View.VISIBLE);
 					}
-					holder.linearLayoutRideReceipt.setVisibility(View.VISIBLE);
+					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 					holder.textViewRideCancelled.setVisibility(View.GONE);
 					holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 				}
 				else{
 					holder.textViewDetailsValue.setText(rideInfo.date+",");
-					holder.textViewAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(rideInfo.amount));
-					holder.relativeLayoutRateRide.setVisibility(View.GONE);
+					holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 					holder.imageViewDiv.setVisibility(View.VISIBLE);
 					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 					holder.textViewRideCancelled.setVisibility(View.VISIBLE);
@@ -561,7 +564,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
             });
 
 
-            holder.relativeLayoutRateRide.setOnClickListener(new OnClickListener() {
+            /*holder.relativeLayoutRateRide.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
@@ -588,9 +591,9 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                         e.printStackTrace();
                     }
                 }
-            });
+            });*/
 
-			holder.linearLayoutRideReceipt.setOnClickListener(new OnClickListener() {
+			holder.linearLayoutMain.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					try {

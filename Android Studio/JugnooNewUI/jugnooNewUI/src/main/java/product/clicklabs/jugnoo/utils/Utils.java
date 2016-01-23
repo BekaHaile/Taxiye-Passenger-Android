@@ -596,6 +596,13 @@ public class Utils {
 		return dp;
 	}
 
+	public interface AlertCallBackWithButtonsInterface {
+		void positiveClick();
+
+		void neutralClick();
+
+		void negativeClick();
+	}
 
 	public static void openUrl(Context context, String url){
 		Intent i = new Intent(Intent.ACTION_VIEW);

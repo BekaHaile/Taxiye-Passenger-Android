@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="110px"
-    android:splitMotionEvents="false"
-    >
-
+    android:layout_height="100px"
+    android:splitMotionEvents="false">
 
     <RelativeLayout
-        android:layout_width="120px"
+        android:id="@+id/relativeLayoutRank"
+        android:layout_width="105px"
         android:layout_height="match_parent"
-        android:background="@color/grey_lb_list"
-        >
+        android:background="@color/grey_lb_list">
+
         <TextView
             android:id="@+id/textViewRank"
             android:layout_width="80px"
             android:layout_height="80px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:background="@drawable/circle_white"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:tag="mwar"
             android:text="1"
-            android:textColor="@color/grey_dark_more_receipt"
-            android:textSize="@dimen/share_lb_text_size"
-            />
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34" />
 
     </RelativeLayout>
 
@@ -36,11 +32,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="150px"
-        android:text="@string/lb_name"
-        android:textColor="@color/grey_dark_more_receipt"
-        android:textSize="@dimen/share_lb_text_size"
         android:singleLine="true"
-        />
+        android:text="@string/lb_name"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_34" />
 
     <TextView
         android:id="@+id/textViewNoOfDownloads"
@@ -51,15 +46,14 @@
         android:layout_marginRight="40px"
         android:gravity="center_vertical|right"
         android:text="100"
-        android:textColor="@color/grey_black"
-        android:textSize="@dimen/share_lb_text_size"
-        />
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_34" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:layout_marginLeft="105px"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey_light"
-        />
+        android:background="@color/text_color_light" />
 
 </RelativeLayout>

@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -45,12 +45,12 @@
 	<string name="about_3_text">First 2 kms: Rs.30\nAfter 2 kms: Rs. 10/km\nWaiting time: Rs.1.5/min after 15 minutes.</string>
 	
 	
-	<string name="email_id">Email ID</string>
+	<string name="email_or_phone">Email or Phone number</string>
 	<string name="password">Password</string>
 	<string name="sign_in">Sign In</string>
-	<string name="forgot_password">Forgot Password?</string>
+	<string name="forgot_password"><u>Forgot Password?</u></string>
 	<string name="sign_up">Sign Up</string>
-	<string name="or">OR</string>
+	<string name="or">or</string>
 	<string name="sign_in_with_facebook">Sign in with Facebook</string>
 	
 	<string name="save_to_favorite">Save To Favorite</string>
@@ -63,7 +63,7 @@
 	
 	<string name="first_name">First Name</string>
 	<string name="last_name">Last Name</string>
-	<string name="phone_number">Phone number</string>
+	<string name="phone_number">Phone Number</string>
 	<string name="confirm_password">Confirm Password</string>
 	
 	<string name="confirmation_code">Confirmation Code</string>
@@ -260,8 +260,8 @@
 	<string name="assigning_state_edit_text_hint">Set drop location</string>
 
 	<!-- Ride Summary New Strings -->
-	<string name="total_fare">Total Fare</string>
-	<string name="Cash_to_be_paid">Cash to be paid</string>
+	<string name="total_fare">TOTAL FARE</string>
+	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">RATE YOUR RIDE</string>
 	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
@@ -270,6 +270,7 @@
 	<string name="leave_a_comment">Leave a comment</string>
 	<string name="what_could_we_improve">What could we improve?</string>
 	<string name="ruppes_value_format">\u20B9 %s</string>
+	<string name="ruppes_value_format_without_space">\u20B9%s</string>
 	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
@@ -294,7 +295,7 @@
 	<string name="weekly_leaderboard">Weekly</string>
 	<string name="lb_rank">Rank</string>
 	<string name="lb_name">Name</string>
-	<string name="lb_no_downloads">No. of\nDownloads</string>
+	<string name="lb_no_downloads">Downloads</string>
 
 	<!-- Priority Tip -->
 	<string name="priority_tip">PRIORITY TIP</string>
@@ -307,6 +308,60 @@
 
 	<string name="insert_sd_card">Please insert SD Card to use this app</string>
 
+	<!-- NL Home Screen -->
+	<string name="nl_min_fare">MIN FARE</string>
+	<string name="nl_offers">OFFERS</string>
+	<string name="nl_change_locality">CHANGE LOCALITY</string>
+	<string name="nl_get_fare_estimate">Get fare estimate</string>
+	<string name="nl_per_km">Per Km</string>
+	<string name="nl_per_min">Per Min</string>
+
+	<!-- NL Forgot Passowrd screen-->
+	<string name="nl_forgot_password">Forgot Password</string>
+	<string name="nl_forgot_password_help">Please provide your email id or phone number. We will send you the instructions to reset your password.</string>
+	<string name="nl_forgot_reset_password">Reset Password</string>
+
+
+	<!-- NL Splash screen-->
+	<string name="nl_splash_already_have_account">Already have an account?</string>
+	<string name="nl_splash_terms">By Signing up you agree to our <u>Terms of Use</u></string>
+	<string name="nl_splash_policy">and <u>Private Policy</u></string>
+	<string name="nl_paytm_wallet">Paytm Wallet</string>
+	<string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
+	<string name="nl_splash_required">required</string>
+
+
+	<!-- NL Login-->
+	<string name="nl_login">Login</string>
+	<string name="nl_log_in">Log In</string>
+	<string name="nl_login_facebook">Facebook</string>
+	<string name="nl_login_google">Google</string>
+	<string name="nl_login_email_empty_error">Please enter email or phone number</string>
+	<string name="nl_login_empty_password_error">Please enter password</string>
+	<string name="nl_login_invalid_email_error">Please enter valid phone number</string>
+
+	<!-- NL Signup-->
+	<string name="nl_signup">Signup</string>
+	<string name="nl_signup_name">Name</string>
+	<string name="nl_signup_email">Email</string>
+	<string name="nl_signup_promocode">Promocode (optional)</string>
+	<string name="nl_signup_plus91">+91</string>
+
+
+	<!-- NL OTP-->
+	<string name="nl_otp_verification">Verification</string>
+	<string name="nl_otp_please_enter_otp">Please enter the One Time Password sent to</string>
+	<string name="nl_otp_enter_otp">Enter One Time Password</string>
+	<string name="nl_otp_waiting_to_detect_otp">Waiting to automatically detect OTP</string>
+	<string name="nl_otp_verify">Verify Me</string>
+	<string name="nl_otp_receive_otp_via_call">Receive the OTP via call</string>
+	<string name="nl_otp_give_missed_call">Give a missed call</string>
+
+	<!-- NL Change Phone Number-->
+	<string name="nl_change_phone_number">Change Phone Number</string>
+	<string name="nl_change_phone_number_please_enter">Please enter your new phone number</string>
+	<string name="nl_change_phone_number_enter_new_number">Enter New Phone Number</string>
+	
 
 	<!-- User Debt-->
 	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
@@ -314,8 +369,27 @@
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
 
+	<!-- NL Signup Multiple Accounts-->
+	<string name="nl_signup_multiple_accounts_already_created_format">%s accounts have already been created on this device</string>
+	<string name="nl_signup_multiple_please_login_through">Please login through one of these accounts</string>
+	<string name="nl_signup_multiple_if_you_still_like_to_create_new">If you would still like to create a new account</string>
+	<string name="nl_signup_multiple_please_contact_customer_care">Please contact our customer care</string>
+
+	<!-- NL Signup Request Duplicate Registration-->
+	<string name="nl_signup_request_registration">Request Registration</string>
+	<string name="nl_signup_request_registration_info">Registration Information</string>
+	<string name="nl_signup_request_registration_you_have_already_format">You have already created %s accounts from this device. Please explain the reason for creating a new account.</string>
+	<string name="nl_signup_request_registration_revert_you">We will revert to you soon</string>
+
+
+	<string name="debug">Debug</string>
+
 
 	<string name="no_results_found">No results found</string>
+	<string name="i_want_to_cancel_my_ride_because">I WANT TO CANCEL MY RIDE BECAUSE</string>
+	<string name="connection_lost_title">CONNECTION LOST</string>
+	<string name="connection_lost_desc">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="connection_lost_try_again">TRY AGAIN</string>
 
 	<string-array name="CountryCodes" >
 <item>93,AF</item>
@@ -526,13 +600,15 @@
 <item>263,ZW</item>
 </string-array>
 
-	<string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
-	<string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,\\ </string>
+	<string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
+	<string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
 
 
     <string name="payment_option_dialog_title">Select preferred payment option</string>
     <string name="paytm">Paytm</string>
     <string name="cash">Cash</string>
+	<string name="jugnoo_cash">Jugnoo Cash</string>
+	<string name="add_cash">ADD CASH</string>
     <string name="payment_option_dialog_jugnoo_cash_deduction">Jugnoo Cash will be deducted first</string>
 
     <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
@@ -556,10 +632,31 @@
 	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
 
 	<string name="remove">Remove</string>
+	<string name="change">Change</string>
+	<string name="verify">Verify</string>
+	<string name="apply">Apply</string>
+	<string name="request_otp">Request Otp</string>
+	<string name="resend_otp">Resend Otp</string>
+	<string name="add_paytm_cash">Add Paytm Cash</string>
+	<string name="pay_via_jugnoo_cash">Pay Via Jugnoo Cash</string>
+	<string name="jugnoo_line">Jugnoo Line</string>
+	<string name="mail_us">Mail Us</string>
 
     <string name="promocode_invalid_message_on_signup">Invalid Promo code! Enter correct code to avail benefits</string>
 
-    <string name="loading">"Loading..."</string>
+    <string name="loading">Loading...</string>
 
+	<string name="whoops">W h o o p s !</string>
+
+	<string name="give_missed_call_dialog_text">No Code? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
+	<string name="call_us">Call Us</string>
+	<string name="call_me">Call Me</string>
+	<string name="receive_otp_via_call">Receive the OTP via call</string>
+	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
+
+	<string name="tnc_apply">T&amp;C Apply</string>
+	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
+		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
+		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
 </resources>

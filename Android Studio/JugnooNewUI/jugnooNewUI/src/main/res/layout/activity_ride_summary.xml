@@ -23,9 +23,9 @@
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
-        android:background="@color/yellow">
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -67,7 +67,7 @@
 
         <product.clicklabs.jugnoo.utils.ProgressWheel
             android:id="@+id/progressWheel"
-            wheel:matProg_barColor="@color/yellow"
+            wheel:matProg_barColor="@color/theme_color"
             wheel:matProg_fillRadius="true"
             wheel:matProg_progressIndeterminate="false"
             android:layout_width="120px"
@@ -75,7 +75,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:tag="mwar"></product.clicklabs.jugnoo.utils.ProgressWheel>
+            android:tag="mwar"/>
 
 
     </RelativeLayout>

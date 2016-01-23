@@ -61,18 +61,18 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 			e.printStackTrace();
 		}
 
-		((TextView)rootView.findViewById(R.id.textViewNumberOfDownloads)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
-		((TextView)rootView.findViewById(R.id.textViewNumberOfFirstRides)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
-		((TextView)rootView.findViewById(R.id.textViewMoneyEarned)).setTypeface(Fonts.latoLight(activity), Typeface.BOLD);
+		((TextView)rootView.findViewById(R.id.textViewNumberOfDownloads)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewNumberOfFirstRides)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewMoneyEarned)).setTypeface(Fonts.mavenLight(activity));
 
 		textViewNumberOfDownloadsValue = (TextView)rootView.findViewById(R.id.textViewNumberOfDownloadsValue);
-		textViewNumberOfDownloadsValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		textViewNumberOfDownloadsValue.setTypeface(Fonts.mavenLight(activity));
 		textViewNumberOfFirstRidesValue = (TextView)rootView.findViewById(R.id.textViewNumberOfFirstRidesValue);
-		textViewNumberOfFirstRidesValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		textViewNumberOfFirstRidesValue.setTypeface(Fonts.mavenLight(activity));
 		textViewMoneyEarnedValue = (TextView)rootView.findViewById(R.id.textViewMoneyEarnedValue);
-		textViewMoneyEarnedValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		textViewMoneyEarnedValue.setTypeface(Fonts.mavenLight(activity));
 		textViewDataEffective = (TextView)rootView.findViewById(R.id.textViewDataEffective);
-		textViewDataEffective.setTypeface(Fonts.latoRegular(activity));
+		textViewDataEffective.setTypeface(Fonts.mavenLight(activity));
 
 
 

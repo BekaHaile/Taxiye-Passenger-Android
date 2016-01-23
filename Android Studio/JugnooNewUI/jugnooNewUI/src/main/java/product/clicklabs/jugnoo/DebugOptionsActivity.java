@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,7 +21,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
@@ -68,12 +66,12 @@ public class DebugOptionsActivity extends BaseActivity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
-        ((TextView) findViewById(R.id.textViewDebugOptions)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewServerEnv)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewDebugOptions)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView) findViewById(R.id.textViewServerEnv)).setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutShowAllDrivers = (RelativeLayout) findViewById(R.id.relativeLayoutShowAllDrivers);
         relativeLayoutShowDriverInfo = (RelativeLayout) findViewById(R.id.relativeLayoutShowDriverInfo);
@@ -81,8 +79,8 @@ public class DebugOptionsActivity extends BaseActivity {
         imageViewShowAllDrivers = (ImageView) findViewById(R.id.imageViewShowAllDrivers);
         imageViewShowDriverInfo = (ImageView) findViewById(R.id.imageViewShowDriverInfo);
 
-        ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.mavenLight(this));
 
 
 
@@ -101,17 +99,17 @@ public class DebugOptionsActivity extends BaseActivity {
         imageViewTest8015 = (ImageView) findViewById(R.id.imageViewTest8015);
 		imageViewCustom = (ImageView) findViewById(R.id.imageViewCustom);
 
-		((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.latoRegular(this));
+		((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
+		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
 		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.latoRegular(this));
 
 
-        buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.latoRegular(this));
-        buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.latoRegular(this));
-		buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM); buttonRefreshGCM.setTypeface(Fonts.latoRegular(this));
+        buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.mavenRegular(this));
+        buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.mavenRegular(this));
+		buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM); buttonRefreshGCM.setTypeface(Fonts.mavenRegular(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -183,20 +181,20 @@ public class DebugOptionsActivity extends BaseActivity {
 
         if(showAllDriversValue == 1){
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked_new);
+            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
         }
         else{
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
         }
 
         if(showDriverInfoValue == 1){
             relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
-            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked_new);
+            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
         }
         else{
             relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
-            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
         }
 
         setServerUI(selectedServer);
@@ -209,11 +207,11 @@ public class DebugOptionsActivity extends BaseActivity {
 				if (showAllDriversValue == 0) {
 					showAllDriversValue = 1;
 					relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked_new);
+					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
 				} else {
 					showAllDriversValue = 0;
 					relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked_new);
+					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
 				}
 			}
 		});
@@ -225,12 +223,12 @@ public class DebugOptionsActivity extends BaseActivity {
                 if(showDriverInfoValue == 0){
                     showDriverInfoValue = 1;
                     relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
-                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked_new);
+                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
                 }
                 else{
                     showDriverInfoValue = 0;
                     relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
-                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked_new);
+                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
                 }
             }
         });
@@ -306,17 +304,17 @@ public class DebugOptionsActivity extends BaseActivity {
 			}
 		});
 
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-
-			}
-
-			@Override
-			public void keyBoardClosed() {
-
-			}
-		}));
+//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+//			@Override
+//			public void keyboardOpened() {
+//
+//			}
+//
+//			@Override
+//			public void keyBoardClosed() {
+//
+//			}
+//		}));
 
 
 
@@ -334,12 +332,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDevServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -349,12 +347,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -364,12 +362,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -379,12 +377,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_checked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_checked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
         else if(selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())){
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -394,12 +392,12 @@ public class DebugOptionsActivity extends BaseActivity {
             relativeLayoutTest8015.setBackgroundColor(Color.WHITE);
 			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
-            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-            imageViewTest8015.setImageResource(R.drawable.check_box_checked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_checked);
+			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
         }
 		else{
 			relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
@@ -409,12 +407,12 @@ public class DebugOptionsActivity extends BaseActivity {
 			relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
 			relativeLayoutCustom.setBackgroundColor(Color.WHITE);
 
-			imageViewLive4012.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8012.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8013.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8014.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewTest8015.setImageResource(R.drawable.check_box_unchecked_new);
-			imageViewCustom.setImageResource(R.drawable.check_box_checked_new);
+			imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+			imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+			imageViewCustom.setImageResource(R.drawable.check_box_checked);
 
 			editTextCustom.setText(selectedServer);
 			editTextCustom.setSelection(editTextCustom.getText().toString().length());

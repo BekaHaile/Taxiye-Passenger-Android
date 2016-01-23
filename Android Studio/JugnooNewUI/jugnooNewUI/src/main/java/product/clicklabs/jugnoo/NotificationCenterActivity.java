@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -40,11 +39,12 @@ import product.clicklabs.jugnoo.wallet.EventsHolder;
 public class NotificationCenterActivity extends BaseActivity implements DisplayPushHandler {
 
     private LinearLayout root;
-    private TextView textViewTitle, textViewInfo;
+    private TextView textViewTitle;
     private ImageView imageViewBack;
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter myNotificationAdapter;
     private ArrayList<NotificationData> notificationList;
+	private LinearLayout linearLayoutNoNotifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +56,13 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         root = (LinearLayout)findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView)findViewById(R.id.imageViewBack);
 
-		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
-		textViewInfo.setVisibility(View.GONE);
+		linearLayoutNoNotifications = (LinearLayout) findViewById(R.id.linearLayoutNoNotifications);
+		linearLayoutNoNotifications.setVisibility(View.GONE);
+		((TextView)findViewById(R.id.textViewWhoops)).setTypeface(Fonts.mavenRegular(this));
+		((TextView)findViewById(R.id.textViewNoNotifications)).setTypeface(Fonts.mavenLight(this));
 
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
@@ -114,9 +116,9 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			super.onPostExecute(s);
 			DialogPopup.dismissLoadingDialog();
 			if(notificationList.size() > 0){
-				textViewInfo.setVisibility(View.GONE);
+				linearLayoutNoNotifications.setVisibility(View.GONE);
 			} else{
-				textViewInfo.setVisibility(View.VISIBLE);
+				linearLayoutNoNotifications.setVisibility(View.VISIBLE);
 			}
 			myNotificationAdapter.notifyDataSetChanged();
 		}

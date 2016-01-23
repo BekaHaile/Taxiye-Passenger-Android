@@ -93,7 +93,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
         topBar = (RelativeLayout) findViewById(R.id.topBar);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
@@ -120,7 +120,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
         editTextFeedback = (EditText) findViewById(R.id.editTextFeedback);
         editTextFeedback.setTypeface(Fonts.latoRegular(this));
         buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback);
-        buttonSubmitFeedback.setTypeface(Fonts.latoRegular(this));
+        buttonSubmitFeedback.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
         ((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
@@ -399,7 +399,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
     public void submitFeedbackToDriverAsync(final Activity activity, String engagementId, String ratingReceiverId, final int givenRating, String feedbackText, String feedbackReasons) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 
@@ -501,7 +501,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
     public void submitFeedbackSupportAsync(final Activity activity, int givenRating, String feedbackText) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
             RequestParams params = new RequestParams();
 

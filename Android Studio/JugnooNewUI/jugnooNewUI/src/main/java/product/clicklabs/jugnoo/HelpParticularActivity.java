@@ -56,7 +56,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
         progressBar = (ProgressWheel) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);

@@ -12,15 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="50px"
-        android:background="@drawable/button_yellow_normal"
+        android:background="@drawable/background_priority_tip"
         android:splitMotionEvents="false">
 
-        <ImageView
-            android:layout_width="119px"
-            android:layout_height="76px"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="25px"
-            android:background="@drawable/envelope" />
+
 
         <LinearLayout
             android:id="@+id/rl1"
@@ -29,10 +24,18 @@
             android:layout_marginBottom="7px"
             android:layout_marginLeft="7px"
             android:layout_marginRight="7px"
-            android:layout_marginTop="121px"
+            android:layout_marginTop="7px"
             android:background="@drawable/button_white_normal"
             android:orientation="vertical"
             android:splitMotionEvents="false">
+
+            <ImageView
+                android:layout_width="447px"
+                android:layout_height="208px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25px"
+                android:tag="mwar"
+                android:background="@drawable/popup_free_ride_illustration" />
 
             <TextView
                 android:id="@+id/textHead"
@@ -54,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15px"
+                android:layout_marginTop="30px"
                 android:gravity="center"
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
@@ -64,11 +67,11 @@
 
             <Button
                 android:id="@+id/btnOk"
-                android:layout_width="545px"
-                android:layout_height="90px"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
-                android:background="@drawable/button_yellow"
+                android:layout_marginTop="30px"
+                android:background="@drawable/button_theme"
                 android:singleLine="true"
                 android:text="@string/upload_contact_yes"
                 android:textColor="@drawable/text_color_white_alpha_selector"

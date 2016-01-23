@@ -1,6 +1,6 @@
 <LinearLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -8,9 +8,9 @@
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
-        android:background="@color/yellow">
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:text="EMERGENCY CONTACT"
             android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"/>
+            android:textSize="@dimen/top_bar_title_text_size" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -29,190 +29,100 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/back_white_selector" />
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white_light_grey">
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/linearLayoutInScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:splitMotionEvents="false"
             android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
 
-            >
+            <!-- top EC1 -->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutEmergencyContact1Top"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:animateLayoutChanges="true"
+                android:background="@color/sliding_bottom_bg_color">
 
-                <!-- top EC1 -->
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutEmergencyContact1Top"
-                    android:layout_width="match_parent"
-                    android:layout_height="80px"
-                    android:background="@drawable/background_white_white_light_grey_selector"
-                    android:animateLayoutChanges="true"
-                    android:layout_marginTop="55px"
+                <ImageView
+                    android:id="@+id/imageViewEmergencyContact1PM"
+                    android:layout_width="30px"
+                    android:layout_height="30px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:src="@drawable/emergency_plus_icon"
+                    android:tag="mwar" />
 
-                    >
-
-
-                    <ImageView
-                        android:id="@+id/imageViewEmergencyContact1PM"
-                        android:layout_width="36px"
-                        android:layout_height="36px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:src="@drawable/emergency_plus_icon"
-                        android:tag="mwar"
-                        />
-
-
-                    <TextView
-                        android:id="@+id/textViewEmergencyContact1"
-                        android:layout_width="560px"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:layout_toRightOf="@+id/imageViewEmergencyContact1PM"
-                        android:text="Primary Emergency Contact"
-                        android:textColor="@color/black_text"
-                        android:textSize="28px"
-                        android:singleLine="true"
-                        />
-
-
-                    <ImageView
-                        android:id="@+id/imageViewEmergencyContact1Edit"
-                        android:layout_width="73px"
-                        android:layout_height="73px"
-                        android:padding="20px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10px"
-                        android:src="@drawable/emergency_edit_icon"
-                        android:tag="mwar"
-                        />
-
-
-                </RelativeLayout>
-
-                <!-- Feilds EC1 -->
-                <LinearLayout
-                    android:id="@+id/linearLayoutEmergencyContact1Fields"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textViewEmergencyContact1"
+                    android:layout_width="560px"
                     android:layout_height="wrap_content"
-                    android:layout_margin="40px"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    >
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/imageViewEmergencyContact1PM"
+                    android:singleLine="true"
+                    android:text="Primary Emergency Contact"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32" />
 
-                    <RelativeLayout
-                        android:layout_width="620px"
-                        android:layout_height="wrap_content"
-                        >
+                <ImageView
+                    android:id="@+id/imageViewEmergencyContact1Edit"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10px"
+                    android:padding="15px"
+                    android:src="@drawable/edit_icon_selector"
+                    android:tag="mwar" />
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_light" />
 
-                        <EditText
-                            android:id="@+id/editTextEC1Name"
-                            android:layout_width="match_parent"
-                            android:layout_height="65px"
-                            android:background="@color/transparent"
-                            android:capitalize="words"
-                            android:hint="Name"
-                            android:paddingLeft="20px"
-                            android:paddingRight="74px"
-                            android:singleLine="true"
-                            android:textColor="@color/black_text"
-                            android:textColorHint="@color/black_text_alpha"
-                            android:textSize="28px"
+            </RelativeLayout>
 
-                            />
+            <!-- Feilds EC1 -->
+            <LinearLayout
+                android:id="@+id/linearLayoutEmergencyContact1Fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="40px"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                        <ImageView
-                            android:id="@+id/imageViewEC1PickContact"
-                            android:layout_width="60px"
-                            android:layout_height="64px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="0px"
-                            android:padding="10px"
-                            android:src="@drawable/emergency_pick_contact_icon"
-                            android:tag="mwar"
-                            />
+                <RelativeLayout
+                    android:layout_width="620px"
+                    android:layout_height="wrap_content">
 
-
-                    </RelativeLayout>
-                    <ImageView
-                        android:layout_width="620px"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
-
-
-                    <RelativeLayout
-                        android:layout_width="620px"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="40px"
-                        >
-
-
-                        <TextView
-                            android:id="@+id/textViewEC1Phone91"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10px"
-                            android:text="+91"
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
-                            />
-
-                        <EditText
-                            android:id="@+id/editTextEC1Phone"
-                            android:layout_width="match_parent"
-                            android:layout_height="65px"
-                            android:layout_toRightOf="@+id/textViewEC1Phone91"
-                            android:background="@color/transparent"
-                            android:hint="Phone"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:paddingLeft="10px"
-                            android:paddingRight="20px"
-                            android:singleLine="true"
-                            android:textColor="@color/black_text"
-                            android:textColorHint="@color/black_text_alpha"
-                            android:textSize="28px"
-                            />
-
-                    </RelativeLayout>
-
-                    <ImageView
-                        android:layout_width="620px"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
 
                     <EditText
-                        android:id="@+id/editTextEC1Email"
-                        android:layout_width="620px"
+                        android:id="@+id/editTextEC1Name"
+                        android:layout_width="match_parent"
                         android:layout_height="65px"
-                        android:layout_marginTop="40px"
                         android:background="@color/transparent"
-                        android:hint="Email"
-                        android:inputType="textEmailAddress"
+                        android:capitalize="words"
+                        android:hint="Name"
                         android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingRight="74px"
                         android:singleLine="true"
                         android:textColor="@color/black_text"
                         android:textColorHint="@color/black_text_alpha"
@@ -221,350 +131,421 @@
                         />
 
                     <ImageView
-                        android:layout_width="620px"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
-
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutEC1Delete"
-                        android:layout_width="130px"
-                        android:layout_height="70px"
-                        android:layout_gravity="right"
-                        >
-
-                        <TextView
-                            android:id="@+id/textViewEC1Delete"
-                            android:layout_width="130px"
-                            android:layout_height="70px"
-                            android:padding="0px"
-                            android:text="Delete"
-                            android:textColor="@drawable/text_color_yellow_alpha_selector"
-                            android:textSize="28px"
-                            android:gravity="center"
-                            />
-                        <ImageView
-                            android:layout_width="90px"
-                            android:layout_height="4px"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/background_yellow_alpha_selector"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="5px"/>
-
-                    </RelativeLayout>
-
-
-
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutEC1Operations"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="60px"
-                        >
-
-                        <Button
-                            android:id="@+id/buttonVerifyEC1"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/button_yellow"
-                            android:text="VERIFY"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"
-                            android:visibility="gone"
-                            />
-
-
-                        <TextView
-                            android:id="@+id/textViewEC1NotVerified"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
-                            android:text="This contact has\nnot been verified."
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
-                            />
-
-
-                        <Button
-                            android:id="@+id/buttonResendSMSEC1"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10px"
-                            android:background="@drawable/button_red_selector"
-                            android:text="RESEND SMS"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"
-                            />
-
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-
-                <!-- top EC2 -->
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutEmergencyContact2Top"
-                    android:layout_width="match_parent"
-                    android:layout_height="80px"
-                    android:background="@drawable/background_white_white_light_grey_selector"
-                    android:animateLayoutChanges="true"
-                    android:layout_marginTop="20px"
-                    >
-
-
-                    <ImageView
-                        android:id="@+id/imageViewEmergencyContact2PM"
-                        android:layout_width="36px"
-                        android:layout_height="36px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:src="@drawable/emergency_plus_icon"
-                        android:tag="mwar"
-                        />
-
-
-                    <TextView
-                        android:id="@+id/textViewEmergencyContact2"
-                        android:layout_width="560px"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:layout_toRightOf="@+id/imageViewEmergencyContact2PM"
-                        android:text="Secondary Emergency Contact"
-                        android:textColor="@color/black_text"
-                        android:textSize="28px"
-                        android:singleLine="true"
-                        />
-
-
-                    <ImageView
-                        android:id="@+id/imageViewEmergencyContact2Edit"
-                        android:layout_width="73px"
-                        android:layout_height="73px"
-                        android:padding="20px"
+                        android:id="@+id/imageViewEC1PickContact"
+                        android:layout_width="60px"
+                        android:layout_height="64px"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10px"
-                        android:src="@drawable/emergency_edit_icon"
+                        android:layout_marginRight="0px"
+                        android:padding="10px"
+                        android:src="@drawable/emergency_pick_contact_icon"
                         android:tag="mwar"
-                        />
+                        android:visibility="visible" />
 
 
                 </RelativeLayout>
 
-                <!-- Feilds EC2 -->
-                <LinearLayout
-                    android:id="@+id/linearLayoutEmergencyContact2Fields"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="620px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+
+
+                <RelativeLayout
+                    android:layout_width="620px"
                     android:layout_height="wrap_content"
-                    android:layout_margin="40px"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="gone"
+                    android:layout_marginTop="40px">
 
-                    >
 
-                    <RelativeLayout
-                        android:layout_width="620px"
+                    <TextView
+                        android:id="@+id/textViewEC1Phone91"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        >
-
-
-                        <EditText
-                            android:id="@+id/editTextEC2Name"
-                            android:layout_width="match_parent"
-                            android:layout_height="65px"
-                            android:background="@color/transparent"
-                            android:capitalize="words"
-                            android:hint="Name"
-                            android:paddingLeft="20px"
-                            android:paddingRight="74px"
-                            android:singleLine="true"
-                            android:textColor="@color/black_text"
-                            android:textColorHint="@color/black_text_alpha"
-                            android:textSize="28px"
-
-                            />
-
-                        <ImageView
-                            android:id="@+id/imageViewEC2PickContact"
-                            android:layout_width="60px"
-                            android:layout_height="64px"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="0px"
-                            android:padding="10px"
-                            android:src="@drawable/emergency_pick_contact_icon"
-                            android:tag="mwar"
-                            />
-
-
-                    </RelativeLayout>
-                    <ImageView
-                        android:layout_width="620px"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
-
-
-                    <RelativeLayout
-                        android:layout_width="620px"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="40px"
-                        >
-
-
-                        <TextView
-                            android:id="@+id/textViewEC2Phone91"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10px"
-                            android:text="+91"
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
-                            />
-
-                        <EditText
-                            android:id="@+id/editTextEC2Phone"
-                            android:layout_width="match_parent"
-                            android:layout_height="65px"
-                            android:layout_toRightOf="@+id/textViewEC2Phone91"
-                            android:background="@color/transparent"
-                            android:hint="Phone"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:paddingLeft="10px"
-                            android:paddingRight="20px"
-                            android:singleLine="true"
-                            android:textColor="@color/black_text"
-                            android:textColorHint="@color/black_text_alpha"
-                            android:textSize="28px"
-                            />
-
-                    </RelativeLayout>
-
-                    <ImageView
-                        android:layout_width="620px"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10px"
+                        android:text="+91"
+                        android:textColor="@color/black_text"
+                        android:textSize="28px" />
 
                     <EditText
-                        android:id="@+id/editTextEC2Email"
-                        android:layout_width="620px"
+                        android:id="@+id/editTextEC1Phone"
+                        android:layout_width="match_parent"
                         android:layout_height="65px"
-                        android:layout_marginTop="40px"
+                        android:layout_toRightOf="@+id/textViewEC1Phone91"
                         android:background="@color/transparent"
-                        android:hint="Email"
-                        android:inputType="textEmailAddress"
-                        android:paddingLeft="20px"
+                        android:hint="Phone"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:paddingLeft="10px"
                         android:paddingRight="20px"
                         android:singleLine="true"
                         android:textColor="@color/black_text"
                         android:textColorHint="@color/black_text_alpha"
-                        android:textSize="28px"
+                        android:textSize="28px" />
 
-                        />
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="620px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+
+                <EditText
+                    android:id="@+id/editTextEC1Email"
+                    android:layout_width="620px"
+                    android:layout_height="65px"
+                    android:layout_marginTop="40px"
+                    android:background="@color/transparent"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textColorHint="@color/black_text_alpha"
+                    android:textSize="28px"
+
+                    />
+
+                <ImageView
+                    android:layout_width="620px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEC1Delete"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:layout_height="70px"
+                    android:layout_gravity="right">
+
+                    <TextView
+                        android:id="@+id/textViewEC1Delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70px"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/imageViewDelete"
+                        android:layout_marginLeft="15px"
+                        android:padding="0px"
+                        android:text="Delete"
+                        android:textColor="@color/text_color_theme_selector"
+                        android:textSize="28px" />
 
                     <ImageView
-                        android:layout_width="620px"
-                        android:layout_height="2px"
-                        android:layout_alignParentBottom="true"
-                        android:src="@color/yellow"/>
+                        android:id="@+id/imageViewDelete"
+                        android:layout_width="24px"
+                        android:layout_height="29px"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/emergency_delete" />
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutEC2Delete"
-                        android:layout_width="130px"
-                        android:layout_height="70px"
-                        android:layout_gravity="right"
-                        >
-
-                        <TextView
-                            android:id="@+id/textViewEC2Delete"
-                            android:layout_width="130px"
-                            android:layout_height="70px"
-                            android:padding="0px"
-                            android:text="Delete"
-                            android:textColor="@drawable/text_color_yellow_alpha_selector"
-                            android:textSize="28px"
-                            android:gravity="center"
-                            />
-                        <ImageView
-                            android:layout_width="90px"
-                            android:layout_height="4px"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/background_yellow_alpha_selector"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="5px"/>
-
-                    </RelativeLayout>
+                </RelativeLayout>
 
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutEC2Operations"
-                        android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEC1Operations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60px">
+
+                    <Button
+                        android:id="@+id/buttonVerifyEC1"
+                        android:layout_width="@dimen/button_width"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/button_theme"
+                        android:text="VERIFY"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="gone" />
+
+
+                    <TextView
+                        android:id="@+id/textViewEC1NotVerified"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="60px"
-                        >
-
-                        <Button
-                            android:id="@+id/buttonVerifyEC2"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/button_yellow"
-                            android:text="VERIFY"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"
-                            android:visibility="visible"
-                            />
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:text="This contact has\nnot been verified."
+                        android:textColor="@color/text_color_light"
+                        android:textSize="28px" />
 
 
-                        <TextView
-                            android:id="@+id/textViewEC2NotVerified"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
-                            android:text="This contact has\nnot been verified."
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
-                            android:visibility="gone"
-                            />
+                    <Button
+                        android:id="@+id/buttonResendSMSEC1"
+                        android:layout_width="347px"
+                        android:layout_height="93px"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10px"
+                        android:background="@drawable/button_red_selector"
+                        android:text="RESEND SMS"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/button_text_size" />
 
 
-                        <Button
-                            android:id="@+id/buttonResendSMSEC2"
-                            android:layout_width="347px"
-                            android:layout_height="93px"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10px"
-                            android:background="@drawable/button_red_selector"
-                            android:text="RESEND SMS"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="@dimen/button_text_size"
-                            android:visibility="gone"
-                            />
+                </RelativeLayout>
 
 
-                    </RelativeLayout>
+            </LinearLayout>
+
+            <!-- top EC2 -->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutEmergencyContact2Top"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:animateLayoutChanges="true"
+                android:background="@color/sliding_bottom_bg_color">
 
 
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/imageViewEmergencyContact2PM"
+                    android:layout_width="36px"
+                    android:layout_height="36px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:src="@drawable/emergency_plus_icon"
+                    android:tag="mwar" />
+
+
+                <TextView
+                    android:id="@+id/textViewEmergencyContact2"
+                    android:layout_width="560px"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/imageViewEmergencyContact2PM"
+                    android:singleLine="true"
+                    android:text="Secondary Emergency Contact"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32" />
+
+
+                <ImageView
+                    android:id="@+id/imageViewEmergencyContact2Edit"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10px"
+                    android:padding="15px"
+                    android:src="@drawable/edit_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_light" />
+
+
+            </RelativeLayout>
+
+            <!-- Feilds EC2 -->
+            <LinearLayout
+                android:id="@+id/linearLayoutEmergencyContact2Fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="40px"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible"
+
+                >
+
+                <RelativeLayout
+                    android:layout_width="620px"
+                    android:layout_height="wrap_content">
+
+
+                    <EditText
+                        android:id="@+id/editTextEC2Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="65px"
+                        android:background="@color/transparent"
+                        android:capitalize="words"
+                        android:hint="Name"
+                        android:paddingLeft="20px"
+                        android:paddingRight="74px"
+                        android:singleLine="true"
+                        android:textColor="@color/black_text"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textSize="28px"/>
+
+                    <ImageView
+                        android:id="@+id/imageViewEC2PickContact"
+                        android:layout_width="60px"
+                        android:layout_height="64px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="0px"
+                        android:padding="10px"
+                        android:src="@drawable/emergency_pick_contact_icon"
+                        android:tag="mwar" />
+
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="620px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+
+
+                <RelativeLayout
+                    android:layout_width="620px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40px">
+
+
+                    <TextView
+                        android:id="@+id/textViewEC2Phone91"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10px"
+                        android:text="+91"
+                        android:textColor="@color/black_text"
+                        android:textSize="28px" />
+
+                    <EditText
+                        android:id="@+id/editTextEC2Phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="65px"
+                        android:layout_toRightOf="@+id/textViewEC2Phone91"
+                        android:background="@color/transparent"
+                        android:hint="Phone"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:paddingLeft="10px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/black_text"
+                        android:textColorHint="@color/black_text_alpha"
+                        android:textSize="28px" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="620px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+
+                <EditText
+                    android:id="@+id/editTextEC2Email"
+                    android:layout_width="620px"
+                    android:layout_height="65px"
+                    android:layout_marginTop="40px"
+                    android:background="@color/transparent"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textColorHint="@color/black_text_alpha"
+                    android:textSize="28px"
+
+                    />
+
+                <ImageView
+                    android:layout_width="620px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEC2Delete"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:layout_height="70px"
+                    android:layout_gravity="right">
+
+                    <TextView
+                        android:id="@+id/textViewEC2Delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70px"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/imageViewDelete1"
+                        android:layout_marginLeft="15px"
+                        android:padding="0px"
+                        android:text="Delete"
+                        android:textColor="@color/text_color_theme_selector"
+                        android:textSize="28px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewDelete1"
+                        android:layout_width="24px"
+                        android:layout_height="29px"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/emergency_delete" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutEC2Operations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60px">
+
+                    <Button
+                        android:id="@+id/buttonVerifyEC2"
+                        android:layout_width="@dimen/button_width"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/button_theme"
+                        android:text="VERIFY"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/textViewEC2NotVerified"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:text="This contact has\nnot been verified."
+                        android:textColor="@color/black_text"
+                        android:textSize="28px"
+                        android:visibility="gone" />
+
+
+                    <Button
+                        android:id="@+id/buttonResendSMSEC2"
+                        android:layout_width="347px"
+                        android:layout_height="93px"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10px"
+                        android:background="@drawable/button_red_selector"
+                        android:text="RESEND SMS"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/button_text_size"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
 
 
             <TextView
                 android:id="@+id/textViewExtraScroll"
                 android:layout_width="1px"
-                android:layout_height="1px"/>
-
+                android:layout_height="1px" />
 
 
         </LinearLayout>

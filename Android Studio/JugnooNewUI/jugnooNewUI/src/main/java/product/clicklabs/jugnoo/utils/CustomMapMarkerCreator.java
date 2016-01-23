@@ -24,11 +24,11 @@ public class CustomMapMarkerCreator {
 	
 	public static Bitmap createCarMarkerBitmap(Activity activity, ASSL assl){
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(70.0f * scale);
-		int height = (int)(70.0f * scale);
+		int width = (int)(36.0f * scale);
+		int height = (int)(57.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = activity.getResources().getDrawable(R.drawable.car_android);
+		Drawable shape = activity.getResources().getDrawable(R.drawable.auto_top);
 		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
 		shape.draw(canvas);
 		return mDotMarkerBitmap;
@@ -95,8 +95,8 @@ public class CustomMapMarkerCreator {
 		final Rect boundsText = new Rect();
 
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(86.0f * 0.85 * scale);
-		int height = (int)(117.0f * 0.85 * scale);
+		int width = (int)(77.0f * 0.85 * scale);
+		int height = (int)(130.0f * 0.85 * scale);
 
 		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);

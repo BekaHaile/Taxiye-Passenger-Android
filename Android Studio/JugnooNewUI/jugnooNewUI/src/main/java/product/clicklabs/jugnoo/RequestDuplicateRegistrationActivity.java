@@ -61,22 +61,22 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewRegisterEmailValue = (TextView) findViewById(R.id.textViewRegisterEmailValue); textViewRegisterEmailValue.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewRegisterPhoneValue = (TextView) findViewById(R.id.textViewRegisterPhoneValue); textViewRegisterPhoneValue.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewRegisterHelp = (TextView) findViewById(R.id.textViewRegisterHelp); textViewRegisterHelp.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Fonts.mavenRegular(this));
+        textViewRegisterEmailValue = (TextView) findViewById(R.id.textViewRegisterEmailValue); textViewRegisterEmailValue.setTypeface(Fonts.mavenRegular(this));
+        textViewRegisterPhoneValue = (TextView) findViewById(R.id.textViewRegisterPhoneValue); textViewRegisterPhoneValue.setTypeface(Fonts.mavenRegular(this));
+        textViewRegisterHelp = (TextView) findViewById(R.id.textViewRegisterHelp); textViewRegisterHelp.setTypeface(Fonts.mavenLight(this));
 
-        ((TextView) findViewById(R.id.textViewRegistration)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewRegisterName)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewRegistration)).setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRegisterName)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Fonts.mavenLight(this));
 
-        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Fonts.latoRegular(this));
 
-        buttonSubmitRequest = (Button) findViewById(R.id.buttonSubmitRequest); buttonSubmitRequest.setTypeface(Fonts.latoRegular(this));
+        buttonSubmitRequest = (Button) findViewById(R.id.buttonSubmitRequest); buttonSubmitRequest.setTypeface(Fonts.mavenRegular(this));
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -100,12 +100,12 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                 String email = "";
                 String phone = "";
 
-                if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+                if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
                     name = OTPConfirmScreen.facebookRegisterData.fbName;
                     email = OTPConfirmScreen.facebookRegisterData.fbUserEmail;
                     phone = OTPConfirmScreen.facebookRegisterData.phoneNo;
                 }
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					name = OTPConfirmScreen.googleRegisterData.name;
 					email = OTPConfirmScreen.googleRegisterData.email;
 					phone = OTPConfirmScreen.googleRegisterData.phoneNo;
@@ -123,12 +123,12 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 
 
         try{
-			if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+			if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
                 textViewRegisterNameValue.setText(OTPConfirmScreen.facebookRegisterData.fbName);
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.facebookRegisterData.fbUserEmail);
                 textViewRegisterPhoneValue.setText(OTPConfirmScreen.facebookRegisterData.phoneNo);
             }
-			else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+			else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 				textViewRegisterNameValue.setText(OTPConfirmScreen.googleRegisterData.name);
 				textViewRegisterEmailValue.setText(OTPConfirmScreen.googleRegisterData.email);
 				textViewRegisterPhoneValue.setText(OTPConfirmScreen.googleRegisterData.phoneNo);
@@ -229,8 +229,8 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			params.put("client_id", Config.getClientId());
 
             try {
-                if (RegisterScreen.multipleCaseJSON != null) {
-                    params.put("users", RegisterScreen.multipleCaseJSON.getJSONArray("users"));
+                if (SplashNewActivity.multipleCaseJSON != null) {
+                    params.put("users", SplashNewActivity.multipleCaseJSON.getJSONArray("users"));
                 }
             } catch(Exception e){
                 e.printStackTrace();

@@ -4,16 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/white"
     android:splitMotionEvents="false">
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="TRANSACTIONS"
+            android:text="RECENT TRANSACTIONS"
             android:textColor="@color/white"
             android:textSize="@dimen/top_bar_title_text_size"/>
 
@@ -43,17 +43,6 @@
         android:layout_below="@+id/topBar"
         android:splitMotionEvents="false">
 
-        <TextView
-            android:id="@+id/textViewRecentTransactions"
-            android:layout_width="match_parent"
-            android:layout_height="90px"
-            android:textSize="34px"
-            android:textColor="@color/grey_black_light"
-            android:gravity="center_vertical"
-            android:text="Recent Transactions"
-            android:paddingLeft="30px"
-            />
-
 
         <ListView
             android:id="@+id/listViewTransactions"
@@ -74,7 +63,7 @@
             android:layout_width="100px"
             android:layout_height="100px"
             android:layout_centerInParent="true"
-            wheel:matProg_barColor="@color/yellow"
+            wheel:matProg_barColor="@color/theme_color"
             wheel:matProg_fillRadius="true"
             wheel:matProg_progressIndeterminate="true"
             android:tag="mwar"

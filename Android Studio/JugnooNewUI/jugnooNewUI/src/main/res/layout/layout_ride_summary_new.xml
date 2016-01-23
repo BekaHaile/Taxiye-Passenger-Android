@@ -16,7 +16,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="130px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -31,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/total_fare"
                     android:textSize="@dimen/end_ride_fare_title_text_size"
-                    android:textColor="@color/grey_black"/>
+                    android:textColor="@color/text_color"/>
 
                 <TextView
                     android:id="@+id/textViewRSTotalFareValue"
@@ -39,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:text="90"
                     android:textSize="@dimen/end_ride_fare_value_text_size"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color"
                     android:layout_marginTop="10px"
                     />
             </LinearLayout>
@@ -48,8 +49,8 @@
                 android:layout_width="2px"
                 android:layout_height="match_parent"
                 android:src="@color/grey_dark_less"
-                android:layout_marginTop="15px"
-                android:layout_marginBottom="15px"
+                android:layout_marginTop="10px"
+                android:layout_marginBottom="10px"
                 />
 
             <LinearLayout
@@ -64,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/Cash_to_be_paid"
                     android:textSize="@dimen/end_ride_fare_title_text_size"
-                    android:textColor="@color/grey_black"/>
+                    android:textColor="@color/text_color"/>
 
                 <TextView
                     android:id="@+id/textViewRSCashPaidValue"
@@ -72,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:text="90"
                     android:textSize="@dimen/end_ride_fare_value_text_size"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color"
                     android:layout_marginTop="10px"
                     />
             </LinearLayout>
@@ -89,9 +90,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="38px"
-                android:layout_height="38px"
-                android:layout_marginRight="14px"
+                android:layout_width="24px"
+                android:layout_height="24px"
+                android:tag="mwar"
+                android:layout_marginRight="8px"
                 android:src="@drawable/ic_ride_receipt"/>
 
             <TextView
@@ -100,15 +102,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="@string/view_invoice"
-                android:textSize="30px"
-                android:textColor="@drawable/text_color_black_alpha_selector"
+                android:textSize="@dimen/text_size_32"
+                android:textColor="@color/text_color_theme_selector"
                 />
-
-            <ImageView
-                android:layout_width="13px"
-                android:layout_height="26px"
-                android:layout_marginLeft="10px"
-                android:src="@drawable/arrow_icon_selector"/>
 
         </LinearLayout>
 
@@ -131,8 +127,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/rate_your_ride"
-                android:textSize="34px"
-                android:textColor="@color/grey_black"/>
+                android:textSize="@dimen/text_size_26"
+                android:textColor="@color/text_color"/>
 
             <ImageView
                 android:layout_width="match_parent"
@@ -160,21 +156,22 @@
             android:id="@+id/textViewRSWhatImprove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="40px"
             android:layout_marginTop="15px"
             android:text="@string/what_could_we_improve"
-            android:textColor="@color/grey_dark_more"
+            android:textColor="@color/text_color"
             android:textSize="30px"/>
 
         <product.clicklabs.jugnoo.utils.NonScrollGridView
             android:id="@+id/gridViewRSFeedbackReasons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
             android:layout_marginTop="20px"
             android:divider="@color/transparent"
             android:dividerHeight="0px"
             android:numColumns="2"
-            android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollGridView>
+            android:splitMotionEvents="false"/>
 
 
         <EditText
@@ -210,15 +207,12 @@
 
         <Button
             android:id="@+id/buttonRSSubmitFeedback"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10px"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_yellow"
             android:text="@string/submit_feedback_caps"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size"/>
+            />
 
         <Button
             android:id="@+id/buttonRSSkipFeedback"

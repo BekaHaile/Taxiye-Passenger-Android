@@ -21,9 +21,9 @@
             android:layout_width="@dimen/share_lb_button_width"
             android:layout_height="@dimen/share_lb_button_height"
             android:layout_marginLeft="30px"
-            android:background="@drawable/background_white_bordered_yellow_rounded_selector"
+            android:background="@drawable/button_white_grey_theme_border_selector"
             android:text="@string/local_leaderboard"
-            android:textColor="@drawable/text_color_grey_dark_white_selector"
+            android:textColor="@color/text_color_theme_selector"
             android:textSize="@dimen/button_text_size" />
 
         <Button
@@ -31,7 +31,7 @@
             android:layout_width="@dimen/share_lb_button_width"
             android:layout_height="@dimen/share_lb_button_height"
             android:layout_marginRight="30px"
-            android:background="@drawable/button_yellow_normal"
+            android:background="@drawable/nl_button_theme_normal"
             android:text="@string/global_leaderboard"
             android:textColor="@color/white"
             android:textSize="@dimen/button_text_size"
@@ -45,38 +45,58 @@
         android:id="@+id/relativeLayoutDailyWeekly"
         android:layout_width="match_parent"
         android:layout_height="@dimen/share_lb_text_view_layout_height"
-        android:layout_margin="-2px"
         >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_alignParentTop="true"
+            android:src="@color/text_color_light"/>
 
         <TextView
             android:id="@+id/textViewDaily"
-            android:layout_width="360px"
+            android:layout_width="359px"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:layout_marginTop="2px"
+            android:layout_marginBottom="2px"
             android:text="@string/daily_leaderboard"
-            android:textColor="@color/white"
-            android:textSize="@dimen/share_lb_text_size"
-            android:background="@drawable/background_yellow"
-            />
-        <TextView
-            android:id="@+id/textViewWeekly"
-            android:layout_width="360px"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/weekly_leaderboard"
-            android:textColor="@drawable/text_color_grey_dark_white_selector"
-            android:textSize="@dimen/share_lb_text_size"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/background_white_bordered"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:background="@color/menu_item_selector_color"
             />
 
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:src="@color/text_color_light"
+            android:layout_toRightOf="@+id/textViewDaily"/>
+
+        <TextView
+            android:id="@+id/textViewWeekly"
+            android:layout_width="359px"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginTop="2px"
+            android:layout_marginBottom="2px"
+            android:text="@string/weekly_leaderboard"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:layout_alignParentRight="true"
+            android:background="@color/white"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_alignParentBottom="true"
+            android:src="@color/text_color_light"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayoutListTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15px"
+        android:layout_height="100px"
         >
 
         <TextView
@@ -85,10 +105,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/lb_rank"
-            android:textColor="@color/grey_dark_less"
-            android:textSize="@dimen/share_lb_text_size_medium"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/text_size_30"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="@dimen/text_size_32"
             />
         <TextView
             android:id="@+id/textViewName"
@@ -96,8 +116,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/lb_name"
-            android:textColor="@color/grey_dark_less"
-            android:textSize="@dimen/share_lb_text_size_medium"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/text_size_32"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             />
@@ -108,8 +128,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/lb_no_downloads"
-            android:textColor="@color/grey_dark_less"
-            android:textSize="@dimen/share_lb_text_size_small"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/text_size_32"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20px"
@@ -119,8 +139,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/grey_light"
-        android:layout_marginTop="15px"/>
+        android:background="@color/grey_light"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewLb"

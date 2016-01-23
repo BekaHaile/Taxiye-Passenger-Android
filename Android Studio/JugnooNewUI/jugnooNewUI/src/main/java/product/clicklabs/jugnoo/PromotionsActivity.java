@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class PromotionsActivity extends BaseActivity implements FlurryEventNames {
@@ -108,10 +109,10 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 		
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
 		editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode); editTextPromoCode.setTypeface(Fonts.latoRegular(this));
-		buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo); buttonApplyPromo.setTypeface(Fonts.latoRegular(this));
+		buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo); buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
 		textViewCouponsAvailable = (TextView) findViewById(R.id.textViewCouponsAvailable); textViewCouponsAvailable.setTypeface(Fonts.latoRegular(this));
 		textViewCouponsAvailable.setVisibility(View.GONE);
         textViewCouponInfo = (TextView) findViewById(R.id.textViewCouponInfo); textViewCouponInfo.setTypeface(Fonts.latoRegular(this));
@@ -134,7 +135,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
         listViewPromotions.setAdapter(promotionListAdapter);
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
-        textViewInvite =(TextView)findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.latoRegular(this));
+        textViewInvite =(TextView)findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.mavenLight(this));
 
 
 		
@@ -284,7 +285,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                 listViewCoupons.setVisibility(View.GONE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                textViewOngoingOffers.setVisibility(View.GONE);
                 listViewPromotions.setVisibility(View.VISIBLE);
                 textViewPromoInfo.setVisibility(View.GONE);
             }
@@ -295,7 +296,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                textViewOngoingOffers.setVisibility(View.GONE);
                 listViewPromotions.setVisibility(View.VISIBLE);
                 textViewPromoInfo.setVisibility(View.GONE);
 			}
@@ -346,10 +347,10 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 				holder = new ViewHolderCoupon();
 				convertView = mInflater.inflate(R.layout.list_item_coupon, null);
 				
-				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.latoRegular(context));
-				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
-				holder.textViewValidTime = (TextView) convertView.findViewById(R.id.textViewValidTime); holder.textViewValidTime.setTypeface(Fonts.latoRegular(context));
-                ((TextView) convertView.findViewById(R.id.textViewTNC)).setTypeface(Fonts.latoRegular(context));
+				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.mavenLight(context));
+				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.mavenLight(context));
+				holder.textViewValidTime = (TextView) convertView.findViewById(R.id.textViewValidTime); holder.textViewValidTime.setTypeface(Fonts.mavenLight(context));
+                ((TextView) convertView.findViewById(R.id.textViewTNC)).setTypeface(Fonts.mavenLight(context));
 
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
 				
@@ -588,7 +589,22 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
                         });
                 } else {
-                    updateListData("No Internet connection. Tap to retry", true);
+                    //updateListData("No Internet connection. Tap to retry", true);
+                    DialogPopup.dialogNoInternet(PromotionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG
+                            , new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick() {
+                            getAccountInfoAsync(PromotionsActivity.this);
+                        }
+
+                        @Override
+                        public void neutralClick() {
+                        }
+
+                        @Override
+                        public void negativeClick() {
+                        }
+                    });
                 }
             }
         }

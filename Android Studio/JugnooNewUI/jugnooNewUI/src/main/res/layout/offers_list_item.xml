@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPromotion1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nl_button_size"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+
+        <ImageView
+            android:id="@+id/radioPromotion1"
+            android:layout_width="33px"
+            android:layout_height="33px"
+            android:tag="mwar"
+            android:layout_marginLeft="23px"
+            android:src="@drawable/radio_unselected_icon"/>
+
+        <TextView
+            android:id="@+id/textViewPromotion1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cashback"
+            android:maxLines="2"
+            android:layout_marginLeft="39px"
+            android:textSize="@dimen/text_size_40"
+            android:textColor="@color/text_color"/>
+
+    </LinearLayout>
+
+</LinearLayout>
