@@ -127,13 +127,15 @@
                                 android:layout_width="100px"
                                 android:layout_height="100px"
                                 android:layout_marginRight="10px"
-                                android:background="@drawable/background_white_bordered"
+                                android:background="@drawable/background_white_rounded_bordered"
                                 android:cursorVisible="false"
                                 android:gravity="center"
                                 android:hint="1"
+                                android:tag="mwar"
+                                android:textColorHint="@color/text_color_hint"
                                 android:inputType="number"
                                 android:maxLength="1"
-                                android:textColor="@color/yellow"
+                                android:textColor="@color/theme_color"
                                 android:textSize="77px" />
 
                             <TextView
@@ -149,13 +151,15 @@
                                 android:layout_width="100px"
                                 android:layout_height="100px"
                                 android:layout_marginLeft="10px"
-                                android:background="@drawable/background_white_bordered"
+                                android:background="@drawable/background_white_rounded_bordered"
                                 android:cursorVisible="false"
                                 android:gravity="center"
                                 android:hint="8"
+                                android:tag="mwar"
+                                android:textColorHint="@color/text_color_hint"
                                 android:inputType="number"
                                 android:maxLength="2"
-                                android:textColor="@color/yellow"
+                                android:textColor="@color/theme_color"
                                 android:textSize="77px" />
                         </LinearLayout>
 
@@ -182,7 +186,7 @@
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="1.25X"
-                        android:textColor="#F39E4A"
+                        android:textColor="#FFB552"
                         android:textSize="66px" />
 
                     <TextView

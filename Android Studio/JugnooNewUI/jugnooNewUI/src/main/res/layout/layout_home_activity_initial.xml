@@ -115,10 +115,10 @@
             android:id="@+id/textViewInitialInstructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5px"
             android:gravity="center"
+            android:background="@drawable/background_initial_instruction"
             android:text="No drivers available"
-            android:textColor="@color/grey_dark_less"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30" />
 
         <RelativeLayout
@@ -203,11 +203,38 @@
         android:src="@drawable/auto_icon_r_selector"
         android:tag="mwar" />
 
+    <LinearLayout
+        android:id="@+id/changeLocalityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="224px"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/sliding_bottom_bg_color"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/textViewChangeLocality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_32"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/changeLocalityBtn"
+            style="@style/ButtonTheme"
+            android:layout_marginTop="30px"
+            android:layout_centerHorizontal="true"
+            android:text="@string/nl_change_locality"
+            android:visibility="visible" />
+    </LinearLayout>
     <Button
         android:id="@+id/initialMyLocationBtnChangeLoc"
         android:layout_width="87px"
         android:layout_height="87px"
-        android:layout_above="@+id/changeLocalityBtn"
+        android:layout_above="@+id/changeLocalityLayout"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="40px"
         android:layout_marginRight="50px"
@@ -215,18 +242,7 @@
         android:tag="mwar"
         android:visibility="gone" />
 
-    <Button
-        android:id="@+id/changeLocalityBtn"
-        android:layout_width="648px"
-        android:layout_height="100px"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="90px"
-        android:background="@drawable/button_theme"
-        android:text="@string/nl_change_locality"
-        android:textColor="@drawable/text_color_white_alpha_selector"
-        android:textSize="@dimen/button_text_size"
-        android:visibility="gone" />
+
 
     <!-- Location error -->
     <RelativeLayout
@@ -296,8 +312,8 @@
 
         <ImageView
             android:id="@+id/imageViewLocationError"
-            android:layout_width="104px"
-            android:layout_height="146px"
+            android:layout_width="110px"
+            android:layout_height="140px"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="190px"

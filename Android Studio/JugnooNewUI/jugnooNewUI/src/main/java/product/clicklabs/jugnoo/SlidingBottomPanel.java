@@ -46,7 +46,7 @@ public class SlidingBottomPanel {
     private ImageView imageViewPaymentOp;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
     private LinearLayout linearLayoutSlidingBottom;
-    private PromoCoupon selectedCoupon = new CouponInfo(0, "");
+    private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
     private ArrayList<PromoCoupon> promoCoupons;
 
@@ -141,10 +141,12 @@ public class SlidingBottomPanel {
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
         if (promoCoupons != null) {
-            if (promoCoupons.size() > 0) {
-                selectedCoupon = noSelectionCoupon;
-            } else {
-                selectedCoupon = new CouponInfo(0, "");
+            if(selectedCoupon == null) {
+                if (promoCoupons.size() > 0) {
+                    selectedCoupon = noSelectionCoupon;
+                } else {
+                    selectedCoupon = new CouponInfo(0, "");
+                }
             }
             textViewOffersValue.setText("" + promoCoupons.size());
         } else {
@@ -196,6 +198,10 @@ public class SlidingBottomPanel {
             selectedCoupon = noSelectionCoupon;
         }
         displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+    }
+
+    public void setSelectedCoupon(PromoCoupon promoCoupon){
+        selectedCoupon = promoCoupon;
     }
 
     public void setPaytmLoadingVisiblity(int visiblity) {

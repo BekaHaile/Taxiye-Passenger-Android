@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class PromotionsActivity extends BaseActivity implements FlurryEventNames {
@@ -134,7 +135,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
         listViewPromotions.setAdapter(promotionListAdapter);
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
-        textViewInvite =(TextView)findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.latoRegular(this));
+        textViewInvite =(TextView)findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.mavenLight(this));
 
 
 		
@@ -284,7 +285,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                 listViewCoupons.setVisibility(View.GONE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                textViewOngoingOffers.setVisibility(View.GONE);
                 listViewPromotions.setVisibility(View.VISIBLE);
                 textViewPromoInfo.setVisibility(View.GONE);
             }
@@ -295,7 +296,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.VISIBLE);
+                textViewOngoingOffers.setVisibility(View.GONE);
                 listViewPromotions.setVisibility(View.VISIBLE);
                 textViewPromoInfo.setVisibility(View.GONE);
 			}
@@ -588,7 +589,22 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
                         });
                 } else {
-                    updateListData("No Internet connection. Tap to retry", true);
+                    //updateListData("No Internet connection. Tap to retry", true);
+                    DialogPopup.dialogNoInternet(PromotionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG
+                            , new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick() {
+                            getAccountInfoAsync(PromotionsActivity.this);
+                        }
+
+                        @Override
+                        public void neutralClick() {
+                        }
+
+                        @Override
+                        public void negativeClick() {
+                        }
+                    });
                 }
             }
         }

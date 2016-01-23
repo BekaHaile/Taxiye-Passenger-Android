@@ -29,10 +29,15 @@ public class BaseActivity extends Activity {
         if (!newActivityStarted && !activityFinished) {
 //            startService(new Intent(GENIE_SERVICE));
         }
-        newActivityStarted = false;
 
-        activityFinished = false;
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        newActivityStarted = false;
+        activityFinished = false;
+        super.onDestroy();
     }
 
     @Override

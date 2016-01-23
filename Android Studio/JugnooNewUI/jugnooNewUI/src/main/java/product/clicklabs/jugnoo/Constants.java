@@ -12,6 +12,7 @@ public interface Constants {
 
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
+	String KEY_EMAIL = "email";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
@@ -48,5 +49,27 @@ public interface Constants {
 	String KEY_CLIENT_ID = "client_id";
 	String KEY_IP_ADDRESS= "ip_addr";
 
+
+	String KEY_OTP = "otp";
+
+	String KEY_BRANCH_REFERRING_USER_IDENTIFIER = "referring_user_identifier";
+	String KEY_DEEPINDEX = "deepindex";
+	String KEY_REFERRAL_CODE = "referral_code";
+	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
+	String FB_LINK_SHARE_NAME = "Jugnoo";
+//	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
+
+
+	String DOMAIN_SHARE_JUGNOO_IN = "share.jugnoo.in";
+
+	String KEY_BRANCH_DESKTOP_URL = "branch_desktop_url";
+	String KEY_BRANCH_ANDROID_URL = "branch_android_url";
+	String KEY_BRANCH_IOS_URL = "branch_ios_url";
+	String KEY_BRANCH_FALLBACK_URL = "branch_fallback_url";
+
+	String KEY_JUGNOO_CASH_TNC = "jugnoo_cash_tnc";
+
+	String KEY_ALREADY_VERIFIED_EMAIL = "already_verified_email";
+	String KEY_ALREADY_REGISTERED_EMAIL = "already_registered_email";
 
 }

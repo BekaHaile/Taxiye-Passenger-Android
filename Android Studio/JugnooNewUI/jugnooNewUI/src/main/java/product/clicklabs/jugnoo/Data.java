@@ -44,6 +44,8 @@ public class Data {
 	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
 						PAYTM_STATUS_INACTIVE = "INACTIVE";
 
+	public static boolean linkFoundOnce = false;
+
 
 
     public static final String INVALID_ACCESS_TOKEN = "invalid access token";
@@ -119,7 +121,8 @@ public class Data {
 	
 	public static final String SERVER_ERROR_MSG = "Connection lost. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Connection lost. Please try again later.";
-	public static final String CHECK_INTERNET_MSG = "Check your internet connection.";
+	public static final String CHECK_INTERNET_TITLE = "CONNECTION LOST";
+	public static final String CHECK_INTERNET_MSG = "Oops! Your Internet in not working.\nPlease try again.";
 	
 	
 	
@@ -179,7 +182,7 @@ public class Data {
 	public static FareStructure fareStructure;
 	
 	public static CancelOptionsList cancelOptionsList;
-    public static ArrayList<FeedbackReason> feedbackReasons;
+    public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
 
 	public static ReferralMessages referralMessages;
 
@@ -322,8 +325,8 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
-			if(data.getQueryParameter("referral_code") != null){
-				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
+			if(data.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
+				Data.deepLinkReferralCode = data.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 			}
 
 			if(data.getQueryParameter("deepindex") != null){
@@ -343,7 +346,7 @@ public class Data {
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
 			try {
 				Intent intent = newIntent;
@@ -353,8 +356,8 @@ public class Data {
 				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
 				Uri dataTarget = Uri.parse(targetUrl);
 
-				if(dataTarget.getQueryParameter("referral_code") != null){
-					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
+				if(dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 				}
 
 				if(dataTarget.getQueryParameter("deepindex") != null){
@@ -370,6 +373,7 @@ public class Data {
 					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
 				}
 			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		}
 

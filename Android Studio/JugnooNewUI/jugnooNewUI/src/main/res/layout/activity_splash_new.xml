@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@drawable/bg_img"
-    android:splitMotionEvents="false"
-    >
+    android:splitMotionEvents="false">
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
@@ -22,15 +21,13 @@
             android:id="@+id/viewInitJugnoo"
             android:layout_width="match_parent"
             android:layout_height="140px"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/viewInitSplashJugnoo"
             android:layout_width="match_parent"
             android:layout_height="200px"
-            android:visibility="gone"
-            />
+            android:visibility="visible" />
 
         <!-- Jugnoo Logo layout-->
         <RelativeLayout
@@ -39,8 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80px"
-            android:visibility="gone"
-            >
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
@@ -50,23 +46,21 @@
                 android:background="@drawable/jugnoo_logo_big_white"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:tag="mwar"
-                android:visibility="visible"
-                />
+                android:tag="mhar"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/imageViewDebug1"
                 android:layout_width="180px"
                 android:layout_height="120px"
-                android:layout_marginTop="170px"
-                />
+                android:layout_marginTop="170px" />
 
             <ImageView
                 android:id="@+id/imageViewDebug2"
                 android:layout_width="180px"
                 android:layout_height="120px"
-                android:layout_marginTop="170px"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="170px"
 
                 />
 
@@ -74,8 +68,8 @@
                 android:id="@+id/imageViewDebug3"
                 android:layout_width="120px"
                 android:layout_height="120px"
-                android:layout_marginTop="60px"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="60px"
 
                 />
 
@@ -85,8 +79,7 @@
             android:id="@+id/viewInitLS"
             android:layout_width="match_parent"
             android:layout_height="300px"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <!-- splash buttons -->
         <RelativeLayout
@@ -95,8 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="150px"
             android:animateLayoutChanges="true"
-            android:visibility="gone"
-            >
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/linearLayoutLoginSignupButtons"
@@ -106,8 +98,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="visible"
-                >
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/buttonRegister"
@@ -117,7 +108,7 @@
                     android:text="@string/sign_up"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_alpha_selector"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:textSize="@dimen/text_size_34" />
 
                 <TextView
                     android:id="@+id/textViewAlreadyHaveAccount"
@@ -127,8 +118,7 @@
                     android:layout_marginTop="20px"
                     android:text="@string/nl_splash_already_have_account"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26"
-                    />
+                    android:textSize="@dimen/text_size_26" />
 
 
                 <Button
@@ -139,7 +129,7 @@
                     android:text="@string/nl_log_in"
                     android:textAllCaps="true"
                     android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:textSize="@dimen/text_size_34" />
 
                 <TextView
                     android:id="@+id/textViewTerms"
@@ -148,8 +138,7 @@
                     android:layout_marginTop="60px"
                     android:text="@string/nl_splash_terms"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26"
-                    />
+                    android:textSize="@dimen/text_size_26" />
 
             </LinearLayout>
 
@@ -161,15 +150,14 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="gone"
-                >
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="90px"
                     android:layout_height="80px"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/no_internet_icon"
-                    android:tag="mwar"/>
+                    android:tag="mhar" />
 
                 <TextView
                     android:id="@+id/textViewNoNet"
@@ -180,15 +168,14 @@
                     android:gravity="center"
                     android:text="@string/no_internet_connection"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_30"
-                    />
+                    android:textSize="@dimen/text_size_30" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutNoInternetButtons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="40px"
+                    android:layout_marginBottom="80px"
                     android:layout_marginTop="40px"
                     android:splitMotionEvents="false"
                     android:visibility="visible">
@@ -197,25 +184,34 @@
                         android:id="@+id/buttonNoNetCall"
                         android:layout_width="@dimen/splash_button_width"
                         android:layout_height="@dimen/splash_button_height"
-                        android:layout_marginLeft="65px"
-                        android:background="@drawable/button_yellow_white_border_selector"
+                        android:layout_marginLeft="40px"
+                        android:background="@drawable/button_theme_alpha_white_stroke_selector"
+
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="@string/call_to_book"
+
+
+                        android:textAllCaps="true"
                         android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                     <Button
                         android:id="@+id/buttonRefresh"
                         android:layout_width="@dimen/splash_button_width"
                         android:layout_height="@dimen/splash_button_height"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="65px"
+
+                        android:layout_marginLeft="40px"
+                        android:layout_marginRight="40px"
                         android:background="@drawable/button_white_selector"
+
                         android:gravity="center"
+                        android:singleLine="true"
                         android:text="@string/refresh"
-                        android:textColor="@drawable/text_color_yellow_alpha_selector"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color_theme_alpha_selector"
+                        android:textSize="@dimen/text_size_34" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -230,8 +226,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:splitMotionEvents="false"
-            android:visibility="gone"
-            >
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -241,8 +236,7 @@
                 android:layout_marginRight="30px"
                 android:layout_marginTop="40px"
                 android:background="@drawable/background_white_shadow"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -255,8 +249,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_user_email"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <AutoCompleteTextView
                         android:id="@+id/editTextEmail"
@@ -264,8 +257,8 @@
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10px"
-                        android:layout_toRightOf="@+id/imageViewEmail"
                         android:layout_toLeftOf="@+id/textViewEmailRequired"
+                        android:layout_toRightOf="@+id/imageViewEmail"
                         android:background="#0000"
                         android:completionThreshold="1"
                         android:gravity="center_vertical"
@@ -277,8 +270,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewEmailRequired"
@@ -289,8 +281,7 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"
-                        />
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
@@ -299,8 +290,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_margin="2px"
-                    android:src="@color/grey_light"
-                    />
+                    android:src="@color/grey_light" />
 
 
                 <RelativeLayout
@@ -314,8 +304,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_password"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <AutoCompleteTextView
                         android:id="@+id/editTextPassword"
@@ -323,8 +312,8 @@
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10px"
-                        android:layout_toRightOf="@+id/imageViewPassword"
                         android:layout_toLeftOf="@+id/textViewPasswordRequired"
+                        android:layout_toRightOf="@+id/imageViewPassword"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/password"
@@ -335,8 +324,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewPasswordRequired"
@@ -347,8 +335,7 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"
-                        />
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
@@ -364,8 +351,7 @@
                 android:text="@string/nl_login"
                 android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"
-                />
+                android:textSize="@dimen/text_size_34" />
 
             <TextView
                 android:id="@+id/textViewLoginOr"
@@ -375,8 +361,7 @@
                 android:layout_margin="20px"
                 android:text="@string/or"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                />
+                android:textSize="@dimen/text_size_26" />
 
             <Button
                 android:id="@+id/buttonFacebookLogin"
@@ -387,8 +372,7 @@
                 android:text="@string/nl_login_facebook"
                 android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"
-                />
+                android:textSize="@dimen/text_size_34" />
 
             <Button
                 android:id="@+id/buttonGoogleLogin"
@@ -400,8 +384,7 @@
                 android:text="@string/nl_login_google"
                 android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"
-                />
+                android:textSize="@dimen/text_size_34" />
 
 
             <TextView
@@ -413,7 +396,7 @@
                 android:gravity="center"
                 android:text="@string/forgot_password"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_26"/>
+                android:textSize="@dimen/text_size_26" />
 
         </LinearLayout>
 
@@ -424,8 +407,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible"
-            >
+            android:visibility="gone">
 
 
             <LinearLayout
@@ -436,14 +418,12 @@
                 android:layout_marginRight="30px"
                 android:layout_marginTop="120px"
                 android:background="@drawable/background_white_shadow"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
+                    android:layout_weight="1">
 
                     <ImageView
                         android:layout_width="18px"
@@ -451,8 +431,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_user_email"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSName"
@@ -461,18 +440,18 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="64px"
                         android:background="#0000"
+                        android:layout_toLeftOf="@+id/textViewSNameRequired"
+                        android:digits="@string/digits_characters_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_name"
+                        android:maxLength="50"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        android:digits="@string/digits_characters_numbers"
-                        android:maxLength="50"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSNameRequired"
@@ -483,8 +462,7 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"
-                        />
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
@@ -492,8 +470,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_margin="2px"
-                    android:src="@color/grey_light"
-                    />
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -506,8 +483,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_email"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSEmail"
@@ -518,6 +494,7 @@
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_email"
+                        android:layout_toLeftOf="@+id/textViewSEmailRequired"
                         android:inputType="textEmailAddress"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
@@ -525,8 +502,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSEmailRequired"
@@ -537,8 +513,7 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"
-                        />
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
@@ -546,14 +521,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_margin="2px"
-                    android:src="@color/grey_light"
-                    />
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
+                    android:layout_weight="1">
 
                     <ImageView
                         android:layout_width="27px"
@@ -561,8 +534,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_phone"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <TextView
                         android:id="@+id/textViewSPhone91"
@@ -573,8 +545,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/nl_signup_plus91"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <EditText
                         android:id="@+id/editTextSPhone"
@@ -585,6 +556,7 @@
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/phone_number"
+                        android:layout_toLeftOf="@+id/textViewSPhoneRequired"
                         android:inputType="number"
                         android:maxLength="10"
                         android:paddingLeft="20px"
@@ -593,8 +565,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSPhoneRequired"
@@ -605,8 +576,7 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"
-                        />
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
@@ -614,8 +584,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_margin="2px"
-                    android:src="@color/grey_light"
-                    />
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -628,8 +597,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_password"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSPassword"
@@ -640,16 +608,16 @@
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:layout_toLeftOf="@+id/textViewSPasswordRequired"
+                        android:maxLength="20"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        android:inputType="textPassword"
-                        android:maxLength="20"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSPasswordRequired"
@@ -660,8 +628,7 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"
-                        />
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
@@ -669,8 +636,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_margin="2px"
-                    android:src="@color/grey_light"
-                    />
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -683,8 +649,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_promocode"
-                        android:tag="mwar"
-                        />
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSPromo"
@@ -693,20 +658,19 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="64px"
                         android:background="#0000"
+                        android:capitalize="characters"
+                        android:digits="@string/digits_characters_caps_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_promocode"
+                        android:inputType="textCapCharacters"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
                         android:singleLine="true"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        android:inputType="textCapCharacters"
-                        android:textAllCaps="true"
-                        android:capitalize="characters"
-                        android:digits="@string/digits_characters_caps_numbers"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                 </RelativeLayout>
 
@@ -722,8 +686,7 @@
                 android:text="@string/sign_up"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_theme_alpha_selector"
-                android:textSize="@dimen/text_size_34"
-                />
+                android:textSize="@dimen/text_size_34" />
 
             <TextView
                 android:id="@+id/textViewSignupOr"
@@ -733,8 +696,7 @@
                 android:layout_margin="20px"
                 android:text="@string/or"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                />
+                android:textSize="@dimen/text_size_26" />
 
             <Button
                 android:id="@+id/buttonFacebookSignup"
@@ -745,8 +707,7 @@
                 android:text="@string/nl_login_facebook"
                 android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"
-                />
+                android:textSize="@dimen/text_size_34" />
 
             <Button
                 android:id="@+id/buttonGoogleSignup"
@@ -758,8 +719,7 @@
                 android:text="@string/nl_login_google"
                 android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"
-                />
+                android:textSize="@dimen/text_size_34" />
 
 
             <TextView
@@ -770,15 +730,14 @@
                 android:layout_marginTop="20px"
                 android:text="@string/nl_splash_terms"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                />
+                android:textSize="@dimen/text_size_26" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/textViewScroll"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -790,8 +749,7 @@
         android:layout_marginLeft="5px"
         android:padding="30px"
         android:src="@drawable/back_white_selector"
-        android:tag="mwar"
-        android:visibility="gone"
-        />
+        android:tag="mhar"
+        android:visibility="gone" />
 
 </RelativeLayout>

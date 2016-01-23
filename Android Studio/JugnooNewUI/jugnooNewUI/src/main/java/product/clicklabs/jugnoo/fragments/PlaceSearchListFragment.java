@@ -150,15 +150,19 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 					@Override
 					public void onTextChange(String text) {
-						if(text.length() > 0){
-							imageViewSearchCross.setVisibility(View.VISIBLE);
-							hideSearchLayout();
+						try {
+							if(text.length() > 0){
+								imageViewSearchCross.setVisibility(View.VISIBLE);
+								hideSearchLayout();
+							}
+							else{
+								imageViewSearchCross.setVisibility(View.GONE);
+								showSearchLayout();
+							}
+							searchListActionsHandler.onTextChange(text);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-						else{
-							imageViewSearchCross.setVisibility(View.GONE);
-							showSearchLayout();
-						}
-						searchListActionsHandler.onTextChange(text);
 					}
 
 					@Override

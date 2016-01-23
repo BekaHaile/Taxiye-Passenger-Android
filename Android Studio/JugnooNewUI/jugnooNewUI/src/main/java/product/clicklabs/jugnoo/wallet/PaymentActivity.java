@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -170,7 +171,23 @@ public class PaymentActivity extends BaseFragmentActivity{
 						}
 					});
 				} else {
-					retryDialog(Data.CHECK_INTERNET_MSG, fragName);
+					//retryDialog(Data.CHECK_INTERNET_MSG, fragName);
+					DialogPopup.dialogNoInternet(PaymentActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick() {
+							getBalance("Refresh");
+						}
+
+						@Override
+						public void neutralClick() {
+
+						}
+
+						@Override
+						public void negativeClick() {
+
+						}
+					});
 				}
 			}
 		} catch (Exception e) {
