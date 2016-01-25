@@ -14,7 +14,6 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -157,8 +156,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				performBackPressed();
 			}
 		});
-		
 
+		relative.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextOTP.setError(null);
+			}
+		});
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
@@ -186,17 +190,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonVerify.performClick();
-						break;
-
-					case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-					default:
-				}
+				buttonVerify.performClick();
 				return true;
 			}
 		});
@@ -205,6 +199,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			@Override
 			public void onClick(View v) {
 				try{
+					editTextOTP.setError(null);
 					if (1 == Data.otpViaCallEnabled) {
 						if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 							initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
@@ -249,6 +244,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			@Override
 			public void onClick(View v) {
 				try {
+					editTextOTP.setError(null);
 					if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
 								getResources().getString(R.string.give_missed_call_dialog_text),
@@ -280,6 +276,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
             @Override
             public void onClick(View v) {
+				editTextOTP.setError(null);
                 FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
                 startActivity(new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class));
                 finish();

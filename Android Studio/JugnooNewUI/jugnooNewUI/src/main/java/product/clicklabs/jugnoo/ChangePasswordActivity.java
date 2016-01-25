@@ -1,13 +1,9 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -201,44 +197,7 @@ public class ChangePasswordActivity extends BaseActivity {
 		
 		
 		
-		final View activityRootView = findViewById(R.id.mainLinear);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
 
-					@Override
-					public void onGlobalLayout() {
-						Rect r = new Rect();
-						// r will be populated with the coordinates of your view
-						// that area still visible.
-						activityRootView.getWindowVisibleDisplayFrame(r);
-
-						int heightDiff = activityRootView.getRootView()
-								.getHeight() - (r.bottom - r.top);
-						if (heightDiff > 100) { // if more than 100 pixels, its
-												// probably a keyboard...
-
-							/************** Adapter for the parent List *************/
-
-							ViewGroup.LayoutParams params_12 = textViewScroll
-									.getLayoutParams();
-
-							params_12.height = (int)(heightDiff);
-
-							textViewScroll.setLayoutParams(params_12);
-							textViewScroll.requestLayout();
-
-						} else {
-
-							ViewGroup.LayoutParams params = textViewScroll
-									.getLayoutParams();
-							params.height = 0;
-							textViewScroll.setLayoutParams(params);
-							textViewScroll.requestLayout();
-
-						}
-					}
-				});
-		
 		
 	}
 	

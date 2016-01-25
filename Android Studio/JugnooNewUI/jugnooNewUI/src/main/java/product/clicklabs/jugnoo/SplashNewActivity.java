@@ -647,11 +647,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+				if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
 					FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 					facebookLoginHelper.openFacebookSession();
-				} else{
+				} else {
 					DialogPopup.dialogNoInternet(SplashNewActivity.this,
 							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 							new Utils.AlertCallBackWithButtonsInterface() {
@@ -729,6 +729,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void facebookLoginError(String message) {
 				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+			}
+		});
+		editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				editTextPassword.requestFocus();
+				return true;
 			}
 		});
 		editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
@@ -845,6 +853,38 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
 				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
 						GOOGLE_SIGNIN_REQ_CODE_SIGNUP);
+			}
+		});
+		editTextSName.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				editTextSEmail.requestFocus();
+				return true;
+			}
+		});
+		editTextSEmail.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				editTextSPhone.requestFocus();
+				return true;
+			}
+		});
+		editTextSPhone.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				editTextSPassword.requestFocus();
+				return true;
+			}
+		});
+		editTextSPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				editTextSPromo.requestFocus();
+				return true;
 			}
 		});
 		editTextSPromo.setOnEditorActionListener(new OnEditorActionListener() {
@@ -1747,6 +1787,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void setLoginScreenValuesOnCreate(){
 		// set email screen values according to intent
+		editTextEmail.setText("");
 		try {
 			if(getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterationType.EMAIL == SplashNewActivity.registerationType){
 				if(phoneNoLogin) {
@@ -2245,6 +2286,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	private void setSignupScreenValuesOnCreate(){
+
+		editTextSName.setText(""); editTextSName.setEnabled(true);
+		editTextSEmail.setText(""); editTextSEmail.setEnabled(true);
+		editTextSPromo.setText("");
+		editTextSPhone.setText("");
+		editTextSPassword.setText("");
 
 		fillSocialAccountInfo(SplashNewActivity.registerationType);
 

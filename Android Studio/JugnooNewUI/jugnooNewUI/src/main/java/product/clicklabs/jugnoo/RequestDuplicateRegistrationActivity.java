@@ -258,13 +258,19 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 							try {
 								jObj = new JSONObject(response);
 								int flag = jObj.getInt("flag");
+								String message = JSONParser.getServerMessage(jObj);
 								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
                                     if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
+										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												activity.startActivity(new Intent(activity, SplashNewActivity.class));
+												activity.finish();
+												activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+											}
+										});
                                     }
 									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                        String message = jObj.getString("message");
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
                                             @Override
                                             public void onClick(View v) {
@@ -275,7 +281,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                                         });
 									}
 									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+										DialogPopup.alertPopup(activity, "", message);
 									}
 								}
 							}  catch (Exception exception) {
