@@ -141,7 +141,10 @@
                             android:textColor="@color/black_text"
                             android:textColorHint="@color/black_text_alpha"
                             android:textCursorDrawable="@null"
-                            android:textSize="30px" />
+                            android:textSize="30px"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="DONE"
+                            />
 
                         <ImageView
                             android:id="@+id/imageViewEditName"
@@ -180,7 +183,10 @@
                             android:textColor="@color/black_text"
                             android:textColorHint="@color/black_text_alpha"
                             android:textCursorDrawable="@null"
-                            android:textSize="30px" />
+                            android:textSize="30px"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="DONE"
+                            />
 
                         <ImageView
                             android:id="@+id/imageViewEmailVerifyStatus"
@@ -302,7 +308,10 @@
                             android:textColor="@color/black_text"
                             android:textColorHint="@color/black_text_alpha"
                             android:textCursorDrawable="@null"
-                            android:textSize="30px" />
+                            android:textSize="30px"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="DONE"
+                            />
 
                         <ImageView
                             android:id="@+id/imageViewEditPhoneNo"

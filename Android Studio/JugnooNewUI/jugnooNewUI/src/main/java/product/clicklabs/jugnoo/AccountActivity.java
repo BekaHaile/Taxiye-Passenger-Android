@@ -3,9 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +29,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.BlurTransform;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -282,18 +278,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditName.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditName.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditName.performClick();
                 return true;
             }
         });
@@ -334,18 +319,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditEmail.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditEmail.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditEmail.performClick();
                 return true;
             }
         });
@@ -390,18 +364,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditPhoneNo.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditPhoneNo.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditPhoneNo.performClick();
                 return true;
             }
         });

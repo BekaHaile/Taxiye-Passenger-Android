@@ -841,18 +841,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-				facebookLoginHelper.openFacebookSession();
+//				FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
+//				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+//				facebookLoginHelper.openFacebookSession();
+				buttonFacebookLogin.performClick();
 			}
 		});
 		buttonGoogleSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
-						GOOGLE_SIGNIN_REQ_CODE_SIGNUP);
+//				FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
+//				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+//				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
+//						GOOGLE_SIGNIN_REQ_CODE_SIGNUP);
+				buttonGoogleLogin.performClick();
 			}
 		});
 		editTextSName.setOnEditorActionListener(new OnEditorActionListener() {
@@ -1530,11 +1532,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
 				}
-				else if(State.LOGIN == state){
+				else if(State.LOGIN == state || State.SIGNUP == state){
 					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
-						Database2.getInstance(SplashNewActivity.this).updateDriverLastLocationTime();
-						Database2.getInstance(SplashNewActivity.this).close();
-
 						Map<String, String> articleParams = new HashMap<String, String>();
 						articleParams.put("username", Data.userData.userName);
 						FlurryAgent.logEvent("App Login", articleParams);
@@ -1559,11 +1558,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						sendIntentToRegisterScreen(RegisterationType.GOOGLE);
 					}
 					else if(SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen){
-						sendIntentToOtpScreen();
-					}
-				}
-				else if(State.SIGNUP == state){
-					if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
 						sendIntentToOtpScreen();
 					}
 				}

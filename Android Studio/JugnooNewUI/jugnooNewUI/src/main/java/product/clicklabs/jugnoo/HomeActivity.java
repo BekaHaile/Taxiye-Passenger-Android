@@ -1599,9 +1599,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             startUIAfterGettingUserStatus();
 
-
-            Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.getDeviceToken(), Config.getServerUrl());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1989,8 +1986,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public void switchUserScreen() {
-
-        Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_PASSENGER);
 
         passengerMainLayout.setVisibility(View.VISIBLE);
 
@@ -4842,14 +4837,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (hasFocus) {
             if (loggedOut) {
                 loggedOut = false;
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_OFFLINE);
-                        Database2.getInstance(HomeActivity.this).close();
-                    }
-                }).start();
 
                 cancelTimerUpdateDrivers();
 

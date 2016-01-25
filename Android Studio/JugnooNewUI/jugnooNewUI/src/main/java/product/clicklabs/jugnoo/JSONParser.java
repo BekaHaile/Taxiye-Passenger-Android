@@ -158,8 +158,6 @@ public class JSONParser implements Constants {
         try {
             if (userData.has("gcm_intent")) {
                 gcmIntent = userData.getInt("gcm_intent");
-                Database2.getInstance(context).updateDriverGcmIntent(gcmIntent);
-                Database2.getInstance(context).close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -347,9 +345,7 @@ public class JSONParser implements Constants {
         if (currentUserStatus == 2) {
             //Fetching drivers info
             parseDriversToShow(jObj, "drivers");
-            Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
         } else if (currentUserStatus == 1) {
-            Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
         }
 
 
