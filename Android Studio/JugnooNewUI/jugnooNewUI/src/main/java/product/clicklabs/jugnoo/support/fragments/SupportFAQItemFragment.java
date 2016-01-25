@@ -18,8 +18,8 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
-import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -84,14 +84,14 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		textViewSubtitle.setText(parentName);
 		textViewDescription.setText(item.getText());
 
-		if(ViewType.TEXT_BOX.getOrdinal() == item.getViewType()){
+		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.VISIBLE);
 			buttonSubmit.setVisibility(View.VISIBLE);
-		} else if(ViewType.CALL_BUTTON.getOrdinal() == item.getViewType()){
+		} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.GONE);
 			buttonSubmit.setVisibility(View.VISIBLE);
 			buttonSubmit.setText(activity.getResources().getString(R.string.call_driver).toUpperCase(Locale.ENGLISH));
-		} else if(ViewType.TEXT_ONLY.getOrdinal() == item.getViewType()){
+		} else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.GONE);
 			buttonSubmit.setVisibility(View.GONE);
 		}

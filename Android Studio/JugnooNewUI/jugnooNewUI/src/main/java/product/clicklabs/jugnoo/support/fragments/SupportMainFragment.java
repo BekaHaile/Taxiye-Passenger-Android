@@ -26,7 +26,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
-import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -106,25 +105,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						if(ViewType.TEXT_BOX.getOrdinal() == item.getViewType()
-								|| ViewType.CALL_BUTTON.getOrdinal() == item.getViewType()
-								|| ViewType.TEXT_ONLY.getOrdinal() == item.getViewType()) {
-							activity.getSupportFragmentManager().beginTransaction()
-									.add(activity.getLinearLayoutContainer().getId(),
-											new SupportFAQItemFragment(item.getText(), item), SupportFAQItemFragment.class.getName())
-									.addToBackStack(SupportFAQItemFragment.class.getName())
-									.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-											.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-									.commitAllowingStateLoss();
-						} else if(ViewType.LIST_VIEW.getOrdinal() == item.getViewType()) {
-							activity.getSupportFragmentManager().beginTransaction()
-									.add(activity.getLinearLayoutContainer().getId(),
-											new SupportFAQItemsListFragment(item), SupportFAQItemsListFragment.class.getName())
-									.addToBackStack(SupportFAQItemsListFragment.class.getName())
-									.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-											.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-									.commitAllowingStateLoss();
-						}
+						activity.openItemInFragment(activity.getResources().getString(R.string.support_main_title), item);
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);

@@ -11,7 +11,11 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
+import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
+import product.clicklabs.jugnoo.support.models.ActionType;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -82,8 +86,31 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		textViewTitle.setText(title);
 	}
 
-	public LinearLayout getLinearLayoutContainer(){
+	private LinearLayout getLinearLayoutContainer(){
 		return linearLayoutContainer;
+	}
+
+	public void openItemInFragment(String parentName, ShowPanelResponse.Item item){
+		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()
+				|| ActionType.INAPP_CALL.getOrdinal() == item.getActionType()
+				|| ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()) {
+			getSupportFragmentManager().beginTransaction()
+					.add(getLinearLayoutContainer().getId(),
+							new SupportFAQItemFragment(parentName, item), SupportFAQItemFragment.class.getName())
+					.addToBackStack(SupportFAQItemFragment.class.getName())
+					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
+			getSupportFragmentManager().beginTransaction()
+					.add(getLinearLayoutContainer().getId(),
+							new SupportFAQItemsListFragment(item), SupportFAQItemsListFragment.class.getName())
+					.addToBackStack(SupportFAQItemsListFragment.class.getName())
+					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
 	}
 
 	

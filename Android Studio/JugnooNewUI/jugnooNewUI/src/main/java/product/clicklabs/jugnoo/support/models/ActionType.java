@@ -8,6 +8,7 @@ public enum ActionType {
 	NEXT_LEVEL(1),
 	INAPP_CALL(2),
 	GENERATE_FRESHDESK_TICKET(3),
+	TEXT_ONLY(4)
 	;
 
 
