@@ -61,7 +61,7 @@
                     android:gravity="center"
                     android:singleLine="true"
                     android:text="UserName"
-                    android:textColor="@color/theme_color"
+                    android:textColor="@color/text_color_theme_alpha_selector"
                     android:textSize="32px" />
 
                 <TextView
@@ -73,7 +73,7 @@
                     android:gravity="center"
                     android:singleLine="true"
                     android:text="View Account"
-                    android:textColor="@color/text_color_hint"
+                    android:textColor="@color/text_color_view_account_selector"
                     android:textSize="26px" />
             </LinearLayout>
 

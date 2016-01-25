@@ -364,7 +364,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/white"
+                        android:background="@color/sliding_bottom_bg_color"
                         android:visibility="visible">
 
 
@@ -405,7 +405,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/white">
+                        android:background="@color/sliding_bottom_bg_color">
 
                         <TextView
                             android:id="@+id/textViewEmergencyContact"

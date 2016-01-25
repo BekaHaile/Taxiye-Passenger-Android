@@ -79,6 +79,7 @@
             style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="23px"
+            android:imeOptions="actionDone"
             android:text="@string/apply"
             />
 
