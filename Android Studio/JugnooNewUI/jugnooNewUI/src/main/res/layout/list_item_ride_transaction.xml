@@ -10,7 +10,7 @@
         android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white_rounded_bordered"
+        android:background="@drawable/background_white_grey_rb_selector"
         android:layout_marginBottom="30px"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"

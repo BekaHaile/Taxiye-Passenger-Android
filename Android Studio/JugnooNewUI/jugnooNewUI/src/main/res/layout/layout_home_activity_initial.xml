@@ -203,44 +203,6 @@
         android:src="@drawable/auto_icon_r_selector"
         android:tag="mwar" />
 
-    <LinearLayout
-        android:id="@+id/changeLocalityLayout"
-        android:layout_width="match_parent"
-        android:layout_height="224px"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        android:background="@color/sliding_bottom_bg_color"
-        android:layout_alignParentBottom="true">
-
-        <TextView
-            android:id="@+id/textViewChangeLocality"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32"
-            android:gravity="center"/>
-
-        <Button
-            android:id="@+id/changeLocalityBtn"
-            style="@style/ButtonTheme"
-            android:layout_marginTop="30px"
-            android:layout_centerHorizontal="true"
-            android:text="@string/nl_change_locality"
-            android:visibility="visible" />
-    </LinearLayout>
-    <Button
-        android:id="@+id/initialMyLocationBtnChangeLoc"
-        android:layout_width="87px"
-        android:layout_height="87px"
-        android:layout_above="@+id/changeLocalityLayout"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="40px"
-        android:layout_marginRight="50px"
-        android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar"
-        android:visibility="gone" />
 
 
 
