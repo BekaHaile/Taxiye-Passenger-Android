@@ -58,4 +58,9 @@ public interface ApiService {
     void showPanel(@FieldMap Map<String, String> params,
                    Callback<ShowPanelResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/get_ride_summary")
+    void getRideSummary(@FieldMap Map<String, String> params,
+                   Callback<SettleUserDebt> callback);
+
 }

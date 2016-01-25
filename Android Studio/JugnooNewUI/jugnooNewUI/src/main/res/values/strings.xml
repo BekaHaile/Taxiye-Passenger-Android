@@ -676,6 +676,10 @@
 
 	<string name="no_net_title">CONNECTION LOST</string>
 	<string name="no_net_text">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="conn_lost_title">CONNECTION LOST</string>
+	<string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+	<string name="server_error_title">CONNECTION LOST</string>
+	<string name="server_error_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
 
 
 </resources>

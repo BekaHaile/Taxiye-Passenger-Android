@@ -13,6 +13,7 @@
     >
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutIssueWithRide"
         android:layout_width="match_parent"
         android:layout_height="74px"
         >
@@ -21,7 +22,7 @@
             android:id="@+id/textViewIssueWithRide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_color"
+            android:textColor="@color/text_color_light_selector"
             android:text="@string/issue_with_a_recent_ride"
             android:textSize="@dimen/text_size_34"
             android:layout_marginLeft="30px"

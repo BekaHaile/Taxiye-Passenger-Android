@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support.fragments;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,9 +24,15 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -35,6 +45,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
@@ -42,15 +53,19 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	private LinearLayout root;
 
 	private LinearLayout linearLayoutRideShortInfo;
+	private RelativeLayout relativeLayoutIssueWithRide;
 	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
 	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
 
 	private RecyclerView recyclerViewSupportFaq;
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
-	private ShowPanelResponse showPanelResponse;
 
 	private View rootView;
     private SupportActivity activity;
+
+	private int showPanelState = 0, getRideSummaryState = 0;
+	private ShowPanelResponse showPanelResponse;
+	private EndRideData endRideData;
 
     @Override
     public void onStart() {
@@ -83,7 +98,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			e.printStackTrace();
 		}
 
+		showPanelState = 0; getRideSummaryState = 0;
+
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
+		relativeLayoutIssueWithRide = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutIssueWithRide);
 		((TextView)rootView.findViewById(R.id.textViewIssueWithRide)).setTypeface(Fonts.mavenRegular(activity));
 		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
@@ -117,6 +135,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			}
 		});
 
+		linearLayoutRideShortInfo.setVisibility(View.GONE);
+		relativeLayoutIssueWithRide.setVisibility(View.VISIBLE);
+		recyclerViewSupportFaq.setVisibility(View.GONE);
+		getRideSummaryAPI(activity);
 		showPanel();
 
 
@@ -134,7 +156,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(root);
+		ASSL.closeActivity(root);
         System.gc();
 	}
 
@@ -152,43 +174,123 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 						public void success(ShowPanelResponse showPanelResponse, Response response) {
 							DialogPopup.dismissLoadingDialog();
 							try {
+								recyclerViewSupportFaq.setVisibility(View.VISIBLE);
+								showPanelState = 1;
 								update(showPanelResponse);
 							} catch (Exception exception) {
 								exception.printStackTrace();
+								retryDialog(DialogErrorType.SERVER_ERROR);
 							}
 						}
 
 						@Override
 						public void failure(RetrofitError error) {
 							DialogPopup.dismissLoadingDialog();
+							recyclerViewSupportFaq.setVisibility(View.GONE);
+							showPanelState = -1;
+							retryDialog(DialogErrorType.CONNECTION_LOST);
 						}
 					});
 		} else{
-			DialogPopup.dialogNoInternet(activity,
-					activity.getResources().getString(R.string.no_net_title),
-					activity.getResources().getString(R.string.no_net_text),
-					new Utils.AlertCallBackWithButtonsInterface() {
-						@Override
-						public void positiveClick() {
-							showPanel();
-						}
-
-						@Override
-						public void neutralClick() {
-
-						}
-
-						@Override
-						public void negativeClick() {
-
-						}
-					});
+			retryDialog(DialogErrorType.NO_NET);
 		}
 	}
+
+
+	public void getRideSummaryAPI(final Activity activity) {
+		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_ENGAGEMENT_ID, "56289");
+
+			RestClient.getApiServices().getRideSummary(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					DialogPopup.dismissLoadingDialog();
+					try {
+						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+						JSONObject jObj = new JSONObject(jsonString);
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							int flag = jObj.getInt("flag");
+							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
+								endRideData = JSONParser.parseEndRideData(jObj, "56289", Data.fareStructure.fixedFare);
+								setRideData();
+								linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+								getRideSummaryState = 1;
+							} else {
+								retryDialog(DialogErrorType.NO_NET);
+							}
+						}
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						retryDialog(DialogErrorType.NO_NET);
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+					getRideSummaryState = -1;
+					linearLayoutRideShortInfo.setVisibility(View.GONE);
+					retryDialog(DialogErrorType.NO_NET);
+				}
+			});
+		} else {
+			retryDialog(DialogErrorType.NO_NET);
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType){
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick() {
+						if(showPanelState != 1) {
+							showPanel();
+						}
+						if(getRideSummaryState != 1){
+							getRideSummaryAPI(activity);
+						}
+					}
+
+					@Override
+					public void neutralClick() {
+
+					}
+
+					@Override
+					public void negativeClick() {
+
+					}
+				});
+	}
+
 
 	private void update(ShowPanelResponse showPanelResponse){
 		this.showPanelResponse = showPanelResponse;
 		supportFAQItemsAdapter.setResults((ArrayList<ShowPanelResponse.Item>) this.showPanelResponse.getMenu());
+	}
+
+	private void setRideData(){
+		try{
+			if(endRideData != null){
+				textViewDriverName.setText(endRideData.driverName);
+				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
+
+				textViewStartValue.setText(endRideData.pickupAddress);
+				textViewEndValue.setText(endRideData.dropAddress);
+
+				textViewStart.append(" " + endRideData.pickupTime);
+				textViewEnd.append(" " + endRideData.dropTime);
+
+				textViewTripTotalValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.fare));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 
