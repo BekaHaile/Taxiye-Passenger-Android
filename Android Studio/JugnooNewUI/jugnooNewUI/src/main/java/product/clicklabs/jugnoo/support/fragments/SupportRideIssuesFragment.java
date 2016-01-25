@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.support.fragments;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,23 +15,17 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -45,10 +38,9 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
-public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
+public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private LinearLayout root;
 
@@ -63,7 +55,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	private View rootView;
     private SupportActivity activity;
 
-	private int showPanelState = 0, getRideSummaryState = 0;
+	private int showPanelState = 0;
 	private EndRideData endRideData;
 
     @Override
@@ -71,7 +63,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(SupportMainFragment.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(SupportRideIssuesFragment.class.getSimpleName() + " started");
     }
 
     @Override
@@ -79,14 +71,18 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		super.onStop();
         FlurryAgent.onEndSession(activity);
     }
-	
+
+
+	public SupportRideIssuesFragment(EndRideData endRideData){
+		this.endRideData = endRideData;
+	}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_support_main, container, false);
+        rootView = inflater.inflate(R.layout.fragment_support_ride_issues, container, false);
 
         activity = (SupportActivity) getActivity();
-		activity.setTitle(activity.getResources().getString(R.string.support_main_title));
+		activity.setTitle(activity.getResources().getString(R.string.support_ride_issues_title));
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
@@ -97,7 +93,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			e.printStackTrace();
 		}
 
-		showPanelState = 0; getRideSummaryState = 0;
+		showPanelState = 0;
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
 		relativeLayoutIssueWithRide = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutIssueWithRide);
@@ -122,35 +118,21 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						activity.openItemInFragment(-1, activity.getResources().getString(R.string.support_main_title), item);
+						activity.openItemInFragment(Integer.parseInt(endRideData.engagementId), activity.getResources().getString(R.string.support_main_title), item);
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
-		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				activity.openRideIssuesFragment(endRideData);
-			}
-		});
-
-		linearLayoutRideShortInfo.setVisibility(View.GONE);
-		relativeLayoutIssueWithRide.setVisibility(View.VISIBLE);
+		linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+		relativeLayoutIssueWithRide.setVisibility(View.GONE);
 		recyclerViewSupportFaq.setVisibility(View.GONE);
-		getRideSummaryAPI(activity);
+		setRideData();
 		showPanel();
 
 
 		return rootView;
 	}
 
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		super.onHiddenChanged(hidden);
-		if (!hidden) {
-			activity.setTitle(activity.getResources().getString(R.string.support_main_title));
-		}
-	}
 
 	@Override
 	public void onDestroy() {
@@ -196,50 +178,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	}
 
 
-	public void getRideSummaryAPI(final Activity activity) {
-		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
-			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-			HashMap<String, String> params = new HashMap<>();
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-			params.put(Constants.KEY_ENGAGEMENT_ID, "56289");
-
-			RestClient.getApiServices().getRideSummary(params, new Callback<SettleUserDebt>() {
-				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
-					DialogPopup.dismissLoadingDialog();
-					try {
-						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-						JSONObject jObj = new JSONObject(jsonString);
-						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							int flag = jObj.getInt("flag");
-							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
-								endRideData = JSONParser.parseEndRideData(jObj, "56289", Data.fareStructure.fixedFare);
-								setRideData();
-								linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-								getRideSummaryState = 1;
-							} else {
-								retryDialog(DialogErrorType.NO_NET);
-							}
-						}
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						retryDialog(DialogErrorType.NO_NET);
-					}
-				}
-
-				@Override
-				public void failure(RetrofitError error) {
-					DialogPopup.dismissLoadingDialog();
-					getRideSummaryState = -1;
-					linearLayoutRideShortInfo.setVisibility(View.GONE);
-					retryDialog(DialogErrorType.NO_NET);
-				}
-			});
-		} else {
-			retryDialog(DialogErrorType.NO_NET);
-		}
-	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){
 		DialogPopup.dialogNoInternet(activity,
@@ -249,9 +187,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					public void positiveClick() {
 						if(showPanelState != 1) {
 							showPanel();
-						}
-						if(getRideSummaryState != 1){
-							getRideSummaryAPI(activity);
 						}
 					}
 

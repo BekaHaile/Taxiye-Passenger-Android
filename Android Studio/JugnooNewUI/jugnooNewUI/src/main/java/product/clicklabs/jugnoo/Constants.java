@@ -72,4 +72,7 @@ public interface Constants {
 	String KEY_ALREADY_VERIFIED_EMAIL = "already_verified_email";
 	String KEY_ALREADY_REGISTERED_EMAIL = "already_registered_email";
 
+	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
+	String KEY_SUPPORT_ID = "support_id";
+
 }

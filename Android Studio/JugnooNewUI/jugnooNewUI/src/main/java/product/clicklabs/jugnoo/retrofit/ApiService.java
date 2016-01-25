@@ -63,4 +63,9 @@ public interface ApiService {
     void getRideSummary(@FieldMap Map<String, String> params,
                    Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/submit_support_feedback")
+    void submitSupportFeedback(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
 }

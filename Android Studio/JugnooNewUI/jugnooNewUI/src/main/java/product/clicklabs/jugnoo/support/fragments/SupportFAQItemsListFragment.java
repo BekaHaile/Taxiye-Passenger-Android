@@ -34,6 +34,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	private View rootView;
     private SupportActivity activity;
 
+	private int engagementId;
 	private ShowPanelResponse.Item item;
 
     @Override
@@ -50,7 +51,8 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemsListFragment(ShowPanelResponse.Item item){
+	public SupportFAQItemsListFragment(int engagementId, ShowPanelResponse.Item item){
+		this.engagementId = engagementId;
 		this.item = item;
 	}
 
@@ -81,7 +83,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						activity.openItemInFragment(SupportFAQItemsListFragment.this.item.getText(), item);
+						activity.openItemInFragment(engagementId, SupportFAQItemsListFragment.this.item.getText(), item);
 					}
 				});
 		recyclerViewItems.setAdapter(supportFAQItemsAdapter);

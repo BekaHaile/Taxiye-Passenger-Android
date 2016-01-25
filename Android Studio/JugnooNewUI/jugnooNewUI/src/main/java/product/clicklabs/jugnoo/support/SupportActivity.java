@@ -11,9 +11,11 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
+import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -90,13 +92,13 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return linearLayoutContainer;
 	}
 
-	public void openItemInFragment(String parentName, ShowPanelResponse.Item item){
+	public void openItemInFragment(int engagementId, String parentName, ShowPanelResponse.Item item){
 		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()
 				|| ActionType.INAPP_CALL.getOrdinal() == item.getActionType()
 				|| ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()) {
 			getSupportFragmentManager().beginTransaction()
 					.add(getLinearLayoutContainer().getId(),
-							new SupportFAQItemFragment(parentName, item), SupportFAQItemFragment.class.getName())
+							new SupportFAQItemFragment(engagementId, parentName, item), SupportFAQItemFragment.class.getName())
 					.addToBackStack(SupportFAQItemFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
 							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
@@ -105,8 +107,20 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
 			getSupportFragmentManager().beginTransaction()
 					.add(getLinearLayoutContainer().getId(),
-							new SupportFAQItemsListFragment(item), SupportFAQItemsListFragment.class.getName())
+							new SupportFAQItemsListFragment(engagementId, item), SupportFAQItemsListFragment.class.getName())
 					.addToBackStack(SupportFAQItemsListFragment.class.getName())
+					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openRideIssuesFragment(EndRideData endRideData){
+		if(endRideData != null) {
+			getSupportFragmentManager().beginTransaction()
+					.add(getLinearLayoutContainer().getId(),
+							new SupportRideIssuesFragment(endRideData), SupportRideIssuesFragment.class.getName())
+					.addToBackStack(SupportRideIssuesFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
 							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,17 +13,30 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class SupportFAQItemFragment extends Fragment implements FlurryEventNames, Constants {
@@ -35,6 +49,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private View rootView;
     private SupportActivity activity;
 
+	private int engagementId;
 	private String parentName;
 	private ShowPanelResponse.Item item;
 
@@ -52,7 +67,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemFragment(String parentName, ShowPanelResponse.Item item){
+	public SupportFAQItemFragment(int engagementId, String parentName, ShowPanelResponse.Item item){
+		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
 	}
@@ -99,7 +115,21 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
+					String feedbackText = editTextMessage.getText().toString().trim();
+					if(feedbackText.length() <= 0){
+						editTextMessage.requestFocus();
+						editTextMessage.setError(activity.getResources().getString(R.string.support_feedback_empty_error));
+					} else if(feedbackText.length() > 1000){
+						editTextMessage.requestFocus();
+						editTextMessage.setError(String.format(activity.getResources()
+								.getString(R.string.support_feedback_lengthy_error_format), "1000"));
+					} else{
+						submitFeedback(activity, engagementId, feedbackText, item.getSupportId());
+					}
+				} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
+					Utils.openCallIntent(activity, "+910000000000");
+				}
 			}
 		});
 
@@ -114,6 +144,62 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         System.gc();
 	}
 
+	public void submitFeedback(final Activity activity, final int engagementId, String feedbackText, int supportId) {
+		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_SUPPORT_FEEDBACK_TEXT, feedbackText);
+			params.put(Constants.KEY_SUPPORT_ID, ""+supportId);
+
+			if(engagementId != -1){
+				params.put(Constants.KEY_ENGAGEMENT_ID, ""+engagementId);
+			}
+
+			RestClient.getApiServices().submitSupportFeedback(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					DialogPopup.dismissLoadingDialog();
+					try {
+						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						retryDialog(DialogErrorType.NO_NET);
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+					retryDialog(DialogErrorType.NO_NET);
+				}
+			});
+		} else {
+			retryDialog(DialogErrorType.NO_NET);
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType){
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick() {
+					}
+
+					@Override
+					public void neutralClick() {
+
+					}
+
+					@Override
+					public void negativeClick() {
+
+					}
+				});
+	}
 
 
 }
