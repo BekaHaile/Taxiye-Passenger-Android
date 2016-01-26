@@ -627,7 +627,7 @@
 //			Log.i("params", "="+params);
 //
 //			AsyncHttpClient client = Data.getClient();
-//			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
+//			client.post(Config.getServerUrl() + "/loginUsingEmailOrPhoneNo", params,
 //					new CustomAsyncHttpResponseHandler() {
 //					private JSONObject jObj;
 //
