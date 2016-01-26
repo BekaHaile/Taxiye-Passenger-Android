@@ -17,19 +17,23 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class RequestDuplicateRegistrationActivity extends BaseActivity {
@@ -220,7 +224,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
             params.put("user_name", name);
             params.put("user_email", email);
@@ -230,7 +234,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 
             try {
                 if (SplashNewActivity.multipleCaseJSON != null) {
-                    params.put("users", SplashNewActivity.multipleCaseJSON.getJSONArray("users"));
+                    params.put("users", ""+SplashNewActivity.multipleCaseJSON.getJSONArray("users"));
                 }
             } catch(Exception e){
                 e.printStackTrace();
@@ -240,57 +244,108 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			Log.i("params request_dup_registration", "=" + params);
 
 		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/request_dup_registration", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+//			AsyncHttpClient client = Data.getClient();
+//			client.post(Config.getServerUrl() + "/request_dup_registration", params,
+//					new CustomAsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//
+//						@Override
+//						public void onFailure(Throwable arg3) {
+//							Log.e("request fail", arg3.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//						}
+//
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.i("Server response request_dup_registration", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								int flag = jObj.getInt("flag");
+//								String message = JSONParser.getServerMessage(jObj);
+//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+//                                    if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+//										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+//											@Override
+//											public void onClick(View v) {
+//												activity.startActivity(new Intent(activity, SplashNewActivity.class));
+//												activity.finish();
+//												activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//											}
+//										});
+//                                    }
+//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+//                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                activity.startActivity(new Intent(activity, SplashNewActivity.class));
+//                                                activity.finish();
+//                                                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//                                            }
+//                                        });
+//									}
+//									else{
+//										DialogPopup.alertPopup(activity, "", message);
+//									}
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//							}
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//					});
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response request_dup_registration", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								int flag = jObj.getInt("flag");
-								String message = JSONParser.getServerMessage(jObj);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                    if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												activity.startActivity(new Intent(activity, SplashNewActivity.class));
-												activity.finish();
-												activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-											}
-										});
-                                    }
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
-                                            @Override
-                                            public void onClick(View v) {
-                                                activity.startActivity(new Intent(activity, SplashNewActivity.class));
-                                                activity.finish();
-                                                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                            }
-                                        });
+
+			RestClient.getApiServices().requestDupRegistration(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("Server response request_dup_registration", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						int flag = jObj.getInt("flag");
+						String message = JSONParser.getServerMessage(jObj);
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										activity.startActivity(new Intent(activity, SplashNewActivity.class));
+										activity.finish();
+										activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 									}
-									else{
-										DialogPopup.alertPopup(activity, "", message);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								});
 							}
-							DialogPopup.dismissLoadingDialog();
+							else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+										activity.startActivity(new Intent(activity, SplashNewActivity.class));
+										activity.finish();
+										activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+									}
+								});
+							}
+							else{
+								DialogPopup.alertPopup(activity, "", message);
+							}
 						}
-					});
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("request fail", error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

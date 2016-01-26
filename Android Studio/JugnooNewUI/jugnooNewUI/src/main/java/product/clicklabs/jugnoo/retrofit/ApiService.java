@@ -87,4 +87,29 @@ public interface ApiService {
     void registerUsingGoogle(@FieldMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/request_dup_registration")
+    void requestDupRegistration(@FieldMap Map<String, String> params,
+                             Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/verify_my_contact_number")
+    void verifyMyContactNumber(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/send_new_number_otp_via_call")
+    void sendNewNumberOtpViaCall(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/forgot_password")
+    void forgotPassword(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_fare_estimate")
+    void getFareEstimate(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
 }

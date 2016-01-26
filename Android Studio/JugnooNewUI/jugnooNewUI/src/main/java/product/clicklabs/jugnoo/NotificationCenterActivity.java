@@ -81,7 +81,17 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			}
 		});
 
-		new GetNotificationsAsync().execute();
+		notificationList.clear();
+		notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
+		Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+		if(notificationList.size() > 0){
+			linearLayoutNoNotifications.setVisibility(View.GONE);
+		} else{
+			linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+		}
+		myNotificationAdapter.notifyDataSetChanged();
+
+//		new GetNotificationsAsync().execute();
 
 		//new GetAllContacts().execute();
 
