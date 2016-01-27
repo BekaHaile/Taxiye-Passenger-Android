@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -117,7 +118,9 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									if(activity instanceof RideTransactionsActivity){
 										((RideTransactionsActivity)activity).openRideSummaryFragment(rideInfo.engagementId);
 									} else if(activity instanceof SupportActivity){
-										((SupportActivity)activity).openRideIssuesFragment(rideInfo.engagementId, null, null);
+										new TransactionUtils().openRideIssuesFragment(activity,
+												((SupportActivity) activity).getContainer(),
+												rideInfo.engagementId, null, null);
 									}
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

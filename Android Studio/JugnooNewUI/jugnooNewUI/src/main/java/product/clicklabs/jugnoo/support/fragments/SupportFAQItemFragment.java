@@ -25,7 +25,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -78,7 +77,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_support_item, container, false);
 
-        activity = (SupportActivity) getActivity();
+        activity = getActivity();
 
 		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
 		try {

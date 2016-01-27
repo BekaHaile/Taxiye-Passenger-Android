@@ -138,7 +138,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			@Override
 			public void onClick(View v) {
 				if(endRideData != null && getRideSummaryResponse != null) {
-					activity.openRideIssuesFragment(-1, endRideData, getRideSummaryResponse);
+					new TransactionUtils().openRideIssuesFragment(activity,
+							activity.getContainer(),
+							-1, endRideData, getRideSummaryResponse);
 				}
 			}
 		});

@@ -95,8 +95,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_support_ride_issues, container, false);
 
-        activity = (SupportActivity) getActivity();
-		activity.setTitle(activity.getResources().getString(R.string.support_ride_issues_title));
+        activity = getActivity();
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
