@@ -20,12 +20,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -38,9 +37,10 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -48,6 +48,10 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class RideSummaryFragment extends Fragment implements FlurryEventNames, Constants {
@@ -241,6 +245,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					.getResources().getString(R.string.ride_summary));
 		} else if(OpenMode.FROM_SUPPORT == openMode){
 
+		} else if(OpenMode.FROM_RIDE_END == openMode){
+
 		}
 
 		return rootView;
@@ -370,43 +376,43 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				progressWheel.setVisibility(View.VISIBLE);
 				progressWheel.spin();
-				RequestParams params = new RequestParams();
+
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("engagement_id", engagementId);
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getServerUrl() + "/get_ride_summary", params,
-						new CustomAsyncHttpResponseHandler() {
-							private JSONObject jObj;
 
-							@Override
-							public void onFailure(Throwable arg3) {
-								progressWheel.stopSpinning();
-								progressWheel.setVisibility(View.GONE);
-								endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
-							}
-
-							@Override
-							public void onSuccess(String response) {
-								Log.i("Server response get_ride_summary", "response = " + response);
-								progressWheel.stopSpinning();
-								progressWheel.setVisibility(View.GONE);
-								try {
-									jObj = new JSONObject(response);
-									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-										int flag = jObj.getInt("flag");
-										if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
-											endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
-											setRideData();
-										} else {
-											endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
-										}
-									}
-								} catch (Exception exception) {
-									exception.printStackTrace();
+				RestClient.getApiServices().getRideSummary(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response get_ride_summary", "response = " + response);
+						progressWheel.stopSpinning();
+						progressWheel.setVisibility(View.GONE);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
+									endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
+									setRideData();
+								} else {
 									endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
 								}
 							}
-						});
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						progressWheel.stopSpinning();
+						progressWheel.setVisibility(View.GONE);
+						endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+
 			} else {
 				endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
 			}
@@ -429,7 +435,13 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
 	public void performBackPressed() {
-		
+		if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).onBackPressed();
+		} else if(OpenMode.FROM_SUPPORT == openMode){
+
+		} else if(OpenMode.FROM_RIDE_END == openMode && activity instanceof HomeActivity){
+			((HomeActivity)activity).onBackPressed();
+		}
 	}
 
 	@Override
@@ -441,7 +453,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 	public enum OpenMode{
 
-		FROM_MENU(0), FROM_SUPPORT(1);
+		FROM_MENU(0), FROM_SUPPORT(1), FROM_RIDE_END(2);
 
 		private int ordinal;
 
