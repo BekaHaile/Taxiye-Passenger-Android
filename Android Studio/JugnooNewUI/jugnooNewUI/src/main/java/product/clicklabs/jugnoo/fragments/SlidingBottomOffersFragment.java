@@ -186,7 +186,8 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             PromoCoupon promoCoupon = offerList.get(position);
 
             setPromoCouponText(holder.textViewPromotion1, promoCoupon);
-            if(activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id){
+            if(activity.getSlidingBottomPanel().getSelectedCoupon() != null &&
+                    activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id){
                 holder.radioPromotion1.setImageResource(R.drawable.radio_selected_icon);
             } else{
                 holder.radioPromotion1.setImageResource(R.drawable.radio_unselected_icon);

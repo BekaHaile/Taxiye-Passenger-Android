@@ -25,22 +25,21 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -50,6 +49,10 @@ import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
@@ -351,67 +354,119 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 	public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final double distanceValue, final double timeValue) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("start_latitude", "" + sourceLatLng.latitude);
 				params.put("start_longitude", "" + sourceLatLng.longitude);
 				params.put("ride_distance", "" + distanceValue);
 				params.put("ride_time", "" + timeValue);
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getServerUrl() + "/get_fare_estimate", params,
-						new CustomAsyncHttpResponseHandler() {
-							private JSONObject jObj;
+//				AsyncHttpClient client = Data.getClient();
+//				client.post(Config.getServerUrl() + "/get_fare_estimate", params,
+//						new CustomAsyncHttpResponseHandler() {
+//							private JSONObject jObj;
+//
+//							@Override
+//							public void onFailure(Throwable arg3) {
+//								Log.e("request fail", arg3.toString());
+//								DialogPopup.dismissLoadingDialog();
+//								retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
+//							}
+//
+//							@Override
+//							public void onSuccess(String response) {
+//								Log.e("Server response", "response = " + response);
+//								try {
+//									jObj = new JSONObject(response);
+//
+//									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+//										int flag = jObj.getInt("flag");
+//										String message = JSONParser.getServerMessage(jObj);
+//										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+//											String minFare = jObj.getString("min_fare");
+//											String maxFare = jObj.getString("max_fare");
+//											double convenienceCharge = jObj.optDouble("convenience_charge", 0);
+//
+//											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
+//													getResources().getString(R.string.rupee) + "" + maxFare);
+//
+//											if(convenienceCharge > 0){
+//												textViewConvenienceCharge.setText("Convenience Charges "
+//														+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+//											}
+//											else{
+//												if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
+//													textViewConvenienceCharge.setText("Convenience Charges "
+//															+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
+//												}
+//												else{
+//													textViewConvenienceCharge.setText("");
+//												}
+//											}
+//										} else {
+//											retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
+//										}
+//									}
+//								} catch (Exception exception) {
+//									exception.printStackTrace();
+//									retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
+//								}
+//								DialogPopup.dismissLoadingDialog();
+//							}
+//
+//						});
 
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-								retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
-							}
+                RestClient.getApiServices().getFareEstimate(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.e("Server response", "response = " + responseStr);
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
 
-							@Override
-							public void onSuccess(String response) {
-								Log.e("Server response", "response = " + response);
-								try {
-									jObj = new JSONObject(response);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    String minFare = jObj.getString("min_fare");
+                                    String maxFare = jObj.getString("max_fare");
+                                    double convenienceCharge = jObj.optDouble("convenience_charge", 0);
 
-									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-										int flag = jObj.getInt("flag");
-										String message = JSONParser.getServerMessage(jObj);
-										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-											String minFare = jObj.getString("min_fare");
-											String maxFare = jObj.getString("max_fare");
-											double convenienceCharge = jObj.optDouble("convenience_charge", 0);
+                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
+                                            getResources().getString(R.string.rupee) + "" + maxFare);
 
-											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
-													getResources().getString(R.string.rupee) + "" + maxFare);
+                                    if(convenienceCharge > 0){
+                                        textViewConvenienceCharge.setText("Convenience Charges "
+                                                +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                                    }
+                                    else{
+                                        if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
+                                            textViewConvenienceCharge.setText("Convenience Charges "
+                                                    +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
+                                        }
+                                        else{
+                                            textViewConvenienceCharge.setText("");
+                                        }
+                                    }
+                                } else {
+                                    retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
 
-											if(convenienceCharge > 0){
-												textViewConvenienceCharge.setText("Convenience Charges "
-														+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
-											}
-											else{
-												if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
-													textViewConvenienceCharge.setText("Convenience Charges "
-															+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-												}
-												else{
-													textViewConvenienceCharge.setText("");
-												}
-											}
-										} else {
-											retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
-										}
-									}
-								} catch (Exception exception) {
-									exception.printStackTrace();
-									retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
-								}
-								DialogPopup.dismissLoadingDialog();
-							}
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("request fail", error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
+                    }
+                });
 
-						});
 			} else {
 				retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, distanceValue, timeValue);
                 DialogPopup.dismissLoadingDialog();

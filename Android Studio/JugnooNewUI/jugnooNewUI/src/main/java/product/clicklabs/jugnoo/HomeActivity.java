@@ -114,7 +114,6 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
-import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -303,7 +302,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
 
-    private LinearLayout changeLocalityLayout;
+    private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation;
 
@@ -576,7 +575,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInitialInstructions = (TextView) findViewById(R.id.textViewInitialInstructions);
         textViewInitialInstructions.setTypeface(Fonts.mavenLight(this));
         textViewInitialInstructions.setVisibility(View.GONE);
-        changeLocalityLayout = (LinearLayout)findViewById(R.id.changeLocalityLayout);
+        changeLocalityLayout = (RelativeLayout)findViewById(R.id.changeLocalityLayout);
         textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
 
 
@@ -904,6 +903,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
+        changeLocalityLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
 
@@ -912,7 +917,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 				try {
 					if(map != null) {
                         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
@@ -1475,11 +1479,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapTouched() {
                     // Map touched
-                    if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                    /*if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
                         slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                     } else{
                         slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    }
+                    }*/
 
 
                 }
@@ -1595,9 +1599,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			switchUserScreen();
 
             startUIAfterGettingUserStatus();
-
-
-            Database2.getInstance(HomeActivity.this).insertDriverLocData(Data.userData.accessToken, Data.getDeviceToken(), Config.getServerUrl());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1890,7 +1891,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     OnClickListener mapMyLocationClick = new OnClickListener() {
-
         @Override
         public void onClick(View v) {
             textViewInitialSearch.setText("");
@@ -1908,9 +1908,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 reconnectLocationFetchers();
             }
             FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+            /*if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }
+            }*/
         }
     };
 
@@ -1988,8 +1988,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchUserScreen() {
 
-        Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_PASSENGER);
-
         passengerMainLayout.setVisibility(View.VISIBLE);
 
         relativeLayoutPromotions.setVisibility(View.VISIBLE);
@@ -2046,7 +2044,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
 
-                setSlidingUpPanelLayoutState(mode);
+                //setSlidingUpPanelLayoutState(mode);
 
                 switch (mode) {
 
@@ -3570,7 +3568,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-
+                    Log.e("show promotion api", "errorrrr"+error.toString());
                 }
             });
 
@@ -3598,7 +3596,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
 		if (!"".equalsIgnoreCase(farAwayCity)) {
-            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
+            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight(0);
+            //slidingBottomPanel.setLinearLayoutSlidingBottom(View.GONE);
 
             //textViewInitialInstructions.setVisibility(View.VISIBLE);
             textViewInitialInstructions.setText(farAwayCity);
@@ -3615,10 +3616,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		} else {
 			if(!promoOpened) {
 				imageViewRideNow.setVisibility(View.VISIBLE);
-
 				initialMyLocationBtn.setVisibility(View.VISIBLE);
 			}
-            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight((int)(ASSL.Yscale()*110));
+            //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
+            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             changeLocalityLayout.setVisibility(View.GONE);
 			changeLocalityBtn.setVisibility(View.GONE);
 			initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
@@ -3757,7 +3759,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
                                 }
                                 else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 5000, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -4574,7 +4576,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             builder.include(lastLatLng).include(Data.dropLatLng);
                                             LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, FIX_ZOOM_DIAGONAL);
                                             float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 2000, new GoogleMap.CancelableCallback() {
+                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, new GoogleMap.CancelableCallback() {
 												@Override
 												public void onFinish() {
 													pickupDropZoomed = true;
@@ -4836,14 +4838,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (hasFocus) {
             if (loggedOut) {
                 loggedOut = false;
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Database2.getInstance(HomeActivity.this).updateUserMode(Database2.UM_OFFLINE);
-                        Database2.getInstance(HomeActivity.this).close();
-                    }
-                }).start();
 
                 cancelTimerUpdateDrivers();
 

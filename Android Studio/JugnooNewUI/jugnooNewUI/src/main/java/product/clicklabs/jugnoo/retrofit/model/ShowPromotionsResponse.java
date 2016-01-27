@@ -484,25 +484,25 @@ public class ShowPromotionsResponse {
 
         @SerializedName("fare_fixed")
         @Expose
-        private Integer fareFixed;
+        private Double fareFixed;
         @SerializedName("fare_per_km")
         @Expose
-        private Integer farePerKm;
+        private Double farePerKm;
         @SerializedName("fare_threshold_distance")
         @Expose
-        private Integer fareThresholdDistance;
+        private Double fareThresholdDistance;
         @SerializedName("fare_per_min")
         @Expose
-        private Integer farePerMin;
+        private Double farePerMin;
         @SerializedName("fare_threshold_time")
         @Expose
-        private Integer fareThresholdTime;
+        private Double fareThresholdTime;
         @SerializedName("fare_per_waiting_min")
         @Expose
-        private Integer farePerWaitingMin;
+        private Double farePerWaitingMin;
         @SerializedName("fare_threshold_waiting_time")
         @Expose
-        private Integer fareThresholdWaitingTime;
+        private Double fareThresholdWaitingTime;
         @SerializedName("start_time")
         @Expose
         private String startTime;
@@ -518,7 +518,7 @@ public class ShowPromotionsResponse {
          * @return
          * The fareFixed
          */
-        public Integer getFareFixed() {
+        public Double getFareFixed() {
             return fareFixed;
         }
 
@@ -527,7 +527,7 @@ public class ShowPromotionsResponse {
          * @param fareFixed
          * The fare_fixed
          */
-        public void setFareFixed(Integer fareFixed) {
+        public void setFareFixed(Double fareFixed) {
             this.fareFixed = fareFixed;
         }
 
@@ -536,7 +536,7 @@ public class ShowPromotionsResponse {
          * @return
          * The farePerKm
          */
-        public Integer getFarePerKm() {
+        public Double getFarePerKm() {
             return farePerKm;
         }
 
@@ -545,7 +545,7 @@ public class ShowPromotionsResponse {
          * @param farePerKm
          * The fare_per_km
          */
-        public void setFarePerKm(Integer farePerKm) {
+        public void setFarePerKm(Double farePerKm) {
             this.farePerKm = farePerKm;
         }
 
@@ -554,7 +554,7 @@ public class ShowPromotionsResponse {
          * @return
          * The fareThresholdDistance
          */
-        public Integer getFareThresholdDistance() {
+        public Double getFareThresholdDistance() {
             return fareThresholdDistance;
         }
 
@@ -563,7 +563,7 @@ public class ShowPromotionsResponse {
          * @param fareThresholdDistance
          * The fare_threshold_distance
          */
-        public void setFareThresholdDistance(Integer fareThresholdDistance) {
+        public void setFareThresholdDistance(Double fareThresholdDistance) {
             this.fareThresholdDistance = fareThresholdDistance;
         }
 
@@ -572,7 +572,7 @@ public class ShowPromotionsResponse {
          * @return
          * The farePerMin
          */
-        public Integer getFarePerMin() {
+        public Double getFarePerMin() {
             return farePerMin;
         }
 
@@ -581,7 +581,7 @@ public class ShowPromotionsResponse {
          * @param farePerMin
          * The fare_per_min
          */
-        public void setFarePerMin(Integer farePerMin) {
+        public void setFarePerMin(Double farePerMin) {
             this.farePerMin = farePerMin;
         }
 
@@ -590,7 +590,7 @@ public class ShowPromotionsResponse {
          * @return
          * The fareThresholdTime
          */
-        public Integer getFareThresholdTime() {
+        public Double getFareThresholdTime() {
             return fareThresholdTime;
         }
 
@@ -599,7 +599,7 @@ public class ShowPromotionsResponse {
          * @param fareThresholdTime
          * The fare_threshold_time
          */
-        public void setFareThresholdTime(Integer fareThresholdTime) {
+        public void setFareThresholdTime(Double fareThresholdTime) {
             this.fareThresholdTime = fareThresholdTime;
         }
 
@@ -608,7 +608,7 @@ public class ShowPromotionsResponse {
          * @return
          * The farePerWaitingMin
          */
-        public Integer getFarePerWaitingMin() {
+        public Double getFarePerWaitingMin() {
             return farePerWaitingMin;
         }
 
@@ -617,7 +617,7 @@ public class ShowPromotionsResponse {
          * @param farePerWaitingMin
          * The fare_per_waiting_min
          */
-        public void setFarePerWaitingMin(Integer farePerWaitingMin) {
+        public void setFarePerWaitingMin(Double farePerWaitingMin) {
             this.farePerWaitingMin = farePerWaitingMin;
         }
 
@@ -626,7 +626,7 @@ public class ShowPromotionsResponse {
          * @return
          * The fareThresholdWaitingTime
          */
-        public Integer getFareThresholdWaitingTime() {
+        public Double getFareThresholdWaitingTime() {
             return fareThresholdWaitingTime;
         }
 
@@ -635,7 +635,7 @@ public class ShowPromotionsResponse {
          * @param fareThresholdWaitingTime
          * The fare_threshold_waiting_time
          */
-        public void setFareThresholdWaitingTime(Integer fareThresholdWaitingTime) {
+        public void setFareThresholdWaitingTime(Double fareThresholdWaitingTime) {
             this.fareThresholdWaitingTime = fareThresholdWaitingTime;
         }
 

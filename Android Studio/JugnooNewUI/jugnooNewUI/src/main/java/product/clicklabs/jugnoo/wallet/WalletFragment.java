@@ -3,6 +3,9 @@ package product.clicklabs.jugnoo.wallet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,20 +192,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		});
 
 
-		try{
-			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
-				textViewPaytmBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
-				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
-					showPaytmActiveUI();
-				}
-				else{
-					showPaytmInactiveUI();
-				}
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		setUserWalletInfo();
 
         return rootView;
 	}
@@ -210,26 +200,38 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	@Override
 	public void onResume() {
 		super.onResume();
+		HomeActivity.checkIfUserDataNull(paymentActivity);
+		HomeActivity.checkForAccessTokenChange(paymentActivity);
+		setUserWalletInfo();
+	}
+
+	private void setUserWalletInfo(){
 		try{
-			HomeActivity.checkIfUserDataNull(paymentActivity);
 			if(Data.userData != null){
 				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
 				textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				} else if(Data.userData.getPaytmStatus().equalsIgnoreCase("")){
-                    showPaytmActiveUI();
-                    textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), "--"));
-                } else{
+					showPaytmActiveUI();
+					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupee), "--"));
+				} else{
 					showPaytmInactiveUI();
 				}
+
+				Spannable spanJ = new SpannableString(textViewJugnooCashBalanceValue.getText());
+				spanJ.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				textViewJugnooCashBalanceValue.setText(spanJ);
+
+				Spannable spanP = new SpannableString(textViewPaytmBalanceValue.getText());
+				spanP.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				textViewPaytmBalanceValue.setText(spanP);
+
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		HomeActivity.checkForAccessTokenChange(paymentActivity);
 	}
-
 
 
 	private void showPaytmActiveUI(){

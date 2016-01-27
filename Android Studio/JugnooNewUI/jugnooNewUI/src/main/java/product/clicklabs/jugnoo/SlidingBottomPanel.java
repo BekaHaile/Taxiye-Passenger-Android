@@ -43,7 +43,7 @@ public class SlidingBottomPanel {
     private String TAG = "slidingPanel";
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
-    private ImageView imageViewPaymentOp;
+    private ImageView imageViewPaymentOp, imageViewExtraForSliding;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
     private LinearLayout linearLayoutSlidingBottom;
     private PromoCoupon selectedCoupon = null;
@@ -68,6 +68,7 @@ public class SlidingBottomPanel {
         textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
         linearLayoutSlidingBottom = (LinearLayout) view.findViewById(R.id.linearLayoutSlidingBottom);
+        imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
 
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
@@ -78,16 +79,19 @@ public class SlidingBottomPanel {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+                imageViewExtraForSliding.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPanelExpanded(View panel) {
                 Log.i(TAG, "onPanelExpanded");
+                imageViewExtraForSliding.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
                 Log.i(TAG, "onPanelCollapsed");
+                imageViewExtraForSliding.setVisibility(View.GONE);
             }
 
             @Override
@@ -108,6 +112,14 @@ public class SlidingBottomPanel {
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
         tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
         tabs.setViewPager(viewPager);
+
+        imageViewExtraForSliding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageViewExtraForSliding.setVisibility(View.GONE);
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
 
         update(null);
     }

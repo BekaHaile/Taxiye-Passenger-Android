@@ -1,14 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    android:background="@color/white_light_grey" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_light_grey">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/topBar"
@@ -16,7 +15,7 @@
             android:layout_height="@dimen/top_bar_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/nl_background_theme_color" >
+            android:background="@drawable/nl_background_theme_color">
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -24,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="MY ACCOUNT"
+                android:text="PROFILE"
                 android:textColor="@color/white"
                 android:textSize="@dimen/top_bar_title_text_size" />
 
@@ -41,52 +40,51 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_below="@+id/topBar"
-            >
+            android:orientation="vertical">
 
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutMain"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:animateLayoutChanges="true"
                     android:background="@color/white"
                     android:orientation="vertical"
-                    android:splitMotionEvents="false"
-                    android:animateLayoutChanges="true" >
+                    android:splitMotionEvents="false">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="313px" >
+                        android:layout_height="313px">
 
                         <ImageView
                             android:id="@+id/imageViewUserImageBlur"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/white_light_grey"
-                            android:visibility="gone"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/imageViewUserImageBlurCover"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:visibility="gone"
                             android:background="#10000000"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
 
                         <RelativeLayout
                             android:id="@+id/relativeLayoutProfileImage"
                             android:layout_width="223px"
                             android:layout_height="223px"
-                            android:layout_marginTop="34px"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginTop="34px"
                             android:splitMotionEvents="false"
-                            android:tag="mwar" >
+                            android:tag="mwar">
 
                             <ImageView
                                 android:id="@+id/imageViewProfileImageBack"
@@ -107,229 +105,237 @@
                             android:layout_width="match_parent"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:src="@color/text_color_hint"
-                            android:layout_gravity="center_horizontal" />
+                            android:layout_gravity="center_horizontal"
+                            android:src="@color/text_color_hint" />
 
                         <TextView
                             android:id="@+id/textViewInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="INFO"
-                            android:textColor="@color/theme_color"
-                            android:textSize="@dimen/text_size_26"
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="10px"
-                            android:layout_marginLeft="30px"/>
+                            android:layout_marginLeft="30px"
+                            android:text="INFO"
+                            android:textColor="@color/theme_color"
+                            android:textSize="@dimen/text_size_26" />
 
 
                     </RelativeLayout>
 
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutETName"
-                            android:layout_width="660px"
-                            android:layout_height="@dimen/top_bar_height"
-                            android:layout_gravity="center_horizontal">
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutETName"
+                        android:layout_width="660px"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:layout_gravity="center_horizontal">
 
-                            <EditText
-                                android:id="@+id/editTextUserName"
-                                android:layout_width="590px"
-                                android:layout_height="match_parent"
-                                android:background="#0000"
-                                android:capitalize="words"
-                                android:gravity="center_vertical"
-                                android:hint="Name"
-                                android:paddingRight="20px"
-                                android:singleLine="true"
-                                android:textColor="@color/black_text"
-                                android:textColorHint="@color/black_text_alpha"
-                                android:textCursorDrawable="@null"
-                                android:textSize="30px" />
-
-                            <ImageView
-                                android:id="@+id/imageViewEditName"
-                                android:layout_width="60px"
-                                android:layout_height="60px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:padding="15px"
-                                android:src="@drawable/edit_icon_selector"
-                                android:tag="mwar" />
-                        </RelativeLayout>
+                        <EditText
+                            android:id="@+id/editTextUserName"
+                            android:layout_width="590px"
+                            android:layout_height="match_parent"
+                            android:background="#0000"
+                            android:capitalize="words"
+                            android:gravity="center_vertical"
+                            android:hint="Name"
+                            android:paddingRight="20px"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textColorHint="@color/black_text_alpha"
+                            android:textCursorDrawable="@null"
+                            android:textSize="30px"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="DONE"
+                            />
 
                         <ImageView
-                            android:layout_width="660px"
-                            android:layout_height="2px"
-                            android:src="@color/text_color_hint"
-                            android:layout_gravity="center_horizontal" />
+                            android:id="@+id/imageViewEditName"
+                            android:layout_width="60px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:padding="15px"
+                            android:src="@drawable/edit_icon_selector"
+                            android:tag="mwar" />
+                    </RelativeLayout>
 
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutETEmail"
-                            android:layout_width="660px"
-                            android:layout_height="@dimen/top_bar_height"
-                            android:layout_marginTop="5px"
-                            android:layout_gravity="center_horizontal">
+                    <ImageView
+                        android:layout_width="660px"
+                        android:layout_height="2px"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@color/text_color_hint" />
 
-                            <EditText
-                                android:id="@+id/editTextEmail"
-                                android:layout_width="560px"
-                                android:layout_height="match_parent"
-                                android:background="#0000"
-                                android:gravity="center_vertical"
-                                android:hint="Email"
-                                android:inputType="textEmailAddress"
-                                android:paddingRight="20px"
-                                android:singleLine="true"
-                                android:textColor="@color/black_text"
-                                android:textColorHint="@color/black_text_alpha"
-                                android:textCursorDrawable="@null"
-                                android:textSize="30px" />
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutETEmail"
+                        android:layout_width="660px"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5px">
 
-                            <ImageView
-                                android:id="@+id/imageViewEmailVerifyStatus"
-                                android:layout_width="68px"
-                                android:layout_height="68px"
-                                android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/imageViewEditEmail"
-                                android:padding="15px"
-                                android:src="@drawable/warning_icon"
-                                android:tag="mwar" />
-
-                            <ImageView
-                                android:id="@+id/imageViewEditEmail"
-                                android:layout_width="60px"
-                                android:layout_height="60px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:padding="15px"
-                                android:src="@drawable/edit_icon_selector"
-                                android:tag="mwar" />
-                        </RelativeLayout>
+                        <EditText
+                            android:id="@+id/editTextEmail"
+                            android:layout_width="560px"
+                            android:layout_height="match_parent"
+                            android:background="#0000"
+                            android:gravity="center_vertical"
+                            android:hint="Email"
+                            android:inputType="textEmailAddress"
+                            android:paddingRight="20px"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textColorHint="@color/black_text_alpha"
+                            android:textCursorDrawable="@null"
+                            android:textSize="30px"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="DONE"
+                            />
 
                         <ImageView
-                            android:layout_width="660px"
-                            android:layout_height="2px"
-                            android:src="@color/text_color_hint"
-                            android:layout_gravity="center_horizontal" />
+                            android:id="@+id/imageViewEmailVerifyStatus"
+                            android:layout_width="68px"
+                            android:layout_height="68px"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/imageViewEditEmail"
+                            android:padding="15px"
+                            android:src="@drawable/warning_icon"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            android:id="@+id/imageViewEditEmail"
+                            android:layout_width="60px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:padding="15px"
+                            android:src="@drawable/edit_icon_selector"
+                            android:tag="mwar" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="660px"
+                        android:layout_height="2px"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@color/text_color_hint" />
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutEmailVerify"
+                        android:layout_width="626px"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10px"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/imageViewOraneTriangle"
+                            android:layout_width="28px"
+                            android:layout_height="28px"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="73px"
+                            android:src="@drawable/triangle_orange" />
 
                         <RelativeLayout
-                            android:id="@+id/relativeLayoutEmailVerify"
-                            android:layout_width="626px"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
+                            android:layout_width="616px"
+                            android:layout_height="58px"
                             android:layout_marginTop="10px"
-                            android:visibility="visible" >
-
-                            <ImageView
-                                android:id="@+id/imageViewOraneTriangle"
-                                android:layout_width="28px"
-                                android:layout_height="28px"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="73px"
-                                android:src="@drawable/triangle_orange" />
-
-                            <RelativeLayout
-                                android:layout_width="616px"
-                                android:layout_height="58px"
-                                android:layout_marginTop="10px"
-                                android:background="@drawable/button_yellow_orange_normal" >
-
-                                <TextView
-                                    android:id="@+id/textViewEmailVerifyMessage"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginLeft="20px"
-                                    android:gravity="center"
-                                    android:text="Please verify the Address."
-                                    android:textColor="@color/white"
-                                    android:textSize="26px" />
-
-                                <TextView
-                                    android:id="@+id/textViewEmailVerify"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginRight="50px"
-                                    android:gravity="center"
-                                    android:text="VERIFY ME"
-                                    android:textColor="@drawable/text_color_white_alpha_selector"
-                                    android:textSize="26px" />
-
-                                <ImageView
-                                    android:id="@+id/imageViewEmailVerifyArrow"
-                                    android:layout_width="13px"
-                                    android:layout_height="26px"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginRight="20px"
-                                    android:rotation="180"
-                                    android:src="@drawable/back_white_selector"
-                                    android:tag="mwar" />
-                            </RelativeLayout>
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutETPhone"
-                            android:layout_width="660px"
-                            android:layout_height="@dimen/top_bar_height"
-                            android:layout_marginTop="5px"
-                            android:layout_gravity="center_horizontal" >
+                            android:background="@drawable/button_yellow_orange_normal">
 
                             <TextView
-                                android:id="@+id/textViewPhone91"
+                                android:id="@+id/textViewEmailVerifyMessage"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center_vertical"
-                                android:gravity="center_vertical"
-                                android:text="+91"
-                                android:textColor="@color/black_text"
-                                android:textSize="30px"
-                                />
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="20px"
+                                android:gravity="center"
+                                android:text="Please verify the Address."
+                                android:textColor="@color/white"
+                                android:textSize="26px" />
 
-
-                            <EditText
-                                android:id="@+id/editTextPhone"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_toLeftOf="@+id/imageViewEditPhoneNo"
-                                android:layout_toRightOf="@+id/textViewPhone91"
-                                android:background="#0000"
-                                android:gravity="center_vertical"
-                                android:hint="Phone Number"
-                                android:inputType="number"
-                                android:maxLength="10"
-                                android:paddingLeft="10px"
-                                android:paddingRight="20px"
-                                android:singleLine="true"
-                                android:textColor="@color/black_text"
-                                android:textColorHint="@color/black_text_alpha"
-                                android:textCursorDrawable="@null"
-                                android:textSize="30px" />
-
-                            <ImageView
-                                android:id="@+id/imageViewEditPhoneNo"
-                                android:layout_width="60px"
-                                android:layout_height="60px"
+                            <TextView
+                                android:id="@+id/textViewEmailVerify"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:padding="15px"
-                                android:src="@drawable/edit_icon_selector"
+                                android:layout_marginRight="50px"
+                                android:gravity="center"
+                                android:text="VERIFY ME"
+                                android:textColor="@drawable/text_color_white_alpha_selector"
+                                android:textSize="26px" />
+
+                            <ImageView
+                                android:id="@+id/imageViewEmailVerifyArrow"
+                                android:layout_width="13px"
+                                android:layout_height="26px"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20px"
+                                android:rotation="180"
+                                android:src="@drawable/back_white_selector"
                                 android:tag="mwar" />
                         </RelativeLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutETPhone"
+                        android:layout_width="660px"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5px">
+
+                        <TextView
+                            android:id="@+id/textViewPhone91"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:text="+91"
+                            android:textColor="@color/black_text"
+                            android:textSize="30px" />
+
+
+                        <EditText
+                            android:id="@+id/editTextPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@+id/imageViewEditPhoneNo"
+                            android:layout_toRightOf="@+id/textViewPhone91"
+                            android:background="#0000"
+                            android:gravity="center_vertical"
+                            android:hint="Phone Number"
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:paddingLeft="10px"
+                            android:paddingRight="20px"
+                            android:singleLine="true"
+                            android:textColor="@color/black_text"
+                            android:textColorHint="@color/black_text_alpha"
+                            android:textCursorDrawable="@null"
+                            android:textSize="30px"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="DONE"
+                            />
 
                         <ImageView
-                            android:layout_width="660px"
-                            android:layout_height="2px"
-                            android:src="@color/text_color_hint"
-                            android:layout_gravity="center_horizontal" />
+                            android:id="@+id/imageViewEditPhoneNo"
+                            android:layout_width="60px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:padding="15px"
+                            android:src="@drawable/edit_icon_selector"
+                            android:tag="mwar" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="660px"
+                        android:layout_height="2px"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@color/text_color_hint" />
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutJugnooJeanie"
                         android:layout_width="match_parent"
-                        android:layout_gravity="center_horizontal"
                         android:layout_height="@dimen/top_bar_height"
-                        android:background="@color/white" >
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/white">
 
 
                         <TextView
@@ -338,8 +344,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:gravity="center"
                             android:layout_marginLeft="30px"
+                            android:gravity="center"
                             android:text="@string/jugnoo_jeanie"
                             android:textColor="@drawable/text_color_black_alpha_selector"
                             android:textSize="28px" />
@@ -366,9 +372,9 @@
                         android:id="@+id/relativeLayoutChangePassword"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
-                        android:visibility="visible"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/white" >
+                        android:background="@color/sliding_bottom_bg_color"
+                        android:visibility="visible">
 
 
                         <TextView
@@ -389,8 +395,8 @@
                             android:layout_width="13px"
                             android:layout_height="26px"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="30px"
                             android:layout_centerVertical="true"
+                            android:layout_marginRight="30px"
                             android:src="@drawable/arrow_icon_selector"
                             android:tag="mwar" />
 
@@ -406,9 +412,9 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutEmergencyContact"
                         android:layout_width="match_parent"
-                        android:layout_gravity="center_horizontal"
                         android:layout_height="@dimen/top_bar_height"
-                        android:background="@color/white" >
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/sliding_bottom_bg_color">
 
                         <TextView
                             android:id="@+id/textViewEmergencyContact"
@@ -427,8 +433,8 @@
                             android:layout_width="13px"
                             android:layout_height="26px"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="30px"
                             android:layout_centerVertical="true"
+                            android:layout_marginRight="30px"
                             android:src="@drawable/arrow_icon_selector"
                             android:tag="mwar" />
 
@@ -445,7 +451,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/white" >
+                        android:background="@color/white">
 
                         <TextView
                             android:id="@+id/textViewAddHome"
@@ -453,12 +459,12 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
-                            android:maxLines="2"
-                            android:lineSpacingExtra="10px"
-                            android:paddingRight="20px"
-                            android:layout_toRightOf="@+id/imageViewAddHome"
                             android:layout_toLeftOf="@+id/imageViewEditHome"
+                            android:layout_toRightOf="@+id/imageViewAddHome"
                             android:gravity="center_vertical"
+                            android:lineSpacingExtra="10px"
+                            android:maxLines="2"
+                            android:paddingRight="20px"
                             android:text="@string/add_home"
                             android:textColor="@color/text_color_hint"
                             android:textSize="28px" />
@@ -467,9 +473,9 @@
                             android:id="@+id/imageViewAddHome"
                             android:layout_width="36px"
                             android:layout_height="34px"
-                            android:layout_marginLeft="30px"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
                             android:src="@drawable/home"
                             android:tag="mwar" />
 
@@ -479,11 +485,11 @@
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:padding="15px"
-                            android:visibility="gone"
                             android:layout_marginRight="20px"
+                            android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
-                            android:tag="mwar" />
+                            android:tag="mwar"
+                            android:visibility="gone" />
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -498,7 +504,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/white" >
+                        android:background="@color/white">
 
 
                         <TextView
@@ -507,12 +513,12 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
+                            android:layout_toLeftOf="@+id/imageViewEditWork"
+                            android:layout_toRightOf="@+id/imageViewAddWork"
+                            android:gravity="center_vertical"
+                            android:lineSpacingExtra="10px"
                             android:maxLines="2"
                             android:paddingRight="20px"
-                            android:lineSpacingExtra="10px"
-                            android:layout_toRightOf="@+id/imageViewAddWork"
-                            android:layout_toLeftOf="@+id/imageViewEditWork"
-                            android:gravity="center_vertical"
                             android:text="@string/add_work"
                             android:textColor="@color/text_color_hint"
                             android:textSize="28px" />
@@ -521,9 +527,9 @@
                             android:id="@+id/imageViewAddWork"
                             android:layout_width="36px"
                             android:layout_height="34px"
-                            android:layout_marginLeft="30px"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
                             android:src="@drawable/work"
                             android:tag="mwar" />
 
@@ -533,11 +539,11 @@
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:padding="15px"
-                            android:visibility="gone"
                             android:layout_marginRight="20px"
+                            android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
-                            android:tag="mwar" />
+                            android:tag="mwar"
+                            android:visibility="gone" />
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -554,23 +560,22 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="70px"
                         android:layout_marginTop="70px"
-                        android:text="@string/logout"
-                        />
+                        android:text="@string/logout" />
 
                     <TextView
                         android:id="@+id/textViewScroll"
                         android:layout_width="20px"
                         android:layout_height="20px"
-                        android:text=" "/>
+                        android:text=" " />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="6px"
-            android:background="@drawable/shadow_down"
             android:layout_below="@+id/topBar"
-            />
+            android:background="@drawable/shadow_down" />
 
     </RelativeLayout>
 

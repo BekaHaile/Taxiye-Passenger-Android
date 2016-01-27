@@ -1,11 +1,9 @@
-<android.support.v4.widget.DrawerLayout
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawerLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,157 +19,212 @@
             sothree:umanoPanelHeight="110px"
             sothree:umanoShadowHeight="10px">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:splitMotionEvents="false"
-            >
-
-            <!-- map layout -->
             <RelativeLayout
-                android:id="@+id/mapLayout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/screen_height"
-                android:splitMotionEvents="false"
-                android:layout_marginTop="@dimen/top_bar_height"
-                android:visibility="visible">
-
-                <fragment
-                    android:id="@+id/map"
-                    class="product.clicklabs.jugnoo.utils.TouchableMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
-
-            <!-- passenger main layout -->
-            <RelativeLayout
-                android:id="@+id/passengerMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:splitMotionEvents="false"
-                android:visibility="visible"
-                android:layout_marginTop="@dimen/top_bar_height"
-                >
+                android:orientation="vertical"
+                android:splitMotionEvents="false">
 
-                <!-- centre pin layout -->
+                <!-- map layout -->
                 <RelativeLayout
-                    android:id="@+id/centreLocationRl"
+                    android:id="@+id/mapLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/screen_height"
+                    android:layout_marginTop="@dimen/top_bar_height"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible">
+
+                    <fragment
+                        android:id="@+id/map"
+                        class="product.clicklabs.jugnoo.utils.TouchableMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </RelativeLayout>
+
+                <!-- passenger main layout -->
+                <RelativeLayout
+                    android:id="@+id/passengerMainLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/top_bar_height"
                     android:splitMotionEvents="false"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
+                    <!-- centre pin layout -->
                     <RelativeLayout
+                        android:id="@+id/centreLocationRl"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:splitMotionEvents="false"
-                        android:layout_above="@+id/imageViewCenterPinMargin"
-                        >
+                        android:visibility="gone">
+
                         <RelativeLayout
-                            android:id="@+id/relativeLayoutCentrePin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@+id/centreLocationPivot"
-                            android:layout_centerHorizontal="true">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_above="@+id/imageViewCenterPinMargin"
+                            android:splitMotionEvents="false">
+
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutCentrePin"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@+id/centreLocationPivot"
+                                android:layout_centerHorizontal="true">
+
+                                <ImageView
+                                    android:id="@+id/centreLocationPin"
+                                    android:layout_width="77px"
+                                    android:layout_height="130px"
+                                    android:background="@drawable/ic_centre_pin_big"
+                                    android:tag="mwar" />
+
+                                <TextView
+                                    android:id="@+id/textViewCentrePinETA"
+                                    android:layout_width="77px"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8px"
+                                    android:gravity="center"
+                                    android:text="-"
+                                    android:textColor="@color/white"
+                                    android:textSize="28px" />
+
+                                <TextView
+                                    android:id="@+id/textViewCentrePinETAMin"
+                                    android:layout_width="77px"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/textViewCentrePinETA"
+                                    android:layout_marginTop="-6px"
+                                    android:gravity="center"
+                                    android:text="MIN"
+                                    android:textColor="@color/white"
+                                    android:textSize="22px" />
+
+                            </RelativeLayout>
 
                             <ImageView
-                                android:id="@+id/centreLocationPin"
-                                android:layout_width="77px"
-                                android:layout_height="130px"
-                                android:background="@drawable/ic_centre_pin_big"
-                                android:tag="mwar"/>
-
-                            <TextView
-                                android:id="@+id/textViewCentrePinETA"
-                                android:layout_width="77px"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8px"
-                                android:gravity="center"
-                                android:text="-"
-                                android:textColor="@color/white"
-                                android:textSize="28px"
-                                />
-
-                            <TextView
-                                android:id="@+id/textViewCentrePinETAMin"
-                                android:layout_width="77px"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/textViewCentrePinETA"
-                                android:layout_marginTop="-6px"
-                                android:gravity="center"
-                                android:text="MIN"
-                                android:textColor="@color/white"
-                                android:textSize="22px"
-                                />
-
+                                android:id="@+id/centreLocationPivot"
+                                android:layout_width="1px"
+                                android:layout_height="1px"
+                                android:layout_centerInParent="true" />
                         </RelativeLayout>
 
                         <ImageView
-                            android:id="@+id/centreLocationPivot"
-                            android:layout_width="1px"
-                            android:layout_height="1px"
-                            android:layout_centerInParent="true"/>
+                            android:id="@+id/imageViewCenterPinMargin"
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_alignParentBottom="true" />
+
                     </RelativeLayout>
-                    <ImageView
-                        android:id="@+id/imageViewCenterPinMargin"
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:layout_alignParentBottom="true"/>
+
+                    <!-- initial layout -->
+                    <include layout="@layout/layout_home_activity_initial" />
 
                 </RelativeLayout>
 
-                <!-- initial layout -->
-                <include layout="@layout/layout_home_activity_initial"/>
-
-                <!-- assigning layout -->
-                <include layout="@layout/layout_home_activity_assigning"/>
-
-                <!-- request final layout -->
-                <include layout="@layout/layout_home_activity_request_final"/>
-
-            </RelativeLayout>
-
-            <!-- search layout -->
-            <RelativeLayout
-                android:id="@+id/relativeLayoutSearch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/top_bar_height"
-                android:background="@color/white_translucent"
-                android:splitMotionEvents="false"
-                android:visibility="gone">
-
-            </RelativeLayout>
-
-            <!-- end ride layout -->
-            <RelativeLayout
-                android:id="@+id/endRideReviewRl"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/top_bar_height"
-                android:splitMotionEvents="false"
-                android:visibility="gone">
-
+                <!-- top bar layout -->
                 <include
-                    layout="@layout/layout_ride_summary_new"
-                    ></include>
+                    android:id="@+id/topBarMain"
+                    layout="@layout/layout_top_bar" />
+
+                <!-- Extra view for sliding panel -->
+                <ImageView
+                    android:id="@+id/imageViewExtraForSliding"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
+            <include layout="@layout/layout_home_activity_sliding_bottom" />
 
-            <!-- top bar layout -->
-            <include android:id="@+id/topBarMain" layout="@layout/layout_top_bar" />
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <!-- assigning layout -->
+        <include layout="@layout/layout_home_activity_assigning" />
+
+        <!-- request final layout -->
+        <include layout="@layout/layout_home_activity_request_final" />
+
+        <!-- end ride layout -->
+        <RelativeLayout
+            android:id="@+id/endRideReviewRl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/top_bar_height"
+            android:splitMotionEvents="false"
+            android:visibility="gone">
+
+            <include layout="@layout/layout_ride_summary_new"></include>
 
         </RelativeLayout>
 
-            <include layout="@layout/layout_home_activity_sliding_bottom"/>
+        <!-- search layout -->
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/top_bar_height"
+            android:background="@color/white_translucent"
+            android:splitMotionEvents="false"
+            android:visibility="gone">
 
-        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-    </FrameLayout>
+        </RelativeLayout>
+
+        <!--Change Locality layout-->
+        <RelativeLayout
+            android:id="@+id/changeLocalityLayout"
+            android:layout_width="match_parent"
+            android:layout_height="350px"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="224px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/sliding_bottom_bg_color"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+
+                <TextView
+                    android:id="@+id/textViewChangeLocality"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32" />
+
+                <Button
+                    android:id="@+id/changeLocalityBtn"
+                    style="@style/ButtonTheme"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30px"
+                    android:text="@string/nl_change_locality"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/initialMyLocationBtnChangeLoc"
+                android:layout_width="87px"
+                android:layout_height="87px"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="40px"
+                android:layout_marginRight="50px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <!-- menu layout -->
-    <include layout="@layout/layout_home_activity_menu"/>
+    <include layout="@layout/layout_home_activity_menu" />
 
 
 </android.support.v4.widget.DrawerLayout>

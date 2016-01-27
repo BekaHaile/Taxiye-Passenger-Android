@@ -1,7 +1,9 @@
 package product.clicklabs.jugnoo.retrofit;
 
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Protocol;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import product.clicklabs.jugnoo.config.Config;
@@ -25,11 +27,17 @@ public class RestClient {
             }
         };*/
 
+        ArrayList<Protocol> protocolList = new ArrayList<Protocol>();
+        protocolList.add(Protocol.HTTP_2);
+        protocolList.add(Protocol.SPDY_3);
+        protocolList.add(Protocol.HTTP_1_1);
+
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
         okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
         okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
         okHttpClient.setRetryOnConnectionFailure(false);
+        okHttpClient.setProtocols(protocolList);
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())
                 .setClient(new OkClient(okHttpClient))

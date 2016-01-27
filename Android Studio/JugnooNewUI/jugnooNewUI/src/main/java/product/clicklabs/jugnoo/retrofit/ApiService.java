@@ -66,6 +66,66 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/submit_support_feedback")
     void submitSupportFeedback(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/login_using_access_token")
+    void loginUsingAccessToken(@FieldMap Map<String, String> params,
+                   Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/login_using_email_or_phone_no")
+    void loginUsingEmailOrPhoneNo(@FieldMap Map<String, String> params,
+                                  Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/login_using_facebook")
+    void loginUsingFacebook(@FieldMap Map<String, String> params,
+                                  Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/login_using_google")
+    void loginUsingGoogle(@FieldMap Map<String, String> params,
+                            Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/register_using_email")
+    void registerUsingEmail(@FieldMap Map<String, String> params,
+                          Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/register_using_facebook")
+    void registerUsingFacebook(@FieldMap Map<String, String> params,
+                            Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/register_using_google")
+    void registerUsingGoogle(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/request_dup_registration")
+    void requestDupRegistration(@FieldMap Map<String, String> params,
+                             Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/verify_my_contact_number")
+    void verifyMyContactNumber(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/send_new_number_otp_via_call")
+    void sendNewNumberOtpViaCall(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/forgot_password")
+    void forgotPassword(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_fare_estimate")
+    void getFareEstimate(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
 }
