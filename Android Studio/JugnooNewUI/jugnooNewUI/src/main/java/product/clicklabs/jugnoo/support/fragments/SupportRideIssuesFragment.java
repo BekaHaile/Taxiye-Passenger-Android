@@ -149,7 +149,6 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 		linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 		relativeLayoutIssueWithRide.setVisibility(View.GONE);
-		recyclerViewSupportFaq.setVisibility(View.GONE);
 
 		if(activity instanceof SupportActivity){
 			if(endRideData == null){
@@ -225,7 +224,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 									endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 									SupportRideIssuesFragment.this.getRideSummaryResponse = getRideSummaryResponse;
 									setRideData();
-									updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+									updateIssuesList((ArrayList<ShowPanelResponse.Item>) SupportRideIssuesFragment.this.getRideSummaryResponse.getMenu());
 								} else {
 									retryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
 								}

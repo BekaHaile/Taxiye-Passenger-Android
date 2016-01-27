@@ -74,6 +74,8 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 						new RideSummaryFragment(engagementId, RideSummaryFragment.OpenMode.FROM_MENU),
 						RideTransactionsFragment.class.getName())
 				.addToBackStack(RideTransactionsFragment.class.getName())
+				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 				.commitAllowingStateLoss();
 	}
 

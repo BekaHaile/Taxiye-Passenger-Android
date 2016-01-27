@@ -31,34 +31,34 @@ public class GetRideSummaryResponse {
 	private String dropTime;
 	@SerializedName("fare")
 	@Expose
-	private Integer fare;
+	private Double fare;
 	@SerializedName("paid_using_wallet")
 	@Expose
-	private Integer paidUsingWallet;
+	private Double paidUsingWallet;
 	@SerializedName("paid_using_paytm")
 	@Expose
-	private Integer paidUsingPaytm;
+	private Double paidUsingPaytm;
 	@SerializedName("to_pay")
 	@Expose
-	private Integer toPay;
+	private Double toPay;
 	@SerializedName("distance")
 	@Expose
-	private Integer distance;
+	private Double distance;
 	@SerializedName("wait_time")
 	@Expose
-	private Integer waitTime;
+	private Double waitTime;
 	@SerializedName("ride_time")
 	@Expose
-	private Integer rideTime;
+	private Double rideTime;
 	@SerializedName("total_luggage_charges")
 	@Expose
-	private Integer totalLuggageCharges;
+	private Double totalLuggageCharges;
 	@SerializedName("waiting_charges_applicable")
 	@Expose
 	private Integer waitingChargesApplicable;
 	@SerializedName("convenience_charge")
 	@Expose
-	private Integer convenienceCharge;
+	private Double convenienceCharge;
 	@SerializedName("driver_name")
 	@Expose
 	private String driverName;
@@ -70,16 +70,16 @@ public class GetRideSummaryResponse {
 	private List<Discount> discount = new ArrayList<Discount>();
 	@SerializedName("base_fare")
 	@Expose
-	private Integer baseFare;
+	private Double baseFare;
 	@SerializedName("fare_factor")
 	@Expose
-	private Integer fareFactor;
+	private Double fareFactor;
 	@SerializedName("jugnoo_balance")
 	@Expose
-	private Integer jugnooBalance;
+	private Double jugnooBalance;
 	@SerializedName("paytm_balance")
 	@Expose
-	private Integer paytmBalance;
+	private Double paytmBalance;
 	@SerializedName("rate_app")
 	@Expose
 	private Integer rateApp;
@@ -206,7 +206,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The fare
 	 */
-	public Integer getFare() {
+	public Double getFare() {
 		return fare;
 	}
 
@@ -215,7 +215,7 @@ public class GetRideSummaryResponse {
 	 * @param fare
 	 * The fare
 	 */
-	public void setFare(Integer fare) {
+	public void setFare(Double fare) {
 		this.fare = fare;
 	}
 
@@ -224,7 +224,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The paidUsingWallet
 	 */
-	public Integer getPaidUsingWallet() {
+	public Double getPaidUsingWallet() {
 		return paidUsingWallet;
 	}
 
@@ -233,7 +233,7 @@ public class GetRideSummaryResponse {
 	 * @param paidUsingWallet
 	 * The paid_using_wallet
 	 */
-	public void setPaidUsingWallet(Integer paidUsingWallet) {
+	public void setPaidUsingWallet(Double paidUsingWallet) {
 		this.paidUsingWallet = paidUsingWallet;
 	}
 
@@ -242,7 +242,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The paidUsingPaytm
 	 */
-	public Integer getPaidUsingPaytm() {
+	public Double getPaidUsingPaytm() {
 		return paidUsingPaytm;
 	}
 
@@ -251,7 +251,7 @@ public class GetRideSummaryResponse {
 	 * @param paidUsingPaytm
 	 * The paid_using_paytm
 	 */
-	public void setPaidUsingPaytm(Integer paidUsingPaytm) {
+	public void setPaidUsingPaytm(Double paidUsingPaytm) {
 		this.paidUsingPaytm = paidUsingPaytm;
 	}
 
@@ -260,7 +260,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The toPay
 	 */
-	public Integer getToPay() {
+	public Double getToPay() {
 		return toPay;
 	}
 
@@ -269,7 +269,7 @@ public class GetRideSummaryResponse {
 	 * @param toPay
 	 * The to_pay
 	 */
-	public void setToPay(Integer toPay) {
+	public void setToPay(Double toPay) {
 		this.toPay = toPay;
 	}
 
@@ -278,7 +278,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The distance
 	 */
-	public Integer getDistance() {
+	public Double getDistance() {
 		return distance;
 	}
 
@@ -287,7 +287,7 @@ public class GetRideSummaryResponse {
 	 * @param distance
 	 * The distance
 	 */
-	public void setDistance(Integer distance) {
+	public void setDistance(Double distance) {
 		this.distance = distance;
 	}
 
@@ -296,7 +296,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The waitTime
 	 */
-	public Integer getWaitTime() {
+	public Double getWaitTime() {
 		return waitTime;
 	}
 
@@ -305,7 +305,7 @@ public class GetRideSummaryResponse {
 	 * @param waitTime
 	 * The wait_time
 	 */
-	public void setWaitTime(Integer waitTime) {
+	public void setWaitTime(Double waitTime) {
 		this.waitTime = waitTime;
 	}
 
@@ -314,7 +314,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The rideTime
 	 */
-	public Integer getRideTime() {
+	public Double getRideTime() {
 		return rideTime;
 	}
 
@@ -323,7 +323,7 @@ public class GetRideSummaryResponse {
 	 * @param rideTime
 	 * The ride_time
 	 */
-	public void setRideTime(Integer rideTime) {
+	public void setRideTime(Double rideTime) {
 		this.rideTime = rideTime;
 	}
 
@@ -332,7 +332,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The totalLuggageCharges
 	 */
-	public Integer getTotalLuggageCharges() {
+	public Double getTotalLuggageCharges() {
 		return totalLuggageCharges;
 	}
 
@@ -341,7 +341,7 @@ public class GetRideSummaryResponse {
 	 * @param totalLuggageCharges
 	 * The total_luggage_charges
 	 */
-	public void setTotalLuggageCharges(Integer totalLuggageCharges) {
+	public void setTotalLuggageCharges(Double totalLuggageCharges) {
 		this.totalLuggageCharges = totalLuggageCharges;
 	}
 
@@ -368,7 +368,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The convenienceCharge
 	 */
-	public Integer getConvenienceCharge() {
+	public Double getConvenienceCharge() {
 		return convenienceCharge;
 	}
 
@@ -377,7 +377,7 @@ public class GetRideSummaryResponse {
 	 * @param convenienceCharge
 	 * The convenience_charge
 	 */
-	public void setConvenienceCharge(Integer convenienceCharge) {
+	public void setConvenienceCharge(Double convenienceCharge) {
 		this.convenienceCharge = convenienceCharge;
 	}
 
@@ -440,7 +440,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The baseFare
 	 */
-	public Integer getBaseFare() {
+	public Double getBaseFare() {
 		return baseFare;
 	}
 
@@ -449,7 +449,7 @@ public class GetRideSummaryResponse {
 	 * @param baseFare
 	 * The base_fare
 	 */
-	public void setBaseFare(Integer baseFare) {
+	public void setBaseFare(Double baseFare) {
 		this.baseFare = baseFare;
 	}
 
@@ -458,7 +458,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The fareFactor
 	 */
-	public Integer getFareFactor() {
+	public Double getFareFactor() {
 		return fareFactor;
 	}
 
@@ -467,7 +467,7 @@ public class GetRideSummaryResponse {
 	 * @param fareFactor
 	 * The fare_factor
 	 */
-	public void setFareFactor(Integer fareFactor) {
+	public void setFareFactor(Double fareFactor) {
 		this.fareFactor = fareFactor;
 	}
 
@@ -476,7 +476,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The jugnooBalance
 	 */
-	public Integer getJugnooBalance() {
+	public Double getJugnooBalance() {
 		return jugnooBalance;
 	}
 
@@ -485,7 +485,7 @@ public class GetRideSummaryResponse {
 	 * @param jugnooBalance
 	 * The jugnoo_balance
 	 */
-	public void setJugnooBalance(Integer jugnooBalance) {
+	public void setJugnooBalance(Double jugnooBalance) {
 		this.jugnooBalance = jugnooBalance;
 	}
 
@@ -494,7 +494,7 @@ public class GetRideSummaryResponse {
 	 * @return
 	 * The paytmBalance
 	 */
-	public Integer getPaytmBalance() {
+	public Double getPaytmBalance() {
 		return paytmBalance;
 	}
 
@@ -503,7 +503,7 @@ public class GetRideSummaryResponse {
 	 * @param paytmBalance
 	 * The paytm_balance
 	 */
-	public void setPaytmBalance(Integer paytmBalance) {
+	public void setPaytmBalance(Double paytmBalance) {
 		this.paytmBalance = paytmBalance;
 	}
 
@@ -588,7 +588,7 @@ public class GetRideSummaryResponse {
 		private String key;
 		@SerializedName("value")
 		@Expose
-		private Integer value;
+		private Double value;
 
 		/**
 		 *
@@ -613,7 +613,7 @@ public class GetRideSummaryResponse {
 		 * @return
 		 * The value
 		 */
-		public Integer getValue() {
+		public Double getValue() {
 			return value;
 		}
 
@@ -622,7 +622,7 @@ public class GetRideSummaryResponse {
 		 * @param value
 		 * The value
 		 */
-		public void setValue(Integer value) {
+		public void setValue(Double value) {
 			this.value = value;
 		}
 

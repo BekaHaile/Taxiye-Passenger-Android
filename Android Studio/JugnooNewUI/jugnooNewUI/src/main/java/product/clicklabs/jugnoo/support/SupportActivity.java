@@ -90,17 +90,15 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return linearLayoutContainer;
 	}
 
-	public void openRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse){
-		if(endRideData != null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(getContainer().getId(),
-							new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
-							SupportRideIssuesFragment.class.getName())
-					.addToBackStack(SupportRideIssuesFragment.class.getName())
-					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
-		}
+	public void openRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+		getSupportFragmentManager().beginTransaction()
+				.add(getContainer().getId(),
+						new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
+						SupportRideIssuesFragment.class.getName())
+				.addToBackStack(SupportRideIssuesFragment.class.getName())
+				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+				.commitAllowingStateLoss();
 	}
 
 	public void openRideTransactionsFragment(){
@@ -109,6 +107,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						new RideTransactionsFragment(),
 						RideTransactionsFragment.class.getName())
 				.addToBackStack(RideTransactionsFragment.class.getName())
+				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 				.commitAllowingStateLoss();
 		setTitle(getResources().getString(R.string.support_select_a_ride_title));
 	}
