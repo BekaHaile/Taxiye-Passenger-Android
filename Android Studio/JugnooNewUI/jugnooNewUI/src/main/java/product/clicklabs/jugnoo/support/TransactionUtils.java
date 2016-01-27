@@ -3,9 +3,12 @@ package product.clicklabs.jugnoo.support;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
+import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.support.models.ActionType;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 
 /**
@@ -35,6 +38,19 @@ public class TransactionUtils {
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();
 		}
+	}
+
+
+	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
+									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+		activity.getSupportFragmentManager().beginTransaction()
+				.add(container.getId(),
+						new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
+						SupportRideIssuesFragment.class.getName())
+				.addToBackStack(SupportRideIssuesFragment.class.getName())
+				.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+				.commitAllowingStateLoss();
 	}
 
 }

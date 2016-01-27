@@ -11,11 +11,8 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
-import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -88,17 +85,6 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public LinearLayout getContainer(){
 		return linearLayoutContainer;
-	}
-
-	public void openRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
-		getSupportFragmentManager().beginTransaction()
-				.add(getContainer().getId(),
-						new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
-						SupportRideIssuesFragment.class.getName())
-				.addToBackStack(SupportRideIssuesFragment.class.getName())
-				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-				.commitAllowingStateLoss();
 	}
 
 	public void openRideTransactionsFragment(){

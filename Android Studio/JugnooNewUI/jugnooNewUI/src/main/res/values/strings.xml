@@ -672,6 +672,7 @@
 	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
 	<string name="support_feedback_empty_error">Please fill some feedback</string>
 	<string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
+	<string name="need_help">Need Help</string>
 
 	<!-- Ride transactions-->
 	<string name="rate_this_ride">Rate this ride</string>

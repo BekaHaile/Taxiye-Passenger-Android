@@ -38,6 +38,8 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -77,15 +79,14 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
 
 	EndRideData endRideData = null;
+	GetRideSummaryResponse getRideSummaryResponse;
 	private int engagementId = 0;
-	private OpenMode openMode;
 
 	private View rootView;
     private FragmentActivity activity;
 
-	public RideSummaryFragment(int engagementId, OpenMode openMode){
+	public RideSummaryFragment(int engagementId){
 		this.engagementId = engagementId;
-		this.openMode = openMode;
 	}
 
 
@@ -216,7 +217,13 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 			@Override
 			public void onClick(View v) {
-				performBackPressed();
+				if(activity instanceof RideTransactionsActivity){
+					new TransactionUtils().openRideIssuesFragment(activity,
+							((RideTransactionsActivity)activity).getContainer(),
+							engagementId, endRideData, getRideSummaryResponse);
+				} else {
+					performBackPressed();
+				}
 			}
 		});
 
@@ -235,13 +242,16 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 			performBackPressed();
 		}
 
-		if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
+		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).setTitle(((RideTransactionsActivity)activity)
 					.getResources().getString(R.string.ride_summary));
-		} else if(OpenMode.FROM_SUPPORT == openMode){
-
-		} else if(OpenMode.FROM_RIDE_END == openMode){
-
+			buttonEndRideOk.setText(activity.getResources().getString(R.string.need_help));
+		}
+		else if(activity instanceof HomeActivity){
+			buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
+		}
+		else if(activity instanceof SupportActivity){
+			buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
 		}
 
 		return rootView;
@@ -388,6 +398,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 								if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
 									endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 									setRideData();
+									RideSummaryFragment.this.getRideSummaryResponse = getRideSummaryResponse;
 								} else {
 									endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
 								}
@@ -427,12 +438,12 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
 	public void performBackPressed() {
-		if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
+		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).onBackPressed();
-		} else if(OpenMode.FROM_SUPPORT == openMode){
-
-		} else if(OpenMode.FROM_RIDE_END == openMode && activity instanceof HomeActivity){
+		} else if(activity instanceof HomeActivity){
 			((HomeActivity)activity).onBackPressed();
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).onBackPressed();
 		}
 	}
 
@@ -441,21 +452,6 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		ASSL.closeActivity(relative);
 		System.gc();
 		super.onDestroy();
-	}
-
-	public enum OpenMode{
-
-		FROM_MENU(0), FROM_SUPPORT(1), FROM_RIDE_END(2);
-
-		private int ordinal;
-
-		OpenMode(int ordinal){
-			this.ordinal = ordinal;
-		}
-
-		public int getOrdinal() {
-			return ordinal;
-		}
 	}
 
 }

@@ -2597,7 +2597,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(frag == null || frag.isRemoving()) {
                 getSupportFragmentManager().beginTransaction()
                         .add(linearLayoutRideSummaryContainer.getId(),
-                                new RideSummaryFragment(-1, RideSummaryFragment.OpenMode.FROM_RIDE_END),
+                                new RideSummaryFragment(-1),
                                 RideTransactionsFragment.class.getName())
                         .addToBackStack(RideTransactionsFragment.class.getName())
                         .commitAllowingStateLoss();

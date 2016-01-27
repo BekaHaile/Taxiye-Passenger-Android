@@ -71,7 +71,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	public void openRideSummaryFragment(int engagementId){
 		getSupportFragmentManager().beginTransaction()
 				.add(relativeLayoutContainer.getId(),
-						new RideSummaryFragment(engagementId, RideSummaryFragment.OpenMode.FROM_MENU),
+						new RideSummaryFragment(engagementId),
 						RideTransactionsFragment.class.getName())
 				.addToBackStack(RideTransactionsFragment.class.getName())
 				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
