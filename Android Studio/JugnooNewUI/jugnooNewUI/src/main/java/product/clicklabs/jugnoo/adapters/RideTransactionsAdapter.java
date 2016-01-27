@@ -27,16 +27,24 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Activity activity;
     private int rowLayout;
     private ArrayList<RideInfo> rideInfosList;
+    private int totalRides;
     private Callback callback;
 
     private DecimalFormat decimalFormat = new DecimalFormat("#.#");
     private DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
 
-    public RideTransactionsAdapter(ArrayList<RideInfo> rideInfosList, Activity activity, int rowLayout, Callback callback) {
+    public RideTransactionsAdapter(ArrayList<RideInfo> rideInfosList, Activity activity, int rowLayout, Callback callback,
+                                   int totalRides) {
         this.rideInfosList = rideInfosList;
         this.activity = activity;
         this.rowLayout = rowLayout;
         this.callback = callback;
+        this.totalRides = totalRides;
+    }
+
+    public void notifyList(int totalRides){
+        this.totalRides = totalRides;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -148,7 +156,11 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             return 0;
         }
         else{
-            return rideInfosList.size() + 1;
+            if(totalRides > rideInfosList.size()){
+                return rideInfosList.size() + 1;
+            } else{
+                return rideInfosList.size();
+            }
         }
     }
 

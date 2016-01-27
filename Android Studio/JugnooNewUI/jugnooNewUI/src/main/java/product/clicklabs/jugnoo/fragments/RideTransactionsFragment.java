@@ -28,7 +28,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FeedbackActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.RideSummaryActivity;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.RideTransactionsAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -56,9 +56,15 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 	ArrayList<RideInfo> rideInfosList = new ArrayList<>();
 	int totalRides = 0;
+	private OpenMode openMode;
 
 	private View rootView;
     private FragmentActivity activity;
+
+	public RideTransactionsFragment(OpenMode openMode){
+		this.openMode = openMode;
+	}
+
 
     @Override
     public void onStart() {
@@ -109,10 +115,11 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 						try {
 							if (0 == rideInfo.isCancelledRide) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
-									Intent intent = new Intent(activity, RideSummaryActivity.class);
-									intent.putExtra(Constants.KEY_ENGAGEMENT_ID, rideInfo.engagementId);
-									activity.startActivity(intent);
-									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
+										((RideTransactionsActivity)activity).addRideSummaryFragment(rideInfo.engagementId);
+									} else if(OpenMode.FROM_SUPPORT == openMode){
+
+									}
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 								}
@@ -143,7 +150,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					public void onShowMoreClick() {
 						getRecentRidesAPI(activity, false);
 					}
-				});
+				}, totalRides);
 		recyclerViewRideTransactions.setAdapter(rideTransactionsAdapter);
 
 
@@ -167,6 +174,18 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		super.onDestroy();
         ASSL.closeActivity(relativeLayoutRoot);
         System.gc();
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
+				((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
+			} else if(OpenMode.FROM_SUPPORT == openMode){
+
+			}
+		}
 	}
 
 	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
@@ -280,7 +299,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 			buttonGetRide.setVisibility(View.GONE);
 
 			rideInfosList.clear();
-			rideTransactionsAdapter.notifyDataSetChanged();
+			rideTransactionsAdapter.notifyList(totalRides);
 		}
 		else{
 			if(rideInfosList.size() == 0){
@@ -292,7 +311,22 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 				textViewInfo.setVisibility(View.GONE);
 				buttonGetRide.setVisibility(View.GONE);
 			}
-			rideTransactionsAdapter.notifyDataSetChanged();
+			rideTransactionsAdapter.notifyList(totalRides);
+		}
+	}
+
+
+	public enum OpenMode{
+		FROM_MENU(0), FROM_SUPPORT(1);
+
+		private int ordinal;
+
+		OpenMode(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
 		}
 	}
 

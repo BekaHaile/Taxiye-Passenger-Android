@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
+import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -22,21 +23,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	ImageView imageViewBack;
 
     RelativeLayout relativeLayoutContainer;
-//	ListView listViewRideTransactions;
-//	TextView textViewInfo;
-//	Button buttonGetRide;
-//
-//	RideTransactionAdapter rideTransactionAdapter;
-//
-//	RelativeLayout relativeLayoutShowMore;
-//	TextView textViewShowMore;
-//
-//    FutureSchedule futureSchedule = null;
-//    ArrayList<RideInfo> rideInfosList = new ArrayList<>();
-//    int totalRides = 0;
-//
-//	DecimalFormat decimalFormat = new DecimalFormat("#.#");
-//	DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
 
     public static UpdateRideTransaction updateRideTransaction;
 
@@ -44,11 +30,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-        try {
-//            rideTransactionAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 	
 	@Override
@@ -58,10 +39,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 
         updateRideTransaction = this;
 
-//        futureSchedule = null;
-//        rideInfosList = new ArrayList<>();
-//        totalRides = 0;
-
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 		
@@ -69,30 +46,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
-//		listViewRideTransactions = (ListView) findViewById(R.id.listViewRideTransactions);
-//		textViewInfo = (TextView) findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.latoRegular(this));
-//		buttonGetRide = (Button) findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.latoRegular(this));
-//		textViewInfo.setVisibility(View.GONE);
-//		buttonGetRide.setVisibility(View.GONE);
-//        listViewRideTransactions.setVisibility(View.GONE);
-		
-		
-//		LinearLayout viewF = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_show_more, null);
-//		listViewRideTransactions.addFooterView(viewF);
-//		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
-//		ASSL.DoMagic(viewF);
-//
-//		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
-//		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-//		textViewShowMore.setText("Show More");
-//
-//		rideTransactionAdapter = new RideTransactionAdapter(this);
-//		listViewRideTransactions.setAdapter(rideTransactionAdapter);
-//		rideTransactionAdapter.notifyDataSetChanged();
-//
-//        relativeLayoutShowMore.setVisibility(View.GONE);
-		
-		
+
 		imageViewBack.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -101,44 +55,37 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 			}
 		});
 
-//		buttonGetRide.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				performBackPressed();
-//			}
-//		});
-//
-//		textViewInfo.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				getRecentRidesAPI(RideTransactionsActivity.this, true);
-//			}
-//		});
-//
-//
-//		relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				getRecentRidesAPI(RideTransactionsActivity.this, false);
-//			}
-//		});
-
-
-//        getRecentRidesAPI(RideTransactionsActivity.this, true);
 
         getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
+                .add(relativeLayoutContainer.getId(), new RideTransactionsFragment(RideTransactionsFragment.OpenMode.FROM_MENU), RideTransactionsFragment.class.getName())
                 .addToBackStack(RideTransactionsFragment.class.getName())
                 .commitAllowingStateLoss();
+		setTitle(getResources().getString(R.string.ride_history));
 
 	}
 
+
+	public void addRideSummaryFragment(int engagementId){
+		getSupportFragmentManager().beginTransaction()
+				.add(relativeLayoutContainer.getId(),
+						new RideSummaryFragment(engagementId, RideSummaryFragment.OpenMode.FROM_MENU),
+						RideTransactionsFragment.class.getName())
+				.addToBackStack(RideTransactionsFragment.class.getName())
+				.commitAllowingStateLoss();
+	}
+
+	public void setTitle(String title){
+		textViewTitle.setText(title);
+	}
 	
 	public void performBackPressed(){
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		} else {
+			super.onBackPressed();
+			setTitle(getResources().getString(R.string.ride_history));
+		}
 	}
 	
 	@Override
