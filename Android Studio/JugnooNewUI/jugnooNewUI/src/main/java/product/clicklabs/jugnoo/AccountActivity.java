@@ -261,6 +261,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             editTextUserName.requestFocus();
                             editTextUserName.setError("Changed Username is same as the previous one.");
                         } else {
+                            imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
                             updateUserProfileAPI(AccountActivity.this, nameChanged, ProfileUpdateMode.NAME);
                         }
                     }
@@ -268,7 +269,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextUserName.requestFocus();
                     editTextUserName.setEnabled(true);
                     editTextUserName.setSelection(editTextUserName.getText().length());
+                    imageViewEditName.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
+
                 }
                 dissmissEmailVerify();
             }
@@ -302,6 +305,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             editTextEmail.requestFocus();
                             editTextEmail.setError("Changed email is same as the previous one.");
                         } else {
+                            imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
                             updateUserProfileAPI(AccountActivity.this, emailChanged, ProfileUpdateMode.EMAIL);
                         }
                     }
@@ -309,6 +313,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextEmail.requestFocus();
                     editTextEmail.setEnabled(true);
                     editTextEmail.setSelection(editTextEmail.getText().length());
+                    imageViewEditEmail.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
                 }
                 dissmissEmailVerify();
@@ -343,6 +348,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 editTextPhone.requestFocus();
                                 editTextPhone.setError("Changed Phone number is same as the previous one.");
                             } else {
+                                imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                                 updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
                             }
                         } else {
@@ -354,6 +360,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextPhone.requestFocus();
                     editTextPhone.setEnabled(true);
                     editTextPhone.setSelection(editTextPhone.getText().length());
+                    imageViewEditPhoneNo.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
                 }
                 dissmissEmailVerify();

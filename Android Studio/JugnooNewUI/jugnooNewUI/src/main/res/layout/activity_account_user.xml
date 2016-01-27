@@ -450,22 +450,22 @@
                         android:id="@+id/relativeLayoutAddHome"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
-                        android:layout_gravity="center_horizontal"
                         android:background="@color/white">
 
                         <TextView
                             android:id="@+id/textViewAddHome"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
                             android:layout_toLeftOf="@+id/imageViewEditHome"
                             android:layout_toRightOf="@+id/imageViewAddHome"
-                            android:gravity="center_vertical"
-                            android:lineSpacingExtra="10px"
+                            android:lineSpacingExtra="2px"
                             android:maxLines="2"
                             android:paddingRight="20px"
                             android:text="@string/add_home"
+                            android:tag="mwar"
                             android:textColor="@color/text_color_hint"
                             android:textSize="28px" />
 
@@ -516,8 +516,9 @@
                             android:layout_toLeftOf="@+id/imageViewEditWork"
                             android:layout_toRightOf="@+id/imageViewAddWork"
                             android:gravity="center_vertical"
-                            android:lineSpacingExtra="10px"
+                            android:lineSpacingExtra="2px"
                             android:maxLines="2"
+                            android:tag="mwar"
                             android:paddingRight="20px"
                             android:text="@string/add_work"
                             android:textColor="@color/text_color_hint"

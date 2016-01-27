@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <!-- promo name fare factor layout-->
     <RelativeLayout
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
+                android:layout_marginLeft="30px"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -140,8 +140,8 @@
                 <ImageView
                     android:id="@+id/imageViewIRPaymentOptionCash"
                     android:layout_width="36px"
-                    android:layout_height="40px"
-                    android:background="@drawable/ic_rupee"
+                    android:layout_height="23px"
+                    android:background="@drawable/cash_icon"
                     android:tag="mwar"
                     android:visibility="gone" />
 
@@ -187,12 +187,18 @@
             android:layout_width="match_parent"
             android:layout_height="172px">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10px"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
             <TextView
                 android:id="@+id/textViewInRideDriverName"
                 android:layout_width="240px"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
+
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="Driver Name"
@@ -207,10 +213,9 @@
                 android:gravity="center"
                 android:maxLines="2"
                 android:text="Car Number"
-                android:layout_marginLeft="10px"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32" />
-
+            </LinearLayout>
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideDriverImage"
                 android:layout_width="130px"
