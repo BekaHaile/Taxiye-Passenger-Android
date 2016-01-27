@@ -1280,49 +1280,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 if(Data.endRideData != null) {
-//                    Intent intent = new Intent(HomeActivity.this, RideSummaryActivity.class);
-//                    intent.putExtra(KEY_END_RIDE_DATA, 1);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
                     linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE);
                 }
             }
         });
 
-        /*buttonEndRideOk.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                GCMIntentService.clearNotifications(HomeActivity.this);
-                *//*if (userMode == UserMode.PASSENGER) {
-                    Intent intent = new Intent(HomeActivity.this, FeedbackActivity.class);
-                    intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.AFTER_RIDE.getOrdinal());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                }*//*
-
-                DialogPopup.alertPopupFromPoint(HomeActivity.this, "title", "message");
-            }
-        });*/
 
 
 
         // map object initialized
         if (map != null) {
-
-//			map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-//				@Override
-//				public void onMapLoaded() {
-//				}
-//			});
-//			SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-//			mapFragment.getMapAsync(new OnMapReadyCallback() {
-//				@Override
-//				public void onMapReady(GoogleMap googleMap) {
-//					map = googleMap;
-//				}
-//			});
 
             map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setZoomControlsEnabled(false);

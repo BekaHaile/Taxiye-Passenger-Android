@@ -5,8 +5,9 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
-import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import retrofit.Callback;
 import retrofit.http.Field;
@@ -61,7 +62,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/get_ride_summary")
     void getRideSummary(@FieldMap Map<String, String> params,
-                   Callback<SettleUserDebt> callback);
+                   Callback<GetRideSummaryResponse> callback);
 
     @FormUrlEncoded
     @POST("/submit_support_feedback")

@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.support.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,8 +16,10 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -32,7 +35,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
 
 	private View rootView;
-    private SupportActivity activity;
+    private FragmentActivity activity;
 
 	private int engagementId;
 	private ShowPanelResponse.Item item;
@@ -83,7 +86,16 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						activity.openItemInFragment(engagementId, SupportFAQItemsListFragment.this.item.getText(), item);
+						if(activity instanceof SupportActivity){
+							new TransactionUtils().openItemInFragment(activity,
+									((SupportActivity)activity).getContainer(),
+									engagementId, SupportFAQItemsListFragment.this.item.getText(), item);
+
+						} else if(activity instanceof RideTransactionsActivity){
+							new TransactionUtils().openItemInFragment(activity,
+									((RideTransactionsActivity)activity).getContainer(),
+									engagementId, SupportFAQItemsListFragment.this.item.getText(), item);
+						}
 					}
 				});
 		recyclerViewItems.setAdapter(supportFAQItemsAdapter);
@@ -97,7 +109,5 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
         ASSL.closeActivity(root);
         System.gc();
 	}
-
-
 
 }

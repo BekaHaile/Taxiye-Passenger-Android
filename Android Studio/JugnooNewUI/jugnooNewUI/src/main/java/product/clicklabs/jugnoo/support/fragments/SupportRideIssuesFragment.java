@@ -1,8 +1,10 @@
 package product.clicklabs.jugnoo.support.fragments;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,29 +17,38 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants {
@@ -53,10 +64,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
 
 	private View rootView;
-    private SupportActivity activity;
+    private FragmentActivity activity;
 
-	private int showPanelState = 0;
+	private int engagementId;
 	private EndRideData endRideData;
+	private GetRideSummaryResponse getRideSummaryResponse;
 
     @Override
     public void onStart() {
@@ -73,8 +85,10 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
     }
 
 
-	public SupportRideIssuesFragment(EndRideData endRideData){
+	public SupportRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse){
+		this.engagementId = engagementId;
 		this.endRideData = endRideData;
+		this.getRideSummaryResponse = getRideSummaryResponse;
 	}
 
     @Override
@@ -93,7 +107,6 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 			e.printStackTrace();
 		}
 
-		showPanelState = 0;
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
 		relativeLayoutIssueWithRide = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutIssueWithRide);
@@ -118,7 +131,18 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						activity.openItemInFragment(Integer.parseInt(endRideData.engagementId), activity.getResources().getString(R.string.support_main_title), item);
+						if(activity instanceof SupportActivity){
+							new TransactionUtils().openItemInFragment(activity,
+									((SupportActivity)activity).getContainer(),
+									Integer.parseInt(endRideData.engagementId),
+									activity.getResources().getString(R.string.support_main_title), item);
+
+						} else if(activity instanceof RideTransactionsActivity){
+							new TransactionUtils().openItemInFragment(activity,
+									((RideTransactionsActivity)activity).getContainer(),
+									Integer.parseInt(endRideData.engagementId),
+									activity.getResources().getString(R.string.support_main_title), item);
+						}
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -126,9 +150,18 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 		relativeLayoutIssueWithRide.setVisibility(View.GONE);
 		recyclerViewSupportFaq.setVisibility(View.GONE);
-		setRideData();
-		showPanel();
 
+		if(activity instanceof SupportActivity){
+			if(endRideData == null){
+				getRideSummaryAPI(activity, ""+engagementId);
+			} else{
+				setRideData();
+				updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+			}
+		} else if(activity instanceof RideTransactionsActivity){
+			setRideData();
+			updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+		}
 
 		return rootView;
 	}
@@ -142,69 +175,10 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	}
 
 
-	private void showPanel() {
-		if(!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
-			DialogPopup.showLoadingDialog(activity, "");
-
-			HashMap<String, String> params = new HashMap<>();
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-
-			RestClient.getApiServices().showPanel(params,
-					new Callback<ShowPanelResponse>() {
-						@Override
-						public void success(ShowPanelResponse showPanelResponse, Response response) {
-							DialogPopup.dismissLoadingDialog();
-							try {
-								recyclerViewSupportFaq.setVisibility(View.VISIBLE);
-								showPanelState = 1;
-								update(showPanelResponse);
-							} catch (Exception exception) {
-								exception.printStackTrace();
-								retryDialog(DialogErrorType.SERVER_ERROR);
-							}
-						}
-
-						@Override
-						public void failure(RetrofitError error) {
-							DialogPopup.dismissLoadingDialog();
-							recyclerViewSupportFaq.setVisibility(View.GONE);
-							showPanelState = -1;
-							retryDialog(DialogErrorType.CONNECTION_LOST);
-						}
-					});
-		} else{
-			retryDialog(DialogErrorType.NO_NET);
-		}
-	}
 
 
-
-	private void retryDialog(DialogErrorType dialogErrorType){
-		DialogPopup.dialogNoInternet(activity,
-				dialogErrorType,
-				new Utils.AlertCallBackWithButtonsInterface() {
-					@Override
-					public void positiveClick() {
-						if(showPanelState != 1) {
-							showPanel();
-						}
-					}
-
-					@Override
-					public void neutralClick() {
-
-					}
-
-					@Override
-					public void negativeClick() {
-
-					}
-				});
-	}
-
-
-	private void update(ShowPanelResponse showPanelResponse){
-		supportFAQItemsAdapter.setResults((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
+	private void updateIssuesList(ArrayList<ShowPanelResponse.Item> items){
+		supportFAQItemsAdapter.setResults((ArrayList<ShowPanelResponse.Item>) items);
 	}
 
 	private void setRideData(){
@@ -227,5 +201,74 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	}
 
 
+
+	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+		if (!HomeActivity.checkIfUserDataNull(activity)) {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put("access_token", Data.userData.accessToken);
+				params.put("engagement_id", engagementId);
+
+				RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
+					@Override
+					public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response get_ride_summary", "response = " + response);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
+									endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
+									SupportRideIssuesFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+									setRideData();
+									updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+								} else {
+									retryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+								}
+							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							retryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						DialogPopup.dismissLoadingDialog();
+						retryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+
+			} else {
+				retryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
+			}
+		}
+	}
+
+	public void performBackPress(){
+		if(activity instanceof SupportActivity){
+			((SupportActivity)activity).onBackPressed();
+		} else if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).onBackPressed();
+		}
+	}
+
+	public void retryDialog(final Activity activity, final String engagementId, String errorMessage) {
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", errorMessage, "Retry", "Cancel", new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getRideSummaryAPI(activity, engagementId);
+			}
+		}, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				performBackPress();
+			}
+		}, false, false);
+	}
 
 }

@@ -38,7 +38,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -46,7 +46,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -60,8 +59,6 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 	RelativeLayout relativeLayoutMap;
 	GoogleMap mapLite;
-
-	ProgressWheel progressWheel;
 
 	RelativeLayout relativeLayoutRideSummary;
 	ScrollView scrollViewEndRide;
@@ -144,8 +141,6 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 15));
 			}
 		}
-
-		progressWheel = (ProgressWheel) rootView.findViewById(R.id.progressWheel);
 
 		relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
@@ -374,20 +369,18 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				progressWheel.setVisibility(View.VISIBLE);
-				progressWheel.spin();
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("engagement_id", engagementId);
 
-				RestClient.getApiServices().getRideSummary(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i("Server response get_ride_summary", "response = " + response);
-						progressWheel.stopSpinning();
-						progressWheel.setVisibility(View.GONE);
+						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
@@ -407,8 +400,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 					@Override
 					public void failure(RetrofitError error) {
-						progressWheel.stopSpinning();
-						progressWheel.setVisibility(View.GONE);
+						DialogPopup.dismissLoadingDialog();
 						endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
 					}
 				});

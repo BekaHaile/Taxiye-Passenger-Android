@@ -12,12 +12,10 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
-import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
-import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
+import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
-import product.clicklabs.jugnoo.support.models.ActionType;
-import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -88,44 +86,33 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		textViewTitle.setText(title);
 	}
 
-	private LinearLayout getLinearLayoutContainer(){
+	public LinearLayout getContainer(){
 		return linearLayoutContainer;
 	}
 
-	public void openItemInFragment(int engagementId, String parentName, ShowPanelResponse.Item item){
-		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()
-				|| ActionType.INAPP_CALL.getOrdinal() == item.getActionType()
-				|| ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()) {
-			getSupportFragmentManager().beginTransaction()
-					.add(getLinearLayoutContainer().getId(),
-							new SupportFAQItemFragment(engagementId, parentName, item), SupportFAQItemFragment.class.getName())
-					.addToBackStack(SupportFAQItemFragment.class.getName())
-					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
-		}
-		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
-			getSupportFragmentManager().beginTransaction()
-					.add(getLinearLayoutContainer().getId(),
-							new SupportFAQItemsListFragment(engagementId, item), SupportFAQItemsListFragment.class.getName())
-					.addToBackStack(SupportFAQItemsListFragment.class.getName())
-					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
-		}
-	}
-
-	public void openRideIssuesFragment(EndRideData endRideData){
+	public void openRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse){
 		if(endRideData != null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(getLinearLayoutContainer().getId(),
-							new SupportRideIssuesFragment(endRideData), SupportRideIssuesFragment.class.getName())
+					.add(getContainer().getId(),
+							new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
+							SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
 							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();
 		}
 	}
+
+	public void openRideTransactionsFragment(){
+		getSupportFragmentManager().beginTransaction()
+				.add(getContainer().getId(),
+						new RideTransactionsFragment(),
+						RideTransactionsFragment.class.getName())
+				.addToBackStack(RideTransactionsFragment.class.getName())
+				.commitAllowingStateLoss();
+		setTitle(getResources().getString(R.string.support_select_a_ride_title));
+	}
+
 
 	
 	@Override

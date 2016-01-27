@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.support.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private Button buttonSubmit;
 
 	private View rootView;
-    private SupportActivity activity;
+    private FragmentActivity activity;
 
 	private int engagementId;
 	private String parentName;

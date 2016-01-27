@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
@@ -56,13 +57,11 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 	ArrayList<RideInfo> rideInfosList = new ArrayList<>();
 	int totalRides = 0;
-	private OpenMode openMode;
 
 	private View rootView;
     private FragmentActivity activity;
 
-	public RideTransactionsFragment(OpenMode openMode){
-		this.openMode = openMode;
+	public RideTransactionsFragment(){
 	}
 
 
@@ -115,10 +114,10 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 						try {
 							if (0 == rideInfo.isCancelledRide) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
-									if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
-										((RideTransactionsActivity)activity).addRideSummaryFragment(rideInfo.engagementId);
-									} else if(OpenMode.FROM_SUPPORT == openMode){
-
+									if(activity instanceof RideTransactionsActivity){
+										((RideTransactionsActivity)activity).openRideSummaryFragment(rideInfo.engagementId);
+									} else if(activity instanceof SupportActivity){
+										((SupportActivity)activity).openRideIssuesFragment(rideInfo.engagementId, null, null);
 									}
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -180,10 +179,10 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
-			if(OpenMode.FROM_MENU == openMode && activity instanceof RideTransactionsActivity){
+			if(activity instanceof RideTransactionsActivity){
 				((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
-			} else if(OpenMode.FROM_SUPPORT == openMode){
-
+			} else if(activity instanceof SupportActivity){
+				((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_select_a_ride_title));
 			}
 		}
 	}
@@ -315,19 +314,5 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		}
 	}
 
-
-	public enum OpenMode{
-		FROM_MENU(0), FROM_SUPPORT(1);
-
-		private int ordinal;
-
-		OpenMode(int ordinal){
-			this.ordinal = ordinal;
-		}
-
-		public int getOrdinal() {
-			return ordinal;
-		}
-	}
 
 }

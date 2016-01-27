@@ -32,9 +32,10 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -65,6 +66,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private int showPanelState = 0, getRideSummaryState = 0;
 	private EndRideData endRideData;
+	private GetRideSummaryResponse getRideSummaryResponse;
 
     @Override
     public void onStart() {
@@ -122,7 +124,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						activity.openItemInFragment(-1, activity.getResources().getString(R.string.support_main_title), item);
+						if(position == 0){
+							activity.openRideTransactionsFragment();
+						} else {
+							new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
+									-1, activity.getResources().getString(R.string.support_main_title), item);
+						}
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -130,7 +137,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.openRideIssuesFragment(endRideData);
+				if(endRideData != null && getRideSummaryResponse != null) {
+					activity.openRideIssuesFragment(-1, endRideData, getRideSummaryResponse);
+				}
 			}
 		});
 
@@ -204,9 +213,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put(Constants.KEY_ENGAGEMENT_ID, "56289");
 
-			RestClient.getApiServices().getRideSummary(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
 				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
+				public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
 					DialogPopup.dismissLoadingDialog();
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -215,6 +224,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							int flag = jObj.getInt("flag");
 							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
 								endRideData = JSONParser.parseEndRideData(jObj, "56289", Data.fareStructure.fixedFare);
+								SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
 								setRideData();
 								linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 								getRideSummaryState = 1;

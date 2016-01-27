@@ -668,6 +668,7 @@
 	<string name="ride_summary">Ride Summary</string>
 	<string name="support_main_title">How can we help?</string>
 	<string name="support_ride_issues_title">Select an Issue</string>
+	<string name="support_select_a_ride_title">Select a Ride</string>
 	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
 	<string name="support_feedback_empty_error">Please fill some feedback</string>
 	<string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>

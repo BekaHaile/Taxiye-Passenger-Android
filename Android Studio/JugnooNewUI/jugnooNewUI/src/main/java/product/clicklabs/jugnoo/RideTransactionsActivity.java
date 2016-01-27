@@ -57,15 +57,18 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 
 
         getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new RideTransactionsFragment(RideTransactionsFragment.OpenMode.FROM_MENU), RideTransactionsFragment.class.getName())
+                .add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
                 .addToBackStack(RideTransactionsFragment.class.getName())
                 .commitAllowingStateLoss();
 		setTitle(getResources().getString(R.string.ride_history));
 
 	}
 
+	public RelativeLayout getContainer(){
+		return relativeLayoutContainer;
+	}
 
-	public void addRideSummaryFragment(int engagementId){
+	public void openRideSummaryFragment(int engagementId){
 		getSupportFragmentManager().beginTransaction()
 				.add(relativeLayoutContainer.getId(),
 						new RideSummaryFragment(engagementId, RideSummaryFragment.OpenMode.FROM_MENU),
