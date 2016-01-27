@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -52,7 +53,6 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TextView textViewTitle;
 
 	//Transactions List vars
-	ProgressWheel progressBar;
 	ListView listViewTransactions;
 	TransactionListAdapter transactionListAdapter;
 	RelativeLayout relativeLayoutShowMore;
@@ -64,6 +64,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 	View rootView;
     private PaymentActivity paymentActivity;
+	private ImageView imageViewJugnooAnimation;
+	private AnimationDrawable jugnooAnimation;
 
     @Override
     public void onStart() {
@@ -110,9 +112,9 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		transactionListAdapter = new TransactionListAdapter(paymentActivity);
 		listViewTransactions.setAdapter(transactionListAdapter);
-		
-		progressBar = (ProgressWheel) rootView.findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.GONE);
+
+		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
+		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -289,7 +291,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	public void getTransactionInfoAsync(final Activity activity) {
 		relativeLayoutShowMore.setVisibility(View.GONE);
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			progressBar.setVisibility(View.VISIBLE);
+			imageViewJugnooAnimation.setVisibility(View.VISIBLE);
+			jugnooAnimation.start();
 			callRefreshAPI(activity);
 		} else {
 			updateListData("No Internet connection", true);
@@ -314,7 +317,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
-								progressBar.setVisibility(View.GONE);
+								imageViewJugnooAnimation.setVisibility(View.GONE);
+								jugnooAnimation.stop();
 								updateListData("Some error occurred", true);
 							}
 
@@ -366,7 +370,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 									exception.printStackTrace();
 									updateListData("Some error occurred", true);
 								}
-								progressBar.setVisibility(View.GONE);
+								imageViewJugnooAnimation.setVisibility(View.GONE);
+								jugnooAnimation.stop();
 							}
 
 						});

@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,7 +52,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
     TextView textViewTitle;
     ImageView imageViewBack;
 
-	ProgressWheel progressWheel;
+	//ProgressWheel progressWheel;
 
 	RelativeLayout relativeLayoutRideSummary;
 	ScrollView scrollViewEndRide;
@@ -68,6 +69,8 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
 	Button buttonEndRideOk;
 	EndRideDiscountsAdapter endRideDiscountsAdapter;
+	private ImageView imageViewJugnooAnimation;
+	private AnimationDrawable jugnooAnimation;
 
 	EndRideData endRideData = null;
 
@@ -113,7 +116,8 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
         textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-		progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
+		imageViewJugnooAnimation = (ImageView)findViewById(R.id.imageViewJugnooAnimation);
+		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
 
 		relativeLayoutRideSummary = (RelativeLayout) findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
@@ -348,8 +352,8 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				progressWheel.setVisibility(View.VISIBLE);
-				progressWheel.spin();
+				imageViewJugnooAnimation.setVisibility(View.VISIBLE);
+				jugnooAnimation.start();
 				RequestParams params = new RequestParams();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("engagement_id", engagementId);
@@ -360,16 +364,16 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 							@Override
 							public void onFailure(Throwable arg3) {
-								progressWheel.stopSpinning();
-								progressWheel.setVisibility(View.GONE);
+								imageViewJugnooAnimation.setVisibility(View.GONE);
+								jugnooAnimation.stop();
 								endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
 							}
 
 							@Override
 							public void onSuccess(String response) {
 								Log.i("Server response get_ride_summary", "response = " + response);
-								progressWheel.stopSpinning();
-								progressWheel.setVisibility(View.GONE);
+								imageViewJugnooAnimation.setVisibility(View.GONE);
+								jugnooAnimation.stop();
 								try {
 									jObj = new JSONObject(response);
 									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {

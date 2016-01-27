@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.ConsoleMessage;
@@ -36,8 +37,9 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
     ImageView imageViewBack;
     TextView textViewTitle;
-
-    ProgressWheel progressBar;
+    private ImageView imageViewJugnooAnimation;
+    private AnimationDrawable jugnooAnimation;
+    //ProgressWheel progressBar;
     TextView textViewInfo;
     WebView webview;
 
@@ -53,13 +55,12 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(HelpParticularActivity.this, relative, 1134, 720, false);
 
-
+        imageViewJugnooAnimation = (ImageView)findViewById(R.id.imageViewJugnooAnimation);
+        jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-        progressBar = (ProgressWheel) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.latoRegular(this));
 
@@ -121,7 +122,8 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             loadingFinished = false;
             //SHOW LOADING IF IT ISNT ALREADY VISIBLE
-            progressBar.setVisibility(View.VISIBLE);
+            imageViewJugnooAnimation.setVisibility(View.VISIBLE);
+            jugnooAnimation.start();
             Log.e("onPageStarted", "url="+url);
         }
 
@@ -133,7 +135,8 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
             if(loadingFinished && !redirect && !apiCalling){
                 //HIDE LOADING IT HAS FINISHED
-                progressBar.setVisibility(View.GONE);
+                imageViewJugnooAnimation.setVisibility(View.GONE);
+                jugnooAnimation.stop();
             } else{
                 redirect = false;
             }
@@ -186,7 +189,8 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             textViewInfo.setVisibility(View.VISIBLE);
             textViewInfo.setText(data);
             webview.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
+            imageViewJugnooAnimation.setVisibility(View.GONE);
+            jugnooAnimation.stop();
         } else {
             textViewInfo.setVisibility(View.GONE);
             webview.setVisibility(View.VISIBLE);
@@ -211,7 +215,8 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 					if (helpSection != null) {
 						apiCalling = true;
 	//                    DialogPopup.showLoadingDialog(activity, "Loading...");
-						progressBar.setVisibility(View.VISIBLE);
+                        imageViewJugnooAnimation.setVisibility(View.VISIBLE);
+                        jugnooAnimation.start();
 						textViewInfo.setVisibility(View.GONE);
 						webview.setVisibility(View.GONE);
 						loadHTMLContent("");
@@ -254,7 +259,8 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 									try {
 										Log.e("request fail", arg3.toString());
 										apiCalling = false;
-										progressBar.setVisibility(View.GONE);
+                                        imageViewJugnooAnimation.setVisibility(View.GONE);
+                                        jugnooAnimation.stop();
 										openHelpData("Some error occured. Tap to retry.", true);
 	//                                DialogPopup.dismissLoadingDialog();
 									} catch (Exception e) {

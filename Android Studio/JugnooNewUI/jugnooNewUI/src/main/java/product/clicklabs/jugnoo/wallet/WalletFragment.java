@@ -221,11 +221,11 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 				Spannable spanJ = new SpannableString(textViewJugnooCashBalanceValue.getText());
 				spanJ.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewJugnooCashBalanceValue.setText(spanJ);
+				//textViewJugnooCashBalanceValue.setText(spanJ);
 
 				Spannable spanP = new SpannableString(textViewPaytmBalanceValue.getText());
 				spanP.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewPaytmBalanceValue.setText(spanP);
+				//textViewPaytmBalanceValue.setText(spanP);
 
 			}
 		} catch(Exception e){

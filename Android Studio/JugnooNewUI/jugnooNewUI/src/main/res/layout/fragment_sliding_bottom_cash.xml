@@ -95,18 +95,18 @@
             android:src="@drawable/radio_unselected_icon"/>
 
         <ImageView
-            android:layout_width="36px"
-            android:layout_height="23px"
+            android:layout_width="68px"
+            android:layout_height="22px"
             android:tag="mwar"
-            android:layout_marginLeft="26px"
-            android:src="@drawable/cash_icon"/>
+            android:layout_marginLeft="15px"
+            android:src="@drawable/cash_home_icon"/>
 
         <TextView
             android:id="@+id/textViewCash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cash"
-            android:layout_marginLeft="70px"
+            android:layout_marginLeft="50px"
             android:textSize="@dimen/text_size_40"
             android:textColor="@color/text_color"/>
 

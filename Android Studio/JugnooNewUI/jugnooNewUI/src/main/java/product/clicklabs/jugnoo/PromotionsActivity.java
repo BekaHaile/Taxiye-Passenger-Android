@@ -115,7 +115,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
         editTextPromoCode.setImeOptions(EditorInfo.IME_ACTION_DONE);
 		buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo); buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
 
-		textViewCouponsAvailable = (TextView) findViewById(R.id.textViewCouponsAvailable); textViewCouponsAvailable.setTypeface(Fonts.latoRegular(this));
+		textViewCouponsAvailable = (TextView) findViewById(R.id.textViewCouponsAvailable); textViewCouponsAvailable.setTypeface(Fonts.mavenLight(this));
 		textViewCouponsAvailable.setVisibility(View.GONE);
         textViewCouponInfo = (TextView) findViewById(R.id.textViewCouponInfo); textViewCouponInfo.setTypeface(Fonts.latoRegular(this));
         textViewCouponInfo.setVisibility(View.GONE);
@@ -274,7 +274,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             else if(couponInfosList.size() > 0 && promotionInfoList.size() == 0){
                 textViewCouponsAvailable.setVisibility(View.VISIBLE);
 				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
-                textViewCouponsAvailable.setText("Coupons Available");
+                textViewCouponsAvailable.setText("COUPONS AVAILABLE");
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
@@ -294,7 +294,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			else{
                 textViewCouponsAvailable.setVisibility(View.VISIBLE);
 				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
-                textViewCouponsAvailable.setText("Coupons Available");
+                textViewCouponsAvailable.setText("COUPONS AVAILABLE");
                 listViewCoupons.setVisibility(View.VISIBLE);
                 textViewCouponInfo.setVisibility(View.GONE);
 
@@ -314,7 +314,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 	
 	
 	class ViewHolderCoupon {
-		TextView textViewCouponTitle, textViewExpiryDate, textViewValidTime;
+		TextView textViewCouponTitle, textViewExpiryDate;
 		LinearLayout relative;
 		int id;
 	}
@@ -351,7 +351,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 				
 				holder.textViewCouponTitle = (TextView) convertView.findViewById(R.id.textViewCouponTitle); holder.textViewCouponTitle.setTypeface(Fonts.mavenLight(context));
 				holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.mavenLight(context));
-				holder.textViewValidTime = (TextView) convertView.findViewById(R.id.textViewValidTime); holder.textViewValidTime.setTypeface(Fonts.mavenLight(context));
                 ((TextView) convertView.findViewById(R.id.textViewTNC)).setTypeface(Fonts.mavenLight(context));
 
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -372,9 +371,8 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
 			holder.textViewCouponTitle.setText(couponInfo.title);
 			holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
-            holder.textViewValidTime.setText(DateOperations.getUTCTimeInLocalTime(couponInfo.startTime)+" - "+DateOperations.getUTCTimeInLocalTime(couponInfo.endTime));
-			holder.textViewValidTime.setVisibility(View.GONE);
-			
+//            holder.textViewValidTime.setText(DateOperations.getUTCTimeInLocalTime(couponInfo.startTime)+" - "+DateOperations.getUTCTimeInLocalTime(couponInfo.endTime));
+
 			holder.relative.setOnClickListener(new View.OnClickListener() {
 				
 				@Override

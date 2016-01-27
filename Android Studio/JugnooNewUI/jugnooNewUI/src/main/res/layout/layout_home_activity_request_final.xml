@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <!-- promo name fare factor layout-->
     <RelativeLayout
@@ -139,9 +139,9 @@
 
                 <ImageView
                     android:id="@+id/imageViewIRPaymentOptionCash"
-                    android:layout_width="36px"
-                    android:layout_height="23px"
-                    android:background="@drawable/cash_icon"
+                    android:layout_width="68px"
+                    android:layout_height="22px"
+                    android:background="@drawable/cash_home_icon"
                     android:tag="mwar"
                     android:visibility="gone" />
 

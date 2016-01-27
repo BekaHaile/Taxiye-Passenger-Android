@@ -3595,10 +3595,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
 		if (!"".equalsIgnoreCase(farAwayCity)) {
-            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
-            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight(0);
-            //slidingBottomPanel.setLinearLayoutSlidingBottom(View.GONE);
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
             //textViewInitialInstructions.setVisibility(View.VISIBLE);
             textViewInitialInstructions.setText(farAwayCity);
