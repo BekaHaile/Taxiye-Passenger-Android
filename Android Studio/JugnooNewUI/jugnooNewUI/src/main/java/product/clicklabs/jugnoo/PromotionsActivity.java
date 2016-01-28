@@ -670,7 +670,24 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
                     });
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.dialogNoInternet(PromotionsActivity.this,
+                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        new Utils.AlertCallBackWithButtonsInterface() {
+                            @Override
+                            public void positiveClick(View v) {
+                                applyPromoCodeAPI(activity, promoCode);
+                            }
+
+                            @Override
+                            public void neutralClick(View v) {
+
+                            }
+
+                            @Override
+                            public void negativeClick(View v) {
+
+                            }
+                        });
             }
         }
 	}

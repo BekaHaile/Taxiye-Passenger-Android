@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -25,9 +24,10 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class HelpParticularActivity extends BaseActivity implements Constants {
@@ -77,6 +77,10 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
         if (helpSection != null) {
             textViewTitle.setText(helpSection.getName().toUpperCase());
+            if(helpSection.getOrdinal() == HelpSection.FAQ.getOrdinal()){
+                textViewTitle.setAllCaps(false);
+                textViewTitle.setText("FAQs");
+            }
         }
 
 
@@ -295,8 +299,25 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 							});
 					}
 				} else {
-					openHelpData("No internet connection. Tap to retry.", true);
-				}
+                    DialogPopup.dialogNoInternet(HelpParticularActivity.this,
+                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            new Utils.AlertCallBackWithButtonsInterface() {
+                                @Override
+                                public void positiveClick(View v) {
+                                    getFareDetailsAsync(activity);
+                                }
+
+                                @Override
+                                public void neutralClick(View v) {
+
+                                }
+
+                                @Override
+                                public void negativeClick(View v) {
+
+                                }
+                            });
+                }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

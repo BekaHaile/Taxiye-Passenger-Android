@@ -288,6 +288,24 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
+		} else {
+			//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+			DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+				@Override
+				public void positiveClick(View v) {
+					getLeaderboardActivityCall();
+				}
+
+				@Override
+				public void neutralClick(View v) {
+
+				}
+
+				@Override
+				public void negativeClick(View v) {
+
+				}
+			});
 		}
 	}
 }

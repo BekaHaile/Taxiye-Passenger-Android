@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -41,6 +40,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
@@ -498,7 +498,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 	}
 
 
-    public void submitFeedbackSupportAsync(final Activity activity, int givenRating, String feedbackText) {
+    public void submitFeedbackSupportAsync(final Activity activity, final int givenRating, final String feedbackText) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
@@ -549,7 +549,24 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                     }
                 });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.dialogNoInternet(FeedbackActivity.this,
+                    Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                    new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View v) {
+                            submitFeedbackSupportAsync(activity, givenRating, feedbackText);
+                        }
+
+                        @Override
+                        public void neutralClick(View v) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View v) {
+
+                        }
+                    });
         }
     }
 
