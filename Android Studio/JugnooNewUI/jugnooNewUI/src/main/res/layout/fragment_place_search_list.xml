@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sliding_bottom_bg_color"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutSearchBar"
@@ -24,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="18px"
             android:src="@drawable/search_icon"
-            android:tag="mwar"/>
+            android:tag="mwar" />
 
         <EditText
             android:id="@+id/editTextSearch"
@@ -39,22 +37,21 @@
             android:singleLine="true"
             android:textColor="@color/black_text"
             android:textCursorDrawable="@null"
-            android:textSize="30px"/>
+            android:textSize="30px" />
 
         <product.clicklabs.jugnoo.utils.ProgressWheel
-            android:id="@+id/progressBarSearch"
             xmlns:wheel="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/progressBarSearch"
             android:layout_width="70px"
             android:layout_height="70px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="75px"
+            android:tag="mwar"
             wheel:matProg_barColor="@color/theme_color"
             wheel:matProg_barWidth="3dp"
             wheel:matProg_fillRadius="true"
-            wheel:matProg_progressIndeterminate="true"
-            android:tag="mwar"
-            />
+            wheel:matProg_progressIndeterminate="true" />
 
         <ImageView
             android:id="@+id/imageViewSearchCross"
@@ -65,7 +62,7 @@
             android:layout_marginRight="5px"
             android:padding="20px"
             android:src="@drawable/ic_cross_et"
-            android:tag="mwar"/>
+            android:tag="mwar" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -80,16 +77,16 @@
         android:id="@+id/linearLayoutAddFav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
-        android:background="@drawable/background_wallet_border" >
+        android:background="@drawable/background_wallet_border"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/relativeLayoutAddHome"
             android:layout_width="match_parent"
-            android:layout_height="90px"
-            android:visibility="visible" >
+            android:layout_height="110px"
+            android:visibility="visible">
 
 
             <TextView
@@ -98,11 +95,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
+                android:layout_toLeftOf="@+id/imageViewEditHome"
+                android:layout_toRightOf="@+id/imageViewAddHome"
+                android:gravity="center_vertical"
                 android:maxLines="2"
                 android:paddingRight="20px"
-                android:layout_toRightOf="@+id/imageViewAddHome"
-                android:layout_toLeftOf="@+id/imageViewEditHome"
-                android:gravity="center_vertical"
                 android:text="@string/add_home"
                 android:textColor="@drawable/text_color_black_alpha_selector"
                 android:textSize="28px" />
@@ -123,16 +120,14 @@
             android:id="@+id/imageViewSep"
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/grey_dark"
-            />
-
+            android:background="@color/grey_dark" />
 
 
         <RelativeLayout
             android:id="@+id/relativeLayoutAddWork"
             android:layout_width="match_parent"
-            android:layout_height="90px"
-            android:visibility="visible" >
+            android:layout_height="110px"
+            android:visibility="visible">
 
 
             <TextView
@@ -141,11 +136,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
+                android:layout_toLeftOf="@+id/imageViewEditWork"
+                android:layout_toRightOf="@+id/imageViewAddWork"
+                android:gravity="center_vertical"
                 android:maxLines="2"
                 android:paddingRight="20px"
-                android:layout_toRightOf="@+id/imageViewAddWork"
-                android:layout_toLeftOf="@+id/imageViewEditWork"
-                android:gravity="center_vertical"
                 android:text="@string/add_work"
                 android:textColor="@drawable/text_color_black_alpha_selector"
                 android:textSize="28px" />
@@ -180,34 +175,33 @@
                 android:layout_height="2px"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
-                android:visibility="visible"
-                android:src="@color/text_color_hint"/>
+                android:src="@color/text_color_hint"
+                android:visibility="visible" />
+
             <product.clicklabs.jugnoo.utils.NonScrollListView
                 android:id="@+id/listViewSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20px"
-                android:dividerHeight="0px"
                 android:layout_marginRight="20px"
-                android:splitMotionEvents="false">
-            </product.clicklabs.jugnoo.utils.NonScrollListView>
+                android:dividerHeight="0px"
+                android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
 
             <ImageView
                 android:id="@+id/imageViewPoweredByGoogleSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/powered_by_google_light"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:tag="DontTouchMe"
-                />
+                android:src="@drawable/powered_by_google_light"
+                android:tag="DontTouchMe" />
 
             <TextView
                 android:id="@+id/textViewScrollSearch"
                 android:layout_width="10px"
                 android:layout_height="10px"
-                android:textSize="28px"/>
+                android:textSize="28px" />
 
         </LinearLayout>
     </ScrollView>

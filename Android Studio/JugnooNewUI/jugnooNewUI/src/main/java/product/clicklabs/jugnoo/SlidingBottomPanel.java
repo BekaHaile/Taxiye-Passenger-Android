@@ -130,18 +130,30 @@ public class SlidingBottomPanel {
         }
         switch (view.getId()) {
             case R.id.linearLayoutCash:
-                Log.v("on click", "linearLayoutCash");
-                viewPager.setCurrentItem(0, true);
+                Log.v("on click", "linearLayoutCash"+viewPager.getCurrentItem());
+                if(viewPager.getCurrentItem() == 0){
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                } else {
+                    viewPager.setCurrentItem(0, true);
+                }
                 break;
 
             case R.id.linearLayoutFare:
-                Log.v("on click", "linearLayoutFare");
-                viewPager.setCurrentItem(1, true);
+                Log.v("on click", "linearLayoutFare" + viewPager.getCurrentItem());
+                if(viewPager.getCurrentItem() == 1){
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                } else {
+                    viewPager.setCurrentItem(1, true);
+                }
                 break;
 
             case R.id.linearLayoutOffers:
-                Log.v("on click", "linearLayoutOffers");
-                viewPager.setCurrentItem(2, true);
+                Log.v("on click", "linearLayoutOffers" + viewPager.getCurrentItem());
+                if(viewPager.getCurrentItem() == 2){
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                } else {
+                    viewPager.setCurrentItem(2, true);
+                }
                 break;
         }
     }
