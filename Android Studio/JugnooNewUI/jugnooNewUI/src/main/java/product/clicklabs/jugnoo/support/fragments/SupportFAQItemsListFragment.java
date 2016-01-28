@@ -24,7 +24,7 @@ import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import product.clicklabs.jugnoo.utils.LinearLayoutManager;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
 
 public class SupportFAQItemsListFragment extends Fragment implements FlurryEventNames, Constants {
@@ -77,7 +77,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 		}
 
 		recyclerViewItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewItems);
-		recyclerViewItems.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewItems.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewItems.setHasFixedSize(false);
 

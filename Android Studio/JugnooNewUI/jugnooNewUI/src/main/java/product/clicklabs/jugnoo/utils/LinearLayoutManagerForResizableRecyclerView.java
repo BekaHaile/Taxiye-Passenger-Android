@@ -21,7 +21,7 @@ import product.clicklabs.jugnoo.BuildConfig;
  * If animations are not used at all then a normal measuring procedure will run and child views will be measured during
  * the measure pass.
  */
-public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutManager {
+public class LinearLayoutManagerForResizableRecyclerView extends android.support.v7.widget.LinearLayoutManager {
 
 	private static final int CHILD_WIDTH = 0;
 	private static final int CHILD_HEIGHT = 1;
@@ -33,12 +33,12 @@ public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutM
 	private boolean hasChildSize;
 
 	@SuppressWarnings("UnusedDeclaration")
-	public LinearLayoutManager(Context context) {
+	public LinearLayoutManagerForResizableRecyclerView(Context context) {
 		super(context);
 	}
 
 	@SuppressWarnings("UnusedDeclaration")
-	public LinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+	public LinearLayoutManagerForResizableRecyclerView(Context context, int orientation, boolean reverseLayout) {
 		super(context, orientation, reverseLayout);
 	}
 
