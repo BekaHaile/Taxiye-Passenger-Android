@@ -655,6 +655,7 @@
 	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
 
 	<string name="tnc_apply">T&amp;C Apply</string>
+	<string name="tnc">T&amp;C</string>
 	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>

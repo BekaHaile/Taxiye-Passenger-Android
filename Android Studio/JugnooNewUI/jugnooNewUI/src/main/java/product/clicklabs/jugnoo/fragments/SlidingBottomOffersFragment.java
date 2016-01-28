@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LinearLayoutLayoutManagerResizableRecyclerView;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -63,7 +63,7 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         ((TextView)rootView.findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenLight(activity));
 
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.offers_recycler);
-        recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerViewOffers.setLayoutManager(new LinearLayoutLayoutManagerResizableRecyclerView(activity));
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 

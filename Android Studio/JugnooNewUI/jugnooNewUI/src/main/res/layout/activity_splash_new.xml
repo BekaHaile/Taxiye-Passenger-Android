@@ -270,7 +270,9 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34" />
+                        android:textSize="@dimen/text_size_34"
+
+                        />
 
                     <TextView
                         android:id="@+id/textViewEmailRequired"
@@ -451,7 +453,9 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34" />
+                        android:textSize="@dimen/text_size_34"
+                        android:inputType="textNoSuggestions"
+                        />
 
                     <TextView
                         android:id="@+id/textViewSNameRequired"
@@ -662,7 +666,7 @@
                         android:digits="@string/digits_characters_caps_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_promocode"
-                        android:inputType="textCapCharacters"
+                        android:inputType="textNoSuggestions"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
                         android:singleLine="true"
