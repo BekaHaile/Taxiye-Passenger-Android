@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.HomeActivity;
@@ -31,7 +33,7 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
     private HomeActivity activity;
     private LinearLayout linearLayoutRoot;
     private RelativeLayout relativeLayoutPriorityTip;
-    private TextView textViewPriorityTipValue, textViewKMValue, textViewMinValue, textViewFareEstimage;
+    private TextView textViewPriorityTipValue, textViewKMValue, textViewMinValue, textViewFareEstimage, textViewThreshold;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
         textViewKMValue = (TextView)rootView.findViewById(R.id.textViewKMValue);textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
         textViewMinValue = (TextView)rootView.findViewById(R.id.textViewMinValue);textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
         textViewFareEstimage = (TextView)rootView.findViewById(R.id.textViewFareEstimage);textViewFareEstimage.setTypeface(Fonts.mavenLight(activity));
+        textViewThreshold = (TextView)rootView.findViewById(R.id.textViewThreshold);textViewThreshold.setTypeface(Fonts.mavenLight(activity));
 
         update();
 
@@ -74,6 +77,13 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
             textViewMinValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
+            if(Data.fareStructure.thresholdDistance > 1.0){
+                textViewThreshold.setVisibility(View.VISIBLE);
+                DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                textViewThreshold.setText("First "+decimalFormat.format(Data.fareStructure.thresholdDistance)+" Kms included in base fare");
+            } else{
+                textViewThreshold.setVisibility(View.GONE);
+            }
             if(Data.fareStructure.fareFactor > 1.0){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
                 textViewPriorityTipValue.setText(Data.fareStructure.fareFactor+"X");
