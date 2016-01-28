@@ -202,9 +202,9 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
                     int position = (int) v.getTag();
                     PromoCoupon promoCoupon = offerList.get(position);
                     if (promoCoupon instanceof CouponInfo) {
-                        DialogPopup.alertPopup(activity, "", ((CouponInfo)promoCoupon).description);
+                        DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description);
                     } else if (promoCoupon instanceof PromotionInfo) {
-                        DialogPopup.alertPopup(activity, "", ((PromotionInfo)promoCoupon).terms);
+                        DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo)promoCoupon).terms);
                     }
                 }
             });
