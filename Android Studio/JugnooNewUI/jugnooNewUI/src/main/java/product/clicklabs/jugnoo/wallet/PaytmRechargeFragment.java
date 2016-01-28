@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -515,7 +514,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 
 
-	private void addBalance(String amount) {
+	private void addBalance(final String amount) {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Adding Balance...");
@@ -551,7 +550,23 @@ public class PaytmRechargeFragment extends Fragment {
 				});
 			}
 			else{
-				DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								addBalance(amount);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -639,7 +654,23 @@ public class PaytmRechargeFragment extends Fragment {
 					}
 				});
 			} else{
-				DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								removeWallet();
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

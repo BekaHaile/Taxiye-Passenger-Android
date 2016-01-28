@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -21,6 +24,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -85,7 +89,21 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 } else{
                     if(Data.userData.paytmEnabled == 1
                             && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_no_cash));
+                        DialogPopup.alertPopupWithListener(activity, "",
+                                activity.getResources().getString(R.string.paytm_no_cash),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(activity, PaymentActivity.class);
+                                        if(Data.userData.paytmEnabled == 1) {
+                                            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                                        } else {
+                                            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                                        }
+                                        activity.startActivity(intent);
+                                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                    }
+                                });
                     }
                     else{
                         activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();

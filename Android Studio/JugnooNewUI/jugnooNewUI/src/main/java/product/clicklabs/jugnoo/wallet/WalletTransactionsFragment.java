@@ -41,7 +41,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -295,7 +294,23 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			jugnooAnimation.start();
 			callRefreshAPI(activity);
 		} else {
-			updateListData("No Internet connection", true);
+			DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View view) {
+							getTransactionInfoAsync(activity);
+						}
+
+						@Override
+						public void neutralClick(View view) {
+
+						}
+
+						@Override
+						public void negativeClick(View view) {
+
+						}
+					});
 		}
 	}
 

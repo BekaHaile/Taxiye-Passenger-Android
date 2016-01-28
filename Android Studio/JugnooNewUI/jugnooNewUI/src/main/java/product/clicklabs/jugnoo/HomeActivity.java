@@ -935,7 +935,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         if(Data.userData.getPaytmError() == 1){
                                             DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_error_cash_select_cash));
                                         } else{
-                                            DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_no_cash));
+                                            DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                                                    getResources().getString(R.string.paytm_no_cash),
+                                                    new OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                                                            if(Data.userData.paytmEnabled == 1) {
+                                                                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                                                            } else {
+                                                                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                                                            }
+                                                            startActivity(intent);
+                                                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                                        }
+                                                    });
                                         }
                                     }
                                     FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
@@ -1164,7 +1178,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                if(Data.userData.paytmEnabled == 1) {
+                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                } else {
+                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                }
                 startActivity(intent);
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
