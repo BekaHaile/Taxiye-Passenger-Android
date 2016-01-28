@@ -5,9 +5,10 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
-import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -111,5 +112,9 @@ public interface ApiService {
     @POST("/get_fare_estimate")
     void getFareEstimate(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/request_ride")
+    Response requestRide(@FieldMap Map<String, String> params);
 
 }

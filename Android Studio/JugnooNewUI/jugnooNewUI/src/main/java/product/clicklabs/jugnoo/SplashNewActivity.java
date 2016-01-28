@@ -497,12 +497,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		textViewTerms.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				try {
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
-					startActivity(browserIntent);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				try {
+//					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+//					startActivity(browserIntent);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 			}
 		});
 
@@ -533,6 +533,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				} else if (State.SIGNUP == state) {
 					performSignupBackPressed();
 				}
+				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 			}
 		});
 
@@ -896,7 +897,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		textViewSTerms.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				textViewTerms.performClick();
+				try {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+					startActivity(browserIntent);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 

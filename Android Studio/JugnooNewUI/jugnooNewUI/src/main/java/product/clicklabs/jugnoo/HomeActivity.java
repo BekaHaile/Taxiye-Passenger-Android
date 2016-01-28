@@ -415,7 +415,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private SlidingBottomPanel slidingBottomPanel;
 
 
-    private Dialog dialogPriorityTip;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -922,11 +921,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Data.pickupLatLng = map.getCameraPosition().target;
                             FlurryEventLogger.event(AUTO_RIDE_ICON);
 
-                            if(slidingBottomPanel.getSelectedCoupon() instanceof CouponInfo){
-                                Log.v(TAG, "selected coupon: "+((CouponInfo)slidingBottomPanel.getSelectedCoupon()).title);
-                            } else if(slidingBottomPanel.getSelectedCoupon() instanceof PromotionInfo){
-                                Log.v(TAG, "selected promo: "+((PromotionInfo)slidingBottomPanel.getSelectedCoupon()).title);
-                            }
                             boolean proceed = slidingBottomPanel.displayAlertAndCheckForSelectedPaytmCoupon();
                             if(proceed) {
                                 boolean callRequestRide = true;
@@ -1832,7 +1826,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
-            dialogPriorityTip = new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
+            Dialog dialogPriorityTip = new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
                     new PriorityTipDialog.Callback() {
                         @Override
                         public void onConfirmed() {
@@ -3046,6 +3040,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
 
+        Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
 //        genieLayout.setGenieParams();
     }
@@ -3882,7 +3877,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
                                     HomeActivity.logoutUser(activity);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", errorMessage);
+                                    DialogPopup.alertPopupWithListener(activity, "", errorMessage,
+                                            new OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    callAndHandleStateRestoreAPI(true);
+                                                }
+                                            });
                                 }
                             } else {
                                 customerUIBackToInitialAfterCancel();
@@ -4688,7 +4689,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textHead.setText("Chalo Jugnoo Se");
 
 
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+            final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
             btnCancel.setTypeface(Fonts.latoRegular(activity));
@@ -4699,13 +4700,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             btnOk.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
-                    if (Data.driverInfos.size() == 0) {
-                        noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
-                        //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
+                    if(AppStatus.getInstance(activity).isOnline(activity)) {
+                        dialog.dismiss();
+                        if (Data.driverInfos.size() == 0) {
+                            noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+                            //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
+                        } else {
+                            initiateRequestRide(true);
+                            FlurryEventLogger.event(FINAL_CALL_RIDE);
+                        }
                     } else{
-                        initiateRequestRide(true);
-                        FlurryEventLogger.event(FINAL_CALL_RIDE);
+                        DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
+                                Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                            @Override
+                            public void positiveClick() {
+                                btnOk.performClick();
+                            }
+
+                            @Override
+                            public void neutralClick() {
+
+                            }
+
+                            @Override
+                            public void negativeClick() {
+
+                            }
+                        });
                     }
                 }
 
@@ -5323,8 +5344,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
 
             requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
-            serverRequestStartTime = 0;
-            serverRequestEndTime = 0;
+            serverRequestStartTime = System.currentTimeMillis();
+            serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
             executionTime = -10;
             requestPeriod = 20000;
 
@@ -5358,60 +5379,62 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 updateCancelButtonUI();
 
-                                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                                nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
-                                nameValuePairs.add(new BasicNameValuePair("latitude", "" + Data.pickupLatLng.latitude));
-                                nameValuePairs.add(new BasicNameValuePair("longitude", "" + Data.pickupLatLng.longitude));
+                                HashMap<String, String> nameValuePairs = new HashMap<>();
+                                nameValuePairs.put("access_token", Data.userData.accessToken);
+                                nameValuePairs.put("latitude", "" + Data.pickupLatLng.latitude);
+                                nameValuePairs.put("longitude", "" + Data.pickupLatLng.longitude);
 
 								//30.7500, 76.7800
 //								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
 //								nameValuePairs.add(new BasicNameValuePair("longitude", "76.7800"));
 
                                 if (myLocation != null) {
-                                    nameValuePairs.add(new BasicNameValuePair("current_latitude", "" + myLocation.getLatitude()));
-                                    nameValuePairs.add(new BasicNameValuePair("current_longitude", "" + myLocation.getLongitude()));
+                                    nameValuePairs.put("current_latitude", "" + myLocation.getLatitude());
+                                    nameValuePairs.put("current_longitude", "" + myLocation.getLongitude());
                                 } else {
-                                    nameValuePairs.add(new BasicNameValuePair("current_latitude", "" + Data.pickupLatLng.latitude));
-                                    nameValuePairs.add(new BasicNameValuePair("current_longitude", "" + Data.pickupLatLng.longitude));
+                                    nameValuePairs.put("current_latitude", "" + Data.pickupLatLng.latitude);
+                                    nameValuePairs.put("current_longitude", "" + Data.pickupLatLng.longitude);
                                 }
 
                                 if (promoCouponSelectedForRide != null) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
-                                        nameValuePairs.add(new BasicNameValuePair("coupon_to_apply", "" + promoCouponSelectedForRide.id));
+                                        nameValuePairs.put("coupon_to_apply", "" + promoCouponSelectedForRide.id);
                                         if (promoCouponSelectedForRide.id == 0) {
-                                            nameValuePairs.add(new BasicNameValuePair("promo_to_apply", "" + promoCouponSelectedForRide.id));
+                                            nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.id);
                                         }
                                     } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
-                                        nameValuePairs.add(new BasicNameValuePair("promo_to_apply", "" + promoCouponSelectedForRide.id));
+                                        nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.id);
                                     }
                                 }
 
                                 if ("".equalsIgnoreCase(Data.cSessionId)) {
-                                    nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "0"));
-                                    nameValuePairs.add(new BasicNameValuePair("fare_factor", "" + Data.userData.fareFactor));
+                                    nameValuePairs.put("duplicate_flag", "0");
+                                    nameValuePairs.put("fare_factor", "" + Data.userData.fareFactor);
                                     if (myLocation != null && myLocation.hasAccuracy()) {
-                                        nameValuePairs.add(new BasicNameValuePair("location_accuracy", "" + myLocation.getAccuracy()));
+                                        nameValuePairs.put("location_accuracy", "" + myLocation.getAccuracy());
                                     }
 
                                 } else {
-                                    nameValuePairs.add(new BasicNameValuePair("duplicate_flag", "1"));
+                                    nameValuePairs.put("duplicate_flag", "1");
                                 }
 
 
                                 String links = Database2.getInstance(HomeActivity.this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 								if(links != null){
                                     if(!"[]".equalsIgnoreCase(links)) {
-                                        nameValuePairs.add(new BasicNameValuePair("branch_referring_links", links));
+                                        nameValuePairs.put("branch_referring_links", links);
                                     }
 								}
 
-								nameValuePairs.add(new BasicNameValuePair("preferred_payment_mode", "" + Data.pickupPaymentOption));
+								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
-                                String response = new HttpRequester().getJSONFromUrlParams(Config.getServerUrl() + "/request_ride", nameValuePairs);
+//                                String response = new HttpRequester().getJSONFromUrlParams(Config.getServerUrl() + "/request_ride", nameValuePairs);
+
+                                Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
+                                String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
 
                                 Log.e("response of request_ride", "=" + response);
-
 
 //                                {
 //                                    "flag": 105,
@@ -5469,8 +5492,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                                    "flag": 106,
 //                                    "log": "Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later."
 //                                }
-
-                                if (response.contains(HttpRequester.SERVER_TIMEOUT)) {
+                                if (responseRetro == null || response == null
+                                        || response.contains(HttpRequester.SERVER_TIMEOUT)) {
                                     Log.e("timeout", "=");
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -5577,6 +5600,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     long stopTime = System.currentTimeMillis();
                     long elapsedTime = stopTime - startTime;
 
+                    if (executionTime < 0) {
+                        executionTime = serverRequestStartTime + elapsedTime;
+                    }
                     if (executionTime > 0) {
                         if (elapsedTime >= requestPeriod) {
                             executionTime = executionTime + elapsedTime;

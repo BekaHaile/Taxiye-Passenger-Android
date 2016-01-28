@@ -98,7 +98,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <Button
                     android:id="@+id/buttonRegister"
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60px"
-                    android:text="@string/nl_splash_terms"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_26" />
 
@@ -150,7 +150,7 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="90px"
