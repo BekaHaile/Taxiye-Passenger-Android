@@ -24,62 +24,150 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 
 
 public class DialogPopup {
 
+	private static boolean ifOtherDialog(Activity activity, String message,
+										 final View.OnClickListener positiveListener,
+										 final View.OnClickListener negativeListener, boolean cancellable){
+		if(message.contains(Data.CHECK_INTERNET_MSG)){
+			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View v) {
+							if(positiveListener != null){
+								positiveListener.onClick(v);
+							}
+						}
+
+						@Override
+						public void neutralClick(View v) {
+
+						}
+
+						@Override
+						public void negativeClick(View v) {
+							if(negativeListener != null){
+								negativeListener.onClick(v);
+							}
+						}
+					}, cancellable);
+			return false;
+		}
+		else if(message.contains(Data.SERVER_NOT_RESOPNDING_MSG)){
+			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View v) {
+							if(positiveListener != null){
+								positiveListener.onClick(v);
+							}
+						}
+
+						@Override
+						public void neutralClick(View v) {
+
+						}
+
+						@Override
+						public void negativeClick(View v) {
+							if(negativeListener != null){
+								negativeListener.onClick(v);
+							}
+						}
+					}, cancellable);
+			return false;
+		}
+		else if(message.contains(Data.SERVER_ERROR_MSG)){
+			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View v) {
+							if(positiveListener != null){
+								positiveListener.onClick(v);
+							}
+						}
+
+						@Override
+						public void neutralClick(View v) {
+
+						}
+
+						@Override
+						public void negativeClick(View v) {
+							if(negativeListener != null){
+								negativeListener.onClick(v);
+							}
+						}
+					}, cancellable);
+			return false;
+		} else{
+			return true;
+		}
+	}
+
 	public static Dialog dialog;
 	public static void alertPopup(Activity activity, String title, String message) {
 		try {
-			dismissAlertPopup();
-			if("".equalsIgnoreCase(title)){
-				title = activity.getResources().getString(R.string.alert);
-			}
-			
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_custom_one_button);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, false);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
-			
-			textHead.setText(title);
-			textMessage.setText(message);
-			
-			textHead.setVisibility(View.GONE);
-			
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
-			
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
+			if(ifOtherDialog(activity, message, null, null, false)){
+				dismissAlertPopup();
+				if("".equalsIgnoreCase(title)){
+					title = activity.getResources().getString(R.string.alert);
 				}
-				
-			});
-			
-			dialog.show();
+
+				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.dialog_custom_one_button);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, false);
+
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+
+
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
+
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int)(800.0f*ASSL.Yscale()));
+
+				textHead.setText(title);
+				textMessage.setText(message);
+
+				textHead.setVisibility(View.GONE);
+
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
+
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+
+				});
+
+				dialog.show();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void dialogNoInternet(Activity activity, String title, String message,
-										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface) {
+										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface){
+		dialogNoInternet(activity, title, message, alertCallBackWithButtonsInterface, false);
+	}
+
+	public static void dialogNoInternet(Activity activity, String title, String message,
+										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface,
+										final boolean cancellable) {
 		try {
 			dismissAlertPopup();
 
@@ -93,8 +181,8 @@ public class DialogPopup {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
+			dialog.setCancelable(cancellable);
+			dialog.setCanceledOnTouchOutside(cancellable);
 
 
 			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
@@ -113,7 +201,9 @@ public class DialogPopup {
 				@Override
 				public void onClick(View view) {
 					dialog.dismiss();
-					alertCallBackWithButtonsInterface.positiveClick();
+					if(alertCallBackWithButtonsInterface != null) {
+						alertCallBackWithButtonsInterface.positiveClick(view);
+					}
 				}
 			});
 
@@ -121,14 +211,25 @@ public class DialogPopup {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					alertCallBackWithButtonsInterface.negativeClick();
+					if(alertCallBackWithButtonsInterface != null) {
+						alertCallBackWithButtonsInterface.negativeClick(v);
+					}
 				}
 			});
 
 			frameLayout.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dialog.dismiss();
+					if(cancellable) {
+						dialog.dismiss();
+					}
+				}
+			});
+
+			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
 				}
 			});
 
@@ -137,6 +238,9 @@ public class DialogPopup {
 			e.printStackTrace();
 		}
 	}
+
+
+
 	
 	public static void alertPopupHtml(Activity activity, String title, String message) {
 		try {
@@ -299,62 +403,66 @@ public class DialogPopup {
 	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
 											  final View.OnClickListener onClickListener, boolean newInstance) {
 		try {
-			dismissAlertPopup();
-			if("".equalsIgnoreCase(title)){
-				title = activity.getResources().getString(R.string.alert);
-			}
-
-			Dialog dialogI = null;
-			if(newInstance){
-				dialogI = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			}
-			else{
-				DialogPopup.dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialogI = DialogPopup.dialog;
-			}
-			final Dialog dialog = dialogI;
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_custom_one_button);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, false);
-			
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-
-			
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
-			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-			
-			textHead.setText(title);
-			textMessage.setText(message);
-			
-			textHead.setVisibility(View.GONE);
-
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
-
-			if(buttonText.length() > 0){
-				btnOk.setText(buttonText);
-			}
-
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					if(onClickListener != null) {
-						onClickListener.onClick(view);
-					}
+			if(ifOtherDialog(activity, message, onClickListener, null, false)) {
+				dismissAlertPopup();
+				if ("".equalsIgnoreCase(title)) {
+					title = activity.getResources().getString(R.string.alert);
 				}
-				
-			});
 
-			dialog.show();
+				Dialog dialogI = null;
+				if (newInstance) {
+					dialogI = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				} else {
+					DialogPopup.dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+					dialogI = DialogPopup.dialog;
+				}
+				final Dialog dialog = dialogI;
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.dialog_custom_one_button);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, false);
+
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+
+
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+				textHead.setTypeface(Fonts.mavenRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
+				textMessage.setTypeface(Fonts.mavenLight(activity));
+
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+				textHead.setText(title);
+				textMessage.setText(message);
+
+				textHead.setVisibility(View.GONE);
+
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+				btnOk.setTypeface(Fonts.mavenRegular(activity));
+
+				if (buttonText.length() > 0) {
+					btnOk.setText(buttonText);
+				}
+
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						if (onClickListener != null) {
+							onClickListener.onClick(view);
+						}
+					}
+
+				});
+
+				dialog.show();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -375,92 +483,93 @@ public class DialogPopup {
                                                          final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative,
                                                          final boolean cancelable, final boolean showTitle, DialogInterface.OnCancelListener dialogCancelListener) {
         try {
-            dismissAlertPopup();
-            dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            dialog.setContentView(R.layout.dialog_custom_two_buttons);
+			if(ifOtherDialog(activity, message, listenerPositive, listenerNegative, cancelable)) {
+				dismissAlertPopup();
+				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-            FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-            new ASSL(activity, frameLayout, 1134, 720, true);
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, true);
 
-            WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-            layoutParams.dimAmount = 0.6f;
-            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            dialog.setCancelable(cancelable);
-            dialog.setCanceledOnTouchOutside(cancelable);
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(cancelable);
+				dialog.setCanceledOnTouchOutside(cancelable);
 
-            if(dialogCancelListener != null) {
-                dialog.setOnCancelListener(dialogCancelListener);
-            }
+				if (dialogCancelListener != null) {
+					dialog.setOnCancelListener(dialogCancelListener);
+				}
 
-            TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.mavenRegular(activity));
-            TextView textMessage = (TextView) dialog
-                .findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.mavenLight(activity));
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+				textHead.setTypeface(Fonts.mavenRegular(activity));
+				TextView textMessage = (TextView) dialog
+						.findViewById(R.id.textMessage);
+				textMessage.setTypeface(Fonts.mavenLight(activity));
 
-            textMessage.setMovementMethod(new ScrollingMovementMethod());
-            textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
-            textHead.setText(title);
-            textMessage.setText(message);
+				textHead.setText(title);
+				textMessage.setText(message);
 
-            if(showTitle){
-                textHead.setVisibility(View.VISIBLE);
-            }
-            else{
-                textHead.setVisibility(View.GONE);
-            }
+				if (showTitle) {
+					textHead.setVisibility(View.VISIBLE);
+				} else {
+					textHead.setVisibility(View.GONE);
+				}
 
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.mavenRegular(activity));
-            if(!"".equalsIgnoreCase(okText)){
-                btnOk.setText(okText);
-            }
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+				btnOk.setTypeface(Fonts.mavenRegular(activity));
+				if (!"".equalsIgnoreCase(okText)) {
+					btnOk.setText(okText);
+				}
 
-            Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-            btnCancel.setTypeface(Fonts.mavenRegular(activity));
-            if(!"".equalsIgnoreCase(canceltext)){
-                btnCancel.setText(canceltext);
-            }
+				Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+				btnCancel.setTypeface(Fonts.mavenRegular(activity));
+				if (!"".equalsIgnoreCase(canceltext)) {
+					btnCancel.setText(canceltext);
+				}
 
-            btnOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                    listenerPositive.onClick(view);
-                }
-            });
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						listenerPositive.onClick(view);
+					}
+				});
 
-            btnCancel.setOnClickListener(new View.OnClickListener() {
+				btnCancel.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    listenerNegative.onClick(v);
-                }
-            });
-
-
-            dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                }
-            });
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+						listenerNegative.onClick(v);
+					}
+				});
 
 
-            dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+				dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    if(cancelable){
-                        dismissAlertPopup();
-                    }
-                }
-            });
+					@Override
+					public void onClick(View v) {
+					}
+				});
 
-            dialog.show();
+
+				dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (cancelable) {
+							dismissAlertPopup();
+						}
+					}
+				});
+
+				dialog.show();
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

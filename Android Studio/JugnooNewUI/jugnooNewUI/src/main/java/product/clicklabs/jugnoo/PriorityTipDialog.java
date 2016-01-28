@@ -186,17 +186,17 @@ public class PriorityTipDialog {
                         DialogPopup.dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE,
                                 Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
                                     @Override
-                                    public void positiveClick() {
+                                    public void positiveClick(View v) {
                                         btnOk.performClick();
                                     }
 
                                     @Override
-                                    public void neutralClick() {
+                                    public void neutralClick(View v) {
 
                                     }
 
                                     @Override
-                                    public void negativeClick() {
+                                    public void negativeClick(View v) {
 
                                     }
                                 });

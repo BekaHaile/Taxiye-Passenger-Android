@@ -59,7 +59,6 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         linearLayoutPromotion1.setOnClickListener(this);
         linearLayoutPromotion2.setOnClickListener(this);
         linearLayoutNoOffers = (LinearLayout)rootView.findViewById(R.id.linearLayoutNoOffers);
-        ((TextView)rootView.findViewById(R.id.textViewWhoops)).setTypeface(Fonts.mavenRegular(activity));
         ((TextView)rootView.findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenLight(activity));
 
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.offers_recycler);

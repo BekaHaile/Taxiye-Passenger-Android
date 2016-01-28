@@ -654,16 +654,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 							new Utils.AlertCallBackWithButtonsInterface() {
 								@Override
-								public void positiveClick() {
+								public void positiveClick(View v) {
 									buttonFacebookLogin.performClick();
 								}
 
 								@Override
-								public void neutralClick() {
+								public void neutralClick(View v) {
 								}
 
 								@Override
-								public void negativeClick() {
+								public void negativeClick(View v) {
 								}
 							});
 				}
@@ -682,16 +682,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 							new Utils.AlertCallBackWithButtonsInterface() {
 								@Override
-								public void positiveClick() {
+								public void positiveClick(View v) {
 									buttonGoogleLogin.performClick();
 								}
 
 								@Override
-								public void neutralClick() {
+								public void neutralClick(View v) {
 								}
 
 								@Override
-								public void negativeClick() {
+								public void negativeClick(View v) {
 								}
 							});
 				}

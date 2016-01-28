@@ -597,11 +597,11 @@ public class Utils {
 	}
 
 	public interface AlertCallBackWithButtonsInterface {
-		void positiveClick();
+		void positiveClick(View view);
 
-		void neutralClick();
+		void neutralClick(View view);
 
-		void negativeClick();
+		void negativeClick(View view);
 	}
 
 	public static void openUrl(Context context, String url){

@@ -47,26 +47,15 @@
             android:id="@+id/linearLayoutNoNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:layout_marginTop="200px"
             >
             <ImageView
-                android:layout_width="297px"
-                android:layout_height="347px"
-                android:src="@drawable/ic_no_notifications"
-                />
-
-            <TextView
-                android:id="@+id/textViewWhoops"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/whoops"
-                android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_44"
-                android:textAllCaps="true"
-                android:layout_marginTop="20px"
+                android:layout_width="241px"
+                android:layout_height="342px"
+                android:src="@drawable/ic_no_items"
+                android:tag="mwar"
                 />
 
             <TextView

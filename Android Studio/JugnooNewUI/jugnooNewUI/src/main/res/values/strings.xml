@@ -660,4 +660,9 @@
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
+	<string name="app_quit_message">Are you sure you want to quit the app?</string>
+
+
+	<string name="no_coupons_currently">No coupons currently</string>
+
 </resources>

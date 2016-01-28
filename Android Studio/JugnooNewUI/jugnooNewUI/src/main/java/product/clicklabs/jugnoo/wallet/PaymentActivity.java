@@ -174,17 +174,17 @@ public class PaymentActivity extends BaseFragmentActivity{
 					//retryDialog(Data.CHECK_INTERNET_MSG, fragName);
 					DialogPopup.dialogNoInternet(PaymentActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
-						public void positiveClick() {
+						public void positiveClick(View v) {
 							getBalance("Refresh");
 						}
 
 						@Override
-						public void neutralClick() {
+						public void neutralClick(View v) {
 
 						}
 
 						@Override
-						public void negativeClick() {
+						public void negativeClick(View v) {
 
 						}
 					});

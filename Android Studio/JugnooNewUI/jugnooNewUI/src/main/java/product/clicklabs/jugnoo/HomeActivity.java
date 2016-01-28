@@ -960,17 +960,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else {
                             DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
-                                public void positiveClick() {
+                                public void positiveClick(View v) {
                                     imageViewRideNow.performClick();
                                 }
 
                                 @Override
-                                public void neutralClick() {
+                                public void neutralClick(View v) {
 
                                 }
 
                                 @Override
-                                public void negativeClick() {
+                                public void negativeClick(View v) {
 
                                 }
                             });
@@ -3351,13 +3351,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.event(DROP_LOCATION_OPENED_BUT_NOT_USED_RIDE_ACCEPTED);
             }
             else{
-                ActivityCompat.finishAffinity(this);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        startService(new Intent(BaseActivity.GENIE_SERVICE));
-                    }
-                }, 2000);
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                        getResources().getString(R.string.app_quit_message),
+                        getResources().getString(R.string.cancel),
+                        getResources().getString(R.string.ok),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        },
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ActivityCompat.finishAffinity(HomeActivity.this);
+                            }
+                        }, false, false);
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        startService(new Intent(BaseActivity.GENIE_SERVICE));
+//                    }
+//                }, 2000);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3896,17 +3912,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
                 @Override
-                public void positiveClick() {
+                public void positiveClick(View v) {
                     cancelCustomerRequestAsync(HomeActivity.this);
                 }
 
                 @Override
-                public void neutralClick() {
+                public void neutralClick(View v) {
 
                 }
 
                 @Override
-                public void negativeClick() {
+                public void negativeClick(View v) {
 
                 }
             });
@@ -4709,17 +4725,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
                                 Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
-                            public void positiveClick() {
+                            public void positiveClick(View v) {
                                 btnOk.performClick();
                             }
 
                             @Override
-                            public void neutralClick() {
+                            public void neutralClick(View v) {
 
                             }
 
                             @Override
-                            public void negativeClick() {
+                            public void negativeClick(View v) {
 
                             }
                         });

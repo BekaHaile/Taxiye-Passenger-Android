@@ -61,7 +61,6 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 		linearLayoutNoNotifications = (LinearLayout) findViewById(R.id.linearLayoutNoNotifications);
 		linearLayoutNoNotifications.setVisibility(View.GONE);
-		((TextView)findViewById(R.id.textViewWhoops)).setTypeface(Fonts.mavenRegular(this));
 		((TextView)findViewById(R.id.textViewNoNotifications)).setTypeface(Fonts.mavenLight(this));
 
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);

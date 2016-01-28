@@ -289,7 +289,7 @@ public class SlidingBottomPanel {
     public void openPaymentActivityInCaseOfPaytmNotAdded() {
         if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
             Intent intent = new Intent(activity, PaymentActivity.class);
-            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
             activity.startActivity(intent);
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);

@@ -296,16 +296,16 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 			//updateListData("No internet connection, tap to retry", true);
             DialogPopup.dialogNoInternet(RideTransactionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
                 @Override
-                public void positiveClick() {
+                public void positiveClick(View v) {
                     getRecentRidesAPI(RideTransactionsActivity.this, true);
                 }
 
                 @Override
-                public void neutralClick() {
+                public void neutralClick(View v) {
                 }
 
                 @Override
-                public void negativeClick() {
+                public void negativeClick(View v) {
                 }
             });
 		}

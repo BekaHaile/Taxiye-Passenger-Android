@@ -96,6 +96,7 @@
                 >
                 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutListTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50px">
@@ -134,7 +135,7 @@
                 <RelativeLayout
                     android:id="@+id/relativeLayoutCoupons"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="8px"
                     android:orientation="vertical"
                     android:splitMotionEvents="false">
@@ -152,14 +153,33 @@
                         android:splitMotionEvents="false"
                         />
 
-                    <TextView
-                        android:id="@+id/textViewCouponInfo"
+                    <LinearLayout
+                        android:id="@+id/linearLayoutNoCoupons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="TextView"
-                        android:textColor="@color/black"
-                        android:textSize="34px"/>
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        >
+                        <ImageView
+                            android:layout_width="241px"
+                            android:layout_height="342px"
+                            android:src="@drawable/ic_no_items"
+                            android:tag="mwar"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewNoCoupons"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/no_coupons_currently"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_30"
+                            android:layout_marginTop="30px"
+                            />
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
