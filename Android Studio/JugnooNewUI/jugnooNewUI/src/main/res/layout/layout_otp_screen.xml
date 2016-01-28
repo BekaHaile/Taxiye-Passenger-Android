@@ -15,6 +15,7 @@
         android:splitMotionEvents="false">
 
         <LinearLayout
+            android:id="@+id/linearLayoutEnterOtp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/sliding_bottom_bg_color"

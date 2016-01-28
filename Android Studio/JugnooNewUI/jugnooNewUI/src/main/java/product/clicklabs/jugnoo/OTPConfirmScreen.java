@@ -69,6 +69,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewTitle;
 
 
+	LinearLayout linearLayoutEnterOtp;
 	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
@@ -137,6 +138,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
+		linearLayoutEnterOtp = (LinearLayout) findViewById(R.id.linearLayoutEnterOtp);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
@@ -425,7 +427,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					@Override
 					public void run() {
 						if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
-							scrollView.smoothScrollTo(0, editTextOTP.getTop());
+							scrollView.smoothScrollTo(0, linearLayoutEnterOtp.getBottom());
 						} else {
 							scrollView.smoothScrollTo(0, buttonVerify.getTop());
 						}
@@ -449,7 +451,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				@Override
 				public void run() {
 					if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
-						scrollView.smoothScrollTo(0, editTextOTP.getTop());
+						scrollView.smoothScrollTo(0, linearLayoutEnterOtp.getBottom());
 					} else {
 						scrollView.smoothScrollTo(0, buttonVerify.getTop());
 					}
