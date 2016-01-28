@@ -70,6 +70,11 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePreferredPaymentOptionUI();
+    }
 
     private void paymentSelection(ImageView selected, ImageView unSelected){
         selected.setImageResource(R.drawable.radio_selected_icon);
@@ -144,7 +149,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.ruppes_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 
-            if(Data.userData.paytmEnabled == 1){
+            if(Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_paytm_wallet));
             }
