@@ -193,6 +193,9 @@ public class SlidingBottomPanel {
     }
 
     public void updatePaymentOption() {
+        if(Data.userData.getPaytmError() == 1){
+            Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+        }
         if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
             imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
             textViewCashValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)

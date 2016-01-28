@@ -122,7 +122,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
     public void updatePreferredPaymentOptionUI(){
         try{
-            int preferredPaymentOption = PaymentOption.PAYTM.getOrdinal();
+            int preferredPaymentOption = Data.pickupPaymentOption;
             if(PaymentOption.PAYTM.getOrdinal() == preferredPaymentOption){
                 if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
                     Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
@@ -152,6 +152,14 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             else{
                 textViewPaytmValue.setVisibility(View.GONE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
+            }
+
+            if(Data.userData.getPaytmError() == 1){
+                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                relativeLayoutPaytm.setVisibility(View.GONE);
+            }
+            else{
+                relativeLayoutPaytm.setVisibility(View.VISIBLE);
             }
 
             setSelectedPaymentOptionUI(Data.pickupPaymentOption);

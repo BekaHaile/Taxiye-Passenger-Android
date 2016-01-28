@@ -113,6 +113,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -3370,7 +3371,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.event(DROP_LOCATION_OPENED_BUT_NOT_USED_RIDE_ACCEPTED);
             }
             else{
-                ActivityCompat.finishAffinity(HomeActivity.this);
+                if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+                else{
+                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                    ActivityCompat.finishAffinity(HomeActivity.this);
+                }
 
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
@@ -6247,42 +6254,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					slidingBottomPanel.setPaytmLoadingVisiblity(View.VISIBLE);
 					progressBarMenuPaytmWalletLoading.setVisibility(View.VISIBLE);
 					textViewWalletValue.setVisibility(View.GONE);
-					RequestParams params = new RequestParams();
+
+					HashMap<String, String> params = new HashMap<>();
 					params.put("access_token", Data.userData.accessToken);
 					params.put("client_id", Config.getClientId());
 					params.put("is_access_token_new", "1");
 
-					AsyncHttpClient client = Data.getClient();
-					client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
-						@Override
-						public void onSuccess(String response) {
-							Log.i("request succesfull", "response = " + response);
-							try {
-								JSONObject jObj = new JSONObject(response.toString());
-								JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
-								setUserData();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+                    RestClient.getApiServices().paytmCheckBalance(params, new Callback<SettleUserDebt>() {
+                        @Override
+                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                            String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                            Log.i("request succesfull", "response = " + responseStr);
+                            try {
+                                JSONObject jObj = new JSONObject(responseStr);
+                                JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
+                                setUserData();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
                             slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
-							textViewWalletValue.setVisibility(View.VISIBLE);
-						}
+                            textViewWalletValue.setVisibility(View.VISIBLE);
+                        }
 
-						@Override
-						public void onFailure(Throwable arg0) {
-							try {
-								Log.e("request fail", arg0.toString());
-								JSONParser.setPaytmErrorCase();
-								setUserData();
-								progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+                        @Override
+                        public void failure(RetrofitError error) {
+                            try {
+                                Log.e("request fail", error.toString());
+                                JSONParser.setPaytmErrorCase();
+                                setUserData();
+                                progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
                                 slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
-								textViewWalletValue.setVisibility(View.VISIBLE);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					});
+                                textViewWalletValue.setVisibility(View.VISIBLE);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
 				}
 			}
 		} catch (Exception e) {

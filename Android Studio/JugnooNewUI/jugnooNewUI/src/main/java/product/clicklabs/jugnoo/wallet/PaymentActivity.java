@@ -5,10 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -19,12 +18,17 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -142,18 +146,19 @@ public class PaymentActivity extends BaseFragmentActivity{
 			if(1 == Data.userData.paytmEnabled) {
 				if (AppStatus.getInstance(this).isOnline(this)) {
 					DialogPopup.showLoadingDialog(this, "Loading...");
-					RequestParams params = new RequestParams();
+
+					HashMap<String, String> params = new HashMap<>();
 					params.put("access_token", Data.userData.accessToken);
 					params.put("client_id", Config.getClientId());
 					params.put("is_access_token_new", "1");
 
-					AsyncHttpClient client = Data.getClient();
-					client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
+					RestClient.getApiServices().paytmCheckBalance(params, new Callback<SettleUserDebt>() {
 						@Override
-						public void onSuccess(String response) {
-							Log.i("request succesfull", "response = " + response);
+						public void success(SettleUserDebt settleUserDebt, Response response) {
+							String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+							Log.i("request succesfull", "response = " + responseStr);
 							try {
-								JSONObject jObj = new JSONObject(response.toString());
+								JSONObject jObj = new JSONObject(responseStr);
 								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
 								performGetBalanceSuccess(fragName);
 							} catch (Exception e) {
@@ -164,12 +169,17 @@ public class PaymentActivity extends BaseFragmentActivity{
 						}
 
 						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
+						public void failure(RetrofitError error) {
+							try {
+								Log.e("request fail", error.toString());
+								DialogPopup.dismissLoadingDialog();
+								retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
+
 				} else {
 					//retryDialog(Data.CHECK_INTERNET_MSG, fragName);
 					DialogPopup.dialogNoInternet(PaymentActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {

@@ -117,4 +117,10 @@ public interface ApiService {
     @POST("/request_ride")
     Response requestRide(@FieldMap Map<String, String> params);
 
+
+    @FormUrlEncoded
+    @POST("/paytm/check_balance")
+    void paytmCheckBalance(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
 }

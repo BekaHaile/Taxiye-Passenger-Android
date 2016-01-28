@@ -172,7 +172,7 @@ public class Data {
 	
 	
 	public static LatLng pickupLatLng, dropLatLng;
-	public static int pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+	public static int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
 
 	public static FacebookUserData facebookUserData;
 	public static GoogleSignInAccount googleSignInAccount;
