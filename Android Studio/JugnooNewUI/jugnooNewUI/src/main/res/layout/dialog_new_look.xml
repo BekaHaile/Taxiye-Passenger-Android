@@ -40,7 +40,7 @@
         android:layout_width="187px"
         android:layout_height="187px"
         android:tag="mwar"
-        android:layout_marginBottom="145px"
+        android:layout_marginBottom="165px"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/auto_icon_r_normal"/>

@@ -1583,11 +1583,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }*/
 
             // ****** New Look Tutorial Screen ***** //
-            if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)){
-                Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
-                // for tutorial screens
-                new NewLookTutorialDialog(HomeActivity.this);
-            }
+            new NewLookTutorialDialog(HomeActivity.this);
 
 			switchUserScreen();
 
