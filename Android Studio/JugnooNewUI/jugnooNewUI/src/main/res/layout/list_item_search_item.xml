@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="@dimen/screen_width"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/background_search_list"
     android:orientation="vertical"
-    android:background="@color/transparent"
-        android:splitMotionEvents="false"
-     >
+    android:tag="mwar"
+    android:splitMotionEvents="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:splitMotionEvents="false"
         android:layout_margin="30px"
-        
-         >
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
 
         <TextView
             android:id="@+id/textViewSearchName"
@@ -23,29 +21,20 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:textColor="@color/black_text"
-            android:textSize="30px"
-             />
-        
+            android:textSize="30px" />
+
         <TextView
             android:id="@+id/textViewSearchAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Address"
-            android:singleLine="true"
-            android:textColor="@color/grey_dark"
-            android:textSize="26px"
             android:layout_marginTop="10px"
-             />
-        
-       
-        
+            android:singleLine="true"
+            android:text="Address"
+            android:textColor="@color/grey_dark"
+            android:textSize="26px" />
+
+
     </LinearLayout>
-    
-     <ImageView 
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/grey_light_more"
-            
-            />
+
 
 </LinearLayout>

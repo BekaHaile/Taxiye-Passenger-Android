@@ -164,7 +164,7 @@ public class SearchListAdapter extends BaseAdapter{
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
