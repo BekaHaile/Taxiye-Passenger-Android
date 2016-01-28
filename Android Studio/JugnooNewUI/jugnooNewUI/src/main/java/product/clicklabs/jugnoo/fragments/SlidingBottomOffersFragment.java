@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutLayoutManagerResizableRecyclerView;
 
@@ -193,7 +194,22 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             }
 
             holder.linearLayoutPromotion1.setTag(position);
+            holder.radioPromotion1.setTag(position);
+
             holder.linearLayoutPromotion1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = (int) v.getTag();
+                    PromoCoupon promoCoupon = offerList.get(position);
+                    if (promoCoupon instanceof CouponInfo) {
+                        DialogPopup.alertPopup(activity, "", ((CouponInfo)promoCoupon).description);
+                    } else if (promoCoupon instanceof PromotionInfo) {
+                        DialogPopup.alertPopup(activity, "", ((PromotionInfo)promoCoupon).terms);
+                    }
+                }
+            });
+
+            holder.radioPromotion1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();

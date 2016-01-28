@@ -1571,10 +1571,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //						showPaytmTutorialPopup(HomeActivity.this);
 					}
 				}, 1000);
-			}
 
-
-            // ****** Jugnoo Jeanie Tutorial Screen ****** //
+                // ****** Jugnoo Jeanie Tutorial Screen ****** //
             /*if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
                     &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
                 Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
@@ -1582,8 +1580,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
             }*/
 
-            // ****** New Look Tutorial Screen ***** //
-            new NewLookTutorialDialog(HomeActivity.this);
+                // ****** New Look Tutorial Screen ***** //
+                new NewLookTutorialDialog(HomeActivity.this);
+			}
+
 
 			switchUserScreen();
 
@@ -1628,7 +1628,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		try{
 			if(Data.userData.getPromoSuccess() == 0){
                 DialogPopup.alertPopupWithListener(HomeActivity.this, "",
-                    getResources().getString(R.string.promocode_invalid_message_on_signup),
+                    Data.userData.getPromoMessage(),
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {

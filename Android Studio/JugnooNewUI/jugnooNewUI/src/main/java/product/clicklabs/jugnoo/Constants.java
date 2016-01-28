@@ -33,6 +33,9 @@ public interface Constants {
 
 	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 
+	String KEY_PROMO_SUCCESS = "promo_success";
+	String KEY_PROMO_MESSAGE = "promo_message";
+
 	String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
 
 	String KEY_SPLASH_STATE = "splash_state";

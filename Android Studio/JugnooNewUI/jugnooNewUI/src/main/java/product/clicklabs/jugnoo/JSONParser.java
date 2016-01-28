@@ -255,7 +255,9 @@ public class JSONParser implements Constants {
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
         Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-		int promoSuccess = userData.optInt("promo_success", 1);
+		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
+        String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
+                context.getResources().getString(R.string.promocode_invalid_message_on_signup));
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
@@ -317,7 +319,9 @@ public class JSONParser implements Constants {
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie,
+                contactSaved, referAllText, referAllTitle,
+                promoSuccess, promoMessage,
+                showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl, jugnooCashTNC);
     }
 
