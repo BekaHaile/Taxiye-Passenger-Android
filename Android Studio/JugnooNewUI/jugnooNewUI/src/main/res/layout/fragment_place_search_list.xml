@@ -110,7 +110,7 @@
                 android:layout_height="34px"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/home"
                 android:tag="mwar" />
 
@@ -151,7 +151,7 @@
                 android:layout_height="34px"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="40px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/work"
                 android:tag="mwar" />
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress;
+        ImageView imageViewType;
         LinearLayout relative;
         int id;
     }
@@ -161,10 +163,11 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.latoRegular(context));
             holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+            holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(ASSL.Yscale())*110));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -178,6 +181,16 @@ public class SearchListAdapter extends BaseAdapter{
 
             holder.textViewSearchName.setText(autoCompleteSearchResults.get(position).name);
             holder.textViewSearchAddress.setText(autoCompleteSearchResults.get(position).address);
+
+            if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_HOME){
+                holder.imageViewType.setVisibility(View.VISIBLE);
+                holder.imageViewType.setImageResource(R.drawable.home);
+            } else if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_WORK){
+                holder.imageViewType.setVisibility(View.VISIBLE);
+                holder.imageViewType.setImageResource(R.drawable.work);
+            } else{
+                holder.imageViewType.setVisibility(View.GONE);
+            }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 

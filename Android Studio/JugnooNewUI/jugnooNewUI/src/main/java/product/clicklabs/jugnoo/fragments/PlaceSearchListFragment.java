@@ -60,6 +60,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
     private Activity activity;
 	private GoogleApiClient mGoogleApiClient;
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
+	private SearchListAdapter searchListAdapter;
 
 	private final int ADD_HOME = 2, ADD_WORK = 3;
 
@@ -145,7 +146,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		showSearchLayout();
 
-		SearchListAdapter searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
 				new SearchListAdapter.SearchListActionsHandler() {
 
 					@Override
@@ -294,6 +295,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		//searchListAdapter
+	}
+
+	@Override
 	public void onConnected(Bundle bundle) {
 
 	}
@@ -335,6 +342,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 						textViewAddWork.setText("Add Work");
 					}
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

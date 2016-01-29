@@ -73,7 +73,7 @@ public class SlidingBottomPanel {
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
-        slidingUpPanelLayout.setPanelHeight((int) (110 * ASSL.Yscale()));
+        slidingUpPanelLayout.setPanelHeight((int) (108 * ASSL.Yscale()));
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -170,11 +170,21 @@ public class SlidingBottomPanel {
                     selectedCoupon = noSelectionCoupon;
                 } else {
                     selectedCoupon = new CouponInfo(0, "");
+                    //textViewOffersValue.setVisibility(View.GONE);
+                    textViewOffersValue.setText("");
                 }
             }
-            textViewOffersValue.setText("" + promoCoupons.size());
+            if (promoCoupons.size() > 0) {
+                textViewOffersValue.setText("" + promoCoupons.size());
+                textViewOffersValue.setVisibility(View.VISIBLE);
+            } else{
+                //textViewOffersValue.setVisibility(View.GONE);
+                textViewOffersValue.setText("");
+            }
+
         } else {
-            textViewOffersValue.setText("0");
+            textViewOffersValue.setText("");
+            //textViewOffersValue.setVisibility(View.GONE);
         }
 
 

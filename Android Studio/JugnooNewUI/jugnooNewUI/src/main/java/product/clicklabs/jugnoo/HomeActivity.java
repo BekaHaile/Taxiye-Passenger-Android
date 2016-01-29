@@ -2801,7 +2801,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
                 }
-                setBottomMarginOfView(initialMyLocationBtn, 80f);
+                setBottomMarginOfView(initialMyLocationBtn, 90f);
                 //setBottomMarginOfView(imageViewRideNow, 40f);
                 //setBottomMarginOfView(changeLocalityBtn, 100f);
             }
