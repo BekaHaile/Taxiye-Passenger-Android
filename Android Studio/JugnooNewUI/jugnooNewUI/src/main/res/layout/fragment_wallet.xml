@@ -93,7 +93,7 @@
                     android:gravity="right"
                     android:text="@string/rupee_0"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_54" />
+                    android:textSize="@dimen/text_size_50" />
 
 
                 <RelativeLayout
@@ -172,7 +172,7 @@
                     android:gravity="right"
                     android:text="@string/rupee_0"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_54" />
+                    android:textSize="@dimen/text_size_50" />
 
 
                 <ImageView
@@ -200,7 +200,7 @@
                 android:layout_width="31px"
                 android:layout_height="37px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
+                android:layout_marginLeft="30px"
                 android:src="@drawable/wallet_recent_transacions_icon" />
 
             <TextView

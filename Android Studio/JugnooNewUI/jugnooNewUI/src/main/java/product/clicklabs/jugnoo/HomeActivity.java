@@ -578,8 +578,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
         textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor);
-        textViewCurrentFareFactor.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Fonts.latoRegular(this));
+        textViewCurrentFareFactor.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Fonts.mavenLight(this));
 
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
         initialMyLocationBtnChangeLoc = (Button) findViewById(R.id.initialMyLocationBtnChangeLoc);

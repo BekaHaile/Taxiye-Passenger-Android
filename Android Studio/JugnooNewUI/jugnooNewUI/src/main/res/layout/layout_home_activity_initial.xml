@@ -121,7 +121,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutInitialFareFactor"
             android:layout_width="match_parent"
-            android:layout_height="50px"
+            android:layout_height="55px"
             android:layout_gravity="center_horizontal"
             android:background="@color/sliding_bottom_bg_color"
             android:visibility="visible">
@@ -133,8 +133,8 @@
 
             <ImageView
                 android:id="@+id/imageViewPriorityTip"
-                android:layout_width="36px"
-                android:layout_height="41px"
+                android:layout_width="34px"
+                android:layout_height="39px"
                 android:layout_marginLeft="30px"
                 android:layout_centerVertical="true"
                 android:src="@drawable/surge_icon_top"/>
@@ -155,7 +155,7 @@
                     android:gravity="left"
                     android:singleLine="true"
                     android:text="1.2x"
-                    android:textColor="@color/black_text_grey"
+                    android:textColor="@color/text_color"
                     android:textSize="26px" />
 
 
@@ -167,7 +167,7 @@
                     android:gravity="left"
                     android:singleLine="true"
                     android:text="of standard rates applicable right now"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/text_color"
                     android:textSize="24px" />
 
             </LinearLayout>
