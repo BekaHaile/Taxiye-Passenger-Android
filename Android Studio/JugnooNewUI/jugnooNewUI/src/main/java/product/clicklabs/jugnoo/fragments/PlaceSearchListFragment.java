@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -115,18 +114,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
 		imageViewSep = (ImageView) rootView.findViewById(R.id.imageViewSep);
 
-		linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch,
-				textViewScrollSearch, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-
-			}
-
-			@Override
-			public void keyBoardClosed() {
-
-			}
-		}));
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {
 
@@ -297,7 +284,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	@Override
 	public void onResume() {
 		super.onResume();
-		//searchListAdapter
+		searchListAdapter.addSavedLocationsToList();
 	}
 
 	@Override

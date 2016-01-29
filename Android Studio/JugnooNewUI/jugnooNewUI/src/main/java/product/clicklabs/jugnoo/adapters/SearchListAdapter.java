@@ -137,6 +137,12 @@ public class SearchListAdapter extends BaseAdapter{
         this.notifyDataSetChanged();
     }
 
+    public void addSavedLocationsToList(){
+        autoCompleteSearchResultsForSearch.clear();
+        addFavoriteLocations("");
+        setResults(autoCompleteSearchResultsForSearch);
+    }
+
     @Override
     public int getCount() {
         return autoCompleteSearchResults.size();
@@ -224,6 +230,7 @@ public class SearchListAdapter extends BaseAdapter{
                 autoCompleteSearchResults.remove(autoCompleteSearchResults.indexOf(new AutoCompleteSearchResult("No results found", "", "")));
             }
         }
+
         super.notifyDataSetChanged();
     }
 
