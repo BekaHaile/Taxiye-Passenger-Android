@@ -1,8 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -73,9 +71,9 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
 
     public void update(){
         try {
-            textViewKMValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space),
+            textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
-            textViewMinValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space),
+            textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
             if(Data.fareStructure.thresholdDistance > 1.0){
                 textViewThreshold.setVisibility(View.VISIBLE);

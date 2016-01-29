@@ -251,7 +251,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			
 			holder.textViewTransactionDate.setText(transactionInfo.date);
 
-			holder.textViewTransactionAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
+			holder.textViewTransactionAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
 			holder.textViewTransactionTime.setText(transactionInfo.time);
 			holder.textViewTransactionType.setText(transactionInfo.transactionText);
 			

@@ -143,7 +143,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             }
 
             textViewPaytmValue.setText(String.format(activity.getResources()
-                    .getString(R.string.ruppes_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+                    .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 
             if(Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
                 textViewPaytmValue.setVisibility(View.VISIBLE);

@@ -2057,9 +2057,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Data.feedbackReasons.get(i).checked = false;
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
-                        textViewRSTotalFareValue.setText(String.format(getString(R.string.ruppes_value_format_without_space),
+                        textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                             "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
-                        textViewRSCashPaidValue.setText(String.format(getString(R.string.ruppes_value_format_without_space),
+                        textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                             ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
@@ -2369,9 +2369,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setAssignedDriverData(mode);
 
 
-                        buttonCancelRide.setVisibility(View.GONE);
-                        buttonAddPaytmCash.setVisibility(View.VISIBLE);
-                        updateInRideAddPaytmButtonText();
+                        buttonCancelRide.setVisibility(View.VISIBLE);
+                        buttonAddPaytmCash.setVisibility(View.GONE);
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
@@ -2728,7 +2727,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void updateInRideAddPaytmButtonText(){
 		try{
-            if (Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+            if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
 				buttonAddPaytmCash.setText("Add Paytm Cash");
 			}
 			else{
@@ -4732,21 +4731,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else{
                         DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
                                 Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
-                            @Override
-                            public void positiveClick(View v) {
-                                btnOk.performClick();
-                            }
+                                    @Override
+                                    public void positiveClick(View v) {
+                                        btnOk.performClick();
+                                    }
 
-                            @Override
-                            public void neutralClick(View v) {
+                                    @Override
+                                    public void neutralClick(View v) {
 
-                            }
+                                    }
 
-                            @Override
-                            public void negativeClick(View v) {
+                                    @Override
+                                    public void negativeClick(View v) {
 
-                            }
-                        });
+                                    }
+                                });
                     }
                 }
 
@@ -6263,7 +6262,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     RestClient.getApiServices().paytmCheckBalance(params, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
-                            String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                             Log.i("request succesfull", "response = " + responseStr);
                             try {
                                 JSONObject jObj = new JSONObject(responseStr);

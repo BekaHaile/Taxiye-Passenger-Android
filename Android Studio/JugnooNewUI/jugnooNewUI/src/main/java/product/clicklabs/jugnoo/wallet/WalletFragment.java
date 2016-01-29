@@ -208,13 +208,13 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	private void setUserWalletInfo(){
 		try{
 			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
-				textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.ruppes_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
+				textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				} else if(Data.userData.getPaytmStatus().equalsIgnoreCase("")){
 					showPaytmActiveUI();
-					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.ruppes_value_format_without_space), "--"));
+					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), "--"));
 				} else{
 					showPaytmInactiveUI();
 				}

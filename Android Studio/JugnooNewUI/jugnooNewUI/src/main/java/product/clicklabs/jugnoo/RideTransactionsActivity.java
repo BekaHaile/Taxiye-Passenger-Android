@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
@@ -43,7 +42,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -468,7 +466,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 							holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
 									+ decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
 						}
-						holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+						holder.textViewAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 
 						if (1 != rideInfo.isRatedBefore) {
 							holder.imageViewDiv.setVisibility(View.VISIBLE);
@@ -481,7 +479,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 					}
 					else{
 						holder.textViewDetailsValue.setText(rideInfo.date+",");
-						holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+						holder.textViewAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 						holder.imageViewDiv.setVisibility(View.VISIBLE);
 						holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 						holder.textViewRideCancelled.setVisibility(View.VISIBLE);
@@ -510,7 +508,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 						holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
 								+ decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
 					}
-					holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+					holder.textViewAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 
 					if (1 != rideInfo.isRatedBefore) {
 						holder.imageViewDiv.setVisibility(View.VISIBLE);
@@ -523,7 +521,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				}
 				else{
 					holder.textViewDetailsValue.setText(rideInfo.date+",");
-					holder.textViewAmount.setText(String.format(getResources().getString(R.string.ruppes_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+					holder.textViewAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
 					holder.imageViewDiv.setVisibility(View.VISIBLE);
 					holder.linearLayoutRideReceipt.setVisibility(View.GONE);
 					holder.textViewRideCancelled.setVisibility(View.VISIBLE);

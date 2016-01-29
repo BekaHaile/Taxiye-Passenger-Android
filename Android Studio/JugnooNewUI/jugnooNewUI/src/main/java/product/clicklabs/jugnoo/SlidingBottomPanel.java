@@ -161,7 +161,7 @@ public class SlidingBottomPanel {
     public void update(ArrayList<PromoCoupon> promoCoupons) {
         this.promoCoupons = promoCoupons;
 
-        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)
+        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
         if (promoCoupons != null) {
@@ -198,7 +198,7 @@ public class SlidingBottomPanel {
         }
         if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
             imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
-            textViewCashValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space)
+            textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                     , Data.userData.getPaytmBalanceStr()));
         } else {
             imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);

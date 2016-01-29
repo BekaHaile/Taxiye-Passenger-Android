@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/linearLayoutReceipt"
         android:layout_width="671px"
-        android:layout_height="833px"
+        android:layout_height="920px"
         android:layout_marginTop="38px"
         android:layout_centerHorizontal="true"
         android:background="@drawable/receipt_background"
@@ -19,18 +19,17 @@
         android:gravity="center_horizontal"
         >
 
-
         <!-- driver info -->
         <RelativeLayout
             android:id="@+id/relativeLayoutEndRideDriverInfo"
             android:layout_width="560px"
-            android:layout_height="wrap_content"
+            android:layout_height="102px"
             android:layout_marginTop="5px"
             android:layout_centerHorizontal="true">
 
             <RelativeLayout
                 android:layout_width="280px"
-                android:layout_height="80px">
+                android:layout_height="100px">
 
                 <ImageView
                     android:id="@+id/imageViewEndRideDriverIcon"
@@ -53,13 +52,13 @@
                     android:gravity="center_vertical"
                     android:maxLines="2"
                     android:text="Driver Name"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="26px"/>
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="280px"
-                android:layout_height="80px"
+                android:layout_height="100px"
                 android:layout_alignParentRight="true">
 
                 <ImageView
@@ -82,20 +81,33 @@
                     android:gravity="center_vertical"
                     android:maxLines="2"
                     android:text="Car Number"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="26px"/>
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28"/>
             </RelativeLayout>
         </RelativeLayout>
+
+        <ImageView
+            android:layout_width="540px"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            />
 
         <TextView
             android:id="@+id/textViewEndRideSummary"
             android:layout_width="560px"
-            android:layout_height="40px"
-            android:background="@color/grey_dark_title"
+            android:layout_height="70px"
             android:gravity="center"
             android:text="Ride Summary"
-            android:textColor="@color/white"
-            android:textSize="30px"/>
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30"
+            android:textAllCaps="true"
+            />
+
+        <ImageView
+            android:layout_width="540px"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            />
 
         <ScrollView
             android:id="@+id/scrollViewEndRide"
@@ -120,7 +132,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <!-- fare -->
@@ -136,30 +147,20 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Fare"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRideFareRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideFareValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideFareValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
 
@@ -177,30 +178,20 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Luggage Charge"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRideLuggageChargeRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideLuggageChargeValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideLuggageChargeValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
                     <!-- convenience charge -->
@@ -217,30 +208,20 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Convenience Charge"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRideConvenienceChargeRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideConvenienceChargeValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideConvenienceChargeValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
                     <!-- discount -->
@@ -257,30 +238,20 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Discount"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRideDiscountRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideDiscountValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideDiscountValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
                     <product.clicklabs.jugnoo.utils.NonScrollListView
@@ -306,30 +277,19 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Final Fare"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
-
-                        <TextView
-                            android:id="@+id/textViewEndRideFinalFareRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideFinalFareValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideFinalFareValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
                     <!-- jugnoo cash deducted -->
@@ -346,30 +306,20 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Jugnoo Cash"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRideJugnooCashRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideJugnooCashValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideJugnooCashValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
                     <!-- paytm wallet deducted -->
@@ -386,30 +336,20 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="Paytm Wallet"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRidePaytmRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRidePaytmValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/grey_dark_less"
-                            android:textSize="26px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRidePaytmValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </RelativeLayout>
 
 
@@ -417,7 +357,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6px">
+                        android:layout_marginTop="10px">
 
                         <TextView
                             android:id="@+id/textViewEndRideToBePaid"
@@ -426,49 +366,40 @@
                             android:gravity="center_vertical"
                             android:layout_marginLeft="30px"
                             android:text="To Be Paid"
-                            android:textColor="@color/black"
-                            android:textSize="30px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_30"/>
 
-                        <TextView
-                            android:id="@+id/textViewEndRideToBePaidRupee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10px"
-                            android:layout_toLeftOf="@+id/textViewEndRideToBePaidValue"
-                            android:gravity="center_vertical"
-                            android:text="@string/rupee"
-                            android:textColor="@color/black"
-                            android:textSize="30px"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideToBePaidValue"
-                            android:layout_width="110px"
+                            android:layout_width="200px"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:gravity="center_vertical|right"
                             android:layout_marginRight="40px"
                             android:text="0"
-                            android:textColor="@color/black"
-                            android:textSize="30px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_30"/>
                     </RelativeLayout>
 
-                    
+
                     <ImageView
-                        android:layout_width="500px"
+                        android:layout_width="540px"
                         android:layout_height="2px"
+                        android:background="@color/text_color_hint"
+                        android:layout_marginTop="15px"
                         android:layout_gravity="center_horizontal"
-                        android:background="@color/grey_dark_less"
-                        android:layout_marginTop="10px"/>
+                        />
                     
                 </LinearLayout>
 
                 <!-- ride details -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10px"
+                    android:layout_height="100px"
                     android:orientation="horizontal"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical"
                     >
 
                     <LinearLayout
@@ -484,8 +415,8 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             android:text="Base Fare"
-                            android:textColor="@color/grey_dark_more"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideBaseFareValue"
@@ -495,9 +426,15 @@
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="Rs. 20"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="2px"
+                        android:layout_height="80px"
+                        android:background="@color/text_color_hint"
+                        />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -514,8 +451,8 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             android:text="Distance"
-                            android:textColor="@color/grey_dark_more"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideDistanceValue"
@@ -525,20 +462,33 @@
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="20 kms"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutEndRideWaitTime"
+
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutEndRideWaitTime"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:orientation="vertical"
-                        android:visibility="gone"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
                         android:layout_weight="1"
                         >
 
+                        <ImageView
+                            android:layout_width="2px"
+                            android:layout_height="80px"
+                            android:background="@color/text_color_hint"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_centerInParent="true"
+                            >
                         <TextView
                             android:id="@+id/textViewEndRideWaitTime"
                             android:layout_width="wrap_content"
@@ -546,8 +496,8 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             android:text="Wait"
-                            android:textColor="@color/grey_dark_more"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideWaitTimeValue"
@@ -557,9 +507,17 @@
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="20 min"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
-                    </LinearLayout>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="2px"
+                        android:layout_height="80px"
+                        android:background="@color/text_color_hint"
+                        />
 
                     <LinearLayout
                         android:id="@+id/linearLayoutEndRideTime"
@@ -578,8 +536,8 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             android:text="Total"
-                            android:textColor="@color/grey_dark_more"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"/>
 
                         <TextView
                             android:id="@+id/textViewEndRideTimeValue"
@@ -589,32 +547,20 @@
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="20 min"
-                            android:textColor="@color/grey_dark_more_receipt"
-                            android:textSize="26px"/>
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"/>
                     </LinearLayout>
 
                 </LinearLayout>
+                <ImageView
+                    android:layout_width="540px"
+                    android:layout_height="2px"
+                    android:background="@color/text_color_hint"
+                    android:layout_gravity="center_horizontal"
+                    />
 
 
                 <!-- fare factor -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10px"
-                    android:orientation="vertical"
-
-                    >
-
-                    <TextView
-                        android:id="@+id/textViewEndRideFareFactor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:text="Rate"
-                        android:textColor="@color/grey_dark_more"
-                        android:textSize="26px"/>
 
                     <TextView
                         android:id="@+id/textViewEndRideFareFactorValue"
@@ -623,10 +569,12 @@
                         android:layout_gravity="center_horizontal"
                         android:gravity="center"
                         android:singleLine="true"
-                        android:text="1x"
-                        android:textColor="@color/grey_dark_more_receipt"
-                        android:textSize="28px"/>
-                </LinearLayout>
+                        android:text="Priority Tip 1x"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26"
+                        android:layout_marginTop="20px"
+
+                        />
 
 
 
@@ -635,7 +583,7 @@
                     android:id="@+id/relativeLayoutEndRideStartEndInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20px">
+                    android:layout_marginTop="40px">
 
                     <ImageView
                         android:id="@+id/imageViewStartEnd"
@@ -658,8 +606,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Start"
-                            android:textColor="@color/grey_dark_more"
-                            android:textSize="26px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"
                             android:layout_gravity="center_horizontal"/>
 
                         <TextView
@@ -670,8 +618,8 @@
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="00:00 AM"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="26px"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"
                             android:layout_marginTop="4px"/>
 
                         <TextView
@@ -682,8 +630,8 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center_horizontal"
                             android:text="Sector 37, Chandigarh\nIndia"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="24px"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_24"
                             android:layout_marginTop="14px"
                             android:layout_marginLeft="10px"
                             android:layout_marginRight="10px"/>
@@ -702,8 +650,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="End"
-                            android:textColor="@color/grey_dark_more"
-                            android:textSize="26px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_26"
                             android:layout_gravity="center_horizontal"/>
                         <TextView
                             android:id="@+id/textViewEndRideEndTimeValue"
@@ -713,8 +661,8 @@
                             android:gravity="center"
                             android:maxLines="2"
                             android:text="00:00 AM"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="26px"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_26"
                             android:layout_marginTop="4px"/>
                         <TextView
                             android:id="@+id/textViewEndRideEndLocationValue"
@@ -724,8 +672,8 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center_horizontal"
                             android:text="Sector 28, Chandigarh\nIndia"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="24px"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_24"
                             android:layout_marginTop="14px"
                             android:layout_marginLeft="10px"
                             android:layout_marginRight="10px"/>
