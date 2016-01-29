@@ -118,6 +118,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 		imageViewJugnooAnimation = (ImageView)findViewById(R.id.imageViewJugnooAnimation);
 		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
+		imageViewJugnooAnimation.setVisibility(View.GONE);
 
 		relativeLayoutRideSummary = (RelativeLayout) findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) findViewById(R.id.scrollViewEndRide);
