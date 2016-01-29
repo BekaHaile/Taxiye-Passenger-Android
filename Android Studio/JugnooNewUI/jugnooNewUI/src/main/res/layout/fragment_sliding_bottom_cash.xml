@@ -13,6 +13,8 @@
         android:layout_height="@dimen/nl_button_size"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
+        android:layout_marginBottom="30px"
+        android:visibility="visible"
         android:background="@drawable/background_white_rounded_bordered">
 
     <LinearLayout
@@ -79,10 +81,10 @@
         android:id="@+id/linearLayoutCash"
         android:layout_width="match_parent"
         android:layout_height="@dimen/nl_button_size"
-        android:layout_marginTop="25px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
         android:gravity="center_vertical"
+        android:visibility="visible"
         android:background="@drawable/background_white_rounded_bordered"
         android:orientation="horizontal">
 
