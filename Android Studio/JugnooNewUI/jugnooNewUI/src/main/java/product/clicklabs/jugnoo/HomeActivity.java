@@ -6267,6 +6267,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             try {
                                 JSONObject jObj = new JSONObject(responseStr);
                                 JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
+                                Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
                                 setUserData();
                             } catch (Exception e) {
                                 e.printStackTrace();
