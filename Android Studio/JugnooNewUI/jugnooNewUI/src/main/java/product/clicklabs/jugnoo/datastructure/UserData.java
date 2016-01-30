@@ -1,6 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.content.Context;
+
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class UserData {
@@ -202,4 +205,35 @@ public class UserData {
 	public void setPromoMessage(String promoMessage) {
 		this.promoMessage = promoMessage;
 	}
+
+
+	public int getPaytmBalanceColor(Context context){
+		int color = context.getResources().getColor(R.color.amount_positive_color);
+		if(getPaytmBalance() < 0){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		if(getPaytmError() == 1){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		return color;
+	}
+
+	public int getJugnooBalanceColor(Context context){
+		int color = context.getResources().getColor(R.color.amount_positive_color);
+		if(getJugnooBalance() < 0){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		return color;
+	}
+
+	public int getTotalBalanceColor(Context context){
+		int color = context.getResources().getColor(R.color.amount_positive_color);
+		if(getTotalWalletBalance() < 0){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		return color;
+	}
+
+
+
 }

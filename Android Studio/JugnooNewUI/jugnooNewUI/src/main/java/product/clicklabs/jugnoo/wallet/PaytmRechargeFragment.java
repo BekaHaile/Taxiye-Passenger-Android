@@ -314,13 +314,7 @@ public class PaytmRechargeFragment extends Fragment {
 		paymentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-		try{
-			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		updatePaytmBalance();
 
 
 		if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
@@ -350,17 +344,21 @@ public class PaytmRechargeFragment extends Fragment {
 		}
 	}
 
-
-	@Override
-	public void onResume() {
-		super.onResume();
+	private void updatePaytmBalance(){
 		try{
 			if(Data.userData != null){
 				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
+				textViewCurrentBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updatePaytmBalance();
 	}
 
 	/**

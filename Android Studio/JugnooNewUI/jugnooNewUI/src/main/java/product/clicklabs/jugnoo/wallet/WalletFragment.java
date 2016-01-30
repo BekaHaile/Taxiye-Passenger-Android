@@ -226,7 +226,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				Spannable spanP = new SpannableString(textViewPaytmBalanceValue.getText());
 				spanP.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				//textViewPaytmBalanceValue.setText(spanP);
-
+				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
+				textViewPaytmBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 			}
 		} catch(Exception e){
 			e.printStackTrace();

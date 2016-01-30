@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -163,6 +162,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             }
 
             setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+
+            textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
+
         } catch(Exception e){
             e.printStackTrace();
         }
