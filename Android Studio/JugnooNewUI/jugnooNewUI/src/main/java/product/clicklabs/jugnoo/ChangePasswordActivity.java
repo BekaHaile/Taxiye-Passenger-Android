@@ -42,7 +42,7 @@ public class ChangePasswordActivity extends BaseActivity {
 	
 	ScrollView scrollView;
 	
-	TextView textViewScroll;
+	TextView textViewScroll, textViewOld, textViewNew, textViewRetype;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -75,6 +75,9 @@ public class ChangePasswordActivity extends BaseActivity {
 		editTextRetypeNewPassword = (EditText) findViewById(R.id.editTextRetypeNewPassword); editTextRetypeNewPassword.setTypeface(Fonts.latoRegular(this));
 
 		buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword); buttonChangePassword.setTypeface(Fonts.mavenRegular(this));
+		textViewOld = (TextView)findViewById(R.id.textViewOld); textViewOld.setTypeface(Fonts.mavenLight(this));
+		textViewNew = (TextView)findViewById(R.id.textViewNew); textViewNew.setTypeface(Fonts.mavenLight(this));
+		textViewRetype = (TextView)findViewById(R.id.textViewRetype); textViewRetype.setTypeface(Fonts.mavenLight(this));
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -130,7 +133,27 @@ public class ChangePasswordActivity extends BaseActivity {
 				}
 			}
 		});
-		
+
+		textViewOld.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextOldPassword.requestFocus();
+			}
+		});
+
+		textViewNew.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextNewPassword.requestFocus();
+			}
+		});
+
+		textViewRetype.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextRetypeNewPassword.requestFocus();
+			}
+		});
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -193,9 +216,9 @@ public class ChangePasswordActivity extends BaseActivity {
 				return true;
 			}
 		});
-		
-		
-		
+
+
+		editTextOldPassword.requestFocus();
 		
 
 		

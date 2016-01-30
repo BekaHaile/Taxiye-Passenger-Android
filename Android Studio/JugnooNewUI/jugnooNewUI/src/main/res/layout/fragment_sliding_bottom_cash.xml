@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nl_paytm_wallet"
-            android:layout_marginLeft="39px"
+            android:layout_marginLeft="28px"
             android:textSize="@dimen/text_size_40"
             android:textColor="@color/text_color"/>
 
@@ -56,7 +56,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textSize="@dimen/text_size_40"
-            android:textColor="@color/text_color"
+            android:textColor="@color/amount_positive_color"
             android:layout_marginRight="30px"
             android:text="200"/>
 
@@ -108,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cash"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="39px"
             android:textSize="@dimen/text_size_40"
             android:textColor="@color/text_color"/>
 

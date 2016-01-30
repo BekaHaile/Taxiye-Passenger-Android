@@ -54,7 +54,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         linearLayoutCash = (LinearLayout)rootView.findViewById(R.id.linearLayoutCash);
         radioBtnPaytm = (ImageView)rootView.findViewById(R.id.radio_paytm);
         radioBtnCash = (ImageView)rootView.findViewById(R.id.radio_cash);
-        textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenRegular(getActivity()));
+        textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(getActivity()));
         textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(getActivity()));
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(getActivity()));
         progressBarPaytm = (ProgressWheel) rootView.findViewById(R.id.progressBarPaytm);

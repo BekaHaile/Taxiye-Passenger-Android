@@ -334,6 +334,7 @@
                         android:id="@+id/relativeLayoutJugnooJeanie"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
+                        android:visibility="visible"
                         android:layout_gravity="center_horizontal"
                         android:background="@color/white">
 
@@ -413,6 +414,7 @@
                         android:id="@+id/relativeLayoutEmergencyContact"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
+                        android:visibility="visible"
                         android:layout_gravity="center_horizontal"
                         android:background="@color/sliding_bottom_bg_color">
 
@@ -492,10 +494,10 @@
                             android:visibility="gone" />
 
                         <ImageView
-                            android:layout_width="match_parent"
+                            android:layout_width="660px"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_gravity="center_horizontal"
+                            android:layout_centerHorizontal="true"
                             android:src="@color/text_color_hint" />
                     </RelativeLayout>
 
@@ -547,10 +549,10 @@
                             android:visibility="gone" />
 
                         <ImageView
-                            android:layout_width="match_parent"
+                            android:layout_width="660px"
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
-                            android:layout_gravity="center_horizontal"
+                            android:layout_centerHorizontal="true"
                             android:src="@color/text_color_hint" />
                     </RelativeLayout>
 
