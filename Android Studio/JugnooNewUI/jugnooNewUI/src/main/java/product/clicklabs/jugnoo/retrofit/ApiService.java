@@ -123,4 +123,9 @@ public interface ApiService {
     void paytmCheckBalance(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);
 
+
+    @FormUrlEncoded
+    @POST("/get_driver_current_location")
+    Response getDriverCurrentLocation(@FieldMap Map<String, String> params);
+
 }

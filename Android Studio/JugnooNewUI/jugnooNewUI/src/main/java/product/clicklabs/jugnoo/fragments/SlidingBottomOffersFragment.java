@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -195,8 +196,9 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
 
             holder.linearLayoutPromotion1.setTag(position);
             holder.radioPromotion1.setTag(position);
+            holder.textViewTNC.setTag(position);
 
-            holder.linearLayoutPromotion1.setOnClickListener(new View.OnClickListener() {
+            holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();
@@ -209,7 +211,7 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
                 }
             });
 
-            holder.radioPromotion1.setOnClickListener(new View.OnClickListener() {
+            holder.linearLayoutPromotion1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();
@@ -231,15 +233,17 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            public LinearLayout linearLayoutPromotion1;
+            public RelativeLayout linearLayoutPromotion1;
             public ImageView radioPromotion1;
-            public TextView textViewPromotion1;
+            public TextView textViewPromotion1, textViewTNC;
             public ViewHolder(View itemView, Activity activity) {
                 super(itemView);
-                linearLayoutPromotion1 = (LinearLayout) itemView.findViewById(R.id.linearLayoutPromotion1);
+                linearLayoutPromotion1 = (RelativeLayout) itemView.findViewById(R.id.linearLayoutPromotion1);
                 radioPromotion1 = (ImageView)itemView.findViewById(R.id.radioPromotion1);
                 textViewPromotion1 = (TextView) itemView.findViewById(R.id.textViewPromotion1);
                 textViewPromotion1.setTypeface(Fonts.mavenLight(activity));
+                textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);
+                textViewTNC.setTypeface(Fonts.mavenLight(activity));
             }
         }
     }

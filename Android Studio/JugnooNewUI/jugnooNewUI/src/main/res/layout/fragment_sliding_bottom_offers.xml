@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/linearLayoutRoot"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
-              android:background="@color/sliding_bottom_bg_color"
-              android:gravity="center_vertical"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
+    android:background="@color/sliding_bottom_bg_color"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/offers_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/linearLayoutPromotion1"
@@ -23,8 +23,7 @@
         android:background="@drawable/background_white_rounded_bordered"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/radioPromotion1"
@@ -32,7 +31,7 @@
             android:layout_height="33px"
             android:layout_marginLeft="23px"
             android:src="@drawable/radio_unselected_icon"
-            android:tag="mwar"/>
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewPromotion1"
@@ -41,7 +40,7 @@
             android:layout_marginLeft="39px"
             android:text="cashback"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_40"/>
+            android:textSize="@dimen/text_size_40" />
 
     </LinearLayout>
 
@@ -56,8 +55,7 @@
         android:background="@drawable/background_white_rounded_bordered"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/radioPromotion2"
@@ -65,7 +63,7 @@
             android:layout_height="33px"
             android:layout_marginLeft="23px"
             android:src="@drawable/radio_unselected_icon"
-            android:tag="mwar"/>
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewPromotion2"
@@ -74,7 +72,7 @@
             android:layout_marginLeft="39px"
             android:text="cashback"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_40"/>
+            android:textSize="@dimen/text_size_40" />
 
     </LinearLayout>
 
@@ -85,15 +83,13 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="134px"
             android:layout_height="190px"
             android:src="@drawable/ic_no_items"
-            android:tag="mwar"
-            />
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewNoOffers"
@@ -103,8 +99,7 @@
             android:layout_marginTop="10px"
             android:text="No Current Offers"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_24"
-            />
+            android:textSize="@dimen/text_size_24" />
 
     </LinearLayout>
 
