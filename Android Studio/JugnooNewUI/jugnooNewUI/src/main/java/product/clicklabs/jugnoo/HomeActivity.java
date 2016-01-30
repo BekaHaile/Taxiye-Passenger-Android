@@ -5709,30 +5709,36 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void run() {
-
-                ReferralActions.incrementTransactionCount(HomeActivity.this);
-                userMode = UserMode.PASSENGER;
-
-                switchUserScreen();
-
-                if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-                    rateAppPopup(activity);
-                } else {
-                }
-				firstTimeZoom = false;
-				pickupDropZoomed = false;
-
-                slidingBottomPanel.setSelectedCoupon(null);
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
-                Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
-
-				BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
-                FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
-
+                afterRideFeedbackSubmitted(givenRating, skipped);
             }
         });
 
+    }
+
+    public void afterRideFeedbackSubmitted(final int givenRating, final boolean skipped){
+        try {
+            ReferralActions.incrementTransactionCount(HomeActivity.this);
+            userMode = UserMode.PASSENGER;
+
+            switchUserScreen();
+
+            if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
+				rateAppPopup(activity);
+			} else {
+			}
+            firstTimeZoom = false;
+            pickupDropZoomed = false;
+
+            slidingBottomPanel.setSelectedCoupon(null);
+            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            switchPassengerScreen(passengerScreenMode);
+            Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
+
+            BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
+            FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -6447,7 +6453,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
 
             HomeActivity.feedbackSkipped = true;
-            HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+            afterRideFeedbackSubmitted(0, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6494,9 +6500,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                     if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                         Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
-                                        if (HomeActivity.appInterruptHandler != null) {
-                                            HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
-                                        }
+                                        afterRideFeedbackSubmitted(givenRating, false);
                                         try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
                                     } else {
                                         DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
