@@ -29,10 +29,10 @@
                 <ImageView
                     android:id="@+id/notification_image"
                     android:layout_width="match_parent"
-                    android:layout_height="450px"
+                    android:layout_height="340px"
                     android:tag="mwar"
                     android:scaleType="centerCrop"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
 
             </RelativeLayout>
