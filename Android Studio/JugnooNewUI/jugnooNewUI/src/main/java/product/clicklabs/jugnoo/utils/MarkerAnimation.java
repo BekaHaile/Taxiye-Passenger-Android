@@ -109,7 +109,7 @@ public class MarkerAnimation {
 //            }
 //        });
 
-        if(MapUtils.distance(marker.getPosition(), finalPosition) < 50){
+        if(MapUtils.distance(marker.getPosition(), finalPosition) < 200){
             List<LatLng> list = new ArrayList<>();
             list.add(finalPosition);
             animateMarkerToICSRecursive(marker, list, latLngInterpolator, false);

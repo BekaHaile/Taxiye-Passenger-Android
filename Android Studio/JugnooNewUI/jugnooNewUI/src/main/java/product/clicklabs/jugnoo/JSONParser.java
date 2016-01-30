@@ -86,10 +86,10 @@ public class JSONParser implements Constants {
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes, 0, 0, convenienceCharges);
+                    farePerMin, freeMinutes, 0, 0, convenienceCharges, true);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0);
+            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0, false);
         }
     }
 
@@ -1246,7 +1246,7 @@ public class JSONParser implements Constants {
                         jfs.getDouble("fare_per_min"),
                         jfs.getDouble("fare_threshold_time"),
                         jfs.getDouble("fare_per_waiting_min"),
-                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges);
+                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges, true);
                     Data.fareStructure.fareFactor = fareFactor;
                     break;
                 }

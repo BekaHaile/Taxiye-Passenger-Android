@@ -1438,7 +1438,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
 					|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
-				farAwayCity = "Our service is not available in this area";
+				farAwayCity = getResources().getString(R.string.service_not_available);
 				setServiceAvailablityUI(farAwayCity);
                 Data.lastRefreshLatLng = new LatLng(22.971723, 78.754263);
             } else {
@@ -2024,6 +2024,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private void checkForFareAvailablity(){
+        try{
+            if(Data.fareStructure != null && !Data.fareStructure.getIsFromServer()){
+                farAwayCity = getResources().getString(R.string.service_not_available);
+                setServiceAvailablityUI(farAwayCity);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public void switchUserScreen() {
 
@@ -2178,6 +2188,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //							genieLayout.setVisibility(View.VISIBLE);
 							centreLocationRl.setVisibility(View.VISIBLE);
 						}
+
+                        checkForFareAvailablity();
 
                         break;
 
@@ -3586,7 +3598,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 fareStructure.getFarePerMin(),
                                                 fareStructure.getFareThresholdTime(),
                                                 fareStructure.getFarePerWaitingMin(),
-                                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges);
+                                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
                                         Data.fareStructure.fareFactor = fareFactor;
                                         break;
                                     }
@@ -3759,20 +3771,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng){
         try{
-            if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+            if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                    || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                    || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                     && Data.pickupLatLng != null && driverLatLng != null) {
 
                 LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                 double distance = MapUtils.distance(Data.pickupLatLng, driverLatLng);
                 if (distance <= 15000) {
                     boundsBuilder.include(Data.pickupLatLng).include(driverLatLng);
+                    if(Data.dropLatLng != null){
+                        boundsBuilder.include(Data.dropLatLng);
+                    }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+                                if ((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
                                         && bounds != null) {
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
                                 }
@@ -4623,9 +4640,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public boolean toShowPathToDrop(){
-        return (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
-            PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
-            PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
+        return (PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
     public void getDropLocationPathAndDisplay(final LatLng lastLatLng) {
@@ -4641,22 +4656,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void run() {
                                     try {
                                         if(lastLatLng != null && Data.dropLatLng != null && !pickupDropZoomed){
-                                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                                            builder.include(lastLatLng).include(Data.dropLatLng);
-                                            LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, FIX_ZOOM_DIAGONAL);
-                                            float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, new GoogleMap.CancelableCallback() {
-												@Override
-												public void onFinish() {
-													pickupDropZoomed = true;
-												}
+//                                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//                                            builder.include(lastLatLng).include(Data.dropLatLng);
+//                                            LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, FIX_ZOOM_DIAGONAL);
+//                                            float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+//                                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, new GoogleMap.CancelableCallback() {
+//												@Override
+//												public void onFinish() {
+//													pickupDropZoomed = true;
+//												}
+//
+//												@Override
+//												public void onCancel() {
+//													pickupDropZoomed = false;
+//												}
+//
+//											});
+                                            zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
+                                            pickupDropZoomed = true;
 
-												@Override
-												public void onCancel() {
-													pickupDropZoomed = false;
-												}
-
-											});
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();

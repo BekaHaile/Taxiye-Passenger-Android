@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginRight="50px"
-            android:layout_marginTop="50px"
+            android:layout_marginTop="30px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -103,6 +103,8 @@
                 android:gravity="center_vertical"
                 android:text="@string/view_invoice"
                 android:textSize="@dimen/text_size_32"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
                 android:textColor="@color/text_color_theme_selector"
                 />
 
@@ -111,7 +113,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50px">
+            android:layout_marginTop="30px">
 
             <ImageView
                 android:layout_width="match_parent"

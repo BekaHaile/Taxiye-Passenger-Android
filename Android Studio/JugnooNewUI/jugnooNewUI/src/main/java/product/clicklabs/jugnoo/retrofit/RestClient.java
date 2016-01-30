@@ -21,11 +21,11 @@ public class RestClient {
     }
 
     public static void setupRestClient() {
-       /* RestAdapter.Log fooLog = new RestAdapter.Log() {
+       RestAdapter.Log fooLog = new RestAdapter.Log() {
             @Override
             public void log(String message) {
             }
-        };*/
+        };
 
         ArrayList<Protocol> protocolList = new ArrayList<Protocol>();
         protocolList.add(Protocol.HTTP_2);
@@ -41,7 +41,7 @@ public class RestClient {
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())
                 .setClient(new OkClient(okHttpClient))
-                //.setLog(fooLog)
+                .setLog(fooLog)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
         RestAdapter restAdapter = builder.build();

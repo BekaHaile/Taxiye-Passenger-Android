@@ -8,10 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-
-	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!--  General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -317,6 +316,7 @@
 	<string name="nl_get_fare_estimate">Get fare estimate</string>
 	<string name="nl_per_km">Per Km</string>
 	<string name="nl_per_min">Per Min</string>
+	<string name="service_not_available">Our service is not available in this area</string>
 
 	<!-- NL Forgot Passowrd screen-->
 	<string name="nl_forgot_password">Forgot Password</string>
