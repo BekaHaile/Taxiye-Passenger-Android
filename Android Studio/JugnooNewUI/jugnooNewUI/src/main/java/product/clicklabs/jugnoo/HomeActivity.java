@@ -50,6 +50,8 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
+import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
+import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -386,6 +388,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final int PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT = 1;
 
+    private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
+
 
 
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
@@ -418,6 +422,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MyApplication.getInstance().trackScreenView(TAG);
 
         try {
             setContentView(R.layout.activity_home);
@@ -3059,6 +3065,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
+        try {
+            AdWordsConversionReporter.registerReferrer(this.getApplicationContext(), this.getIntent().getData());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(this, GOOGLE_ADWORD_CONVERSION_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 //        genieLayout.setGenieParams();
     }
 
@@ -5595,6 +5613,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 												if ("".equalsIgnoreCase(Data.cSessionId)) {
 													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE, true);
                                                     FbEvents.logEvent(HomeActivity.this, FB_EVENT_REQUEST_RIDE, true);
+                                                    // Ride Requested
+                                                    // Google Android in-app conversion tracking snippet
+                                                    // Add this code to the event you'd like to track in your app.
+                                                    // See code examples and learn how to add advanced features like app deep links at:
+                                                    //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
+                                                    AdWordsConversionReporter.reportWithConversionId(HomeActivity.this.getApplicationContext(),
+                                                            GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
 												}
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -5771,6 +5796,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
             FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
+
+            // Ride Completion
+            // Google Android in-app conversion tracking snippet
+            // Add this code to the event you'd like to track in your app.
+            // See code examples and learn how to add advanced features like app deep links at:
+            //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
+            AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+                    GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -442,7 +442,6 @@ public class JSONParser implements Constants {
     }
 
 
-    //TODO
     public void parseLastRideData(JSONObject jObj) {
 
 //		  "last_ride": {
@@ -775,7 +774,6 @@ public class JSONParser implements Constants {
                 Data.cSessionId = sessionId;
                 clearSPData(context);
             } else {
-                //TODO
                 SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 
                 Data.cSessionId = sessionId;

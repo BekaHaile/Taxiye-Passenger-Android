@@ -5,10 +5,13 @@ import com.flurry.android.FlurryAgent;
 import java.util.HashMap;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.MyApplication;
+
 public class FlurryEventLogger {
 
     public static void event(String eventName){
         try{ FlurryAgent.logEvent(eventName); } catch(Exception e){ e.printStackTrace(); }
+		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName);} catch(Exception e){e.printStackTrace();}
     }
 
 
@@ -32,6 +35,8 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");
+		} catch (Exception e){}
 	}
 
 
@@ -44,6 +49,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 	
@@ -60,6 +66,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 
@@ -72,6 +79,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 	
@@ -84,6 +92,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 
@@ -97,18 +106,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-	}
-	
-	
-
-	public static void christmasNewScreenOpened(String accessToken){
-		try{
-			Map<String, String> articleParams = new HashMap<String, String>();
-			articleParams.put("access_token", accessToken);
-			FlurryAgent.logEvent("Christmas new screen opened", articleParams);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 

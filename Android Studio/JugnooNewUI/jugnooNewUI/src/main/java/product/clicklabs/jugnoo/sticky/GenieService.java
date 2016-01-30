@@ -111,7 +111,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
 
         SplashNewActivity.initializeServerURL(this);
@@ -252,7 +251,6 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
                 @Override
                 public void run() {
-                    // TODO Auto-generated method stub
 
                     isLongclick = true;
                     showCloseView();
