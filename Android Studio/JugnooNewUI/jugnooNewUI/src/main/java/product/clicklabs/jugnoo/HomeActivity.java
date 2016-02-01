@@ -117,6 +117,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
+import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -1620,22 +1621,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			if(Data.userData.getPromoSuccess() != 0) {
 				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
+                    @Override
+                    public void run() {
 //						showPaytmTutorialPopup(HomeActivity.this);
-					}
-				}, 1000);
+                    }
+                }, 1000);
 
                 // ****** Jugnoo Jeanie Tutorial Screen ****** //
-            /*if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
-                    &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
-                Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
-                // for tutorial screens
-                startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
-            }*/
+
+
+                //startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
 
                 // ****** New Look Tutorial Screen ***** //
-                new NewLookTutorialDialog(HomeActivity.this);
+                if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
+                    if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
+                            &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
+                        Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
+                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
+                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
+                        startActivity(intent);
+                    } else{
+                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
+                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
+                        startActivity(intent);
+                    }
+                    Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
+                    //new NewLookTutorialDialog(HomeActivity.this);
+                }
 			}
 
 

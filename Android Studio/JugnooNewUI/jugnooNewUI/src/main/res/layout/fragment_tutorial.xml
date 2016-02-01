@@ -20,12 +20,13 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="10dp"
-        android:textColor="#FFD931"
+        android:textColor="@color/theme_color"
         android:gravity="center"
         android:visibility="gone"
         android:text="Finish"/>
 
     <LinearLayout
+        android:id="@+id/linearLayoutDot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -41,6 +42,14 @@
             />
         <View
             android:id="@+id/dot_two"
+            android:layout_width="30px"
+            android:layout_height="30px"
+            android:layout_marginLeft="20px"
+            android:background="@drawable/circle_white"
+            />
+
+        <View
+            android:id="@+id/dot_three"
             android:layout_width="30px"
             android:layout_height="30px"
             android:layout_marginLeft="20px"
