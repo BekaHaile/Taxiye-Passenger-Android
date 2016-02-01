@@ -491,6 +491,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
+						int deepindex = jObj.optInt("deepindex", -1);
 
 						if (jObj.has("client_id")) {
 							Log.e("jObj=", "=" + jObj);
@@ -510,11 +511,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 
 							if(!"".equalsIgnoreCase(picture)){
-								int deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
+								deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
 								new BigImageNotifAsync(title, message1, deepindex, picture).execute();
 							}
 							else{
-								int deepindex = jObj.optInt("deepindex", -1);
+								deepindex = jObj.optInt("deepindex", -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex);
 							}
 						}
@@ -527,13 +528,18 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							// store push in database for notificaion center screen...
 							String pushArrived = DateOperations.getCurrentTimeInUTC();
 							if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+								Database2.getInstance(this).insertNotification(pushArrived, message1, ""+deepindex,
+										jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
 								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-							} else if(jObj.has("timeToDisplay")){
-								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", jObj.getString("timeToDisplay"), "", picture);
+							}
+							else if(jObj.has("timeToDisplay")){
+								Database2.getInstance(this).insertNotification(pushArrived, message1, ""+deepindex,
+										jObj.getString("timeToDisplay"), "", picture);
 								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-							} else if(jObj.has("timeTillDisplay")){
-								Database2.getInstance(this).insertNotification(pushArrived, message1, "0", "0", jObj.getString("timeTillDisplay"), picture);
+							}
+							else if(jObj.has("timeTillDisplay")){
+								Database2.getInstance(this).insertNotification(pushArrived, message1, ""+deepindex,
+										"0", jObj.getString("timeTillDisplay"), picture);
 								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 							}
 							if("".equalsIgnoreCase(picture)){

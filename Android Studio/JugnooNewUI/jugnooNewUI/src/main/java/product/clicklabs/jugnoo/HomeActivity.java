@@ -866,6 +866,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutNotificationMenu.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                if(map != null){
+                    Data.latitude = map.getCameraPosition().target.latitude;
+                    Data.longitude = map.getCameraPosition().target.longitude;
+                }
 				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
@@ -1779,6 +1783,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
 
                 case R.id.relativeLayoutNotification:
+                    if(map != null){
+                        Data.latitude = map.getCameraPosition().target.latitude;
+                        Data.longitude = map.getCameraPosition().target.longitude;
+                    }
                     startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(NOTIFICATION_ICON);

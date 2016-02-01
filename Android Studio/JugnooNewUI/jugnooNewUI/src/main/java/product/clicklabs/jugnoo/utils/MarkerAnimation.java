@@ -74,42 +74,8 @@ public class MarkerAnimation {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void animateMarkerToICS(Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
 
-//        TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
-//            @Override
-//            public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
-//                return latLngInterpolator.interpolate(fraction, startValue, endValue);
-//            }
-//        };
-//        Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
-//        ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
-//        animator.setDuration((long) (10.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
-//        animator.start();
-//
-//
-//
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//
-//            }
-//        });
-
-        if(MapUtils.distance(marker.getPosition(), finalPosition) < 200){
+        if(MapUtils.distance(marker.getPosition(), finalPosition) < 200
+                || MapUtils.distance(marker.getPosition(), finalPosition) > 20000){
             List<LatLng> list = new ArrayList<>();
             list.add(finalPosition);
             animateMarkerToICSRecursive(marker, list, latLngInterpolator, false);
