@@ -4,7 +4,7 @@
     >
     
     <solid 
-        android:color="@color/yellow_orange"
+        android:color="@color/theme_color"
         />
     
     <corners 

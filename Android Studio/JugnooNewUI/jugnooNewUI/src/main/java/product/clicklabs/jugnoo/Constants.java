@@ -33,8 +33,15 @@ public interface Constants {
 
 	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 
+	String KEY_PROMO_SUCCESS = "promo_success";
+	String KEY_PROMO_MESSAGE = "promo_message";
+
 	String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
 
+	String KEY_SPLASH_STATE = "splash_state";
+	String KEY_FORGOT_LOGIN_EMAIL = "forgot_login_email";
+	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
+	String KEY_BACK_FROM_OTP = "back_from_otp";
 	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
 
 	String POST_DATA = "post_data";
@@ -63,5 +70,9 @@ public interface Constants {
 	String KEY_BRANCH_FALLBACK_URL = "branch_fallback_url";
 
 	String KEY_JUGNOO_CASH_TNC = "jugnoo_cash_tnc";
+
+	String KEY_ALREADY_VERIFIED_EMAIL = "already_verified_email";
+	String KEY_ALREADY_REGISTERED_EMAIL = "already_registered_email";
+	String KEY_TUTORIAL_NO_OF_PAGES = "NumOfPages";
 
 }

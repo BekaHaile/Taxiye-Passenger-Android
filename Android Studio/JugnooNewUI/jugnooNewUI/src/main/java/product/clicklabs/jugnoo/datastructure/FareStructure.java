@@ -12,9 +12,11 @@ public class FareStructure {
     public double fareFactor;
 	public double convenienceCharge;
 
+    private boolean fromServer;
+
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
-						 double convenienceCharge){
+						 double convenienceCharge, boolean fromServer){
         this.fixedFare = fixedFare;
         this.thresholdDistance = thresholdDistance;
         this.farePerKm = farePerKm;
@@ -24,6 +26,8 @@ public class FareStructure {
         this.fareThresholdWaitingTime = fareThresholdWaitingTime;
         this.fareFactor = 1;
 		this.convenienceCharge = convenienceCharge;
+
+        this.fromServer = fromServer;
     }
 
     public double calculateFare(double totalDistanceInKm, double totalTimeInMin, double totalWaitTimeInMin){
@@ -46,4 +50,11 @@ public class FareStructure {
         return fare;
     }
 
+    public boolean getIsFromServer() {
+        return fromServer;
+    }
+
+    public void setFromServer(boolean fromServer) {
+        this.fromServer = fromServer;
+    }
 }

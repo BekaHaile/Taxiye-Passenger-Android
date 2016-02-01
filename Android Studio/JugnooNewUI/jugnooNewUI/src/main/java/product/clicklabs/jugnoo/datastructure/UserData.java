@@ -1,6 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.content.Context;
+
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class UserData {
@@ -17,6 +20,7 @@ public class UserData {
 	public int paytmEnabled, paytmError, contactSaved;
     public String referAllText, referAllTitle;
 	private int promoSuccess;
+	private String promoMessage;
 
 	private String branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl;
 
@@ -27,7 +31,9 @@ public class UserData {
 			int canSchedule, int canChangeLocation, int schedulingLimitMinutes, int isAvailable, int exceptionalDriver, int gcmIntent, int christmasIconEnable, 
 			int nukkadEnable, String nukkadIcon, int enableJugnooMeals, String jugnooMealsPackageName, int freeRideIconDisable, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, double sharingFareFixed, int showJugnooSharing, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle, int promoSuccess, int showJugnooJeanie,
+                    int contactSaved, String referAllText, String referAllTitle,
+					int promoSuccess, String promoMessage,
+					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
 					String jugnooCashTNC){
         this.userIdentifier = userIdentifier;
@@ -65,7 +71,10 @@ public class UserData {
 		this.contactSaved = contactSaved;
         this.referAllText = referAllText;
 		this.referAllTitle = referAllTitle;
+
 		this.promoSuccess = promoSuccess;
+		this.promoMessage = promoMessage;
+
 		this.showJugnooJeanie = showJugnooJeanie;
 
 		if(1 == this.paytmEnabled) {
@@ -188,4 +197,43 @@ public class UserData {
 	public void setJugnooCashTNC(String jugnooCashTNC) {
 		this.jugnooCashTNC = jugnooCashTNC;
 	}
+
+	public String getPromoMessage() {
+		return promoMessage;
+	}
+
+	public void setPromoMessage(String promoMessage) {
+		this.promoMessage = promoMessage;
+	}
+
+
+	public int getPaytmBalanceColor(Context context){
+		int color = context.getResources().getColor(R.color.amount_positive_color);
+		if(getPaytmBalance() < 0){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		if(getPaytmError() == 1){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		return color;
+	}
+
+	public int getJugnooBalanceColor(Context context){
+		int color = context.getResources().getColor(R.color.amount_positive_color);
+		if(getJugnooBalance() < 0){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		return color;
+	}
+
+	public int getTotalBalanceColor(Context context){
+		int color = context.getResources().getColor(R.color.amount_positive_color);
+		if(getTotalWalletBalance() < 0){
+			color = context.getResources().getColor(R.color.amount_negative_color);
+		}
+		return color;
+	}
+
+
+
 }

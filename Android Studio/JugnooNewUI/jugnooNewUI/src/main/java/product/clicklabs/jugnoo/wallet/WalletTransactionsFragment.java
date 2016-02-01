@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,7 +41,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -52,8 +52,6 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TextView textViewTitle;
 
 	//Transactions List vars
-	TextView textViewRecentTransactions;
-	ProgressWheel progressBar;
 	ListView listViewTransactions;
 	TransactionListAdapter transactionListAdapter;
 	RelativeLayout relativeLayoutShowMore;
@@ -65,6 +63,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 	View rootView;
     private PaymentActivity paymentActivity;
+	private ImageView imageViewJugnooAnimation;
+	private AnimationDrawable jugnooAnimation;
 
     @Override
     public void onStart() {
@@ -97,11 +97,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		textViewRecentTransactions = (TextView) rootView.findViewById(R.id.textViewRecentTransactions);
-		textViewRecentTransactions.setTypeface(Fonts.latoRegular(paymentActivity));
-		
 		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
 
 		LinearLayout viewF = (LinearLayout) paymentActivity.getLayoutInflater().inflate(R.layout.list_item_show_more, null);
@@ -114,9 +111,9 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		transactionListAdapter = new TransactionListAdapter(paymentActivity);
 		listViewTransactions.setAdapter(transactionListAdapter);
-		
-		progressBar = (ProgressWheel) rootView.findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.GONE);
+
+		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
+		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -186,11 +183,9 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		else{
 			if(transactionInfoList.size() == 0){
 				relativeLayoutShowMore.setVisibility(View.GONE);
-				textViewRecentTransactions.setText("No transactions currently");
 			}
 			else{
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
-				textViewRecentTransactions.setText("Recent Transactions");
 			}
 			transactionListAdapter.notifyDataSetChanged();
 		}
@@ -233,16 +228,16 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				holder = new ViewHolderTransaction();
 				convertView = mInflater.inflate(R.layout.list_item_trans_naw, null);
 				
-				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.latoRegular(context));
-				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.latoRegular(context));
-				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.latoLight(context));
-				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.latoLight(context));
-				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.latoLight(context));
+				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenLight(context));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 				
 				holder.relative.setTag(holder);
 				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, 108));
+				holder.relative.setLayoutParams(new ListView.LayoutParams(720, 156));
 				ASSL.DoMagic(holder.relative);
 				
 				convertView.setTag(holder);
@@ -256,7 +251,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			
 			holder.textViewTransactionDate.setText(transactionInfo.date);
 
-			holder.textViewTransactionAmount.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(transactionInfo.amount));
+			holder.textViewTransactionAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
 			holder.textViewTransactionTime.setText(transactionInfo.time);
 			holder.textViewTransactionType.setText(transactionInfo.transactionText);
 			
@@ -295,10 +290,27 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	public void getTransactionInfoAsync(final Activity activity) {
 		relativeLayoutShowMore.setVisibility(View.GONE);
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			progressBar.setVisibility(View.VISIBLE);
+			imageViewJugnooAnimation.setVisibility(View.VISIBLE);
+			jugnooAnimation.start();
 			callRefreshAPI(activity);
 		} else {
-			updateListData("No Internet connection", true);
+			DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View view) {
+							getTransactionInfoAsync(activity);
+						}
+
+						@Override
+						public void neutralClick(View view) {
+
+						}
+
+						@Override
+						public void negativeClick(View view) {
+
+						}
+					});
 		}
 	}
 
@@ -320,7 +332,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 							@Override
 							public void onFailure(Throwable arg3) {
 								Log.e("request fail", arg3.toString());
-								progressBar.setVisibility(View.GONE);
+								imageViewJugnooAnimation.setVisibility(View.GONE);
+								jugnooAnimation.stop();
 								updateListData("Some error occurred", true);
 							}
 
@@ -372,7 +385,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 									exception.printStackTrace();
 									updateListData("Some error occurred", true);
 								}
-								progressBar.setVisibility(View.GONE);
+								imageViewJugnooAnimation.setVisibility(View.GONE);
+								jugnooAnimation.stop();
 							}
 
 						});

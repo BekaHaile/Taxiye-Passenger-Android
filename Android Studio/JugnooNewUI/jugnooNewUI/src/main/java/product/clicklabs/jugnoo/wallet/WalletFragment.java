@@ -1,9 +1,11 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -41,10 +42,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	TextView textViewJugnooCashBalanceValue;
 
 	RelativeLayout relativeLayoutPaytm;
-	TextView textViewPaytmBalanceValue;
-	ProgressWheel progressBarWallet;
-
-	RelativeLayout relativeLayoutCash, relativeLayoutAddPaytm;
+	TextView textViewPaytmBalance, textViewPaytmBalanceValue;
 
 	RelativeLayout relativeLayoutWalletTransactions;
 
@@ -79,31 +77,24 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
 		
 		textViewPromotion = (TextView) rootView.findViewById(R.id.textViewPromotion); textViewPromotion.setTypeface(Fonts.latoRegular(paymentActivity));
 
 		relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWallet);
-		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.latoRegular(paymentActivity));
-		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.latoRegular(paymentActivity));
+		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenLight(paymentActivity));
+		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewJugnooCashBalanceValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashBalanceValue);
-		textViewJugnooCashBalanceValue.setTypeface(Fonts.latoRegular(paymentActivity));
+		textViewJugnooCashBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
-		((TextView)rootView.findViewById(R.id.textViewPaytmBalance)).setTypeface(Fonts.latoRegular(paymentActivity));
+		textViewPaytmBalance = (TextView)rootView.findViewById(R.id.textViewPaytmBalance); textViewPaytmBalance.setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewPaytmBalanceValue = (TextView) rootView.findViewById(R.id.textViewPaytmBalanceValue);
-		textViewPaytmBalanceValue.setTypeface(Fonts.latoRegular(paymentActivity));
-		progressBarWallet = (ProgressWheel) rootView.findViewById(R.id.progressBarWallet);
-		progressBarWallet.setVisibility(View.GONE);
+		textViewPaytmBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		relativeLayoutCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCash); relativeLayoutCash.setVisibility(View.GONE);
-		((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.latoRegular(paymentActivity));
-
-		relativeLayoutAddPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddPaytm);
-		((TextView)rootView.findViewById(R.id.textViewAddPaytm)).setTypeface(Fonts.latoRegular(paymentActivity));
 
 		relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
-		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.latoRegular(paymentActivity));
+		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenLight(paymentActivity));
 
 
 		textViewPromotion.setVisibility(View.GONE);
@@ -140,7 +131,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			@Override
 			public void onClick(View v) {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-					if (Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+					if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 						paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
 								.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
 								.addToBackStack(PaytmRechargeFragment.class.getName())
@@ -148,16 +139,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 								.commit();
 						FlurryEventLogger.event(PAYTM_WALLET_OPENED);
-					}
-				}
-			}
-		});
-
-		relativeLayoutAddPaytm.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-					if (!Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+					} else {
 						paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
 								.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
 								.addToBackStack(AddPaytmFragment.class.getName())
@@ -169,6 +151,21 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				}
 			}
 		});
+
+//		relativeLayoutAddPaytm.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				if(!Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+//					paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//							.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
+//							.addToBackStack(AddPaytmFragment.class.getName())
+//							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+//									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//							.commit();
+//					FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
+//				}
+//			}
+//		});
 
 
         textViewPromotion.setOnClickListener(new View.OnClickListener() {
@@ -195,20 +192,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		});
 
 
-		try{
-			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
-				textViewPaytmBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
-				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
-					showPaytmActiveUI();
-				}
-				else{
-					showPaytmInactiveUI();
-				}
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		setUserWalletInfo();
 
         return rootView;
 	}
@@ -216,36 +200,49 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	@Override
 	public void onResume() {
 		super.onResume();
+		HomeActivity.checkIfUserDataNull(paymentActivity);
+		HomeActivity.checkForAccessTokenChange(paymentActivity);
+		setUserWalletInfo();
+	}
+
+	private void setUserWalletInfo(){
 		try{
-			HomeActivity.checkIfUserDataNull(paymentActivity);
 			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
-				textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
+				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
+				textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
 					showPaytmActiveUI();
 				} else if(Data.userData.getPaytmStatus().equalsIgnoreCase("")){
-                    showPaytmActiveUI();
-                    textViewPaytmBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" --");
-                } else{
+					showPaytmActiveUI();
+					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), "--"));
+				} else{
 					showPaytmInactiveUI();
 				}
+
+				Spannable spanJ = new SpannableString(textViewJugnooCashBalanceValue.getText());
+				spanJ.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				//textViewJugnooCashBalanceValue.setText(spanJ);
+
+				Spannable spanP = new SpannableString(textViewPaytmBalanceValue.getText());
+				spanP.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				//textViewPaytmBalanceValue.setText(spanP);
+				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
+				textViewPaytmBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		HomeActivity.checkForAccessTokenChange(paymentActivity);
 	}
-
 
 
 	private void showPaytmActiveUI(){
-		relativeLayoutPaytm.setVisibility(View.VISIBLE);
-		relativeLayoutAddPaytm.setVisibility(View.GONE);
+		textViewPaytmBalance.setText(getResources().getString(R.string.nl_paytm_wallet));
+		textViewPaytmBalanceValue.setVisibility(View.VISIBLE);
 	}
 
 	private void showPaytmInactiveUI(){
-		relativeLayoutPaytm.setVisibility(View.GONE);
-		relativeLayoutAddPaytm.setVisibility(View.VISIBLE);
+		textViewPaytmBalance.setText(getResources().getString(R.string.nl_add_paytm_wallet));
+		textViewPaytmBalanceValue.setVisibility(View.GONE);
 	}
 
 

@@ -4,17 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
     <RelativeLayout
-        android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:id="@+id/topRl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:splitMotionEvents="false"
+        android:background="@drawable/nl_background_theme_color"
+        >
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -22,18 +21,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="VERIFICATION"
+            android:text="@string/nl_otp_verification"
             android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"/>
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_34" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
+            android:layout_width="61px"
+            android:layout_height="61px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/back_btn_selector"
+            android:tag="mwar" />
     </RelativeLayout>
 
     <ImageView

@@ -86,10 +86,10 @@ public class JSONParser implements Constants {
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes, 0, 0, convenienceCharges);
+                    farePerMin, freeMinutes, 0, 0, convenienceCharges, true);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0);
+            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0, false);
         }
     }
 
@@ -158,8 +158,6 @@ public class JSONParser implements Constants {
         try {
             if (userData.has("gcm_intent")) {
                 gcmIntent = userData.getInt("gcm_intent");
-                Database2.getInstance(context).updateDriverGcmIntent(gcmIntent);
-                Database2.getInstance(context).close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,7 +255,9 @@ public class JSONParser implements Constants {
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
         Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-		int promoSuccess = userData.optInt("promo_success", 1);
+		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
+        String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
+                context.getResources().getString(R.string.promocode_invalid_message_on_signup));
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
@@ -315,11 +315,13 @@ public class JSONParser implements Constants {
                 context.getResources().getString(R.string.jugnoo_cash_tnc));
 
 		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
-                userData.getString("user_image"), userData.getString("referral_code"), phoneNo,
+                userData.getString("user_image"), userData.getString(KEY_REFERRAL_CODE), phoneNo,
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie,
+                contactSaved, referAllText, referAllTitle,
+                promoSuccess, promoMessage,
+                showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl, jugnooCashTNC);
     }
 
@@ -347,9 +349,7 @@ public class JSONParser implements Constants {
         if (currentUserStatus == 2) {
             //Fetching drivers info
             parseDriversToShow(jObj, "drivers");
-            Database2.getInstance(context).updateUserMode(Database2.UM_PASSENGER);
         } else if (currentUserStatus == 1) {
-            Database2.getInstance(context).updateUserMode(Database2.UM_DRIVER);
         }
 
 
@@ -442,7 +442,6 @@ public class JSONParser implements Constants {
     }
 
 
-    //TODO
     public void parseLastRideData(JSONObject jObj) {
 
 //		  "last_ride": {
@@ -775,7 +774,6 @@ public class JSONParser implements Constants {
                 Data.cSessionId = sessionId;
                 clearSPData(context);
             } else {
-                //TODO
                 SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 
                 Data.cSessionId = sessionId;
@@ -900,7 +898,8 @@ public class JSONParser implements Constants {
                 String userImage = "";
                 String driverCarImage = "";
                 String carNumber = "";
-                Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0));
+                double bearing = dataI.optDouble("bearing", 0);
+                Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0, bearing));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1247,7 +1246,7 @@ public class JSONParser implements Constants {
                         jfs.getDouble("fare_per_min"),
                         jfs.getDouble("fare_threshold_time"),
                         jfs.getDouble("fare_per_waiting_min"),
-                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges);
+                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges, true);
                     Data.fareStructure.fareFactor = fareFactor;
                     break;
                 }

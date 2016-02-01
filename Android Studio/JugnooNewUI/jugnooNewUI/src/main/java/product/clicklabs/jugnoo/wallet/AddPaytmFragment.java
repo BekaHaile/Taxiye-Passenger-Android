@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.wallet;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -99,18 +98,18 @@ public class AddPaytmFragment extends Fragment {
 
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.latoRegular(paymentActivity));
-		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.latoRegular(paymentActivity));
-		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.latoRegular(paymentActivity));
+		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.mavenLight(paymentActivity));
 
 		linearLayoutOTP = (LinearLayout) rootView.findViewById(R.id.linearLayoutOTP);
 		editTextOTP = (EditText) rootView.findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(paymentActivity));
 
-		buttonRequestOTP = (Button) rootView.findViewById(R.id.buttonRequestOTP);	buttonRequestOTP.setTypeface(Fonts.latoRegular(paymentActivity));
-		buttonVerifyOTP = (Button) rootView.findViewById(R.id.buttonVerifyOTP);	buttonVerifyOTP.setTypeface(Fonts.latoRegular(paymentActivity));
-		buttonResendOTP = (Button) rootView.findViewById(R.id.buttonResendOTP);	buttonResendOTP.setTypeface(Fonts.latoRegular(paymentActivity));
+		buttonRequestOTP = (Button) rootView.findViewById(R.id.buttonRequestOTP);	buttonRequestOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonVerifyOTP = (Button) rootView.findViewById(R.id.buttonVerifyOTP);	buttonVerifyOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonResendOTP = (Button) rootView.findViewById(R.id.buttonResendOTP);	buttonResendOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
@@ -326,13 +325,31 @@ public class AddPaytmFragment extends Fragment {
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
 				});
+			} else{
+				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								generateOTP(retry);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void sendOTP(String otp) {
+	private void sendOTP(final String otp) {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
@@ -386,6 +403,24 @@ public class AddPaytmFragment extends Fragment {
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
 				});
+			} else{
+				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								sendOTP(otp);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

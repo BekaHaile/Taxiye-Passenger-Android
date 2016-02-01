@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -92,12 +93,12 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		viewPager.setAdapter(shareFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		tabs.setTextColorResource(R.color.yellow, R.color.grey_dark);
-		tabs.setTypeface(Fonts.latoRegular(this), Typeface.NORMAL);
+		tabs.setTextColorResource(R.color.text_color, R.color.text_color);
+		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.NORMAL);
 		tabs.setViewPager(viewPager);
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
 		getLeaderboardCall();
 
@@ -201,7 +202,23 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							}
 						});
 			} else {
-				retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+				//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+				DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View v) {
+						getLeaderboardCall();
+					}
+
+					@Override
+					public void neutralClick(View v) {
+
+					}
+
+					@Override
+					public void negativeClick(View v) {
+
+					}
+				});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -271,6 +288,24 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
+		} else {
+			//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+			DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+				@Override
+				public void positiveClick(View v) {
+					getLeaderboardActivityCall();
+				}
+
+				@Override
+				public void neutralClick(View v) {
+
+				}
+
+				@Override
+				public void negativeClick(View v) {
+
+				}
+			});
 		}
 	}
 }

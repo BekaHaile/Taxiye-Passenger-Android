@@ -9,9 +9,9 @@
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
-        android:background="@color/yellow">
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -41,17 +41,36 @@
             android:id="@+id/my_request_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white_light_grey"/>
+            />
 
-        <TextView
-            android:id="@+id/textViewInfo"
+        <LinearLayout
+            android:id="@+id/linearLayoutNoNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No notifications currently"
-            android:textColor="@color/grey_black"
-            android:textSize="@dimen/top_bar_title_text_size"
-            />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <ImageView
+                android:layout_width="241px"
+                android:layout_height="342px"
+                android:src="@drawable/ic_no_items"
+                android:tag="mwar"
+                />
+
+            <TextView
+                android:id="@+id/textViewNoNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="No Current Notifications"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                android:layout_marginTop="30px"
+                />
+
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="match_parent"

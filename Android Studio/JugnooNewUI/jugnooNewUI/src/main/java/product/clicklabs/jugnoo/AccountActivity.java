@@ -3,9 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -16,10 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +26,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.BlurTransform;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -94,7 +87,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);
@@ -104,11 +97,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
-		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.latoRegular(this));
-		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.latoRegular(this));
-		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.latoRegular(this));
+		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenLight(this));
+		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenLight(this));
+		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenLight(this));
 
-        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewInfo)).setTypeface(Fonts.mavenRegular(this));
 
 		imageViewEditName = (ImageView) findViewById(R.id.imageViewEditName);
 		imageViewEditEmail = (ImageView) findViewById(R.id.imageViewEditEmail);
@@ -118,25 +112,25 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		imageViewEmailVerifyStatus = (ImageView) findViewById(R.id.imageViewEmailVerifyStatus);
 		relativeLayoutEmailVerify = (RelativeLayout) findViewById(R.id.relativeLayoutEmailVerify);
-		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Fonts.latoRegular(this));
-		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Fonts.latoRegular(this));
+		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Fonts.mavenLight(this));
+		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
-		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.latoRegular(this));
+		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
-        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.latoRegular(this));
+        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenLight(this));
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
         imageViewEditHome = (ImageView)findViewById(R.id.imageViewEditHome);
-		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.latoRegular(this));
+		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenLight(this));
         relativeLayoutAddWork = (RelativeLayout) findViewById(R.id.relativeLayoutAddWork);
         imageViewEditWork = (ImageView)findViewById(R.id.imageViewEditWork);
-        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.latoRegular(this));
+        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenLight(this));
 		//relativeLayoutAddFav.setVisibility(View.GONE);
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
-        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.latoRegular(this));
+        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.mavenLight(this));
         relativeLayoutJugnooJeanie.setVisibility(View.GONE);
         if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
             relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
@@ -146,7 +140,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 
-		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.latoRegular(this));
+		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.mavenRegular(this));
 
 
 
@@ -264,6 +258,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             editTextUserName.requestFocus();
                             editTextUserName.setError("Changed Username is same as the previous one.");
                         } else {
+                            imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
                             updateUserProfileAPI(AccountActivity.this, nameChanged, ProfileUpdateMode.NAME);
                         }
                     }
@@ -271,7 +266,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextUserName.requestFocus();
                     editTextUserName.setEnabled(true);
                     editTextUserName.setSelection(editTextUserName.getText().length());
+                    imageViewEditName.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
+
+                    editTextEmail.setEnabled(false);
+                    editTextPhone.setEnabled(false);
+                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -281,18 +282,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditName.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditName.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditName.performClick();
                 return true;
             }
         });
@@ -316,6 +306,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             editTextEmail.requestFocus();
                             editTextEmail.setError("Changed email is same as the previous one.");
                         } else {
+                            imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
                             updateUserProfileAPI(AccountActivity.this, emailChanged, ProfileUpdateMode.EMAIL);
                         }
                     }
@@ -323,7 +314,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextEmail.requestFocus();
                     editTextEmail.setEnabled(true);
                     editTextEmail.setSelection(editTextEmail.getText().length());
+                    imageViewEditEmail.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
+
+                    editTextUserName.setEnabled(false);
+                    editTextPhone.setEnabled(false);
+                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -333,18 +330,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditEmail.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditEmail.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditEmail.performClick();
                 return true;
             }
         });
@@ -368,6 +354,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 editTextPhone.requestFocus();
                                 editTextPhone.setError("Changed Phone number is same as the previous one.");
                             } else {
+                                imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                                 updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
                             }
                         } else {
@@ -379,7 +366,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextPhone.requestFocus();
                     editTextPhone.setEnabled(true);
                     editTextPhone.setSelection(editTextPhone.getText().length());
+                    imageViewEditPhoneNo.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
+
+                    editTextUserName.setEnabled(false);
+                    editTextEmail.setEnabled(false);
+                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -389,18 +382,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditPhoneNo.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditPhoneNo.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditPhoneNo.performClick();
                 return true;
             }
         });
@@ -529,43 +511,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 
-		final View activityRootView = findViewById(R.id.linearLayoutMain);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-
-					@Override
-					public void onGlobalLayout() {
-						Rect r = new Rect();
-						// r will be populated with the coordinates of your view
-						// that area still visible.
-						activityRootView.getWindowVisibleDisplayFrame(r);
-
-						int heightDiff = activityRootView.getRootView()
-								.getHeight() - (r.bottom - r.top);
-						if (heightDiff > 100) { // if more than 100 pixels, its
-												// probably a keyboard...
-
-							/************** Adapter for the parent List *************/
-
-							ViewGroup.LayoutParams params_12 = textViewScroll
-									.getLayoutParams();
-
-							params_12.height = (int)(heightDiff);
-
-							textViewScroll.setLayoutParams(params_12);
-							textViewScroll.requestLayout();
-
-						} else {
-
-							ViewGroup.LayoutParams params = textViewScroll
-									.getLayoutParams();
-							params.height = 0;
-							textViewScroll.setLayoutParams(params);
-							textViewScroll.requestLayout();
-
-						}
-					}
-				});
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -582,29 +527,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		}
 	}
 
-    /*private void setSavePlaces(){
-        if(!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
-            String abc =Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            String s = "Home \n" + searchResult.name+", "+searchResult.address;
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
-            textViewHome.setText(ss1);
-        }
-
-        if(!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
-            String abc =Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            String s = "Work \n" + searchResult.name+", "+searchResult.address;
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
-            textViewWork.setText(ss1);
-        }
-    }*/
 
 
     public void setUserData(boolean refreshed){
@@ -655,7 +577,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
 					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfileImage);
-					Picasso.with(this).load(Data.userData.userImage).transform(new BlurTransform()).into(imageViewUserImageBlur);
+					//Picasso.with(this).load(Data.userData.userImage).transform(new BlurTransform()).into(imageViewUserImageBlur);
 				}
 			} catch(Exception e){
 				e.printStackTrace();
@@ -1055,6 +977,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+            textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
             String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
             Gson gson = new Gson();
             AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
@@ -1062,12 +985,15 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             String s = "Home \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddHome.setText(ss1);
             imageViewEditHome.setVisibility(View.VISIBLE);
+        } else{
+            textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
         }
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+            textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
             String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
             Gson gson = new Gson();
             AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
@@ -1075,9 +1001,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             String s = "Work \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+            ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddWork.setText(ss1);
             imageViewEditWork.setVisibility(View.VISIBLE);
+        } else{
+            textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
         }
     }
 
@@ -1094,10 +1022,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             if (requestCode == ADD_HOME) {
                 if(searchResult != null){
                     //String s = "Home \n" + searchResult.name + " " + searchResult.address;
+                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
                     String s = "Home \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
                     textViewAddHome.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
                     imageViewEditHome.setVisibility(View.VISIBLE);
@@ -1109,15 +1038,17 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 }else {
                     textViewAddHome.setText("Add Home");
                     imageViewEditHome.setVisibility(View.GONE);
+                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
                 }
 
             } else if (requestCode == ADD_WORK) {
                 if(searchResult != null) {
                     //String s = "Work \n" + searchResult.name + " " + searchResult.address;
+                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
                     String s = "Work \n" + searchResult.address;
                     SpannableString ss1 = new SpannableString(s);
                     ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
+                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
                     textViewAddWork.setText(ss1);
                     Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
                     imageViewEditWork.setVisibility(View.VISIBLE);
@@ -1129,6 +1060,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 }else{
                     textViewAddWork.setText("Add Work");
                     imageViewEditWork.setVisibility(View.GONE);
+                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
                 }
             } else {
                 Log.v("onActivityResult else part", "onActivityResult else part");

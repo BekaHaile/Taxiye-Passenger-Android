@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="720px"
+    android:layout_width="@dimen/screen_width"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
-    <ImageView 
-        android:layout_width="match_parent"
-        android:layout_height="15px"
-        />
-        
-        
-    
     <RelativeLayout 
         android:id="@+id/relativeLayoutShowMore"
         android:layout_width="match_parent"

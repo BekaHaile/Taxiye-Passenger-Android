@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -60,6 +59,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
     private Activity activity;
 	private GoogleApiClient mGoogleApiClient;
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
+	private SearchListAdapter searchListAdapter;
 
 	private final int ADD_HOME = 2, ADD_WORK = 3;
 
@@ -114,18 +114,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
 		imageViewSep = (ImageView) rootView.findViewById(R.id.imageViewSep);
 
-		linearLayoutScrollSearch.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutScrollSearch,
-				textViewScrollSearch, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-
-			}
-
-			@Override
-			public void keyBoardClosed() {
-
-			}
-		}));
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {
 
@@ -145,7 +133,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		showSearchLayout();
 
-		SearchListAdapter searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
 				new SearchListAdapter.SearchListActionsHandler() {
 
 					@Override
@@ -294,6 +282,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		searchListAdapter.addSavedLocationsToList();
+	}
+
+	@Override
 	public void onConnected(Bundle bundle) {
 
 	}
@@ -335,6 +329,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 						textViewAddWork.setText("Add Work");
 					}
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

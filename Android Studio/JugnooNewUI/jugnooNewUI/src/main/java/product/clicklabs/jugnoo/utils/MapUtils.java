@@ -3,9 +3,14 @@ package product.clicklabs.jugnoo.utils;
 import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
@@ -41,6 +46,49 @@ public class MapUtils {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+
+	public static double getBearing(LatLng source, LatLng dest){
+		//Source
+		try {
+			Location location1 = new Location("locationA");
+			location1.setLatitude(source.latitude);
+			location1.setLongitude(source.longitude);
+			Location location2 = new Location("locationA");
+			location2.setLatitude(dest.latitude);
+			location2.setLongitude(dest.longitude);
+			double brng = location1.bearingTo(location2);
+			return brng;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static void rotateMarker(final Marker marker, final float toRotation) {
+		final Handler handler = new Handler();
+		final long start = SystemClock.uptimeMillis();
+		final float startRotation = marker.getRotation();
+		final long duration = 300;
+
+		final Interpolator interpolator = new LinearInterpolator();
+
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				long elapsed = SystemClock.uptimeMillis() - start;
+				float t = interpolator.getInterpolation((float) elapsed / duration);
+
+				float rot = t * toRotation + (1 -t) * startRotation;
+
+				marker.setRotation(-rot > 180 ? rot/2 : rot);
+				if (t < 1.0) {
+					// Post again 16ms later.
+					handler.postDelayed(this, 16);
+				}
+			}
+		});
 	}
 	
 	

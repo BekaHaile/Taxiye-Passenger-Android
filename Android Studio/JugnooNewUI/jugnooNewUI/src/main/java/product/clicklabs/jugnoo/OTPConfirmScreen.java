@@ -9,10 +9,11 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,12 +31,16 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -50,6 +55,10 @@ import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
@@ -60,20 +69,18 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewTitle;
 
 
-	//new start
-	TextView textViewOtpNumber, textViewEnterOTP;
+	LinearLayout linearLayoutEnterOtp;
+	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
 	LinearLayout linearLayoutWaiting;
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
-	//new end
 
-	Button buttonVerify;
-
-	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutOtpViaCall, relativeLayoutMissCall, relativeLayoutOr;
+	Button buttonVerify, buttonOtpViaCall;
+	LinearLayout linearLayoutGiveAMissedCall;
+	TextView textViewOr;
 
 
 	LinearLayout relative;
@@ -124,37 +131,27 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-		//new start
-		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
-		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
+		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
+		linearLayoutEnterOtp = (LinearLayout) findViewById(R.id.linearLayoutEnterOtp);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
-		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
-		//new end
-		
+
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
-		
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
 
-
-		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-
-		relativeLayoutOtpViaCall = (RelativeLayout) findViewById(R.id.relativeLayoutOtpViaCall);
-		((TextView) findViewById(R.id.textViewOtpViaCall)).setTypeface(Fonts.latoLight(this));
-		((TextView) findViewById(R.id.textViewOtpViaCallMe)).setTypeface(Fonts.latoLight(this));
-
-		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		((TextView) findViewById(R.id.textViewMissCall)).setTypeface(Fonts.latoLight(this));
-
-		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
+		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
+		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -169,8 +166,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				performBackPressed();
 			}
 		});
-		
 
+		relative.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextOTP.setError(null);
+			}
+		});
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
@@ -178,13 +180,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
-					if (RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
-					}
-					else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode);
-					}
-					else {
+					} else {
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode);
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
@@ -195,30 +195,52 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		});
 
-		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.showSoftKeyboard(OTPConfirmScreen.this, editTextOTP);
-				editTextOTP.requestFocus();
-			}
-		});
 
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				int result = actionId & EditorInfo.IME_MASK_ACTION;
-				switch (result) {
-					case EditorInfo.IME_ACTION_DONE:
-						buttonVerify.performClick();
-						break;
-
-					case EditorInfo.IME_ACTION_NEXT:
-						break;
-
-					default:
-				}
+				buttonVerify.performClick();
 				return true;
+			}
+		});
+
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try{
+					editTextOTP.setError(null);
+					if (1 == Data.otpViaCallEnabled) {
+						if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+							initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
+						} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+							initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
+						} else {
+							initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
+						}
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+
+		editTextOTP.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length() > 0){
+					editTextOTP.setTextSize(20);
+				} else{
+					editTextOTP.setTextSize(15);
+				}
 			}
 		});
 
@@ -227,32 +249,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		editTextOTP.setOnClickListener(onClickListener);
 
 
-		relativeLayoutOtpViaCall.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					if(1 == Data.otpViaCallEnabled){
-						if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
-							initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-						}
-						else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
-							initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
-						}
-						else{
-							initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
+		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				try {
+					editTextOTP.setError(null);
 					if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
 								getResources().getString(R.string.give_missed_call_dialog_text),
@@ -284,18 +286,17 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
             @Override
             public void onClick(View v) {
+				editTextOTP.setError(null);
                 FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
                 startActivity(new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class));
                 finish();
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
-		
-		
+
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
-		//new start
 		try {
 			//jungooautos-verify://app?otp=1234
 			Uri data = getIntent().getData();
@@ -306,20 +307,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				String otp = data.getQueryParameter("otp");
 
 				String registrationMode = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE,
-						"" + RegisterScreen.registerationType);
+						"" + SplashNewActivity.registerationType);
 				String registerData = Prefs.with(this).getString(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
-				if((""+RegisterScreen.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
+				if((""+SplashNewActivity.RegisterationType.FACEBOOK).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					facebookRegisterData = gson.fromJson(registerData, FacebookRegisterData.class);
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
 				}
-				else if((""+RegisterScreen.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
+				else if((""+SplashNewActivity.RegisterationType.GOOGLE).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					googleRegisterData = gson.fromJson(registerData, GoogleRegisterData.class);
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
 				}
-				else if((""+RegisterScreen.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
+				else if((""+SplashNewActivity.RegisterationType.EMAIL).equalsIgnoreCase(registrationMode)
 						&& !"".equalsIgnoreCase(registerData)){
 					emailRegisterData = gson.fromJson(registerData, EmailRegisterData.class);
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
@@ -331,19 +332,19 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				}
 			}
 			else{
-				if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType){
+				if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(facebookRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + RegisterScreen.RegisterationType.FACEBOOK);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "" + SplashNewActivity.RegisterationType.FACEBOOK);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(facebookRegisterData, FacebookRegisterData.class));
 				}
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					textViewOtpNumber.setText(googleRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.GOOGLE);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.GOOGLE);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(googleRegisterData, GoogleRegisterData.class));
 				}
 				else{
 					textViewOtpNumber.setText(emailRegisterData.phoneNo);
-					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+RegisterScreen.RegisterationType.EMAIL);
+					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, ""+SplashNewActivity.RegisterationType.EMAIL);
 					Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, gson.toJson(emailRegisterData, EmailRegisterData.class));
 				}
 			}
@@ -355,7 +356,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		try{
 			if(getIntent().getIntExtra("show_timer", 0) == 1){
 				linearLayoutWaiting.setVisibility(View.VISIBLE);
-				linearLayoutOTPOptions.setVisibility(View.GONE);
 				textViewCounter.setText("0:30");
 				countDownTimer.start();
 			}
@@ -364,38 +364,37 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		} catch(Exception e){
 			linearLayoutWaiting.setVisibility(View.GONE);
-			linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 		}
 
 		try{
-			if(1 == Data.otpViaCallEnabled){
-				relativeLayoutOtpViaCall.setVisibility(View.VISIBLE);
-			} else{
-				relativeLayoutOtpViaCall.setVisibility(View.GONE);
-			}
-
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				relativeLayoutMissCall.setVisibility(View.VISIBLE);
-			} else{
-				relativeLayoutMissCall.setVisibility(View.GONE);
+				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(relativeLayoutOtpViaCall.getVisibility() == View.GONE
-					|| relativeLayoutMissCall.getVisibility() == View.GONE){
-				relativeLayoutOr.setVisibility(View.GONE);
+			if(1 == Data.otpViaCallEnabled) {
+				buttonOtpViaCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				buttonOtpViaCall.setVisibility(View.GONE);
+			}
+			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
+					|| buttonOtpViaCall.getVisibility() == View.VISIBLE){
+				textViewOr.setVisibility(View.VISIBLE);
 			} else{
-				relativeLayoutOr.setVisibility(View.VISIBLE);
+				textViewOr.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			relativeLayoutOtpViaCall.setVisibility(View.VISIBLE);
-			relativeLayoutOr.setVisibility(View.GONE);
-			relativeLayoutMissCall.setVisibility(View.GONE);
+			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			buttonOtpViaCall.setVisibility(View.GONE);
+			textViewOr.setVisibility(View.GONE);
 		}
-		//new end
-		
+
 		new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
-			
+
 			@Override
 			public void deviceTokenReceived(final String regId) {
 				Data.deviceToken = regId;
@@ -427,7 +426,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+						if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
+							scrollView.smoothScrollTo(0, linearLayoutEnterOtp.getBottom());
+						} else {
+							scrollView.smoothScrollTo(0, buttonVerify.getTop());
+						}
 					}
 				}, 200);
 			} else {
@@ -447,7 +450,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
+						scrollView.smoothScrollTo(0, linearLayoutEnterOtp.getBottom());
+					} else {
+						scrollView.smoothScrollTo(0, buttonVerify.getTop());
+					}
 				}
 			}, 200);
 			try {
@@ -460,7 +467,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	};
 
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -492,7 +499,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
         }
     }
 
-	
+
 	@Override
 	protected void onPause() {
 		try{
@@ -505,10 +512,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		super.onPause();
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * ASync for confirming otp from server
 	 */
@@ -518,7 +525,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
-                RequestParams params = new RequestParams();
+                HashMap<String, String> params = new HashMap<>();
 
                 if (Data.locationFetcher != null) {
                     Data.loginLatitude = Data.locationFetcher.getLatitude();
@@ -549,73 +556,127 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 Log.i("params", "" + params.toString());
 
 
-                AsyncHttpClient client = Data.getClient();
-                client.post(Config.getServerUrl() + "/verify_otp", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+//                AsyncHttpClient client = Data.getClient();
+//                client.post(Config.getServerUrl() + "/verify_otp", params,
+//                    new CustomAsyncHttpResponseHandler() {
+//                        private JSONObject jObj;
+//
+//                        @Override
+//                        public void onFailure(Throwable arg3) {
+//                            Log.e("request fail", arg3.toString());
+//                            DialogPopup.dismissLoadingDialog();
+//                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(String response) {
+//                            Log.i("Server response", "response = " + response);
+//
+//                            try {
+//                                jObj = new JSONObject(response);
+//
+//                                int flag = jObj.getInt("flag");
+//
+//                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+//                                    if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+//                                        String error = jObj.getString("error");
+//                                        DialogPopup.alertPopup(activity, "", error);
+//                                    } else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+//                                        String error = jObj.getString("error");
+//                                        DialogPopup.alertPopup(activity, "", error);
+//                                    } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+//                                        if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+//                                            new JSONParser().parseAccessTokenLoginData(activity, response);
+//                                            Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
+//                                            Database.getInstance(OTPConfirmScreen.this).close();
+//                                            loginDataFetched = true;
+//											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+//											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+//                                        }
+//                                    } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+//                                        String error = jObj.getString("error");
+//                                        DialogPopup.alertPopup(activity, "", error);
+//                                    } else {
+//                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//                                    }
+//                                    DialogPopup.dismissLoadingDialog();
+//                                } else {
+//                                    DialogPopup.dismissLoadingDialog();
+//                                }
+//
+//                            } catch (Exception exception) {
+//                                exception.printStackTrace();
+//                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//                                DialogPopup.dismissLoadingDialog();
+//                            }
+//
+//
+//                        }
+//                    });
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
+				RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i("Server response", "response = " + response);
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response", "response = " + response);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
 
-                            try {
-                                jObj = new JSONObject(response);
+							int flag = jObj.getInt("flag");
 
-                                int flag = jObj.getInt("flag");
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+										new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
+										Database.getInstance(OTPConfirmScreen.this).close();
+										loginDataFetched = true;
+										BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+										FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+									}
+								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else {
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								}
+								DialogPopup.dismissLoadingDialog();
+							} else {
+								DialogPopup.dismissLoadingDialog();
+							}
 
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-                                        if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-                                            new JSONParser().parseAccessTokenLoginData(activity, response);
-                                            Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
-                                            Database.getInstance(OTPConfirmScreen.this).close();
-                                            loginDataFetched = true;
-											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
-                                        }
-                                    } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else {
-                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                    }
-                                    DialogPopup.dismissLoadingDialog();
-                                } else {
-                                    DialogPopup.dismissLoadingDialog();
-                                }
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.dismissLoadingDialog();
+						}
+					}
 
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                DialogPopup.dismissLoadingDialog();
-                            }
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e("request fail", error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
 
-
-                        }
-                    });
             } else {
                 DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             }
         }
 
 	}
-	
-	
-	
-	
+
+
+
+
 
 	public void verifyOtpViaFB(final Activity activity, String otp) {
         if(!checkIfRegisterDataNull(activity)) {
@@ -623,7 +684,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
-                RequestParams params = new RequestParams();
+                HashMap<String, String> params = new HashMap<>();
 
                 if (Data.locationFetcher != null) {
                     Data.loginLatitude = Data.locationFetcher.getLatitude();
@@ -659,61 +720,114 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 Log.i("params", "" + params);
 
 
-                AsyncHttpClient client = Data.getClient();
-                client.post(Config.getServerUrl() + "/verify_otp", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+//                AsyncHttpClient client = Data.getClient();
+//                client.post(Config.getServerUrl() + "/verify_otp", params,
+//                    new CustomAsyncHttpResponseHandler() {
+//                        private JSONObject jObj;
+//
+//                        @Override
+//                        public void onFailure(Throwable arg3) {
+//                            Log.e("request fail", arg3.toString());
+//                            DialogPopup.dismissLoadingDialog();
+//                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(String response) {
+//                            Log.v("Server response", "response = " + response);
+//
+//                            try {
+//                                jObj = new JSONObject(response);
+//
+//                                int flag = jObj.getInt("flag");
+//
+//                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+//                                    if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+//                                        String error = jObj.getString("error");
+//                                        DialogPopup.alertPopup(activity, "", error);
+//                                    } else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+//                                        String error = jObj.getString("error");
+//                                        DialogPopup.alertPopup(activity, "", error);
+//                                    } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+//                                        if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+//                                            new JSONParser().parseAccessTokenLoginData(activity, response);
+//                                            loginDataFetched = true;
+//                                            Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
+//                                            Database.getInstance(OTPConfirmScreen.this).close();
+//											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+//											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+//                                        }
+//                                    } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+//                                        String error = jObj.getString("error");
+//                                        DialogPopup.alertPopup(activity, "", error);
+//                                    } else {
+//                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//                                    }
+//                                    DialogPopup.dismissLoadingDialog();
+//                                } else {
+//                                    DialogPopup.dismissLoadingDialog();
+//                                }
+//
+//                            } catch (Exception exception) {
+//                                exception.printStackTrace();
+//                                DialogPopup.dismissLoadingDialog();
+//                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//                            }
+//                        }
+//                    });
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
+				RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.v("Server response", "response = " + responseStr);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.v("Server response", "response = " + response);
+							int flag = jObj.getInt("flag");
 
-                            try {
-                                jObj = new JSONObject(response);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+										new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+										loginDataFetched = true;
+										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
+										Database.getInstance(OTPConfirmScreen.this).close();
+										BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
+										FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
+									}
+								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else {
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								}
+								DialogPopup.dismissLoadingDialog();
+							} else {
+								DialogPopup.dismissLoadingDialog();
+							}
 
-                                int flag = jObj.getInt("flag");
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						}
+					}
 
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else if (ApiResponseFlags.AUTH_VERIFICATION_FAILURE.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-                                        if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-                                            new JSONParser().parseAccessTokenLoginData(activity, response);
-                                            loginDataFetched = true;
-                                            Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
-                                            Database.getInstance(OTPConfirmScreen.this).close();
-											BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-											FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
-                                        }
-                                    } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    } else {
-                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                    }
-                                    DialogPopup.dismissLoadingDialog();
-                                } else {
-                                    DialogPopup.dismissLoadingDialog();
-                                }
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG+" request fail", error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
 
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.dismissLoadingDialog();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                            }
-                        }
-                    });
             } else {
                 DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             }
@@ -821,20 +935,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
-	
+
 	/**
 	 * ASync for initiating OTP Call from server
 	 */
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			
+
 			DialogPopup.showLoadingDialog(activity, "Loading...");
-			
+
 			RequestParams params = new RequestParams();
-		
+
 			params.put("phone_no", phoneNo);
 			Log.i("phone_no", ">"+phoneNo);
-		
+
 			AsyncHttpClient client = Data.getClient();
 			client.post(Config.getServerUrl() + "/send_otp_via_call", params,
 					new CustomAsyncHttpResponseHandler() {
@@ -850,7 +964,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						@Override
 						public void onSuccess(String response) {
 							Log.i("Server response", "response = " + response);
-	
+
 							try {
 								jObj = new JSONObject(response);
 
@@ -889,17 +1003,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 	}
-	
-	
-	
+
+
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		
+
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
-			Database2.getInstance(OTPConfirmScreen.this).updateDriverLastLocationTime();
-			Database2.getInstance(OTPConfirmScreen.this).close();
 			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
 			intent.setData(Data.splashIntentUri);
 			startActivity(intent);
@@ -907,33 +1019,35 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			ActivityCompat.finishAffinity(this);
 		}
 	}
-	
+
 
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
 		super.onBackPressed();
 	}
-	
-	
+
+
 	public void performBackPressed(){
 		if(intentFromRegister){
-			Intent intent = new Intent(OTPConfirmScreen.this, RegisterScreen.class);
-			intent.putExtra("back_from_otp", true);
+			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
+			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
 		else{
-			Intent intent = new Intent(OTPConfirmScreen.this, SplashLogin.class);
-			intent.putExtra("back_from_otp", true);
+			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
+			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
+			intent.putExtra(KEY_BACK_FROM_OTP, true);
 			startActivity(intent);
 		}
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
-	
-	
-	
+
+
+
+
 	@Override
 	protected void onDestroy() {
 		Utils.disableSMSReceiver(this);
@@ -983,7 +1097,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		@Override
 		public void onFinish() {
 			linearLayoutWaiting.setVisibility(View.GONE);
-			linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 		}
 	};
 
@@ -1014,7 +1127,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
-	
+
 }
 
 

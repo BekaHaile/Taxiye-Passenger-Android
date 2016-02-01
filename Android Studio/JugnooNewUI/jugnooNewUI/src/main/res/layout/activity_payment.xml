@@ -7,10 +7,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="96px"
+        android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
     </RelativeLayout>
 

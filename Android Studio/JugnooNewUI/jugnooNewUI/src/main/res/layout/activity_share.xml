@@ -9,11 +9,11 @@
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow">
+        android:background="@drawable/nl_background_theme_color">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -45,12 +45,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="99px"
+        android:layout_height="110px"
         android:visibility="visible"
-        app:pstsIndicatorHeight="7px"
-        app:pstsDividerColor="@color/grey_light"
+        app:pstsIndicatorHeight="10px"
+        app:pstsDividerColor="@color/text_color_hint"
         app:pstsShouldExpand="true"
-        app:pstsUnderlineColor="@color/grey_light"
+        app:pstsUnderlineColor="@color/text_color_hint"
         app:pstsUnderlineHeight="2px"
         />
 

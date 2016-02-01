@@ -105,7 +105,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
         new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
