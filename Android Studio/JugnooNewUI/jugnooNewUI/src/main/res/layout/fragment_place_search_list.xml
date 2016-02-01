@@ -20,7 +20,7 @@
             android:layout_width="33px"
             android:layout_height="33px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="18px"
+            android:layout_marginLeft="30px"
             android:src="@drawable/search_icon"
             android:tag="mwar" />
 

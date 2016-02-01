@@ -112,8 +112,8 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText(text, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
-		canvasText.drawText("min", canvasText.getWidth() / 2, (int)(35f*assl.Yscale()) + boundsText.height(), paint);
+		canvasText.drawText(text, canvasText.getWidth() / 2, (26f*assl.Yscale()), paint);
+		canvasText.drawText("MIN", canvasText.getWidth() / 2, (int)(30f*assl.Yscale()) + boundsText.height(), paint);
 
 
 		return bmpText;

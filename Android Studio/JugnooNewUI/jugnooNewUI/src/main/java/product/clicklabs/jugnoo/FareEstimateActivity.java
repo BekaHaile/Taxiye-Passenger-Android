@@ -131,9 +131,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
         textViewDropLocation.setTypeface(Fonts.mavenLight(this));
         textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
-        textViewEstimateTime.setTypeface(Fonts.mavenLight(this));
+        textViewEstimateTime.setTypeface(Fonts.mavenRegular(this));
         textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
-        textViewEstimateDistance.setTypeface(Fonts.mavenLight(this));
+        textViewEstimateDistance.setTypeface(Fonts.mavenRegular(this));
         textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
         textViewEstimateFare.setTypeface(Fonts.mavenRegular(this));
 		textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
@@ -145,6 +145,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         buttonOk.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
+
+        ((TextView)findViewById(R.id.textViewStart)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewEnd)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewEstimateDistanceText)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewEstimateRideTimeText)).setTypeface(Fonts.mavenLight(this));
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {

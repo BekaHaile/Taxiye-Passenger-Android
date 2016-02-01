@@ -672,4 +672,8 @@
 
 	<string name="support_call_us_dialog_message">Give us a Missed Call and we will get back to you</string>
 
+
+	<string name="start">Start</string>
+	<string name="end">End</string>
+
 </resources>

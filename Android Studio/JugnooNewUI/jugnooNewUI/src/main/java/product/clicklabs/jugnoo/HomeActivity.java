@@ -1033,6 +1033,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
+                setServiceAvailablityUI("");
                 passengerScreenMode = PassengerScreenMode.P_SEARCH;
                 switchPassengerScreen(passengerScreenMode);
             }
@@ -2950,7 +2951,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    }
                     pickupLocationMarker.setIcon(BitmapDescriptorFactory
                             .fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 12)));
+                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 11)));
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
@@ -3668,37 +3669,39 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
-		if (!"".equalsIgnoreCase(farAwayCity)) {
-            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (!"".equalsIgnoreCase(farAwayCity)) {
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-            //textViewInitialInstructions.setVisibility(View.VISIBLE);
-            textViewInitialInstructions.setText(farAwayCity);
-            changeLocalityLayout.setVisibility(View.VISIBLE);
-            textViewChangeLocality.setText(farAwayCity);
-            //noDriverNearbyToast(farAwayCity);
+                //textViewInitialInstructions.setVisibility(View.VISIBLE);
+                textViewInitialInstructions.setText(farAwayCity);
+                changeLocalityLayout.setVisibility(View.VISIBLE);
+                textViewChangeLocality.setText(farAwayCity);
+                //noDriverNearbyToast(farAwayCity);
 
-			imageViewRideNow.setVisibility(View.GONE);
+                imageViewRideNow.setVisibility(View.GONE);
 
-			initialMyLocationBtn.setVisibility(View.GONE);
-			changeLocalityBtn.setVisibility(View.VISIBLE);
-			initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
+                initialMyLocationBtn.setVisibility(View.GONE);
+                changeLocalityBtn.setVisibility(View.VISIBLE);
+                initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
 //									genieLayout.setVisibility(View.GONE);
-		} else {
-			if(!promoOpened) {
-				imageViewRideNow.setVisibility(View.VISIBLE);
-				initialMyLocationBtn.setVisibility(View.VISIBLE);
-			}
-            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight((int)(ASSL.Yscale()*110));
-            //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
-            //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            changeLocalityLayout.setVisibility(View.GONE);
-			changeLocalityBtn.setVisibility(View.GONE);
-			initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
+            } else {
+                if (!promoOpened) {
+                    imageViewRideNow.setVisibility(View.VISIBLE);
+                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+                }
+                //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight((int)(ASSL.Yscale()*110));
+                //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
+                //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                changeLocalityLayout.setVisibility(View.GONE);
+                changeLocalityBtn.setVisibility(View.GONE);
+                initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
-			if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
+                if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
 //										genieLayout.setVisibility(View.VISIBLE);
-			}
-		}
+                }
+            }
+        }
 	}
 
 
@@ -3715,7 +3718,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else{
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
-                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 12)));
+                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 11)));
         }
 //
         return markerOptions;
@@ -4680,8 +4683,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
+                                    try {
+                                        zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
+                                }
                             }, 500);
                         }
                     });

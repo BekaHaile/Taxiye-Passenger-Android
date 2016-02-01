@@ -595,22 +595,30 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				@Override
 				public void onClick(View v) {
 					try {
-						if(AppStatus.getInstance(context).isOnline(context)) {
-							holder = (ViewHolderRideTransaction) v.getTag();
+                        holder = (ViewHolderRideTransaction) v.getTag();
+                        RideInfo rideInfo = null;
+                        if (futureSchedule != null) {
+                            rideInfo = rideInfosList.get(holder.id - 1);
+                        } else {
+                            rideInfo = rideInfosList.get(holder.id);
+                        }
 
-							Intent intent = new Intent(RideTransactionsActivity.this, RideSummaryActivity.class);
-							if (futureSchedule != null) {
-								intent.putExtra("engagement_id", rideInfosList.get(holder.id - 1).engagementId);
-							} else {
-								intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
-							}
-							startActivity(intent);
-							overridePendingTransition(R.anim.right_in, R.anim.right_out);
-						}
-						else{
-							DialogPopup.alertPopup(RideTransactionsActivity.this, "", Data.CHECK_INTERNET_MSG);
-						}
-						FlurryEventLogger.event(RIDE_SUMMARY_CHECKED_LATER);
+                        if(0 == rideInfo.isCancelledRide) {
+                            if (AppStatus.getInstance(context).isOnline(context)) {
+
+                                Intent intent = new Intent(RideTransactionsActivity.this, RideSummaryActivity.class);
+                                if (futureSchedule != null) {
+                                    intent.putExtra("engagement_id", rideInfo.engagementId);
+                                } else {
+                                    intent.putExtra("engagement_id", rideInfo.engagementId);
+                                }
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            } else {
+                                DialogPopup.alertPopup(RideTransactionsActivity.this, "", Data.CHECK_INTERNET_MSG);
+                            }
+                            FlurryEventLogger.event(RIDE_SUMMARY_CHECKED_LATER);
+                        }
 
 					} catch (Exception e) {
 						e.printStackTrace();
