@@ -1633,6 +1633,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
 
                 // ****** New Look Tutorial Screen ***** //
+
                 if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
                     if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
                             &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
@@ -1646,8 +1647,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         startActivity(intent);
                     }
                     Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
-                    //new NewLookTutorialDialog(HomeActivity.this);
                 }
+
+
 			}
 
 
