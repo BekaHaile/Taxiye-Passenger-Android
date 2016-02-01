@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +14,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -84,8 +84,23 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 			
 			@Override
 			public void onClick(View v) {
-		        Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber(SupportActivity.this));
-                FlurryEventLogger.event(CALL_SUPPORT);
+				DialogPopup.alertPopupTwoButtonsWithListeners(SupportActivity.this, "",
+						getResources().getString(R.string.support_call_us_dialog_message),
+						getResources().getString(R.string.call_us),
+						getResources().getString(R.string.cancel),
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber(SupportActivity.this));
+								FlurryEventLogger.event(CALL_SUPPORT);
+							}
+						},
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+							}
+						}, false, false);
 			}
 		});
 		

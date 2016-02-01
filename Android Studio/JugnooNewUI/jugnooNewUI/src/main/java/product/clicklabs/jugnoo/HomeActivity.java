@@ -3230,6 +3230,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutInvite.performClick();
+                FlurryEventLogger.event(INVITE_SCREEN_THROUGH_PUSH);
 			}
 			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutWallet.performClick();

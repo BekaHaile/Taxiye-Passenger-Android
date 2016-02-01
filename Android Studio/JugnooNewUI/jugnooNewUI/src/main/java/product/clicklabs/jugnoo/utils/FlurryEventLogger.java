@@ -1,11 +1,14 @@
 package product.clicklabs.jugnoo.utils;
 
+import android.content.Context;
+
 import com.flurry.android.FlurryAgent;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.config.Config;
 
 public class FlurryEventLogger {
 
@@ -14,6 +17,14 @@ public class FlurryEventLogger {
 		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName);} catch(Exception e){e.printStackTrace();}
     }
 
+	public static void eventWithSessionOpenAndClose(Context context, String eventName){
+		try{
+			FlurryAgent.init(context, Config.getFlurryKey());
+			FlurryAgent.onStartSession(context, Config.getFlurryKey());
+			event(eventName);
+			FlurryAgent.onEndSession(context);
+		} catch(Exception e){e.printStackTrace();}
+	}
 
 	public static void appStarted(String deviceToken){
         try{

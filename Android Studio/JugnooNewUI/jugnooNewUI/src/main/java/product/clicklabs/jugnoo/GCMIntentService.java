@@ -38,6 +38,8 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -547,6 +549,10 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
+						}
+
+						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
+							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED);
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						String message1 = jObj.getString("message");
