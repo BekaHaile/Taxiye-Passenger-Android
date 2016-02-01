@@ -3,7 +3,7 @@
     android:id="@+id/tutorial_one"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone">
+    android:visibility="visible">
     
     <ImageView
         android:id="@+id/imageViewHurry"
@@ -40,7 +40,7 @@
         android:layout_width="187px"
         android:layout_height="187px"
         android:tag="mwar"
-        android:layout_marginBottom="145px"
+        android:layout_marginBottom="150px"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/auto_icon_r_normal"/>
