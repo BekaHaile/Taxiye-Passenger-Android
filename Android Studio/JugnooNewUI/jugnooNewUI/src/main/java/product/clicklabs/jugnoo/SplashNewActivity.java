@@ -45,7 +45,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
@@ -305,14 +304,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		Data.getDeepLinkIndexFromIntent(getIntent());
 
-
-		try {
-			NewRelic.withApplicationToken(
-					Config.getNewRelicKey()
-			).start(this.getApplication());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 
 		try{
