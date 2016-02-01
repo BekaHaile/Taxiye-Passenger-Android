@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tutorial_one"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
+    
+    <ImageView
+        android:id="@+id/imageViewHurry"
+        android:layout_width="453px"
+        android:layout_height="414px"
+        android:tag="mwar"
+        android:layout_marginTop="110px"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/tutorial_one_tap_text"/>
+    
+    <ImageView
+        android:id="@+id/imageViewOneTapRide"
+        android:layout_width="531px"
+        android:layout_height="169px"
+        android:tag="mlar"
+        android:layout_marginBottom="-70px"
+        android:layout_marginLeft="20px"
+        android:layout_above="@+id/imageViewBoy"
+        android:src="@drawable/tutorial_one_tap_ride"/>
+    
+
+    <ImageView
+        android:id="@+id/imageViewBoy"
+        android:layout_width="330px"
+        android:layout_height="342px"
+        android:tag="mwar"
+        android:layout_marginBottom="10px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="50px"
+        android:src="@drawable/tutorial_one_tap_boy"/>
+
+    <ImageView
+        android:id="@+id/imageViewAutoIcon"
+        android:layout_width="187px"
+        android:layout_height="187px"
+        android:tag="mwar"
+        android:layout_marginBottom="150px"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/auto_icon_r_normal"/>
+
+</RelativeLayout>

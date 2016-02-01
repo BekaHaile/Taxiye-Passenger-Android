@@ -49,7 +49,6 @@ public class RegistrationIntentService extends IntentService {
 
 				Data.deviceToken = token;
 
-				// TODO: Implement this method to send any registration to your app's servers.
 				sendRegistrationToServer(this, token);
 
 				// Subscribe to topic channels

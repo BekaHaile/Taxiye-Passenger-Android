@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/requestFinalLayout"
+    android:layout_marginTop="@dimen/top_bar_height"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:splitMotionEvents="false"
+    android:visibility="gone">
+
+    <!-- promo name fare factor layout-->
+    <RelativeLayout
+        android:id="@+id/relativeLayoutInRideInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutFinalDropLocationClick"
+        android:background="@color/sliding_bottom_bg_color">
+
+        <TextView
+            android:id="@+id/textViewInRidePromoName"
+            android:layout_width="470px"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:padding="10px"
+            android:text="No Promo Code applied"
+            android:textColor="@color/text_color"
+            android:textSize="28px"
+            />
+
+        <TextView
+            android:id="@+id/textViewInRideFareFactor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="Price: 1.0x"
+            android:textColor="@color/text_color"
+            android:textSize="28px"
+            android:visibility="visible"
+            android:padding="10px"
+            />
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/relativeLayoutInRideInfo"
+        android:rotation="180"
+        android:src="@drawable/shadow_up" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutFinalDropLocationClick"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:splitMotionEvents="false">
+
+        <ImageView
+            android:layout_width="33px"
+            android:layout_height="33px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/search_icon"
+            android:tag="mwar" />
+
+        <TextView
+            android:id="@+id/textViewFinalDropLocationClick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20px"
+            android:background="@color/transparent"
+            android:gravity="center_vertical"
+            android:hint="Enter your destination"
+            android:singleLine="true"
+            android:textColor="@color/black_text"
+            android:textCursorDrawable="@null"
+            android:textSize="30px" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/linearLayoutFinalDropLocationClick"
+        android:rotation="180"
+        android:src="@drawable/shadow_up" />
+
+    <Button
+        android:id="@+id/customerInRideMyLocationBtn"
+        android:layout_width="83px"
+        android:layout_height="83px"
+        android:layout_above="@+id/linearLayoutInRideDriverInfo"
+        android:layout_marginBottom="65px"
+        android:layout_marginLeft="50px"
+        android:visibility="gone"
+        android:background="@drawable/mylocation_btn_selector"
+        android:tag="mwar" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="4px"
+        android:layout_above="@+id/linearLayoutInRideDriverInfo"
+        android:src="@drawable/shadow_up"/>
+
+    <!-- drive info layout-->
+    <LinearLayout
+        android:id="@+id/linearLayoutInRideDriverInfo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nl_sliding_bottom_with_tabs"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutIRPaymentOption"
+            android:layout_width="match_parent"
+            android:layout_height="108px">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutIRPaymentOption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewIRPaymentOptionPaytm"
+                    android:layout_width="72px"
+                    android:layout_height="23px"
+                    android:src="@drawable/ic_paytm_logo"
+                    android:tag="mwar"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/imageViewIRPaymentOptionCash"
+                    android:layout_width="68px"
+                    android:layout_height="22px"
+                    android:background="@drawable/cash_home_icon"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textViewIRPaymentOption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:layout_toRightOf="@+id/linearLayoutIRPaymentOption"
+                android:text="Paytm Wallet"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
+
+            <TextView
+                android:id="@+id/textViewIRPaymentOptionValue"
+                android:layout_width="260px"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20px"
+                android:gravity="right"
+                android:text="Rs. 0"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="2px"
+                android:layout_marginRight="2px"
+                android:layout_marginTop="0px"
+                android:background="@color/grey_light" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="172px">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10px"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewInRideDriverName"
+                android:layout_width="240px"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Driver Name"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
+
+            <TextView
+                android:id="@+id/textViewInRideDriverCarNumber"
+                android:layout_width="240px"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewInRideDriverName"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Car Number"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
+            </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/relativeLayoutInRideDriverImage"
+                android:layout_width="130px"
+                android:layout_height="130px"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:tag="mwar">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/circle_grey"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/imageViewInRideDriver"
+                    android:layout_width="120px"
+                    android:layout_height="120px"
+                    android:layout_centerInParent="true"
+                    android:tag="mwar" />
+            </RelativeLayout>
+
+
+
+
+            <TextView
+                android:id="@+id/textViewInRideState"
+                android:layout_width="240px"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10px"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Driver\nEnroute"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/grey_light" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="108px"
+            android:orientation="horizontal"
+            android:splitMotionEvents="false">
+
+            <Button
+                android:id="@+id/buttonCancelRide"
+                android:layout_width="359px"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_white_grey_selector"
+                android:singleLine="true"
+                android:text="Cancel Ride"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_32"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/buttonAddPaytmCash"
+                android:layout_width="359px"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_white_grey_selector"
+                android:singleLine="true"
+                android:text="Add Paytm Cash"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_32"
+                android:visibility="visible" />
+
+
+            <ImageView
+                android:id="@+id/imageViewIRButtonSep"
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:background="@color/grey_light" />
+
+            <Button
+                android:id="@+id/buttonCallDriver"
+                android:layout_width="359px"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:background="@drawable/background_white_grey_selector"
+                android:singleLine="true"
+                android:text="Call Driver"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_32" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- drop location layout-->
+    <RelativeLayout
+        android:id="@+id/relativeLayoutFinalDropLocationParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -11,11 +11,11 @@
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="720px"
-        android:layout_height="96px"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/yellow" >
+        android:background="@drawable/nl_background_theme_color" >
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -52,20 +52,17 @@
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15px"
             android:layout_marginBottom="15px"
-            android:layout_marginLeft="10px"
-            android:layout_marginRight="10px"
-            android:background="@drawable/dropshadow_grey"
+            android:background="@color/white"
             android:splitMotionEvents="false">
 
             <ImageView
                 android:id="@+id/imageViewSearchGPSIcon"
-                android:layout_width="30px"
-                android:layout_height="44px"
+                android:layout_width="33px"
+                android:layout_height="33px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18px"
-                android:src="@drawable/search_location_icon"
+                android:layout_marginLeft="30px"
+                android:src="@drawable/search_icon"
                 android:tag="mwar"/>
 
             <EditText
@@ -97,7 +94,7 @@
                 android:layout_height="70px"
                 android:layout_centerVertical="true"
                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                wheel:matProg_barColor="@color/yellow"
+                wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_fillRadius="true"
                 android:layout_marginRight="10px"
                 wheel:matProg_progressIndeterminate="true"
@@ -115,6 +112,12 @@
                 android:layout_alignParentRight="true"
                 android:tag="mwar"/>
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/shadow_down"/>
 
         </RelativeLayout>
 
@@ -162,17 +165,14 @@
 
         <Button
             android:id="@+id/buttonRemove"
-            android:layout_width="648px"
-            android:layout_height="85px"
+            style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30px"
             android:layout_marginTop="20px"
-            android:background="@drawable/button_yellow"
-            android:text="REMOVE "
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/button_text_size" />
+            android:text="@string/remove"
+            />
     </RelativeLayout>
 
         <ImageView

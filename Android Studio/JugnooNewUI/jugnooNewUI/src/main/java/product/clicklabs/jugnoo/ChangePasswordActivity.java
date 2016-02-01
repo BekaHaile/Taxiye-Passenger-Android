@@ -1,13 +1,9 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,7 +42,7 @@ public class ChangePasswordActivity extends BaseActivity {
 	
 	ScrollView scrollView;
 	
-	TextView textViewScroll;
+	TextView textViewScroll, textViewOld, textViewNew, textViewRetype;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -71,14 +67,17 @@ public class ChangePasswordActivity extends BaseActivity {
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ChangePasswordActivity.this, relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
 		editTextOldPassword = (EditText) findViewById(R.id.editTextOldPassword); editTextOldPassword.setTypeface(Fonts.latoRegular(this));
 		editTextNewPassword = (EditText) findViewById(R.id.editTextNewPassword); editTextNewPassword.setTypeface(Fonts.latoRegular(this));
 		editTextRetypeNewPassword = (EditText) findViewById(R.id.editTextRetypeNewPassword); editTextRetypeNewPassword.setTypeface(Fonts.latoRegular(this));
 
-		buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword); buttonChangePassword.setTypeface(Fonts.latoRegular(this));
+		buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword); buttonChangePassword.setTypeface(Fonts.mavenRegular(this));
+		textViewOld = (TextView)findViewById(R.id.textViewOld); textViewOld.setTypeface(Fonts.mavenLight(this));
+		textViewNew = (TextView)findViewById(R.id.textViewNew); textViewNew.setTypeface(Fonts.mavenLight(this));
+		textViewRetype = (TextView)findViewById(R.id.textViewRetype); textViewRetype.setTypeface(Fonts.mavenLight(this));
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -134,7 +133,27 @@ public class ChangePasswordActivity extends BaseActivity {
 				}
 			}
 		});
-		
+
+		textViewOld.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextOldPassword.requestFocus();
+			}
+		});
+
+		textViewNew.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextNewPassword.requestFocus();
+			}
+		});
+
+		textViewRetype.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextRetypeNewPassword.requestFocus();
+			}
+		});
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -197,48 +216,11 @@ public class ChangePasswordActivity extends BaseActivity {
 				return true;
 			}
 		});
+
+
+		editTextOldPassword.requestFocus();
 		
-		
-		
-		
-		final View activityRootView = findViewById(R.id.mainLinear);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
 
-					@Override
-					public void onGlobalLayout() {
-						Rect r = new Rect();
-						// r will be populated with the coordinates of your view
-						// that area still visible.
-						activityRootView.getWindowVisibleDisplayFrame(r);
-
-						int heightDiff = activityRootView.getRootView()
-								.getHeight() - (r.bottom - r.top);
-						if (heightDiff > 100) { // if more than 100 pixels, its
-												// probably a keyboard...
-
-							/************** Adapter for the parent List *************/
-
-							ViewGroup.LayoutParams params_12 = textViewScroll
-									.getLayoutParams();
-
-							params_12.height = (int)(heightDiff);
-
-							textViewScroll.setLayoutParams(params_12);
-							textViewScroll.requestLayout();
-
-						} else {
-
-							ViewGroup.LayoutParams params = textViewScroll
-									.getLayoutParams();
-							params.height = 0;
-							textViewScroll.setLayoutParams(params);
-							textViewScroll.requestLayout();
-
-						}
-					}
-				});
-		
 		
 	}
 	

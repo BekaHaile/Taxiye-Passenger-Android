@@ -62,7 +62,7 @@
                     android:layout_marginLeft="6px"
                     android:gravity="center_vertical"
                     android:text="GIFT &amp; GET"
-                    android:textColor="@color/yellow"
+                    android:textColor="@color/theme_color"
                     android:textSize="47px"
 
                     />

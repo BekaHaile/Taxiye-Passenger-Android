@@ -6,11 +6,11 @@
 
         <RelativeLayout
             android:id="@+id/topBar"
-            android:layout_width="720px"
-            android:layout_height="96px"
+            android:layout_width="@dimen/screen_width"
+            android:layout_height="@dimen/top_bar_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@color/yellow" >
+            android:background="@drawable/nl_background_theme_color" >
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -73,7 +73,7 @@
                     android:id="@+id/textViewRateText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/yellow"
+                    android:textColor="@color/theme_color"
                     android:textSize="38px"
                     android:text="Liked it"
                     android:layout_gravity="center_horizontal"
@@ -142,15 +142,12 @@
 
                 <Button
                     android:id="@+id/buttonSubmitFeedback"
-                    android:layout_width="648px"
-                    android:layout_height="80px"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
                     android:layout_marginBottom="40px"
-                    android:background="@drawable/button_yellow"
-                    android:text="SUBMIT"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size" />
+                    android:text="@string/submit"
+                    />
 
                 <TextView
                     android:id="@+id/textViewScroll"

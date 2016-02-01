@@ -106,18 +106,18 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 		
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-		textViewWantToCancel = (TextView) findViewById(R.id.textViewWantToCancel); textViewWantToCancel.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+		textViewWantToCancel = (TextView) findViewById(R.id.textViewWantToCancel); textViewWantToCancel.setTypeface(Fonts.mavenRegular(this));
 		
 		listViewCancelOptions = (NonScrollListView) findViewById(R.id.listViewCancelOptions);
 		cancelOptionsListAdapter = new CancelOptionsListAdapter(RideCancellationActivity.this);
 		listViewCancelOptions.setAdapter(cancelOptionsListAdapter);
 
         relativeLayoutOtherCancelOptionInner = (RelativeLayout) findViewById(R.id.relativeLayoutOtherCancelOptionInner);
-        textViewOtherCancelOption = (TextView) findViewById(R.id.textViewOtherCancelOption); textViewOtherCancelOption.setTypeface(Fonts.latoRegular(this));
+        textViewOtherCancelOption = (TextView) findViewById(R.id.textViewOtherCancelOption); textViewOtherCancelOption.setTypeface(Fonts.mavenRegular(this));
         imageViewOtherCancelOptionCheck = (ImageView) findViewById(R.id.imageViewOtherCancelOptionCheck);
-        editTextOtherCancelOption = (EditText) findViewById(R.id.editTextOtherCancelOption); editTextOtherCancelOption.setTypeface(Fonts.latoRegular(this));
+        editTextOtherCancelOption = (EditText) findViewById(R.id.editTextOtherCancelOption); editTextOtherCancelOption.setTypeface(Fonts.mavenRegular(this));
         editTextOtherCancelOption.setMinHeight((int) (ASSL.Yscale() * 160));
 		relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
 		((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
@@ -125,9 +125,9 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
 
 
-		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.latoRegular(this));
+		buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide); buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
 		
-		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+		textViewCancelInfo = (TextView) findViewById(R.id.textViewCancelInfo); textViewCancelInfo.setTypeface(Fonts.mavenRegular(this));
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -345,7 +345,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 				holder = new ViewHolderCancelOption();
 				convertView = mInflater.inflate(R.layout.list_item_cancel_option, null);
 				
-				holder.textViewCancelOption = (TextView) convertView.findViewById(R.id.textViewCancelOption); holder.textViewCancelOption.setTypeface(Fonts.latoRegular(context));
+				holder.textViewCancelOption = (TextView) convertView.findViewById(R.id.textViewCancelOption); holder.textViewCancelOption.setTypeface(Fonts.mavenRegular(context));
 				holder.imageViewCancelOptionCheck = (ImageView) convertView.findViewById(R.id.imageViewCancelOptionCheck);
 				
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative); 
@@ -368,11 +368,11 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 			
 			if(cancelOption.checked){
 				holder.relative.setBackgroundColor(Color.WHITE);
-				holder.imageViewCancelOptionCheck.setImageResource(R.drawable.check_box_checked_new);
+				holder.imageViewCancelOptionCheck.setImageResource(R.drawable.check_box_checked);
 			}
 			else{
 				holder.relative.setBackgroundColor(Color.TRANSPARENT);
-				holder.imageViewCancelOptionCheck.setImageResource(R.drawable.check_box_unchecked_new);
+				holder.imageViewCancelOptionCheck.setImageResource(R.drawable.check_box_unchecked);
 			}
 			
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -408,14 +408,14 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                 Data.cancelOptionsList.cancelOptions.get(i).checked = false;
             }
             relativeLayoutOtherCancelOptionInner.setBackgroundColor(Color.WHITE);
-            imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_checked_new);
+            imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_checked);
             if(View.VISIBLE != editTextOtherCancelOption.getVisibility()) {
                 editTextOtherCancelOption.setVisibility(View.VISIBLE);
             }
         }
         else{
             relativeLayoutOtherCancelOptionInner.setBackgroundColor(Color.TRANSPARENT);
-            imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_unchecked_new);
+            imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_unchecked);
             if(View.GONE != editTextOtherCancelOption.getVisibility()) {
                 editTextOtherCancelOption.setVisibility(View.GONE);
             }

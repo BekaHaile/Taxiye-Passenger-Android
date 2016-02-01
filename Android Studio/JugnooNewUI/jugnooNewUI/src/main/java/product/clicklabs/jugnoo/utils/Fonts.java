@@ -8,7 +8,7 @@ import android.graphics.Typeface;
  */
 public class Fonts {
 
-    private static Typeface latoRegular, latoLight;																// fonts declaration
+    private static Typeface latoRegular, latoLight, mavenRegular, mavenLight;																// fonts declaration
 
 
     public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
@@ -23,6 +23,20 @@ public class Fonts {
             latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_light.ttf");
         }
         return latoLight;
+    }
+
+    public static Typeface mavenRegular(Context appContext) {											// accessing fonts functions
+        if (mavenRegular == null) {
+            mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
+        }
+        return mavenRegular;
+    }
+
+    public static Typeface mavenLight(Context appContext) {											// accessing fonts functions
+        if (mavenLight == null) {
+            mavenLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.otf");
+        }
+        return mavenLight;
     }
 
 }

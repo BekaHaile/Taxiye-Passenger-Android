@@ -121,7 +121,8 @@ public class Data {
 	
 	public static final String SERVER_ERROR_MSG = "Connection lost. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Connection lost. Please try again later.";
-	public static final String CHECK_INTERNET_MSG = "Check your internet connection.";
+	public static final String CHECK_INTERNET_TITLE = "CONNECTION LOST";
+	public static final String CHECK_INTERNET_MSG = "Oops! Your Internet in not working.\nPlease try again.";
 	
 	
 	
@@ -171,7 +172,7 @@ public class Data {
 	
 	
 	public static LatLng pickupLatLng, dropLatLng;
-	public static int pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+	public static int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
 
 	public static FacebookUserData facebookUserData;
 	public static GoogleSignInAccount googleSignInAccount;
@@ -324,8 +325,8 @@ public class Data {
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
 
-			if(data.getQueryParameter("referral_code") != null){
-				Data.deepLinkReferralCode = data.getQueryParameter("referral_code");
+			if(data.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
+				Data.deepLinkReferralCode = data.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 			}
 
 			if(data.getQueryParameter("deepindex") != null){
@@ -355,8 +356,8 @@ public class Data {
 				String targetUrl = URLDecoder.decode(data.getQueryParameter("target_url"), "UTF-8");
 				Uri dataTarget = Uri.parse(targetUrl);
 
-				if(dataTarget.getQueryParameter("referral_code") != null){
-					Data.deepLinkReferralCode = dataTarget.getQueryParameter("referral_code");
+				if(dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
+					Data.deepLinkReferralCode = dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 				}
 
 				if(dataTarget.getQueryParameter("deepindex") != null){

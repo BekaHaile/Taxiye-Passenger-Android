@@ -11,7 +11,7 @@
 
     <dimen name="top_bar_height">96px</dimen>
 
-    <dimen name="top_bar_title_text_size">32px</dimen>
+    <dimen name="top_bar_title_text_size">34px</dimen>
 
 
     <dimen name="button_corner_radius">5dp</dimen>
@@ -19,7 +19,7 @@
     <dimen name="wallet_button_corner_radius">2dp</dimen>
     <dimen name="image_bg_corner_radius">5dp</dimen>
     <dimen name="image_bg_stroke">1dp</dimen>
-    <dimen name="button_text_size">36px</dimen>
+    <dimen name="button_text_size">34px</dimen>
     <dimen name="button_small_text_size">30px</dimen>
     <dimen name="menu_width">495px</dimen>
 
@@ -83,7 +83,7 @@
     <dimen name="line_width">2px</dimen>
 
     <dimen name="dialog_border_width">2px</dimen>
-    <dimen name="button_width">648px</dimen>
+    <dimen name="button_width">400px</dimen>
     <dimen name="button_height">80px</dimen>
 
 
@@ -94,7 +94,7 @@
 
 
     <!-- end ride screen dimensions -->
-    <dimen name="end_ride_fare_value_text_size">46px</dimen>
+    <dimen name="end_ride_fare_value_text_size">80px</dimen>
     <dimen name="end_ride_fare_title_text_size">26px</dimen>
 
 
@@ -103,7 +103,7 @@
     <dimen name="share_activity_text_size">40px</dimen>
     <dimen name="share_activity_number_text_size">54px</dimen>
     <dimen name="share_activity_text_size_small">28px</dimen>
-    <dimen name="share_activity_text_margin_left">30px</dimen>
+    <dimen name="share_activity_text_margin_left">38px</dimen>
     <dimen name="share_activity_text_margin_right">45px</dimen>
     <dimen name="share_activity_text_margin_top">62px</dimen>
     <dimen name="share_activity_data_text_margin_top">62px</dimen>
@@ -114,12 +114,35 @@
     <!-- share leaderboard screen-->
     <dimen name="share_lb_button_width">310px</dimen>
     <dimen name="share_lb_button_height">80px</dimen>
+    <dimen name="leaderboard_activity_item_height">245px</dimen>
+    <dimen name="leaderboard_activity_item_value_height">185px</dimen>
     <dimen name="share_lb_text_view_layout_height">80px</dimen>
-    <dimen name="share_lb_text_size">34px</dimen>
-    <dimen name="share_lb_text_size_small">26px</dimen>
-    <dimen name="share_lb_text_size_medium">30px</dimen>
+    <dimen name="text_size_54">54px</dimen>
+    <dimen name="text_size_50">50px</dimen>
+    <dimen name="text_size_40">40px</dimen>
+    <dimen name="text_size_42">42px</dimen>
+    <dimen name="text_size_44">44px</dimen>
+    <dimen name="text_size_38">38px</dimen>
+    <dimen name="text_size_36">36px</dimen>
+    <dimen name="text_size_34">34px</dimen>
+    <dimen name="text_size_32">32px</dimen>
+    <dimen name="text_size_30">30px</dimen>
+    <dimen name="text_size_28">28px</dimen>
+    <dimen name="text_size_26">26px</dimen>
+    <dimen name="text_size_24">24px</dimen>
+    <dimen name="text_size_22">22px</dimen>
 
 
+
+    <!-- NL dimensions-->
+    <dimen name="button_stroke_width">1dp</dimen>
+    <dimen name="nl_sliding_bottom_with_tabs">388px</dimen>
+    <dimen name="nl_sliding_bottom_without_tabs">272px</dimen>
+    <dimen name="nl_button_size">87px</dimen>
+
+    <!-- NL splash screen-->
+    <dimen name="splash_button_width">300px</dimen>
+    <dimen name="splash_button_height">100px</dimen>
 
 
 </resources>

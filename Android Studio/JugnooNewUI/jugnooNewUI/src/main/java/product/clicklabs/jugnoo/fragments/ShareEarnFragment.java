@@ -67,12 +67,12 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			e.printStackTrace();
 		}
 
-		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.latoRegular(activity));
-		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.latoRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.mavenLight(activity));
+		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenLight(activity));
+		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenLight(activity));
 
-		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.latoRegular(activity));
-		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);
+		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenLight(activity));
+		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
 			@Override

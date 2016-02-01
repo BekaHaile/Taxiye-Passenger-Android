@@ -13,7 +13,7 @@
             android:id="@+id/topBar"
             android:layout_width="@dimen/screen_width"
             android:layout_height="@dimen/top_bar_height"
-            android:background="@color/yellow" >
+            android:background="@drawable/nl_background_theme_color" >
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -63,7 +63,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Rate us on Play Store"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -95,7 +95,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Like us on Facebook"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -111,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -127,7 +127,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Terms and Conditions"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -143,7 +143,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -159,7 +159,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="Privacy Policy"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -175,7 +175,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -191,7 +191,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:text="@string/who_are_we"
-                    android:textColor="@drawable/text_color_grey_dark_white_selector"
+                    android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
@@ -207,7 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/yellow" />
+                    android:src="@color/text_color_hint" />
             </RelativeLayout>
             
         </LinearLayout>

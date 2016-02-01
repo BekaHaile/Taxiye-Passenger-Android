@@ -11,8 +11,10 @@
     <RelativeLayout
         android:id="@+id/topRl"
         android:layout_width="match_parent"
-        android:layout_height="90px"
-        android:splitMotionEvents="false">
+        android:layout_height="@dimen/top_bar_height"
+        android:splitMotionEvents="false"
+        android:background="@drawable/nl_background_theme_color"
+        >
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -20,20 +22,26 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="VERIFICATION"
-            android:textColor="@color/black_text"
-            android:textSize="@dimen/top_bar_title_text_size"/>
+            android:text="@string/nl_otp_verification"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_34" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="70.7px"
-            android:layout_height="86.9px"
+            android:layout_width="61px"
+            android:layout_height="61px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:padding="25px"
-            android:src="@drawable/back_orange_selector"
-            android:tag="mwar"/>
+            android:src="@drawable/back_btn_selector"
+            android:tag="mwar" />
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        />
 
     <include
         layout="@layout/layout_otp_screen"

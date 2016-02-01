@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="720px"
+    android:layout_width="@dimen/screen_width"
     android:layout_height="wrap_content"
-                android:background="@color/white"
-    android:splitMotionEvents="false" >
+    android:background="@color/sliding_bottom_bg_color"
+    android:splitMotionEvents="false">
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_white_grey_rb_selector"
+        android:layout_marginBottom="30px"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
-        android:layout_marginTop="15px"
-         >
+        android:splitMotionEvents="false">
 
-       
 
         <TextView
             android:id="@+id/textViewPickupAt"
@@ -29,13 +30,12 @@
             android:text="Pickup at"
             android:textColor="@color/black_text"
             android:textSize="30px"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20px" >
+            android:layout_marginTop="20px">
 
             <TextView
                 android:id="@+id/textViewId"
@@ -43,8 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40px"
                 android:text="ID: "
-                android:textColor="@color/black_text"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
 
             <TextView
                 android:id="@+id/textViewIdValue"
@@ -55,16 +55,15 @@
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewId"
                 android:text="1234"
-                android:textColor="@color/black_text_alpha"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
         </RelativeLayout>
-
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10px" >
+            android:layout_marginTop="10px">
 
             <TextView
                 android:id="@+id/textViewFrom"
@@ -72,8 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40px"
                 android:text="From: "
-                android:textColor="@color/black_text"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
 
             <TextView
                 android:id="@+id/textViewFromValue"
@@ -84,8 +83,8 @@
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewFrom"
                 android:text="Plot No 5, Sector 28 B, \nChandigarh"
-                android:textColor="@color/black_text_alpha"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -93,8 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:visibility="visible"
-            >
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/textViewTo"
@@ -102,8 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40px"
                 android:text="To: "
-                android:textColor="@color/black_text"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
 
             <TextView
                 android:id="@+id/textViewToValue"
@@ -114,14 +112,14 @@
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewTo"
                 android:text="Plot No 5, Sector 28 B, Chandigarh\nabc"
-                android:textColor="@color/black_text_alpha"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10px" >
+            android:layout_marginTop="10px">
 
             <TextView
                 android:id="@+id/textViewDetails"
@@ -129,8 +127,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40px"
                 android:text="Details: "
-                android:textColor="@color/black_text"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
 
             <TextView
                 android:id="@+id/textViewDetailsValue"
@@ -140,71 +138,61 @@
                 android:layout_marginLeft="10px"
                 android:layout_toRightOf="@+id/textViewDetails"
                 android:text="8.5 Km, 20 minutes, February 30th"
-                android:textColor="@color/black_text_alpha"
-                android:textSize="24px" />
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
 
             <TextView
                 android:id="@+id/textViewRideCancelled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5px"
-                android:text="Cancelled"
-                android:textColor="@color/black_text"
                 android:layout_toRightOf="@+id/textViewDetailsValue"
+                android:text="Cancelled"
+                android:textColor="@color/text_color"
                 android:textSize="26px"
-                android:visibility="gone"
-                />
-        </RelativeLayout>
-
-    </LinearLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutRateRide"
-            android:layout_width="match_parent"
-            android:layout_height="80px"
-            android:layout_marginTop="10px"
-            android:background="@drawable/background_white_white_light_grey_selector"
-            android:layout_below="@+id/linearLayoutMain"
-            >
-
-            <TextView
-                android:id="@+id/textViewRateRide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="80px"
-                android:gravity="center"
-                android:text="Rate this ride"
-                android:textColor="@drawable/text_color_black_alpha_selector"
-                android:textSize="28px" />
-
-            <ImageView
-                android:layout_width="13px"
-                android:layout_height="26px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="40px"
-                android:src="@drawable/arrow_icon_selector"
-                android:tag="mwar" />
-
+                android:visibility="gone" />
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/imageViewDiv"
             android:layout_width="match_parent"
             android:layout_height="20px"
-            android:layout_below="@+id/relativeLayoutRateRide"
-            />
+            android:layout_below="@+id/relativeLayoutRateRide" />
 
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRateRide"
+        android:layout_width="match_parent"
+        android:layout_height="80px"
+        android:layout_below="@+id/linearLayoutMain"
+        android:layout_marginTop="10px"
+        android:background="@drawable/background_white_white_light_grey_selector"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textViewRateRide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="80px"
+            android:gravity="center"
+            android:text="Rate this ride"
+            android:textColor="@drawable/text_color_black_alpha_selector"
+            android:textSize="28px" />
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/yellow_alpha"
-            android:layout_below="@+id/imageViewDiv"
-            />
+            android:layout_width="13px"
+            android:layout_height="26px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40px"
+            android:src="@drawable/arrow_icon_selector"
+            android:tag="mwar" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutRideReceipt"
@@ -214,27 +202,26 @@
         android:layout_marginRight="40px"
         android:layout_marginTop="20px"
         android:orientation="horizontal"
-        >
+        android:visibility="gone">
+
         <ImageView
             android:layout_width="44px"
             android:layout_height="44px"
-            android:tag="mwar"
-            android:src="@drawable/ic_ride_receipt"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="10px"
             android:layout_marginBottom="10px"
             android:layout_marginLeft="10px"
-            />
+            android:layout_marginTop="10px"
+            android:src="@drawable/ic_ride_receipt"
+            android:tag="mwar" />
 
         <ImageView
             android:layout_width="13px"
             android:layout_height="26px"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20px"
             android:layout_marginRight="0px"
             android:src="@drawable/arrow_icon_selector"
-            android:tag="mwar"
-            android:layout_marginLeft="20px"
-            />
+            android:tag="mwar" />
 
 
     </LinearLayout>
@@ -244,45 +231,43 @@
         android:id="@+id/textViewAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="40px"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="40px"
         android:singleLine="true"
         android:text="@string/rupee_0"
-        android:textColor="@color/black_text"
+        android:textColor="@color/theme_color"
         android:textSize="28px" />
 
     <LinearLayout
         android:id="@+id/linearLayoutCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="horizontal"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="40px"
         android:layout_centerVertical="true"
-        >
+        android:layout_marginRight="40px"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textViewCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10px"
             android:layout_marginRight="10px"
             android:layout_marginTop="10px"
-            android:layout_marginBottom="10px"
             android:text="CANCEL"
             android:textColor="@drawable/text_color_black_alpha_selector"
-            android:textSize="26px"
-            android:layout_gravity="center_vertical"
-            />
+            android:textSize="26px" />
 
         <ImageView
             android:id="@+id/imageViewArrow"
             android:layout_width="13px"
             android:layout_height="26px"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/arrow_icon_selector"
-            android:tag="mwar"
-            android:layout_gravity="center_vertical" />
+            android:tag="mwar" />
     </LinearLayout>
 
 </RelativeLayout>

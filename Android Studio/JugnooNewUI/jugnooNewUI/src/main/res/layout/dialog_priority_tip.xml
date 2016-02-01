@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/rv"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:splitMotionEvents="false">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:layout_width="620px"
+            android:layout_width="660px"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_marginLeft="50px"
+            android:layout_gravity="center_vertical">
 
             <RelativeLayout
                 android:id="@+id/innerRl"
                 android:layout_width="620px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/button_yellow_normal"
+                android:layout_marginTop="15px"
+                android:background="@drawable/background_priority_tip"
                 android:splitMotionEvents="false">
+
 
                 <TextView
                     android:id="@+id/textHead"
@@ -31,7 +35,7 @@
                     android:layout_marginTop="25px"
                     android:text="@string/priority_tip"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/top_bar_title_text_size"/>
+                    android:textSize="@dimen/top_bar_title_text_size" />
 
                 <LinearLayout
                     android:id="@+id/rl1"
@@ -41,7 +45,7 @@
                     android:layout_marginLeft="7px"
                     android:layout_marginRight="7px"
                     android:layout_marginTop="126px"
-                    android:background="@drawable/button_white_normal"
+                    android:background="@drawable/button_white_br"
                     android:orientation="vertical"
                     android:splitMotionEvents="false">
 
@@ -56,9 +60,11 @@
                         android:paddingLeft="40px"
                         android:paddingRight="40px"
                         android:text="@string/priority_tip_message"
-                        android:textColor="@color/grey_dark_more"
+                        android:textColor="@color/text_color"
                         android:textSize="34px"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
+
+                    // Low Priority layout
 
                     <LinearLayout
                         android:id="@+id/linearLayoutLowPriority"
@@ -72,15 +78,12 @@
 
                         <Button
                             android:id="@+id/btnOk"
-                            android:layout_width="400px"
-                            android:layout_height="70px"
+                            style="@style/ButtonTheme"
                             android:layout_gravity="center_horizontal"
-                            android:background="@drawable/button_yellow"
-                            android:singleLine="true"
-                            android:text="@string/ok"
-                            android:textColor="@drawable/text_color_white_alpha_selector"
-                            android:textSize="34px"/>
+                            android:text="@string/ok" />
                     </LinearLayout>
+
+                    // High Priority layout
 
                     <LinearLayout
                         android:id="@+id/linearLayoutHighPriority"
@@ -88,14 +91,16 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textHead"
                         android:layout_marginBottom="50px"
-                        android:layout_marginTop="40px"
+                        android:layout_marginTop="30px"
                         android:orientation="vertical"
                         android:visibility="visible">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:background="@color/grey_dark"/>
+                            android:layout_marginLeft="50px"
+                            android:layout_marginRight="50px"
+                            android:background="@color/text_color_light" />
 
                         <TextView
                             android:id="@+id/textViewHighPriority"
@@ -108,7 +113,7 @@
                             android:text="@string/priority_tip_message"
                             android:textColor="@color/grey_dark_more"
                             android:textSize="34px"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -122,36 +127,40 @@
                                 android:layout_width="100px"
                                 android:layout_height="100px"
                                 android:layout_marginRight="10px"
-                                android:background="@drawable/background_white_bordered"
+                                android:background="@drawable/background_white_rounded_bordered"
                                 android:cursorVisible="false"
                                 android:gravity="center"
                                 android:hint="1"
+                                android:tag="mwar"
+                                android:textColorHint="@color/text_color_hint"
                                 android:inputType="number"
                                 android:maxLength="1"
-                                android:textColor="@color/yellow"
-                                android:textSize="77px"/>
+                                android:textColor="@color/theme_color"
+                                android:textSize="77px" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15px"
                                 android:text="."
-                                android:textColor="@color/yellow"
-                                android:textSize="52px"/>
+                                android:textColor="@color/theme_color"
+                                android:textSize="52px" />
 
                             <EditText
                                 android:id="@+id/editTextValue2"
                                 android:layout_width="100px"
                                 android:layout_height="100px"
                                 android:layout_marginLeft="10px"
-                                android:background="@drawable/background_white_bordered"
+                                android:background="@drawable/background_white_rounded_bordered"
                                 android:cursorVisible="false"
                                 android:gravity="center"
                                 android:hint="8"
+                                android:tag="mwar"
+                                android:textColorHint="@color/text_color_hint"
                                 android:inputType="number"
                                 android:maxLength="2"
-                                android:textColor="@color/yellow"
-                                android:textSize="77px"/>
+                                android:textColor="@color/theme_color"
+                                android:textSize="77px" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -160,25 +169,34 @@
 
 
                 <LinearLayout
-                    android:layout_width="208px"
-                    android:layout_height="208px"
+                    android:layout_width="198px"
+                    android:layout_height="198px"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="77px"
-                    android:background="@drawable/surge_circle"
+                    android:background="@drawable/circle_priority_tip"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:tag="mwar">
+
+                    <ImageView
+                        android:id="@+id/imageViewPriorityTip"
+                        android:layout_width="27px"
+                        android:layout_height="32px"
+                        android:layout_marginTop="20px"
+                        android:tag="mwar"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/surge_icon_bottom"/>
 
                     <TextView
                         android:id="@+id/textViewTipValue"
                         android:layout_width="180px"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50px"
+                        android:layout_marginTop="10px"
                         android:gravity="center"
                         android:singleLine="true"
                         android:text="1.25X"
-                        android:textColor="@color/yellow"
-                        android:textSize="66px"/>
+                        android:textColor="#FFB552"
+                        android:textSize="58px" />
 
                     <TextView
                         android:id="@+id/textViewNormalFair"
@@ -188,25 +206,24 @@
                         android:gravity="center"
                         android:text="@string/the_normal_fare"
                         android:textColor="@color/white"
-                        android:textSize="16px"/>
+                        android:textSize="16px" />
                 </LinearLayout>
 
             </RelativeLayout>
 
             <ImageView
                 android:id="@+id/close"
-                android:layout_width="65px"
-                android:layout_height="65px"
+                android:layout_width="74px"
+                android:layout_height="74px"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="20px"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingBottom="20px"
                 android:paddingLeft="20px"
                 android:paddingRight="10px"
-                android:paddingTop="10px"
                 android:src="@drawable/close_icon_selector"
-                android:tag="mwar"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                />
+                android:tag="mwar" />
 
         </RelativeLayout>
 

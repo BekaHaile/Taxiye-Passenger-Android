@@ -17,19 +17,23 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class RequestDuplicateRegistrationActivity extends BaseActivity {
@@ -61,22 +65,22 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-        textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewRegisterEmailValue = (TextView) findViewById(R.id.textViewRegisterEmailValue); textViewRegisterEmailValue.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewRegisterPhoneValue = (TextView) findViewById(R.id.textViewRegisterPhoneValue); textViewRegisterPhoneValue.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
-        textViewRegisterHelp = (TextView) findViewById(R.id.textViewRegisterHelp); textViewRegisterHelp.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Fonts.mavenRegular(this));
+        textViewRegisterEmailValue = (TextView) findViewById(R.id.textViewRegisterEmailValue); textViewRegisterEmailValue.setTypeface(Fonts.mavenRegular(this));
+        textViewRegisterPhoneValue = (TextView) findViewById(R.id.textViewRegisterPhoneValue); textViewRegisterPhoneValue.setTypeface(Fonts.mavenRegular(this));
+        textViewRegisterHelp = (TextView) findViewById(R.id.textViewRegisterHelp); textViewRegisterHelp.setTypeface(Fonts.mavenLight(this));
 
-        ((TextView) findViewById(R.id.textViewRegistration)).setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
-        ((TextView) findViewById(R.id.textViewRegisterName)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewRegistration)).setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRegisterName)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Fonts.mavenLight(this));
 
-        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Fonts.latoRegular(this));
 
-        buttonSubmitRequest = (Button) findViewById(R.id.buttonSubmitRequest); buttonSubmitRequest.setTypeface(Fonts.latoRegular(this));
+        buttonSubmitRequest = (Button) findViewById(R.id.buttonSubmitRequest); buttonSubmitRequest.setTypeface(Fonts.mavenRegular(this));
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -100,12 +104,12 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                 String email = "";
                 String phone = "";
 
-                if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+                if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
                     name = OTPConfirmScreen.facebookRegisterData.fbName;
                     email = OTPConfirmScreen.facebookRegisterData.fbUserEmail;
                     phone = OTPConfirmScreen.facebookRegisterData.phoneNo;
                 }
-				else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 					name = OTPConfirmScreen.googleRegisterData.name;
 					email = OTPConfirmScreen.googleRegisterData.email;
 					phone = OTPConfirmScreen.googleRegisterData.phoneNo;
@@ -123,12 +127,12 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 
 
         try{
-			if(RegisterScreen.RegisterationType.FACEBOOK == RegisterScreen.registerationType) {
+			if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
                 textViewRegisterNameValue.setText(OTPConfirmScreen.facebookRegisterData.fbName);
                 textViewRegisterEmailValue.setText(OTPConfirmScreen.facebookRegisterData.fbUserEmail);
                 textViewRegisterPhoneValue.setText(OTPConfirmScreen.facebookRegisterData.phoneNo);
             }
-			else if(RegisterScreen.RegisterationType.GOOGLE == RegisterScreen.registerationType){
+			else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
 				textViewRegisterNameValue.setText(OTPConfirmScreen.googleRegisterData.name);
 				textViewRegisterEmailValue.setText(OTPConfirmScreen.googleRegisterData.email);
 				textViewRegisterPhoneValue.setText(OTPConfirmScreen.googleRegisterData.phoneNo);
@@ -220,7 +224,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
             params.put("user_name", name);
             params.put("user_email", email);
@@ -229,8 +233,8 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			params.put("client_id", Config.getClientId());
 
             try {
-                if (RegisterScreen.multipleCaseJSON != null) {
-                    params.put("users", RegisterScreen.multipleCaseJSON.getJSONArray("users"));
+                if (SplashNewActivity.multipleCaseJSON != null) {
+                    params.put("users", ""+SplashNewActivity.multipleCaseJSON.getJSONArray("users"));
                 }
             } catch(Exception e){
                 e.printStackTrace();
@@ -240,51 +244,108 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 			Log.i("params request_dup_registration", "=" + params);
 
 		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/request_dup_registration", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-	
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+//			AsyncHttpClient client = Data.getClient();
+//			client.post(Config.getServerUrl() + "/request_dup_registration", params,
+//					new CustomAsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//
+//						@Override
+//						public void onFailure(Throwable arg3) {
+//							Log.e("request fail", arg3.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//						}
+//
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.i("Server response request_dup_registration", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								int flag = jObj.getInt("flag");
+//								String message = JSONParser.getServerMessage(jObj);
+//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+//                                    if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+//										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+//											@Override
+//											public void onClick(View v) {
+//												activity.startActivity(new Intent(activity, SplashNewActivity.class));
+//												activity.finish();
+//												activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//											}
+//										});
+//                                    }
+//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+//                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                activity.startActivity(new Intent(activity, SplashNewActivity.class));
+//                                                activity.finish();
+//                                                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//                                            }
+//                                        });
+//									}
+//									else{
+//										DialogPopup.alertPopup(activity, "", message);
+//									}
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//							}
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//					});
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response request_dup_registration", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								int flag = jObj.getInt("flag");
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                    if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                        String error = jObj.getString("error");
-                                        DialogPopup.alertPopup(activity, "", error);
-                                    }
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                        String message = jObj.getString("message");
-                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
-                                            @Override
-                                            public void onClick(View v) {
-                                                activity.startActivity(new Intent(activity, SplashNewActivity.class));
-                                                activity.finish();
-                                                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                            }
-                                        });
+
+			RestClient.getApiServices().requestDupRegistration(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("Server response request_dup_registration", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						int flag = jObj.getInt("flag");
+						String message = JSONParser.getServerMessage(jObj);
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										activity.startActivity(new Intent(activity, SplashNewActivity.class));
+										activity.finish();
+										activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								});
 							}
-							DialogPopup.dismissLoadingDialog();
+							else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+										activity.startActivity(new Intent(activity, SplashNewActivity.class));
+										activity.finish();
+										activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+									}
+								});
+							}
+							else{
+								DialogPopup.alertPopup(activity, "", message);
+							}
 						}
-					});
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("request fail", error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

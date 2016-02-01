@@ -11,12 +11,12 @@
         android:orientation="vertical" >
 
         <RelativeLayout
-            android:id="@+id/topBar"
-            android:layout_width="720px"
-            android:layout_height="96px"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@color/yellow" >
+            android:id="@+id/topRl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/top_bar_height"
+            android:splitMotionEvents="false"
+            android:background="@drawable/nl_background_theme_color"
+            >
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -24,18 +24,19 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="REQUEST REGISTRATION"
+                android:text="@string/nl_signup_request_registration"
                 android:textColor="@color/white"
-                android:textSize="@dimen/top_bar_title_text_size" />
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_34" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="60.7px"
-                android:layout_height="76.9px"
+                android:layout_width="61px"
+                android:layout_height="61px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
-                android:padding="20px"
-                android:src="@drawable/back_white_selector" />
+                android:src="@drawable/back_btn_selector"
+                android:tag="mwar" />
         </RelativeLayout>
 
         <ImageView
@@ -54,7 +55,6 @@
                 android:id="@+id/linearLayoutMain"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white_light_grey"
                 android:orientation="vertical"
                 android:splitMotionEvents="false" >
 
@@ -64,9 +64,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
-                    android:textColor="@color/black_text"
-                    android:textSize="30px"
-                    android:text="Registration Information"/>
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32"
+                    android:text="@string/nl_signup_request_registration_info"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,8 +82,8 @@
                             android:id="@+id/textViewRegisterName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28"
                             android:layout_marginLeft="40px"
                             android:text="Name:"/>
 
@@ -91,8 +91,8 @@
                             android:id="@+id/textViewRegisterNameValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text_grey"
-                            android:textSize="28px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28"
                             android:text="User1"
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
@@ -111,8 +111,8 @@
                             android:id="@+id/textViewRegisterEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28"
                             android:layout_marginLeft="40px"
                             android:text="Email:"/>
 
@@ -120,8 +120,8 @@
                             android:id="@+id/textViewRegisterEmailValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text_grey"
-                            android:textSize="28px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28"
                             android:text="User1"
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
@@ -140,8 +140,8 @@
                             android:id="@+id/textViewRegisterPhone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text"
-                            android:textSize="28px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28"
                             android:layout_marginLeft="40px"
                             android:text="Phone:"/>
 
@@ -149,8 +149,8 @@
                             android:id="@+id/textViewRegisterPhoneValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black_text_grey"
-                            android:textSize="28px"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_28"
                             android:text="User1"
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
@@ -172,12 +172,12 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/dropshadow_grey"
                     android:gravity="left"
-                    android:hint="You have already created 2 accounts from this device. Please explain the reason for creating a new account."
+                    android:hint="@string/nl_signup_request_registration_you_have_already_format"
                     android:padding="25px"
                     android:scrollbars="vertical"
-                    android:textSize="24px"
-                    android:textColor="@color/black_text"
-                    android:textColorHint="@color/black_text_alpha"
+                    android:textSize="@dimen/text_size_26"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
                     />
 
 
@@ -186,25 +186,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="@color/black_text_alpha"
+                    android:textColor="@color/text_color"
                     android:gravity="center_horizontal"
-                    android:textSize="28px"
+                    android:textSize="@dimen/text_size_28"
                     android:layout_marginTop="40px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:text="We will revert to you soon"/>
+                    android:text="@string/nl_signup_request_registration_revert_you"/>
 
 
                 <Button
                     android:id="@+id/buttonSubmitRequest"
-                    android:layout_width="648px"
-                    android:layout_height="100px"
+                    style="@style/ButtonTheme"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="40px"
-                    android:background="@drawable/button_yellow"
-                    android:text="SUBMIT REQUEST"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size" />
+                    android:text="@string/submit"
+                    />
 
                 <TextView
                     android:id="@+id/textViewScroll"

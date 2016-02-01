@@ -36,23 +36,25 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     /**
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
      */
-    private int mPageNumber;
+    private int mPageNumber, numOfPages;
 
-    private RelativeLayout first, mainLay;
+    private RelativeLayout first, mainLay, third;
     private RelativeLayout second;
+
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static ScreenSlidePageFragment create(int pageNumber) {
-        ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
+    public static ScreenSlidePageFragment create(int pageNumber, int numOfPages) {
+        ScreenSlidePageFragment fragment = new ScreenSlidePageFragment(numOfPages);
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ScreenSlidePageFragment() {
+    public ScreenSlidePageFragment(int numOfPages) {
+        this.numOfPages = numOfPages;
     }
 
     @Override
@@ -70,9 +72,10 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
 		ASSL.DoMagic(mainLay);
 
         first = (RelativeLayout) rootView.findViewById(R.id.tutorial_one);
-
         second = (RelativeLayout) rootView.findViewById(R.id.tutorial_two);
-        second.setOnClickListener(new View.OnClickListener() {
+        third = (RelativeLayout) rootView.findViewById(R.id.tutorial_three);
+
+        third.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().finish();
@@ -80,15 +83,32 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
                 startActivity(intent);
             }
         });
+
+        first.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(numOfPages == 1){
+                    getActivity().finish();
+                }
+            }
+        });
+
         first.setVisibility(View.GONE);
         second.setVisibility(View.GONE);
+        third.setVisibility(View.GONE);
 
         if (mPageNumber == 0) {
             first.setVisibility(View.VISIBLE);
             second.setVisibility(View.GONE);
+            third.setVisibility(View.GONE);
         } else if (mPageNumber == 1) {
-            first.setVisibility(View.GONE);
             second.setVisibility(View.VISIBLE);
+            first.setVisibility(View.GONE);
+            third.setVisibility(View.GONE);
+        } else if(mPageNumber == 2){
+            third.setVisibility(View.VISIBLE);
+            first.setVisibility(View.GONE);
+            second.setVisibility(View.GONE);
         }
 
         return rootView;

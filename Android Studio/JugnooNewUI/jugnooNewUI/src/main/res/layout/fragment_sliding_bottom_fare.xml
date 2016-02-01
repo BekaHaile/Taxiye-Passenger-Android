@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/sliding_bottom_bg_color"
+    android:layout_height="@dimen/nl_sliding_bottom_without_tabs">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="128px"
+        android:layout_marginTop="10px"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="240px"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textViewKM"
+                android:layout_width="150px"
+                android:layout_height="wrap_content"
+                android:text="@string/nl_per_km"
+                android:layout_marginTop="20px"
+                android:gravity="center_horizontal"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/text_size_34"
+                android:textColor="@color/text_color_light"/>
+
+            <TextView
+                android:id="@+id/textViewKMValue"
+                android:layout_width="150px"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewKM"
+                android:gravity="center_horizontal"
+                android:text="3"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/text_size_40"
+                android:textColor="@color/text_color"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="240px"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_height="70px"
+                android:layout_centerInParent="true"
+                android:src="@color/grey_light" />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutPriorityTip"
+                android:layout_width="108px"
+                android:layout_height="108px"
+                android:tag="mwar"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circle_surge_price">
+
+                <ImageView
+                    android:layout_width="27px"
+                    android:layout_height="32px"
+                    android:tag="mwar"
+                    android:layout_marginTop="12px"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/surge_icon_bottom"/>
+
+                <TextView
+                    android:id="@+id/textViewPriorityTipValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1.25X"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_30"
+                    android:layout_marginBottom="20px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="@color/white"/>
+                
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="240px"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textViewMin"
+                android:layout_width="150px"
+                android:layout_height="wrap_content"
+                android:text="@string/nl_per_min"
+                android:layout_marginTop="20px"
+                android:gravity="center_horizontal"
+                android:layout_alignParentLeft="true"
+                android:textSize="@dimen/text_size_34"
+                android:textColor="@color/text_color_light"/>
+
+            <TextView
+                android:id="@+id/textViewMinValue"
+                android:layout_width="150px"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewMin"
+                android:gravity="center_horizontal"
+                android:text="3"
+                android:layout_alignParentLeft="true"
+                android:textSize="@dimen/text_size_40"
+                android:textColor="@color/text_color"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewThreshold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="416465465"
+        android:gravity="center"
+        android:layout_marginTop="-10px"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_26"/>
+
+    <TextView
+        android:id="@+id/textViewFareEstimage"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nl_button_size"
+        android:text="@string/nl_get_fare_estimate"
+        android:gravity="center"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:layout_marginTop="10px"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        android:textSize="@dimen/text_size_40"
+        android:textColor="@color/text_color"/>
+</LinearLayout>

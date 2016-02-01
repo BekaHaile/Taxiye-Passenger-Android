@@ -34,7 +34,7 @@ android:splitMotionEvents="false" >
             android:paddingLeft="40px"
             android:paddingRight="40px"
             android:text="Alert"
-            android:textColor="@color/grey_dark_more"
+            android:textColor="@color/text_color"
             android:textSize="34px"
             android:visibility="gone" />
 
@@ -51,7 +51,7 @@ android:splitMotionEvents="false" >
             android:paddingLeft="40px"
             android:paddingRight="40px"
             android:text="Message"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/text_color"
             android:textSize="30px" />
 
         <ImageView
@@ -71,10 +71,10 @@ android:splitMotionEvents="false" >
                 android:layout_width="307px"
                 android:layout_height="90px"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/button_white_yellow_brr_selector"
+                android:background="@drawable/button_white_grey_brr_selector"
                 android:singleLine="true"
                 android:text="OK"
-                android:textColor="@drawable/text_color_yellow_white_selector"
+                android:textColor="@color/text_color"
                 android:textSize="34px" />
 
             <ImageView
@@ -90,10 +90,10 @@ android:splitMotionEvents="false" >
                 android:layout_height="90px"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/imageView1"
-                android:background="@drawable/button_white_yellow_blr_selector"
+                android:background="@drawable/button_white_grey_blr_selector"
                 android:singleLine="true"
                 android:text="Cancel"
-                android:textColor="@drawable/text_color_yellow_white_selector"
+                android:textColor="@color/text_color"
                 android:textSize="34px" />
         </RelativeLayout>
 

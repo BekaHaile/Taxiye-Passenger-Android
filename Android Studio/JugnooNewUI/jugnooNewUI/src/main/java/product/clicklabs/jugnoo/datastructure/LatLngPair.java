@@ -34,7 +34,6 @@ public class LatLngPair {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return source + " " + destination + " " + deltaDistance;
 	}
 	

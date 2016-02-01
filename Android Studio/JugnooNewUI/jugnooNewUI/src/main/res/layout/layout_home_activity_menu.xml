@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menuLayout"
+    android:layout_width="585px"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutProfileImage"
+                    android:layout_width="220px"
+                    android:layout_height="220px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40px"
+                    android:splitMotionEvents="false"
+                    android:tag="mwar">
+
+                    <ImageView
+                        android:id="@+id/imageViewProfileImageBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/circle_grey"
+                        android:tag="mwar" />
+
+                    <ImageView
+                        android:id="@+id/imageViewProfile"
+                        android:layout_width="216px"
+                        android:layout_height="216px"
+                        android:layout_centerInParent="true"
+                        android:tag="mwar" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textViewUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20px"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="UserName"
+                    android:textColor="@color/text_color_theme_alpha_selector"
+                    android:textSize="32px" />
+
+                <TextView
+                    android:id="@+id/textViewViewAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10px"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="View Account"
+                    android:textColor="@color/text_color_view_account_selector"
+                    android:textSize="26px" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutGetRide"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="10px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewGetRide"
+                    android:layout_width="43px"
+                    android:layout_height="34px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/auto_icon_normal"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewGetRide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewGetRide"
+                    android:text="Get a Ride"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewGetRideArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutJugnooLine"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:visibility="gone"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewJugnooLine"
+                    android:layout_width="46px"
+                    android:layout_height="51px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_jugnoo_line_selector"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewJugnooLine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewJugnooLine"
+                    android:text="Jugnoo Line"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewJugnooLineArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutInvite"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewInvite"
+                    android:layout_width="36px"
+                    android:layout_height="36px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/share_icon_normal"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewInvite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewInvite"
+                    android:text="Free Rides"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewInviteArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutWallet"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewWallet"
+                    android:layout_width="36px"
+                    android:layout_height="28px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_wallet"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewWallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewWallet"
+                    android:text="Wallet"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <product.clicklabs.jugnoo.utils.ProgressWheel
+                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/progressBarMenuPaytmWalletLoading"
+                    android:layout_width="45px"
+                    android:layout_height="45px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    wheel:matProg_barColor="@color/text_color"
+                    wheel:matProg_barWidth="2dp"
+                    wheel:matProg_fillRadius="true"
+                    wheel:matProg_progressIndeterminate="true" />
+
+                <TextView
+                    android:id="@+id/textViewWalletValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/background_yellow_rounded"
+                    android:gravity="center_vertical|right"
+                    android:padding="10px"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/white"
+                    android:textSize="30px"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/imageViewWalletArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutPromotions"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewPromotions"
+                    android:layout_width="36px"
+                    android:layout_height="36px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/promotion_icon_normal"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewPromotions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewPromotions"
+                    android:text="Promotions"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <TextView
+                    android:id="@+id/textViewPromotionsValue"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/circle_yellow"
+                    android:gravity="center"
+                    android:padding="10px"
+                    android:tag="mwar"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="30px" />
+
+                <ImageView
+                    android:id="@+id/imageViewPromotionsArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutNotificationMenu"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imageViewNotificationMenu"
+                    android:layout_width="40px"
+                    android:layout_height="45px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_notification_center_thin_selector"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewNotificationMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewNotificationMenu"
+                    android:text="Notification Center"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+                <TextView
+                    android:id="@+id/textViewNotificationValueMenu"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20px"
+                    android:layout_toLeftOf="@+id/imageViewNotificationArrowMenu"
+                    android:background="@drawable/circle_yellow"
+                    android:gravity="center"
+                    android:padding="10px"
+                    android:tag="mwar"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewNotificationArrowMenu"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@color/text_color"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewTransactions"
+                    android:layout_width="35px"
+                    android:layout_height="34px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/transactions_icon_normal"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewTransactions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewTransactions"
+                    android:text="Ride History"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutFareEstimate"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:visibility="gone"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewFareEstimate"
+                    android:layout_width="37px"
+                    android:layout_height="45px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_fare_estimate_selector"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewFareEstimate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewFareEstimate"
+                    android:text="Fare Estimate"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutFareDetails"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imageViewFareDetails"
+                    android:layout_width="36px"
+                    android:layout_height="45px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_notification_center_grey"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewFareDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewFareDetails"
+                    android:text="Fare Details"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+                <ImageView
+                    android:id="@+id/imageViewFareDetailsArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSupport"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewSupport"
+                    android:layout_width="34px"
+                    android:layout_height="35px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/support_icon_normal"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewSupport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewSupport"
+                    android:text="Support"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewSupportArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutAbout"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewAbout"
+                    android:layout_width="35px"
+                    android:layout_height="35px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/about_icon_normal"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewAbout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewAbout"
+                    android:text="About"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewAboutArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

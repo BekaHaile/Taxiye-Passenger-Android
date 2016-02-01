@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/background_yellow_alpha" android:state_pressed="true"/>
-    <item android:drawable="@drawable/background_yellow"/>
+    <item android:drawable="@drawable/nl_background_theme"/>
 
 </selector>

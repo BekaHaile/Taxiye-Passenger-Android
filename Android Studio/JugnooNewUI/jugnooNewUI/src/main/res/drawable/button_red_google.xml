@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/button_shadow"
+        />
+
+    <item
+        android:bottom="1dp"
+        android:left="-0.5dp"
+        android:right="-0.5dp"
+        >
+        <selector>
+            <item
+                android:drawable="@drawable/background_red_google_alpha_rounded"
+                android:state_pressed="true"/>
+            <item android:drawable="@drawable/background_red_google_rounded"/>
+        </selector>
+    </item>
+
+
+</layer-list>

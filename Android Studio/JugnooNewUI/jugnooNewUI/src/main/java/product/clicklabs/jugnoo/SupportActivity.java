@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +14,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -47,7 +47,7 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
 		relativeLayoutSendUsEmail = (RelativeLayout) findViewById(R.id.relativeLayoutSendUsEmail);
@@ -55,10 +55,10 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 		relativeLayoutFAQ = (RelativeLayout) findViewById(R.id.relativeLayoutFAQ);
 		relativeLayoutFeedback = (RelativeLayout) findViewById(R.id.relativeLayoutFeedback);
 		
-		textViewSendUsEmail = (TextView) findViewById(R.id.textViewSendUsEmail); textViewSendUsEmail.setTypeface(Fonts.latoRegular(this));
-		textViewCallUs = (TextView) findViewById(R.id.textViewCallUs); textViewCallUs.setTypeface(Fonts.latoRegular(this));
-		textViewFAQ = (TextView) findViewById(R.id.textViewFAQ); textViewFAQ.setTypeface(Fonts.latoRegular(this));
-		textViewFeedback = (TextView) findViewById(R.id.textViewFeedback); textViewFeedback.setTypeface(Fonts.latoRegular(this));
+		textViewSendUsEmail = (TextView) findViewById(R.id.textViewSendUsEmail); textViewSendUsEmail.setTypeface(Fonts.mavenLight(this));
+		textViewCallUs = (TextView) findViewById(R.id.textViewCallUs); textViewCallUs.setTypeface(Fonts.mavenLight(this));
+		textViewFAQ = (TextView) findViewById(R.id.textViewFAQ); textViewFAQ.setTypeface(Fonts.mavenLight(this));
+		textViewFeedback = (TextView) findViewById(R.id.textViewFeedback); textViewFeedback.setTypeface(Fonts.mavenLight(this));
 
 		
 		relativeLayoutSendUsEmail.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +84,23 @@ public class SupportActivity extends BaseActivity implements FlurryEventNames {
 			
 			@Override
 			public void onClick(View v) {
-		        Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber(SupportActivity.this));
-                FlurryEventLogger.event(CALL_SUPPORT);
+				DialogPopup.alertPopupTwoButtonsWithListeners(SupportActivity.this, "",
+						getResources().getString(R.string.support_call_us_dialog_message),
+						getResources().getString(R.string.call_us),
+						getResources().getString(R.string.cancel),
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								Utils.openCallIntent(SupportActivity.this, Config.getSupportNumber(SupportActivity.this));
+								FlurryEventLogger.event(CALL_SUPPORT);
+							}
+						},
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+							}
+						}, false, false);
 			}
 		});
 		

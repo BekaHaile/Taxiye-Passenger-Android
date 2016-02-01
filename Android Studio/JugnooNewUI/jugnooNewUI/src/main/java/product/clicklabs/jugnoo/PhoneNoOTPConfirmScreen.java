@@ -14,26 +14,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class PhoneNoOTPConfirmScreen extends BaseActivity{
@@ -41,7 +45,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
-	TextView textViewOtpNumber, textViewEnterOTP;
+	TextView textViewOtpNumber;
 	ImageView imageViewSep, imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
@@ -49,12 +53,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewCounter;
 	ImageView imageViewYellowLoadingBar;
 
-	Button buttonVerify;
+	Button buttonVerify, buttonOtpViaCall;
+	LinearLayout linearLayoutGiveAMissedCall;
+	TextView textViewOr;
 
-	LinearLayout linearLayoutOTPOptions;
-	RelativeLayout relativeLayoutOtpViaCall, relativeLayoutMissCall, relativeLayoutOr;
 
-	
 	LinearLayout relative;
 
 	ScrollView scrollView;
@@ -120,35 +123,26 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.latoRegular(this));
-		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
+		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		imageViewSep = (ImageView) findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber); imageViewChangePhoneNumber.setVisibility(View.GONE);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
-		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.latoRegular(this));
-		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
+		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
-		textViewEnterOTP = (TextView)findViewById(R.id.textViewEnterOTP); textViewEnterOTP.setTypeface(Fonts.latoRegular(this));
 
 		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
 
-		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.latoRegular(this));
-
-
-		linearLayoutOTPOptions = (LinearLayout) findViewById(R.id.linearLayoutOTPOptions);
-
-		relativeLayoutOtpViaCall = (RelativeLayout) findViewById(R.id.relativeLayoutOtpViaCall);
-		((TextView) findViewById(R.id.textViewOtpViaCall)).setTypeface(Fonts.latoLight(this));
-		((TextView) findViewById(R.id.textViewOtpViaCallMe)).setTypeface(Fonts.latoLight(this));
-
-		relativeLayoutMissCall = (RelativeLayout) findViewById(R.id.relativeLayoutMissCall);
-		((TextView) findViewById(R.id.textViewMissCall)).setTypeface(Fonts.latoLight(this));
-
-		relativeLayoutOr = (RelativeLayout) findViewById(R.id.relativeLayoutOr);
+		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
+		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
+		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
+		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
+		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenLight(this));
 
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -182,14 +176,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 		});
 
-		textViewEnterOTP.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.showSoftKeyboard(PhoneNoOTPConfirmScreen.this, editTextOTP);
-				editTextOTP.requestFocus();
-			}
-		});
-		
+
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
@@ -209,7 +196,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 		});
 
-		relativeLayoutOtpViaCall.setOnClickListener(new View.OnClickListener() {
+		buttonOtpViaCall.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -222,7 +209,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 		});
 
-		relativeLayoutMissCall.setOnClickListener(new View.OnClickListener() {
+
+		linearLayoutGiveAMissedCall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -267,32 +255,32 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 
 		linearLayoutWaiting.setVisibility(View.GONE);
-		linearLayoutOTPOptions.setVisibility(View.VISIBLE);
 
 		try{
-			if(1 == Data.otpViaCallEnabled){
-				relativeLayoutOtpViaCall.setVisibility(View.VISIBLE);
-			} else{
-				relativeLayoutOtpViaCall.setVisibility(View.GONE);
-			}
-
 			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
-				relativeLayoutMissCall.setVisibility(View.VISIBLE);
-			} else{
-				relativeLayoutMissCall.setVisibility(View.GONE);
+				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(relativeLayoutOtpViaCall.getVisibility() == View.GONE
-					|| relativeLayoutMissCall.getVisibility() == View.GONE){
-				relativeLayoutOr.setVisibility(View.GONE);
+			if(1 == Data.otpViaCallEnabled) {
+				buttonOtpViaCall.setVisibility(View.VISIBLE);
+			}
+			else{
+				buttonOtpViaCall.setVisibility(View.GONE);
+			}
+			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
+					|| buttonOtpViaCall.getVisibility() == View.VISIBLE){
+				textViewOr.setVisibility(View.VISIBLE);
 			} else{
-				relativeLayoutOr.setVisibility(View.VISIBLE);
+				textViewOr.setVisibility(View.GONE);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			relativeLayoutOtpViaCall.setVisibility(View.VISIBLE);
-			relativeLayoutOr.setVisibility(View.GONE);
-			relativeLayoutMissCall.setVisibility(View.GONE);
+			linearLayoutGiveAMissedCall.setVisibility(View.GONE);
+			buttonOtpViaCall.setVisibility(View.GONE);
+			textViewOr.setVisibility(View.GONE);
 		}
 
 
@@ -361,7 +349,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 		
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
@@ -369,51 +357,93 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("phone_no", phoneNo);
 			params.put("verification_token", otp);
 			
-			Log.i("params", ">"+params);
+			Log.i("params", ">" + params);
 		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/verify_my_contact_number", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+//			AsyncHttpClient client = Data.getClient();
+//			client.post(Config.getServerUrl() + "/verify_my_contact_number", params,
+//					new CustomAsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//
+//						@Override
+//						public void onFailure(Throwable arg3) {
+//							Log.e("request fail", arg3.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//						}
+//
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.i("Server response", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+//									int flag = jObj.getInt("flag");
+//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+//										String error = jObj.getString("error");
+//										DialogPopup.dialogBanner(activity, error);
+//									}
+//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+//										String message = jObj.getString("message");
+//										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+//											@Override
+//											public void onClick(View v) {
+//												performBackPressed();
+//											}
+//										});
+//									}
+//									else{
+//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//									}
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//							}
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//					});
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.dialogBanner(activity, error);
+			RestClient.getApiServices().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("Server response", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.dialogBanner(activity, error);
+							}
+							else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								String message = jObj.getString("message");
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										performBackPressed();
 									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												performBackPressed();
-											}
-										});
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+								});
+							}
+							else{
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("request fail", error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -430,7 +460,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 		
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
@@ -438,44 +468,82 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("phone_no", phoneNo);
 			Log.i("params", ">"+params);
 		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+//			AsyncHttpClient client = Data.getClient();
+//			client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
+//					new CustomAsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//
+//						@Override
+//						public void onFailure(Throwable arg3) {
+//							Log.e("request fail", arg3.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//						}
+//
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.i("Server response", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+//									int flag = jObj.getInt("flag");
+//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+//										String error = jObj.getString("error");
+//										DialogPopup.dialogBanner(activity, error);
+//									}
+//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+//										String message = jObj.getString("message");
+//										DialogPopup.dialogBanner(activity, message);
+//									}
+//									else{
+//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//									}
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//							}
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//					});
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.dialogBanner(activity, error);
-									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.dialogBanner(activity, message);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+			RestClient.getApiServices().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("Server response", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.dialogBanner(activity, error);
+							}
+							else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								String message = jObj.getString("message");
+								DialogPopup.dialogBanner(activity, message);
+							}
+							else{
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("request fail", error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

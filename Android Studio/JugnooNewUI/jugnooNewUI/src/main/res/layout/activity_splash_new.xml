@@ -1,47 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/yellow"
-    android:orientation="vertical"
-    android:splitMotionEvents="false" >
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bg_img"
+    android:splitMotionEvents="false">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:splitMotionEvents="false" >
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
 
 
+        <ImageView
+            android:id="@+id/viewInitJugnoo"
+            android:layout_width="match_parent"
+            android:layout_height="140px"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/viewInitSplashJugnoo"
+            android:layout_width="match_parent"
+            android:layout_height="200px"
+            android:visibility="visible" />
+
+        <!-- Jugnoo Logo layout-->
         <RelativeLayout
+            android:id="@+id/relativeLayoutJugnooLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="350px"
-            >
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80px"
+            android:visibility="visible">
+
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
                 android:layout_width="400px"
                 android:layout_height="317px"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/jugnoo_logo_big_white"
-                android:tag="mwar"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:tag="mhar"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/imageViewDebug1"
                 android:layout_width="180px"
                 android:layout_height="120px"
-                android:layout_marginTop="170px"
-
-            />
+                android:layout_marginTop="170px" />
 
             <ImageView
                 android:id="@+id/imageViewDebug2"
                 android:layout_width="180px"
                 android:layout_height="120px"
-                android:layout_marginTop="170px"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="170px"
 
                 />
 
@@ -49,123 +68,692 @@
                 android:id="@+id/imageViewDebug3"
                 android:layout_width="120px"
                 android:layout_height="120px"
-                android:layout_marginTop="60px"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="60px"
 
                 />
 
-            </RelativeLayout>
+        </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/viewInitLS"
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:visibility="gone" />
 
-
-
-        <LinearLayout
+        <!-- splash buttons -->
+        <RelativeLayout
+            android:id="@+id/relativeLayoutLS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="40px"
+            android:layout_marginTop="150px"
+            android:animateLayoutChanges="true"
+            android:visibility="visible">
 
-            >
-            <RelativeLayout
-                android:id="@+id/relativeLayoutLoginSignupButtons"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/linearLayoutLoginSignupButtons"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="40px"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="visible" >
-
-                <Button
-                    android:id="@+id/buttonLogin"
-                    android:layout_width="280px"
-                    android:layout_height="100px"
-                    android:layout_marginLeft="65px"
-                    android:background="@drawable/button_yellow_white_border_selector"
-                    android:text="LOG IN"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/button_text_size" />
+                android:visibility="visible">
 
                 <Button
                     android:id="@+id/buttonRegister"
-                    android:layout_width="280px"
-                    android:layout_height="100px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="65px"
+                    android:layout_width="@dimen/splash_button_width"
+                    android:layout_height="@dimen/splash_button_height"
                     android:background="@drawable/button_white_selector"
-                    android:text="SIGN UP"
-                    android:textColor="@drawable/text_color_yellow_alpha_selector"
-                    android:textSize="@dimen/button_text_size" />
-            </RelativeLayout>
+                    android:text="@string/sign_up"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_theme_alpha_selector"
+                    android:textSize="@dimen/text_size_34" />
+
+                <TextView
+                    android:id="@+id/textViewAlreadyHaveAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20px"
+                    android:layout_marginTop="20px"
+                    android:text="@string/nl_splash_already_have_account"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_26" />
+
+
+                <Button
+                    android:id="@+id/buttonLogin"
+                    android:layout_width="@dimen/splash_button_width"
+                    android:layout_height="@dimen/splash_button_height"
+                    android:background="@drawable/button_theme_alpha_white_stroke_selector"
+                    android:text="@string/nl_log_in"
+                    android:textAllCaps="true"
+                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textSize="@dimen/text_size_34" />
+
+                <TextView
+                    android:id="@+id/textViewTerms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60px"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_26" />
+
+            </LinearLayout>
 
 
             <LinearLayout
                 android:id="@+id/linearLayoutNoNet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:splitMotionEvents="false"
-                android:visibility="visible"
+                android:layout_centerHorizontal="true"
                 android:orientation="vertical"
-                >
-                
+                android:splitMotionEvents="false"
+                android:visibility="gone">
+
                 <ImageView
                     android:layout_width="90px"
                     android:layout_height="80px"
                     android:layout_gravity="center_horizontal"
-                    android:tag="mwar"
-                    android:src="@drawable/no_internet_icon"/>
+                    android:src="@drawable/no_internet_icon"
+                    android:tag="mhar" />
 
                 <TextView
                     android:id="@+id/textViewNoNet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20px"
                     android:gravity="center"
                     android:text="@string/no_internet_connection"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/button_text_size"
-                    android:layout_marginTop="20px"
-                    android:layout_gravity="center_horizontal"
-                    />
+                    android:textSize="@dimen/text_size_30" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutNoInternetButtons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="40px"
+                    android:layout_marginBottom="80px"
                     android:layout_marginTop="40px"
                     android:splitMotionEvents="false"
-                    android:visibility="visible" >
+                    android:visibility="visible">
 
                     <Button
                         android:id="@+id/buttonNoNetCall"
-                        android:layout_width="280px"
-                        android:layout_height="100px"
-                        android:layout_marginLeft="65px"
-                        android:singleLine="true"
+                        android:layout_width="@dimen/splash_button_width"
+                        android:layout_height="@dimen/splash_button_height"
+                        android:layout_marginLeft="40px"
+                        android:background="@drawable/button_theme_alpha_white_stroke_selector"
+
                         android:gravity="center"
-                        android:background="@drawable/button_yellow_white_border_selector"
+                        android:singleLine="true"
                         android:text="@string/call_to_book"
+
+
+                        android:textAllCaps="true"
                         android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="32px" />
+                        android:textSize="@dimen/text_size_34" />
 
                     <Button
                         android:id="@+id/buttonRefresh"
-                        android:layout_width="280px"
-                        android:layout_height="100px"
+                        android:layout_width="@dimen/splash_button_width"
+                        android:layout_height="@dimen/splash_button_height"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="65px"
-                        android:gravity="center"
+
+                        android:layout_marginLeft="40px"
+                        android:layout_marginRight="40px"
                         android:background="@drawable/button_white_selector"
+
+                        android:gravity="center"
+                        android:singleLine="true"
                         android:text="@string/refresh"
-                        android:textColor="@drawable/text_color_yellow_alpha_selector"
-                        android:textSize="32px" />
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color_theme_alpha_selector"
+                        android:textSize="@dimen/text_size_34" />
                 </RelativeLayout>
 
             </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <!-- login buttons -->
+        <LinearLayout
+            android:id="@+id/linearLayoutLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="182px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="40px"
+                android:background="@drawable/background_white_shadow"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imageViewEmail"
+                        android:layout_width="18px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_user_email"
+                        android:tag="mhar" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/editTextEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10px"
+                        android:layout_toLeftOf="@+id/textViewEmailRequired"
+                        android:layout_toRightOf="@+id/imageViewEmail"
+                        android:background="#0000"
+                        android:completionThreshold="1"
+                        android:gravity="center_vertical"
+                        android:hint="@string/email_or_phone"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewEmailRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:text="@string/nl_splash_required"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_margin="2px"
+                    android:src="@color/grey_light" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imageViewPassword"
+                        android:layout_width="18px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_password"
+                        android:tag="mhar" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/editTextPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10px"
+                        android:layout_toLeftOf="@+id/textViewPasswordRequired"
+                        android:layout_toRightOf="@+id/imageViewPassword"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <TextView
+                        android:id="@+id/textViewPasswordRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:text="@string/nl_splash_required"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
             </LinearLayout>
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/buttonEmailLogin"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="38px"
+                android:background="@drawable/button_theme_alpha_white_stroke_selector"
+                android:text="@string/nl_login"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textViewLoginOr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20px"
+                android:text="@string/or"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26" />
+
+            <Button
+                android:id="@+id/buttonFacebookLogin"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_blue"
+                android:text="@string/nl_login_facebook"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
+
+            <Button
+                android:id="@+id/buttonGoogleLogin"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="28px"
+                android:background="@drawable/button_red_google"
+                android:text="@string/nl_login_google"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
+
+
+            <TextView
+                android:id="@+id/textViewForgotPassword"
+                android:layout_width="400px"
+                android:layout_height="70px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0px"
+                android:gravity="center"
+                android:text="@string/forgot_password"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_26" />
+
+        </LinearLayout>
+
+
+        <!-- Signup layout-->
+        <LinearLayout
+            android:id="@+id/linearLayoutSignup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="464px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="120px"
+                android:background="@drawable/background_white_shadow"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="18px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_user_email"
+                        android:tag="mhar" />
+
+                    <EditText
+                        android:id="@+id/editTextSName"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="64px"
+                        android:background="#0000"
+                        android:layout_toLeftOf="@+id/textViewSNameRequired"
+                        android:digits="@string/digits_characters_numbers"
+                        android:gravity="center_vertical"
+                        android:hint="@string/nl_signup_name"
+                        android:maxLength="50"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34"
+                        android:inputType="textNoSuggestions"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewSNameRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:text="@string/nl_splash_required"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_margin="2px"
+                    android:src="@color/grey_light" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="27px"
+                        android:layout_height="23px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_email"
+                        android:tag="mhar" />
+
+                    <EditText
+                        android:id="@+id/editTextSEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="64px"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="@string/nl_signup_email"
+                        android:layout_toLeftOf="@+id/textViewSEmailRequired"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <TextView
+                        android:id="@+id/textViewSEmailRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:text="@string/nl_splash_required"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_margin="2px"
+                    android:src="@color/grey_light" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="27px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_phone"
+                        android:tag="mhar" />
+
+                    <TextView
+                        android:id="@+id/textViewSPhone91"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="84px"
+                        android:gravity="center_vertical"
+                        android:text="@string/nl_signup_plus91"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <EditText
+                        android:id="@+id/editTextSPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/textViewSPhone91"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="@string/phone_number"
+                        android:layout_toLeftOf="@+id/textViewSPhoneRequired"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <TextView
+                        android:id="@+id/textViewSPhoneRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:text="@string/nl_splash_required"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_margin="2px"
+                    android:src="@color/grey_light" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="18px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_password"
+                        android:tag="mhar" />
+
+                    <EditText
+                        android:id="@+id/editTextSPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="64px"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:layout_toLeftOf="@+id/textViewSPasswordRequired"
+                        android:maxLength="20"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <TextView
+                        android:id="@+id/textViewSPasswordRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:text="@string/nl_splash_required"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_margin="2px"
+                    android:src="@color/grey_light" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="27px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="36px"
+                        android:src="@drawable/ic_promocode"
+                        android:tag="mhar" />
+
+                    <EditText
+                        android:id="@+id/editTextSPromo"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="64px"
+                        android:background="#0000"
+                        android:capitalize="characters"
+                        android:digits="@string/digits_characters_numbers"
+                        android:gravity="center_vertical"
+                        android:hint="@string/nl_signup_promocode"
+                        android:inputType="textCapCharacters|textNoSuggestions"
+                        android:paddingLeft="20px"
+                        android:paddingRight="20px"
+                        android:singleLine="true"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/text_size_34" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonEmailSignup"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="58px"
+                android:background="@drawable/button_white_selector"
+                android:text="@string/sign_up"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_theme_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
+
+            <TextView
+                android:id="@+id/textViewSignupOr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20px"
+                android:text="@string/or"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26" />
+
+            <Button
+                android:id="@+id/buttonFacebookSignup"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_blue"
+                android:text="@string/nl_login_facebook"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
+
+            <Button
+                android:id="@+id/buttonGoogleSignup"
+                android:layout_width="@dimen/splash_button_width"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="28px"
+                android:background="@drawable/button_red_google"
+                android:text="@string/nl_login_google"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
+
+
+            <TextView
+                android:id="@+id/textViewSTerms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:text="@string/nl_splash_terms"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewScroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewBack"
+        android:layout_width="80.7px"
+        android:layout_height="96.9px"
+        android:layout_marginLeft="5px"
+        android:padding="30px"
+        android:src="@drawable/back_white_selector"
+        android:tag="mhar"
+        android:visibility="gone" />
+
+</RelativeLayout>
