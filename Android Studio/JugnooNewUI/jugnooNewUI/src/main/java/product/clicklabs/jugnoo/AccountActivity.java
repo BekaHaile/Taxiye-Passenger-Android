@@ -269,6 +269,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     imageViewEditName.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
 
+                    editTextEmail.setEnabled(false);
+                    editTextPhone.setEnabled(false);
+                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -312,6 +316,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextEmail.setSelection(editTextEmail.getText().length());
                     imageViewEditEmail.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
+
+                    editTextUserName.setEnabled(false);
+                    editTextPhone.setEnabled(false);
+                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -359,6 +368,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextPhone.setSelection(editTextPhone.getText().length());
                     imageViewEditPhoneNo.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
+
+                    editTextUserName.setEnabled(false);
+                    editTextEmail.setEnabled(false);
+                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
