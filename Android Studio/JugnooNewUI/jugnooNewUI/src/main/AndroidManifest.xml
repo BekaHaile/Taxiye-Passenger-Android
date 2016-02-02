@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo"
     android:versionCode="209"
-    android:versionName="2.0.9"
+    android:versionName="2.0.10"
      >
 
     

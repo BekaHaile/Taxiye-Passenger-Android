@@ -64,6 +64,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     @SuppressLint("ValidFragment")
     public ScreenSlidePageFragment(int numOfPages, Callback callback) {
         this.numOfPages = numOfPages;
+        this.callback = callback;
     }
 
     @Override
