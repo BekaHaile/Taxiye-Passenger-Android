@@ -16,6 +16,7 @@
 
 package product.clicklabs.jugnoo.sticky;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -43,9 +44,15 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     private RelativeLayout second;
 
 
+    public ScreenSlidePageFragment() {
+        super();
+    }
+
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
+
+
     public static ScreenSlidePageFragment create(int pageNumber, int numOfPages, Callback callback) {
         ScreenSlidePageFragment fragment = new ScreenSlidePageFragment(numOfPages, callback);
         Bundle args = new Bundle();
@@ -54,6 +61,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
+    @SuppressLint("ValidFragment")
     public ScreenSlidePageFragment(int numOfPages, Callback callback) {
         this.numOfPages = numOfPages;
     }

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,6 +68,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	}
 
+	@SuppressLint("ValidFragment")
 	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler, GoogleApiClient mGoogleApiClient){
 		this.searchListActionsHandler = searchListActionsHandler;
 		this.mGoogleApiClient = mGoogleApiClient;

@@ -16,6 +16,10 @@
 #   public *;
 #}
 
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontwarn android.support.**
+-verbose
 -dontwarn android.content.Context
 -dontwarn com.google.android.gms.**
 -dontwarn com.squareup.okhttp.**
@@ -24,71 +28,40 @@
 -dontwarn com.google.common.**
 -dontwarn rx.**
 -dontwarn retrofit.**
+-dontwarn okio.**
+-dontwarn com.flurry.**
 -keep class retrofit.** { *; }
--keep class android.support.v4.** { *; }
--keepclasseswithmembers class * {
-    @retrofit.http.* <methods>;
-}
--keepclassmembers class ** {
-    @com.squareup.otto.Subscribe public *;
-    @com.squareup.otto.Produce public *;
-}
-
-
--keep class com.facebook.** { *; }
-
-
-
--keepattributes Signature
--keepattributes *Annotation*,EnclosingMethod
-
--keep class android.app.** { *; }
--keep class android.content.** { *; }
--keep class **.R
--keep class **.R$* {
-    <fields>;
-}
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
-}
--keepattributes **
-
--optimizationpasses 25
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
+-dontoptimize
 -dontpreverify
--verbose
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
--printmapping out.map
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
--keep class com.bugsense.** { *; }
--keep class com.dd.** { *; }
+
+
+-keepattributes *Annotation*
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
+-keep public class com.google.vending.licensing.ILicensingService
 -keep public class com.android.vending.licensing.ILicensingService
-
+-keep public class * extends android.support.v4.app.Fragment
+-keep public class * extends android.app.Fragment
 
 -keepclasseswithmembernames class * {
     native <methods>;
 }
 
--keepclasseswithmembers class * {
+-keepclasseswithmembernames class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
--keepclasseswithmembers class * {
+-keepclasseswithmembernames class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
--keepclassmembers class * extends android.app.Activity {
-   public void *(android.view.View);
-}
+ -keepclassmembers public class * extends android.view.View {
+  void set*(***);
+  *** get*();
+ }
 
 -keepclassmembers enum * {
     public static **[] values();
@@ -97,4 +70,8 @@
 
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+  public static <fields>;
 }
