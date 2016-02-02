@@ -398,6 +398,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					int flag = jObj.getInt(KEY_FLAG);
 					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
+					int deepindex = jObj.optInt("deepindex", -1);
+					String message1 = jObj.getString(KEY_MESSAGE);
+
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
@@ -406,7 +409,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
-						String message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null);
 						} else{
@@ -436,7 +439,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
-						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
+						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
 							notificationManagerResume(this, title, message1, false);
 							HomeActivity.appInterruptHandler.startRideForCustomer(0);
@@ -452,7 +455,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
-						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
+						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
 						if (HomeActivity.appInterruptHandler != null) {
@@ -464,7 +467,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
-						String message1 = jObj.optString(KEY_MESSAGE, "Your ride has been cancelled due to an unexpected issue");
+						message1 = jObj.optString(KEY_MESSAGE, "Your ride has been cancelled due to an unexpected issue");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1);
 							notificationManagerResume(this, title, message1, false);
@@ -472,7 +475,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
-						String message1 = jObj.getString("message");
+						message1 = jObj.getString("message");
 						if (HomeActivity.activity == null) {
 							notificationManager(this, title, "" + message1, false);
 						} else {
@@ -492,8 +495,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							notificationManager(this, title, logMessage, false);
 						}
 					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
-						String message1 = jObj.getString("message");
-						int deepindex = jObj.optInt("deepindex", -1);
 
 						if (jObj.has("client_id")) {
 							Log.e("jObj=", "=" + jObj);
@@ -522,40 +523,10 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 						}
 
-						try {
-							String picture = jObj.optString("image", "");
-							if("".equalsIgnoreCase(picture)){
-								picture = jObj.optString("picture", "");
-							}
-							// store push in database for notificaion center screen...
-							String pushArrived = DateOperations.getCurrentTimeInUTC();
-							if(jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-								Database2.getInstance(this).insertNotification(pushArrived, message1, ""+deepindex,
-										jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
-								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-							}
-							else if(jObj.has("timeToDisplay")){
-								Database2.getInstance(this).insertNotification(pushArrived, message1, ""+deepindex,
-										jObj.getString("timeToDisplay"), "", picture);
-								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-							}
-							else if(jObj.has("timeTillDisplay")){
-								Database2.getInstance(this).insertNotification(pushArrived, message1, ""+deepindex,
-										"0", jObj.getString("timeTillDisplay"), picture);
-								Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-							}
-							if("".equalsIgnoreCase(picture)){
-								if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
 							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED);
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
-						String message1 = jObj.getString("message");
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
@@ -564,7 +535,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.EMERGENCY_CONTACT_VERIFIED.getOrdinal() == flag) {
-						String message1 = jObj.getString("message");
 						int emergencyContactId = jObj.getInt("id");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onEmergencyContactVerified(emergencyContactId);
@@ -591,7 +561,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					} else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
 					} else if (PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal() == flag) {
-						String message1 = jObj.getString("message");
 						if(HomeActivity.appInterruptHandler != null && Utils.isForeground(this)){
 							HomeActivity.appInterruptHandler.showDialog(message1);
 						}
@@ -599,13 +568,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, message1);
 						}
 					}  else if(PushFlags.DRIVER_ETA.getOrdinal() == flag){
-                        String message1 = jObj.getString(KEY_MESSAGE);
                         String eta = jObj.optString(KEY_ETA, "-1");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
                         if(!"-1".equalsIgnoreCase(eta) && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta);
                         }
                     }
+
+					savePush(jObj, message1, deepindex);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -618,6 +588,49 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			Log.e("exception", "," + e);
 		}
     }
+
+	private void savePush(JSONObject jObj, String message1, int deepindex){
+		try {
+			int flag = jObj.getInt(KEY_FLAG);
+			boolean tryToSave = false;
+			if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
+				tryToSave = true;
+			} else{
+				int saveNotification = jObj.optInt(KEY_SAVE_NOTIFICATION, 0);
+				if(1 == saveNotification){
+					tryToSave = true;
+				}
+			}
+
+			if(tryToSave) {
+				String picture = jObj.optString("image", "");
+				if ("".equalsIgnoreCase(picture)) {
+					picture = jObj.optString("picture", "");
+				}
+				// store push in database for notificaion center screen...
+				String pushArrived = DateOperations.getCurrentTimeInUTC();
+				if (jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
+					Database2.getInstance(this).insertNotification(pushArrived, message1, "" + deepindex,
+							jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
+					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
+				} else if (jObj.has("timeToDisplay")) {
+					Database2.getInstance(this).insertNotification(pushArrived, message1, "" + deepindex,
+							jObj.getString("timeToDisplay"), "", picture);
+					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
+				} else if (jObj.has("timeTillDisplay")) {
+					Database2.getInstance(this).insertNotification(pushArrived, message1, "" + deepindex,
+							"0", jObj.getString("timeTillDisplay"), picture);
+					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
+				}
+				if (EventsHolder.displayPushHandler != null) {
+					EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
     private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
 

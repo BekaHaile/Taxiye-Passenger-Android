@@ -37,6 +37,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
      */
     private int mPageNumber, numOfPages;
+    private Callback callback;
 
     private RelativeLayout first, mainLay, third;
     private RelativeLayout second;
@@ -45,15 +46,15 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static ScreenSlidePageFragment create(int pageNumber, int numOfPages) {
-        ScreenSlidePageFragment fragment = new ScreenSlidePageFragment(numOfPages);
+    public static ScreenSlidePageFragment create(int pageNumber, int numOfPages, Callback callback) {
+        ScreenSlidePageFragment fragment = new ScreenSlidePageFragment(numOfPages, callback);
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ScreenSlidePageFragment(int numOfPages) {
+    public ScreenSlidePageFragment(int numOfPages, Callback callback) {
         this.numOfPages = numOfPages;
     }
 
@@ -78,6 +79,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
         third.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callback.onThirdClick();
                 getActivity().finish();
                 Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 startActivity(intent);
@@ -89,7 +91,16 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
             public void onClick(View v) {
                 if(numOfPages == 1){
                     getActivity().finish();
+                } else{
+                    callback.onFirstClick();
                 }
+            }
+        });
+
+        second.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onSecondClick();
             }
         });
 
@@ -120,4 +131,11 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     public int getPageNumber() {
         return mPageNumber;
     }
+
+    public interface Callback{
+        void onFirstClick();
+        void onSecondClick();
+        void onThirdClick();
+    }
+
 }

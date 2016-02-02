@@ -56,7 +56,31 @@ public class TutorialFragment extends Fragment {
         skipTxt = (TextView) contentView.findViewById(R.id.skip_text);
         skipTxt.setVisibility(View.GONE);
         mPager =(ViewPager) contentView.findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager(), numOfPages);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager(), numOfPages,
+                new ScreenSlidePageFragment.Callback() {
+            @Override
+            public void onFirstClick() {
+                try {
+                    mPager.setCurrentItem(1, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSecondClick() {
+                try {
+                    mPager.setCurrentItem(2, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onThirdClick() {
+
+            }
+        });
         mPager.setAdapter(mPagerAdapter);
         dotOneView.setBackgroundResource(R.drawable.circle_yellow);
 
