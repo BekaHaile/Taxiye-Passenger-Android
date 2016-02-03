@@ -27,9 +27,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -44,6 +41,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
@@ -381,15 +379,17 @@ public class Utils {
     }
 
 
-    public static ArrayList<NameValuePair> convertQueryToNameValuePairArr(String query) throws UnsupportedEncodingException {
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            nameValuePairs.add(new BasicNameValuePair(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
-        }
-        return nameValuePairs;
-    }
+	public static HashMap<String, String> convertQueryToNameValuePairArr(String query)
+			throws UnsupportedEncodingException {
+		HashMap<String, String> nameValuePairs = new HashMap<>();
+		String[] pairs = query.substring(2, query.length()-2).split(", ");
+		for (String pair : pairs) {
+			int idx = pair.indexOf("=");
+			nameValuePairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+					URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+		}
+		return nameValuePairs;
+	}
 
 
     public static boolean isServiceRunning(Context context, String className) {

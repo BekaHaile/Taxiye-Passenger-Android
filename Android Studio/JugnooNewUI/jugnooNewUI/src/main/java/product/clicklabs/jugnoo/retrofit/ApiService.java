@@ -128,4 +128,101 @@ public interface ApiService {
     @POST("/get_driver_current_location")
     Response getDriverCurrentLocation(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST("/rate_the_driver")
+    void rateTheDriver(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/skip_rating_by_customer")
+    void skipRatingByCustomer(@FieldMap Map<String, String> params,
+                       Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/submit_feedback")
+    void submitFeedback(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_active_app_list")
+    Response getActiveAppList(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/update_user_installed_app")
+    Response updateUserInstalledApp(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/get_information")
+    void getInformation(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/cancel_the_request")
+    void cancelTheRequest(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/accept_app_rating_request")
+    void acceptAppRatingRequest(@FieldMap Map<String, String> params,
+                          Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_ride_summary")
+    void getRideSummary(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/add_drop_location")
+    void addDropLocation(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_ongoing_ride_path")
+    Response getOngoingRidePath(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/emergency/alert")
+    void emergencyAlert(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/refer_all_contacts")
+    void referAllContacts(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/find_sharing_autos_nearby")
+    void findSharingAutosNearby(@FieldMap Map<String, String> params,
+                          Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/end_sharing_ride")
+    void endSharingRide(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/send_otp_via_call")
+    void sendOtpViaCall(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_coupons_and_promotions")
+    void getCouponsAndPromotions(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/enter_code")
+    void enterCode(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/cancel_ride_by_customer")
+    void cancelRideByCustomer(@FieldMap Map<String, String> params,
+                   Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_recent_rides")
+    void getRecentRides(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
 }

@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**

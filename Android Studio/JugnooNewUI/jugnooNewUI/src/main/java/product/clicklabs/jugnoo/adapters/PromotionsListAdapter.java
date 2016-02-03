@@ -12,30 +12,33 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -254,55 +257,51 @@ public class PromotionsListAdapter extends BaseAdapter implements FlurryEventNam
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
+            HashMap<String, String> params = new HashMap<>();
 
             params.put("access_token", Data.userData.accessToken);
             params.put("latitude", ""+promoLatLng.latitude);
-            params.put("longitude", ""+promoLatLng.longitude);
+            params.put("longitude", "" + promoLatLng.longitude);
 
             Log.i("params", "=" + params);
 
-            AsyncHttpClient fetchPromotionClient = Data.getClient();
-            fetchPromotionClient.post(Config.getServerUrl() + "/show_available_promotions", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
+            RestClient.getApiServices().showAvailablePromotionsCall(params, new Callback<ShowPromotionsResponse>() {
+                @Override
+                public void success(ShowPromotionsResponse showPromotionsResponse, Response response) {
+                    String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                    Log.e("Server response show_available_promotions", "response = " + responseStr);
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        DialogPopup.dismissLoadingDialog();
-                    }
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
 
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.e("Server response show_available_promotions", "response = " + response);
+                        if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                            int flag = jObj.getInt("flag");
+                            if(ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == flag){
+                                promoCouponList.clear();
+                                promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
+                                JSONParser.parseCurrentFareStructure(jObj);
 
-                        try {
-                            jObj = new JSONObject(response);
-
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == flag){
-                                    promoCouponList.clear();
-                                    promoCouponList.addAll(JSONParser.parsePromoCoupons(jObj));
-                                    JSONParser.parseCurrentFareStructure(jObj);
-
-                                    callOnPromoListFetched();
-                                }
-                                else{
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
+                                callOnPromoListFetched();
                             }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            else{
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
                         }
-
-                        DialogPopup.dismissLoadingDialog();
+                    }  catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
 
-                });
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("request fail", error.toString());
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.dismissLoadingDialog();
+                }
+            });
         }
     }
 

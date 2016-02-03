@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 
 public class RegistrationIntentService extends IntentService {

@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -23,24 +22,29 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ActivityCloser;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames {
@@ -429,76 +433,66 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				
 				params.put("access_token", Data.userData.accessToken);
 				params.put("reasons", reasons);
                 params.put("addn_reason", addtionalReason);
 
-				AsyncHttpClient asyncHttpClient = Data.getClient();
-				asyncHttpClient.post(Config.getServerUrl() + "/cancel_ride_by_customer", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+				RestClient.getApiServices().cancelRideByCustomer(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+						Log.i("Server response", "response = " + responseStr);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								String serverMessage = JSONParser.getServerMessage(jObj);
+								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+									DialogPopup.alertPopup(activity, "", serverMessage);
+								} else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
 
+									if (jObj.has("jugnoo_balance")) {
+										Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
+									}
+									if (jObj.has("paytm_balance")) {
+										Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
+									}
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response", "response = " + response);
-                            try {
-                                jObj = new JSONObject(response);
+									if (HomeActivity.appInterruptHandler != null) {
+										HomeActivity.appInterruptHandler.onCancelCompleted();
+									}
 
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    int flag = jObj.getInt("flag");
-                                    String serverMessage = JSONParser.getServerMessage(jObj);
-                                    if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                        DialogPopup.alertPopup(activity, "", serverMessage);
-                                    } else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
+									DialogPopup.alertPopupWithListener(activity, "", serverMessage, new View.OnClickListener() {
 
-                                        if (jObj.has("jugnoo_balance")) {
-                                            Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
-                                        }
-										if (jObj.has("paytm_balance")) {
-											Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
+										@Override
+										public void onClick(View v) {
+											performBackPressed();
 										}
+									});
+									FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
+								} else {
+									DialogPopup.alertPopup(activity, "", serverMessage);
+								}
+							} else {
+							}
 
-                                        if (HomeActivity.appInterruptHandler != null) {
-                                            HomeActivity.appInterruptHandler.onCancelCompleted();
-                                        }
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
 
-                                        DialogPopup.alertPopupWithListener(activity, "", serverMessage, new View.OnClickListener() {
-
-                                            @Override
-                                            public void onClick(View v) {
-                                                performBackPressed();
-                                            }
-                                        });
-                                        FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
-                                    } else {
-                                        DialogPopup.alertPopup(activity, "", serverMessage);
-                                    }
-                                } else {
-                                }
-
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                            }
-                            DialogPopup.dismissLoadingDialog();
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            super.onFinish();
-                        }
-
-                    });
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e("request fail", error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
 			}
 			else {
                 DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
