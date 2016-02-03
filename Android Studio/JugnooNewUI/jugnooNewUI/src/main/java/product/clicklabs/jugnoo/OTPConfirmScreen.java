@@ -87,6 +87,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewScroll;
 	
 	boolean loginDataFetched = false;
+	private int linkedWallet = 0;
 	
 	public static boolean intentFromRegister = true;
 	public static EmailRegisterData emailRegisterData;
@@ -123,6 +124,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		loginDataFetched = false;
 
+		if(getIntent().hasExtra(LINKED_WALLET)){
+			linkedWallet = getIntent().getIntExtra(LINKED_WALLET, 0);
+		}
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
@@ -178,11 +182,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-						verifyOtpViaFB(OTPConfirmScreen.this, otpCode);
+						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
 					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
-						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode);
+						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
 					} else {
-						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode);
+						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
 				} else {
@@ -478,7 +482,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 
-
     public static boolean checkIfRegisterDataNull(Activity activity){
         try {
             if(emailRegisterData == null && facebookRegisterData == null && googleRegisterData == null){
@@ -510,13 +513,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		super.onPause();
 	}
 
-
-
-
 	/**
 	 * ASync for confirming otp from server
 	 */
-	public void verifyOtpViaEmail(final Activity activity, String otp) {
+	public void verifyOtpViaEmail(final Activity activity, String otp, final int linkedWallet) {
         if(!checkIfRegisterDataNull(activity)) {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
@@ -542,6 +542,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
+				params.put("reg_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -613,10 +614,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 
-
-
-
-	public void verifyOtpViaFB(final Activity activity, String otp) {
+	public void verifyOtpViaFB(final Activity activity, String otp, final int linkedWallet) {
         if(!checkIfRegisterDataNull(activity)) {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
@@ -647,6 +645,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
+				params.put("reg_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -717,8 +716,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 
-
-	public void verifyOtpViaGoogle(final Activity activity, String otp) {
+	public void verifyOtpViaGoogle(final Activity activity, String otp, final int linkedWallet) {
 		if(!checkIfRegisterDataNull(activity)) {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
@@ -746,6 +744,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("longitude", "" + Data.loginLongitude);
 				params.put("client_id", Config.getClientId());
 				params.put("otp", otp);
+				params.put("reg_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -876,8 +875,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	}
 
-
-
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
@@ -891,7 +888,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			ActivityCompat.finishAffinity(this);
 		}
 	}
-
 
 	@Override
 	public void onBackPressed() {
@@ -916,9 +912,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-
-
-
 
 	@Override
 	protected void onDestroy() {
@@ -945,9 +938,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 
-
-
-
 	CountDownTimer countDownTimer = new CountDownTimer(30000, 5) {
 
 		@Override
@@ -971,8 +961,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			linearLayoutWaiting.setVisibility(View.GONE);
 		}
 	};
-
-
 
 
 	private void retrieveOTPFromSMS(Intent intent){

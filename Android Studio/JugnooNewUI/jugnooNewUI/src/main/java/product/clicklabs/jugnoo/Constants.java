@@ -76,6 +76,7 @@ public interface Constants {
 	String KEY_TUTORIAL_NO_OF_PAGES = "NumOfPages";
 
 	String KEY_SAVE_NOTIFICATION = "save_notification";
+	String LINKED_WALLET = "linked_wallet";
 
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
 

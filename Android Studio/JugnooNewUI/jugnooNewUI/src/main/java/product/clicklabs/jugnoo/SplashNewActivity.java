@@ -104,13 +104,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
-	ImageView imageViewBack, imageViewJugnooLogo;
+	ImageView imageViewBack, imageViewJugnooLogo, imageViewAddPaytm;
 	ImageView imageViewDebug1, imageViewDebug2, imageViewDebug3;
 
 	RelativeLayout relativeLayoutLS;
-	LinearLayout linearLayoutLoginSignupButtons;
+	LinearLayout linearLayoutLoginSignupButtons, linearLayoutAddPatym;
 	Button buttonLogin, buttonRegister;
-	TextView textViewTerms;
+	TextView textViewTerms, textViewAddPaytm;
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
 	Button buttonNoNetCall, buttonRefresh;
@@ -132,7 +132,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0;
+	int clickCount = 0, linkedWallet = 0;
 
 	private State state = State.SPLASH_LS;
 
@@ -368,6 +368,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
 		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 		imageViewDebug3 = (ImageView) findViewById(R.id.imageViewDebug3);
+		textViewAddPaytm = (TextView) findViewById(R.id.textViewAddPaytm);
+		imageViewAddPaytm = (ImageView) findViewById(R.id.imageViewAddPaytm);
+		linearLayoutAddPatym = (LinearLayout) findViewById(R.id.linearLayoutAddPatym);
 
 		relativeLayoutLS = (RelativeLayout) findViewById(R.id.relativeLayoutLS);
 		linearLayoutLoginSignupButtons = (LinearLayout) findViewById(R.id.linearLayoutLoginSignupButtons);
@@ -457,6 +460,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				});
 		keyboardLayoutListener.setResizeTextView(false);
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+		linearLayoutAddPatym.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(linkedWallet == 1){
+					linkedWallet = 0;
+					imageViewAddPaytm.setImageResource(R.drawable.check_box_unchecked);
+				} else {
+					linkedWallet = 1;
+					imageViewAddPaytm.setImageResource(R.drawable.check_box_checked);
+				}
+			}
+		});
 
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -803,11 +819,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 												if (noFbEmail) {
 													emailId = "";
 												}
-												sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
+												sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password, linkedWallet);
 											} else if (RegisterationType.GOOGLE == registerationType) {
-												sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
+												sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password, linkedWallet);
 											} else {
-												sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password);
+												sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password, linkedWallet);
 											}
 											FlurryEventLogger.event(SIGNUP_FINAL);
 										} else {
@@ -2216,6 +2232,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 					intent.putExtra("show_timer", 0);
+					intent.putExtra(LINKED_WALLET, linkedWallet);
 					startActivity(intent);
 					finish();
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -2227,6 +2244,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			generateOTPRegisterData();
 			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 			intent.putExtra("show_timer", 1);
+			intent.putExtra(LINKED_WALLET, linkedWallet);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -2244,10 +2262,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 		});
 	}
-
-
-
-
 
 
 	public void performSignupBackPressed() {
@@ -2459,7 +2473,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	/**
 	 * ASync for register from server
 	 */
-	public void sendSignupValues(final Activity activity, final String name, final String referralCode, final String emailId, final String phoneNo, final String password) {
+	public void sendSignupValues(final Activity activity, final String name, final String referralCode, final String emailId, final String phoneNo,
+								 final String password, final int linkedWallet) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -2489,7 +2504,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
-
+			params.put("reg_type", String.valueOf(linkedWallet));
 
 
 			if(Utils.isDeviceRooted()){
@@ -2574,7 +2589,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	/**
 	 * ASync for login from server
 	 */
-	public void sendFacebookSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password) {
+	public void sendFacebookSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password
+			, final int linkedWallet) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -2606,6 +2622,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
+			params.put("reg_type", String.valueOf(linkedWallet));
 
 
 			if(Utils.isDeviceRooted()){
@@ -2683,7 +2700,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	/**
 	 * ASync for login from server
 	 */
-	public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password) {
+	public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password, final int linkedWallet) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -2711,6 +2728,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
+			params.put("reg_type", String.valueOf(linkedWallet));
 
 
 			if(Utils.isDeviceRooted()){
