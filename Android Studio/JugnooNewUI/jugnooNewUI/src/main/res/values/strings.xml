@@ -52,7 +52,7 @@
 	<string name="sign_up">Sign Up</string>
 	<string name="or">or</string>
 	<string name="sign_in_with_facebook">Sign in with Facebook</string>
-	<string name="signup_add_patym">Add Patym Wallet</string>
+	<string name="signup_add_patym">Use Mobile Wallet powered by</string>
 	
 	<string name="save_to_favorite">Save To Favorite</string>
 	<string name="enter_name_for_favorite">Enter Name for Favorite</string>

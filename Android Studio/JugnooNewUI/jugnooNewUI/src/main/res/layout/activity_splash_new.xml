@@ -40,8 +40,8 @@
 
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="400px"
-                android:layout_height="317px"
+                android:layout_width="380px"
+                android:layout_height="301px"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/jugnoo_logo_big_white"
                 android:focusable="true"
@@ -114,8 +114,8 @@
                     android:id="@+id/textViewAlreadyHaveAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginBottom="30px"
+                    android:layout_marginTop="30px"
                     android:text="@string/nl_splash_already_have_account"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_26" />

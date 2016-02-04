@@ -132,7 +132,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0, linkedWallet = 0;
+	int clickCount = 0, linkedWallet = 1;
 
 	private State state = State.SPLASH_LS;
 
@@ -368,7 +368,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
 		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 		imageViewDebug3 = (ImageView) findViewById(R.id.imageViewDebug3);
-		textViewAddPaytm = (TextView) findViewById(R.id.textViewAddPaytm);
+		textViewAddPaytm = (TextView) findViewById(R.id.textViewAddPaytm); textViewAddPaytm.setTypeface(Fonts.mavenLight(this));
 		imageViewAddPaytm = (ImageView) findViewById(R.id.imageViewAddPaytm);
 		linearLayoutAddPatym = (LinearLayout) findViewById(R.id.linearLayoutAddPatym);
 
@@ -466,10 +466,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			public void onClick(View v) {
 				if(linkedWallet == 1){
 					linkedWallet = 0;
-					imageViewAddPaytm.setImageResource(R.drawable.check_box_unchecked);
+					imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
 				} else {
 					linkedWallet = 1;
-					imageViewAddPaytm.setImageResource(R.drawable.check_box_checked);
+					imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
 				}
 			}
 		});
