@@ -4668,8 +4668,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     });
 					try {
 						if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.dropLatLng != null && lastLatLng != null && toShowPathToDrop()) {
-							String url = MapUtils.makeDirectionsURL(lastLatLng, Data.dropLatLng);
-							Log.i("url", "=" + url);
                             Response response = RestClient.getGoogleApiServices().getDirections(lastLatLng.latitude + "," + lastLatLng.longitude,
                                     Data.dropLatLng.latitude + "," + Data.dropLatLng.longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());

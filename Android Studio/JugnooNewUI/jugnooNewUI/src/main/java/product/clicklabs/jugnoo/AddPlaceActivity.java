@@ -14,17 +14,18 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -33,6 +34,10 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -271,8 +276,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         try {
             if(AppStatus.getInstance(AddPlaceActivity.this).isOnline(AddPlaceActivity.this)) {
 
-                RequestParams params = new RequestParams();
-
+                HashMap<String, String> params = new HashMap<>();
                 if(removeOther){
                     params.put("access_token", Data.userData.accessToken);
                     params.put("address", "");
@@ -293,60 +297,57 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
 				DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getServerUrl() + "/add_home_and_work_address", params,
-						new CustomAsyncHttpResponseHandler() {
-							private JSONObject jObj;
+                RestClient.getApiServices().addHomeAndWorkAddress(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                        Log.i("Server response", "response = " + responseStr);
+                        DialogPopup.dismissLoadingDialog();
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
+                            int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                            String message = JSONParser.getServerMessage(jObj);
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-								DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
-							}
+                                if(removeOther){
+                                    if(type.equalsIgnoreCase(TYPE_HOME)){
+                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
+                                    } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
+                                    }
+                                    addPlacesApi(address, googlePlaceId, type, strResult, false);
+                                }
+                                else{
+                                    if(type.equalsIgnoreCase(TYPE_HOME)){
+                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
+                                    } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
+                                    }
 
-							@Override
-							public void onSuccess(String response) {
-								Log.i("Server response", "response = " + response);
-								DialogPopup.dismissLoadingDialog();
-								try {
-									jObj = new JSONObject(response);
-									int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-									String message = JSONParser.getServerMessage(jObj);
-									if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                    Intent intent=new Intent();
+                                    intent.putExtra("PLACE", strResult);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                }
 
-                                        if(removeOther){
-                                            if(type.equalsIgnoreCase(TYPE_HOME)){
-                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
-                                            } else if(type.equalsIgnoreCase(TYPE_WORK)){
-                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
-                                            }
-                                            addPlacesApi(address, googlePlaceId, type, strResult, false);
-                                        }
-                                        else{
-                                            if(type.equalsIgnoreCase(TYPE_HOME)){
-                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
-                                            } else if(type.equalsIgnoreCase(TYPE_WORK)){
-                                                Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
-                                            }
+                            } else{
+                                DialogPopup.alertPopup(AddPlaceActivity.this, "", message);
+                            }
+                        }  catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.dismissLoadingDialog();
+                        }
+                    }
 
-                                            Intent intent=new Intent();
-                                            intent.putExtra("PLACE", strResult);
-                                            setResult(RESULT_OK, intent);
-                                            finish();
-                                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                        }
-
-									} else{
-										DialogPopup.alertPopup(AddPlaceActivity.this, "", message);
-									}
-								}  catch (Exception exception) {
-									exception.printStackTrace();
-									DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_ERROR_MSG);
-									DialogPopup.dismissLoadingDialog();
-								}
-							}
-						});
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("request fail", error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+                });
 			}
 			else {
 				DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.CHECK_INTERNET_MSG);

@@ -187,10 +187,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                     public void run() {
                         try {
                             if (sourceLatLng != null && destLatLng != null) {
-                                String url = MapUtils.makeDirectionsURL(sourceLatLng, destLatLng);
-                                Log.i("url", "=" + url);
-                                HttpRequester.setTimeouts(30000);
-                                String result = new HttpRequester().getJSONFromUrl(url);
+                                Response response = RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                                        destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false);
+                                String result = new String(((TypedByteArray)response.getBody()).getBytes());
                                 Log.i("result", "=" + result);
                                 if (result != null) {
                                     JSONObject jObj = new JSONObject(result);

@@ -6,14 +6,10 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.SyncHttpClient;
 
 import java.net.URLDecoder;
-import java.security.KeyStore;
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -253,54 +249,6 @@ public class Data {
 	}
 	
 	
-
-
-	
-	public static AsyncHttpClient mainClient;
-	public static SyncHttpClient mainSyncClient;
-	
-	public static final int SOCKET_TIMEOUT = 30000;
-	public static final int CONNECTION_TIMEOUT = 30000;
-	public static final int MAX_RETRIES = 0;
-	public static final int RETRY_TIMEOUT = 1000;
-	
-	public static AsyncHttpClient getClient() {
-		if (mainClient == null) {
-			mainClient = Config.getAsyncHttpClient();
-			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-				trustStore.load(null, null);
-				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-				mainClient.setSSLSocketFactory(sf);
-			} catch (Exception e) {
-				Log.e("exception in https hostname", "="+e.toString());
-			}
-			mainClient.setConnectTimeout(CONNECTION_TIMEOUT);
-			mainClient.setResponseTimeout(SOCKET_TIMEOUT);
-			mainClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_TIMEOUT);
-		}
-		return mainClient;
-	}
-
-	public static SyncHttpClient getSyncClient() {
-		if (mainSyncClient == null) {
-			mainSyncClient = new SyncHttpClient();
-			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-				trustStore.load(null, null);
-				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-				mainSyncClient.setSSLSocketFactory(sf);
-			} catch (Exception e) {
-				Log.e("exception in https hostname", "="+e.toString());
-			}
-			mainSyncClient.setConnectTimeout(CONNECTION_TIMEOUT);
-			mainSyncClient.setResponseTimeout(SOCKET_TIMEOUT);
-			mainSyncClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_TIMEOUT);
-		}
-		return mainSyncClient;
-	}
 
 
 

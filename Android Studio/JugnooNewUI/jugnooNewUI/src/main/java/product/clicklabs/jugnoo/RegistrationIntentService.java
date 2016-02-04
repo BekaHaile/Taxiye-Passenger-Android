@@ -13,14 +13,13 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Log;
+import retrofit.client.Response;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -98,17 +97,12 @@ public class RegistrationIntentService extends IntentService {
 
 			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(context);
 			if(!"".equalsIgnoreCase(pair.first)) {
-				ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
-				nameValuePairs.add(new BasicNameValuePair("access_token", pair.first));
-				nameValuePairs.add(new BasicNameValuePair("client_id", Config.getClientId()));
-				nameValuePairs.add(new BasicNameValuePair("device_token", token));
-
-
-				HttpRequester simpleJSONParser = new HttpRequester();
-				String result = simpleJSONParser.getJSONFromUrlParams(serverUrl + "/update_device_token", nameValuePairs);
-				Log.e("update_device_token result", ""+result);
-
-				simpleJSONParser = null;
+				HashMap<String, String> nameValuePairs = new HashMap<>();
+				nameValuePairs.put("access_token", pair.first);
+				nameValuePairs.put("client_id", Config.getClientId());
+				nameValuePairs.put("device_token", token);
+				Response response = RestClient.getApiServices().updateDeviceToken(nameValuePairs);
+				Log.e("update_device_token result", ""+response.getBody());
 				nameValuePairs = null;
 			}
 		} catch (Exception e) {

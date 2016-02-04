@@ -35,17 +35,19 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.AccessTokenGenerator;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -57,6 +59,10 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -519,48 +525,44 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
     private void getNearestDriver(){
         if (AppStatus.getInstance(GenieService.this).isOnline(GenieService.this)) {
-            RequestParams params = new RequestParams();
+            HashMap<String, String> params = new HashMap<>();
             params.put("access_token", accessToken);
-            params.put("lat", latLng.latitude);
-            params.put("long", latLng.longitude);
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/fare_estimate_for_jeanie", params,
-                    new AsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+            params.put("lat", String.valueOf(latLng.latitude));
+            params.put("long", String.valueOf(latLng.longitude));
 
-                        @Override
-                        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                            Log.e("on failure", "on failure");
-                            chatheadView.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                            String response = new String(bytes);
-                            Log.i("Response find_a_driver", "response = " + response);
-                            try {
-                                JSONObject jObj = new JSONObject(response);
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
-                                eta = jObj.optString("eta");
-                                baseFair = jObj.optString("base_fare");
-                                fairPerKM = jObj.optString("fare_per_km");
-                                fairPerMin = jObj.optString("fare_per_min");
-                                if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) && (Integer.parseInt(eta) != 0)){
-                                    if(relativeLayoutJeaniePopup != null && relativeLayoutJeaniePopup.isShown()) {
-                                        windowManager.removeView(relativeLayoutJeaniePopup);
-                                    }
-                                    chatheadView.setVisibility(View.VISIBLE);
-									FlurryEventLogger.event(JUGNOO_STICKY_OPENED);
-                                }
-
-                            }  catch (Exception exception) {
-                                exception.printStackTrace();
-                                chatheadView.setVisibility(View.GONE);
+            RestClient.getApiServices().fareEstimateForJeanie(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                    Log.i("Response find_a_driver", "response = " + response);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        int flag = jObj.getInt("flag");
+                        String message = JSONParser.getServerMessage(jObj);
+                        eta = jObj.optString("eta");
+                        baseFair = jObj.optString("base_fare");
+                        fairPerKM = jObj.optString("fare_per_km");
+                        fairPerMin = jObj.optString("fare_per_min");
+                        if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) && (Integer.parseInt(eta) != 0)){
+                            if(relativeLayoutJeaniePopup != null && relativeLayoutJeaniePopup.isShown()) {
+                                windowManager.removeView(relativeLayoutJeaniePopup);
                             }
+                            chatheadView.setVisibility(View.VISIBLE);
+                            FlurryEventLogger.event(JUGNOO_STICKY_OPENED);
                         }
 
-                    });
+                    }  catch (Exception exception) {
+                        exception.printStackTrace();
+                        chatheadView.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("on failure", "on failure");
+                    chatheadView.setVisibility(View.GONE);
+                }
+            });
         } else {
 
         }

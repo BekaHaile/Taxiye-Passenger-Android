@@ -17,10 +17,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
@@ -30,6 +30,8 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -37,6 +39,10 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class AddPaytmFragment extends Fragment {
@@ -282,33 +288,29 @@ public class AddPaytmFragment extends Fragment {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "1");
 
-				AsyncHttpClient client = Data.getClient();
-
-				client.post(Config.getTXN_URL() + "/paytm/request_otp", params, new CustomAsyncHttpResponseHandler() {
-
+				RestClient.getApiServices().paytmRequestOtp(params, new Callback<SettleUserDebt>() {
 					@Override
-					public void onSuccess(String response) {
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i("request succesfull", "response = " + response);
 						DialogPopup.dismissLoadingDialog();
 						try {
-							JSONObject jObj = new JSONObject(response);
+							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							int flag = jObj.getInt("flag");
-							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								setUIAfterRequest();
-								if(retry){
+								if (retry) {
 									DialogPopup.dialogBanner(paymentActivity, "OTP sent successfully");
 								}
-							}
-							else if(ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag){
+							} else if (ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag) {
 								DialogPopup.alertPopup(paymentActivity, "", message);
-							}
-							else{
+							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							}
 						} catch (Exception e) {
@@ -318,8 +320,8 @@ public class AddPaytmFragment extends Fragment {
 					}
 
 					@Override
-					public void onFailure(Throwable arg0) {
-						Log.e("request fail", arg0.toString());
+					public void failure(RetrofitError error) {
+						Log.e("request fail", error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
@@ -352,23 +354,20 @@ public class AddPaytmFragment extends Fragment {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "1");
-
 				params.put("otp", "" + otp);
 
-				AsyncHttpClient client = Data.getClient();
-
-				client.post(Config.getTXN_URL() + "/paytm/login_with_otp", params, new CustomAsyncHttpResponseHandler() {
-
+				RestClient.getApiServices().paytmLoginWithOtp(params, new Callback<SettleUserDebt>() {
 					@Override
-					public void onSuccess(String response) {
-						Log.i("request succesfull", "response = " + response);
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+						Log.i("request succesfull", "response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
-							JSONObject jObj = new JSONObject(response);
+							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							int flag = jObj.getInt("flag");
 							if(ApiResponseFlags.PAYTM_OTP_ERROR.getOrdinal() == flag){
@@ -396,8 +395,8 @@ public class AddPaytmFragment extends Fragment {
 					}
 
 					@Override
-					public void onFailure(Throwable arg0) {
-						Log.e("request fail", arg0.toString());
+					public void failure(RetrofitError error) {
+						Log.e("request fail", error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}

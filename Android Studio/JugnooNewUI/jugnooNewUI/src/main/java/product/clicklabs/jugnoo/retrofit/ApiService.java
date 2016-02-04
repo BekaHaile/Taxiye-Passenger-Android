@@ -139,6 +139,10 @@ public interface ApiService {
                        Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/skip_rating_by_customer")
+    Response skipRatingByCustomerSync(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
     @POST("/submit_feedback")
     void submitFeedback(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);
@@ -186,9 +190,17 @@ public interface ApiService {
                          Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/emergency/alert")
+    Response emergencyAlertSync(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
     @POST("/refer_all_contacts")
     void referAllContacts(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/refer_all_contacts")
+    Response referAllContactsSync(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST("/find_sharing_autos_nearby")
@@ -224,5 +236,94 @@ public interface ApiService {
     @POST("/get_recent_rides")
     void getRecentRides(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/fare_estimate_for_jeanie")
+    void fareEstimateForJeanie(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/paytm/request_otp")
+    void paytmRequestOtp(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/paytm/login_with_otp")
+    void paytmLoginWithOtp(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/paytm/add_money")
+    void paytmAddMoney(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/paytm/delete_paytm")
+    void paytmDeletePaytm(@FieldMap Map<String, String> params,
+                       Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_transaction_history")
+    void getTransactionHistory(@FieldMap Map<String, String> params,
+                          Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/update_user_profile")
+    void updateUserProfile(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/reload_my_profile")
+    void reloadMyProfile(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/send_verify_email_link")
+    void sendVerifyEmailLink(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/logout_user")
+    void logoutUser(@FieldMap Map<String, String> params,
+                             Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/add_home_and_work_address")
+    void addHomeAndWorkAddress(@FieldMap Map<String, String> params,
+                    Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/update_device_token")
+    Response updateDeviceToken(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/emergency/contacts/list")
+    void emergencyContactsList(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/emergency/contacts/add")
+    void emergencyContactsAdd(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/emergency/contacts/edit")
+    void emergencyContactsEdit(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/emergency/contacts/delete")
+    void emergencyContactsDelete(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/emergency/contacts/request_verification")
+    void emergencyContactsRequestVerification(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_current_user_status")
+    Response getCurrentUserStatus(@FieldMap Map<String, String> params);
+
 
 }

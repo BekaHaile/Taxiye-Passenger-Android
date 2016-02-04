@@ -19,17 +19,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.RefreshEmergencyContacts;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -39,6 +38,10 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class EmergencyContactsActivity extends BaseActivity implements RefreshEmergencyContacts, FlurryEventNames {
@@ -377,6 +380,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
                         else {
                             if (0 == editEC1) {
                                 addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
+                                FlurryEventLogger.event(EMERGENCY_CONTACT_ADDED);
                             } else {
                                 if (emergencyContact1 != null) {
                                     if (name.equalsIgnoreCase(emergencyContact1.name)
@@ -427,6 +431,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
                         else{
                             if(0 == editEC2) {
                                 addEmergencyContactAPI(EmergencyContactsActivity.this, name, reducedPhone, email);
+                                FlurryEventLogger.event(EMERGENCY_CONTACT_ADDED);
                             }
                             else{
                                 if(emergencyContact2 != null) {
@@ -777,51 +782,46 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
-
+            HashMap<String, String> params = new HashMap<>();
             params.put("access_token", Data.userData.accessToken);
+            Log.i("params", "=" + params.toString());
 
-            Log.i("params", "="+params.toString());
-
-            AsyncHttpClient client = Data.getClient();
-            client.get(Config.getServerUrl() + "/emergency/contacts/list", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        DialogPopup.dismissLoadingDialog();
-                        try {
-                            jObj = new JSONObject(response);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
-                                    if (Data.emergencyContactsList == null) {
-                                        Data.emergencyContactsList = new ArrayList<>();
-                                    }
-                                    Data.emergencyContactsList.clear();
-                                    Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
-                                    setEmergencyContacts();
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
+            RestClient.getApiServices().emergencyContactsList(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i("Server response", "response = " + responseStr);
+                    DialogPopup.dismissLoadingDialog();
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        String message = JSONParser.getServerMessage(jObj);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
+                                if (Data.emergencyContactsList == null) {
+                                    Data.emergencyContactsList = new ArrayList<>();
                                 }
+                                Data.emergencyContactsList.clear();
+                                Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
+                                setEmergencyContacts();
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message);
                             }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                        DialogPopup.dismissLoadingDialog();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
-                });
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("request fail", error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
         }
         else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -837,52 +837,15 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
-
+            HashMap<String, String> params = new HashMap<>();
             params.put("access_token", Data.userData.accessToken);
             params.put("name", name);
             params.put("phone_no", phoneNo);
             params.put("email", email);
 
-            Log.e("params", "="+params.toString());
+            Log.e("params", "=" + params.toString());
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/emergency/contacts/add", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.e("Server response", "response = " + response);
-                        DialogPopup.dismissLoadingDialog();
-                        try {
-                            jObj = new JSONObject(response);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                    DialogPopup.dialogBanner(activity, message);
-                                } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    getAllEmergencyContactsAPI(activity);
-                                    FlurryEventLogger.event(EMERGENCY_CONTACT_ADDED);
-                                } else {
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
+            RestClient.getApiServices().emergencyContactsAdd(params, callback);
         }
         else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -895,64 +858,22 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
-
+            HashMap<String, String> params = new HashMap<>();
             params.put("access_token", Data.userData.accessToken);
             params.put("id", ""+previousEmergencyContact.id);
-
             if(!previousEmergencyContact.name.equalsIgnoreCase(name)){
                 params.put("name", name);
             }
-
             if(!previousEmergencyContact.phoneNo.equalsIgnoreCase(phoneNo)){
                 params.put("phone_no", phoneNo);
             }
-
             if(!previousEmergencyContact.email.equalsIgnoreCase(email)){
                 params.put("email", email);
             }
 
-            Log.i("params", "="+params.toString());
+            Log.i("params", "=" + params.toString());
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/emergency/contacts/edit", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        DialogPopup.dismissLoadingDialog();
-                        try {
-                            jObj = new JSONObject(response);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                    DialogPopup.dialogBanner(activity, message);
-                                    getAllEmergencyContactsAPI(activity);
-                                }
-                                else{
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                            }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
+            RestClient.getApiServices().emergencyContactsEdit(params, callback);
         }
         else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -965,52 +886,14 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
+            HashMap<String, String> params = new HashMap<>();
 
             params.put("access_token", Data.userData.accessToken);
-            params.put("id", ""+previousEmergencyContact.id);
+            params.put("id", "" + previousEmergencyContact.id);
 
-            Log.i("params", "="+params.toString());
+            Log.i("params", "=" + params.toString());
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/emergency/contacts/delete", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        DialogPopup.dismissLoadingDialog();
-                        try {
-                            jObj = new JSONObject(response);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                    DialogPopup.dialogBanner(activity, message);
-                                    getAllEmergencyContactsAPI(activity);
-                                }
-                                else{
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                            }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
+            RestClient.getApiServices().emergencyContactsDelete(params, callback);
         }
         else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -1024,59 +907,56 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
-
+            HashMap<String, String> params = new HashMap<>();
             params.put("access_token", Data.userData.accessToken);
             params.put("phone_no", phoneNo);
             params.put("email", email);
 
-            Log.i("params", "="+params.toString());
+            Log.i("params", "=" + params.toString());
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/emergency/contacts/request_verification", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        DialogPopup.dismissLoadingDialog();
-                        try {
-                            jObj = new JSONObject(response);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                    DialogPopup.dialogBanner(activity, message);
-                                    getAllEmergencyContactsAPI(activity);
-                                }
-                                else{
-                                    DialogPopup.dialogBanner(activity, message);
-                                }
-                            }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                });
+            RestClient.getApiServices().emergencyContactsRequestVerification(params, callback);
         }
         else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
 
     }
+
+
+    Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
+        @Override
+        public void success(SettleUserDebt settleUserDebt, Response response) {
+            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+            Log.i("Server response", "response = " + responseStr);
+            DialogPopup.dismissLoadingDialog();
+            try {
+                JSONObject jObj = new JSONObject(responseStr);
+                String message = JSONParser.getServerMessage(jObj);
+                if (!SplashNewActivity.checkIfTrivialAPIErrors(EmergencyContactsActivity.this, jObj)) {
+                    int flag = jObj.getInt("flag");
+                    if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                        DialogPopup.dialogBanner(EmergencyContactsActivity.this, message);
+                    } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                        DialogPopup.dialogBanner(EmergencyContactsActivity.this, message);
+                        getAllEmergencyContactsAPI(EmergencyContactsActivity.this);
+                    } else {
+                        DialogPopup.dialogBanner(EmergencyContactsActivity.this, message);
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                DialogPopup.alertPopup(EmergencyContactsActivity.this, "", Data.SERVER_ERROR_MSG);
+            }
+            DialogPopup.dismissLoadingDialog();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("request fail", error.toString());
+            DialogPopup.dismissLoadingDialog();
+            DialogPopup.alertPopup(EmergencyContactsActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+        }
+    };
 
 
 
