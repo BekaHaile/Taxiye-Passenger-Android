@@ -3502,7 +3502,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(FindADriverResponse findADriverResponse, Response response) {
                     try {
-                        Log.e("find_a_driver resp", "resp- " + new String(((TypedByteArray) response.getBody()).getBytes()));
+                        Log.e(TAG, "findADriverCall response=" + new String(((TypedByteArray) response.getBody()).getBytes()));
                         Data.driverInfos.clear();
                         for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
                             double bearing = 0;
@@ -3554,6 +3554,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void failure(RetrofitError error) {
                     //textViewInitialInstructions.setVisibility(View.VISIBLE);
+                    Log.e(TAG, "findADriverCall error="+error.toString());
                     textViewInitialInstructions.setText("Couldn't find drivers nearby.");
                     textViewCentrePinETA.setText("-");
                     noDriverNearbyToast("Couldn't find drivers nearby.");
@@ -3579,6 +3580,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     try {
                         String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i(TAG, "showAvailablePromotionsCall response="+jsonString);
                         JSONObject jObj = new JSONObject(jsonString);
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             if (ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == showPromotionsResponse.getFlag()) {
@@ -3637,7 +3639,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("show promotion api", "errorrrr" + error.toString());
+                    Log.e(TAG, "showAvailablePromotionsCall error=" + error.toString());
                 }
             });
 
@@ -3968,7 +3970,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.e("Server response", "response = " + responseStr);
+                    Log.i(TAG, "cancelTheRequest response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
 
                     try {
@@ -3998,7 +4000,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "cancelTheRequest error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     callAndHandleStateRestoreAPI(true);
                 }
@@ -4139,7 +4141,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Server response accept_app_rating_request", "response = " + responseStr);
+                        Log.i(TAG, "acceptAppRatingRequest response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
@@ -4152,7 +4154,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("request fail", error.toString());
+                        Log.e(TAG, "acceptAppRatingRequest error="+error.toString());
                     }
                 });
             }
@@ -4173,7 +4175,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Server response get_ride_summary", "response = " + responseStr);
+                        Log.i(TAG, "getRideSummary response = " + responseStr);
                         DialogPopup.dismissLoadingDialog();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
@@ -4241,6 +4243,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void failure(RetrofitError error) {
+                        Log.e(TAG, "getRideSummary error="+error);
                         DialogPopup.dismissLoadingDialog();
                         endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
                     }
@@ -4287,7 +4290,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.e("Server response", "response = " + responseStr);
+                    Log.i(TAG, "addDropLocation response = " + responseStr);
 
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
@@ -4327,7 +4330,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "addDropLocation error="+error.toString());
 //                        DialogPopup.dismissLoadingDialog();
                     progressWheel.setVisibility(View.GONE);
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
@@ -4373,7 +4376,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                            HttpRequester simpleJSONParser = new HttpRequester();
 //                            String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_driver_current_location", nameValuePairs);
 
-                            Log.e("result of get_driver_current_location", "=" + result);
+                            Log.e(TAG, "getDriverCurrentLocation result=" + result);
                             try {
                                 JSONObject jObj = new JSONObject(result);
 
@@ -4526,7 +4529,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Response response = RestClient.getApiServices().getOngoingRidePath(nameValuePairs);
                         String result = new String(((TypedByteArray)response.getBody()).getBytes());
 
-                        Log.e("result of get_ongoing_ride_path", "=" + result);
+                        Log.e(TAG, "getOngoingRidePath result=" + result);
 
                         try {
                             final JSONObject jObj = new JSONObject(result);
@@ -4671,7 +4674,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Response response = RestClient.getGoogleApiServices().getDirections(lastLatLng.latitude + "," + lastLatLng.longitude,
                                     Data.dropLatLng.latitude + "," + Data.dropLatLng.longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
-							Log.i("result", "=" + result);
 							if (result != null) {
 								final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 								if (list.size() > 0) {
@@ -5498,7 +5500,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
 
-                                Log.e("response of request_ride", "=" + response);
+                                Log.e(TAG, "requestRide result=" + response);
 
 //                                {
 //                                    "flag": 105,
@@ -6046,7 +6048,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Server response /emergency/alert", "response = " + responseStr);
+                    Log.i(TAG, "emergencyAlert response = " + responseStr);
                     try {
                     } catch (Exception exception) {
                         exception.printStackTrace();
@@ -6055,7 +6057,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "emergencyAlert error"+error.toString());
                     Database2.getInstance(activity).insertPendingAPICall(activity,
                             PendingCall.EMERGENCY_ALERT.getPath(), params);
                 }
@@ -6327,7 +6329,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
                             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                            Log.i("request succesfull", "response = " + responseStr);
+                            Log.i(TAG, "paytmCheckBalance response = " + responseStr);
                             try {
                                 JSONObject jObj = new JSONObject(responseStr);
                                 JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
@@ -6344,7 +6346,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void failure(RetrofitError error) {
                             try {
-                                Log.e("request fail", error.toString());
+                                Log.e(TAG, "paytmCheckBalance error="+error.toString());
                                 JSONParser.setPaytmErrorCase();
                                 setUserData();
                                 progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
@@ -6440,7 +6442,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Response of referral", "response = " + responseStr);
+                    Log.i(TAG, "referAllContacts response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
@@ -6461,7 +6463,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void failure(RetrofitError error) {
                     DialogPopup.dismissLoadingDialog();
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "referAllContacts error=" + error.toString());
                     //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                 }
             });
@@ -6485,12 +6487,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             RestClient.getApiServices().skipRatingByCustomer(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
-                    Log.i("Server response", "response = " + response);
+                    Log.i(TAG, "skipRatingByCustomer response = " + response);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "skipRatingByCustomer error="+error.toString());
                 }
             });
 
@@ -6527,8 +6529,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 RestClient.getApiServices().rateTheDriver(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
-                        String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                        Log.i("Server response", "response = " + responseStr);
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i(TAG, "rateTheDriver response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             int flag = jObj.getInt("flag");
@@ -6536,7 +6538,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     afterRideFeedbackSubmitted(givenRating, false);
-                                    try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+                                    try {
+                                        Data.driverInfos.clear();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -6550,7 +6556,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("request fail", error.toString());
+                        Log.e(TAG, "rateTheDriver error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                     }

@@ -35,6 +35,7 @@ import retrofit.mime.TypedByteArray;
 
 public class HelpParticularActivity extends BaseActivity implements Constants {
 
+    private final String TAG = HelpParticularActivity.class.getSimpleName();
 
     LinearLayout relative;
 
@@ -253,7 +254,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                         public void success(SettleUserDebt settleUserDebt, Response response) {
                             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
                             apiCalling = false;
-                            Log.i("Server response faq ", "response = " + responseStr);
+                            Log.i(TAG, "getInformation response = " + responseStr);
                             try {
                                 JSONObject jObj = new JSONObject(responseStr);
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
@@ -271,7 +272,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                         @Override
                         public void failure(RetrofitError error) {
                             try {
-                                Log.e("request fail", error.toString());
+                                Log.e(TAG, "getInformation error="+error.toString());
                                 apiCalling = false;
                                 imageViewJugnooAnimation.setVisibility(View.GONE);
                                 jugnooAnimation.stop();

@@ -54,7 +54,8 @@ import retrofit.mime.TypedByteArray;
 
 
 public class PromotionsActivity extends BaseActivity implements FlurryEventNames {
-	
+
+    private final String TAG = PromotionsActivity.class.getSimpleName();
 	
 	RelativeLayout relative;
 	
@@ -482,7 +483,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
                             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                            Log.e("Server response", "response = " + responseStr);
+                            Log.i(TAG, "getCouponsAndPromotions response = " + responseStr);
                             try {
                                 JSONObject jObj = new JSONObject(responseStr);
 
@@ -523,7 +524,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
                         @Override
                         public void failure(RetrofitError error) {
-                            Log.e("request fail", error.toString());
+                            Log.e(TAG, "getCouponsAndPromotions error="+error.toString());
                             DialogPopup.dismissLoadingDialog();
                             updateListData("Some error occurred. Tap to retry", true);
                         }
@@ -565,8 +566,8 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                 RestClient.getApiServices().enterCode(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
-                        String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                        Log.i("Server response", "response = " + responseStr);
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i(TAG, "enterCode response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             int flag = jObj.getInt("flag");
@@ -595,7 +596,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("request fail", error.toString());
+                        Log.e(TAG, "enterCode error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                     }

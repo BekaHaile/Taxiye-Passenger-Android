@@ -20,6 +20,7 @@ public class RestClient {
 
     static {
         setupRestClient();
+        setupGoogleAPIRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(){
@@ -65,6 +66,24 @@ public class RestClient {
         return API_SERVICES;
     }
 
+
+    public static StringAPIService getStringRestClient() {
+        RestAdapter.Log fooLog = new RestAdapter.Log() {
+            @Override
+            public void log(String message) {
+            }
+        };
+
+        RestAdapter.Builder builder = new RestAdapter.Builder()
+                .setEndpoint(Config.getServerUrl())
+                .setClient(new OkClient(getOkHttpClient()))
+                .setConverter(new StringConverter())
+                .setLog(fooLog)
+                .setLogLevel(RestAdapter.LogLevel.FULL);
+
+        RestAdapter restAdapter = builder.build();
+        return restAdapter.create(StringAPIService.class);
+    }
 
 
 

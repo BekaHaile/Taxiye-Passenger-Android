@@ -46,6 +46,8 @@ import retrofit.mime.TypedByteArray;
 
 public class RideSummaryActivity extends BaseFragmentActivity implements FlurryEventNames, Constants {
 
+	private final String TAG = RideSummaryActivity.class.getSimpleName();
+
     RelativeLayout relative;
 
 	RelativeLayout relativeLayoutMap;
@@ -353,8 +355,8 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 				RestClient.getApiServices().getRideSummary(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
-						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i("Server response get_ride_summary", "response = " + responseStr);
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "getRideSummary response = " + responseStr);
 						imageViewJugnooAnimation.setVisibility(View.GONE);
 						jugnooAnimation.stop();
 						try {
@@ -376,6 +378,7 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 					@Override
 					public void failure(RetrofitError error) {
+						Log.e(TAG, "getRideSummary error="+error);
 						imageViewJugnooAnimation.setVisibility(View.GONE);
 						jugnooAnimation.stop();
 						endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);

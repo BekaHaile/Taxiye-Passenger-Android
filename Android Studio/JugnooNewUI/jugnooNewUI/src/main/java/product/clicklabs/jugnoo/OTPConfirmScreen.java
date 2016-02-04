@@ -556,7 +556,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("Server response", "response = " + response);
+						Log.i(TAG, "verifyOtp response = " + responseStr);
 
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -599,7 +599,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "verifyOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 					}
@@ -662,7 +662,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.v("Server response", "response = " + responseStr);
+						Log.v(TAG, "verifyOtp response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 
@@ -704,7 +704,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG+" request fail", error.toString());
+						Log.e(TAG, "verifyOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 					}
@@ -760,7 +760,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.v("Server response", "response = " + responseStr);
+						Log.v(TAG, "verifyOtp response = " + responseStr);
 
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -802,7 +802,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "verifyOtp errror="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 					}
@@ -830,35 +830,32 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			RestClient.getApiServices().sendOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
-					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-					Log.i("Server response", "response = " + responseStr);
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "sendOtpViaCall response = " + responseStr);
 
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
 
-						if(!jObj.isNull("error")){
+						if (!jObj.isNull("error")) {
 							String errorMessage = jObj.getString("error");
 							int flag = jObj.getInt("flag");
-							if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
+							if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
 								HomeActivity.logoutUser(activity);
-							}
-							else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
+							} else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
 								DialogPopup.alertPopup(activity, "", errorMessage);
-							}
-							else{
+							} else {
 								DialogPopup.alertPopup(activity, "", errorMessage);
 							}
 							DialogPopup.dismissLoadingDialog();
-						}
-						else{
+						} else {
 							String message = jObj.getString("message");
 							int flag = jObj.getInt("flag");
-							if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
+							if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
 								DialogPopup.alertPopup(activity, "", message);
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
-					}  catch (Exception exception) {
+					} catch (Exception exception) {
 						exception.printStackTrace();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 						DialogPopup.dismissLoadingDialog();
@@ -867,7 +864,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e("request fail", error.toString());
+					Log.e(TAG, "sendOtpViaCall error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}

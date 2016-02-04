@@ -49,7 +49,9 @@ import retrofit.mime.TypedByteArray;
 
 
 public class WalletTransactionsFragment extends Fragment implements FlurryEventNames {
-	
+
+	private final String TAG = WalletTransactionsFragment.class.getSimpleName();
+
 	RelativeLayout relative;
 	
 	ImageView imageViewBack;
@@ -332,7 +334,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.e("Server response", "response = " + responseStr);
+						Log.e(TAG, "getTransactionHistory response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
@@ -384,7 +386,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "getTransactionHistory error="+error.toString());
 						imageViewJugnooAnimation.setVisibility(View.GONE);
 						jugnooAnimation.stop();
 						updateListData("Some error occurred", true);

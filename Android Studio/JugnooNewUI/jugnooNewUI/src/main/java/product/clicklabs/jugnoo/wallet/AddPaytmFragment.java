@@ -47,6 +47,8 @@ import retrofit.mime.TypedByteArray;
 
 public class AddPaytmFragment extends Fragment {
 
+	private final String TAG = AddPaytmFragment.class.getSimpleName();
+
 	RelativeLayout relative;
 
 	ImageView imageViewBack;
@@ -297,7 +299,7 @@ public class AddPaytmFragment extends Fragment {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("request succesfull", "response = " + response);
+						Log.i(TAG, "paytmRequestOtp response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -321,7 +323,7 @@ public class AddPaytmFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "paytmRequestOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
@@ -364,7 +366,7 @@ public class AddPaytmFragment extends Fragment {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i("request succesfull", "response = " + responseStr);
+						Log.i(TAG, "paytmLoginWithOtp response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -396,7 +398,7 @@ public class AddPaytmFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "paytmLoginWithOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}

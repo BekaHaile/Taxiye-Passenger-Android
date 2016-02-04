@@ -36,6 +36,8 @@ import retrofit.mime.TypedByteArray;
 
 public class ChangePasswordActivity extends BaseActivity {
 
+	private final String TAG = ChangePasswordActivity.class.getSimpleName();
+
 	LinearLayout relative;
 	
 	TextView textViewTitle;
@@ -282,7 +284,7 @@ public class ChangePasswordActivity extends BaseActivity {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i("Server response", "response = " + responseStr);
+					Log.i(TAG, "updateUserProfile response = " + responseStr);
 					DialogPopup.dismissLoadingDialog();
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -313,7 +315,7 @@ public class ChangePasswordActivity extends BaseActivity {
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e("request fail", error.toString());
+					Log.e(TAG, "updateUserProfile error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}

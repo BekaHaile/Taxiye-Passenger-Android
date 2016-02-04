@@ -1276,13 +1276,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.e(TAG+" Server response of access_token", "response = " + responseStr);
+						Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
 						performLoginSuccess(activity, responseStr);
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG+" request fail", ""+error.toString());
+						Log.e(TAG, "loginUsingAccessToken error="+error.toString());
 						performLoginFailure(activity);
 					}
 				});
@@ -1900,7 +1900,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i("Server response", "response = " + responseStr);
+					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
 
@@ -1957,7 +1957,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG + " request fail", error.toString());
+					Log.e(TAG, "loginUsingEmailOrPhoneNo error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2014,7 +2014,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-					Log.i("Server response", "response = " + responseStr);
+					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
 
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -2066,7 +2066,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG+" request fail", error.toString());
+					Log.e(TAG, "loginUsingFacebook error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2118,7 +2118,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i("Server response", "response = " + responseStr);
+					Log.i(TAG, "loginUsingGoogle response = " + responseStr);
 
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -2170,7 +2170,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG+" request fail", error.toString());
+					Log.e(TAG, "loginUsingGoogle error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2508,7 +2508,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i("Server response register_using_email", "response = " + responseStr);
+					Log.i(TAG, "registerUsingEmail response = " + responseStr);
 
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -2558,7 +2558,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG+" request fail", error.toString());
+					Log.e(TAG, "registerUsingEmail error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2623,7 +2623,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i("Server response register_using_facebook", "response = " + response);
+					Log.i(TAG, "registerUsingFacebook response = " + response);
 
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -2668,7 +2668,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG+" request fail", error.toString());
+					Log.e(TAG, "registerUsingFacebook error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2727,7 +2727,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i("Server response register_using_google", "response = " + responseStr);
+					Log.i(TAG, "registerUsingGoogle response = " + responseStr);
 
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
@@ -2772,7 +2772,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG + " request fail", error.toString());
+					Log.e(TAG, "registerUsingGoogle error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2871,7 +2871,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("Server response", "jsonString = " + jsonString);
+						Log.i(TAG, "verifyOtp jsonString = " + jsonString);
 						JSONObject jObj = new JSONObject(jsonString);
 
 						int flag = jObj.getInt("flag");
@@ -2918,7 +2918,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e("RetrofitError", "error=" + error);
+					Log.e(TAG, "verifyOtp error=" + error);
 					if(progressDialog != null) progressDialog.dismiss();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}

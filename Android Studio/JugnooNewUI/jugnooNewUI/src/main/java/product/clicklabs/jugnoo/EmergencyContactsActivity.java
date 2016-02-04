@@ -46,6 +46,8 @@ import retrofit.mime.TypedByteArray;
 
 public class EmergencyContactsActivity extends BaseActivity implements RefreshEmergencyContacts, FlurryEventNames {
 
+    private final String TAG = EmergencyContactsActivity.class.getSimpleName();
+
     LinearLayout relative;
 
     TextView textViewTitle;
@@ -790,7 +792,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    Log.i(TAG, "emergencyContactsList response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
@@ -817,7 +819,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "emergencyContactsList error"+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
@@ -927,7 +929,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
         @Override
         public void success(SettleUserDebt settleUserDebt, Response response) {
             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-            Log.i("Server response", "response = " + responseStr);
+            Log.i(TAG, "response = " + responseStr);
             DialogPopup.dismissLoadingDialog();
             try {
                 JSONObject jObj = new JSONObject(responseStr);
@@ -952,7 +954,7 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
         @Override
         public void failure(RetrofitError error) {
-            Log.e("request fail", error.toString());
+            Log.e(TAG, "error="+error.toString());
             DialogPopup.dismissLoadingDialog();
             DialogPopup.alertPopup(EmergencyContactsActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
         }

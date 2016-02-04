@@ -50,6 +50,8 @@ import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
 
+    private final String TAG = JSONParser.class.getSimpleName();
+
     public JSONParser() {
 
     }
@@ -624,6 +626,7 @@ public class JSONParser implements Constants {
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
             Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+            Log.i(TAG, "getCurrentUserStatus response="+responseStr);
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
             } else {

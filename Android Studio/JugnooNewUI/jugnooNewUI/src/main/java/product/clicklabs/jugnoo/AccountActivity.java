@@ -61,6 +61,8 @@ import retrofit.mime.TypedByteArray;
 
 public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
+    private final String TAG = AccountActivity.class.getSimpleName();
+
 	RelativeLayout relative;
 
     RelativeLayout topBar;
@@ -676,7 +678,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    Log.i(TAG, "updateUserProfile response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
@@ -715,7 +717,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "updateUserProfile error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
@@ -742,7 +744,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Server response", "response = " + responseStr);
+                        Log.i(TAG, "reloadMyProfile response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
@@ -778,7 +780,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("request fail", error.toString());
+                        Log.e(TAG, "reloadMyProfile error="+error.toString());
                     }
                 });
             }
@@ -802,7 +804,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    Log.i(TAG, "sendVerifyEmailLink response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
@@ -827,7 +829,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "sendVerifyEmailLink error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
@@ -855,7 +857,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                    Log.v("Server response", "response = " + responseStr);
+                    Log.v(TAG, "logoutUser response = " + responseStr);
 
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
@@ -903,7 +905,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "logoutUser error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }

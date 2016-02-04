@@ -49,6 +49,8 @@ import retrofit.mime.TypedByteArray;
 
 public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
+    private final String TAG = FeedbackActivity.class.getSimpleName();
+
     RelativeLayout relative;
 
     RelativeLayout topBar;
@@ -345,7 +347,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
                         params_12.height = (int) (heightDiff);
 
-                        textViewScroll.setLayoutParams(params_12);
+//                        textViewScroll.setLayoutParams(params_12);
                         textViewScroll.requestLayout();
                         editTextFeedback.setHint("");
                         if(!scrolled) {
@@ -363,7 +365,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                         ViewGroup.LayoutParams params = textViewScroll
                             .getLayoutParams();
                         params.height = 0;
-                        textViewScroll.setLayoutParams(params);
+//                        textViewScroll.setLayoutParams(params);
                         textViewScroll.requestLayout();
                         editTextFeedback.setHint("Please share your valuable feedback");
                         scrolled = false;
@@ -420,7 +422,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    Log.i(TAG, "rateTheDriver response = " + responseStr);
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
                         int flag = jObj.getInt("flag");
@@ -452,7 +454,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "rateTheDriver error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
@@ -481,12 +483,12 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.e("request fail", responseStr);
+                    Log.e(TAG, "skipRatingByCustomer response="+responseStr);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "skipRatingByCustomer error="+error.toString());
                 }
             });
 
@@ -515,7 +517,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    Log.i(TAG, "submitFeedback response = " + responseStr);
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
                         int flag = jObj.getInt("flag");
@@ -540,7 +542,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "submitFeedback error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }

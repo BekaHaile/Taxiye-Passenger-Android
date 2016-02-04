@@ -37,7 +37,9 @@ import retrofit.mime.TypedByteArray;
 
 
 public class ChangePhoneBeforeOTPActivity extends BaseActivity {
-	
+
+    private final String TAG = ChangePhoneBeforeOTPActivity.class.getSimpleName();
+
 	ImageView imageViewBack;
 	TextView textViewTitle;
 	
@@ -191,7 +193,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    Log.i(TAG, "updateUserProfile response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
                         JSONObject jObj = new JSONObject(responseStr);

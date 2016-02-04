@@ -48,6 +48,8 @@ import retrofit.mime.TypedByteArray;
 
 public class JugnooLineActivity extends BaseActivity implements FlurryEventNames {
 
+	private final String TAG = JugnooLineActivity.class.getSimpleName();
+
     LinearLayout relative;
 
     TextView textViewTitle;
@@ -294,7 +296,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("Server response faq ", "response = " + responseStr);
+						Log.i(TAG, "findSharingAutosNearby response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
@@ -315,7 +317,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "findSharingAutosNearby error="+error.toString());
 						progressBarNearbyDrivers.setVisibility(View.GONE);
 						recyclerViewDrivers.setVisibility(View.GONE);
 					}
@@ -342,21 +344,21 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 			params.put("money_transacted", ""+Data.userData.sharingFareFixed);
 			params.put("transaction_latitude", ""+Data.latitude);
 			params.put("transaction_longitude", ""+Data.longitude);
-			params.put("wallet_balance_before", ""+Data.userData.getTotalWalletBalance());
+			params.put("wallet_balance_before", "" + Data.userData.getTotalWalletBalance());
 
 			RestClient.getApiServices().endSharingRide(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
-					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-					Log.i("Server response faq ", "response = " + responseStr);
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "endSharingRide response = " + responseStr);
 					DialogPopup.dismissLoadingDialog();
 					try {
 						JSONObject jObj = new JSONObject(responseStr);
 						String message = JSONParser.getServerMessage(jObj);
 						int flag = jObj.getInt("flag");
-						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 							try {
-								if(Data.userData != null){
+								if (Data.userData != null) {
 									Data.userData.setJugnooBalance(jObj.optDouble("wallet_balance", Data.userData.getJugnooBalance()));
 								}
 							} catch (Exception e) {
@@ -368,8 +370,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 									performBackPressed();
 								}
 							});
-						}
-						else{
+						} else {
 							DialogPopup.alertPopup(activity, "", message);
 						}
 					} catch (Exception exception) {
@@ -380,7 +381,7 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e("request fail", error.toString());
+					Log.e(TAG, "endSharingRide error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}

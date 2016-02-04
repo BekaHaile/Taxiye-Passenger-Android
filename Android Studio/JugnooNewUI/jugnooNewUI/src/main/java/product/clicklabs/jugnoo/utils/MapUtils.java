@@ -27,6 +27,7 @@ import retrofit.mime.TypedByteArray;
 
 public class MapUtils {
 
+	private final String TAG = MapUtils.class.getSimpleName();
 	
 	public static double distance(LatLng start, LatLng end) {
 		try {

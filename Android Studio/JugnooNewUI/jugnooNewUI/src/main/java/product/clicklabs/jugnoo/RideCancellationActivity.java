@@ -48,7 +48,8 @@ import retrofit.mime.TypedByteArray;
 
 
 public class RideCancellationActivity extends BaseActivity implements ActivityCloser, FlurryEventNames {
-	
+
+	private final String TAG = RideCancellationActivity.class.getSimpleName();
 	
 	LinearLayout relative;
 	
@@ -437,13 +438,13 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 				
 				params.put("access_token", Data.userData.accessToken);
 				params.put("reasons", reasons);
-                params.put("addn_reason", addtionalReason);
+				params.put("addn_reason", addtionalReason);
 
 				RestClient.getApiServices().cancelRideByCustomer(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
-						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i("Server response", "response = " + responseStr);
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "cancelRideByCustomer response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 
@@ -488,7 +489,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "cancelRideByCustomer error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 					}

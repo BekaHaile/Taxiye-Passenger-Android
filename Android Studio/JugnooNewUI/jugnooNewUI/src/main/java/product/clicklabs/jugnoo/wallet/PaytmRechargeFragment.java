@@ -52,6 +52,8 @@ import retrofit.mime.TypedByteArray;
 
 public class PaytmRechargeFragment extends Fragment {
 
+	private final String TAG = PaytmRechargeFragment.class.getSimpleName();
+
 	LinearLayout relative;
 
 	ImageView imageViewBack;
@@ -416,11 +418,12 @@ public class PaytmRechargeFragment extends Fragment {
 				params.put("is_access_token_new", "1");
 				params.put("amount", amount);
 
-				RestClient.getApiServices().paytmAddMoney(params, new Callback<SettleUserDebt>() {
+				RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(String settleUserDebt, Response response) {
+						Log.i(TAG, "paytmAddMoney settleUserDebt = " + settleUserDebt);
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("request succesfull", "response = " + responseStr);
+						Log.i(TAG, "paytmAddMoney response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							openWebView(responseStr);
@@ -433,7 +436,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "paytmAddMoney error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
@@ -477,7 +480,7 @@ public class PaytmRechargeFragment extends Fragment {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i("request succesfull", "response = " + responseStr);
+						Log.i(TAG, "paytmDeletePaytm response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
@@ -500,7 +503,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "paytmDeletePaytm error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}

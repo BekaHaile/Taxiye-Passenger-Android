@@ -36,7 +36,7 @@ import retrofit.mime.TypedByteArray;
  */
 public class ContactsUploadService extends IntentService {
 
-    private static final String TAG = "ContactUploadService";
+    private static final String TAG = ContactsUploadService.class.getSimpleName();
     private static int UPLOAD_BATCH_SIZE = 100;
     private ArrayDeque<ContactSyncEntry> mSyncQueue;
     private String accessToken = "", sessionId = "", engagementId = "";
@@ -392,7 +392,7 @@ public class ContactsUploadService extends IntentService {
             if(response != null){
                 try {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                    Log.i("Server response request_dup_registration", "response = " + responseStr);
+                    Log.i(TAG, "referAllContactsSync response = " + responseStr);
 
                     try {
 						JSONObject jObj = new JSONObject(responseStr);

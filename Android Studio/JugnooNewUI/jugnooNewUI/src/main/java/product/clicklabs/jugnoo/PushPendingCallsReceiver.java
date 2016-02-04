@@ -32,7 +32,7 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
                         try {
                             ArrayList<PendingAPICall> pendingAPICalls = Database2.getInstance(context).getAllPendingAPICalls();
                             for(PendingAPICall pendingAPICall : pendingAPICalls){
-                                Log.e("pendingAPICall", "=" + pendingAPICall);
+                                Log.e(TAG, "pendingAPICall=" + pendingAPICall);
                                 startAPI(context, pendingAPICall);
                             }
 

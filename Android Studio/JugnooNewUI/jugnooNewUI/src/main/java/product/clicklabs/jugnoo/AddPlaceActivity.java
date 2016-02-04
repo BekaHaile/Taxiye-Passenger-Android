@@ -45,6 +45,8 @@ import retrofit.mime.TypedByteArray;
  */
 public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private final String TAG = AddPlaceActivity.class.getSimpleName();
+
     private ImageView imageViewBack, imageViewSearchCross;
     private LinearLayout root;
     private EditText editTextSearch;
@@ -301,7 +303,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                        Log.i("Server response", "response = " + responseStr);
+                        Log.i(TAG, "addHomeAndWorkAddress response = " + responseStr);
                         DialogPopup.dismissLoadingDialog();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
@@ -343,7 +345,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("request fail", error.toString());
+                        Log.e(TAG, "addHomeAndWorkAddress error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
                     }

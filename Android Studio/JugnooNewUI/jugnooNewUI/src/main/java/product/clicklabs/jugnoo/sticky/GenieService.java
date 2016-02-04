@@ -72,6 +72,8 @@ import retrofit.mime.TypedByteArray;
 
 public class GenieService extends Service implements View.OnClickListener, FlurryEventNames {
 
+    private final String TAG = GenieService.class.getSimpleName();
+
     private WindowManager windowManager;
     private RelativeLayout chatheadView, removeView;
     private LinearLayout txtView, txt_linearlayout;
@@ -534,7 +536,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                    Log.i("Response find_a_driver", "response = " + response);
+                    Log.i(TAG, "fareEstimateForJeanie response = " + responseStr);
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
                         int flag = jObj.getInt("flag");
@@ -559,7 +561,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("on failure", "on failure");
+                    Log.e(TAG, "fareEstimateForJeanie error="+error);
                     chatheadView.setVisibility(View.GONE);
                 }
             });

@@ -49,6 +49,8 @@ import retrofit.mime.TypedByteArray;
 
 public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction, FlurryEventNames {
 
+    private final String TAG = RideTransactionsActivity.class.getSimpleName();
+
 	RelativeLayout relative;
 	
 	TextView textViewTitle;
@@ -195,13 +197,13 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 			HashMap<String, String> params = new HashMap<>();
 		
 			params.put("access_token", Data.userData.accessToken);
-			params.put("start_from", "" + rideInfosList.size());
+            params.put("start_from", "" + rideInfosList.size());
 
             RestClient.getApiServices().getRecentRides(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                    Log.i("Server response", "response = " + responseStr);
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "getRecentRides response = " + responseStr);
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
@@ -247,12 +249,12 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
                                         }
 
                                         double waitTime = -1;
-                                        if(jRide.has("wait_time")){
+                                        if (jRide.has("wait_time")) {
                                             waitTime = jRide.getDouble("wait_time");
                                         }
 
                                         int isCancelledRide = 0;
-                                        if(jRide.has("is_cancelled_ride")){
+                                        if (jRide.has("is_cancelled_ride")) {
                                             isCancelledRide = jRide.getInt("is_cancelled_ride");
                                         }
 
@@ -282,7 +284,7 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e("request fail", error.toString());
+                    Log.e(TAG, "getRecentRides error="+error.toString());
                     updateListData("Some error occurred, tap to retry", true);
                     DialogPopup.dismissLoadingDialog();
                 }

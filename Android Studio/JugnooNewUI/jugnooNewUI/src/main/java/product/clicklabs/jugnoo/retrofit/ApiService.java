@@ -12,7 +12,9 @@ import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.QueryMap;
 
 /**
  *Define all server calls here
@@ -180,9 +182,8 @@ public interface ApiService {
     void addDropLocation(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
-    @FormUrlEncoded
-    @POST("/get_ongoing_ride_path")
-    Response getOngoingRidePath(@FieldMap Map<String, String> params);
+    @GET("/get_ongoing_ride_path")
+    Response getOngoingRidePath(@QueryMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST("/emergency/alert")
@@ -253,11 +254,6 @@ public interface ApiService {
                          Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/paytm/add_money")
-    void paytmAddMoney(@FieldMap Map<String, String> params,
-                           Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
     @POST("/paytm/delete_paytm")
     void paytmDeletePaytm(@FieldMap Map<String, String> params,
                        Callback<SettleUserDebt> callback);
@@ -296,9 +292,8 @@ public interface ApiService {
     @POST("/update_device_token")
     Response updateDeviceToken(@FieldMap Map<String, String> params);
 
-    @FormUrlEncoded
-    @POST("/emergency/contacts/list")
-    void emergencyContactsList(@FieldMap Map<String, String> params,
+    @GET("/emergency/contacts/list")
+    void emergencyContactsList(@QueryMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded

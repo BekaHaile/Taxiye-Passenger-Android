@@ -28,6 +28,8 @@ import retrofit.mime.TypedByteArray;
  */
 public class FetchAppDataService extends IntentService implements Constants {
 
+	private final String TAG = FetchAppDataService.class.getSimpleName();
+
 	public FetchAppDataService(){
 		this("FetchAppDataService");
 	}
@@ -62,6 +64,7 @@ public class FetchAppDataService extends IntentService implements Constants {
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+						Log.i(TAG, "getActiveAppList responseStr="+responseStr);
 						JSONObject jObj = new JSONObject(responseStr);
 						int flag = jObj.getInt("flag");
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -104,6 +107,7 @@ public class FetchAppDataService extends IntentService implements Constants {
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+						Log.i(TAG, "updateUserInstalledApp responseStr="+responseStr);
 						JSONObject jObj = new JSONObject(responseStr);
 						int flag = jObj.getInt("flag");
 
