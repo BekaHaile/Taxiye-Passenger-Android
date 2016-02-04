@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 
@@ -78,7 +78,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 			else{
 				holder.notificationImage.setVisibility(View.VISIBLE);
 				//Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
-                Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
+                //Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
+                Picasso.with(activity).load(notification.getNotificationImage())
+                        .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
+                        .into(holder.notificationImage);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
