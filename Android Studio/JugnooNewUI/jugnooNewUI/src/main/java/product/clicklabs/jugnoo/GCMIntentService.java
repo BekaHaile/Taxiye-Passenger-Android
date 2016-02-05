@@ -607,6 +607,10 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				if ("".equalsIgnoreCase(picture)) {
 					picture = jObj.optString("picture", "");
 				}
+//				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() != flag) {
+//					message1 = title + "\n" + message1;
+//				}
+
 				message1 = title + "\n" + message1;
 
 				// store push in database for notificaion center screen...
