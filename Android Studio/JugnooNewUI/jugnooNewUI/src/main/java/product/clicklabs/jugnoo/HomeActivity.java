@@ -1653,6 +1653,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             startUIAfterGettingUserStatus();
 
+            new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

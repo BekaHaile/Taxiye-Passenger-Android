@@ -321,4 +321,10 @@ public interface ApiService {
     Response getCurrentUserStatus(@FieldMap Map<String, String> params);
 
 
+    @FormUrlEncoded
+    @POST("/upload_analytics_messages")
+    void uploadAnalyticsMessages(@FieldMap Map<String, String> params,
+                                              Callback<SettleUserDebt> callback);
+
+
 }
