@@ -25,6 +25,8 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class Database2 {                                                                    // class for handling database related activities
 
+    private final String TAG = Database2.class.getSimpleName();
+
     private static Database2 dbInstance;
 
     private static final String DATABASE_NAME = "jugnoo_database2";                        // declaring database variables
@@ -93,7 +95,6 @@ public class Database2 {                                                        
 
     private static void createAllTables(SQLiteDatabase database) {
         /****************************************** CREATING ALL THE TABLES *****************************************************/
-
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_RIDE_INFO + " ("
                 + POSITION_ID + " INTEGER, "
                 + SOURCE_LATITUDE + " REAL, "
@@ -109,8 +110,9 @@ public class Database2 {                                                        
             + API_REQUEST_PARAMS + " TEXT"
             + ");");
 
+
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                + NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + NOTIFICATION_ID + " INTEGER PRIMARY KEY, "
                 + TIME_PUSH_ARRIVED + " TEXT, "
                 + MESSAGE + " TEXT, "
                 + DEEP_INDEX + " TEXT, "
@@ -119,12 +121,27 @@ public class Database2 {                                                        
                 + NOTIFICATION_IMAGE + " TEXT"
                 + ");");
 
-            database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_LINKS + " ("
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_LINKS + " ("
             + LINK + " TEXT, "
             + LINK_TIME + " TEXT"
             + ");");
         
     }
+
+    private static void dropAndCreateNotificationTable(SQLiteDatabase database){
+        database.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTIFICATION_CENTER);
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
+                + NOTIFICATION_ID + " INTEGER PRIMARY KEY, "
+                + TIME_PUSH_ARRIVED + " TEXT, "
+                + MESSAGE + " TEXT, "
+                + DEEP_INDEX + " TEXT, "
+                + TIME_TO_DISPLAY + " TEXT, "
+                + TIME_TILL_DISPLAY + " TEXT, "
+                + NOTIFICATION_IMAGE + " TEXT"
+                + ");");
+    }
+
 
     public static Database2 getInstance(Context context) {
         if (dbInstance == null) {
@@ -285,6 +302,11 @@ public class Database2 {                                                        
     }
 
 
+
+
+
+
+
     public ArrayList<NotificationData> getAllNotification() {
         ArrayList<NotificationData> allNotification = new ArrayList<NotificationData>();
         try {
@@ -359,9 +381,14 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertNotification(String timePushArrived, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
+    public void insertNotification(long id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
+                                   String timeTillDisplay, String notificationImage) {
         try{
+            if(id == -1){
+                id = System.currentTimeMillis();
+            }
             ContentValues contentValues = new ContentValues();
+            contentValues.put(NOTIFICATION_ID, id);
             contentValues.put(TIME_PUSH_ARRIVED, timePushArrived);
             contentValues.put(MESSAGE, message);
             contentValues.put(DEEP_INDEX, deepIndex);
@@ -369,12 +396,16 @@ public class Database2 {                                                        
             contentValues.put(TIME_TILL_DISPLAY, timeTillDisplay);
             contentValues.put(NOTIFICATION_IMAGE, notificationImage);
             database.insert(TABLE_NOTIFICATION_CENTER, null, contentValues);
+            int rowCount = getAllNotificationCount();
+            Log.i(TAG, "insertNotification rowCount="+rowCount);
         } catch(Exception e){
             e.printStackTrace();
+            dropAndCreateNotificationTable(database);
+            insertNotification(id, timePushArrived, message, deepIndex, timeToDisplay, timeTillDisplay, notificationImage);
         }
     }
 
-    public int deleteNotification(int notificationId){
+    public int deleteNotification(long notificationId){
         try{
             return database.delete(TABLE_NOTIFICATION_CENTER, NOTIFICATION_ID + "=" + notificationId, null);
         } catch(Exception e){
@@ -391,6 +422,8 @@ public class Database2 {                                                        
         }
 
     }
+
+
 
 
 

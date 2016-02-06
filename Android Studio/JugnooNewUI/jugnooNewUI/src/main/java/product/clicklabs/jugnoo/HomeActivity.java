@@ -3554,11 +3554,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void failure(RetrofitError error) {
                     //textViewInitialInstructions.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "findADriverCall error="+error.toString());
-                    textViewInitialInstructions.setText("Couldn't find drivers nearby.");
-                    textViewCentrePinETA.setText("-");
-                    noDriverNearbyToast("Couldn't find drivers nearby.");
-                    setServiceAvailablityUI(farAwayCity);
+                    try {
+                        Log.e(TAG, "findADriverCall error=" + error.toString());
+                        if(Data.driverInfos.size() == 0){
+							textViewInitialInstructions.setText("Couldn't find drivers nearby.");
+							textViewCentrePinETA.setText("-");
+							noDriverNearbyToast("Couldn't find drivers nearby.");
+						}
+                        setServiceAvailablityUI(farAwayCity);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } catch (Exception e) {
