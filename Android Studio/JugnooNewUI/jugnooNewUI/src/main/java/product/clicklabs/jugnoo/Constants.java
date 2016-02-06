@@ -80,4 +80,7 @@ public interface Constants {
 
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
 
+	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
+	String KEY_ANALYTICS_SMS_LIST= "analytics_sms_list";
+
 }
