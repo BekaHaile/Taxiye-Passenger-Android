@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
+import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -66,9 +67,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewTitle;
 
 
-	LinearLayout linearLayoutEnterOtp;
+	LinearLayout linearLayoutEnterOtp, linearLayoutMissedCall, linearLayoutOR, linearLayoutPaytmOtp, linearLayoutTopPaytm, linearLayoutTopDefault;
 	TextView textViewOtpNumber;
-	ImageView imageViewSep, imageViewChangePhoneNumber;
+	ImageView imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
 	LinearLayout linearLayoutWaiting;
@@ -128,18 +129,25 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			linkedWallet = getIntent().getIntExtra(LINKED_WALLET, 0);
 		}
 
+
+
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
+		((TextView)findViewById(R.id.otpHelpTextPaytm)).setTypeface(Fonts.mavenLight(this));
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
-		imageViewSep = (ImageView) findViewById(R.id.imageViewSep);
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
 		linearLayoutEnterOtp = (LinearLayout) findViewById(R.id.linearLayoutEnterOtp);
+		linearLayoutMissedCall = (LinearLayout) findViewById(R.id.linearLayoutMissedCall);
+		linearLayoutOR = (LinearLayout) findViewById(R.id.linearLayoutOR);
+		linearLayoutPaytmOtp = (LinearLayout) findViewById(R.id.linearLayoutPaytmOtp);
+		linearLayoutTopPaytm = (LinearLayout) findViewById(R.id.linearLayoutTopPaytm);
+		linearLayoutTopDefault = (LinearLayout) findViewById(R.id.linearLayoutTopDefault);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
@@ -158,6 +166,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
 
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -211,15 +220,21 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				try{
 					editTextOTP.setError(null);
-					if (1 == Data.otpViaCallEnabled) {
-						if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-							initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
-						} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
-							initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
-						} else {
-							initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
+					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+						// Resend OTP call to Paytm server...
+
+					} else{
+						if (1 == Data.otpViaCallEnabled) {
+							if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
+								initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
+							} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
+								initiateOTPCallAsync(OTPConfirmScreen.this, googleRegisterData.phoneNo);
+							} else {
+								initiateOTPCallAsync(OTPConfirmScreen.this, emailRegisterData.phoneNo);
+							}
 						}
 					}
+
 				} catch(Exception e){
 					e.printStackTrace();
 				}
@@ -353,18 +368,62 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			e.printStackTrace();
 		}
 
+		long timerDuration = 30000;
+		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+			linearLayoutTopDefault.setVisibility(View.GONE);
+			linearLayoutMissedCall.setVisibility(View.GONE);
+			linearLayoutTopPaytm.setVisibility(View.VISIBLE);
+			textViewCounter.setText("0:60");
+			timerDuration = 60000;
+			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
+		} else{
+			linearLayoutTopPaytm.setVisibility(View.GONE);
+			linearLayoutTopDefault.setVisibility(View.VISIBLE);
+			linearLayoutMissedCall.setVisibility(View.VISIBLE);
+			textViewCounter.setText("0:30");
+			buttonOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
+		}
 
 		try{
 			if(getIntent().getIntExtra("show_timer", 0) == 1){
+
 				linearLayoutWaiting.setVisibility(View.VISIBLE);
-				textViewCounter.setText("0:30");
-				countDownTimer.start();
+
+				CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
+				customCountDownTimer.start();
+
+//				CountDownTimer countDownTimer = new CountDownTimer(timerDuration, 5) {
+//					@Override
+//					public void onTick(long millisUntilFinished) {
+//						double percent = (((double)millisUntilFinished) * 100.0) / 30000.0;
+//
+//						double widthToSet = percent * ((double) (ASSL.Xscale() * 530)) / 100.0;
+//
+//						RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewYellowLoadingBar.getLayoutParams();
+//						params.width = (int) widthToSet;
+//						imageViewYellowLoadingBar.setLayoutParams(params);
+//
+//
+//						long seconds = (long) Math.ceil(((double)millisUntilFinished) / 1000.0d);
+//						String text = seconds < 10 ? "0:0"+seconds : "0:"+seconds;
+//						textViewCounter.setText(text);
+//					}
+//
+//					@Override
+//					public void onFinish() {
+//						linearLayoutWaiting.setVisibility(View.GONE);
+//						linearLayoutMissedCall.setVisibility(View.VISIBLE);
+//						linearLayoutOR.setVisibility(View.VISIBLE);
+//					}
+//				};
+//				countDownTimer.start();
 			}
 			else{
 				throw new Exception();
 			}
 		} catch(Exception e){
 			linearLayoutWaiting.setVisibility(View.GONE);
+
 		}
 
 		try{
@@ -409,6 +468,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		OTP_SCREEN_OPEN = "yes";
 
 
+
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -416,6 +477,38 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		}, 100);
 
+	}
+
+	class CustomCountDownTimer extends CountDownTimer {
+
+		private final long mMillisInFuture;
+		public CustomCountDownTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+			mMillisInFuture = millisInFuture;
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			double percent = (((double)millisUntilFinished) * 100.0) / mMillisInFuture;
+
+			double widthToSet = percent * ((double) (ASSL.Xscale() * 530)) / 100.0;
+
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewYellowLoadingBar.getLayoutParams();
+			params.width = (int) widthToSet;
+			imageViewYellowLoadingBar.setLayoutParams(params);
+
+
+			long seconds = (long) Math.ceil(((double)millisUntilFinished) / 1000.0d);
+			String text = seconds < 10 ? "0:0"+seconds : "0:"+seconds;
+			textViewCounter.setText(text);
+		}
+
+		@Override
+		public void onFinish() {
+			linearLayoutWaiting.setVisibility(View.GONE);
+			linearLayoutMissedCall.setVisibility(View.VISIBLE);
+			linearLayoutOR.setVisibility(View.VISIBLE);
+		}
 	}
 
 
@@ -542,7 +635,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
-				params.put("reg_type", String.valueOf(linkedWallet));
+				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -645,7 +738,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("longitude", "" + Data.loginLongitude);
                 params.put("client_id", Config.getClientId());
                 params.put("otp", otp);
-				params.put("reg_type", String.valueOf(linkedWallet));
+				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -744,7 +837,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("longitude", "" + Data.loginLongitude);
 				params.put("client_id", Config.getClientId());
 				params.put("otp", otp);
-				params.put("reg_type", String.valueOf(linkedWallet));
+				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -938,29 +1031,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 
-	CountDownTimer countDownTimer = new CountDownTimer(30000, 5) {
 
-		@Override
-		public void onTick(long millisUntilFinished) {
-			double percent = (((double)millisUntilFinished) * 100.0) / 30000.0;
-
-			double widthToSet = percent * ((double) (ASSL.Xscale() * 530)) / 100.0;
-
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewYellowLoadingBar.getLayoutParams();
-			params.width = (int) widthToSet;
-			imageViewYellowLoadingBar.setLayoutParams(params);
-
-
-			long seconds = (long) Math.ceil(((double)millisUntilFinished) / 1000.0d);
-			String text = seconds < 10 ? "0:0"+seconds : "0:"+seconds;
-			textViewCounter.setText(text);
-		}
-
-		@Override
-		public void onFinish() {
-			linearLayoutWaiting.setVisibility(View.GONE);
-		}
-	};
 
 
 	private void retrieveOTPFromSMS(Intent intent){
@@ -986,7 +1057,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			e.printStackTrace();
 		}
 	}
-
 
 }
 

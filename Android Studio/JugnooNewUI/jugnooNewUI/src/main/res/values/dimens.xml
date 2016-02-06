@@ -131,6 +131,7 @@
     <dimen name="text_size_26">26px</dimen>
     <dimen name="text_size_24">24px</dimen>
     <dimen name="text_size_22">22px</dimen>
+    <dimen name="text_size_20">20px</dimen>
 
 
 

@@ -62,6 +62,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
+import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -464,11 +465,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		linearLayoutAddPatym.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(linkedWallet == 1){
-					linkedWallet = 0;
+				if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+					linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
 					imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
 				} else {
-					linkedWallet = 1;
+					linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal();
 					imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
 				}
 			}
@@ -2504,7 +2505,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("reg_type", String.valueOf(linkedWallet));
+			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 
 			if(Utils.isDeviceRooted()){
@@ -2541,13 +2542,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 									SplashNewActivity.this.name = name;
 									SplashNewActivity.this.emailId = emailId;
-									SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
-									SplashNewActivity.this.password = password;
-									SplashNewActivity.this.referralCode = referralCode;
-									SplashNewActivity.this.accessToken = jObj.getString("access_token");
-									Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-									Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-									sendToOtpScreen = true;
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 									SplashNewActivity.this.name = name;
 									SplashNewActivity.this.emailId = emailId;
@@ -2556,7 +2551,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									SplashNewActivity.this.referralCode = referralCode;
 									SplashNewActivity.this.accessToken = "";
 									parseDataSendToMultipleAccountsScreen(activity, jObj);
-								} else {
+								} else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag){
+									SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
+									SplashNewActivity.this.name = name;
+									SplashNewActivity.this.emailId = emailId;
+									parseOTPSignUpData(jObj, password, referralCode);
+								} else{
 									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 								DialogPopup.dismissLoadingDialog();
@@ -2622,7 +2622,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
-			params.put("reg_type", String.valueOf(linkedWallet));
+			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 
 			if(Utils.isDeviceRooted()){
@@ -2655,19 +2655,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									String error = jObj.getString("error");
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-									SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
-									SplashNewActivity.this.password = password;
-									SplashNewActivity.this.referralCode = referralCode;
-									SplashNewActivity.this.accessToken = jObj.getString("access_token");
-									Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-									Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-									sendToOtpScreen = true;
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 									SplashNewActivity.this.phoneNo = phoneNo;
 									SplashNewActivity.this.password = password;
 									SplashNewActivity.this.referralCode = referralCode;
 									SplashNewActivity.this.accessToken = "";
 									parseDataSendToMultipleAccountsScreen(activity, jObj);
+								} else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
+									SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
@@ -2728,7 +2725,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
-			params.put("reg_type", String.valueOf(linkedWallet));
+			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 
 			if(Utils.isDeviceRooted()){
@@ -2760,19 +2757,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									String error = jObj.getString("error");
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-									SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
-									SplashNewActivity.this.password = password;
-									SplashNewActivity.this.referralCode = referralCode;
-									SplashNewActivity.this.accessToken = jObj.getString("access_token");
-									Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-									Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-									sendToOtpScreen = true;
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 									SplashNewActivity.this.phoneNo = phoneNo;
 									SplashNewActivity.this.password = password;
 									SplashNewActivity.this.referralCode = referralCode;
 									SplashNewActivity.this.accessToken = "";
 									parseDataSendToMultipleAccountsScreen(activity, jObj);
+								} else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
+									SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
@@ -2801,6 +2795,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
+	private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode) throws Exception{
+		SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+		SplashNewActivity.this.password = password;
+		SplashNewActivity.this.referralCode = referralCode;
+		SplashNewActivity.this.accessToken = jObj.getString("access_token");
+		Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+		Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+		sendToOtpScreen = true;
+	}
 
 	private void generateOTPRegisterData(){
 		if(RegisterationType.FACEBOOK == SplashNewActivity.registerationType){

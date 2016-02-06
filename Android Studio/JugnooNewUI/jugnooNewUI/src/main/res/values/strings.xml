@@ -359,6 +359,9 @@
 	<string name="nl_otp_verify">Verify Me</string>
 	<string name="nl_otp_receive_otp_via_call">Receive the OTP via call</string>
 	<string name="nl_otp_give_missed_call">Give a missed call</string>
+	<string name="nl_otp_paytm">Pay for Jugnoo Rides with a Mobile Wallet</string>
+	<string name="nl_otp_verify_your_account">VERIFY YOUR ACCOUNT</string>
+	<string name="nl_otp_with_just_a_missed_call">WITH JUST A MISSED CALL</string>
 
 	<!-- NL Change Phone Number-->
 	<string name="nl_change_phone_number">Change Phone Number</string>
