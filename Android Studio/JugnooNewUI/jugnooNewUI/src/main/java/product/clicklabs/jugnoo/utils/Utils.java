@@ -610,4 +610,8 @@ public class Utils {
 		context.startActivity(i);
 	}
 
+	public static int currentTimeMillisInt() {
+		return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+	}
+
 }
