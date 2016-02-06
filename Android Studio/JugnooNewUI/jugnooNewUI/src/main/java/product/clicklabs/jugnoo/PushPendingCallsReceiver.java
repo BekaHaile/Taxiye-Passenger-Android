@@ -7,13 +7,18 @@ import android.content.Intent;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
+import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 public class PushPendingCallsReceiver extends BroadcastReceiver {
+
+    private final String TAG = PushPendingCallsReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -27,7 +32,7 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
                         try {
                             ArrayList<PendingAPICall> pendingAPICalls = Database2.getInstance(context).getAllPendingAPICalls();
                             for(PendingAPICall pendingAPICall : pendingAPICalls){
-                                Log.e("pendingAPICall", "=" + pendingAPICall);
+                                Log.e(TAG, "pendingAPICall=" + pendingAPICall);
                                 startAPI(context, pendingAPICall);
                             }
 
@@ -65,15 +70,24 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
 
     public void startAPI(Context context, PendingAPICall pendingAPICall) {
         if (AppStatus.getInstance(context).isOnline(context)) {
-            HttpRequester.setTimeouts(10000);
-            HttpRequester simpleJSONParser = new HttpRequester();
-            String result = simpleJSONParser.getJSONFromUrlParams(pendingAPICall.url, pendingAPICall.nameValuePairs);
-            HttpRequester.setTimeouts(30000);
-            Log.e("result in pendingAPICall ", "=" + pendingAPICall + " and result = " + result);
-            if(result.contains(HttpRequester.SERVER_TIMEOUT)){
-            }
-            else{
-                Database2.getInstance(context).deletePendingAPICall(pendingAPICall.id);
+            try {
+                if (AppStatus.getInstance(context).isOnline(context)) {
+                    Response response = null;
+                    if(PendingCall.EMERGENCY_ALERT.getPath().equalsIgnoreCase(pendingAPICall.url)){
+                        response = RestClient.getApiServices().emergencyAlertSync(pendingAPICall.nameValuePairs);
+                    }
+                    else if(PendingCall.SKIP_RATING_BY_CUSTOMER.getPath().equalsIgnoreCase(pendingAPICall.url)){
+                        response = RestClient.getApiServices().skipRatingByCustomerSync(pendingAPICall.nameValuePairs);
+                    }
+                    Log.e(TAG, "response="+response);
+                    if(response != null){
+                        Database2.getInstance(context).deletePendingAPICall(pendingAPICall.id);
+                        Log.e(TAG, "response to string=" + new String(((TypedByteArray)response.getBody()).getBytes()));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "e="+e);
             }
         }
     }

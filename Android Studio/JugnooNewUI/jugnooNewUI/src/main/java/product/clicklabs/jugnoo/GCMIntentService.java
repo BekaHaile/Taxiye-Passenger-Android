@@ -575,7 +575,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
                         }
                     }
 
-					savePush(jObj, message1, deepindex);
+					savePush(jObj, title, message1, deepindex);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -589,7 +589,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		}
     }
 
-	private void savePush(JSONObject jObj, String message1, int deepindex){
+	private void savePush(JSONObject jObj, String title, String message1, int deepindex){
 		try {
 			int flag = jObj.getInt(KEY_FLAG);
 			boolean tryToSave = false;
@@ -607,6 +607,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				if ("".equalsIgnoreCase(picture)) {
 					picture = jObj.optString("picture", "");
 				}
+//				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() != flag) {
+//					message1 = title + "\n" + message1;
+//				}
+
+				message1 = title + "\n" + message1;
+
 				// store push in database for notificaion center screen...
 				String pushArrived = DateOperations.getCurrentTimeInUTC();
 				if (jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {

@@ -16,18 +16,18 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 public class MapUtils {
 
+	private final String TAG = MapUtils.class.getSimpleName();
 	
 	public static double distance(LatLng start, LatLng end) {
 		try {
@@ -80,9 +80,9 @@ public class MapUtils {
 				long elapsed = SystemClock.uptimeMillis() - start;
 				float t = interpolator.getInterpolation((float) elapsed / duration);
 
-				float rot = t * toRotation + (1 -t) * startRotation;
+				float rot = t * toRotation + (1 - t) * startRotation;
 
-				marker.setRotation(-rot > 180 ? rot/2 : rot);
+				marker.setRotation(-rot > 180 ? rot / 2 : rot);
 				if (t < 1.0) {
 					// Post again 16ms later.
 					handler.postDelayed(this, 16);
@@ -168,12 +168,10 @@ public class MapUtils {
 	public static GAPIAddress getGAPIAddressObject(LatLng latLng){
 		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "", "", "", "", "", "not_found");
 		try {
-			JSONObject jsonObj = new JSONObject(
-					new HttpRequester().getJSONFromUrl("http://maps.googleapis.com/maps/api/geocode/json?"
-									+ "latlng="
-									+ latLng.latitude
-									+ ","
-									+ latLng.longitude + "&sensor=true"));
+			Response response = RestClient.getGoogleApiServices().geocode(latLng.latitude + "," + latLng.longitude,
+					"en", false);
+			String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+			JSONObject jsonObj = new JSONObject(responseStr);
 			//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
 			
 			String status = jsonObj.getString("status");
@@ -308,123 +306,7 @@ public class MapUtils {
 		}
 		return fullAddress;
 	}
-	
-	
-	
-	
-	public static ArrayList<SearchResult> getSearchResultsFromGooglePlaces(String searchText) {
-		ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
-		try{
-			searchText = URLEncoder.encode(searchText, "utf8");
-			String ignr2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location="
-					+ "30.75"
-					+ ","
-					+ "76.78"
-					+ "&radius=50"
-					+ "&query="
-					+ searchText
-					+ "&sensor=true&key="+ Config.getMapsBrowserKey();
-			// "https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=2bb0000&query=%@&sensor=true&key=%@";
 
-			ignr2 = ignr2.replaceAll(" ", "%20");
-			
-			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
-
-			JSONArray info = null;
-			info = jsonObj.getJSONArray("results");
-			for (int i = 0; i < info.length(); i++) {
-				SearchResult searchResult = new SearchResult(info.getJSONObject(i).getString("name"), 
-						info.getJSONObject(i).getString("formatted_address"),
-						new LatLng(info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-								info.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
-
-				searchResults.add(searchResult);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		return searchResults;
-	}
-	
-	public static ArrayList<AutoCompleteSearchResult> getAutoCompleteSearchResultsFromGooglePlaces(String searchText, LatLng latLng) {
-		ArrayList<AutoCompleteSearchResult> searchResults = new ArrayList<AutoCompleteSearchResult>();
-		try{
-			searchText = URLEncoder.encode(searchText, "utf8");
-			String ignr2 = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"+
-					"input="+ URLEncoder.encode(searchText, "utf8")
-					+"&couponType=address&location="
-					+ latLng.latitude + "," + latLng.longitude + "&radius=50"
-					+"&key="+Config.getMapsBrowserKey();
-			//https://maps.googleapis.com/maps/api/place/autocomplete/json?input=pizza&type=address&location=30.75,76.78&radius=500&key=
-			//AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
-			ignr2 = ignr2.replaceAll(" ", "%20");
-            HttpRequester.setTimeouts(30000);
-			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
-			Log.e("getAutoCompleteSearchResultsFromGooglePlaces", "=jsonObj"+jsonObj);
-			JSONArray info = null;
-			info = jsonObj.getJSONArray("predictions");
-			for (int i = 0; i < info.length(); i++) {
-				JSONObject jInfoI = info.getJSONObject(i);
-				String name = jInfoI.getString("description"), address = "";
-				JSONArray jTerms = jInfoI.getJSONArray("terms");
-				for(int j=0; j<jTerms.length(); j++){
-					if(j == 0){
-						name = jTerms.getJSONObject(j).getString("value");
-					}
-					else if(j < jTerms.length()-1){
-						address = address + jTerms.getJSONObject(j).getString("value") + ", ";
-					}
-					else{
-						address = address + jTerms.getJSONObject(j).getString("value");
-					}
-				}
-				searchResults.add(new AutoCompleteSearchResult(name, address, jInfoI.getString("place_id")));
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		Log.e("getAutoCompleteSearchResultsFromGooglePlaces searchResults = ", "="+searchResults);
-		return searchResults;
-	}
-	
-	
-	public static SearchResult getSearchResultsFromPlaceIdGooglePlaces(String placeId) {
-		try{
-			String ignr2 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId +"&key="+Config.getMapsBrowserKey();
-			//https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJqX9P5SDtDzkR2oUORhzrAhs&key=AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY
-			ignr2 = ignr2.replaceAll(" ", "%20");
-            HttpRequester.setTimeouts(30000);
-			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(ignr2));
-			JSONObject info = null;
-			info = jsonObj.getJSONObject("result");
-			SearchResult result = new SearchResult(info.getString("name"), info.getString("formatted_address"), 
-					new LatLng(info.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-							info.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
-			return result;
-		} catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	
-	public static String getOSMZIPCodeForLatLng(LatLng latLng) {
-		try{
-			String link = "http://nominatim.openstreetmap.org/reverse?format=json&lat="
-					+ latLng.latitude + "&lon=" + latLng.longitude + "&zoom=18&addressdetails=1";
-			////http://nominatim.openstreetmap.org/reverse?format=json&lat=30.75&lon=76.75&zoom=18&addressdetails=1
-			link = link.replaceAll(" ", "%20");
-			JSONObject jsonObj = new JSONObject(new HttpRequester().getJSONFromUrl(link));
-			JSONObject address = jsonObj.getJSONObject("address");
-			String zipCode = address.getString("postcode");
-			return zipCode;
-		} catch(Exception e){
-			e.printStackTrace();
-			return "not_found";
-		}
-	}
-	
-	
 	
 	public static List<LatLng> getLatLngListFromPath(String result){
 		try {
@@ -444,9 +326,9 @@ public class MapUtils {
 
 	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
-			String url = MapUtils.makeDirectionsURL(sourceLatLng, destinationLatLng);
-			Log.i("url", "=" + url);
-			String result = new HttpRequester().getJSONFromUrl(url);
+			Response response = RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+					destinationLatLng + "," + destinationLatLng, false, "driving", false);
+			String result = new String(((TypedByteArray)response.getBody()).getBytes());
 			Log.i("result", "=" + result);
 			if (result != null) {
 				final List<LatLng> list = MapUtils.getLatLngListFromPath(result);

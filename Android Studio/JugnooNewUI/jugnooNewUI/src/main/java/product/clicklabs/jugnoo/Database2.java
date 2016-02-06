@@ -7,12 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
@@ -258,7 +257,7 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertPendingAPICall(Context context, String url, RequestParams requestParams) {
+    public void insertPendingAPICall(Context context, String url, HashMap<String, String> requestParams) {
         try{
             ContentValues contentValues = new ContentValues();
             contentValues.put(API_URL, url);

@@ -77,4 +77,6 @@ public interface Constants {
 
 	String KEY_SAVE_NOTIFICATION = "save_notification";
 
+	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
+
 }

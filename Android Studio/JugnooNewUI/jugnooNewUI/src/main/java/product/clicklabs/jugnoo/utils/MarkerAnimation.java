@@ -22,6 +22,10 @@ import com.google.android.gms.maps.model.Marker;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
+
 public class MarkerAnimation {
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
@@ -107,9 +111,9 @@ public class MarkerAnimation {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String url = MapUtils.makeDirectionsURL(source, destination);
-                String result = new HttpRequester().getJSONFromUrl(url);
-                return result;
+                Response response = RestClient.getGoogleApiServices().getDirections(source.latitude + "," + source.longitude,
+                        destination + "," + destination, false, "driving", false);
+                return new String(((TypedByteArray)response.getBody()).getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
             }
