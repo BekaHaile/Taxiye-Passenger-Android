@@ -77,7 +77,7 @@ public interface Constants {
 
 	String KEY_SAVE_NOTIFICATION = "save_notification";
 	String LINKED_WALLET = "linked_wallet";
-
+	String LINKED_WALLET_MESSAGE = "linked_wallet_message";
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
 
 }

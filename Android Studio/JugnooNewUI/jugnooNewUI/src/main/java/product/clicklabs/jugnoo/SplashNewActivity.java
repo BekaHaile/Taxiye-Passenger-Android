@@ -25,6 +25,8 @@ import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -133,7 +135,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0, linkedWallet = 1;
+	int clickCount = 0, linkedWallet = 0;
 
 	private State state = State.SPLASH_LS;
 
@@ -144,7 +146,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	boolean emailRegister = false, facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "",
-			emailNeedRegister = "";
+			emailNeedRegister = "", linkedWalletErrorMsg = "";
 	private String enteredEmail = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
@@ -391,6 +393,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
 		buttonRefresh.setTypeface(Fonts.mavenRegular(this));
 
+		ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
+		scale.setDuration(300);
+		scale.setInterpolator(new OvershootInterpolator());
+
+		//buttonLogin.startAnimation(scale);
+
 
 		String[] emails = Database.getInstance(this).getEmails();
 		ArrayAdapter<String> adapter;
@@ -480,6 +488,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				if (isBranchLinkNotClicked()) {
+					linkedWallet = 0;
 					FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 					changeUIState(State.LOGIN);
 				} else {
@@ -493,6 +502,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void onClick(View v) {
 				if(isBranchLinkNotClicked()) {
+					linkedWallet = 1;
 					FlurryEventLogger.event(SIGNUP);
 					SplashNewActivity.registerationType = RegisterationType.EMAIL;
 					changeUIState(State.SIGNUP);
@@ -1941,6 +1951,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								else{
 									enteredEmail = emailId;
 								}
+								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
 								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
@@ -2049,6 +2060,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								DialogPopup.alertPopup(activity, "", error);
 							}
 							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
 								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
@@ -2153,6 +2165,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								DialogPopup.alertPopup(activity, "", error);
 							}
 							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
 								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
@@ -2245,6 +2258,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			generateOTPRegisterData();
 			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 			intent.putExtra("show_timer", 1);
+			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
 			intent.putExtra(LINKED_WALLET, linkedWallet);
 			startActivity(intent);
 			finish();
@@ -2803,6 +2817,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 		Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 		sendToOtpScreen = true;
+		linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
 	}
 
 	private void generateOTPRegisterData(){
