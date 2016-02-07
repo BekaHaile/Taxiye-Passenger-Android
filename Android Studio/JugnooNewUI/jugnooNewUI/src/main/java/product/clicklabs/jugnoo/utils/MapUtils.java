@@ -327,7 +327,7 @@ public class MapUtils {
 	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			Response response = RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-					destinationLatLng + "," + destinationLatLng, false, "driving", false);
+					destinationLatLng.latitude + "," + destinationLatLng.longitude, false, "driving", false);
 			String result = new String(((TypedByteArray)response.getBody()).getBytes());
 			Log.i("result", "=" + result);
 			if (result != null) {

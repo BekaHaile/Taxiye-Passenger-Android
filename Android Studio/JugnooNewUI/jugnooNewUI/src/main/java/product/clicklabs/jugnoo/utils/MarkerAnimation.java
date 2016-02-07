@@ -27,6 +27,9 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 public class MarkerAnimation {
+
+    private static final String TAG = MarkerAnimation.class.getSimpleName();
+
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
@@ -112,8 +115,9 @@ public class MarkerAnimation {
         protected String doInBackground(String... strings) {
             try {
                 Response response = RestClient.getGoogleApiServices().getDirections(source.latitude + "," + source.longitude,
-                        destination + "," + destination, false, "driving", false);
-                return new String(((TypedByteArray)response.getBody()).getBytes());
+                        destination.latitude + "," + destination.longitude, false, "driving", false);
+                String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                return responseStr;
             } catch (Exception e) {
                 e.printStackTrace();
             }

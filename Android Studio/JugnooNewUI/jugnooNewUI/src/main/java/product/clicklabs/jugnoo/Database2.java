@@ -325,8 +325,6 @@ public class Database2 {                                                        
 
                 for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
                     try {
-                        Log.e("cursor.getString(in4)", "---->"+cursor.getString(in4));
-                        Log.e("cursor.getString(in5)", "---->"+cursor.getString(in5));
                         long savedIn4 = 600000;
                         try{
                             savedIn4 = Long.parseLong(cursor.getString(in4));
