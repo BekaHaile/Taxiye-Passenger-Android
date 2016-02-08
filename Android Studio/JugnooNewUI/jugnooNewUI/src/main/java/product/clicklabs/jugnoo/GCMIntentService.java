@@ -596,15 +596,15 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 	private ArrayList<Integer> getDontSavePushesArray(){
 		if(dontSavePushes == null){
 			dontSavePushes = new ArrayList<>();
-			dontSavePushes.add(PushFlags.WAITING_STARTED.getOrdinal());
-			dontSavePushes.add(PushFlags.WAITING_ENDED.getOrdinal());
-			dontSavePushes.add(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal());
-			dontSavePushes.add(PushFlags.CHANGE_STATE.getOrdinal());
-			dontSavePushes.add(PushFlags.PAYMENT_RECEIVED.getOrdinal());
-			dontSavePushes.add(PushFlags.CLEAR_ALL_MESSAGE.getOrdinal());
-			dontSavePushes.add(PushFlags.DELETE_NOTIFICATION_ID.getOrdinal());
-			dontSavePushes.add(PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal());
-			dontSavePushes.add(PushFlags.DRIVER_ETA.getOrdinal());
+//			dontSavePushes.add(PushFlags.WAITING_STARTED.getOrdinal());
+//			dontSavePushes.add(PushFlags.WAITING_ENDED.getOrdinal());
+//			dontSavePushes.add(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal());
+//			dontSavePushes.add(PushFlags.CHANGE_STATE.getOrdinal());
+//			dontSavePushes.add(PushFlags.PAYMENT_RECEIVED.getOrdinal());
+//			dontSavePushes.add(PushFlags.CLEAR_ALL_MESSAGE.getOrdinal());
+//			dontSavePushes.add(PushFlags.DELETE_NOTIFICATION_ID.getOrdinal());
+//			dontSavePushes.add(PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal());
+//			dontSavePushes.add(PushFlags.DRIVER_ETA.getOrdinal());
 		}
 		return dontSavePushes;
 	}
