@@ -112,7 +112,7 @@ public class Database2 {                                                        
 
 
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                + NOTIFICATION_ID + " INTEGER PRIMARY KEY, "
+                + NOTIFICATION_ID + " INTEGER, "
                 + TIME_PUSH_ARRIVED + " TEXT, "
                 + MESSAGE + " TEXT, "
                 + DEEP_INDEX + " TEXT, "
@@ -132,7 +132,7 @@ public class Database2 {                                                        
     private static void dropAndCreateNotificationTable(SQLiteDatabase database){
         database.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTIFICATION_CENTER);
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                + NOTIFICATION_ID + " INTEGER PRIMARY KEY, "
+                + NOTIFICATION_ID + " INTEGER, "
                 + TIME_PUSH_ARRIVED + " TEXT, "
                 + MESSAGE + " TEXT, "
                 + DEEP_INDEX + " TEXT, "
@@ -379,12 +379,9 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertNotification(long id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
+    public void insertNotification(int id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
                                    String timeTillDisplay, String notificationImage) {
         try{
-            if(id == -1){
-                id = System.currentTimeMillis();
-            }
             ContentValues contentValues = new ContentValues();
             contentValues.put(NOTIFICATION_ID, id);
             contentValues.put(TIME_PUSH_ARRIVED, timePushArrived);
@@ -403,7 +400,7 @@ public class Database2 {                                                        
         }
     }
 
-    public int deleteNotification(long notificationId){
+    public int deleteNotification(int notificationId){
         try{
             return database.delete(TABLE_NOTIFICATION_CENTER, NOTIFICATION_ID + "=" + notificationId, null);
         } catch(Exception e){

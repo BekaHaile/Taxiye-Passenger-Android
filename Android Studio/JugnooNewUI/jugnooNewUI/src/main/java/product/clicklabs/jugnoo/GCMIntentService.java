@@ -31,6 +31,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -545,7 +546,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1);
-
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
@@ -555,7 +555,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					}
 					else if (PushFlags.DELETE_NOTIFICATION_ID.getOrdinal() == flag) {
 						if(jObj.has(KEY_NOTIFICATION_ID)) {
-							long id = jObj.optLong(KEY_NOTIFICATION_ID, -1);
+							int id = jObj.optInt(KEY_NOTIFICATION_ID, -1);
 							if(id != -1) {
 								Database2.getInstance(this).deleteNotification(id);
 								if (EventsHolder.displayPushHandler != null) {
@@ -579,7 +579,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
                         }
                     }
 
-					savePush(jObj, title, message1, deepindex);
+					savePush(jObj, flag, title, message1, deepindex);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -592,13 +592,29 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		}
     }
 
-	private void savePush(JSONObject jObj, String title, String message1, int deepindex){
+	private ArrayList<Integer> dontSavePushes = null;
+	private ArrayList<Integer> getDontSavePushesArray(){
+		if(dontSavePushes == null){
+			dontSavePushes = new ArrayList<>();
+			dontSavePushes.add(PushFlags.WAITING_STARTED.getOrdinal());
+			dontSavePushes.add(PushFlags.WAITING_ENDED.getOrdinal());
+			dontSavePushes.add(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal());
+			dontSavePushes.add(PushFlags.CHANGE_STATE.getOrdinal());
+			dontSavePushes.add(PushFlags.PAYMENT_RECEIVED.getOrdinal());
+			dontSavePushes.add(PushFlags.CLEAR_ALL_MESSAGE.getOrdinal());
+			dontSavePushes.add(PushFlags.DELETE_NOTIFICATION_ID.getOrdinal());
+			dontSavePushes.add(PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal());
+			dontSavePushes.add(PushFlags.DRIVER_ETA.getOrdinal());
+		}
+		return dontSavePushes;
+	}
+
+	private void savePush(JSONObject jObj, int flag, String title, String message1, int deepindex){
 		try {
-			int flag = jObj.getInt(KEY_FLAG);
 			boolean tryToSave = false;
 			if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
 				tryToSave = true;
-			} else{
+			} else if(!getDontSavePushesArray().contains(flag)){
 				int saveNotification = jObj.optInt(KEY_SAVE_NOTIFICATION, 0);
 				if(1 == saveNotification){
 					tryToSave = true;
@@ -616,7 +632,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 				message1 = title + "\n" + message1;
 
-				long notificationId = jObj.optLong(KEY_NOTIFICATION_ID, System.currentTimeMillis());
+				int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, flag);
 
 				// store push in database for notificaion center screen...
 				String pushArrived = DateOperations.getCurrentTimeInUTC();
