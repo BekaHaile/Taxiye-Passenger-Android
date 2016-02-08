@@ -389,7 +389,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
 					int deepindex = jObj.optInt("deepindex", -1);
-					String message1 = jObj.getString(KEY_MESSAGE);
+					String message1 = jObj.optString(KEY_MESSAGE, "");
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -621,7 +621,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				}
 			}
 
-			if(tryToSave) {
+			if(tryToSave && !"".equalsIgnoreCase(message1)) {
 				String picture = jObj.optString("image", "");
 				if ("".equalsIgnoreCase(picture)) {
 					picture = jObj.optString("picture", "");
