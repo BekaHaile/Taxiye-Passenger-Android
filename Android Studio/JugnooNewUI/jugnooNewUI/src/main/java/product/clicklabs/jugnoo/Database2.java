@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -126,20 +127,25 @@ public class Database2 {                                                        
             + LINK + " TEXT, "
             + LINK_TIME + " TEXT"
             + ");");
-        
+
+
+
     }
 
-    private static void dropAndCreateNotificationTable(SQLiteDatabase database){
-        database.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTIFICATION_CENTER);
-        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                + NOTIFICATION_ID + " INTEGER, "
-                + TIME_PUSH_ARRIVED + " TEXT, "
-                + MESSAGE + " TEXT, "
-                + DEEP_INDEX + " TEXT, "
-                + TIME_TO_DISPLAY + " TEXT, "
-                + TIME_TILL_DISPLAY + " TEXT, "
-                + NOTIFICATION_IMAGE + " TEXT"
-                + ");");
+    private static void dropAndCreateNotificationTable(SQLiteDatabase database, Context context){
+        if(Prefs.with(context).getInt(Constants.FIRST_TIME_DB, 1) == 1) {
+            database.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION_CENTER);
+            database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
+                    + NOTIFICATION_ID + " INTEGER, "
+                    + TIME_PUSH_ARRIVED + " TEXT, "
+                    + MESSAGE + " TEXT, "
+                    + DEEP_INDEX + " TEXT, "
+                    + TIME_TO_DISPLAY + " TEXT, "
+                    + TIME_TILL_DISPLAY + " TEXT, "
+                    + NOTIFICATION_IMAGE + " TEXT"
+                    + ");");
+            Prefs.with(context).save(Constants.FIRST_TIME_DB, 0);
+        }
     }
 
 
@@ -150,6 +156,7 @@ public class Database2 {                                                        
             dbInstance = null;
             dbInstance = new Database2(context);
         }
+        dropAndCreateNotificationTable(dbInstance.database, context);
         return dbInstance;
     }
 
@@ -379,7 +386,7 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertNotification(int id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
+    public void insertNotification(Context context, int id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
                                    String timeTillDisplay, String notificationImage) {
         try{
             ContentValues contentValues = new ContentValues();
@@ -395,8 +402,8 @@ public class Database2 {                                                        
             Log.i(TAG, "insertNotification rowCount="+rowCount);
         } catch(Exception e){
             e.printStackTrace();
-            dropAndCreateNotificationTable(database);
-            insertNotification(id, timePushArrived, message, deepIndex, timeToDisplay, timeTillDisplay, notificationImage);
+            dropAndCreateNotificationTable(database, context);
+            insertNotification(context, id, timePushArrived, message, deepIndex, timeToDisplay, timeTillDisplay, notificationImage);
         }
     }
 

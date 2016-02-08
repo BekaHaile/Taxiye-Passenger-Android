@@ -637,15 +637,15 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				// store push in database for notificaion center screen...
 				String pushArrived = DateOperations.getCurrentTimeInUTC();
 				if (jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-					Database2.getInstance(this).insertNotification(notificationId, pushArrived, message1, "" + deepindex,
+					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, message1, "" + deepindex,
 							jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
 					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				} else if (jObj.has("timeToDisplay")) {
-					Database2.getInstance(this).insertNotification(notificationId, pushArrived, message1, "" + deepindex,
+					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, message1, "" + deepindex,
 							jObj.getString("timeToDisplay"), "", picture);
 					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				} else if (jObj.has("timeTillDisplay")) {
-					Database2.getInstance(this).insertNotification(notificationId, pushArrived, message1, "" + deepindex,
+					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, message1, "" + deepindex,
 							"0", jObj.getString("timeTillDisplay"), picture);
 					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				}

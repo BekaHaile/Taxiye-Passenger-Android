@@ -83,4 +83,7 @@ public interface Constants {
 	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
 	String KEY_ANALYTICS_SMS_LIST= "analytics_sms_list";
 
+
+	String FIRST_TIME_DB= "first_time_db";
+
 }
