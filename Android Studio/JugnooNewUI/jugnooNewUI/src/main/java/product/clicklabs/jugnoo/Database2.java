@@ -132,8 +132,9 @@ public class Database2 {                                                        
 
     }
 
-    private static void dropAndCreateNotificationTable(SQLiteDatabase database, Context context){
+    private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context){
         if(Prefs.with(context).getInt(Constants.FIRST_TIME_DB, 1) == 1) {
+            ArrayList<NotificationData> notifications = getAllNotification();
             database.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION_CENTER);
             database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
                     + NOTIFICATION_ID + " INTEGER, "
@@ -144,6 +145,16 @@ public class Database2 {                                                        
                     + TIME_TILL_DISPLAY + " TEXT, "
                     + NOTIFICATION_IMAGE + " TEXT"
                     + ");");
+
+            for(NotificationData data : notifications){
+                insertNotification(context, data.getNotificationId(),
+                        data.getTimePushArrived(),
+                        data.getMessage(),
+                        data.getDeepIndex(),
+                        data.getTimeToDisplay(),
+                        data.getTimeTillDisplay(),
+                        data.getNotificationImage());
+            }
             Prefs.with(context).save(Constants.FIRST_TIME_DB, 0);
         }
     }
@@ -156,7 +167,7 @@ public class Database2 {                                                        
             dbInstance = null;
             dbInstance = new Database2(context);
         }
-        dropAndCreateNotificationTable(dbInstance.database, context);
+        dbInstance.dropAndCreateNotificationTable(dbInstance.database, context);
         return dbInstance;
     }
 
@@ -399,7 +410,7 @@ public class Database2 {                                                        
             contentValues.put(NOTIFICATION_IMAGE, notificationImage);
             database.insert(TABLE_NOTIFICATION_CENTER, null, contentValues);
             int rowCount = getAllNotificationCount();
-            Log.i(TAG, "insertNotification rowCount="+rowCount);
+            Log.i(TAG, "insertNotification rowCount=" + rowCount);
         } catch(Exception e){
             e.printStackTrace();
             dropAndCreateNotificationTable(database, context);
