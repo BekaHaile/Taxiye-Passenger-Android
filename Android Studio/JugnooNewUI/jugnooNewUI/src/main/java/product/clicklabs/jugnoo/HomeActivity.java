@@ -5266,18 +5266,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     // *****************************Used for flurry work***************//
     @Override
     protected void onStart() {
-        super.onStart();
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
-        FlurryAgent.onEvent("HomeActivity started");
-		mGoogleApiClient.connect();
+        try {
+            super.onStart();
+            FlurryAgent.init(this, Config.getFlurryKey());
+            FlurryAgent.onStartSession(this, Config.getFlurryKey());
+            FlurryAgent.onEvent("HomeActivity started");
+            mGoogleApiClient.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
-        FlurryAgent.onEndSession(this);
-		mGoogleApiClient.disconnect();
+        try {
+            super.onStop();
+            FlurryAgent.onEndSession(this);
+            mGoogleApiClient.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
