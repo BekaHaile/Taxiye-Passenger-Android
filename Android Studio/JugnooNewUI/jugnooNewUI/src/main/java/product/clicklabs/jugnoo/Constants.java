@@ -76,5 +76,14 @@ public interface Constants {
 	String KEY_TUTORIAL_NO_OF_PAGES = "NumOfPages";
 
 	String KEY_SAVE_NOTIFICATION = "save_notification";
+	String KEY_NOTIFICATION_ID = "notification_id";
+
+	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
+
+	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
+	String KEY_ANALYTICS_SMS_LIST= "analytics_sms_list";
+
+
+	String FIRST_TIME_DB= "first_time_db";
 
 }

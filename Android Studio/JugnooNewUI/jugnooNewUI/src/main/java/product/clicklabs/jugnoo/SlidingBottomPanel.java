@@ -159,60 +159,68 @@ public class SlidingBottomPanel {
     }
 
     public void update(ArrayList<PromoCoupon> promoCoupons) {
-        this.promoCoupons = promoCoupons;
+        try {
+            this.promoCoupons = promoCoupons;
 
-        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+					, Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
-        if (promoCoupons != null) {
-            if(selectedCoupon == null) {
-                if (promoCoupons.size() > 0) {
-                    selectedCoupon = noSelectionCoupon;
-                } else {
-                    selectedCoupon = new CouponInfo(0, "");
-                    //textViewOffersValue.setVisibility(View.GONE);
-                    textViewOffersValue.setText("");
-                }
-            }
-            if (promoCoupons.size() > 0) {
-                textViewOffersValue.setText("" + promoCoupons.size());
-                textViewOffersValue.setVisibility(View.VISIBLE);
-            } else{
-                //textViewOffersValue.setVisibility(View.GONE);
-                textViewOffersValue.setText("");
-            }
+            if (promoCoupons != null) {
+				if(selectedCoupon == null) {
+					if (promoCoupons.size() > 0) {
+						selectedCoupon = noSelectionCoupon;
+					} else {
+						selectedCoupon = new CouponInfo(0, "");
+						//textViewOffersValue.setVisibility(View.GONE);
+						textViewOffersValue.setText("");
+					}
+				}
+				if (promoCoupons.size() > 0) {
+					textViewOffersValue.setText("" + promoCoupons.size());
+					textViewOffersValue.setVisibility(View.VISIBLE);
+				} else{
+					//textViewOffersValue.setVisibility(View.GONE);
+					textViewOffersValue.setText("");
+				}
 
-        } else {
-            textViewOffersValue.setText("");
-            //textViewOffersValue.setVisibility(View.GONE);
+			} else {
+				textViewOffersValue.setText("");
+				//textViewOffersValue.setVisibility(View.GONE);
+			}
+
+
+            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
+            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
+				((SlidingBottomFareFragment) frag1).update();
+			}
+
+            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
+            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
+				((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
+				((SlidingBottomOffersFragment) frag).update(promoCoupons);
+			}
+            updatePaymentOption();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
-        if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
-            ((SlidingBottomFareFragment) frag1).update();
-        }
-
-        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-        if (frag != null && frag instanceof SlidingBottomOffersFragment) {
-            ((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
-            ((SlidingBottomOffersFragment) frag).update(promoCoupons);
-        }
-        updatePaymentOption();
 
     }
 
     public void updatePaymentOption() {
-        if(Data.userData.getPaytmError() == 1){
-            Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-        }
-        if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-            imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
-            textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                    , Data.userData.getPaytmBalanceStr()));
-        } else {
-            imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
-            textViewCashValue.setText(activity.getResources().getString(R.string.cash));
+        try {
+            if(Data.userData.getPaytmError() == 1){
+				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+			}
+            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
+				imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
+				textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+						, Data.userData.getPaytmBalanceStr()));
+			} else {
+				imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
+				textViewCashValue.setText(activity.getResources().getString(R.string.cash));
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

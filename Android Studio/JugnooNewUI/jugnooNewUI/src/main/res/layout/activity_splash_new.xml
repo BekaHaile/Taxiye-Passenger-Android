@@ -454,7 +454,7 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_34"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="textNoSuggestions|textCapWords"
                         />
 
                     <TextView

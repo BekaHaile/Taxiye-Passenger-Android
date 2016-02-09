@@ -256,52 +256,12 @@
                         android:layout_gravity="center_horizontal"
                         android:src="@color/theme_color"/>
 
-
-                    <Button
-                        android:id="@+id/buttonMakePayment"
-                        android:layout_width="@dimen/button_width"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="60px"
-                        android:background="@drawable/button_theme"
-                        android:text="Genrate OTP"
-                        android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="@dimen/button_text_size"
-                        android:visibility="gone" />
-
-
-                    <Button
-                        android:id="@+id/buttonMakePaymentOTP"
-                        android:layout_width="@dimen/button_width"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="50px"
-                        android:background="@drawable/button_theme"
-                        android:text="Send OTP"
-                        android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="@dimen/button_text_size"
-                        android:visibility="gone" />
-
                     <Button
                         android:id="@+id/buttonAddMoney"
                         style="@style/ButtonTheme"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="60px"
                         android:text="@string/add_paytm_cash" />
-
-
-                    <Button
-                        android:id="@+id/buttonWithdrawMoney"
-                        android:layout_width="@dimen/button_width"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="50px"
-                        android:background="@drawable/button_theme"
-                        android:text="Withdraw Money"
-                        android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="@dimen/button_text_size"
-                        android:visibility="gone" />
-
 
                 </LinearLayout>
             </LinearLayout>

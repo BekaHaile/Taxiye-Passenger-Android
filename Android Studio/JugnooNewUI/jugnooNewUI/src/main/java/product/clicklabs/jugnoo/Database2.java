@@ -7,24 +7,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Handles database related work
  */
 public class Database2 {                                                                    // class for handling database related activities
+
+    private final String TAG = Database2.class.getSimpleName();
 
     private static Database2 dbInstance;
 
@@ -94,7 +96,6 @@ public class Database2 {                                                        
 
     private static void createAllTables(SQLiteDatabase database) {
         /****************************************** CREATING ALL THE TABLES *****************************************************/
-
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_RIDE_INFO + " ("
                 + POSITION_ID + " INTEGER, "
                 + SOURCE_LATITUDE + " REAL, "
@@ -110,8 +111,9 @@ public class Database2 {                                                        
             + API_REQUEST_PARAMS + " TEXT"
             + ");");
 
+
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                + NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + NOTIFICATION_ID + " INTEGER, "
                 + TIME_PUSH_ARRIVED + " TEXT, "
                 + MESSAGE + " TEXT, "
                 + DEEP_INDEX + " TEXT, "
@@ -120,12 +122,43 @@ public class Database2 {                                                        
                 + NOTIFICATION_IMAGE + " TEXT"
                 + ");");
 
-            database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_LINKS + " ("
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_LINKS + " ("
             + LINK + " TEXT, "
             + LINK_TIME + " TEXT"
             + ");");
-        
+
+
+
     }
+
+    private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context){
+        if(Prefs.with(context).getInt(Constants.FIRST_TIME_DB, 1) == 1) {
+            ArrayList<NotificationData> notifications = getAllNotification();
+            database.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION_CENTER);
+            database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
+                    + NOTIFICATION_ID + " INTEGER, "
+                    + TIME_PUSH_ARRIVED + " TEXT, "
+                    + MESSAGE + " TEXT, "
+                    + DEEP_INDEX + " TEXT, "
+                    + TIME_TO_DISPLAY + " TEXT, "
+                    + TIME_TILL_DISPLAY + " TEXT, "
+                    + NOTIFICATION_IMAGE + " TEXT"
+                    + ");");
+
+            for(NotificationData data : notifications){
+                insertNotification(context, data.getNotificationId(),
+                        data.getTimePushArrived(),
+                        data.getMessage(),
+                        data.getDeepIndex(),
+                        data.getTimeToDisplay(),
+                        data.getTimeTillDisplay(),
+                        data.getNotificationImage());
+            }
+            Prefs.with(context).save(Constants.FIRST_TIME_DB, 0);
+        }
+    }
+
 
     public static Database2 getInstance(Context context) {
         if (dbInstance == null) {
@@ -134,6 +167,7 @@ public class Database2 {                                                        
             dbInstance = null;
             dbInstance = new Database2(context);
         }
+        dbInstance.dropAndCreateNotificationTable(dbInstance.database, context);
         return dbInstance;
     }
 
@@ -258,7 +292,7 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertPendingAPICall(Context context, String url, RequestParams requestParams) {
+    public void insertPendingAPICall(Context context, String url, HashMap<String, String> requestParams) {
         try{
             ContentValues contentValues = new ContentValues();
             contentValues.put(API_URL, url);
@@ -286,6 +320,11 @@ public class Database2 {                                                        
     }
 
 
+
+
+
+
+
     public ArrayList<NotificationData> getAllNotification() {
         ArrayList<NotificationData> allNotification = new ArrayList<NotificationData>();
         try {
@@ -304,8 +343,6 @@ public class Database2 {                                                        
 
                 for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
                     try {
-                        Log.e("cursor.getString(in4)", "---->"+cursor.getString(in4));
-                        Log.e("cursor.getString(in5)", "---->"+cursor.getString(in5));
                         long savedIn4 = 600000;
                         try{
                             savedIn4 = Long.parseLong(cursor.getString(in4));
@@ -360,9 +397,11 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertNotification(String timePushArrived, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
+    public void insertNotification(Context context, int id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
+                                   String timeTillDisplay, String notificationImage) {
         try{
             ContentValues contentValues = new ContentValues();
+            contentValues.put(NOTIFICATION_ID, id);
             contentValues.put(TIME_PUSH_ARRIVED, timePushArrived);
             contentValues.put(MESSAGE, message);
             contentValues.put(DEEP_INDEX, deepIndex);
@@ -370,8 +409,12 @@ public class Database2 {                                                        
             contentValues.put(TIME_TILL_DISPLAY, timeTillDisplay);
             contentValues.put(NOTIFICATION_IMAGE, notificationImage);
             database.insert(TABLE_NOTIFICATION_CENTER, null, contentValues);
+            int rowCount = getAllNotificationCount();
+            Log.i(TAG, "insertNotification rowCount=" + rowCount);
         } catch(Exception e){
             e.printStackTrace();
+            dropAndCreateNotificationTable(database, context);
+            insertNotification(context, id, timePushArrived, message, deepIndex, timeToDisplay, timeTillDisplay, notificationImage);
         }
     }
 
@@ -392,6 +435,8 @@ public class Database2 {                                                        
         }
 
     }
+
+
 
 
 

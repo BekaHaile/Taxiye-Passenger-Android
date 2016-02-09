@@ -36,6 +36,8 @@ import retrofit.mime.TypedByteArray;
  */
 public class PaymentActivity extends BaseFragmentActivity{
 
+	private final String TAG = PaymentActivity.class.getSimpleName();
+
 	public int addPaymentPathInt = AddPaymentPath.WALLET.getOrdinal();
 
     @Override
@@ -156,7 +158,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
 							String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-							Log.i("request succesfull", "response = " + responseStr);
+							Log.i(TAG, "paytmCheckBalance response = " + responseStr);
 							try {
 								JSONObject jObj = new JSONObject(responseStr);
 								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
@@ -171,7 +173,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 						@Override
 						public void failure(RetrofitError error) {
 							try {
-								Log.e("request fail", error.toString());
+								Log.e(TAG, "paytmCheckBalance error="+error.toString());
 								DialogPopup.dismissLoadingDialog();
 								retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
 							} catch (Exception e) {

@@ -333,10 +333,10 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				}
 
 			}
+			searchListActionsHandler.onPlaceSaved();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		searchListActionsHandler.onPlaceSaved();
 	}
 
 	public ProgressWheel getProgressBarSearch(){

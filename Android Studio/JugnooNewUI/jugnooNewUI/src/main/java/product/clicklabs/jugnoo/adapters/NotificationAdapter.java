@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -67,9 +68,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         notification = notificationList.get(position);
 
         holder.descriptionTxt.setText(notification.getMessage());
+        holder.textViewTime.setText(DateOperations
+                .convertDateViaFormat(DateOperations.utcToLocal(notification.getTimePushArrived())));
         holder.container.setTag(position);
-
-		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 
 		try {
 			if(notification.getNotificationImage().equalsIgnoreCase("")){
@@ -164,16 +165,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout container;
         public ImageView notificationImage;
-        public TextView descriptionTxt;
+        public TextView descriptionTxt, textViewTime;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             container = (LinearLayout) itemView.findViewById(R.id.container);
             notificationImage = (ImageView)itemView.findViewById(R.id.notification_image);
             descriptionTxt = (TextView) itemView.findViewById(R.id.description);
-            //codeTxt = (TextView) itemView.findViewById(R.id.code_text);
-            //dateTxt = (TextView)itemView.findViewById(R.id.date_text);
+            textViewTime = (TextView) itemView.findViewById(R.id.textViewTime);
 
             descriptionTxt.setTypeface(Fonts.mavenLight(activity));
+            textViewTime.setTypeface(Fonts.mavenLight(activity));
         }
     }
 }

@@ -7,37 +7,36 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.ContactsEntityBean;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by socomo on 11/19/15.
  */
 public class ContactsUploadService extends IntentService {
 
-    private static final String TAG = "ContactUploadService";
+    private static final String TAG = ContactsUploadService.class.getSimpleName();
     private static int UPLOAD_BATCH_SIZE = 100;
     private ArrayDeque<ContactSyncEntry> mSyncQueue;
     private String accessToken = "", sessionId = "", engagementId = "";
@@ -370,7 +369,7 @@ public class ContactsUploadService extends IntentService {
     }
 
     private void uploadContactsApi(String requestParam, final ContactSyncEntry currentSyncEntry){
-        RequestParams params = new RequestParams();
+        HashMap<String, String> params = new HashMap<>();
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             //DialogPopup.showLoadingDialog(this, "Loading...");
@@ -389,44 +388,39 @@ public class ContactsUploadService extends IntentService {
 
             Log.i("params request_dup_registration", "=" + params);
 
+            Response response = RestClient.getApiServices().referAllContactsSync(params);
+            if(response != null){
+                try {
+                    String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                    Log.i(TAG, "referAllContactsSync response = " + responseStr);
 
-            SyncHttpClient client1 = Data.getSyncClient();
-//            AsyncHttpClient client = Data.getClient();
-            client1.post(Config.getServerUrl() + "/refer_all_contacts", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
-
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-                            doneWithSync();
-                        }
-
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response request_dup_registration", "response = " + response);
-
-                            try {
-								JSONObject jObj = new JSONObject(response);
-								int flag = jObj.getInt("flag");
-								String message = JSONParser.getServerMessage(jObj);
-								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-									Data.userData.contactSaved = 1;
-								}
-								else{
-									Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-								}
-                            }  catch (Exception exception) {
-                                exception.printStackTrace();
-                                //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                            }
-                            //DialogPopup.dismissLoadingDialog();
-                            currentSyncEntry.setSynced(true);
-                            checkIfAllSynced();
-                            doneWithSync();
-                        }
-                    });
+                    try {
+						JSONObject jObj = new JSONObject(responseStr);
+						int flag = jObj.getInt("flag");
+						String message = JSONParser.getServerMessage(jObj);
+						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+							Data.userData.contactSaved = 1;
+						}
+						else{
+							Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+						}
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						//DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+                    //DialogPopup.dismissLoadingDialog();
+                    currentSyncEntry.setSynced(true);
+                    checkIfAllSynced();
+                    doneWithSync();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                    doneWithSync();
+                }
+            } else{
+                Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                doneWithSync();
+            }
         }
         else {
             //Database2.getInstance(ContactsUploadService.this).insertPendingAPICall(ContactsUploadService.this, Config.getServerUrl()+"/refer_all_contacts", params);

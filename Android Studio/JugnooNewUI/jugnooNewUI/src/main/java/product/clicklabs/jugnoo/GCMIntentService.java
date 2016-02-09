@@ -31,6 +31,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -48,6 +49,8 @@ import product.clicklabs.jugnoo.wallet.EventsHolder;
 
 public class GCMIntentService extends GcmListenerService implements Constants {
 
+	private final String TAG = GCMIntentService.class.getSimpleName();
+
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
 
@@ -62,8 +65,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             long when = System.currentTimeMillis();
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Log.v("message", "," + message);
 
             Intent notificationIntent = new Intent(context, SplashNewActivity.class);
 
@@ -113,8 +114,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             long when = System.currentTimeMillis();
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Log.v("message", "," + message);
 
             Intent notificationIntent = new Intent(context, HomeActivity.class);
 
@@ -166,8 +165,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Log.v("message", "," + message);
-
             Intent notificationIntent = new Intent(context, SplashNewActivity.class);
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
@@ -215,8 +212,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			long when = System.currentTimeMillis();
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-			Log.v("message", "," + message);
 
 			Intent notificationIntent;
 			if(HomeActivity.appInterruptHandler != null){
@@ -277,8 +272,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Log.v("message", "," + message);
-
             Intent appOpenIntent;
             try {
                 PackageManager manager = context.getPackageManager();
@@ -331,8 +324,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			Log.v("message", "," + message);
-
 			Intent notificationIntent = new Intent(context, SplashNewActivity.class);
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
@@ -383,10 +374,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 	@Override
 	public void onMessageReceived(String from, Bundle data) {
-        Log.e("Recieved a gcm message arg1...", "," + data);
+        Log.e(TAG, "onMessageReceived data=" + data);
 
 		try {
-			Log.e("Recieved a gcm message arg1...", "," + data);
 
 			if (!"".equalsIgnoreCase(data.getString(KEY_MESSAGE, ""))) {
 
@@ -399,7 +389,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
 					int deepindex = jObj.optInt("deepindex", -1);
-					String message1 = jObj.getString(KEY_MESSAGE);
+					String message1 = jObj.optString(KEY_MESSAGE, "");
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -497,7 +487,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
 
 						if (jObj.has("client_id")) {
-							Log.e("jObj=", "=" + jObj);
 							String clientId = jObj.getString("client_id");
 							if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID, AccessTokenGenerator.MEALS_PACKAGE);
@@ -557,10 +546,25 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1);
-
-					} else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
+					}
+					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
-					} else if (PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal() == flag) {
+						if (EventsHolder.displayPushHandler != null) {
+							EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
+						}
+					}
+					else if (PushFlags.DELETE_NOTIFICATION_ID.getOrdinal() == flag) {
+						if(jObj.has(KEY_NOTIFICATION_ID)) {
+							int id = jObj.optInt(KEY_NOTIFICATION_ID, -1);
+							if(id != -1) {
+								Database2.getInstance(this).deleteNotification(id);
+								if (EventsHolder.displayPushHandler != null) {
+									EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
+								}
+							}
+						}
+					}
+					else if (PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal() == flag) {
 						if(HomeActivity.appInterruptHandler != null && Utils.isForeground(this)){
 							HomeActivity.appInterruptHandler.showDialog(message1);
 						}
@@ -575,7 +579,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
                         }
                     }
 
-					savePush(jObj, message1, deepindex);
+					savePush(jObj, flag, title, message1, deepindex);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -584,41 +588,64 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			}
 
 		} catch (Exception e) {
-			Log.e("Recieved exception message arg1...", "," + data);
-			Log.e("exception", "," + e);
+			e.printStackTrace();
 		}
     }
 
-	private void savePush(JSONObject jObj, String message1, int deepindex){
+	private ArrayList<Integer> dontSavePushes = null;
+	private ArrayList<Integer> getDontSavePushesArray(){
+		if(dontSavePushes == null){
+			dontSavePushes = new ArrayList<>();
+//			dontSavePushes.add(PushFlags.WAITING_STARTED.getOrdinal());
+//			dontSavePushes.add(PushFlags.WAITING_ENDED.getOrdinal());
+//			dontSavePushes.add(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal());
+//			dontSavePushes.add(PushFlags.CHANGE_STATE.getOrdinal());
+//			dontSavePushes.add(PushFlags.PAYMENT_RECEIVED.getOrdinal());
+//			dontSavePushes.add(PushFlags.CLEAR_ALL_MESSAGE.getOrdinal());
+//			dontSavePushes.add(PushFlags.DELETE_NOTIFICATION_ID.getOrdinal());
+//			dontSavePushes.add(PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal());
+//			dontSavePushes.add(PushFlags.DRIVER_ETA.getOrdinal());
+		}
+		return dontSavePushes;
+	}
+
+	private void savePush(JSONObject jObj, int flag, String title, String message1, int deepindex){
 		try {
-			int flag = jObj.getInt(KEY_FLAG);
 			boolean tryToSave = false;
 			if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
 				tryToSave = true;
-			} else{
+			} else if(!getDontSavePushesArray().contains(flag)){
 				int saveNotification = jObj.optInt(KEY_SAVE_NOTIFICATION, 0);
 				if(1 == saveNotification){
 					tryToSave = true;
 				}
 			}
 
-			if(tryToSave) {
+			if(tryToSave && !"".equalsIgnoreCase(message1)) {
 				String picture = jObj.optString("image", "");
 				if ("".equalsIgnoreCase(picture)) {
 					picture = jObj.optString("picture", "");
 				}
+//				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() != flag) {
+//					message1 = title + "\n" + message1;
+//				}
+
+				message1 = title + "\n" + message1;
+
+				int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, flag);
+
 				// store push in database for notificaion center screen...
 				String pushArrived = DateOperations.getCurrentTimeInUTC();
 				if (jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-					Database2.getInstance(this).insertNotification(pushArrived, message1, "" + deepindex,
+					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, message1, "" + deepindex,
 							jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
 					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				} else if (jObj.has("timeToDisplay")) {
-					Database2.getInstance(this).insertNotification(pushArrived, message1, "" + deepindex,
+					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, message1, "" + deepindex,
 							jObj.getString("timeToDisplay"), "", picture);
 					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				} else if (jObj.has("timeTillDisplay")) {
-					Database2.getInstance(this).insertNotification(pushArrived, message1, "" + deepindex,
+					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, message1, "" + deepindex,
 							"0", jObj.getString("timeTillDisplay"), picture);
 					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				}

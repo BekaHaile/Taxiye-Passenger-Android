@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.sticky;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -19,15 +18,20 @@ public class JugnooJeanieTutorialActivity extends FragmentActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tutorial);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_tutorial);
 
-        numOfPages = getIntent().getIntExtra(Constants.KEY_TUTORIAL_NO_OF_PAGES, 1);
-        new ASSL(JugnooJeanieTutorialActivity.this, (LinearLayout)findViewById(R.id.rv), 1134, 720, false);
+            numOfPages = getIntent().getIntExtra(Constants.KEY_TUTORIAL_NO_OF_PAGES, 1);
+            new ASSL(JugnooJeanieTutorialActivity.this, (LinearLayout)findViewById(R.id.rv), 1134, 720, false);
 
 
-        if (savedInstanceState == null) {
-            loadTutorialScreen();
+            if (savedInstanceState == null) {
+				loadTutorialScreen();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            finish();
         }
 
     }

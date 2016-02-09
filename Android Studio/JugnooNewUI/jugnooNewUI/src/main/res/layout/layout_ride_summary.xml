@@ -18,21 +18,21 @@
 
         <ImageView
             android:layout_width="53px"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_ride_summary_line"
-
+            android:layout_height="900px"
+            android:background="@drawable/ic_ride_summary_line"
             />
 
         <ImageView
             android:layout_width="53px"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_ride_summary_line"
+            android:layout_height="900px"
+            android:background="@drawable/ic_ride_summary_line"
+            android:rotation="180"
             android:layout_alignParentRight="true"
             />
 
         <LinearLayout
             android:layout_width="562px"
-            android:layout_height="match_parent"
+            android:layout_height="892px"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="4px"
             android:layout_marginLeft="-6px"
@@ -113,6 +113,7 @@
                 android:layout_width="540px"
                 android:layout_height="2px"
                 android:background="@color/text_color_hint"
+                android:layout_gravity="center_horizontal"
                 />
 
             <TextView
@@ -130,6 +131,7 @@
                 android:layout_width="540px"
                 android:layout_height="2px"
                 android:background="@color/text_color_hint"
+                android:layout_gravity="center_horizontal"
                 />
 
             <ScrollView
@@ -713,6 +715,7 @@
             </ScrollView>
 
         </LinearLayout>
+
 
 
 

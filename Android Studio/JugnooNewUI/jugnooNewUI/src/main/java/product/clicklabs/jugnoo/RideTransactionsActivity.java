@@ -19,33 +19,37 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FutureSchedule;
 import product.clicklabs.jugnoo.datastructure.RideInfo;
-import product.clicklabs.jugnoo.datastructure.ScheduleCancelListener;
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class RideTransactionsActivity extends BaseActivity implements UpdateRideTransaction, FlurryEventNames {
+
+    private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
 	RelativeLayout relative;
 	
@@ -190,105 +194,101 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
             DialogPopup.showLoadingDialog(activity, "Loading...");
             textViewInfo.setVisibility(View.GONE);
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 		
 			params.put("access_token", Data.userData.accessToken);
-			params.put("start_from", "" + rideInfosList.size());
-			
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/get_recent_rides", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
+            params.put("start_from", "" + rideInfosList.size());
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        updateListData("Some error occurred, tap to retry", true);
-                        DialogPopup.dismissLoadingDialog();
-                    }
+            RestClient.getApiServices().getRecentRides(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "getRecentRides response = " + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
 
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        try {
+                                totalRides = jObj.getInt("num_rides");
 
-                            jObj = new JSONObject(response);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-
-                                    totalRides = jObj.getInt("num_rides");
-
-                                    if (jObj.has("schedule")) {
-                                        JSONObject jSchedule = jObj.getJSONObject("schedule");
-                                        futureSchedule = new FutureSchedule(jSchedule.getString("pickup_id"),
+                                if (jObj.has("schedule")) {
+                                    JSONObject jSchedule = jObj.getJSONObject("schedule");
+                                    futureSchedule = new FutureSchedule(jSchedule.getString("pickup_id"),
                                             jSchedule.getString("address"),
                                             jSchedule.getString("pickup_date"),
                                             jSchedule.getString("pickup_time"),
                                             new LatLng(jSchedule.getDouble("latitude"), jSchedule.getDouble("longitude")),
                                             jSchedule.getInt("modifiable"),
                                             jSchedule.getInt("status"));
-                                        totalRides = totalRides + 1;
-                                    } else {
-                                        if (rideInfosList.size() == 0) {
-                                            futureSchedule = null;
-                                        }
+                                    totalRides = totalRides + 1;
+                                } else {
+                                    if (rideInfosList.size() == 0) {
+                                        futureSchedule = null;
                                     }
+                                }
 
 
-                                    if (jObj.has("rides")) {
-                                        JSONArray jRidesArr = jObj.getJSONArray("rides");
-                                        for (int i = 0; i < jRidesArr.length(); i++) {
-                                            JSONObject jRide = jRidesArr.getJSONObject(i);
-                                            int isRatedBefore = 1;
-                                            if (jRide.has("is_rated_before")) {
-                                                isRatedBefore = jRide.getInt("is_rated_before");
-                                            }
+                                if (jObj.has("rides")) {
+                                    JSONArray jRidesArr = jObj.getJSONArray("rides");
+                                    for (int i = 0; i < jRidesArr.length(); i++) {
+                                        JSONObject jRide = jRidesArr.getJSONObject(i);
+                                        int isRatedBefore = 1;
+                                        if (jRide.has("is_rated_before")) {
+                                            isRatedBefore = jRide.getInt("is_rated_before");
+                                        }
 
-                                            int driverId = 0;
-                                            if (jRide.has("driver_id")) {
-                                                driverId = jRide.getInt("driver_id");
-                                            }
+                                        int driverId = 0;
+                                        if (jRide.has("driver_id")) {
+                                            driverId = jRide.getInt("driver_id");
+                                        }
 
-                                            int engagementId = 0;
-                                            if (jRide.has("engagement_id")) {
-                                                engagementId = jRide.getInt("engagement_id");
-                                            }
+                                        int engagementId = 0;
+                                        if (jRide.has("engagement_id")) {
+                                            engagementId = jRide.getInt("engagement_id");
+                                        }
 
-											double waitTime = -1;
-											if(jRide.has("wait_time")){
-												waitTime = jRide.getDouble("wait_time");
-											}
+                                        double waitTime = -1;
+                                        if (jRide.has("wait_time")) {
+                                            waitTime = jRide.getDouble("wait_time");
+                                        }
 
-											int isCancelledRide = 0;
-											if(jRide.has("is_cancelled_ride")){
-												isCancelledRide = jRide.getInt("is_cancelled_ride");
-											}
+                                        int isCancelledRide = 0;
+                                        if (jRide.has("is_cancelled_ride")) {
+                                            isCancelledRide = jRide.getInt("is_cancelled_ride");
+                                        }
 
-                                            rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
+                                        rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
                                                 jRide.getString("drop_address"),
                                                 jRide.getDouble("amount"),
                                                 jRide.getDouble("distance"),
                                                 jRide.getDouble("ride_time"), waitTime,
                                                 jRide.getString("date"), isRatedBefore, driverId, engagementId, isCancelledRide));
-                                        }
-									}
-
-                                    updateListData("You haven't tried Jugnoo yet.", false);
-
-                                } else {
-                                    updateListData("Some error occurred, tap to retry", true);
+                                    }
                                 }
+
+                                updateListData("You haven't tried Jugnoo yet.", false);
+
                             } else {
                                 updateListData("Some error occurred, tap to retry", true);
                             }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
+                        } else {
                             updateListData("Some error occurred, tap to retry", true);
                         }
-                        DialogPopup.dismissLoadingDialog();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        updateListData("Some error occurred, tap to retry", true);
                     }
-                });
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "getRecentRides error="+error.toString());
+                    updateListData("Some error occurred, tap to retry", true);
+                    DialogPopup.dismissLoadingDialog();
+                }
+            });
 		}
 		else {
 			//updateListData("No internet connection, tap to retry", true);
@@ -529,67 +529,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
 				}
             }
 
-            holder.linearLayoutCancel.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if(futureSchedule != null){
-                        DialogPopup.alertPopupTwoButtonsWithListeners(RideTransactionsActivity.this, "Cancel Scheduled Ride", "Are you sure you want to cancel the scheduled ride?", "OK", "Cancel",
-                            new View.OnClickListener() {
-
-                                @Override
-                                public void onClick(View v) {
-                                    if(futureSchedule != null){
-                                        removeScheduledRideAPI(RideTransactionsActivity.this, futureSchedule.pickupId, new ScheduleCancelListener() {
-
-                                            @Override
-                                            public void onCancelSuccess() {
-                                                getRecentRidesAPI(RideTransactionsActivity.this, true);
-                                            }
-                                        });
-                                    }
-                                }
-                            },
-                            new View.OnClickListener() {
-
-                                @Override
-                                public void onClick(View v) {
-                                }
-                            }, true, true);
-                    }
-
-                }
-            });
-
-
-            /*holder.relativeLayoutRateRide.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        holder = (ViewHolderRideTransaction) v.getTag();
-
-                        Intent intent = new Intent(RideTransactionsActivity.this, FeedbackActivity.class);
-                        intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.PAST_RIDE.getOrdinal());
-
-                        if(futureSchedule != null) {
-                            intent.putExtra("position", holder.id-1);
-                            intent.putExtra("driver_id", rideInfosList.get(holder.id-1).driverId);
-                            intent.putExtra("engagement_id", rideInfosList.get(holder.id-1).engagementId);
-                        }
-                        else{
-                            intent.putExtra("position", holder.id);
-                            intent.putExtra("driver_id", rideInfosList.get(holder.id).driverId);
-                            intent.putExtra("engagement_id", rideInfosList.get(holder.id).engagementId);
-                        }
-
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        FlurryEventLogger.event(RIDE_RATED_ON_RIDE_HISTORY);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });*/
 
 			holder.linearLayoutMain.setOnClickListener(new OnClickListener() {
 				@Override
@@ -640,75 +579,6 @@ public class RideTransactionsActivity extends BaseActivity implements UpdateRide
             else{
                 relativeLayoutShowMore.setVisibility(View.GONE);
             }
-        }
-
-    }
-
-
-    public static void removeScheduledRideAPI(final Activity activity, String pickupId, final ScheduleCancelListener scheduleCancelListener) {
-        if (AppStatus.getInstance(activity).isOnline(activity)) {
-
-            DialogPopup.showLoadingDialog(activity, "Loading...");
-
-            RequestParams params = new RequestParams();
-
-            params.put("access_token", Data.userData.accessToken);
-            params.put("pickup_id", pickupId);
-
-            product.clicklabs.jugnoo.utils.Log.i("remove_pickup_schedule api params", ">" + params);
-
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/remove_pickup_schedule", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        product.clicklabs.jugnoo.utils.Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        product.clicklabs.jugnoo.utils.Log.i("Server response", "response = " + response);
-
-                        try {
-                            jObj = new JSONObject(response);
-
-                            if(!jObj.isNull("error")){
-                                String errorMessage = jObj.getString("error");
-                                int flag = jObj.getInt("flag");
-                                if(Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())){
-                                    HomeActivity.logoutUser(activity);
-                                }
-                                else if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag){
-                                    DialogPopup.alertPopup(activity, "", errorMessage);
-                                }
-                                else{
-                                    DialogPopup.alertPopup(activity, "", errorMessage);
-                                }
-                                DialogPopup.dismissLoadingDialog();
-                            }
-                            else{
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag){
-                                    String message = jObj.getString("message");
-                                    DialogPopup.alertPopup(activity, "", message);
-                                    scheduleCancelListener.onCancelSuccess();
-                                }
-                                DialogPopup.dismissLoadingDialog();
-                            }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                            DialogPopup.dismissLoadingDialog();
-                        }
-                    }
-                });
-        }
-        else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
 
     }

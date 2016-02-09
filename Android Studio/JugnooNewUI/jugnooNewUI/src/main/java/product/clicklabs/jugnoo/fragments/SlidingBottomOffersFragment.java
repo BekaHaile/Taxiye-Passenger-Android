@@ -89,9 +89,13 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
     }
 
     public void setOfferAdapter(ArrayList<PromoCoupon> offerList){
-        offersAdapter = new OffersAdapter(offerList);
-        recyclerViewOffers.setAdapter(offersAdapter);
-        activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
+        try {
+            offersAdapter = new OffersAdapter(offerList);
+            recyclerViewOffers.setAdapter(offersAdapter);
+            activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void update(ArrayList<PromoCoupon> promoCoupons){
@@ -201,12 +205,16 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = (int) v.getTag();
-                    PromoCoupon promoCoupon = offerList.get(position);
-                    if (promoCoupon instanceof CouponInfo) {
-                        DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description);
-                    } else if (promoCoupon instanceof PromotionInfo) {
-                        DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo)promoCoupon).terms);
+                    try {
+                        int position = (int) v.getTag();
+                        PromoCoupon promoCoupon = offerList.get(position);
+                        if (promoCoupon instanceof CouponInfo) {
+							DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description);
+						} else if (promoCoupon instanceof PromotionInfo) {
+							DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo)promoCoupon).terms);
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -214,14 +222,18 @@ public class SlidingBottomOffersFragment extends Fragment implements View.OnClic
             holder.linearLayoutPromotion1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = (int) v.getTag();
-                    PromoCoupon promoCoupon = offerList.get(position);
-                    if (activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id) {
-                        activity.getSlidingBottomPanel().setSelectedCoupon(-1);
-                    } else {
-                        activity.getSlidingBottomPanel().setSelectedCoupon(position);
+                    try {
+                        int position = (int) v.getTag();
+                        PromoCoupon promoCoupon = offerList.get(position);
+                        if (activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id) {
+							activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+						} else {
+							activity.getSlidingBottomPanel().setSelectedCoupon(position);
+						}
+                        notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    notifyDataSetChanged();
                 }
             });
 

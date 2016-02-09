@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -104,8 +103,12 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
-        System.gc();
+		try {
+			ASSL.closeActivity(linearLayoutRoot);
+			System.gc();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
