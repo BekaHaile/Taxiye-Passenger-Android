@@ -231,7 +231,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
-    Button initialMyLocationBtn, changeLocalityBtn;
+    Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
 
 	RelativeLayout relativeLayoutGoogleAttr;
 	ImageView imageViewGoogleAttrCross;
@@ -576,7 +576,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInitialInstructions.setVisibility(View.GONE);
         changeLocalityLayout = (RelativeLayout)findViewById(R.id.changeLocalityLayout);
         textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
-
+        buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
 
         relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
         textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor);
@@ -1583,6 +1583,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
+            buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 

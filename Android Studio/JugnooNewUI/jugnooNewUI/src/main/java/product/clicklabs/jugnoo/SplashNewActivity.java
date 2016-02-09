@@ -1768,6 +1768,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private void setLoginScreenValuesOnCreate(){
 		// set email screen values according to intent
 		editTextEmail.setText("");
+		editTextPassword.setText("");
 		try {
 			if(getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterationType.EMAIL == SplashNewActivity.registerationType){
 				if(phoneNoLogin) {
