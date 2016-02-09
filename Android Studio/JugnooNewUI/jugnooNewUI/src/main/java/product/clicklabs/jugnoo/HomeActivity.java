@@ -236,7 +236,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
-    Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn;
+    Button initialMyLocationBtn, changeLocalityBtn;
 
 	RelativeLayout relativeLayoutGoogleAttr;
 	ImageView imageViewGoogleAttrCross;
@@ -589,14 +589,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Fonts.mavenLight(this));
 
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
-        initialMyLocationBtnChangeLoc = (Button) findViewById(R.id.initialMyLocationBtnChangeLoc);
         changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn);
         changeLocalityBtn.setTypeface(Fonts.mavenRegular(this));
 
         initialMyLocationBtn.setVisibility(View.VISIBLE);
         changeLocalityLayout.setVisibility(View.GONE);
-        changeLocalityBtn.setVisibility(View.GONE);
-        initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
 
@@ -1575,7 +1572,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     else{
                         Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target));
-//                        textViewNearestDriverETA
                         if(MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
 							Data.lastRefreshLatLng = map.getCameraPosition().target;
                             refresh = true;
@@ -1592,7 +1588,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
-            initialMyLocationBtnChangeLoc.setOnClickListener(mapMyLocationClick);
             assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 
@@ -1619,6 +1614,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 				}
 			}
+
+            switchUserScreen();
+
+            startUIAfterGettingUserStatus();
 
 			if(Data.userData.getPromoSuccess() != 0) {
 				new Handler().postDelayed(new Runnable() {
@@ -1647,16 +1646,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
                         startActivity(intent);
                     }
+                    relativeLayoutLocationError.setVisibility(View.GONE);
+                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+                    imageViewRideNow.setVisibility(View.VISIBLE);
+                    centreLocationRl.setVisibility(View.VISIBLE);
+                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
                     Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
                 }
 
 
 			}
-
-
-			switchUserScreen();
-
-            startUIAfterGettingUserStatus();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2155,11 +2155,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewInitialInstructions.setVisibility(View.GONE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
-
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
-                        changeLocalityBtn.setVisibility(View.GONE);
                         changeLocalityLayout.setVisibility(View.GONE);
-                        initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
                         setFareFactorToInitialState();
 
@@ -2201,6 +2198,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							imageViewRideNow.setVisibility(View.GONE);
 //							genieLayout.setVisibility(View.GONE);
 							centreLocationRl.setVisibility(View.GONE);
+                            changeLocalityLayout.setVisibility(View.GONE);
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
 							Data.locationSettingsNoPressed = false;
 						}
@@ -3669,33 +3668,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                && relativeLayoutLocationError.getVisibility() == View.GONE) {
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-                //textViewInitialInstructions.setVisibility(View.VISIBLE);
                 textViewInitialInstructions.setText(farAwayCity);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
-                //noDriverNearbyToast(farAwayCity);
 
                 imageViewRideNow.setVisibility(View.GONE);
-
                 initialMyLocationBtn.setVisibility(View.GONE);
-                changeLocalityBtn.setVisibility(View.VISIBLE);
-                initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
 //									genieLayout.setVisibility(View.GONE);
             } else {
                 if (!promoOpened) {
                     imageViewRideNow.setVisibility(View.VISIBLE);
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
                 }
-                //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight((int)(ASSL.Yscale()*110));
-                //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
-                //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 changeLocalityLayout.setVisibility(View.GONE);
-                changeLocalityBtn.setVisibility(View.GONE);
-                initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
                 if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
 //										genieLayout.setVisibility(View.VISIBLE);
@@ -3972,49 +3962,49 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/cancel_the_request", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        callAndHandleStateRestoreAPI(true);
-                    }
-
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.e("Server response", "response = " + response);
-                        DialogPopup.dismissLoadingDialog();
-
-                        try {
-                            jObj = new JSONObject(response);
-
-                            if (!jObj.isNull("error")) {
-                                String errorMessage = jObj.getString("error");
-                                if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
-                                    HomeActivity.logoutUser(activity);
-                                } else {
-                                    DialogPopup.alertPopupWithListener(activity, "", errorMessage,
-                                            new OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    callAndHandleStateRestoreAPI(true);
-                                                }
-                                            });
-                                }
-                            } else {
-                                customerUIBackToInitialAfterCancel();
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            callAndHandleStateRestoreAPI(true);
                         }
 
 
-                    }
-                });
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.e("Server response", "response = " + response);
+                            DialogPopup.dismissLoadingDialog();
+
+                            try {
+                                jObj = new JSONObject(response);
+
+                                if (!jObj.isNull("error")) {
+                                    String errorMessage = jObj.getString("error");
+                                    if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                                        HomeActivity.logoutUser(activity);
+                                    } else {
+                                        DialogPopup.alertPopupWithListener(activity, "", errorMessage,
+                                                new OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        callAndHandleStateRestoreAPI(true);
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    customerUIBackToInitialAfterCancel();
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+
+
+                        }
+                    });
         } else {
             //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
@@ -4149,27 +4139,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 params.put("access_token", Data.userData.accessToken);
                 AsyncHttpClient client = Data.getClient();
                 client.post(Config.getServerUrl() + "/accept_app_rating_request", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+                        new CustomAsyncHttpResponseHandler() {
+                            private JSONObject jObj;
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                        }
-
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response accept_app_rating_request", "response = " + response);
-                            try {
-                                jObj = new JSONObject(response);
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-
-                                }
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
+                            @Override
+                            public void onFailure(Throwable arg3) {
+                                Log.e("request fail", arg3.toString());
                             }
-                        }
-                    });
+
+                            @Override
+                            public void onSuccess(String response) {
+                                Log.i("Server response accept_app_rating_request", "response = " + response);
+                                try {
+                                    jObj = new JSONObject(response);
+                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+
+                                    }
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                }
+                            }
+                        });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4186,24 +4176,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 params.put("engagement_id", engagementId);
                 AsyncHttpClient client = Data.getClient();
                 client.post(Config.getServerUrl() + "/get_ride_summary", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+                        new CustomAsyncHttpResponseHandler() {
+                            private JSONObject jObj;
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            DialogPopup.dismissLoadingDialog();
-                            endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
+                            @Override
+                            public void onFailure(Throwable arg3) {
+                                DialogPopup.dismissLoadingDialog();
+                                endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
+                            }
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response get_ride_summary", "response = " + response);
-                            DialogPopup.dismissLoadingDialog();
-                            try {
-                                jObj = new JSONObject(response);
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    int flag = jObj.getInt("flag");
-                                    if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
+                            @Override
+                            public void onSuccess(String response) {
+                                Log.i("Server response get_ride_summary", "response = " + response);
+                                DialogPopup.dismissLoadingDialog();
+                                try {
+                                    jObj = new JSONObject(response);
+                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                        int flag = jObj.getInt("flag");
+                                        if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
 
 //											{
 //											    "pickup_address": "1050-1091, Madhya Marg, 28B, Sector 26 East, Chandigarh 160102, India",
@@ -4219,50 +4209,50 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //											    "flag": 115
 //											}
 
-                                        try {
-                                            if (jObj.has("rate_app")) {
-                                                Data.customerRateAppFlag = jObj.getInt("rate_app");
+                                            try {
+                                                if (jObj.has("rate_app")) {
+                                                    Data.customerRateAppFlag = jObj.getInt("rate_app");
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
 
-                                        try {
-                                            if (jObj.has("jugnoo_balance")) {
-                                                Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
+                                            try {
+                                                if (jObj.has("jugnoo_balance")) {
+                                                    Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                                            try {
+                                                if (jObj.has("paytm_balance")) {
+                                                    Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
+
+                                            clearSPData();
+                                            map.clear();
+                                            passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+                                            switchPassengerScreen(passengerScreenMode);
+
+                                            Utils.hideSoftKeyboard(activity, textViewInitialSearch);
+
+                                            setUserData();
+
+                                        } else {
+                                            endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
                                         }
-										try {
-											if (jObj.has("paytm_balance")) {
-												Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
-											}
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-
-										Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
-
-                                        clearSPData();
-                                        map.clear();
-                                        passengerScreenMode = PassengerScreenMode.P_RIDE_END;
-                                        switchPassengerScreen(passengerScreenMode);
-
-                                        Utils.hideSoftKeyboard(activity, textViewInitialSearch);
-
-                                        setUserData();
-
-                                    } else {
-                                        endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
                                     }
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                    endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
                                 }
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
                             }
-                        }
-                    });
+                        });
             } else {
                 endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
             }
@@ -4303,61 +4293,58 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             AsyncHttpClient client = Data.getClient();
             client.post(Config.getServerUrl() + "/add_drop_location", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
+                    new CustomAsyncHttpResponseHandler() {
+                        private JSONObject jObj;
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
 //                        DialogPopup.dismissLoadingDialog();
-						progressWheel.setVisibility(View.GONE);
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.e("Server response", "response = " + response);
-
-                        try {
-                            jObj = new JSONObject(response);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-                                int flag = jObj.getInt("flag");
-                                if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-                                else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-
-									Data.dropLatLng = dropLatLng;
-
-                                    if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-                                        linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-                                        stopDropLocationSearchUI(false);
-                                    }
-                                    else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
-											PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
-											PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-
-                                        stopDropLocationSearchUI(true);
-                                        setDropLocationEngagedUI();
-
-										getDropLocationPathAndDisplay(Data.pickupLatLng);
-                                    }
-
-                                }
-                                else{
-                                    DialogPopup.alertPopup(activity, "", message);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            progressWheel.setVisibility(View.GONE);
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                         }
+
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.e("Server response", "response = " + response);
+
+                            try {
+                                jObj = new JSONObject(response);
+                                String message = JSONParser.getServerMessage(jObj);
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                    int flag = jObj.getInt("flag");
+                                    if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                        DialogPopup.alertPopup(activity, "", message);
+                                    } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+
+                                        Data.dropLatLng = dropLatLng;
+
+                                        if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
+                                            linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
+                                            stopDropLocationSearchUI(false);
+                                        } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
+                                                PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
+                                                PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+
+                                            stopDropLocationSearchUI(true);
+                                            setDropLocationEngagedUI();
+
+                                            getDropLocationPathAndDisplay(Data.pickupLatLng);
+                                        }
+
+                                    } else {
+                                        DialogPopup.alertPopup(activity, "", message);
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
 //                        DialogPopup.dismissLoadingDialog();
-						progressWheel.setVisibility(View.GONE);
-                    }
-                });
+                            progressWheel.setVisibility(View.GONE);
+                        }
+                    });
         } else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
             progressWheel.setVisibility(View.GONE);
@@ -4544,7 +4531,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     try {
                         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
                         nameValuePairs.add(new BasicNameValuePair("last_sent_max_id", "" +
-                            Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
+                                Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo()));
                         nameValuePairs.add(new BasicNameValuePair("engagement_id", Data.cEngagementId));
                         nameValuePairs.add(new BasicNameValuePair("access_token", Data.userData.accessToken));
 
@@ -6072,23 +6059,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             AsyncHttpClient client = Data.getClient();
             client.post(url, params,
-                new CustomAsyncHttpResponseHandler() {
+                    new CustomAsyncHttpResponseHandler() {
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response /emergency/alert", "response = " + response);
-                        try {
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                            Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
                         }
-                    }
-                });
+
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response /emergency/alert", "response = " + response);
+                            try {
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6487,14 +6474,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 JSONObject jObj = new JSONObject(response);
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
-                                Log.e("message=", "="+message);
-                                if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                Log.e("message=", "=" + message);
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     Data.userData.contactSaved = -1;
-                                }
-                                else{
+                                } else {
                                     //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                                 }
-                            }  catch (Exception exception) {
+                            } catch (Exception exception) {
                                 exception.printStackTrace();
                                 //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
@@ -6523,19 +6509,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             AsyncHttpClient client = Data.getClient();
             client.post(url, params,
-                new CustomAsyncHttpResponseHandler() {
+                    new CustomAsyncHttpResponseHandler() {
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                    }
+                        @Override
+                        public void onFailure(Throwable arg3) {
+                            Log.e("request fail", arg3.toString());
+                        }
 
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
+                        @Override
+                        public void onSuccess(String response) {
+                            Log.i("Server response", "response = " + response);
 
-                    }
-                });
+                        }
+                    });
 
             Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
 
@@ -6568,38 +6554,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 AsyncHttpClient client = Data.getClient();
                 client.post(Config.getServerUrl() + "/rate_the_driver", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+                        new CustomAsyncHttpResponseHandler() {
+                            private JSONObject jObj;
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
-
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response", "response = " + response);
-                            try {
-                                jObj = new JSONObject(response);
-                                int flag = jObj.getInt("flag");
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                        Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
-                                        afterRideFeedbackSubmitted(givenRating, false);
-                                        try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
-                                    } else {
-                                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                    }
-                                }
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            @Override
+                            public void onFailure(Throwable arg3) {
+                                Log.e("request fail", arg3.toString());
+                                DialogPopup.dismissLoadingDialog();
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                             }
-                            DialogPopup.dismissLoadingDialog();
-                        }
-                    });
+
+                            @Override
+                            public void onSuccess(String response) {
+                                Log.i("Server response", "response = " + response);
+                                try {
+                                    jObj = new JSONObject(response);
+                                    int flag = jObj.getInt("flag");
+                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                        if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                            Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                            afterRideFeedbackSubmitted(givenRating, false);
+                                            try {
+                                                Data.driverInfos.clear();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else {
+                                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                        }
+                                    }
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                }
+                                DialogPopup.dismissLoadingDialog();
+                            }
+                        });
             } else {
                 DialogPopup.dialogNoInternet(HomeActivity.this,
                         Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
