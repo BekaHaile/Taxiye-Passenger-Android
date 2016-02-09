@@ -252,7 +252,16 @@
             android:layout_width="match_parent"
             android:layout_height="350px"
             android:layout_alignParentBottom="true"
-            android:visibility="gone">
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/buttonChangeLocalityMyLocation"
+                android:layout_width="83px"
+                android:layout_height="83px"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="92px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar" />
 
 
             <LinearLayout
@@ -282,17 +291,6 @@
                     android:text="@string/nl_change_locality"
                     android:visibility="visible" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/initialMyLocationBtnChangeLoc"
-                android:layout_width="87px"
-                android:layout_height="87px"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="40px"
-                android:layout_marginRight="50px"
-                android:background="@drawable/mylocation_btn_selector"
-                android:tag="mwar"
-                android:visibility="visible" />
 
         </RelativeLayout>
 

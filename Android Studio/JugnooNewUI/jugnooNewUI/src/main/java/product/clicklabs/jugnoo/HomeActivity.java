@@ -231,7 +231,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
-    Button initialMyLocationBtn, initialMyLocationBtnChangeLoc, changeLocalityBtn;
+    Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
 
 	RelativeLayout relativeLayoutGoogleAttr;
 	ImageView imageViewGoogleAttrCross;
@@ -576,7 +576,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInitialInstructions.setVisibility(View.GONE);
         changeLocalityLayout = (RelativeLayout)findViewById(R.id.changeLocalityLayout);
         textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
-
+        buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
 
         relativeLayoutInitialFareFactor = (RelativeLayout) findViewById(R.id.relativeLayoutInitialFareFactor);
         textViewCurrentFareFactor = (TextView) findViewById(R.id.textViewCurrentFareFactor);
@@ -584,14 +584,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((TextView) findViewById(R.id.textViewCurrentRatesInfo)).setTypeface(Fonts.mavenLight(this));
 
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
-        initialMyLocationBtnChangeLoc = (Button) findViewById(R.id.initialMyLocationBtnChangeLoc);
         changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn);
         changeLocalityBtn.setTypeface(Fonts.mavenRegular(this));
 
         initialMyLocationBtn.setVisibility(View.VISIBLE);
         changeLocalityLayout.setVisibility(View.GONE);
-        changeLocalityBtn.setVisibility(View.GONE);
-        initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
 
@@ -1570,7 +1567,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     else{
                         Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target));
-//                        textViewNearestDriverETA
                         if(MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
 							Data.lastRefreshLatLng = map.getCameraPosition().target;
                             refresh = true;
@@ -1587,7 +1583,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
-            initialMyLocationBtnChangeLoc.setOnClickListener(mapMyLocationClick);
+            buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 
@@ -1614,6 +1610,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
 				}
 			}
+
+            switchUserScreen();
+
+            startUIAfterGettingUserStatus();
 
 			if(Data.userData.getPromoSuccess() != 0) {
 				new Handler().postDelayed(new Runnable() {
@@ -1642,16 +1642,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
                         startActivity(intent);
                     }
+                    relativeLayoutLocationError.setVisibility(View.GONE);
+                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+                    imageViewRideNow.setVisibility(View.VISIBLE);
+                    centreLocationRl.setVisibility(View.VISIBLE);
+                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
                     Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
                 }
 
 
 			}
-
-
-			switchUserScreen();
-
-            startUIAfterGettingUserStatus();
 
             new FetchAndSendMessages(this, Data.userData.accessToken).execute();
 
@@ -2152,11 +2153,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewInitialInstructions.setVisibility(View.GONE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
-
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
-                        changeLocalityBtn.setVisibility(View.GONE);
                         changeLocalityLayout.setVisibility(View.GONE);
-                        initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
                         setFareFactorToInitialState();
 
@@ -2198,6 +2196,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							imageViewRideNow.setVisibility(View.GONE);
 //							genieLayout.setVisibility(View.GONE);
 							centreLocationRl.setVisibility(View.GONE);
+                            changeLocalityLayout.setVisibility(View.GONE);
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
 							Data.locationSettingsNoPressed = false;
 						}
@@ -3674,33 +3674,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                && relativeLayoutLocationError.getVisibility() == View.GONE) {
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-                //textViewInitialInstructions.setVisibility(View.VISIBLE);
                 textViewInitialInstructions.setText(farAwayCity);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
-                //noDriverNearbyToast(farAwayCity);
 
                 imageViewRideNow.setVisibility(View.GONE);
-
                 initialMyLocationBtn.setVisibility(View.GONE);
-                changeLocalityBtn.setVisibility(View.VISIBLE);
-                initialMyLocationBtnChangeLoc.setVisibility(View.VISIBLE);
 //									genieLayout.setVisibility(View.GONE);
             } else {
                 if (!promoOpened) {
                     imageViewRideNow.setVisibility(View.VISIBLE);
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
                 }
-                //slidingBottomPanel.getSlidingUpPanelLayout().setPanelHeight((int)(ASSL.Yscale()*110));
-                //slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
-                //slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 changeLocalityLayout.setVisibility(View.GONE);
-                changeLocalityBtn.setVisibility(View.GONE);
-                initialMyLocationBtnChangeLoc.setVisibility(View.GONE);
 
                 if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
 //										genieLayout.setVisibility(View.VISIBLE);
@@ -4190,21 +4181,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
-
-//											{
-//											    "pickup_address": "1050-1091, Madhya Marg, 28B, Sector 26 East, Chandigarh 160102, India",
-//											    "drop_address": "1050-1091, Madhya Marg, 28B, Sector 26 East, Chandigarh 160102, India",
-//											    "pickup_time": "05:51 PM",
-//											    "drop_time": "05:51 PM",
-//											    "fare": 26,
-//											    "discount": 0,
-//											    "paid_using_wallet": 0,
-//											    "to_pay": 26,
-//											    "distance": 0,
-//											    "ride_time": 1,
-//											    "flag": 115
-//											}
-
                                     try {
                                         if (jObj.has("rate_app")) {
                                             Data.customerRateAppFlag = jObj.getInt("rate_app");
