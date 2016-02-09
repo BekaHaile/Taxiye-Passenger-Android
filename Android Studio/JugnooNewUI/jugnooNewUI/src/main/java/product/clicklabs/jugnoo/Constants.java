@@ -78,6 +78,9 @@ public interface Constants {
 	String KEY_SAVE_NOTIFICATION = "save_notification";
 	String KEY_NOTIFICATION_ID = "notification_id";
 
+	String LINKED_WALLET = "linked_wallet";
+	String LINKED_WALLET_MESSAGE = "linked_wallet_message";
+
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
 
 	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";

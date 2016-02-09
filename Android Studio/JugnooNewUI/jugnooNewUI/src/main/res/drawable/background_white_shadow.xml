@@ -2,8 +2,9 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/background_shadow_more_alpha"
-        />
+    <item android:drawable="@drawable/background_shadow_more_alpha">
+
+        </item>
 
     <item
         android:drawable="@drawable/background_white"
