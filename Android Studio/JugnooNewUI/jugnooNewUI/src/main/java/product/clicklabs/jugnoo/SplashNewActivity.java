@@ -434,8 +434,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup); buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
 		textViewSTerms = (TextView) findViewById(R.id.textViewSTerms); textViewSTerms.setTypeface(Fonts.latoRegular(this));
 
-		firstInstallTime();
-
 		root.setOnClickListener(onClickListenerKeybordHide);
 
 		relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
@@ -460,7 +458,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				if (isBranchLinkNotClicked()) {
@@ -473,7 +470,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		});
 
 		buttonRegister.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				if(isBranchLinkNotClicked()) {
@@ -499,7 +495,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		});
 
 		buttonNoNetCall.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
@@ -1153,15 +1148,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	private void firstInstallTime(){
-		try{
-			long installed = getPackageManager().getPackageInfo(getPackageName(), 0).firstInstallTime;
-			Log.v("Installation date", "---> "+installed);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-	}
 
 	@Override
 	protected void onResume() {
