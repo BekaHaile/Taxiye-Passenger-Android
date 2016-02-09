@@ -1022,9 +1022,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	}
 
 
-
-
-
 	private void retrieveOTPFromSMS(Intent intent){
 		try {
 			String otp = "";
