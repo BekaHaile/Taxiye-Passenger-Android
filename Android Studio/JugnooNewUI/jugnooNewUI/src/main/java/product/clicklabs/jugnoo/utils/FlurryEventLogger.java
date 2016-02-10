@@ -31,6 +31,15 @@ public class FlurryEventLogger {
 		} catch(Exception e){e.printStackTrace();}
 	}
 
+	public static void eventWithSessionOpenAndClose(Context context, String eventName, Map<String, String> map){
+		try{
+			FlurryAgent.init(context, Config.getFlurryKey());
+			FlurryAgent.onStartSession(context, Config.getFlurryKey());
+			event(eventName, map);
+			FlurryAgent.onEndSession(context);
+		} catch(Exception e){e.printStackTrace();}
+	}
+
 	public static void appStarted(String deviceToken){
         try{
             Map<String, String> articleParams = new HashMap<String, String>();

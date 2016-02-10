@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -513,7 +514,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
-							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED);
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put(KEY_USER_ID, Prefs.with(this).getString(SP_USER_IDENTIFIER, ""));
+							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED, map);
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						double balance = jObj.getDouble("balance");

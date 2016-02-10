@@ -252,6 +252,7 @@ public class JSONParser implements Constants {
         } catch(Exception e){
             e.printStackTrace();
         }
+        Prefs.with(context).save(SP_USER_IDENTIFIER, userIdentifier);
 
 		double sharingFareFixed = userData.optDouble("sharing_customer_fare_fixed", 10);
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);

@@ -96,12 +96,16 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			public void onClick(View view) {
 				if(AppStatus.getInstance(activity).isOnline(activity)) {
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
-					if(activity.fromDeepLink){
-						HashMap<String, String> map = new HashMap<>();
-						map.put(KEY_USER_ID, Data.userData.userIdentifier);
-						FlurryEventLogger.event(INVITE_SHARE_GENERIC_THROUGH_PUSH, map);
-					} else{
-						FlurryEventLogger.event(INVITE_GENERIC);
+					try {
+						if(activity.fromDeepLink){
+							HashMap<String, String> map = new HashMap<>();
+							map.put(KEY_USER_ID, Data.userData.userIdentifier);
+							FlurryEventLogger.event(INVITE_SHARE_GENERIC_THROUGH_PUSH, map);
+						} else{
+							FlurryEventLogger.event(INVITE_GENERIC);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

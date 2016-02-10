@@ -93,6 +93,7 @@ public interface Constants {
 
 	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
 
+	String SP_USER_IDENTIFIER = "user_identifier";
 
 
 
