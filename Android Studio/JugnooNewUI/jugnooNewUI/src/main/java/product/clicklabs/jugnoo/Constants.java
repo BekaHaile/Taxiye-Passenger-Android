@@ -13,6 +13,7 @@ public interface Constants {
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
+	String KEY_USER_ID = "user_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
@@ -88,5 +89,12 @@ public interface Constants {
 
 
 	String FIRST_TIME_DB= "first_time_db";
+
+
+	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
+
+
+
+
 
 }
