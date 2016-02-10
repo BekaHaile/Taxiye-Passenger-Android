@@ -762,7 +762,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 
@@ -1712,6 +1712,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
+
+        ScheduleAlarmForGCM scheduleAlarmForGCM = new ScheduleAlarmForGCM(this);
+        scheduleAlarmForGCM.start();
 
     }
 
