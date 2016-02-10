@@ -414,7 +414,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(1 == Data.otpViaCallEnabled) {
+			if(1 == Data.otpViaCallEnabled || linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -439,8 +439,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void deviceTokenReceived(final String regId) {
 				Data.deviceToken = regId;
 				Log.e("deviceToken in IDeviceTokenReceiver" +
-						"" +
-						"" +
 						"", Data.deviceToken + "..");
 			}
 		});
