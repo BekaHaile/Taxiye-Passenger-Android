@@ -378,7 +378,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		long timerDuration = 30000;
 		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			linearLayoutTopDefault.setVisibility(View.GONE);
+			linearLayoutTopDefault.setVisibility(View.VISIBLE);
 			imageViewPaytmIcon.setVisibility(View.VISIBLE);
 			textViewCounter.setText("0:60");
 			timerDuration = 60000;

@@ -264,6 +264,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 	
 	public void performBackPressed(boolean showTimer){
         Intent intent = new Intent(ChangePhoneBeforeOTPActivity.this, OTPConfirmScreen.class);
+        intent.putExtra(LINKED_WALLET, linkedWallet);
 		if(showTimer){
 			intent.putExtra("show_timer", 1);
 		}
