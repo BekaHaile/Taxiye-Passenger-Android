@@ -36,7 +36,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ChangePhoneBeforeOTPActivity extends BaseActivity {
+public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Constants {
 
     private final String TAG = ChangePhoneBeforeOTPActivity.class.getSimpleName();
 
@@ -46,6 +46,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 	TextView textViewChangePhoneNoHelp;
 	EditText editTextNewPhoneNumber;
 	Button buttonChangePhoneNumber;
+    private int linkedWallet;
 	
 	LinearLayout relative;
 
@@ -66,6 +67,10 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phone_before_verify);
+
+        if(getIntent().hasExtra(LINKED_WALLET)){
+            linkedWallet = getIntent().getIntExtra(LINKED_WALLET, 0);
+        }
 		
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ChangePhoneBeforeOTPActivity.this, relative, 1134, 720, false);
@@ -188,6 +193,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
             params.put("access_token", accessToken);
             params.put("is_access_token_new", "1");
             params.put("updated_phone_no", updatedField);
+            params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
             RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
@@ -258,6 +264,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity {
 	
 	public void performBackPressed(boolean showTimer){
         Intent intent = new Intent(ChangePhoneBeforeOTPActivity.this, OTPConfirmScreen.class);
+        intent.putExtra(LINKED_WALLET, linkedWallet);
 		if(showTimer){
 			intent.putExtra("show_timer", 1);
 		}

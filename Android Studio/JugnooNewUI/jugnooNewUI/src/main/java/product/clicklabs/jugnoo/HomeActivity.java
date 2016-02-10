@@ -75,12 +75,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
@@ -1714,6 +1730,57 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ScheduleAlarmForGCM scheduleAlarmForGCM = new ScheduleAlarmForGCM(this);
         scheduleAlarmForGCM.start();
 
+        /*//String secret1 = Crypto.createAESKey(aSecret);
+        SecretKey secretKey = null;
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+            keyGen.init(256); // for example
+            secretKey = keyGen.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        //SecretKey secret1 = Pcc38790lULFwt6f;
+        try {
+            byte[] b=Data.userData.userIdentifier.getBytes();
+            Log.v("userIdentifier is ","--->"+Data.userData.userIdentifier+" , "+b.length);
+            Log.v("decrypt key is","--->"+decrypt(secretKey, b));
+        } catch (Exception e){
+            e.printStackTrace();
+        }*/
+
+    }
+
+
+    public static byte[] decrypt(SecretKey secret, byte[] buffer) throws GeneralSecurityException
+    {
+    /* Decrypt the message. - use cipher instance created at encrypt */
+        Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+
+        int n = cipher.getBlockSize();
+        byte[] ivData = Arrays.copyOf(buffer, n);
+
+        cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(ivData));
+        byte[] clear = cipher.doFinal(buffer, n, buffer.length - n);
+
+        return clear;
+    }
+
+    public  void decrypt() throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+        FileInputStream fis = new FileInputStream("data/encrypted");
+
+        FileOutputStream fos = new FileOutputStream("data/decrypted");
+        SecretKeySpec sks = new SecretKeySpec("yourkey".getBytes(), "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC");
+        cipher.init(Cipher.DECRYPT_MODE, sks);
+        CipherInputStream cis = new CipherInputStream(fis, cipher);
+        int b;
+        byte[] d = new byte[8];
+        while((b = cis.read(d)) != -1) {
+            fos.write(d, 0, b);
+        }
+        fos.flush();
+        fos.close();
+        cis.close();
     }
 
     public void slideOnClick(View v){

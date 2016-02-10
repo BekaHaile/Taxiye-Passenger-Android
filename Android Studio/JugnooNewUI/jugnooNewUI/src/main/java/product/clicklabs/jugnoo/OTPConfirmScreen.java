@@ -69,14 +69,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewTitle;
 
 
-	LinearLayout linearLayoutEnterOtp, linearLayoutOtherOptions, linearLayoutOR, linearLayoutTopPaytm, linearLayoutTopDefault;
+	LinearLayout linearLayoutEnterOtp, linearLayoutOtherOptions, linearLayoutOR, linearLayoutTopDefault;
 	TextView textViewOtpNumber;
 	ImageView imageViewChangePhoneNumber;
 	EditText editTextOTP;
 
 	LinearLayout linearLayoutWaiting;
 	TextView textViewCounter;
-	ImageView imageViewYellowLoadingBar;
+	ImageView imageViewYellowLoadingBar, imageViewPaytmIcon;
 
 	Button buttonVerify, buttonOtpViaCall;
 	LinearLayout linearLayoutGiveAMissedCall;
@@ -142,7 +142,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
-		((TextView)findViewById(R.id.otpHelpTextPaytm)).setTypeface(Fonts.mavenLight(this));
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
@@ -150,8 +149,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		linearLayoutEnterOtp = (LinearLayout) findViewById(R.id.linearLayoutEnterOtp);
 		linearLayoutOtherOptions = (LinearLayout) findViewById(R.id.linearLayoutOtherOptions);
 		linearLayoutOR = (LinearLayout) findViewById(R.id.linearLayoutOR);
-		linearLayoutTopPaytm = (LinearLayout) findViewById(R.id.linearLayoutTopPaytm);
 		linearLayoutTopDefault = (LinearLayout) findViewById(R.id.linearLayoutTopDefault);
+		imageViewPaytmIcon = (ImageView) findViewById(R.id.imageViewPaytmIcon);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenLight(this));
@@ -311,7 +310,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
             public void onClick(View v) {
 				editTextOTP.setError(null);
                 FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
-                startActivity(new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class));
+				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
+				intent.putExtra(LINKED_WALLET, linkedWallet);
+				startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
@@ -377,14 +378,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		long timerDuration = 30000;
 		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			linearLayoutTopDefault.setVisibility(View.GONE);
-			linearLayoutTopPaytm.setVisibility(View.VISIBLE);
+			linearLayoutTopDefault.setVisibility(View.VISIBLE);
+			imageViewPaytmIcon.setVisibility(View.VISIBLE);
 			textViewCounter.setText("0:60");
 			timerDuration = 60000;
 			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
 		} else{
 			linearLayoutTopDefault.setVisibility(View.VISIBLE);
-			linearLayoutTopPaytm.setVisibility(View.GONE);
+			imageViewPaytmIcon.setVisibility(View.GONE);
 			//linearLayoutMissedCall.setVisibility(View.VISIBLE);
 			textViewCounter.setText("0:30");
 			buttonOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
