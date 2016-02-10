@@ -48,6 +48,7 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	ShareFragmentAdapter shareFragmentAdapter;
 	PagerSlidingTabStrip tabs;
     private CallbackManager callbackManager;
+	public boolean fromDeepLink = false;
 
 	public LeaderboardResponse leaderboardResponse;
 	public LeaderboardActivityResponse leaderboardActivityResponse;
@@ -82,6 +83,14 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
+
+		try {
+			if(getIntent().hasExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK)){
+				fromDeepLink = getIntent().getBooleanExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		linearLayoutRoot = (LinearLayout) findViewById(R.id.linearLayoutRoot);
 		new ASSL(ShareActivity.this, linearLayoutRoot, 1134, 720, false);

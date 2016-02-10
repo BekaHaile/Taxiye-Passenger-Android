@@ -791,9 +791,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, ShareActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(INVITE_EARN_MENU);
+                intentToShareActivity(false);
             }
         });
 
@@ -3230,10 +3228,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void openDeepLink(){
 		try{
-
 			if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutInvite.performClick();
-                FlurryEventLogger.event(INVITE_SCREEN_THROUGH_PUSH);
+                intentToShareActivity(true);
 			}
 			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutWallet.performClick();
@@ -3471,6 +3467,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         super.onDestroy();
     }
+
+
+    private void intentToShareActivity(boolean fromDeepLink){
+        Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
+        intent.putExtra(KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, fromDeepLink);
+        startActivity(intent);
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+        try {
+            if(fromDeepLink){
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put(KEY_USER_ID, Data.userData.userIdentifier);
+				FlurryEventLogger.event(INVITE_SCREEN_THROUGH_PUSH, map);
+			} else{
+				FlurryEventLogger.event(INVITE_EARN_MENU);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     private void callFindADriverAndShowPromotionsAPIS(LatLng requestLatLng){

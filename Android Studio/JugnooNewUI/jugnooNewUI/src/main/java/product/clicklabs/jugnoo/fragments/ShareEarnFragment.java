@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -95,7 +96,13 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			public void onClick(View view) {
 				if(AppStatus.getInstance(activity).isOnline(activity)) {
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
-					FlurryEventLogger.event(INVITE_GENERIC);
+					if(activity.fromDeepLink){
+						HashMap<String, String> map = new HashMap<>();
+						map.put(KEY_USER_ID, Data.userData.userIdentifier);
+						FlurryEventLogger.event(INVITE_SHARE_GENERIC_THROUGH_PUSH, map);
+					} else{
+						FlurryEventLogger.event(INVITE_GENERIC);
+					}
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 				}

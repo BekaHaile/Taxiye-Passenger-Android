@@ -159,7 +159,8 @@ public interface FlurryEventNames {
 
 
     String INVITE_PUSH_RECEIVED = "invite_push_received",
-            INVITE_SCREEN_THROUGH_PUSH = "invite_screen_through_push"
+            INVITE_SCREEN_THROUGH_PUSH = "invite_screen_through_push",
+            INVITE_SHARE_GENERIC_THROUGH_PUSH = "invite_share_generic_through_push"
 
                     ;
 
