@@ -2236,6 +2236,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void onClick(View v) {
+					linkedWallet = 1;
 					SplashNewActivity.registerationType = registerationType;
 					changeUIState(State.SIGNUP);
 				}
@@ -2315,6 +2316,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		if (Data.previousAccountInfoList == null) {
 			Data.previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
+		}
+
+		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
+		} else {
+			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
 		}
 
 
