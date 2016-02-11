@@ -308,6 +308,11 @@ public class RideSummaryActivity extends BaseFragmentActivity implements FlurryE
 
 				textViewEndRideToBePaidValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.toPay)));
 
+				if(endRideData.fareFactor > 1 || endRideData.fareFactor < 1){
+					textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+				} else{
+					textViewEndRideFareFactorValue.setVisibility(View.GONE);
+				}
 
 				textViewEndRideFareFactorValue.setText(String.format(getResources().getString(R.string.priority_tip_format), decimalFormat.format(endRideData.fareFactor)));
 				textViewEndRideBaseFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(endRideData.baseFare)));
