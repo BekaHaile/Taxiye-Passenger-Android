@@ -247,7 +247,7 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
 
 			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
-			Prefs.with(context).remove(Constants.SP_USER_IDENTIFIER);
+			Prefs.with(context).remove(Constants.SP_USER_PHONE_NO);
 
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
 			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
@@ -256,7 +256,6 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE);
 			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA);
 
-			Prefs.with(context).remove(Constants.SP_USER_IDENTIFIER);
 			Prefs.with(context).remove(SPLabels.BRANCH_DESKTOP_URL);
 			Prefs.with(context).remove(SPLabels.BRANCH_ANDROID_URL);
 			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);

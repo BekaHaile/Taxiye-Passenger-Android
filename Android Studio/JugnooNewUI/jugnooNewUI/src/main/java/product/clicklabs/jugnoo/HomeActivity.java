@@ -78,7 +78,6 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -92,7 +91,6 @@ import java.util.TimerTask;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -3545,7 +3543,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if(fromDeepLink){
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put(KEY_USER_ID, Data.userData.userIdentifier);
+				map.put(KEY_PHONE_NO, Data.userData.phoneNo);
 				FlurryEventLogger.event(INVITE_SCREEN_THROUGH_PUSH, map);
 			} else{
 				FlurryEventLogger.event(INVITE_EARN_MENU);
