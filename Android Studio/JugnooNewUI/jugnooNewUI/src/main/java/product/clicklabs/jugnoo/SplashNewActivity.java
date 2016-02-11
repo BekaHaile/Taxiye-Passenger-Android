@@ -164,7 +164,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "";
-	private static final int GOOGLE_SIGNIN_REQ_CODE_SIGNUP = 1125;
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
 
@@ -728,12 +727,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			@Override
 			public void facebookLoginDone(FacebookUserData facebookUserData) {
 				Data.facebookUserData = facebookUserData;
-				if(State.LOGIN == state) {
+				if(State.LOGIN == state || State.SIGNUP == state) {
 					sendFacebookLoginValues(SplashNewActivity.this);
 					FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
-				} else if(State.SIGNUP == state){
-					fillSocialAccountInfo(RegisterationType.FACEBOOK);
-					FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
 				}
 			}
 
@@ -852,19 +848,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
-//				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-//				facebookLoginHelper.openFacebookSession();
 				buttonFacebookLogin.performClick();
 			}
 		});
 		buttonGoogleSignup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
-//				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-//				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
-//						GOOGLE_SIGNIN_REQ_CODE_SIGNUP);
 				buttonGoogleLogin.performClick();
 			}
 		});
@@ -1227,12 +1216,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if(RESULT_OK == resultCode){
 					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
 					sendGoogleLoginValues(this);
-				}
-			}
-			else if(requestCode == GOOGLE_SIGNIN_REQ_CODE_SIGNUP){
-				if(RESULT_OK == resultCode) {
-					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
-					fillSocialAccountInfo(RegisterationType.GOOGLE);
 				}
 			}
 			else{
@@ -2042,6 +2025,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
+								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+								SplashNewActivity.this.accessToken = jObj.getString("access_token");
 								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 								otpErrorMsg = jObj.getString("error");
@@ -2144,6 +2129,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
+								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+								SplashNewActivity.this.accessToken = jObj.getString("access_token");
 								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
 								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
 								otpErrorMsg = jObj.getString("error");
