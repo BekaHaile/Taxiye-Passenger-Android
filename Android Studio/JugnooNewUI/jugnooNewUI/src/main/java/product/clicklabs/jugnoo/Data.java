@@ -234,6 +234,8 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.REFERRAL_TRANSACTION_COUNT);
 			Prefs.with(context).remove(SPLabels.REFERRAL_APP_OPEN_COUNT);
 			Prefs.with(context).remove(SPLabels.USER_IDENTIFIER);
+			Prefs.with(context).remove(SPLabels.BRANCH_LINK_DESCRIPTION);
+			Prefs.with(context).remove(SPLabels.BRANCH_LINK_IMAGE);
 			Prefs.with(context).remove(SPLabels.BRANCH_SMS_LINK);
 			Prefs.with(context).remove(SPLabels.BRANCH_WHATSAPP_LINK);
 			Prefs.with(context).remove(SPLabels.BRANCH_FACEBOOK_LINK);
@@ -243,6 +245,23 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.ADD_GYM);
 			Prefs.with(context).remove(SPLabels.ADD_FRIEND);
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+
+			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
+			Prefs.with(context).remove(Constants.SP_USER_IDENTIFIER);
+
+			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
+			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
+			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACTS_ERROR);
+			Prefs.with(context).remove(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME);
+			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE);
+			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA);
+
+			Prefs.with(context).remove(Constants.SP_USER_IDENTIFIER);
+			Prefs.with(context).remove(SPLabels.BRANCH_DESKTOP_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_ANDROID_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_FALLBACK_URL);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
