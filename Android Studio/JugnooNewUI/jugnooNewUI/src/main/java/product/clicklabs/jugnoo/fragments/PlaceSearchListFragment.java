@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -311,8 +312,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			if(resultCode == Activity.RESULT_OK) {
 				if (requestCode == ADD_HOME) {
 					String strResult = data.getStringExtra("PLACE");
-					Gson gson = new Gson();
-					AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
 					if(searchResult != null){
 						Prefs.with(activity).save(SPLabels.ADD_HOME, strResult);
 						showSearchLayout();
@@ -322,8 +322,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 				} else if (requestCode == ADD_WORK) {
 					String strResult = data.getStringExtra("PLACE");
-					Gson gson = new Gson();
-					AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
 					if(searchResult != null) {
 						Prefs.with(activity).save(SPLabels.ADD_WORK, strResult);
 						showSearchLayout();

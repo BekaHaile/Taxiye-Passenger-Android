@@ -23,7 +23,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -50,6 +49,7 @@ import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -961,10 +961,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
-            String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            //String s = "Home \n" + searchResult.name + ", " + searchResult.address;
+            String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
+            Log.e(TAG, "setSavePlaces abc="+homeString);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            Log.e(TAG, "setSavePlaces searchResult="+searchResult);
             String s = "Home \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -977,9 +977,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
-            String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
             //String s = "Work \n" + searchResult.name + ", " + searchResult.address;
             String s = "Work \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
@@ -1000,8 +999,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if(resultCode==RESULT_OK) {
             // check if the request code is same as what is passed  here it is 2
             String strResult = data.getStringExtra("PLACE");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
             if (requestCode == ADD_HOME) {
                 if(searchResult != null){
                     //String s = "Home \n" + searchResult.name + " " + searchResult.address;

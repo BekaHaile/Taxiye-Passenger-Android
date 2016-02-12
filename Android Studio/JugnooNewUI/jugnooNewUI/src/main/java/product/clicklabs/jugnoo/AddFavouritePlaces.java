@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
@@ -105,8 +106,7 @@ public class AddFavouritePlaces extends BaseActivity{
     private void setSavePlaces(){
         if(!Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
             String abc =Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_HOME, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(abc);
             String s = "Home \n" + searchResult.name+", "+searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -116,8 +116,7 @@ public class AddFavouritePlaces extends BaseActivity{
 
         if(!Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
             String abc =Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_WORK, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(abc);
             String s = "Work \n" + searchResult.name+", "+searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -127,8 +126,7 @@ public class AddFavouritePlaces extends BaseActivity{
 
         if(!Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")){
             String abc =Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_GYM, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(abc);
             String s = "Gym \n" + searchResult.name+", "+searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -138,8 +136,7 @@ public class AddFavouritePlaces extends BaseActivity{
 
         if(!Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase("")){
             String abc =Prefs.with(AddFavouritePlaces.this).getString(SPLabels.ADD_FRIEND, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(abc);
             String s = "Friend \n" + searchResult.name+", "+searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
@@ -163,8 +160,7 @@ public class AddFavouritePlaces extends BaseActivity{
         if(resultCode==RESULT_OK) {
             // check if the request code is same as what is passed  here it is 2
             String strResult = data.getStringExtra("PLACE");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
             if (requestCode == ADD_HOME) {
                     if(searchResult != null){
                         String s = "Home \n" + searchResult.name + " " + searchResult.address;

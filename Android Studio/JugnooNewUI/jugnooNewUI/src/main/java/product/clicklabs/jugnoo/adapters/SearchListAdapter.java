@@ -24,7 +24,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -37,6 +36,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -319,12 +319,10 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
-			Gson gson = new Gson();
 			if(!Prefs.with(context).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) {
 				if (SPLabels.ADD_GYM.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_GYM, "").toLowerCase().contains(searchText.toLowerCase())) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_GYM, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_GYM, ""));
 					searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_GYM;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
@@ -334,8 +332,7 @@ public class SearchListAdapter extends BaseAdapter{
 			if(!Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase("")) {
 				if (SPLabels.ADD_FRIEND.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").toLowerCase().contains(searchText.toLowerCase())) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_FRIEND, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_FRIEND, ""));
 					searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_FRIEND;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
@@ -346,8 +343,7 @@ public class SearchListAdapter extends BaseAdapter{
 				if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
                         || searchText.equalsIgnoreCase("")) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
 					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_WORK;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
@@ -358,8 +354,7 @@ public class SearchListAdapter extends BaseAdapter{
 				if(SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
                         || searchText.equalsIgnoreCase("")) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
 					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_HOME;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);

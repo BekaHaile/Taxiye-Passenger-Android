@@ -143,6 +143,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
@@ -3370,8 +3371,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(resultCode==RESULT_OK) {
                 if (requestCode == ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
-                    Gson gson = new Gson();
-                    AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+                    AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
                     if(searchResult != null){
                         placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
@@ -3380,8 +3380,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 } else if (requestCode == ADD_WORK) {
                     String strResult = data.getStringExtra("PLACE");
-                    Gson gson = new Gson();
-                    AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+                    AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
                     if(searchResult != null) {
                         placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
