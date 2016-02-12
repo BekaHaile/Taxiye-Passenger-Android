@@ -10,14 +10,17 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
     private int numOfPages = 1;
-    public ScreenSlidePagerAdapter(android.support.v4.app.FragmentManager fm, int numOfPages) {
+    private ScreenSlidePageFragment.Callback callback;
+    public ScreenSlidePagerAdapter(android.support.v4.app.FragmentManager fm, int numOfPages,
+                                   ScreenSlidePageFragment.Callback callback) {
         super(fm);
         this.numOfPages = numOfPages;
+        this.callback = callback;
     }
 
     @Override
     public android.support.v4.app.Fragment getItem(int position) {
-        return ScreenSlidePageFragment.create(position, numOfPages);
+        return ScreenSlidePageFragment.create(position, numOfPages, callback);
     }
 
     @Override

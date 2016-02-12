@@ -3,7 +3,7 @@
     android:id="@+id/dlgProgress"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
+    android:gravity="center_horizontal|bottom"
     android:background="@android:color/transparent">
 
 
@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="150px"
-        android:layout_marginLeft="240px"
         android:tag="mwar"
         android:contentDescription="Animation" />
 

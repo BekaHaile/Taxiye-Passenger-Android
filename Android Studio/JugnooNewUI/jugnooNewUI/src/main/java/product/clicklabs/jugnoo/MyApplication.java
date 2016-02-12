@@ -11,6 +11,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.Map;
+
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 
@@ -123,4 +125,26 @@ public class MyApplication extends Application{
 		// Build and send an Event.
 		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
 	}
+
+	/***
+	 * Tracking event
+	 *
+	 * @param category event category
+	 * @param action   action of the event
+	 * @param label    label
+	 * @param map hash map for key value pairs
+	 */
+	public void trackEvent(String category, String action, String label, Map<String, String> map) {
+		Tracker t = getGoogleAnalyticsTracker();
+
+		HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
+		eventBuilder.setCategory(category).setAction(action).setLabel(label);
+		for (String key : map.keySet()) {
+			eventBuilder.set(key, map.get(key));
+		}
+
+		// Build and send an Event.
+		t.send(eventBuilder.build());
+	}
+
 }

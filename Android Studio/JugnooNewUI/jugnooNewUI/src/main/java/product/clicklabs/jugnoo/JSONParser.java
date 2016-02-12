@@ -8,13 +8,12 @@ import android.content.SharedPreferences.Editor;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -38,16 +37,20 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
+
+    private final String TAG = JSONParser.class.getSimpleName();
 
     public JSONParser() {
 
@@ -249,6 +252,7 @@ public class JSONParser implements Constants {
         } catch(Exception e){
             e.printStackTrace();
         }
+        Prefs.with(context).save(SP_USER_PHONE_NO, phoneNo);
 
 		double sharingFareFixed = userData.optDouble("sharing_customer_fare_fixed", 10);
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
@@ -618,25 +622,21 @@ public class JSONParser implements Constants {
 
 
     public String getUserStatus(Context context, String accessToken, int currentUserStatus) {
-        String returnResponse = "";
         try {
-            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-            HttpRequester simpleJSONParser = new HttpRequester();
-            String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_current_user_status", nameValuePairs);
-//			Log.e("result of = user_status", "="+result);
-            if (result.contains(HttpRequester.SERVER_TIMEOUT)) {
-                returnResponse = HttpRequester.SERVER_TIMEOUT;
-                return returnResponse;
+            HashMap<String, String> nameValuePairs = new HashMap<>();
+            nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
+            Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
+            String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+            Log.i(TAG, "getCurrentUserStatus response="+responseStr);
+            if (response == null || responseStr == null) {
+                return Constants.SERVER_TIMEOUT;
             } else {
-                JSONObject jObject1 = new JSONObject(result);
-                returnResponse = parseCurrentUserStatus(context, currentUserStatus, jObject1);
-                return returnResponse;
+                JSONObject jObject1 = new JSONObject(responseStr);
+                return parseCurrentUserStatus(context, currentUserStatus, jObject1);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            returnResponse = HttpRequester.SERVER_TIMEOUT;
-            return returnResponse;
+            return Constants.SERVER_TIMEOUT;
         }
     }
 
@@ -663,7 +663,7 @@ public class JSONParser implements Constants {
             try {
 
                 if (jObject1.has("error")) {
-                    returnResponse = HttpRequester.SERVER_TIMEOUT;
+                    returnResponse = Constants.SERVER_TIMEOUT;
                     return returnResponse;
                 } else {
 
@@ -749,7 +749,7 @@ public class JSONParser implements Constants {
             } catch (Exception e) {
                 e.printStackTrace();
                 engagementStatus = -1;
-                returnResponse = HttpRequester.SERVER_TIMEOUT;
+                returnResponse = Constants.SERVER_TIMEOUT;
                 return returnResponse;
             }
 

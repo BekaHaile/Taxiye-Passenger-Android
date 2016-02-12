@@ -33,12 +33,15 @@ public class BranchMetricsUtils {
 
     public void getBranchLinkForChannel(String channel, final String spKey, final String userIdentifier,
                                         final String referralCode, final String referringUserName,
-                                        String fbShareDescription, String jugnooFbBanner,
+                                        final String fbShareDescription, final String jugnooFbBanner,
                                         String branchDesktopUrl, String branchAndroidUrl,
                                         String branchIosUrl, String branchFallbackUrl){
 
         String existingUrl = Prefs.with(context).getString(spKey, "");
         String existingUserIdentifier = Prefs.with(context).getString(SPLabels.USER_IDENTIFIER, "");
+
+        String existingLinkDescription = Prefs.with(context).getString(SPLabels.BRANCH_LINK_DESCRIPTION, "");
+        String existingLinkImage = Prefs.with(context).getString(SPLabels.BRANCH_LINK_IMAGE, "");
 
         String existingBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
         String existingBranchAndroidUrl = Prefs.with(context).getString(SPLabels.BRANCH_ANDROID_URL, "");
@@ -58,35 +61,15 @@ public class BranchMetricsUtils {
             Prefs.with(context).save(SPLabels.BRANCH_IOS_URL, branchIosUrl);
             Prefs.with(context).save(SPLabels.BRANCH_FALLBACK_URL, branchFallbackUrl);
         }
-
+        if(!fbShareDescription.equalsIgnoreCase(existingLinkDescription)){
+            existingUrl = "";
+        }
+        if(!jugnooFbBanner.equalsIgnoreCase(existingLinkImage)){
+            existingUrl = "";
+        }
 
         if("".equalsIgnoreCase(existingUrl)){
             DialogPopup.showLoadingDialog(context, context.getResources().getString(R.string.loading));
-
-//            JSONObject params = new JSONObject();
-//            try {
-//                params.put("referring_user_identifier", userIdentifier);
-//				params.put("deepindex", "0");
-//                params.put("referral_code", referralCode);
-//                params.put("referring_user_name", referringUserName);
-//                Log.e("branch link params", ""+params.toString());
-//            } catch (Exception ex) { }
-//
-//            Branch branch = Branch.getInstance(context);
-//            branch.getShortUrl(channel, Branch.FEATURE_TAG_SHARE, null, params, new Branch.BranchLinkCreateListener() {
-//                @Override
-//                public void onLinkCreate(String url, BranchError error) {
-//                    DialogPopup.dismissLoadingDialog();
-//                    if(error == null){
-//                        Prefs.with(context).save(spKey, url);
-//                        Prefs.with(context).save(SPLabels.USER_IDENTIFIER, userIdentifier);
-//                        branchMetricsEventHandler.onBranchLinkCreated(url);
-//                    }
-//                    else{
-//                        branchMetricsEventHandler.onBranchError(error.getMessage());
-//                    }
-//                }
-//            });
 
             BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
 
@@ -143,6 +126,8 @@ public class BranchMetricsUtils {
                     if(error == null){
                         Prefs.with(context).save(spKey, url);
                         Prefs.with(context).save(SPLabels.USER_IDENTIFIER, userIdentifier);
+                        Prefs.with(context).save(SPLabels.BRANCH_LINK_DESCRIPTION, fbShareDescription);
+                        Prefs.with(context).save(SPLabels.BRANCH_LINK_IMAGE, jugnooFbBanner);
                         branchMetricsEventHandler.onBranchLinkCreated(url);
                     }
                     else{

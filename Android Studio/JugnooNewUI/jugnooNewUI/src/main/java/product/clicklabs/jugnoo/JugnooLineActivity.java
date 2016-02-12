@@ -18,22 +18,21 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.NearbyDriversAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.NearbyDriver;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -41,9 +40,15 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class JugnooLineActivity extends BaseActivity implements FlurryEventNames {
+
+	private final String TAG = JugnooLineActivity.class.getSimpleName();
 
     LinearLayout relative;
 
@@ -282,45 +287,41 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 				progressBarNearbyDrivers.setVisibility(View.VISIBLE);
 				recyclerViewDrivers.setVisibility(View.GONE);
 
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("latitude", ""+Data.lastRefreshLatLng.latitude);
-				params.put("longitude", ""+Data.lastRefreshLatLng.longitude);
+				params.put("longitude", "" + Data.lastRefreshLatLng.longitude);
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getServerUrl() + "/find_sharing_autos_nearby", params,
-						new CustomAsyncHttpResponseHandler() {
-							private JSONObject jObj;
-
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								progressBarNearbyDrivers.setVisibility(View.GONE);
-								recyclerViewDrivers.setVisibility(View.GONE);
+				RestClient.getApiServices().findSharingAutosNearby(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "findSharingAutosNearby response = " + responseStr);
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							int flag = jObj.getInt("flag");
+							if (ApiResponseFlags.ALL_DRIVERS.getOrdinal() == flag) {
+								nearbyDrivers.clear();
+								nearbyDrivers.addAll(JSONParser.parseNearbySharingDrivers(jObj));
+								nearbyDriversAdapter.notifyDataSetChanged();
+							} else {
+								DialogPopup.alertPopup(activity, "", message);
 							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+						}
+						progressBarNearbyDrivers.setVisibility(View.GONE);
+						recyclerViewDrivers.setVisibility(View.VISIBLE);
+					}
 
-							@Override
-							public void onSuccess(String response) {
-								Log.i("Server response faq ", "response = " + response);
-								try {
-									jObj = new JSONObject(response);
-									String message = JSONParser.getServerMessage(jObj);
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ALL_DRIVERS.getOrdinal() == flag){
-										nearbyDrivers.clear();
-										nearbyDrivers.addAll(JSONParser.parseNearbySharingDrivers(jObj));
-										nearbyDriversAdapter.notifyDataSetChanged();
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", message);
-									}
-								} catch (Exception exception) {
-									exception.printStackTrace();
-								}
-								progressBarNearbyDrivers.setVisibility(View.GONE);
-								recyclerViewDrivers.setVisibility(View.VISIBLE);
-							}
-						});
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "findSharingAutosNearby error="+error.toString());
+						progressBarNearbyDrivers.setVisibility(View.GONE);
+						recyclerViewDrivers.setVisibility(View.GONE);
+					}
+				});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -337,58 +338,54 @@ public class JugnooLineActivity extends BaseActivity implements FlurryEventNames
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 			params.put("access_token", Data.userData.accessToken);
 			params.put("auto_id", autoId);
 			params.put("money_transacted", ""+Data.userData.sharingFareFixed);
 			params.put("transaction_latitude", ""+Data.latitude);
 			params.put("transaction_longitude", ""+Data.longitude);
-			params.put("wallet_balance_before", ""+Data.userData.getTotalWalletBalance());
+			params.put("wallet_balance_before", "" + Data.userData.getTotalWalletBalance());
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/end_sharing_ride", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response faq ", "response = " + response);
-							DialogPopup.dismissLoadingDialog();
+			RestClient.getApiServices().endSharingRide(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "endSharingRide response = " + responseStr);
+					DialogPopup.dismissLoadingDialog();
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						String message = JSONParser.getServerMessage(jObj);
+						int flag = jObj.getInt("flag");
+						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 							try {
-								jObj = new JSONObject(response);
-								String message = JSONParser.getServerMessage(jObj);
-								int flag = jObj.getInt("flag");
-								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-									try {
-										if(Data.userData != null){
-											Data.userData.setJugnooBalance(jObj.optDouble("wallet_balance", Data.userData.getJugnooBalance()));
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-									DialogPopup.alertPopupWithListener(activity, "", message, new OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											performBackPressed();
-										}
-									});
+								if (Data.userData != null) {
+									Data.userData.setJugnooBalance(jObj.optDouble("wallet_balance", Data.userData.getJugnooBalance()));
 								}
-								else{
-									DialogPopup.alertPopup(activity, "", message);
-								}
-							} catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
+							DialogPopup.alertPopupWithListener(activity, "", message, new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									performBackPressed();
+								}
+							});
+						} else {
+							DialogPopup.alertPopup(activity, "", message);
 						}
-					});
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "endSharingRide error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
 		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -67,6 +69,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	}
 
+	@SuppressLint("ValidFragment")
 	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler, GoogleApiClient mGoogleApiClient){
 		this.searchListActionsHandler = searchListActionsHandler;
 		this.mGoogleApiClient = mGoogleApiClient;
@@ -304,13 +307,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 		try {
+			super.onActivityResult(requestCode, resultCode, data);
 			if(resultCode == Activity.RESULT_OK) {
 				if (requestCode == ADD_HOME) {
 					String strResult = data.getStringExtra("PLACE");
-					Gson gson = new Gson();
-					AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
 					if(searchResult != null){
 						Prefs.with(activity).save(SPLabels.ADD_HOME, strResult);
 						showSearchLayout();
@@ -320,8 +322,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 				} else if (requestCode == ADD_WORK) {
 					String strResult = data.getStringExtra("PLACE");
-					Gson gson = new Gson();
-					AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
 					if(searchResult != null) {
 						Prefs.with(activity).save(SPLabels.ADD_WORK, strResult);
 						showSearchLayout();
@@ -331,10 +332,10 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				}
 
 			}
+			searchListActionsHandler.onPlaceSaved();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		searchListActionsHandler.onPlaceSaved();
 	}
 
 	public ProgressWheel getProgressBarSearch(){

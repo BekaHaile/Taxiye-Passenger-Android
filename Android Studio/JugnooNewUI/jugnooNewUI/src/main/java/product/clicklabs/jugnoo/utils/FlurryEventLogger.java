@@ -17,11 +17,25 @@ public class FlurryEventLogger {
 		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName);} catch(Exception e){e.printStackTrace();}
     }
 
+	public static void event(String eventName, Map<String, String> map){
+		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
+		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+	}
+
 	public static void eventWithSessionOpenAndClose(Context context, String eventName){
 		try{
 			FlurryAgent.init(context, Config.getFlurryKey());
 			FlurryAgent.onStartSession(context, Config.getFlurryKey());
 			event(eventName);
+			FlurryAgent.onEndSession(context);
+		} catch(Exception e){e.printStackTrace();}
+	}
+
+	public static void eventWithSessionOpenAndClose(Context context, String eventName, Map<String, String> map){
+		try{
+			FlurryAgent.init(context, Config.getFlurryKey());
+			FlurryAgent.onStartSession(context, Config.getFlurryKey());
+			event(eventName, map);
 			FlurryAgent.onEndSession(context);
 		} catch(Exception e){e.printStackTrace();}
 	}

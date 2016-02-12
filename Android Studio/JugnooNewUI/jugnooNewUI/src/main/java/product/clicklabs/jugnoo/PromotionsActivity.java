@@ -25,20 +25,20 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -47,10 +47,15 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class PromotionsActivity extends BaseActivity implements FlurryEventNames {
-	
+
+    private final String TAG = PromotionsActivity.class.getSimpleName();
 	
 	RelativeLayout relative;
 	
@@ -74,9 +79,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
     TextView textViewInvite;
 
 	
-	
-	AsyncHttpClient fetchAccountInfoClient;
-	
+
 	ArrayList<CouponInfo> couponInfosList = new ArrayList<CouponInfo>();
     ArrayList<PromotionInfo> promotionInfoList = new ArrayList<PromotionInfo>();
     String headMessage = "", inviteMessage = "";
@@ -231,9 +234,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 	
 	@Override
 	public void onDestroy() {
-		if(fetchAccountInfoClient != null){
-			fetchAccountInfoClient.cancelAllRequests(true);
-		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
@@ -468,124 +468,67 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 	 */
 	public void getAccountInfoAsync(final Activity activity) {
         if(!HomeActivity.checkIfUserDataNull(activity)) {
-            if (fetchAccountInfoClient == null) {
                 if (AppStatus.getInstance(activity).isOnline(activity)) {
                     DialogPopup.showLoadingDialog(activity, "Loading...");
                     couponInfosList.clear();
                     couponsListAdapter.notifyDataSetChanged();
                     linearLayoutNoCoupons.setVisibility(View.GONE);
 
-                    RequestParams params = new RequestParams();
+                    HashMap<String, String> params = new HashMap<>();
                     params.put("access_token", Data.userData.accessToken);
-                    params.put("latitude", ""+Data.latitude);
-                    params.put("longitude", ""+Data.longitude);
+                    params.put("latitude", "" + Data.latitude);
+                    params.put("longitude", "" + Data.longitude);
 
+                    RestClient.getApiServices().getCouponsAndPromotions(params, new Callback<SettleUserDebt>() {
+                        @Override
+                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                            Log.i(TAG, "getCouponsAndPromotions response = " + responseStr);
+                            try {
+                                JSONObject jObj = new JSONObject(responseStr);
 
-                    fetchAccountInfoClient = Data.getClient();
-                    fetchAccountInfoClient.post(Config.getServerUrl() + "/get_coupons_and_promotions", params,
-                        new CustomAsyncHttpResponseHandler() {
-                            private JSONObject jObj;
+                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                    int flag = jObj.getInt("flag");
+                                    if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
+                                        couponInfosList.clear();
+                                        couponInfosList.addAll(JSONParser.parseCouponsArray(jObj));
 
-                            @Override
-                            public void onFailure(Throwable arg3) {
-                                Log.e("request fail", arg3.toString());
-                                DialogPopup.dismissLoadingDialog();
-                                updateListData("Some error occurred. Tap to retry", true);
-                            }
+                                        promotionInfoList.clear();
+                                        promotionInfoList.addAll(JSONParser.parsePromotionsArray(jObj));
 
-                            @Override
-                            public void onSuccess(String response) {
-                                Log.e("Server response", "response = " + response);
-                                try {
-                                    jObj = new JSONObject(response);
-
-                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                        int flag = jObj.getInt("flag");
-                                        if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
-
-
-//                                            {
-//                                                "flag": 140,
-//                                                "coupons": [
-//                                                {
-//                                                    "coupon_id": 12,
-//                                                    "title": "Drop Capped C",
-//                                                    "subtitle": "upto Rs. 100 ",
-//                                                    "description": "Your 30.771823, 76.769595",
-//                                                    "coupon_type": 3,
-//                                                    "type": 3,
-//                                                    "discount_percentage": 0,
-//                                                    "discount_maximum": 0,
-//                                                    "discount": 0,
-//                                                    "maximum": 0,
-//                                                    "start_time": "00:00:00",
-//                                                    "end_time": "23:00:00",
-//                                                    "pickup_latitude": 30.7188,
-//                                                    "pickup_longitude": 76.8108,
-//                                                    "pickup_radius": 200,
-//                                                    "drop_latitude": 30.7718,
-//                                                    "drop_longitude": 76.7696,
-//                                                    "drop_radius": 200,
-//                                                    "image": "",
-//                                                    "account_id": 2568,
-//                                                    "redeemed_on": "0000-00-00 00:00:00",
-//                                                    "status": 1,
-//                                                    "expiry_date": "2015-08-31 18:29:59"
-//                                                }
-//                                                ],
-//                                                "promotions": [
-//                                                {
-//                                                    "promo_id": 19,
-//                                                    "title": "Pickup Capped ",
-//                                                    "end_on": "2015-08-31T00:00:00.000Z",
-//                                                    "max_allowed": 100,
-//                                                    "terms_n_conds": "Terms 30.718556, 76.811276\r\n30.771775, 76.769577",
-//                                                    "validity_text": "Valid until 31st August 2015"
-//                                                }
-//                                                ],
-//                                                "head": "Ongoing offers in Chandigarh",
-//                                                "invite_message": "Invite your friends and get more coupons"
-//                                            }
-
-                                            couponInfosList.clear();
-                                            couponInfosList.addAll(JSONParser.parseCouponsArray(jObj));
-
-                                            promotionInfoList.clear();
-                                            promotionInfoList.addAll(JSONParser.parsePromotionsArray(jObj));
-
-                                            headMessage = jObj.getString("head");
-                                            if(jObj.has("invite_message")) {
-                                                inviteMessage = jObj.getString("invite_message");
-                                            }
-
-                                            promotionInfoList.clear();
-                                            updateListData(headMessage, false);
-
-                                            if (Data.userData != null) {
-                                                Data.userData.numCouponsAvaliable = couponInfosList.size();
-                                            }
-
-                                        } else {
-                                            updateListData("Some error occurred. Tap to retry", true);
+                                        headMessage = jObj.getString("head");
+                                        if (jObj.has("invite_message")) {
+                                            inviteMessage = jObj.getString("invite_message");
                                         }
+
+                                        promotionInfoList.clear();
+                                        updateListData(headMessage, false);
+
+                                        if (Data.userData != null) {
+                                            Data.userData.numCouponsAvaliable = couponInfosList.size();
+                                        }
+
                                     } else {
                                         updateListData("Some error occurred. Tap to retry", true);
                                     }
-
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
+                                } else {
                                     updateListData("Some error occurred. Tap to retry", true);
                                 }
-                                DialogPopup.dismissLoadingDialog();
-                            }
 
-                            @Override
-                            public void onFinish() {
-                                fetchAccountInfoClient = null;
-                                super.onFinish();
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                updateListData("Some error occurred. Tap to retry", true);
                             }
+                            DialogPopup.dismissLoadingDialog();
+                        }
 
-                        });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(TAG, "getCouponsAndPromotions error="+error.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            updateListData("Some error occurred. Tap to retry", true);
+                        }
+                    });
                 } else {
                     //updateListData("No Internet connection. Tap to retry", true);
                     DialogPopup.dialogNoInternet(PromotionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG
@@ -604,7 +547,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                         }
                     });
                 }
-            }
         }
 	}
 
@@ -616,59 +558,49 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
-                RequestParams params = new RequestParams();
+                HashMap<String, String> params = new HashMap<>();
 
                 params.put("access_token", Data.userData.accessToken);
                 params.put("code", promoCode);
 
-                AsyncHttpClient asyncHttpClient = Data.getClient();
-                asyncHttpClient.post(Config.getServerUrl() + "/enter_code", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
-
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                            DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                        }
-
-
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response", "response = " + response);
-                            try {
-                                jObj = new JSONObject(response);
-                                int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag) {
-                                    HomeActivity.logoutUser(activity);
-                                } else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
-                                    String errorMessage = jObj.getString("error");
-                                    DialogPopup.alertPopup(activity, "", errorMessage);
-                                } else if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
-                                    String message = jObj.getString("message");
-                                    DialogPopup.dialogBanner(activity, message);
-                                    getAccountInfoAsync(activity);
-									FlurryEventLogger.event(PROMO_CODE_APPLIED);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
-								double jugnooBalance = jObj.optDouble("jugnoo_balance", Data.userData.getJugnooBalance());
-								Data.userData.setJugnooBalance(jugnooBalance);
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
+                RestClient.getApiServices().enterCode(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i(TAG, "enterCode response = " + responseStr);
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag) {
+                                HomeActivity.logoutUser(activity);
+                            } else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
+                                String errorMessage = jObj.getString("error");
+                                DialogPopup.alertPopup(activity, "", errorMessage);
+                            } else if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
+                                String message = jObj.getString("message");
+                                DialogPopup.dialogBanner(activity, message);
+                                getAccountInfoAsync(activity);
+                                FlurryEventLogger.event(PROMO_CODE_APPLIED);
+                            } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-
                             }
-                            DialogPopup.dismissLoadingDialog();
-                        }
+                            double jugnooBalance = jObj.optDouble("jugnoo_balance", Data.userData.getJugnooBalance());
+                            Data.userData.setJugnooBalance(jugnooBalance);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 
-                        @Override
-                        public void onFinish() {
-                            super.onFinish();
                         }
+                        DialogPopup.dismissLoadingDialog();
+                    }
 
-                    });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "enterCode error="+error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+                });
             } else {
                 DialogPopup.dialogNoInternet(PromotionsActivity.this,
                         Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,

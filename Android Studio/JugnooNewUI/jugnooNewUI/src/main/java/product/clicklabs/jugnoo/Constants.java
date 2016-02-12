@@ -13,6 +13,7 @@ public interface Constants {
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
+	String KEY_USER_ID = "user_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
@@ -74,5 +75,27 @@ public interface Constants {
 	String KEY_ALREADY_VERIFIED_EMAIL = "already_verified_email";
 	String KEY_ALREADY_REGISTERED_EMAIL = "already_registered_email";
 	String KEY_TUTORIAL_NO_OF_PAGES = "NumOfPages";
+
+	String KEY_SAVE_NOTIFICATION = "save_notification";
+	String KEY_NOTIFICATION_ID = "notification_id";
+
+	String LINKED_WALLET = "linked_wallet";
+	String LINKED_WALLET_MESSAGE = "linked_wallet_message";
+
+	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
+
+	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
+	String KEY_ANALYTICS_SMS_LIST= "analytics_sms_list";
+
+
+	String FIRST_TIME_DB= "first_time_db";
+
+
+	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
+
+	String SP_USER_PHONE_NO = "user_phone_no";
+
+
+
 
 }

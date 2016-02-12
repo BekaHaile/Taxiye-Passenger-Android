@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo"
-    android:versionCode="211"
-    android:versionName="2.1.1"
+    android:versionCode="212"
+    android:versionName="2.1.2"
      >
 
     
@@ -48,9 +48,10 @@
 
     <uses-permission android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    
-    
-    
+
+
+    <!-- Permission to start Alarm on device reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     
 
     <application
@@ -102,6 +103,8 @@
         <service
             android:name="product.clicklabs.jugnoo.RegistrationIntentService"
             />
+
+
 
         <activity
             android:name="product.clicklabs.jugnoo.SplashNewActivity"
@@ -495,6 +498,27 @@
                   android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+
+
+
+
+
+
+        <receiver android:name=".RefreshGCMReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Will not be called unless the application explicitly enables it -->
+        <receiver android:name=".DeviceBootReceiver"
+                  android:enabled="true"
+                  android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
