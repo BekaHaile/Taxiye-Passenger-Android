@@ -65,7 +65,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -1065,13 +1064,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutLocationError.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				textViewInitialSearch.setText("");
-				relativeLayoutLocationError.setVisibility(View.GONE);
-				initialMyLocationBtn.setVisibility(View.VISIBLE);
-				imageViewRideNow.setVisibility(View.VISIBLE);
-				centreLocationRl.setVisibility(View.VISIBLE);
-				setServiceAvailablityUI(farAwayCity);
-				callMapTouchedRefreshDrivers();
+                locationGotNow();
+                setServiceAvailablityUI(farAwayCity);
+                callMapTouchedRefreshDrivers();
 //				genieLayout.setVisibility(View.VISIBLE);
 			}
 		});
@@ -1079,12 +1074,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutLocationErrorSearchBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                textViewInitialSearch.setText("");
                 relativeLayoutInitialSearchBar.performClick();
-                relativeLayoutLocationError.setVisibility(View.GONE);
-                initialMyLocationBtn.setVisibility(View.VISIBLE);
-                imageViewRideNow.setVisibility(View.VISIBLE);
-                centreLocationRl.setVisibility(View.VISIBLE);
+                locationGotNow();
 //				genieLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -1534,12 +1525,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapTouched() {
                     // Map touched
-                    /*if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    } else{
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    }*/
-
 
                 }
 
@@ -2036,9 +2021,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 reconnectLocationFetchers();
             }
             FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
-            /*if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }*/
         }
     };
 
@@ -2182,8 +2164,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
 
-                //setSlidingUpPanelLayoutState(mode);
-
                 switch (mode) {
 
                     case P_INITIAL:
@@ -2275,6 +2255,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							imageViewRideNow.setVisibility(View.VISIBLE);
 //							genieLayout.setVisibility(View.VISIBLE);
 							centreLocationRl.setVisibility(View.VISIBLE);
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 						}
 
                         checkForFareAvailablity();
@@ -2631,13 +2612,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private void setSlidingUpPanelLayoutState(PassengerScreenMode passengerScreenMode){
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        } else{
-            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-        }
-    }
 
     public SlidingBottomPanel getSlidingBottomPanel(){
         return slidingBottomPanel;
@@ -5253,17 +5227,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             runOnUiThread(new Runnable() {
 
-				@Override
-				public void run() {
-					try {
-						if (RideCancellationActivity.activityCloser != null) {
-							RideCancellationActivity.activityCloser.close();
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+                @Override
+                public void run() {
+                    try {
+                        if (RideCancellationActivity.activityCloser != null) {
+                            RideCancellationActivity.activityCloser.close();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -5431,16 +5405,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
 					&& relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
-				relativeLayoutLocationError.setVisibility(View.GONE);
-				initialMyLocationBtn.setVisibility(View.VISIBLE);
-				imageViewRideNow.setVisibility(View.VISIBLE);
-//				genieLayout.setVisibility(View.VISIBLE);
-				centreLocationRl.setVisibility(View.VISIBLE);
+                locationGotNow();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+    private void locationGotNow(){
+        textViewInitialSearch.setText("");
+        relativeLayoutLocationError.setVisibility(View.GONE);
+        initialMyLocationBtn.setVisibility(View.VISIBLE);
+        imageViewRideNow.setVisibility(View.VISIBLE);
+        centreLocationRl.setVisibility(View.VISIBLE);
+        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
 
 
     /**
