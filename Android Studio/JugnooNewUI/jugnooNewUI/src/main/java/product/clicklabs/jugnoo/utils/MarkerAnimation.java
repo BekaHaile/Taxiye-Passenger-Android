@@ -81,14 +81,23 @@ public class MarkerAnimation {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void animateMarkerToICS(Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
 
-        if(MapUtils.distance(marker.getPosition(), finalPosition) < 150
-                || MapUtils.distance(marker.getPosition(), finalPosition) > 20000){
-            List<LatLng> list = new ArrayList<>();
-            list.add(finalPosition);
-            animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
-        }
-        else{
-            new GetDirectionsAsync(marker, finalPosition, latLngInterpolator).execute();
+        try {
+            if(MapUtils.distance(marker.getPosition(), finalPosition) < 150
+					|| MapUtils.distance(marker.getPosition(), finalPosition) > 20000){
+				List<LatLng> list = new ArrayList<>();
+				list.add(finalPosition);
+				animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
+			}
+			else{
+				new GetDirectionsAsync(marker, finalPosition, latLngInterpolator).execute();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                marker.setPosition(finalPosition);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
 
     }

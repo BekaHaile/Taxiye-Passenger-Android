@@ -1211,9 +1211,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                if(Data.userData.paytmEnabled == 1) {
+                if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
                     intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-                } else {
+                }
+                else{
                     intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
                 }
                 startActivity(intent);

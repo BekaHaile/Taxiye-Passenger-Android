@@ -306,8 +306,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 		try {
+			super.onActivityResult(requestCode, resultCode, data);
 			if(resultCode == Activity.RESULT_OK) {
 				if (requestCode == ADD_HOME) {
 					String strResult = data.getStringExtra("PLACE");
