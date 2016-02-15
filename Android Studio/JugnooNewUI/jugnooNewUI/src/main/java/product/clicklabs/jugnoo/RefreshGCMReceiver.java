@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
-import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 
 /**
@@ -21,11 +19,11 @@ public class RefreshGCMReceiver extends BroadcastReceiver {
 		// For our recurring task, we'll just display a message
 		Log.e(TAG, "I'm running");
 
-		new DeviceTokenGenerator().clearAndRegenerateDeviceToken(context, new IDeviceTokenReceiver() {
-			@Override
-			public void deviceTokenReceived(String regId) {
-				Log.e(TAG, "deviceToken = " + regId);
-			}
-		});
+//		new DeviceTokenGenerator().clearAndRegenerateDeviceToken(context, new IDeviceTokenReceiver() {
+//			@Override
+//			public void deviceTokenReceived(String regId) {
+//				Log.e(TAG, "deviceToken = " + regId);
+//			}
+//		});
 	}
 }
