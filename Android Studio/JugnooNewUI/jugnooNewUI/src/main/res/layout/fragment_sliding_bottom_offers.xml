@@ -1,120 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
-    android:gravity="center_vertical"
     android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
     android:background="@color/sliding_bottom_bg_color"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/offers_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/linearLayoutPromotion1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/nl_button_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:background="@drawable/background_white_rounded_bordered"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            >
+    <LinearLayout
+        android:id="@+id/linearLayoutPromotion1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nl_button_size"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/radioPromotion1"
-                android:layout_width="33px"
-                android:layout_height="33px"
-                android:tag="mwar"
-                android:layout_marginLeft="23px"
-                android:src="@drawable/radio_unselected_icon"/>
+        <ImageView
+            android:id="@+id/radioPromotion1"
+            android:layout_width="33px"
+            android:layout_height="33px"
+            android:layout_marginLeft="23px"
+            android:src="@drawable/radio_unselected_icon"
+            android:tag="mwar" />
 
-            <TextView
-                android:id="@+id/textViewPromotion1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="cashback"
-                android:layout_marginLeft="39px"
-                android:textSize="@dimen/text_size_40"
-                android:textColor="@color/text_color"/>
+        <TextView
+            android:id="@+id/textViewPromotion1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="39px"
+            android:text="cashback"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_40" />
 
-        </LinearLayout>
-
+    </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/linearLayoutPromotion2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/nl_button_size"
-        android:layout_marginTop="25px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
-        android:gravity="center_vertical"
+        android:layout_marginTop="25px"
         android:background="@drawable/background_white_rounded_bordered"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/radioPromotion2"
             android:layout_width="33px"
             android:layout_height="33px"
-            android:tag="mwar"
             android:layout_marginLeft="23px"
-            android:src="@drawable/radio_unselected_icon"/>
+            android:src="@drawable/radio_unselected_icon"
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewPromotion2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="cashback"
             android:layout_marginLeft="39px"
-            android:textSize="@dimen/text_size_40"
-            android:textColor="@color/text_color"/>
+            android:text="cashback"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_40" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/linearLayoutNoOffers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:visibility="gone"
-        >
-        <ImageView
-            android:layout_width="132px"
-            android:layout_height="154px"
-            android:src="@drawable/ic_no_notifications"
-            />
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/textViewWhoops"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/whoops"
-            android:textColor="@color/text_color_hint"
-            android:textSize="@dimen/text_size_32"
-            android:textAllCaps="true"
-            android:layout_marginTop="10px"
-            />
+        <ImageView
+            android:layout_width="134px"
+            android:layout_height="190px"
+            android:src="@drawable/ic_no_items"
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewNoOffers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="10px"
             android:text="No Current Offers"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
-            android:layout_marginTop="10px"
-            />
+            android:textSize="@dimen/text_size_24" />
 
     </LinearLayout>
 

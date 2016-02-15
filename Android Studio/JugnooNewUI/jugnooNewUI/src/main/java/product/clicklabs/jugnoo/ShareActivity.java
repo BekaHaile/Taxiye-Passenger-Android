@@ -48,6 +48,7 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	ShareFragmentAdapter shareFragmentAdapter;
 	PagerSlidingTabStrip tabs;
     private CallbackManager callbackManager;
+	public boolean fromDeepLink = false;
 
 	public LeaderboardResponse leaderboardResponse;
 	public LeaderboardActivityResponse leaderboardActivityResponse;
@@ -82,6 +83,14 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
+
+		try {
+			if(getIntent().hasExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK)){
+				fromDeepLink = getIntent().getBooleanExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		linearLayoutRoot = (LinearLayout) findViewById(R.id.linearLayoutRoot);
 		new ASSL(ShareActivity.this, linearLayoutRoot, 1134, 720, false);
@@ -205,17 +214,17 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 				//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
 				DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
-					public void positiveClick() {
+					public void positiveClick(View v) {
 						getLeaderboardCall();
 					}
 
 					@Override
-					public void neutralClick() {
+					public void neutralClick(View v) {
 
 					}
 
 					@Override
-					public void negativeClick() {
+					public void negativeClick(View v) {
 
 					}
 				});
@@ -288,6 +297,24 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
+		} else {
+			//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+			DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+				@Override
+				public void positiveClick(View v) {
+					getLeaderboardActivityCall();
+				}
+
+				@Override
+				public void neutralClick(View v) {
+
+				}
+
+				@Override
+				public void negativeClick(View v) {
+
+				}
+			});
 		}
 	}
 }

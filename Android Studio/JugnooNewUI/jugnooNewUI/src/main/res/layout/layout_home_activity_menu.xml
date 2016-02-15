@@ -526,7 +526,7 @@
                     android:layout_height="45px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50px"
-                    android:src="@drawable/notification_center_icon"
+                    android:src="@drawable/ic_notification_center_grey"
                     android:tag="mwar" />
 
                 <TextView

@@ -48,9 +48,9 @@
         android:layout_height="110px"
         android:visibility="visible"
         app:pstsIndicatorHeight="10px"
-        app:pstsDividerColor="@color/text_color_light"
+        app:pstsDividerColor="@color/text_color_hint"
         app:pstsShouldExpand="true"
-        app:pstsUnderlineColor="@color/grey_light"
+        app:pstsUnderlineColor="@color/text_color_hint"
         app:pstsUnderlineHeight="2px"
         />
 

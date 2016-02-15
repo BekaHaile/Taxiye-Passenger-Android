@@ -67,7 +67,6 @@
                         android:id="@+id/imageViewPaytmIcon"
                         android:layout_width="167px"
                         android:layout_height="53px"
-                        android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_paytm_logo_big"
                         android:tag="mwar" />
 
@@ -76,10 +75,8 @@
                         android:id="@+id/textViewAddWalletHelp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10px"
-                        android:text="Pay for Jugnoo Rides with a Mobile Wallet"
+                        android:layout_marginTop="20px"
+                        android:text="@string/nl_otp_paytm"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -89,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/theme_color" />
+                    android:background="@color/text_color_light" />
 
                 <TextView
                     android:id="@+id/textViewOTPMessage"
@@ -155,7 +152,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="140px"
+                android:layout_marginTop="50px"
                 android:orientation="vertical">
 
 

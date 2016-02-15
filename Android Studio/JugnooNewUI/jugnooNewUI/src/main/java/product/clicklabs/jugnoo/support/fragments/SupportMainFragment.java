@@ -258,7 +258,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				dialogErrorType,
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
-					public void positiveClick() {
+					public void positiveClick(View view) {
 						if(showPanelState != 1) {
 							showPanel();
 						}
@@ -268,12 +268,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					}
 
 					@Override
-					public void neutralClick() {
+					public void neutralClick(View view) {
 
 					}
 
 					@Override
-					public void negativeClick() {
+					public void negativeClick(View view) {
 
 					}
 				});

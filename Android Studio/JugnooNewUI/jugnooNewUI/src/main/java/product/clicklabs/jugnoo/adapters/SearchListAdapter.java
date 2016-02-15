@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +24,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -50,6 +51,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress;
+        ImageView imageViewType;
         LinearLayout relative;
         int id;
     }
@@ -135,6 +137,12 @@ public class SearchListAdapter extends BaseAdapter{
         this.notifyDataSetChanged();
     }
 
+    public void addSavedLocationsToList(){
+        autoCompleteSearchResultsForSearch.clear();
+        addFavoriteLocations("");
+        setResults(autoCompleteSearchResultsForSearch);
+    }
+
     @Override
     public int getCount() {
         return autoCompleteSearchResults.size();
@@ -161,10 +169,11 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.latoRegular(context));
             holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+            holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(ASSL.Yscale())*110));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -178,6 +187,16 @@ public class SearchListAdapter extends BaseAdapter{
 
             holder.textViewSearchName.setText(autoCompleteSearchResults.get(position).name);
             holder.textViewSearchAddress.setText(autoCompleteSearchResults.get(position).address);
+
+            if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_HOME){
+                holder.imageViewType.setVisibility(View.VISIBLE);
+                holder.imageViewType.setImageResource(R.drawable.home);
+            } else if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_WORK){
+                holder.imageViewType.setVisibility(View.VISIBLE);
+                holder.imageViewType.setImageResource(R.drawable.work);
+            } else{
+                holder.imageViewType.setVisibility(View.GONE);
+            }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
@@ -211,6 +230,7 @@ public class SearchListAdapter extends BaseAdapter{
                 autoCompleteSearchResults.remove(autoCompleteSearchResults.indexOf(new AutoCompleteSearchResult("No results found", "", "")));
             }
         }
+
         super.notifyDataSetChanged();
     }
 
@@ -299,12 +319,10 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
-			Gson gson = new Gson();
 			if(!Prefs.with(context).getString(SPLabels.ADD_GYM, "").equalsIgnoreCase("")) {
 				if (SPLabels.ADD_GYM.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_GYM, "").toLowerCase().contains(searchText.toLowerCase())) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_GYM, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_GYM, ""));
 					searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_GYM;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
@@ -314,8 +332,7 @@ public class SearchListAdapter extends BaseAdapter{
 			if(!Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").equalsIgnoreCase("")) {
 				if (SPLabels.ADD_FRIEND.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_FRIEND, "").toLowerCase().contains(searchText.toLowerCase())) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_FRIEND, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_FRIEND, ""));
 					searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_FRIEND;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
@@ -326,8 +343,7 @@ public class SearchListAdapter extends BaseAdapter{
 				if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
                         || searchText.equalsIgnoreCase("")) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
 					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_WORK;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);
@@ -338,8 +354,7 @@ public class SearchListAdapter extends BaseAdapter{
 				if(SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
 						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
                         || searchText.equalsIgnoreCase("")) {
-					AutoCompleteSearchResult searchResult = gson.fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""),
-							AutoCompleteSearchResult.class);
+					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
 					//searchResult.address = searchResult.name+", "+searchResult.address;
 					searchResult.name = SPLabels.ADD_HOME;
 					autoCompleteSearchResultsForSearch.add(0, searchResult);

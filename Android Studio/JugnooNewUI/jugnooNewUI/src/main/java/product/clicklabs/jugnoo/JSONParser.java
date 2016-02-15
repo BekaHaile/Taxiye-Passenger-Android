@@ -8,13 +8,12 @@ import android.content.SharedPreferences.Editor;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -38,16 +37,20 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
+
+    private final String TAG = JSONParser.class.getSimpleName();
 
     public JSONParser() {
 
@@ -86,10 +89,10 @@ public class JSONParser implements Constants {
             Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
                     fareDetails0.getDouble("fare_threshold_distance"),
                     fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes, 0, 0, convenienceCharges);
+                    farePerMin, freeMinutes, 0, 0, convenienceCharges, true);
         } catch (Exception e) {
             e.printStackTrace();
-            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0);
+            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0, false);
         }
     }
 
@@ -249,13 +252,16 @@ public class JSONParser implements Constants {
         } catch(Exception e){
             e.printStackTrace();
         }
+        Prefs.with(context).save(SP_USER_PHONE_NO, phoneNo);
 
 		double sharingFareFixed = userData.optDouble("sharing_customer_fare_fixed", 10);
 		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
         Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-		int promoSuccess = userData.optInt("promo_success", 1);
+		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
+        String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
+                context.getResources().getString(R.string.promocode_invalid_message_on_signup));
 
 		int paytmEnabled = userData.optInt("paytm_enabled", 0);
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
@@ -317,7 +323,9 @@ public class JSONParser implements Constants {
                 canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
                 christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
-                contactSaved, referAllText, referAllTitle, promoSuccess, showJugnooJeanie,
+                contactSaved, referAllText, referAllTitle,
+                promoSuccess, promoMessage,
+                showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl, jugnooCashTNC);
     }
 
@@ -438,7 +446,6 @@ public class JSONParser implements Constants {
     }
 
 
-    //TODO
     public void parseLastRideData(JSONObject jObj) {
 
 //		  "last_ride": {
@@ -619,25 +626,21 @@ public class JSONParser implements Constants {
 
 
     public String getUserStatus(Context context, String accessToken, int currentUserStatus) {
-        String returnResponse = "";
         try {
-            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("access_token", accessToken));
-            HttpRequester simpleJSONParser = new HttpRequester();
-            String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_current_user_status", nameValuePairs);
-//			Log.e("result of = user_status", "="+result);
-            if (result.contains(HttpRequester.SERVER_TIMEOUT)) {
-                returnResponse = HttpRequester.SERVER_TIMEOUT;
-                return returnResponse;
+            HashMap<String, String> nameValuePairs = new HashMap<>();
+            nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
+            Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
+            String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+            Log.i(TAG, "getCurrentUserStatus response="+responseStr);
+            if (response == null || responseStr == null) {
+                return Constants.SERVER_TIMEOUT;
             } else {
-                JSONObject jObject1 = new JSONObject(result);
-                returnResponse = parseCurrentUserStatus(context, currentUserStatus, jObject1);
-                return returnResponse;
+                JSONObject jObject1 = new JSONObject(responseStr);
+                return parseCurrentUserStatus(context, currentUserStatus, jObject1);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            returnResponse = HttpRequester.SERVER_TIMEOUT;
-            return returnResponse;
+            return Constants.SERVER_TIMEOUT;
         }
     }
 
@@ -664,7 +667,7 @@ public class JSONParser implements Constants {
             try {
 
                 if (jObject1.has("error")) {
-                    returnResponse = HttpRequester.SERVER_TIMEOUT;
+                    returnResponse = Constants.SERVER_TIMEOUT;
                     return returnResponse;
                 } else {
 
@@ -750,7 +753,7 @@ public class JSONParser implements Constants {
             } catch (Exception e) {
                 e.printStackTrace();
                 engagementStatus = -1;
-                returnResponse = HttpRequester.SERVER_TIMEOUT;
+                returnResponse = Constants.SERVER_TIMEOUT;
                 return returnResponse;
             }
 
@@ -775,7 +778,6 @@ public class JSONParser implements Constants {
                 Data.cSessionId = sessionId;
                 clearSPData(context);
             } else {
-                //TODO
                 SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 
                 Data.cSessionId = sessionId;
@@ -1248,7 +1250,7 @@ public class JSONParser implements Constants {
                         jfs.getDouble("fare_per_min"),
                         jfs.getDouble("fare_threshold_time"),
                         jfs.getDouble("fare_per_waiting_min"),
-                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges);
+                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges, true);
                     Data.fareStructure.fareFactor = fareFactor;
                     break;
                 }

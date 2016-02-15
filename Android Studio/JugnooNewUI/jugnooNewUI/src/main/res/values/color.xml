@@ -149,6 +149,8 @@
  <color name="theme_color_pressed">#99fd8e59</color>
  <color name="jeanie_color">#FD9244</color>
  <color name="text_color">#595968</color>
+    <color name="amount_positive_color">#83CF49</color>
+    <color name="amount_negative_color">#F54646</color>
  <color name="text_color_light">#9D9D9D</color>
  <color name="white_alpha_33">#33FFFFFF</color>
  <color name="sliding_bottom_bg_color">#F7F7F7</color>

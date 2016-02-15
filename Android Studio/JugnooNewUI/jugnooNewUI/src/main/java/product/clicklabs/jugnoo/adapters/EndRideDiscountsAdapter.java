@@ -62,7 +62,6 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.list_item_end_ride_discount, null);
 
             holder.textViewDiscount = (TextView) convertView.findViewById(R.id.textViewDiscount); holder.textViewDiscount.setTypeface(Fonts.latoRegular(context));
-			holder.textViewDiscountRupee = (TextView) convertView.findViewById(R.id.textViewDiscountRupee); holder.textViewDiscountRupee.setTypeface(Fonts.latoRegular(context));
 			holder.textViewDiscountValue = (TextView) convertView.findViewById(R.id.textViewDiscountValue); holder.textViewDiscountValue.setTypeface(Fonts.latoRegular(context));
 
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -80,14 +79,16 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
         DiscountType discountType = discountTypes.get(position);
 
         holder.textViewDiscount.setText("- "+discountType.name);
-		holder.textViewDiscountValue.setText("- "+Utils.getMoneyDecimalFormat().format(discountType.value));
+		holder.textViewDiscountValue.setText(String.format(context.getResources()
+                .getString(R.string.rupees_minus_value_format_without_space),
+                Utils.getMoneyDecimalFormat().format(discountType.value)));
 
         return convertView;
     }
 
 
     private class ViewHolderDiscount {
-        TextView textViewDiscount, textViewDiscountRupee, textViewDiscountValue;
+        TextView textViewDiscount, textViewDiscountValue;
         RelativeLayout relative;
         int id;
     }

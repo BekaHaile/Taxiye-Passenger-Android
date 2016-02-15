@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -95,7 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_light" />
+                    android:src="@color/text_color_hint" />
 
             </RelativeLayout>
 
@@ -216,22 +215,21 @@
                     android:src="@color/text_color_hint" />
 
 
-
                 <RelativeLayout
                     android:id="@+id/relativeLayoutEC1Delete"
                     android:layout_width="wrap_content"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
                     android:layout_height="70px"
-                    android:layout_gravity="right">
+                    android:layout_gravity="right"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px">
 
                     <TextView
                         android:id="@+id/textViewEC1Delete"
                         android:layout_width="wrap_content"
                         android:layout_height="70px"
-                        android:gravity="center"
-                        android:layout_toRightOf="@+id/imageViewDelete"
                         android:layout_marginLeft="15px"
+                        android:layout_toRightOf="@+id/imageViewDelete"
+                        android:gravity="center"
                         android:padding="0px"
                         android:text="Delete"
                         android:textColor="@color/text_color_theme_selector"
@@ -241,8 +239,8 @@
                         android:id="@+id/imageViewDelete"
                         android:layout_width="24px"
                         android:layout_height="29px"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
                         android:src="@drawable/emergency_delete" />
 
                 </RelativeLayout>
@@ -341,7 +339,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_light" />
+                    android:src="@color/text_color_hint" />
 
 
             </RelativeLayout>
@@ -375,7 +373,7 @@
                         android:singleLine="true"
                         android:textColor="@color/black_text"
                         android:textColorHint="@color/black_text_alpha"
-                        android:textSize="28px"/>
+                        android:textSize="28px" />
 
                     <ImageView
                         android:id="@+id/imageViewEC2PickContact"
@@ -464,18 +462,18 @@
                 <RelativeLayout
                     android:id="@+id/relativeLayoutEC2Delete"
                     android:layout_width="wrap_content"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
                     android:layout_height="70px"
-                    android:layout_gravity="right">
+                    android:layout_gravity="right"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px">
 
                     <TextView
                         android:id="@+id/textViewEC2Delete"
                         android:layout_width="wrap_content"
                         android:layout_height="70px"
-                        android:gravity="center"
-                        android:layout_toRightOf="@+id/imageViewDelete1"
                         android:layout_marginLeft="15px"
+                        android:layout_toRightOf="@+id/imageViewDelete1"
+                        android:gravity="center"
                         android:padding="0px"
                         android:text="Delete"
                         android:textColor="@color/text_color_theme_selector"
@@ -485,8 +483,8 @@
                         android:id="@+id/imageViewDelete1"
                         android:layout_width="24px"
                         android:layout_height="29px"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
                         android:src="@drawable/emergency_delete" />
 
                 </RelativeLayout>

@@ -85,12 +85,12 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenLight(paymentActivity));
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewJugnooCashBalanceValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashBalanceValue);
-		textViewJugnooCashBalanceValue.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewJugnooCashBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
 		textViewPaytmBalance = (TextView)rootView.findViewById(R.id.textViewPaytmBalance); textViewPaytmBalance.setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewPaytmBalanceValue = (TextView) rootView.findViewById(R.id.textViewPaytmBalanceValue);
-		textViewPaytmBalanceValue.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewPaytmBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 
 		relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
@@ -221,12 +221,13 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 				Spannable spanJ = new SpannableString(textViewJugnooCashBalanceValue.getText());
 				spanJ.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewJugnooCashBalanceValue.setText(spanJ);
+				//textViewJugnooCashBalanceValue.setText(spanJ);
 
 				Spannable spanP = new SpannableString(textViewPaytmBalanceValue.getText());
 				spanP.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewPaytmBalanceValue.setText(spanP);
-
+				//textViewPaytmBalanceValue.setText(spanP);
+				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
+				textViewPaytmBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 			}
 		} catch(Exception e){
 			e.printStackTrace();

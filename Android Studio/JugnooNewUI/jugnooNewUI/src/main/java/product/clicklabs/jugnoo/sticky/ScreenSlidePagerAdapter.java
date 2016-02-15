@@ -9,18 +9,22 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final int NUM_PAGES = 2;
-    public ScreenSlidePagerAdapter(android.support.v4.app.FragmentManager fm) {
+    private int numOfPages = 1;
+    private ScreenSlidePageFragment.Callback callback;
+    public ScreenSlidePagerAdapter(android.support.v4.app.FragmentManager fm, int numOfPages,
+                                   ScreenSlidePageFragment.Callback callback) {
         super(fm);
+        this.numOfPages = numOfPages;
+        this.callback = callback;
     }
 
     @Override
     public android.support.v4.app.Fragment getItem(int position) {
-        return ScreenSlidePageFragment.create(position);
+        return ScreenSlidePageFragment.create(position, numOfPages, callback);
     }
 
     @Override
     public int getCount() {
-        return NUM_PAGES;
+        return numOfPages;
     }
 }

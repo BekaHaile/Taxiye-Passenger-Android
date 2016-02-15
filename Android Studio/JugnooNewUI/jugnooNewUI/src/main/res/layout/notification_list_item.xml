@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,15 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20px"
-        android:background="@drawable/background_grey_rounded_bordered"
-        >
+        android:background="@drawable/background_grey_rounded_bordered">
 
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -29,11 +26,11 @@
                 <ImageView
                     android:id="@+id/notification_image"
                     android:layout_width="match_parent"
-                    android:layout_height="450px"
-                    android:tag="mwar"
+                    android:layout_height="340px"
+                    android:padding="2px"
                     android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    />
+                    android:tag="mwar"
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
@@ -42,10 +39,24 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20px"
+                android:layout_marginTop="20px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginBottom="5px"
                 android:text="Hello\nHello\nhello"
-                android:textColor="@color/notification_text_color"
-                android:textSize="32px"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32" />
+
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20px"
+                android:layout_marginBottom="10px"
+                android:layout_gravity="right"
+                android:text="Today"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_24" />
         </LinearLayout>
 
     </LinearLayout>

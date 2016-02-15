@@ -45,7 +45,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -58,6 +57,8 @@ import retrofit.mime.TypedByteArray;
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants{
+
+    private final String TAG = FareEstimateActivity.class.getSimpleName();
 
     LinearLayout relative;
 
@@ -131,9 +132,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
         textViewDropLocation.setTypeface(Fonts.mavenLight(this));
         textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
-        textViewEstimateTime.setTypeface(Fonts.mavenLight(this));
+        textViewEstimateTime.setTypeface(Fonts.mavenRegular(this));
         textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
-        textViewEstimateDistance.setTypeface(Fonts.mavenLight(this));
+        textViewEstimateDistance.setTypeface(Fonts.mavenRegular(this));
         textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
         textViewEstimateFare.setTypeface(Fonts.mavenRegular(this));
 		textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
@@ -145,6 +146,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         buttonOk.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
+
+        ((TextView)findViewById(R.id.textViewStart)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewEnd)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewEstimateDistanceText)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewEstimateRideTimeText)).setTypeface(Fonts.mavenLight(this));
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {
@@ -183,10 +189,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                     public void run() {
                         try {
                             if (sourceLatLng != null && destLatLng != null) {
-                                String url = MapUtils.makeDirectionsURL(sourceLatLng, destLatLng);
-                                Log.i("url", "=" + url);
-                                HttpRequester.setTimeouts(30000);
-                                String result = new HttpRequester().getJSONFromUrl(url);
+                                Response response = RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                                        destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false);
+                                String result = new String(((TypedByteArray)response.getBody()).getBytes());
                                 Log.i("result", "=" + result);
                                 if (result != null) {
                                     JSONObject jObj = new JSONObject(result);
@@ -361,66 +366,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 				params.put("ride_distance", "" + distanceValue);
 				params.put("ride_time", "" + timeValue);
 
-//				AsyncHttpClient client = Data.getClient();
-//				client.post(Config.getServerUrl() + "/get_fare_estimate", params,
-//						new CustomAsyncHttpResponseHandler() {
-//							private JSONObject jObj;
-//
-//							@Override
-//							public void onFailure(Throwable arg3) {
-//								Log.e("request fail", arg3.toString());
-//								DialogPopup.dismissLoadingDialog();
-//								retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
-//							}
-//
-//							@Override
-//							public void onSuccess(String response) {
-//								Log.e("Server response", "response = " + response);
-//								try {
-//									jObj = new JSONObject(response);
-//
-//									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-//										int flag = jObj.getInt("flag");
-//										String message = JSONParser.getServerMessage(jObj);
-//										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-//											String minFare = jObj.getString("min_fare");
-//											String maxFare = jObj.getString("max_fare");
-//											double convenienceCharge = jObj.optDouble("convenience_charge", 0);
-//
-//											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
-//													getResources().getString(R.string.rupee) + "" + maxFare);
-//
-//											if(convenienceCharge > 0){
-//												textViewConvenienceCharge.setText("Convenience Charges "
-//														+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
-//											}
-//											else{
-//												if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
-//													textViewConvenienceCharge.setText("Convenience Charges "
-//															+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-//												}
-//												else{
-//													textViewConvenienceCharge.setText("");
-//												}
-//											}
-//										} else {
-//											retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
-//										}
-//									}
-//								} catch (Exception exception) {
-//									exception.printStackTrace();
-//									retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
-//								}
-//								DialogPopup.dismissLoadingDialog();
-//							}
-//
-//						});
-
                 RestClient.getApiServices().getFareEstimate(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.e("Server response", "response = " + responseStr);
+                        Log.e(TAG, "getFareEstimate response = " + responseStr);
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
 
@@ -461,7 +411,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("request fail", error.toString());
+                        Log.e(TAG, "getFareEstimate error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
                         retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
                     }

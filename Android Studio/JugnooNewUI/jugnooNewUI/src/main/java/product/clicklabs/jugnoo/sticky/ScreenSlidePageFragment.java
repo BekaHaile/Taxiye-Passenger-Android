@@ -16,6 +16,7 @@
 
 package product.clicklabs.jugnoo.sticky;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,23 +37,34 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     /**
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
      */
-    private int mPageNumber;
+    private int mPageNumber, numOfPages;
+    private Callback callback;
 
-    private RelativeLayout first, mainLay;
+    private RelativeLayout first, mainLay, third;
     private RelativeLayout second;
+
+
+    public ScreenSlidePageFragment() {
+        super();
+    }
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static ScreenSlidePageFragment create(int pageNumber) {
-        ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
+
+
+    public static ScreenSlidePageFragment create(int pageNumber, int numOfPages, Callback callback) {
+        ScreenSlidePageFragment fragment = new ScreenSlidePageFragment(numOfPages, callback);
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ScreenSlidePageFragment() {
+    @SuppressLint("ValidFragment")
+    public ScreenSlidePageFragment(int numOfPages, Callback callback) {
+        this.numOfPages = numOfPages;
+        this.callback = callback;
     }
 
     @Override
@@ -70,25 +82,53 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
 		ASSL.DoMagic(mainLay);
 
         first = (RelativeLayout) rootView.findViewById(R.id.tutorial_one);
-
         second = (RelativeLayout) rootView.findViewById(R.id.tutorial_two);
-        second.setOnClickListener(new View.OnClickListener() {
+        third = (RelativeLayout) rootView.findViewById(R.id.tutorial_three);
+
+        third.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callback.onThirdClick();
                 getActivity().finish();
                 Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 startActivity(intent);
             }
         });
+
+        first.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(numOfPages == 1){
+                    getActivity().finish();
+                } else{
+                    callback.onFirstClick();
+                }
+            }
+        });
+
+        second.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onSecondClick();
+            }
+        });
+
         first.setVisibility(View.GONE);
         second.setVisibility(View.GONE);
+        third.setVisibility(View.GONE);
 
         if (mPageNumber == 0) {
             first.setVisibility(View.VISIBLE);
             second.setVisibility(View.GONE);
+            third.setVisibility(View.GONE);
         } else if (mPageNumber == 1) {
-            first.setVisibility(View.GONE);
             second.setVisibility(View.VISIBLE);
+            first.setVisibility(View.GONE);
+            third.setVisibility(View.GONE);
+        } else if(mPageNumber == 2){
+            third.setVisibility(View.VISIBLE);
+            first.setVisibility(View.GONE);
+            second.setVisibility(View.GONE);
         }
 
         return rootView;
@@ -100,4 +140,11 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment {
     public int getPageNumber() {
         return mPageNumber;
     }
+
+    public interface Callback{
+        void onFirstClick();
+        void onSecondClick();
+        void onThirdClick();
+    }
+
 }

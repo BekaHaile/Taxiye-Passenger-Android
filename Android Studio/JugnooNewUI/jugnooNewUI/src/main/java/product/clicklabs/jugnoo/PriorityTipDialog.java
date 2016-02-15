@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -20,6 +19,8 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -107,7 +108,7 @@ public class PriorityTipDialog {
             textMessage.setMovementMethod(new ScrollingMovementMethod());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+            final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
 
             Spannable word = new SpannableString(activity.getResources().getString(R.string.type));
@@ -178,8 +179,28 @@ public class PriorityTipDialog {
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
-                    callback.onConfirmed();
+                    if(AppStatus.getInstance(activity).isOnline(activity)) {
+                        dialog.dismiss();
+                        callback.onConfirmed();
+                    } else{
+                        DialogPopup.dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE,
+                                Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                                    @Override
+                                    public void positiveClick(View v) {
+                                        btnOk.performClick();
+                                    }
+
+                                    @Override
+                                    public void neutralClick(View v) {
+
+                                    }
+
+                                    @Override
+                                    public void negativeClick(View v) {
+
+                                    }
+                                });
+                    }
                     // listenerPositive.onClick(view);
                 }
             });

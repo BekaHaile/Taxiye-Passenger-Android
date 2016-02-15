@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="WALLET"
             android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"/>
+            android:textSize="@dimen/top_bar_title_text_size" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/back_white_selector" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -62,7 +62,7 @@
                     android:text="Promotional banner"
                     android:textColor="@color/grey_black_light"
                     android:textSize="26px"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <!-- jugnoo cash rl-->
@@ -70,45 +70,39 @@
                 android:id="@+id/relativeLayoutWallet"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
-                android:background="@drawable/background_white_grey_light_selector"
-                >
+                android:background="@drawable/background_white_grey_light_selector">
 
 
-
-                    <ImageView
-                        android:id="@+id/imageViewJugnooCashIcon"
-                        android:layout_width="76px"
-                        android:layout_height="50px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="30px"
-                        android:src="@drawable/wallet_jugnoo_cash_icon"
-                        android:tag="mwar"
-                        />
+                <ImageView
+                    android:id="@+id/imageViewJugnooCashIcon"
+                    android:layout_width="76px"
+                    android:layout_height="50px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30px"
+                    android:src="@drawable/wallet_jugnoo_cash_icon"
+                    android:tag="mwar" />
 
 
-
-                    <TextView
-                        android:id="@+id/textViewJugnooCashBalanceValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="34px"
-                        android:gravity="right"
-                        android:text="@string/rupee_0"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_54"
-                        />
-
+                <TextView
+                    android:id="@+id/textViewJugnooCashBalanceValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="34px"
+                    android:gravity="right"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_50" />
 
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="20px"
-                    android:layout_toRightOf="@+id/imageViewJugnooCashIcon">
+                    android:layout_toRightOf="@+id/imageViewJugnooCashIcon"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/textViewJugnooCashBalance"
@@ -116,29 +110,25 @@
                         android:layout_height="wrap_content"
                         android:text="@string/jugnoo_cash"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_32"
-                        />
+                        android:textSize="@dimen/text_size_32" />
 
                     <TextView
                         android:id="@+id/textViewJugnooCashTNC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/textViewJugnooCashBalance"
+                        android:layout_marginTop="5px"
                         android:text="@string/tnc_apply"
                         android:textColor="@color/black_text_alpha"
-                        android:textSize="18px"
-                        android:layout_marginTop="5px"
-                        android:layout_below="@+id/textViewJugnooCashBalance"
-                        />
+                        android:textSize="18px" />
                 </RelativeLayout>
-
 
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/text_color_light"
-                    />
+                    android:background="@color/text_color_light" />
 
 
             </RelativeLayout>
@@ -149,8 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="110px"
                 android:background="@drawable/background_white_grey_light_selector"
-                android:visibility="visible"
-                >
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/imageViewPaytmIcon"
@@ -159,8 +148,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:src="@drawable/ic_paytm_logo"
-                    android:tag="mwar"
-                    />
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewPaytmBalance"
@@ -171,8 +159,7 @@
                     android:layout_toRightOf="@+id/imageViewPaytmIcon"
                     android:text="@string/nl_paytm_wallet"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32"
-                    />
+                    android:textSize="@dimen/text_size_32" />
 
 
                 <TextView
@@ -185,16 +172,14 @@
                     android:gravity="right"
                     android:text="@string/rupee_0"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_54"
-                    />
+                    android:textSize="@dimen/text_size_50" />
 
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/text_color_light"
-                    />
+                    android:background="@color/text_color_light" />
 
             </RelativeLayout>
 
@@ -215,9 +200,8 @@
                 android:layout_width="31px"
                 android:layout_height="37px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
-                android:src="@drawable/wallet_recent_transacions_icon"
-                />
+                android:layout_marginLeft="30px"
+                android:src="@drawable/wallet_recent_transacions_icon" />
 
             <TextView
                 android:id="@+id/textViewWalletTransactions"
@@ -228,8 +212,7 @@
                 android:layout_toRightOf="@+id/imageViewWalletTransactionsIcon"
                 android:text="View Recent Transactions"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
-                />
+                android:textSize="@dimen/text_size_32" />
 
             <ImageView
                 android:id="@+id/imageViewWalletArrow"
@@ -239,13 +222,12 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="40px"
                 android:src="@drawable/arrow_icon_selector"
-                android:tag="mwar"/>
+                android:tag="mwar" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/text_color_light"
-                />
+                android:background="@color/text_color_light" />
 
 
         </RelativeLayout>
@@ -257,7 +239,6 @@
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:layout_below="@+id/topBar"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 
 </RelativeLayout>

@@ -114,13 +114,23 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textViewThreshold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="416465465"
+        android:gravity="center"
+        android:layout_marginTop="-10px"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_26"/>
+
+    <TextView
         android:id="@+id/textViewFareEstimage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/nl_button_size"
         android:text="@string/nl_get_fare_estimate"
         android:gravity="center"
         android:background="@drawable/background_white_rounded_bordered"
-        android:layout_marginTop="20px"
+        android:layout_marginTop="10px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
         android:textSize="@dimen/text_size_40"

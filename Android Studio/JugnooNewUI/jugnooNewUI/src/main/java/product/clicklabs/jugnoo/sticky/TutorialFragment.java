@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.sticky;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -25,10 +26,19 @@ public class TutorialFragment extends Fragment {
     private ViewPager mPager;
 
     private PagerAdapter mPagerAdapter;
-    View dotOneView , dotTwoView;
+    View dotOneView , dotTwoView, dotThreeView;
     TextView skipTxt;
+    private int numOfPages = 1;
+    private LinearLayout linearLayoutDot;
 
+    public TutorialFragment() {
+        super();
+    }
 
+    @SuppressLint("ValidFragment")
+    public TutorialFragment(int numOfPages) {
+        this.numOfPages = numOfPages;
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -37,14 +47,46 @@ public class TutorialFragment extends Fragment {
 
         new ASSL(getActivity(), (RelativeLayout)contentView.findViewById(R.id.rv), 1134, 720, false);
 
+        linearLayoutDot = (LinearLayout) contentView.findViewById(R.id.linearLayoutDot);
         dotOneView = (View) contentView.findViewById(R.id.dot_one);
         dotTwoView = (View) contentView.findViewById(R.id.dot_two);
+        dotThreeView = (View) contentView.findViewById(R.id.dot_three);
+
+        if(numOfPages == 1){
+            linearLayoutDot.setVisibility(View.GONE);
+        } else{
+            linearLayoutDot.setVisibility(View.VISIBLE);
+        }
 
 
         skipTxt = (TextView) contentView.findViewById(R.id.skip_text);
         skipTxt.setVisibility(View.GONE);
         mPager =(ViewPager) contentView.findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager());
+        mPagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager(), numOfPages,
+                new ScreenSlidePageFragment.Callback() {
+            @Override
+            public void onFirstClick() {
+                try {
+                    mPager.setCurrentItem(1, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSecondClick() {
+                try {
+                    mPager.setCurrentItem(2, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onThirdClick() {
+
+            }
+        });
         mPager.setAdapter(mPagerAdapter);
         dotOneView.setBackgroundResource(R.drawable.circle_yellow);
 
@@ -54,11 +96,18 @@ public class TutorialFragment extends Fragment {
                 if (position == 0) {
                     dotOneView.setBackgroundResource(R.drawable.circle_yellow);
                     dotTwoView.setBackgroundResource(R.drawable.circle_white);
+                    dotThreeView.setBackgroundResource(R.drawable.circle_white);
                     skipTxt.setVisibility(View.GONE);
                 } else if (position == 1) {
                     //mainLayout.setClickable(true);
-                    dotOneView.setBackgroundResource(R.drawable.circle_white);
                     dotTwoView.setBackgroundResource(R.drawable.circle_yellow);
+                    dotOneView.setBackgroundResource(R.drawable.circle_white);
+                    dotThreeView.setBackgroundResource(R.drawable.circle_white);
+                    skipTxt.setVisibility(View.GONE);
+                } else if (position == 2){
+                    dotThreeView.setBackgroundResource(R.drawable.circle_yellow);
+                    dotOneView.setBackgroundResource(R.drawable.circle_white);
+                    dotTwoView.setBackgroundResource(R.drawable.circle_white);
                     skipTxt.setVisibility(View.GONE);
                 }
                 // When changing pages, reset the action bar actions since they are dependent

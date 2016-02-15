@@ -35,6 +35,8 @@ import retrofit.mime.TypedByteArray;
  */
 public class UserDebtDialog {
 
+	private final String TAG = UserDebtDialog.class.getSimpleName();
+
 	private Activity activity;
 	private UserData userData;
 	public UserDebtDialog(Activity activity, UserData userData){
@@ -94,7 +96,7 @@ public class UserDebtDialog {
 				RestClient.getApiServices().adjustUserDebt(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
-						Log.e("Server response settle_user_debt", "response = " + response);
+						Log.i(TAG, "adjustUserDebt response = " + response);
 						try {
 							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
 							JSONObject jObj = new JSONObject(jsonString);
@@ -116,7 +118,7 @@ public class UserDebtDialog {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e("request fail", error.toString());
+						Log.e(TAG, "adjustUserDebt error"+error.toString());
 						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 						DialogPopup.dismissLoadingDialog();
 					}

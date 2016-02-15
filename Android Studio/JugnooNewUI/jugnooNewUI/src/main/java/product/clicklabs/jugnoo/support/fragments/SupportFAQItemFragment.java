@@ -186,16 +186,16 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				dialogErrorType,
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
-					public void positiveClick() {
+					public void positiveClick(View view) {
 					}
 
 					@Override
-					public void neutralClick() {
+					public void neutralClick(View view) {
 
 					}
 
 					@Override
-					public void negativeClick() {
+					public void negativeClick(View view) {
 
 					}
 				});

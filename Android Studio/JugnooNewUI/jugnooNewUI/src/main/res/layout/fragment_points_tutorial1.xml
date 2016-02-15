@@ -3,12 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mainLayout"
     android:orientation="vertical"
-    android:background="@color/transparent"
+    android:background="@color/black_translucent_more"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/dialog_new_look"/>
+
     <RelativeLayout
-        android:id="@+id/tutorial_one"
+        android:id="@+id/tutorial_two"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/jeanie_tutorial_1_1"
@@ -16,8 +18,8 @@
         >
 
         <ImageView
-            android:layout_width="207px"
-            android:layout_height="229px"
+            android:layout_width="181px"
+            android:layout_height="181px"
             android:src="@drawable/jeanie_tutorial_1_2"
             android:layout_marginTop="140px"
             android:layout_marginLeft="30px"
@@ -27,17 +29,17 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/tutorial_two"
+        android:id="@+id/tutorial_three"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@drawable/jeanie_tutorial_2_1"
         android:layout_height="match_parent">
 
 
         <ImageView
-            android:layout_width="267px"
-            android:layout_height="255px"
+            android:layout_width="257px"
+            android:layout_height="257px"
             android:src="@drawable/jeanie_tutorial_2_2"
             android:layout_marginTop="510px"
             android:layout_marginLeft="0px"

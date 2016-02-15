@@ -52,22 +52,17 @@
             android:dividerHeight="0px"
             android:listSelector="@drawable/background_transparent"
             android:splitMotionEvents="false"
-            android:layout_below="@+id/textViewRecentTransactions"
             >
         </ListView>
 
 
-        <product.clicklabs.jugnoo.utils.ProgressWheel
-            android:id="@+id/progressBar"
-            xmlns:wheel="http://schemas.android.com/apk/res-auto"
-            android:layout_width="100px"
-            android:layout_height="100px"
+        <ImageView
+            android:id="@+id/imageViewJugnooAnimation"
+            android:layout_width="@dimen/jugnoo_anim_loading_width"
+            android:layout_height="@dimen/jugnoo_anim_loading_height"
             android:layout_centerInParent="true"
-            wheel:matProg_barColor="@color/theme_color"
-            wheel:matProg_fillRadius="true"
-            wheel:matProg_progressIndeterminate="true"
-            android:tag="mwar"
-            />
+            android:background="@drawable/anim"
+            android:layout_gravity="center_horizontal"/>
     </RelativeLayout>
 
 

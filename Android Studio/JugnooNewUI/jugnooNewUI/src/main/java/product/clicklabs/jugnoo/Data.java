@@ -6,14 +6,10 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.SyncHttpClient;
 
 import java.net.URLDecoder;
-import java.security.KeyStore;
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -28,7 +24,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.MySSLSocketFactory;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -172,7 +167,7 @@ public class Data {
 	
 	
 	public static LatLng pickupLatLng, dropLatLng;
-	public static int pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+	public static int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
 
 	public static FacebookUserData facebookUserData;
 	public static GoogleSignInAccount googleSignInAccount;
@@ -239,6 +234,8 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.REFERRAL_TRANSACTION_COUNT);
 			Prefs.with(context).remove(SPLabels.REFERRAL_APP_OPEN_COUNT);
 			Prefs.with(context).remove(SPLabels.USER_IDENTIFIER);
+			Prefs.with(context).remove(SPLabels.BRANCH_LINK_DESCRIPTION);
+			Prefs.with(context).remove(SPLabels.BRANCH_LINK_IMAGE);
 			Prefs.with(context).remove(SPLabels.BRANCH_SMS_LINK);
 			Prefs.with(context).remove(SPLabels.BRANCH_WHATSAPP_LINK);
 			Prefs.with(context).remove(SPLabels.BRANCH_FACEBOOK_LINK);
@@ -248,60 +245,28 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.ADD_GYM);
 			Prefs.with(context).remove(SPLabels.ADD_FRIEND);
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+
+			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
+			Prefs.with(context).remove(Constants.SP_USER_PHONE_NO);
+
+			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
+			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
+			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACTS_ERROR);
+			Prefs.with(context).remove(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME);
+			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE);
+			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA);
+
+			Prefs.with(context).remove(SPLabels.BRANCH_DESKTOP_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_ANDROID_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_FALLBACK_URL);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-
-
-	
-	public static AsyncHttpClient mainClient;
-	public static SyncHttpClient mainSyncClient;
-	
-	public static final int SOCKET_TIMEOUT = 30000;
-	public static final int CONNECTION_TIMEOUT = 30000;
-	public static final int MAX_RETRIES = 0;
-	public static final int RETRY_TIMEOUT = 1000;
-	
-	public static AsyncHttpClient getClient() {
-		if (mainClient == null) {
-			mainClient = Config.getAsyncHttpClient();
-			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-				trustStore.load(null, null);
-				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-				mainClient.setSSLSocketFactory(sf);
-			} catch (Exception e) {
-				Log.e("exception in https hostname", "="+e.toString());
-			}
-			mainClient.setConnectTimeout(CONNECTION_TIMEOUT);
-			mainClient.setResponseTimeout(SOCKET_TIMEOUT);
-			mainClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_TIMEOUT);
-		}
-		return mainClient;
-	}
-
-	public static SyncHttpClient getSyncClient() {
-		if (mainSyncClient == null) {
-			mainSyncClient = new SyncHttpClient();
-			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-				trustStore.load(null, null);
-				MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-				sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-				mainSyncClient.setSSLSocketFactory(sf);
-			} catch (Exception e) {
-				Log.e("exception in https hostname", "="+e.toString());
-			}
-			mainSyncClient.setConnectTimeout(CONNECTION_TIMEOUT);
-			mainSyncClient.setResponseTimeout(SOCKET_TIMEOUT);
-			mainSyncClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_TIMEOUT);
-		}
-		return mainSyncClient;
-	}
 
 
 

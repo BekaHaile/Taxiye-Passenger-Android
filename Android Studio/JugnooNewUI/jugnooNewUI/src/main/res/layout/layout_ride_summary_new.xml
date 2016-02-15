@@ -155,6 +155,7 @@
             </RelativeLayout>
 
 
+
             <RatingBar
                 android:id="@+id/ratingBarRSFeedback"
                 style="@style/YellowRatingBarNew"
@@ -165,6 +166,7 @@
                 android:numStars="5"
                 android:rating="1"
                 android:stepSize="1.0"/>
+
 
 
             <TextView
@@ -250,6 +252,5 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 </LinearLayout>

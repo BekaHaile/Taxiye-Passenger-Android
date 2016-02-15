@@ -17,6 +17,8 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 public class RideTransactionsActivity extends BaseFragmentActivity implements UpdateRideTransaction, FlurryEventNames {
 
+    private final String TAG = RideTransactionsActivity.class.getSimpleName();
+
 	RelativeLayout relative;
 	
 	TextView textViewTitle;
@@ -105,8 +107,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
         System.gc();
 		super.onDestroy();
 	}
-	
-	
+
 
     @Override
     public void updateRideTransaction(int position) {

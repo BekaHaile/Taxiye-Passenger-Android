@@ -37,6 +37,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/share_activity_text_margin_right"
                 android:text="0"
+                android:tag="mwar"
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/text_size_54" />
 
@@ -44,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_alignParentBottom="true"
-                android:src="@color/text_color_light"/>
+                android:src="@color/text_color_hint"/>
 
         </RelativeLayout>
 
@@ -74,6 +75,7 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/circle_white"
                 android:gravity="center"
+                android:tag="mwar"
                 android:layout_marginRight="@dimen/share_activity_text_margin_right"
                 android:text="0"
                 android:textColor="@color/theme_color"
@@ -83,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_alignParentBottom="true"
-                android:src="@color/text_color_light"/>
+                android:src="@color/text_color_hint"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -111,6 +113,7 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/circle_white"
                 android:gravity="center"
+                android:tag="mwar"
                 android:layout_marginRight="@dimen/share_activity_text_margin_right"
                 android:text="0"
                 android:textColor="@color/theme_color"
@@ -120,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_alignParentBottom="true"
-                android:src="@color/text_color_light"/>
+                android:src="@color/text_color_hint"/>
         </RelativeLayout>
 
 
