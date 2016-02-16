@@ -580,7 +580,7 @@ public class JSONParser implements Constants {
 			discountTypes.clear();
 		}
 
-		String driverName = "", driverCarNumber = "";
+		String driverName = "", driverCarNumber = "", driverImage = "";
 		if(jLastRideData.has("driver_name")){
 			driverName = jLastRideData.getString("driver_name");
 		}
@@ -590,8 +590,9 @@ public class JSONParser implements Constants {
 		if(jLastRideData.has("driver_car_no")){
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
+        driverImage = jLastRideData.optString("driver_image", "");
 
-		double rideTime = -1;
+        double rideTime = -1;
 		if(jLastRideData.has("ride_time")){
 			rideTime = jLastRideData.getDouble("ride_time");
 		}
@@ -609,7 +610,7 @@ public class JSONParser implements Constants {
         }
 
 
-		return new EndRideData(engagementId, driverName, driverCarNumber,
+		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
 				jLastRideData.getString("pickup_time"),

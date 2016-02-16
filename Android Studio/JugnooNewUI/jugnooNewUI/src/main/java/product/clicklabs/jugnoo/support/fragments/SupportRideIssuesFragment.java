@@ -11,11 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -57,6 +60,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 	private LinearLayout linearLayoutRideShortInfo;
 	private RelativeLayout relativeLayoutIssueWithRide;
+	private ImageView imageViewDriver;
 	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
 	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
 
@@ -115,6 +119,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		((TextView)rootView.findViewById(R.id.textViewTripTotal)).setTypeface(Fonts.mavenLight(activity));
 		textViewTripTotalValue = (TextView)rootView.findViewById(R.id.textViewTripTotalValue); textViewTripTotalValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 
+		imageViewDriver = (ImageView) rootView.findViewById(R.id.imageViewDriver);
 		textViewDate = (TextView)rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenRegular(activity));
 		textViewStart = (TextView)rootView.findViewById(R.id.textViewStart); textViewStart.setTypeface(Fonts.mavenRegular(activity));
 		textViewEnd = (TextView)rootView.findViewById(R.id.textViewEnd); textViewEnd.setTypeface(Fonts.mavenRegular(activity));
@@ -192,6 +197,10 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				textViewEnd.append(" " + endRideData.dropTime);
 
 				textViewTripTotalValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.fare));
+
+				if(!"".equalsIgnoreCase(endRideData.driverImage)){
+					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
+				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();

@@ -5,7 +5,7 @@ import java.util.Locale;
 
 public class EndRideData {
 	
-	public String engagementId, driverName, driverCarNumber,
+	public String engagementId, driverName, driverCarNumber, driverImage,
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
@@ -14,13 +14,15 @@ public class EndRideData {
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	
-	public EndRideData(String engagementId, String driverName, String driverCarNumber, String pickupAddress, String dropAddress, String pickupTime, String dropTime,
+	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
+					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
+		this.driverImage = driverImage;
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.pickupTime = pickupTime;

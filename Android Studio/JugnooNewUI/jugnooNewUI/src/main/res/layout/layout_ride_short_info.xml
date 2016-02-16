@@ -116,6 +116,28 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/relativeLayoutDriverImage"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:tag="mwar">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circle_grey"
+                android:tag="mwar" />
+
+            <ImageView
+                android:id="@+id/imageViewDriver"
+                android:layout_width="94px"
+                android:layout_height="94px"
+                android:layout_centerInParent="true"
+                android:tag="mwar" />
+        </RelativeLayout>
+
 
         <ImageView
             android:layout_width="match_parent"
