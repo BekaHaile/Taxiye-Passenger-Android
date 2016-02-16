@@ -519,6 +519,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 		});
 
+		buttonNoNetCall.setVisibility(View.GONE);
 		buttonNoNetCall.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

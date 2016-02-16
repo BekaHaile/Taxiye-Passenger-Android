@@ -13,8 +13,8 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             /* Setting the alarm here */
-			ScheduleAlarmForGCM scheduleAlarmForGCM = new ScheduleAlarmForGCM(context);
-			scheduleAlarmForGCM.start();
+//			ScheduleAlarmForGCM scheduleAlarmForGCM = new ScheduleAlarmForGCM(context);
+//			scheduleAlarmForGCM.start();
 		}
 	}
 }

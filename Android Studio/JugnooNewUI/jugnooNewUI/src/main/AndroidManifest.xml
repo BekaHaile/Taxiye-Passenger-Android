@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="product.clicklabs.jugnoo"
-    android:versionCode="213"
-    android:versionName="2.1.3"
+    android:versionCode="214"
+    android:versionName="2.1.4"
      >
 
     
@@ -51,7 +51,7 @@
 
 
     <!-- Permission to start Alarm on device reboot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
     
 
     <application
@@ -507,20 +507,20 @@
 
 
 
-        <receiver android:name=".RefreshGCMReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name=".RefreshGCMReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <!-- Will not be called unless the application explicitly enables it -->
-        <receiver android:name=".DeviceBootReceiver"
-                  android:enabled="true"
-                  android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name=".DeviceBootReceiver"-->
+                  <!--android:enabled="true"-->
+                  <!--android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
 
     </application>
