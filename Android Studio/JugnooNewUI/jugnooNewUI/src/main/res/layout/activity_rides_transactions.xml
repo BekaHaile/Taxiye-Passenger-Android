@@ -11,11 +11,13 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color" >
+        android:background="@drawable/nl_background_theme_color"
+        android:animateLayoutChanges="true"
+        >
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="560px"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -23,6 +25,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/top_bar_title_text_size"
             android:textAllCaps="true"
+            android:gravity="center"
             />
 
         <ImageView
