@@ -68,8 +68,8 @@ public interface ApiService {
                    Callback<GetRideSummaryResponse> callback);
 
     @FormUrlEncoded
-    @POST("/submit_support_feedback")
-    void submitSupportFeedback(@FieldMap Map<String, String> params,
+    @POST("/generate_support_ticket")
+    void generateSupportTicket(@FieldMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded

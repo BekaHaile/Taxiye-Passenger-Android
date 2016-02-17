@@ -14,15 +14,19 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -34,6 +38,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -42,6 +47,8 @@ import retrofit.mime.TypedByteArray;
 
 
 public class SupportFAQItemFragment extends Fragment implements FlurryEventNames, Constants {
+
+	private final String TAG = SupportFAQItemFragment.class.getSimpleName();
 
 	private ScrollView scrollViewRoot;
 	private TextView textViewSubtitle, textViewDescription;
@@ -148,6 +155,14 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		}
 	}
 
+	private void performBackPressed(){
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).performBackPressed();
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).performBackPressed();
+		}
+	}
+
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
@@ -176,12 +191,26 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				params.put(Constants.KEY_ENGAGEMENT_ID, ""+engagementId);
 			}
 
-			RestClient.getApiServices().submitSupportFeedback(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "generateSupportTicket jsonString=>"+jsonString);
+						JSONObject jObj = new JSONObject(jsonString);
+						int flag = jObj.getInt(Constants.KEY_FLAG);
+						String message = JSONParser.getServerMessage(jObj);
+						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+							DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									performBackPressed();
+								}
+							});
+						} else {
+							DialogPopup.alertPopup(activity, "", message);
+						}
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
@@ -191,6 +220,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 				@Override
 				public void failure(RetrofitError error) {
+					Log.e(TAG, "generateSupportTicket error=>"+error);
 					DialogPopup.dismissLoadingDialog();
 					retryDialog(DialogErrorType.NO_NET);
 				}
