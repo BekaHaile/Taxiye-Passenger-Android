@@ -64,8 +64,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
         rootView = inflater.inflate(R.layout.fragment_support_items_list, container, false);
 
         activity = getActivity();
-
-		activity.setTitle(item.getText());
+		setActivityTitle();
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
@@ -101,6 +100,22 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 		recyclerViewItems.setAdapter(supportFAQItemsAdapter);
 
 		return rootView;
+	}
+
+	private void setActivityTitle(){
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).setTitle(item.getText());
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).setTitle(item.getText());
+		}
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			setActivityTitle();
+		}
 	}
 
     @Override

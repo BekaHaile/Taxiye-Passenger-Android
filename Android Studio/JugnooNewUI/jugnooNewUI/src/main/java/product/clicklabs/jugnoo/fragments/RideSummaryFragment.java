@@ -57,6 +57,8 @@ import retrofit.mime.TypedByteArray;
 
 public class RideSummaryFragment extends Fragment implements FlurryEventNames, Constants {
 
+	private final String TAG = RideSummaryFragment.class.getSimpleName();
+
 	RelativeLayout relative;
 
 	RelativeLayout relativeLayoutMap;
@@ -235,8 +237,6 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		}
 
 		if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).setTitle(((RideTransactionsActivity)activity)
-					.getResources().getString(R.string.ride_summary));
 			buttonEndRideOk.setText(activity.getResources().getString(R.string.need_help));
 		}
 		else if(activity instanceof HomeActivity){
@@ -246,9 +246,27 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 			buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
 		}
 
+		setActivityTitle();
+
 		return rootView;
 	}
 
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			setActivityTitle();
+		}
+	}
+
+	private void setActivityTitle(){
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_summary));
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.ride_summary));
+		}
+	}
 
 
 
@@ -383,7 +401,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					@Override
 					public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("Server response get_ride_summary", "response = " + response);
+						Log.i(TAG, "getRideSummary responseStr =>" + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -405,6 +423,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 					@Override
 					public void failure(RetrofitError error) {
+						Log.e(TAG, "getRideSummary error =>" + error);
 						DialogPopup.dismissLoadingDialog();
 						endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
 					}

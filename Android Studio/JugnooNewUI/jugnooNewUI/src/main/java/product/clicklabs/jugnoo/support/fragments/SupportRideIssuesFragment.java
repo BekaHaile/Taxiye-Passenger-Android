@@ -110,9 +110,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 			e.printStackTrace();
 		}
 
+		setActivityTitle();
+
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
-		relativeLayoutIssueWithRide = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutIssueWithRide);
+		relativeLayoutIssueWithRide = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutIssueWithRide);
 		((TextView)rootView.findViewById(R.id.textViewIssueWithRide)).setTypeface(Fonts.mavenRegular(activity));
 		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
@@ -151,22 +153,42 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
-		linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 		relativeLayoutIssueWithRide.setVisibility(View.GONE);
-
 		if(activity instanceof SupportActivity){
 			if(endRideData == null){
+				linearLayoutRideShortInfo.setVisibility(View.GONE);
+				recyclerViewSupportFaq.setVisibility(View.GONE);
 				getRideSummaryAPI(activity, ""+engagementId);
 			} else{
+				linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+				recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 				setRideData();
 				updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
 			}
 		} else if(activity instanceof RideTransactionsActivity){
+			linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+			recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 			setRideData();
 			updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
 		}
 
 		return rootView;
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			setActivityTitle();
+		}
+	}
+
+	private void setActivityTitle(){
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.support_ride_issues_title));
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_ride_issues_title));
+		}
 	}
 
 
@@ -233,6 +255,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 									SupportRideIssuesFragment.this.getRideSummaryResponse = getRideSummaryResponse;
 									setRideData();
 									updateIssuesList((ArrayList<ShowPanelResponse.Item>) SupportRideIssuesFragment.this.getRideSummaryResponse.getMenu());
+									linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+									recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 								} else {
 									retryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
 								}

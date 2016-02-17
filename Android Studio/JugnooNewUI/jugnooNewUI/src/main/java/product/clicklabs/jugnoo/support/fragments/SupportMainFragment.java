@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -60,7 +59,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	private LinearLayout root;
 
 	private LinearLayout linearLayoutRideShortInfo;
-	private RelativeLayout relativeLayoutIssueWithRide;
 	private ImageView imageViewDriver;
 	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
 	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
@@ -71,7 +69,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	private View rootView;
     private SupportActivity activity;
 
-	private int showPanelState = 0, getRideSummaryState = 0;
+	private int showPanelCalled = 0, getRideSummaryCalled = 0;
 	private EndRideData endRideData;
 	private GetRideSummaryResponse getRideSummaryResponse;
 
@@ -106,10 +104,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			e.printStackTrace();
 		}
 
-		showPanelState = 0; getRideSummaryState = 0;
+		showPanelCalled = 0; getRideSummaryCalled = 0;
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
-		relativeLayoutIssueWithRide = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutIssueWithRide);
 		((TextView)rootView.findViewById(R.id.textViewIssueWithRide)).setTypeface(Fonts.mavenRegular(activity));
 		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
@@ -154,7 +151,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		});
 
 		linearLayoutRideShortInfo.setVisibility(View.GONE);
-		relativeLayoutIssueWithRide.setVisibility(View.VISIBLE);
 		recyclerViewSupportFaq.setVisibility(View.GONE);
 		getRideSummaryAPI(activity);
 		showPanel();
@@ -193,7 +189,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							DialogPopup.dismissLoadingDialog();
 							try {
 								recyclerViewSupportFaq.setVisibility(View.VISIBLE);
-								showPanelState = 1;
+								showPanelCalled = 1;
 								update(showPanelResponse);
 							} catch (Exception exception) {
 								exception.printStackTrace();
@@ -205,7 +201,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 						public void failure(RetrofitError error) {
 							DialogPopup.dismissLoadingDialog();
 							recyclerViewSupportFaq.setVisibility(View.GONE);
-							showPanelState = -1;
+							showPanelCalled = -1;
 							retryDialog(DialogErrorType.CONNECTION_LOST);
 						}
 					});
@@ -238,7 +234,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 								SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
 								setRideData();
 								linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-								getRideSummaryState = 1;
+								getRideSummaryCalled = 1;
 							} else {
 								retryDialog(DialogErrorType.NO_NET);
 							}
@@ -252,7 +248,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				@Override
 				public void failure(RetrofitError error) {
 					DialogPopup.dismissLoadingDialog();
-					getRideSummaryState = -1;
+					getRideSummaryCalled = -1;
 					linearLayoutRideShortInfo.setVisibility(View.GONE);
 					retryDialog(DialogErrorType.NO_NET);
 				}
@@ -268,10 +264,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						if(showPanelState != 1) {
+						if(showPanelCalled != 1) {
 							showPanel();
 						}
-						if(getRideSummaryState != 1){
+						if(getRideSummaryCalled != 1){
 							getRideSummaryAPI(activity);
 						}
 					}

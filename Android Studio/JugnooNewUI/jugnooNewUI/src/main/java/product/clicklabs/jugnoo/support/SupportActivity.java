@@ -45,9 +45,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		
 
-		
+
 		imageViewBack.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -83,6 +82,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		textViewTitle.setText(title);
 	}
 
+
+
 	public LinearLayout getContainer(){
 		return linearLayoutContainer;
 	}
@@ -96,7 +97,6 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
 						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 				.commitAllowingStateLoss();
-		setTitle(getResources().getString(R.string.support_select_a_ride_title));
 	}
 
 

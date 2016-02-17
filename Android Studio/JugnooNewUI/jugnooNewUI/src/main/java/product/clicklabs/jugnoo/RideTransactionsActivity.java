@@ -22,7 +22,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	RelativeLayout relative;
 	
 	TextView textViewTitle;
-	ImageView imageViewBack;
+	ImageView imageViewBack, imageViewInvoice;
 
     RelativeLayout relativeLayoutContainer;
 
@@ -46,6 +46,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+		imageViewInvoice = (ImageView) findViewById(R.id.imageViewInvoice);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -62,8 +63,13 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
                 .add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
                 .addToBackStack(RideTransactionsFragment.class.getName())
                 .commitAllowingStateLoss();
-		setTitle(getResources().getString(R.string.ride_history));
 
+
+
+	}
+
+	public void setTitle(String title){
+		textViewTitle.setText(title);
 	}
 
 	public RelativeLayout getContainer(){
@@ -81,17 +87,13 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 				.commitAllowingStateLoss();
 	}
 
-	public void setTitle(String title){
-		textViewTitle.setText(title);
-	}
-	
+
 	public void performBackPressed(){
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		} else {
 			super.onBackPressed();
-			setTitle(getResources().getString(R.string.ride_history));
 		}
 	}
 	

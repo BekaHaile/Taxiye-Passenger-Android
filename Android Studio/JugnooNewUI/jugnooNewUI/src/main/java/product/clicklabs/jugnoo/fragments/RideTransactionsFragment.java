@@ -171,6 +171,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		});
 
 		getRecentRidesAPI(activity, true);
+		setActivityTitle();
 
 
 		return rootView;
@@ -184,15 +185,20 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
         System.gc();
 	}
 
+
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
-			if(activity instanceof RideTransactionsActivity){
-				((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
-			} else if(activity instanceof SupportActivity){
-				((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_select_a_ride_title));
-			}
+			setActivityTitle();
+		}
+	}
+
+	private void setActivityTitle(){
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_select_a_ride_title));
 		}
 	}
 

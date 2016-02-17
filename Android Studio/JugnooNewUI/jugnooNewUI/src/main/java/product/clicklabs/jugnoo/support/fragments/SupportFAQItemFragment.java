@@ -21,10 +21,12 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -78,6 +80,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         rootView = inflater.inflate(R.layout.fragment_support_item, container, false);
 
         activity = getActivity();
+		setActivityTitle();
 
 		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
 		try {
@@ -135,6 +138,22 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 
 		return rootView;
+	}
+
+	private void setActivityTitle(){
+		if(activity instanceof RideTransactionsActivity){
+			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.support_main_title));
+		} else if(activity instanceof SupportActivity){
+			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_main_title));
+		}
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			setActivityTitle();
+		}
 	}
 
     @Override
