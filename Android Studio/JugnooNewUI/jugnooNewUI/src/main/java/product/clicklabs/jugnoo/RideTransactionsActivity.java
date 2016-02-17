@@ -22,7 +22,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	RelativeLayout relative;
 	
 	TextView textViewTitle;
-	ImageView imageViewBack, imageViewInvoice;
+	ImageView imageViewBack;
 
     RelativeLayout relativeLayoutContainer;
 
@@ -46,7 +46,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		imageViewInvoice = (ImageView) findViewById(R.id.imageViewInvoice);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -78,6 +77,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 
 	public void openRideSummaryFragment(int engagementId){
 		getSupportFragmentManager().beginTransaction()
+				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 				.add(relativeLayoutContainer.getId(),
 						new RideSummaryFragment(engagementId),
 						RideTransactionsFragment.class.getName())

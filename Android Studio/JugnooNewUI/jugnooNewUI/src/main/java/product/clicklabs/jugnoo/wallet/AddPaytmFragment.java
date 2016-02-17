@@ -271,6 +271,7 @@ public class AddPaytmFragment extends Fragment {
 				.popBackStack(AddPaytmFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
 		if(AddPaymentPath.ADD_PAYTM.getOrdinal() == paymentActivity.addPaymentPathInt){
 			paymentActivity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
 					.addToBackStack(WalletFragment.class.getName())
 					.commitAllowingStateLoss();

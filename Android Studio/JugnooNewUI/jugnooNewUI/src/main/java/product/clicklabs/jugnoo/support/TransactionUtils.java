@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.support;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
@@ -22,6 +23,7 @@ public class TransactionUtils {
 				|| ActionType.INAPP_CALL.getOrdinal() == item.getActionType()
 				|| ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()) {
 			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
 							new SupportFAQItemFragment(engagementId, parentName, item), SupportFAQItemFragment.class.getName())
 					.addToBackStack(SupportFAQItemFragment.class.getName())
@@ -31,6 +33,7 @@ public class TransactionUtils {
 		}
 		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
 			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
 							new SupportFAQItemsListFragment(engagementId, item), SupportFAQItemsListFragment.class.getName())
 					.addToBackStack(SupportFAQItemsListFragment.class.getName())
@@ -44,6 +47,7 @@ public class TransactionUtils {
 	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
 									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
 		activity.getSupportFragmentManager().beginTransaction()
+				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 				.add(container.getId(),
 						new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
 						SupportRideIssuesFragment.class.getName())

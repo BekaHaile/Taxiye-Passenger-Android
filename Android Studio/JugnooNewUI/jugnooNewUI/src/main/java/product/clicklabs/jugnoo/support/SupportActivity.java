@@ -11,6 +11,8 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -23,7 +25,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private RelativeLayout relative;
 
 	private TextView textViewTitle;
-	private ImageView imageViewBack;
+	private ImageView imageViewBack, imageViewInvoice;
 	
 	private LinearLayout linearLayoutContainer;
 
@@ -45,6 +47,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+		imageViewInvoice = (ImageView) findViewById(R.id.imageViewInvoice);
 
 
 		imageViewBack.setOnClickListener(new OnClickListener() {
@@ -80,6 +83,15 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void setTitle(String title){
 		textViewTitle.setText(title);
+		imageViewInvoice.setVisibility(View.GONE);
+	}
+
+	public void setImageViewInvoiceVisibility(int visibility){
+		imageViewInvoice.setVisibility(visibility);
+	}
+
+	public void setImageViewInvoiceOnCLickListener(OnClickListener onCLickListener){
+		imageViewInvoice.setOnClickListener(onCLickListener);
 	}
 
 
@@ -90,8 +102,21 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void openRideTransactionsFragment(){
 		getSupportFragmentManager().beginTransaction()
+				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 				.add(getContainer().getId(),
 						new RideTransactionsFragment(),
+						RideTransactionsFragment.class.getName())
+				.addToBackStack(RideTransactionsFragment.class.getName())
+				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+				.commitAllowingStateLoss();
+	}
+
+	public void openRideSummaryFragment(EndRideData endRideData){
+		getSupportFragmentManager().beginTransaction()
+				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+				.add(getContainer().getId(),
+						new RideSummaryFragment(endRideData),
 						RideTransactionsFragment.class.getName())
 				.addToBackStack(RideTransactionsFragment.class.getName())
 				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()

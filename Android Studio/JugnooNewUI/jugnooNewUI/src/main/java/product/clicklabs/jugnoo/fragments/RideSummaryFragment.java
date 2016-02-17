@@ -92,6 +92,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		this.engagementId = engagementId;
 	}
 
+	public RideSummaryFragment(EndRideData endRideData){
+		this.engagementId = Integer.parseInt(endRideData.engagementId);
+		this.endRideData = endRideData;
+	}
+
 
 	@Override
 	public void onResume() {
@@ -226,7 +231,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				endRideData = Data.endRideData;
 				setRideData();
 			} else if(engagementId != -1){
-				getRideSummaryAPI(activity, ""+engagementId);
+				if(endRideData != null){
+					setRideData();
+				} else{
+					getRideSummaryAPI(activity, ""+engagementId);
+				}
 			}
 			else{
 				throw new Exception();

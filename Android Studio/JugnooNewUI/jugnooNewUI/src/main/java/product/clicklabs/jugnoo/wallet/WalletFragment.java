@@ -132,7 +132,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			public void onClick(View v) {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
 					if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-						paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+						paymentActivity.getSupportFragmentManager().beginTransaction()
+								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 								.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
 								.addToBackStack(PaytmRechargeFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
@@ -140,7 +141,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.commit();
 						FlurryEventLogger.event(PAYTM_WALLET_OPENED);
 					} else {
-						paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+						paymentActivity.getSupportFragmentManager().beginTransaction()
+								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 								.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
 								.addToBackStack(AddPaytmFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
@@ -181,7 +183,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		relativeLayoutWalletTransactions.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				paymentActivity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+				paymentActivity.getSupportFragmentManager().beginTransaction()
+						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(R.id.fragLayout, new WalletTransactionsFragment(), WalletTransactionsFragment.class.getName())
 						.addToBackStack(WalletTransactionsFragment.class.getName())
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()

@@ -34,18 +34,6 @@
             android:padding="20px"
             android:src="@drawable/back_white_selector" />
 
-
-        <ImageView
-            android:id="@+id/imageViewInvoice"
-            android:layout_width="75px"
-            android:layout_height="75px"
-            android:padding="20px"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10px"
-            android:src="@drawable/transactions_icon_normal"
-            android:tag="mwar" />
-
     </RelativeLayout>
 
 

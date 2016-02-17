@@ -188,6 +188,15 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.support_ride_issues_title));
 		} else if(activity instanceof SupportActivity){
 			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.support_ride_issues_title));
+			((SupportActivity)activity).setImageViewInvoiceVisibility(View.VISIBLE);
+			((SupportActivity)activity).setImageViewInvoiceOnCLickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(activity instanceof SupportActivity && endRideData != null) {
+						((SupportActivity) activity).openRideSummaryFragment(endRideData);
+					}
+				}
+			});
 		}
 	}
 
