@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <RelativeLayout
+        android:id="@+id/innerRl"
+        android:layout_width="620px"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="15px"
+        android:background="@drawable/background_grey_rounded_bordered"
+        android:splitMotionEvents="false">
+
+
+        <LinearLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3px"
+            android:layout_marginLeft="3px"
+            android:layout_marginRight="3px"
+            android:layout_marginTop="126px"
+            android:background="@drawable/button_white_br"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100px"/>
+            
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="74px"
+        android:layout_height="74px"
+        android:layout_alignRight="@+id/innerRl"
+        android:layout_alignTop="@+id/innerRl"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="20px"
+        android:paddingLeft="20px"
+        android:paddingRight="10px"
+        android:layout_marginRight="-20px"
+        android:layout_marginTop="-20px"
+        android:src="@drawable/close_icon_selector"
+        android:tag="mwar"/>
+
+</RelativeLayout>
