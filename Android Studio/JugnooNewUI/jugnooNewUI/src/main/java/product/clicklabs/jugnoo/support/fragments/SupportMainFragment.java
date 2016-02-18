@@ -188,6 +188,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 						public void success(ShowPanelResponse showPanelResponse, Response response) {
 							DialogPopup.dismissLoadingDialog();
 							try {
+								String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+								Log.i(TAG, "showPanel responseStr=>"+responseStr);
 								recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 								showPanelCalled = 1;
 								update(showPanelResponse);
@@ -199,6 +201,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 						@Override
 						public void failure(RetrofitError error) {
+							Log.e(TAG, "showPanel error=>"+error);
 							DialogPopup.dismissLoadingDialog();
 							recyclerViewSupportFaq.setVisibility(View.GONE);
 							showPanelCalled = -1;

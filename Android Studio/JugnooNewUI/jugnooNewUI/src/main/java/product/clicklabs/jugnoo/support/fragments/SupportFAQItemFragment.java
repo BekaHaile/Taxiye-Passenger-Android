@@ -250,5 +250,4 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				});
 	}
 
-
 }

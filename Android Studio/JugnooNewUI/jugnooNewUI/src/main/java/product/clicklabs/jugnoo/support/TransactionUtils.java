@@ -19,24 +19,39 @@ public class TransactionUtils {
 
 	public void openItemInFragment(FragmentActivity activity, View container,
 								   int engagementId, String parentName, ShowPanelResponse.Item item){
+		ShowPanelResponse.Item singleItemToOpen = null;
+		String singleItemParentName = null;
 		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()
 				|| ActionType.INAPP_CALL.getOrdinal() == item.getActionType()
 				|| ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()) {
-			activity.getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-					.add(container.getId(),
-							new SupportFAQItemFragment(engagementId, parentName, item), SupportFAQItemFragment.class.getName())
-					.addToBackStack(SupportFAQItemFragment.class.getName())
-					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
+			singleItemToOpen = item;
+			singleItemParentName = parentName;
 		}
-		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()) {
+		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType() && item.getItems() != null) {
+			if(item.getItems().size() > 1){
+				activity.getSupportFragmentManager().beginTransaction()
+						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+						.add(container.getId(),
+								new SupportFAQItemsListFragment(engagementId, item), SupportFAQItemsListFragment.class.getName())
+						.addToBackStack(SupportFAQItemsListFragment.class.getName())
+						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+						.commitAllowingStateLoss();
+			} else if(item.getItems().size() == 1){
+				singleItemToOpen = item.getItems().get(0);
+				singleItemParentName = item.getText();
+			} else{
+				singleItemToOpen = item;
+				singleItemParentName = parentName;
+			}
+		}
+
+		if(singleItemToOpen != null && singleItemParentName != null){
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
-							new SupportFAQItemsListFragment(engagementId, item), SupportFAQItemsListFragment.class.getName())
-					.addToBackStack(SupportFAQItemsListFragment.class.getName())
+							new SupportFAQItemFragment(engagementId, singleItemParentName, singleItemToOpen), SupportFAQItemFragment.class.getName())
+					.addToBackStack(SupportFAQItemFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();
