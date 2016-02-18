@@ -25,7 +25,7 @@
             android:layout_marginTop="35px"
             android:text="Account"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"
+            android:textSize="@dimen/text_size_32"
             />
 
         <TextView
@@ -37,8 +37,8 @@
             android:layout_marginRight="35px"
             android:text="Answer"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
-            android:lineSpacingExtra="4px"
+            android:textSize="@dimen/text_size_28"
+            android:lineSpacingExtra="6px"
             />
 
         <EditText

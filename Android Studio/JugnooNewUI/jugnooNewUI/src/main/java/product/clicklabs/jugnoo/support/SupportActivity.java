@@ -100,18 +100,6 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return linearLayoutContainer;
 	}
 
-	public void openRideTransactionsFragment(){
-		getSupportFragmentManager().beginTransaction()
-				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-				.add(getContainer().getId(),
-						new RideTransactionsFragment(),
-						RideTransactionsFragment.class.getName())
-				.addToBackStack(RideTransactionsFragment.class.getName())
-				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-				.commitAllowingStateLoss();
-	}
-
 	public void openRideSummaryFragment(EndRideData endRideData){
 		getSupportFragmentManager().beginTransaction()
 				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)

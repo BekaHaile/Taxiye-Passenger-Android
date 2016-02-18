@@ -154,26 +154,26 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
 
-		textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.latoRegular(activity));
+		textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.mavenLight(activity));
+		textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
 
-		textViewEndRideStartLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideEndLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideStartTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideEndTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Fonts.latoRegular(activity));
+		textViewEndRideStartLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.mavenLight(activity));
+		textViewEndRideEndLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.mavenLight(activity));
+		textViewEndRideStartTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartTimeValue); textViewEndRideStartTimeValue.setTypeface(Fonts.mavenLight(activity));
+		textViewEndRideEndTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndTimeValue); textViewEndRideEndTimeValue.setTypeface(Fonts.mavenLight(activity));
 
-		textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue); textViewEndRideDiscountValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRidePaytmValue = (TextView) rootView.findViewById(R.id.textViewEndRidePaytmValue); textViewEndRidePaytmValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideDistanceValue = (TextView) rootView.findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideTime = (TextView) rootView.findViewById(R.id.textViewEndRideTime); textViewEndRideTime.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		textViewEndRideTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideWaitTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideWaitTimeValue); textViewEndRideWaitTimeValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideFareFactorValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue); textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue); textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRidePaytmValue = (TextView) rootView.findViewById(R.id.textViewEndRidePaytmValue); textViewEndRidePaytmValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideDistanceValue = (TextView) rootView.findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideTime = (TextView) rootView.findViewById(R.id.textViewEndRideTime); textViewEndRideTime.setTypeface(Fonts.mavenLight(activity));
+		textViewEndRideTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideTimeValue); textViewEndRideTimeValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideWaitTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideWaitTimeValue); textViewEndRideWaitTimeValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideFareFactorValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareFactorValue); textViewEndRideFareFactorValue.setTypeface(Fonts.mavenRegular(activity));
 
 		relativeLayoutLuggageCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLuggageCharge);
 		relativeLayoutConvenienceCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutConvenienceCharge);
@@ -183,9 +183,9 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
 		relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
 
-		textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.latoRegular(activity));
-		textViewEndRideDiscount = (TextView) rootView.findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.latoRegular(activity));
+		textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideDiscount = (TextView) rootView.findViewById(R.id.textViewEndRideDiscount); textViewEndRideDiscount.setTypeface(Fonts.mavenLight(activity));
 
 		listViewEndRideDiscounts = (NonScrollListView) rootView.findViewById(R.id.listViewEndRideDiscounts);
 		endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity);
@@ -195,21 +195,21 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
 
-		((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.latoRegular(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenRegular(activity));
 
-		((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
 
 		buttonEndRideOk.setOnClickListener(new View.OnClickListener() {

@@ -129,12 +129,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						if(position == 0){
-							activity.openRideTransactionsFragment();
-						} else {
-							new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
-									-1, activity.getResources().getString(R.string.support_main_title), item);
-						}
+						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
+								-1, activity.getResources().getString(R.string.support_main_title), item);
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
