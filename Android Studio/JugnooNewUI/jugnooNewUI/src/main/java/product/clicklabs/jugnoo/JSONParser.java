@@ -609,6 +609,9 @@ public class JSONParser implements Constants {
             engagementId = jLastRideData.optString(KEY_ENGAGEMENT_ID, "0");
         }
 
+        String rideDate = jLastRideData.optString(KEY_RIDE_DATE, "");
+        String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
+
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -621,7 +624,8 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("to_pay"),
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
-				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm);
+				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
+                rideDate, phoneNumber);
 	}
 
 

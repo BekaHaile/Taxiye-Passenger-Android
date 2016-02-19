@@ -59,7 +59,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
     private FragmentActivity activity;
 
 	private int engagementId;
-	private String parentName;
+	private String parentName, phoneNumber;
 	private ShowPanelResponse.Item item;
 
     @Override
@@ -76,10 +76,11 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemFragment(int engagementId, String parentName, ShowPanelResponse.Item item){
+	public SupportFAQItemFragment(int engagementId, String parentName, ShowPanelResponse.Item item, String phoneNumber){
 		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
+		this.phoneNumber = phoneNumber;
 	}
 
     @Override
@@ -115,8 +116,12 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			buttonSubmit.setVisibility(View.VISIBLE);
 		} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.GONE);
-			buttonSubmit.setVisibility(View.VISIBLE);
-			buttonSubmit.setText(activity.getResources().getString(R.string.call_driver).toUpperCase(Locale.ENGLISH));
+			if(!"".equalsIgnoreCase(phoneNumber)) {
+				buttonSubmit.setVisibility(View.VISIBLE);
+				buttonSubmit.setText(activity.getResources().getString(R.string.call_driver).toUpperCase(Locale.ENGLISH));
+			} else{
+				buttonSubmit.setVisibility(View.GONE);
+			}
 		} else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.GONE);
 			buttonSubmit.setVisibility(View.GONE);
@@ -138,7 +143,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 						submitFeedback(activity, engagementId, feedbackText, item.getSupportId());
 					}
 				} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
-					Utils.openCallIntent(activity, "+910000000000");
+					Utils.openCallIntent(activity, phoneNumber);
 				}
 			}
 		});

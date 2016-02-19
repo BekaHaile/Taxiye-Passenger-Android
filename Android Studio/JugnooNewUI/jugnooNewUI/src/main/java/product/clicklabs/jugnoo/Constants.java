@@ -102,4 +102,6 @@ public interface Constants {
 	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
 	String KEY_SUPPORT_ID = "support_id";
 
+	String KEY_RIDE_DATE = "ride_date";
+
 }

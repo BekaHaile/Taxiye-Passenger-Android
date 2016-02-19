@@ -669,7 +669,7 @@
 
 	<!-- Support Screen-->
 	<string name="issue_with_a_recent_ride">Issue with a recent ride?</string>
-	<string name="date_colon">Date:</string>
+	<string name="date_colon_format">Date: %s</string>
 	<string name="start">Start</string>
 	<string name="end">End</string>
 	<string name="ride_history">Ride History</string>

@@ -141,13 +141,13 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 							new TransactionUtils().openItemInFragment(activity,
 									((SupportActivity)activity).getContainer(),
 									Integer.parseInt(endRideData.engagementId),
-									activity.getResources().getString(R.string.support_main_title), item);
+									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
 
 						} else if(activity instanceof RideTransactionsActivity){
 							new TransactionUtils().openItemInFragment(activity,
 									((RideTransactionsActivity)activity).getContainer(),
 									Integer.parseInt(endRideData.engagementId),
-									activity.getResources().getString(R.string.support_main_title), item);
+									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
 						}
 					}
 				});
@@ -232,6 +232,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				if(!"".equalsIgnoreCase(endRideData.driverImage)){
 					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
 				}
+
+				textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
+						endRideData.getRideDate()));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -291,9 +294,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 	public void performBackPress(){
 		if(activity instanceof SupportActivity){
-			((SupportActivity)activity).onBackPressed();
+			((SupportActivity)activity).performBackPressed();
 		} else if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).onBackPressed();
+			((RideTransactionsActivity)activity).performBackPressed();
 		}
 	}
 

@@ -461,11 +461,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 	public void performBackPressed() {
 		if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).onBackPressed();
+			((RideTransactionsActivity)activity).performBackPressed();
 		} else if(activity instanceof HomeActivity){
 			((HomeActivity)activity).onBackPressed();
 		} else if(activity instanceof SupportActivity){
-			((SupportActivity)activity).onBackPressed();
+			((SupportActivity)activity).performBackPressed();
 		}
 	}
 

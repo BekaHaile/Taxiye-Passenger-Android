@@ -130,7 +130,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
 						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
-								-1, activity.getResources().getString(R.string.support_main_title), item);
+								-1, activity.getResources().getString(R.string.support_main_title), item, "");
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -216,7 +216,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-			params.put(Constants.KEY_ENGAGEMENT_ID, "22599143");
 
 			RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
 				@Override
@@ -305,6 +304,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				if(!"".equalsIgnoreCase(endRideData.driverImage)){
 					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
 				}
+
+				textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
+						endRideData.getRideDate()));
 			}
 		} catch(Exception e){
 			e.printStackTrace();

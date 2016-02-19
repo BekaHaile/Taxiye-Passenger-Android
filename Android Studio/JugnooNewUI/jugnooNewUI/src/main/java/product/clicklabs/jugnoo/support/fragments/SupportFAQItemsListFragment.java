@@ -39,6 +39,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 
 	private int engagementId;
 	private ShowPanelResponse.Item item;
+	private String phoneNumber;
 
     @Override
     public void onStart() {
@@ -54,9 +55,10 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemsListFragment(int engagementId, ShowPanelResponse.Item item){
+	public SupportFAQItemsListFragment(int engagementId, ShowPanelResponse.Item item, String phoneNumber){
 		this.engagementId = engagementId;
 		this.item = item;
+		this.phoneNumber = phoneNumber;
 	}
 
     @Override
@@ -88,12 +90,12 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 						if(activity instanceof SupportActivity){
 							new TransactionUtils().openItemInFragment(activity,
 									((SupportActivity)activity).getContainer(),
-									engagementId, SupportFAQItemsListFragment.this.item.getText(), item);
+									engagementId, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber);
 
 						} else if(activity instanceof RideTransactionsActivity){
 							new TransactionUtils().openItemInFragment(activity,
 									((RideTransactionsActivity)activity).getContainer(),
-									engagementId, SupportFAQItemsListFragment.this.item.getText(), item);
+									engagementId, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber);
 						}
 					}
 				});

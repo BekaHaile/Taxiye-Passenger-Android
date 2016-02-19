@@ -157,7 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
-            android:text="@string/date_colon"
+            android:text="@string/date_colon_format"
             android:textSize="@dimen/text_size_26"
             android:layout_marginTop="20px"
             android:layout_marginLeft="40px"
