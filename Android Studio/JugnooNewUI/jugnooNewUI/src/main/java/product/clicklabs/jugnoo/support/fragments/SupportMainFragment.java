@@ -176,7 +176,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 
 	private void showPanel() {
-		int savedSupportVersion = Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, 0);
+		int savedSupportVersion = Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, -1);
 		if(savedSupportVersion == Data.userData.getInAppSupportPanelVersion()){
 			ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
 					.getSupportDataItems(SupportCategory.MAIN_MENU.getOrdinal());
