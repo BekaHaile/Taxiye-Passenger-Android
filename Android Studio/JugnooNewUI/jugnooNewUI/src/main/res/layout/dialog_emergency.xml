@@ -31,8 +31,16 @@
 
             
             <TextView
+                android:id="@+id/textViewEnableEmergencyMode"
                 android:layout_width="match_parent"
-                android:layout_height="100px"/>
+                android:layout_height="100px"
+                android:textColor="@color/text_color_theme_selector"
+                android:textSize="@dimen/text_size_36"
+                android:gravity="center_vertical"
+                android:paddingLeft="30px"
+                android:text="@string/enable_emergency_mode"
+                android:textAllCaps="true"
+                />
             
 
         </LinearLayout>

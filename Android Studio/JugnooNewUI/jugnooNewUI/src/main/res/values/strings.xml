@@ -708,4 +708,10 @@
 	<string name="star_please_fill_required_information">* Please fill required information</string>
 
 
+
+
+	<!-- Emergency New -->
+	<string name="enable_emergency_mode">Enable Emergency Mode</string>
+
+
 </resources>
