@@ -29,11 +29,11 @@
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="61px"
-            android:layout_height="61px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:src="@drawable/back_btn_selector"
+            android:layout_width="80.7px"
+            android:layout_height="96.9px"
+            android:layout_marginLeft="5px"
+            android:padding="30px"
+            android:src="@drawable/back_white_selector"
             android:tag="mwar" />
     </RelativeLayout>
 

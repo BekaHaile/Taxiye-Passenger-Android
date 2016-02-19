@@ -27,7 +27,6 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.datastructure.NearbyDriver;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
@@ -99,142 +98,24 @@ public class JSONParser implements Constants {
 
     public UserData parseUserData(Context context, JSONObject userData) throws Exception {
 
-//		"login": {
-//        "flag": 407,
-//        "user_name": "Shankar Bhagwatia",
-//        "user_image": "http://graph.facebook.com/717496164959213/picture?width=160&height=160",
-//        "phone_no": "+919780298413",
-//        "user_email": "shankarsinghisking91@gmail.com",
-//        "email_verification_status": 0,
-//        "referral_code": "SHANKAR23",
-//        "auth_key": "06c898728e0c84d903a93d647ba67858594d2080390860711ed0fa9b37828db9",
-//        "jugnoo_balance": 2,
-//        "current_user_status": 2,
-//        "is_available": 1,
-//        "can_change_location": 1,
-//        "can_schedule": 1,
-//        "scheduling_limit": 60,
-//        "gcm_intent": 1,
-//        "christmas_icon_enable": 0,
-//        "fare_details": [
-//            {
-//                "fare_fixed": 25,
-//                "fare_per_km": 6,
-//                "fare_threshold_distance": 2,
-//                "fare_per_min": 1,
-//                "fare_threshold_time": 0
-//            }
-//        ],
-//        "exceptional_driver": 0,
-//        "update_popup": 0,
-//        "access_token": "f3e2632ae5d84b70e2ebae4f448bfb273a24a03595d5cafd029e4491061e27c6"
-//    }
+        double fareFactor = 1.0;
 
+        String userName = userData.optString("user_name", "");
+        String phoneNo = userData.optString("phone_no", "");
+        String userImage = userData.optString("user_image", "");
+        String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
 
-        int canSchedule = 0, canChangeLocation = 0, schedulingLimitMinutes = 0, isAvailable = 1, exceptionalDriver = 0, gcmIntent = 1,
-                christmasIconEnable = 0, nukkadEnable = 0, enableJugnooMeals = 1, freeRideIconDisable = 1;
-        int emailVerificationStatus = 1;
-        int numCouponsAvailable = 0;
-        String userEmail = "", phoneNo = "", nukkadIcon = "", jugnooMealsPackageName = "com.cdk23.nlk", jugnooFbBanner = "http://bit.ly/1OCgcke";
-        double jugnooBalance = 0, fareFactor = 1.0;
+        double jugnooBalance = userData.optDouble("jugnoo_balance", 0);
 
-        if (userData.has("can_schedule")) {
-            canSchedule = userData.getInt("can_schedule");
-        }
+        String userEmail = userData.optString("user_email", "");
 
-        if (userData.has("can_change_location")) {
-            canChangeLocation = userData.getInt("can_change_location");
-        }
+        int emailVerificationStatus = userData.optInt("email_verification_status", 1);
 
-        if (userData.has("scheduling_limit")) {
-            schedulingLimitMinutes = userData.getInt("scheduling_limit");
-        }
+        String jugnooFbBanner = userData.optString("jugnoo_fb_banner", "");
 
-        if (userData.has("is_available")) {
-            isAvailable = userData.getInt("is_available");
-        }
+        int numCouponsAvailable = userData.optInt("num_coupons_available", 0);
 
-        if (userData.has("exceptional_driver")) {
-            exceptionalDriver = userData.getInt("exceptional_driver");
-        }
-
-        try {
-            if (userData.has("gcm_intent")) {
-                gcmIntent = userData.getInt("gcm_intent");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            if (userData.has("christmas_icon_enable")) {
-                christmasIconEnable = userData.getInt("christmas_icon_enable");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (userData.has("phone_no")) {
-            phoneNo = userData.getString("phone_no");
-        }
-
-        try {
-            if (userData.has("nukkad_enable")) {
-                nukkadEnable = userData.getInt("nukkad_enable");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            if (userData.has("nukkad_icon")) {
-                nukkadIcon = userData.getString("nukkad_icon");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            if (userData.has("enable_jugnoo_meals")) {
-                enableJugnooMeals = userData.getInt("enable_jugnoo_meals");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            if (userData.has("jugnoo_meals_package_name")) {
-                jugnooMealsPackageName = userData.getString("jugnoo_meals_package_name");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (userData.has("free_ride_icon_disable")) {
-            freeRideIconDisable = userData.getInt("free_ride_icon_disable");
-        }
-
-        if (userData.has("jugnoo_balance")) {
-            jugnooBalance = userData.getDouble("jugnoo_balance");
-        }
-
-        if (userData.has("user_email")) {
-            userEmail = userData.getString("user_email");
-        }
-
-        if (userData.has("email_verification_status")) {
-            emailVerificationStatus = userData.getInt("email_verification_status");
-        }
-
-        if (userData.has("jugnoo_fb_banner")) {
-            jugnooFbBanner = userData.getString("jugnoo_fb_banner");
-        }
-
-        if (userData.has("num_coupons_available")) {
-            numCouponsAvailable = userData.getInt("num_coupons_available");
-        }
-
-        String authKey = userData.getString("auth_key");
+        String authKey = userData.optString("auth_key", "");
         AccessTokenGenerator.saveAuthKey(context, authKey);
 
         String authSecret = authKey + Config.getClientSharedSecret();
@@ -253,9 +134,6 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
         Prefs.with(context).save(SP_USER_PHONE_NO, phoneNo);
-
-		double sharingFareFixed = userData.optDouble("sharing_customer_fare_fixed", 10);
-		int showJugnooSharing = userData.optInt("show_jugnoo_sharing", 0);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
         Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
@@ -318,14 +196,11 @@ public class JSONParser implements Constants {
         String jugnooCashTNC = userData.optString(KEY_JUGNOO_CASH_TNC,
                 context.getResources().getString(R.string.jugnoo_cash_tnc));
 
-		return new UserData(userIdentifier, accessToken, authKey, userData.getString("user_name"), userEmail, emailVerificationStatus,
-                userData.getString("user_image"), userData.getString(KEY_REFERRAL_CODE), phoneNo,
-                canSchedule, canChangeLocation, schedulingLimitMinutes, isAvailable, exceptionalDriver, gcmIntent,
-                christmasIconEnable, nukkadEnable, nukkadIcon, enableJugnooMeals, jugnooMealsPackageName, freeRideIconDisable, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, sharingFareFixed, showJugnooSharing, paytmEnabled,
+		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
+                userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
+                jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
-                promoSuccess, promoMessage,
-                showJugnooJeanie,
+                promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl, jugnooCashTNC);
     }
 
@@ -506,36 +381,6 @@ public class JSONParser implements Constants {
 
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
-
-		/*{
-			"user_id": 207,
-			"pickup_address": "97, Manekshaw Road, Block B, Sainik Farms Colony, New Delhi, Delhi 110062, India",
-			"drop_address": "97, Manekshaw Road, Block B, Sainik Farms Colony, New Delhi, Delhi 110062, India",
-			"pickup_time": "12:47 PM",
-			"drop_time": "12:47 PM",
-			"fare": 30,
-			"paid_using_wallet": 1,
-			"to_pay": 24,
-			"distance": 0,
-			"ride_time": 0,
-			"convenience_charge": 10,
-			"discount": [
-				{
-					"key": "Promotion",
-						"value": 0
-				},
-				{
-					"key": "Convenience",
-						"value": 5
-				}
-			],
-			"base_fare": 20,
-			"fare_factor": 1,
-			"jugnoo_balance": 2,
-			"rate_app": 0,
-			"flag": 115,
-			"banner": "You can now add Jugnoo cash by giving it to our Jugnoo driver"
-		}*/
 
 
 		double baseFare = initialBaseFare;
@@ -1267,41 +1112,6 @@ public class JSONParser implements Constants {
     }
 
 
-
-	public static ArrayList<NearbyDriver> parseNearbySharingDrivers(JSONObject jObj){
-//		{
-//			"flag": 175,
-//				"drivers": [
-//			{
-//				"user_id": 1148,
-//					"user_name": "Ds2",
-//					"latitude": 30.719001,
-//					"longitude": 76.809997,
-//					"auto_id": 0,
-//					"user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//					"driver_car_no": "",
-//					"driver_car_image": "",
-//					"distance": 0.64
-//			}
-//			]
-//		}
-		ArrayList<NearbyDriver> nearbyDrivers = new ArrayList<>();
-		try{
-			JSONArray drivers = jObj.getJSONArray("drivers");
-			for(int i=0; i<drivers.length(); i++){
-				JSONObject jd = drivers.getJSONObject(i);
-				nearbyDrivers.add(new NearbyDriver(jd.getString("user_id"),
-						jd.getString("user_name"),
-						jd.getString("auto_id"),
-						jd.getString("user_image"),
-						jd.getString("driver_car_no"),
-						jd.getString("driver_car_image")));
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		return nearbyDrivers;
-	}
 
 
 

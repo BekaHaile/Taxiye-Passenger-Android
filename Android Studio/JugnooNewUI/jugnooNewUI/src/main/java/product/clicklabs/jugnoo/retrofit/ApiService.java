@@ -215,15 +215,6 @@ public interface ApiService {
     @POST("/refer_all_contacts")
     Response referAllContactsSync(@FieldMap Map<String, String> params);
 
-    @FormUrlEncoded
-    @POST("/find_sharing_autos_nearby")
-    void findSharingAutosNearby(@FieldMap Map<String, String> params,
-                          Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
-    @POST("/end_sharing_ride")
-    void endSharingRide(@FieldMap Map<String, String> params,
-                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/send_otp_via_call")
