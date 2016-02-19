@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
+import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
@@ -396,8 +397,29 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	}
 
 
-
 	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+		new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.fareStructure.fixedFare,
+				new ApiGetRideSummary.Callback() {
+					@Override
+					public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+						RideSummaryFragment.this.endRideData = endRideData;
+						RideSummaryFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+						setRideData();
+					}
+
+					@Override
+					public void onFailure() {
+					}
+
+					@Override
+					public void onRetry(View view) {
+						getRideSummaryAPI(activity, engagementId);
+					}
+				}).getRideSummaryAPI();
+	}
+
+
+	public void getRideSummaryAPI1(final Activity activity, final String engagementId) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));

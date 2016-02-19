@@ -104,20 +104,13 @@ public class JSONParser implements Constants {
         String phoneNo = userData.optString("phone_no", "");
         String userImage = userData.optString("user_image", "");
         String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
-
         double jugnooBalance = userData.optDouble("jugnoo_balance", 0);
-
         String userEmail = userData.optString("user_email", "");
-
         int emailVerificationStatus = userData.optInt("email_verification_status", 1);
-
         String jugnooFbBanner = userData.optString("jugnoo_fb_banner", "");
-
         int numCouponsAvailable = userData.optInt("num_coupons_available", 0);
-
         String authKey = userData.optString("auth_key", "");
         AccessTokenGenerator.saveAuthKey(context, authKey);
-
         String authSecret = authKey + Config.getClientSharedSecret();
         String accessToken = SHA256Convertor.getSHA256String(authSecret);
 
@@ -127,12 +120,7 @@ public class JSONParser implements Constants {
         Data.emergencyContactsList.clear();
         Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(userData));
 
-        String userIdentifier = userEmail;
-        try{
-            userIdentifier = userData.optString("user_identifier", userEmail);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        String userIdentifier = userData.optString("user_identifier", userEmail);
         Prefs.with(context).save(SP_USER_PHONE_NO, phoneNo);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
@@ -181,7 +169,6 @@ public class JSONParser implements Constants {
             }
         }
 
-
         String defaultBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
         String defaultBranchAndroidUrl = Prefs.with(context).getString(SPLabels.BRANCH_ANDROID_URL, "");
         String defaultBranchIosUrl = Prefs.with(context).getString(SPLabels.BRANCH_IOS_URL, "");
@@ -196,12 +183,16 @@ public class JSONParser implements Constants {
         String jugnooCashTNC = userData.optString(KEY_JUGNOO_CASH_TNC,
                 context.getResources().getString(R.string.jugnoo_cash_tnc));
 
+        int inAppSupportPanelVersion = userData.optInt(KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, 0);
+
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
-                branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl, jugnooCashTNC);
+                branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
+                jugnooCashTNC, inAppSupportPanelVersion);
+
     }
 
 

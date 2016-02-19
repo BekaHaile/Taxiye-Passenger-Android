@@ -22,6 +22,7 @@ public class UserData {
 	private String branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl;
 
 	private String jugnooCashTNC;
+	private int inAppSupportPanelVersion;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -30,7 +31,7 @@ public class UserData {
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
-					String jugnooCashTNC){
+					String jugnooCashTNC, int inAppSupportPanelVersion){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -72,6 +73,7 @@ public class UserData {
 		this.branchFallbackUrl = branchFallbackUrl;
 
 		this.jugnooCashTNC = jugnooCashTNC;
+		this.inAppSupportPanelVersion = inAppSupportPanelVersion;
 	}
 
 	public double getJugnooBalance() {
@@ -216,5 +218,11 @@ public class UserData {
 	}
 
 
+	public int getInAppSupportPanelVersion() {
+		return inAppSupportPanelVersion;
+	}
 
+	public void setInAppSupportPanelVersion(int inAppSupportPanelVersion) {
+		this.inAppSupportPanelVersion = inAppSupportPanelVersion;
+	}
 }

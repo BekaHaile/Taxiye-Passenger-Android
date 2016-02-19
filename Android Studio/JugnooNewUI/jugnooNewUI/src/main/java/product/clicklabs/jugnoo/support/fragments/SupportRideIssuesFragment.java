@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
@@ -241,9 +242,32 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		}
 	}
 
-
-
 	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+		new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.fareStructure.fixedFare,
+				new ApiGetRideSummary.Callback() {
+					@Override
+					public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+						SupportRideIssuesFragment.this.endRideData = endRideData;
+						SupportRideIssuesFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+						setRideData();
+						updateIssuesList((ArrayList<ShowPanelResponse.Item>) SupportRideIssuesFragment.this.getRideSummaryResponse.getMenu());
+						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+						recyclerViewSupportFaq.setVisibility(View.VISIBLE);
+					}
+
+					@Override
+					public void onFailure() {
+					}
+
+					@Override
+					public void onRetry(View view) {
+						getRideSummaryAPI(activity, engagementId);
+					}
+				}).getRideSummaryAPI();
+	}
+
+
+	public void getRideSummaryAPI1(final Activity activity, final String engagementId) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));

@@ -25,10 +25,12 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -39,12 +41,14 @@ import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -172,45 +176,88 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 
 	private void showPanel() {
-		if(!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
-			DialogPopup.showLoadingDialog(activity, "");
-
-			HashMap<String, String> params = new HashMap<>();
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-
-			RestClient.getApiServices().showPanel(params,
-					new Callback<ShowPanelResponse>() {
-						@Override
-						public void success(ShowPanelResponse showPanelResponse, Response response) {
-							DialogPopup.dismissLoadingDialog();
-							try {
-								String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-								Log.i(TAG, "showPanel responseStr=>"+responseStr);
-								recyclerViewSupportFaq.setVisibility(View.VISIBLE);
-								showPanelCalled = 1;
-								update(showPanelResponse);
-							} catch (Exception exception) {
-								exception.printStackTrace();
-								retryDialog(DialogErrorType.SERVER_ERROR);
-							}
-						}
-
-						@Override
-						public void failure(RetrofitError error) {
-							Log.e(TAG, "showPanel error=>"+error);
-							DialogPopup.dismissLoadingDialog();
-							recyclerViewSupportFaq.setVisibility(View.GONE);
-							showPanelCalled = -1;
-							retryDialog(DialogErrorType.CONNECTION_LOST);
-						}
-					});
-		} else{
-			retryDialog(DialogErrorType.NO_NET);
+		int savedSupportVersion = Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, 0);
+		if(savedSupportVersion == Data.userData.getInAppSupportPanelVersion()){
+			ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
+					.getSupportDataItems(SupportCategory.MAIN_MENU.getOrdinal());
+			showPanelSuccess(menu);
 		}
+		else {
+			if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, "");
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+				RestClient.getApiServices().showPanel(params,
+						new Callback<ShowPanelResponse>() {
+							@Override
+							public void success(ShowPanelResponse showPanelResponse, Response response) {
+								DialogPopup.dismissLoadingDialog();
+								try {
+									String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+									Log.i(TAG, "showPanel responseStr=>" + responseStr);
+									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
+
+									Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+											Data.userData.getInAppSupportPanelVersion());
+									Database2.getInstance(activity)
+											.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
+													showPanelResponse.getMenu());
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									retryDialog(DialogErrorType.SERVER_ERROR);
+								}
+							}
+
+							@Override
+							public void failure(RetrofitError error) {
+								Log.e(TAG, "showPanel error=>" + error);
+								DialogPopup.dismissLoadingDialog();
+								recyclerViewSupportFaq.setVisibility(View.GONE);
+								showPanelCalled = -1;
+								retryDialog(DialogErrorType.CONNECTION_LOST);
+							}
+						});
+			} else {
+				retryDialog(DialogErrorType.NO_NET);
+			}
+		}
+	}
+
+	private void showPanelSuccess(ArrayList<ShowPanelResponse.Item> menu){
+		recyclerViewSupportFaq.setVisibility(View.VISIBLE);
+		showPanelCalled = 1;
+		update(menu);
 	}
 
 
 	public void getRideSummaryAPI(final Activity activity) {
+		new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.fixedFare,
+				new ApiGetRideSummary.Callback() {
+					@Override
+					public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+						SupportMainFragment.this.endRideData = endRideData;
+						SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+						setRideData();
+						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+						getRideSummaryCalled = 1;
+					}
+
+					@Override
+					public void onFailure() {
+						getRideSummaryCalled = -1;
+						linearLayoutRideShortInfo.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onRetry(View view) {
+						hitRetry();
+					}
+				}).getRideSummaryAPI();
+	}
+
+	public void getRideSummaryAPI1(final Activity activity) {
 		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -262,12 +309,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						if(showPanelCalled != 1) {
-							showPanel();
-						}
-						if(getRideSummaryCalled != 1){
-							getRideSummaryAPI(activity);
-						}
+						hitRetry();
 					}
 
 					@Override
@@ -282,9 +324,17 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				});
 	}
 
+	private void hitRetry(){
+		if(showPanelCalled != 1) {
+			showPanel();
+		}
+		if(getRideSummaryCalled != 1){
+			getRideSummaryAPI(activity);
+		}
+	}
 
-	private void update(ShowPanelResponse showPanelResponse){
-		supportFAQItemsAdapter.setResults((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
+	private void update(ArrayList<ShowPanelResponse.Item> menu){
+		supportFAQItemsAdapter.setResults(menu);
 	}
 
 	private void setRideData(){

@@ -188,8 +188,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
 
-	RelativeLayout relativeLayoutJugnooLine;
-
     RelativeLayout relativeLayoutInvite;
     TextView textViewInvite;
 
@@ -202,13 +200,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     RelativeLayout relativeLayoutTransactions;
     TextView textViewTransactions;
-
-	RelativeLayout relativeLayoutNotificationMenu;
-	TextView textViewNotificationValueMenu;
-
-	RelativeLayout relativeLayoutFareEstimate;
-    RelativeLayout relativeLayoutFareDetails;
-    TextView textViewFareDetails;
 
     RelativeLayout relativeLayoutSupport;
     TextView textViewSupport;
@@ -319,21 +310,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation;
-
-    /*ScrollView scrollViewEndRide;
-
-    TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-        relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
-	LinearLayout linearLayoutEndRideTime, linearLayoutEndRideWaitTime;
-	NonScrollListView listViewEndRideDiscounts;
-    TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
-			textViewEndRideDiscount, textViewEndRideDiscountRupee, textViewEndRideDiscountValue,
-			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
-			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
-	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
-    Button buttonEndRideOk;
-	EndRideDiscountsAdapter endRideDiscountsAdapter;*/
 
 
     // data variables declaration
@@ -522,9 +498,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
         textViewGetRide.setTypeface(Fonts.mavenLight(this));
 
-		relativeLayoutJugnooLine = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLine);
-		((TextView) findViewById(R.id.textViewJugnooLine)).setTypeface(Fonts.mavenLight(this));
-
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
         textViewInvite = (TextView) findViewById(R.id.textViewInvite);
         textViewInvite.setTypeface(Fonts.mavenLight(this));
@@ -547,18 +520,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutTransactions);
         textViewTransactions = (TextView) findViewById(R.id.textViewTransactions);
         textViewTransactions.setTypeface(Fonts.mavenLight(this));
-
-		relativeLayoutNotificationMenu = (RelativeLayout) findViewById(R.id.relativeLayoutNotificationMenu);
-		textViewNotificationValueMenu = (TextView) findViewById(R.id.textViewNotificationValueMenu);
-		textViewNotificationValueMenu.setTypeface(Fonts.mavenLight(this));
-		((TextView)findViewById(R.id.textViewNotificationMenu)).setTypeface(Fonts.mavenLight(this));
-
-		relativeLayoutFareEstimate = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimate);
-		((TextView) findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(this));
-
-		relativeLayoutFareDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareDetails); relativeLayoutFareDetails.setVisibility(View.GONE);
-        textViewFareDetails = (TextView) findViewById(R.id.textViewFareDetails);
-        textViewFareDetails.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutSupport = (RelativeLayout) findViewById(R.id.relativeLayoutSupport);
         textViewSupport = (TextView) findViewById(R.id.textViewSupport);
@@ -792,16 +753,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-		relativeLayoutJugnooLine.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-//					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
-//					overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
-			}
-		});
-
         relativeLayoutInvite.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -866,41 +817,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(RIDE_HISTORY);
-            }
-        });
-
-		relativeLayoutNotificationMenu.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-                if(map != null){
-                    Data.latitude = map.getCameraPosition().target.latitude;
-                    Data.longitude = map.getCameraPosition().target.longitude;
-                }
-				startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
-				FlurryEventLogger.event(NOTIFICATION_CENTER_MENU);
-			}
-		});
-
-		relativeLayoutFareEstimate.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				activityResumed = false;
-                if(map != null) {
-                    Data.pickupLatLng = map.getCameraPosition().target;
-                }
-                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(FARE_ESTIMATE);
-			}
-		});
-
-        relativeLayoutFareDetails.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-				sendToFareDetails();
             }
         });
 
@@ -1568,12 +1484,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-
-		relativeLayoutJugnooLine.setVisibility(View.GONE);
-
-
-
-//        Class.forName(getPackageName() + "." + Data.deepLinkClassName)
         try{
             if(!"".equalsIgnoreCase(Data.deepLinkClassName)) {
                 Class cls = Class.forName(getPackageName() + "." + Data.deepLinkClassName);
@@ -1949,12 +1859,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(unreadNotificationsCount > 0){
 				textViewNotificationValue.setVisibility(View.VISIBLE);
 				textViewNotificationValue.setText("" + unreadNotificationsCount);
-				textViewNotificationValueMenu.setVisibility(View.VISIBLE);
-				textViewNotificationValueMenu.setText(""+unreadNotificationsCount);
 			}
 			else{
 				textViewNotificationValue.setVisibility(View.GONE);
-				textViewNotificationValueMenu.setVisibility(View.GONE);
 			}
 
             textViewWalletValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance()));
@@ -3178,9 +3085,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutTransactions.performClick();
 			}
-			else if(AppLinkIndex.FARE_DETAILS.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutFareDetails.performClick();
-			}
 			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutSupport.performClick();
 			}
@@ -4118,10 +4022,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
         if (!checkIfUserDataNull(activity)) {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                params.put("engagement_id", engagementId);
+                params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(KEY_ENGAGEMENT_ID, engagementId);
+                params.put(KEY_SHOW_RIDE_MENU, "0");
                 RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
                     @Override
                     public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
