@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
@@ -136,7 +137,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(endRideData != null && getRideSummaryResponse != null) {
+				if (endRideData != null && getRideSummaryResponse != null) {
 					new TransactionUtils().openRideIssuesFragment(activity,
 							activity.getContainer(),
 							-1, endRideData, getRideSummaryResponse);
@@ -189,11 +190,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							public void success(ShowPanelResponse showPanelResponse, Response response) {
 								DialogPopup.dismissLoadingDialog();
 								try {
-
-									Log.i(TAG, "showPanel reader"+response);
-
+									Log.i(TAG, "showPanel reader"+new String(((TypedByteArray)response.getBody()).getBytes()));
 									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
-
 									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
 											Data.userData.getInAppSupportPanelVersion());
 									Database2.getInstance(activity)

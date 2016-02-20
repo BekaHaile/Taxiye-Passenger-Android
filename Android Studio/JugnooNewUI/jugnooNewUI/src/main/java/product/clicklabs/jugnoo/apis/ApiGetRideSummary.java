@@ -54,7 +54,7 @@ public class ApiGetRideSummary {
 
 	public void getRideSummaryAPI() {
 		boolean showRideMenu = true;
-		int savedSupportVersion = Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, -1);
+		int savedSupportVersion = Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION, -1);
 		if(savedSupportVersion == Data.userData.getInAppSupportPanelVersion()){
 			showRideMenu = false;
 		}
@@ -87,7 +87,7 @@ public class ApiGetRideSummary {
 											.getSupportDataItems(SupportCategory.RIDE_MENU.getOrdinal());
 									getRideSummaryResponse.setMenu(menu);
 								} else{
-									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION,
 											Data.userData.getInAppSupportPanelVersion());
 									Database2.getInstance(activity)
 											.insertUpdateSupportData(SupportCategory.RIDE_MENU.getOrdinal(),

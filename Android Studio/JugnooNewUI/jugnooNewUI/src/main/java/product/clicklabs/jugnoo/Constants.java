@@ -105,6 +105,7 @@ public interface Constants {
 	String KEY_RIDE_DATE = "ride_date";
 
 	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
+	String KEY_SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION = "in_app_ride_support_panel_version";
 	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
 
 }
