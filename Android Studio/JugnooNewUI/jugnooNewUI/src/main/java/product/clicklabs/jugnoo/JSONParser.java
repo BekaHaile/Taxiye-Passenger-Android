@@ -183,7 +183,7 @@ public class JSONParser implements Constants {
         String jugnooCashTNC = userData.optString(KEY_JUGNOO_CASH_TNC,
                 context.getResources().getString(R.string.jugnoo_cash_tnc));
 
-        int inAppSupportPanelVersion = userData.optInt(KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, 0);
+        String inAppSupportPanelVersion = userData.optString(KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "0");
 
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
