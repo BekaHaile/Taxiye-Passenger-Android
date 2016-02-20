@@ -4,16 +4,12 @@ import com.squareup.okhttp.ConnectionPool;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
 
 import product.clicklabs.jugnoo.config.Config;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
-import retrofit.client.Response;
 
 /**
  * Rest client
@@ -45,13 +41,6 @@ public class RestClient {
         okHttpClient.setProtocols(protocolList);
 
         return okHttpClient;
-    }
-
-
-    public void testDecodeCBER() throws Exception {
-        Response resp = null;
-        final GZIPInputStream gin = new GZIPInputStream(resp.getBody().in());
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(gin));
     }
 
 

@@ -15,15 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -193,12 +189,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							public void success(ShowPanelResponse showPanelResponse, Response response) {
 								DialogPopup.dismissLoadingDialog();
 								try {
-									final GZIPInputStream gin = new GZIPInputStream(response.getBody().in());
-									final BufferedReader reader = new BufferedReader(new InputStreamReader(gin));
 
-									Log.i(TAG, "showPanel reader"+reader.toString());
+									Log.i(TAG, "showPanel reader"+response);
 
-									showPanelResponse = new Gson().fromJson(reader, ShowPanelResponse.class);
 									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
 
 									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
