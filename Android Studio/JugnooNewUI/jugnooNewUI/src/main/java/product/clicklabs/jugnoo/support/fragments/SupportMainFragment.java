@@ -15,24 +15,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.HomeActivity;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -53,7 +52,6 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
@@ -195,11 +193,15 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							public void success(ShowPanelResponse showPanelResponse, Response response) {
 								DialogPopup.dismissLoadingDialog();
 								try {
-									String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-									Log.i(TAG, "showPanel responseStr=>" + responseStr);
+									final GZIPInputStream gin = new GZIPInputStream(response.getBody().in());
+									final BufferedReader reader = new BufferedReader(new InputStreamReader(gin));
+
+									Log.i(TAG, "showPanel reader"+reader.toString());
+
+									showPanelResponse = new Gson().fromJson(reader, ShowPanelResponse.class);
 									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
 
-									Prefs.with(activity).getInt(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
 											Data.userData.getInAppSupportPanelVersion());
 									Database2.getInstance(activity)
 											.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
@@ -254,53 +256,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					public void onRetry(View view) {
 						hitRetry();
 					}
-				}).getRideSummaryAPI();
-	}
 
-	public void getRideSummaryAPI1(final Activity activity) {
-		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
-			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+					@Override
+					public void onNoRetry(View view) {
 
-			HashMap<String, String> params = new HashMap<>();
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-
-			RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
-				@Override
-				public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
-					DialogPopup.dismissLoadingDialog();
-					try {
-						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "getRideSummary jsonString="+jsonString);
-						JSONObject jObj = new JSONObject(jsonString);
-						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							int flag = jObj.getInt("flag");
-							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
-								endRideData = JSONParser.parseEndRideData(jObj, "56289", Data.fareStructure.fixedFare);
-								SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
-								setRideData();
-								linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-								getRideSummaryCalled = 1;
-							} else {
-								retryDialog(DialogErrorType.NO_NET);
-							}
-						}
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						retryDialog(DialogErrorType.NO_NET);
 					}
-				}
-
-				@Override
-				public void failure(RetrofitError error) {
-					DialogPopup.dismissLoadingDialog();
-					getRideSummaryCalled = -1;
-					linearLayoutRideShortInfo.setVisibility(View.GONE);
-					retryDialog(DialogErrorType.NO_NET);
-				}
-			});
-		} else {
-			retryDialog(DialogErrorType.NO_NET);
-		}
+				}).getRideSummaryAPI();
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){

@@ -21,39 +21,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
-import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 public class RideSummaryFragment extends Fragment implements FlurryEventNames, Constants {
@@ -415,70 +401,14 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					public void onRetry(View view) {
 						getRideSummaryAPI(activity, engagementId);
 					}
+
+					@Override
+					public void onNoRetry(View view) {
+						performBackPressed();
+					}
 				}).getRideSummaryAPI();
 	}
 
-
-	public void getRideSummaryAPI1(final Activity activity, final String engagementId) {
-		if (!HomeActivity.checkIfUserDataNull(activity)) {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("engagement_id", engagementId);
-
-				RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
-					@Override
-					public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
-						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "getRideSummary responseStr =>" + responseStr);
-						DialogPopup.dismissLoadingDialog();
-						try {
-							JSONObject jObj = new JSONObject(responseStr);
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								int flag = jObj.getInt("flag");
-								if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
-									endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
-									setRideData();
-									RideSummaryFragment.this.getRideSummaryResponse = getRideSummaryResponse;
-								} else {
-									endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
-								}
-							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
-							endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
-						}
-					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e(TAG, "getRideSummary error =>" + error);
-						DialogPopup.dismissLoadingDialog();
-						endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
-					}
-				});
-
-			} else {
-				endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
-			}
-		}
-	}
-
-	public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage) {
-		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", errorMessage, "Retry", "Cancel", new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getRideSummaryAPI(activity, engagementId);
-			}
-		}, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		}, false, false);
-	}
 
 
 	public void performBackPressed() {
