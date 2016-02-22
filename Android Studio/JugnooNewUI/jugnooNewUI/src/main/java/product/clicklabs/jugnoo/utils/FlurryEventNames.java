@@ -190,4 +190,8 @@ public interface FlurryEventNames {
 
                     ;
 
+    String EMERGENCY_MODE_ENABLED = "emergency_mode_enabled"
+
+            ;
+
 }

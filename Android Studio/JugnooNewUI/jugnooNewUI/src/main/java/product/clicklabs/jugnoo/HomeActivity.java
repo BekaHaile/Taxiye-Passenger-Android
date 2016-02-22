@@ -123,6 +123,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
+import product.clicklabs.jugnoo.emergency.EmergencyModeActivity;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -5825,7 +5826,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new EmergencyDialog(activity, new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
-
+                    startActivity(new Intent(HomeActivity.this, EmergencyModeActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);
                 }
 
                 @Override

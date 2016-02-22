@@ -98,6 +98,7 @@ public interface Constants {
 
 
 
+	String SP_EMERGENCY_MODE_ENABLED = "sp_emergency_mode_enabled";
 
 	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
 	String KEY_SUPPORT_ID = "support_id";

@@ -1,0 +1,144 @@
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/emergency_mode_enabled"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="70px"
+            android:layout_height="71px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/ic_cross_white_grey_selector"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        >
+
+        <ImageView
+            android:layout_width="172px"
+            android:layout_height="134px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="94px"
+            android:src="@drawable/ic_siren"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/textViewEmergencyModeEnabledMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="64px"
+            android:gravity="center_horizontal"
+            android:text="@string/emergency_mode_enabled_message"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_36"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonCallPolice"
+            style="@style/ButtonThemeBig"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="38px"
+            android:background="@drawable/button_red_dark_selector"
+            android:text="@string/call_police"
+            />
+
+        <Button
+            android:id="@+id/buttonCallEmergencyContact"
+            style="@style/ButtonThemeBig"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="38px"
+            android:background="@drawable/button_white_red_dark_border_selector"
+            android:text="@string/call_emergency_contact"
+            android:textColor="@color/text_color_red_dark_aplha_selector"
+            />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="74px"
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80px"
+                android:layout_marginRight="20px"
+                android:layout_toLeftOf="@+id/textViewOr"
+                android:src="@color/text_color_hint"
+                />
+
+            <TextView
+                android:id="@+id/textViewOr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/or"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_36"
+                />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="80px"
+                android:layout_toRightOf="@+id/textViewOr"
+                android:src="@color/text_color_hint"
+                />
+
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/buttonDisableEmergencyMode"
+            style="@style/ButtonThemeBig"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="74px"
+            android:text="@string/disable_emergency_mode"
+            />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

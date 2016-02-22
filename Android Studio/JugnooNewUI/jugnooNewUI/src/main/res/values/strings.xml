@@ -714,6 +714,11 @@
 	<string name="enable_emergency_mode">Enable Emergency Mode</string>
 	<string name="send_ride_status">Send Ride Status</string>
 	<string name="in_app_customer_support">In App Customer Support</string>
+	<string name="emergency_mode_enabled">Emergency Mode Enabled</string>
+	<string name="emergency_mode_enabled_message">You have enabled emergency\nWe have sent your location to your\nemergency contacts and Jugnoo support.</string>
+	<string name="call_police">Call Police</string>
+	<string name="call_emergency_contact">Call Emergency Contact</string>
+	<string name="disable_emergency_mode">Disable Emergency Mode</string>
 
 
 </resources>

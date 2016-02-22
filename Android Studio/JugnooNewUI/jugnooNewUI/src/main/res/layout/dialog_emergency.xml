@@ -107,7 +107,6 @@
         android:focusableInTouchMode="true"
         android:paddingBottom="20px"
         android:paddingLeft="20px"
-        android:paddingRight="10px"
         android:layout_marginRight="-20px"
         android:layout_marginTop="-20px"
         android:src="@drawable/close_icon_selector"
