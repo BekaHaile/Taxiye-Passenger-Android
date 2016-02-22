@@ -102,6 +102,8 @@ public interface FlurryEventNames {
         RIDE_HISTORY = "Ride history",
         RIDE_RATED_ON_RIDE_HISTORY = "Ride rated on ride history",
         FARE_DETAILS = "Fare details",
+        SUPPORT_OPTIONS = "Support options",
+            SUPPORT_OPTIONS_THROUGH_EMERGENCY = "Support options through Emergency",
         SEND_EMAIL_SUPPORT = "Send email_support",
         CALL_SUPPORT = "call_support",
         FAQS_SUPPORT = "FAQS_Support",

@@ -122,6 +122,7 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -5814,15 +5815,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
 
-            if(sosContactVerified){
-                sosAlertDialog(activity, primaryPhone, phoneString);
-            }
-            else{
-                call100Dialog(activity);
-            }
+//            if(sosContactVerified){
+//                sosAlertDialog(activity, primaryPhone, phoneString);
+//            }
+//            else{
+//                call100Dialog(activity);
+//            }
+
+            new EmergencyDialog(activity, new EmergencyDialog.CallBack() {
+                @Override
+                public void onEnableEmergencyModeClick(View view) {
+
+                }
+
+                @Override
+                public void onSendRideStatusClick(View view) {
+
+                }
+
+                @Override
+                public void onInAppCustomerSupportClick(View view) {
+                    startActivity(new Intent(HomeActivity.this, SupportActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(SUPPORT_OPTIONS_THROUGH_EMERGENCY);
+                }
+
+                @Override
+                public void onDialogClosed(View view) {
+                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
+                }
+
+                @Override
+                public void onDialogDismissed() {
+
+                }
+            }).show();
 
         } else {
-            call100Dialog(activity);
+//            call100Dialog(activity);
         }
     }
 
