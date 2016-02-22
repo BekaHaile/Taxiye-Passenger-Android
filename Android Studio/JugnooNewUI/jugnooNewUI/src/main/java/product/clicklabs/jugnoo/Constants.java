@@ -14,6 +14,7 @@ public interface Constants {
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
 	String KEY_USER_ID = "user_id";
+	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
@@ -29,6 +30,8 @@ public interface Constants {
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 	String KEY_DRIVER_ID = "driver_id";
+
+	String KEY_ALERT_TYPE = "alert_type";
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
@@ -99,6 +102,7 @@ public interface Constants {
 
 
 	String SP_EMERGENCY_MODE_ENABLED = "sp_emergency_mode_enabled";
+	String EMERGENCY_CALL = "CALL", EMERGENCY_SMS = "SMS", EMERGENCY_CALL_100 = "CALL_100";
 
 	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
 	String KEY_SUPPORT_ID = "support_id";

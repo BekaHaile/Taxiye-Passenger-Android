@@ -49,6 +49,14 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			this.priority = priority;
 			connect();
 	}
+
+	public LocationFetcher(Context context, LocationUpdate locationUpdate, long requestInterval, int priority){
+		this.locationUpdate = locationUpdate;
+		this.context = context;
+		this.requestInterval = requestInterval;
+		this.priority = priority;
+		connect();
+	}
 	
 	public synchronized void connect(){
 		destroy();

@@ -326,7 +326,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     static long previousWaitTime = 0, previousRideTime = 0;
 
 
-    static Location myLocation;
+    public static Location myLocation;
 
 
     public static UserMode userMode;
