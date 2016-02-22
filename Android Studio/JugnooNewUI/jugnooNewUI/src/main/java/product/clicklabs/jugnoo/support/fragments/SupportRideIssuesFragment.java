@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -115,7 +116,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		textViewEndValue = (TextView)rootView.findViewById(R.id.textViewEndValue); textViewEndValue.setTypeface(Fonts.mavenLight(activity));
 
 		recyclerViewSupportFaq = (RecyclerView)rootView.findViewById(R.id.recyclerViewSupportFaq);
-		recyclerViewSupportFaq.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewSupportFaq.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewSupportFaq.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewSupportFaq.setHasFixedSize(false);
 
