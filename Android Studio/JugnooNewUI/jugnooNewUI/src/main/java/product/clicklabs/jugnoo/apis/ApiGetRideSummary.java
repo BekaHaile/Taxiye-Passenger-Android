@@ -106,6 +106,7 @@ public class ApiGetRideSummary {
 
 				@Override
 				public void failure(RetrofitError error) {
+					Log.e(TAG, "getRideSummary error=>"+error.toString());
 					DialogPopup.dismissLoadingDialog();
 					retryDialog(DialogErrorType.NO_NET);
 					callback.onFailure();

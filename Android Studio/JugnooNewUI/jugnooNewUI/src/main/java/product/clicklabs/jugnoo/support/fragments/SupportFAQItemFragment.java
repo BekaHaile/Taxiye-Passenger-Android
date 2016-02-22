@@ -140,7 +140,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 						editTextMessage.setError(String.format(activity.getResources()
 								.getString(R.string.support_feedback_lengthy_error_format), "1000"));
 					} else{
-						submitFeedback(activity, engagementId, feedbackText, item.getSupportId());
+						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
 					}
 				} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
 					Utils.openCallIntent(activity, phoneNumber);
@@ -183,13 +183,15 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         System.gc();
 	}
 
-	public void submitFeedback(final Activity activity, final int engagementId, String feedbackText, int supportId) {
+	public void submitFeedback(final Activity activity, final int engagementId, String feedbackText,
+							   String parentName, int supportId) {
 		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put(Constants.KEY_SUPPORT_FEEDBACK_TEXT, feedbackText);
+			params.put(Constants.KEY_SUPPORT_ISSUE_TITLE, parentName);
 			params.put(Constants.KEY_SUPPORT_ID, ""+supportId);
 
 			if(engagementId != -1){

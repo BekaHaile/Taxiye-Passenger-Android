@@ -441,9 +441,7 @@ public class JSONParser implements Constants {
 		int waitingChargesApplicable = jLastRideData.optInt("waiting_charges_applicable", 0);
 		double paidUsingPaytm = jLastRideData.optDouble("paid_using_paytm", 0);
 
-        if(engagementId == null){
-            engagementId = jLastRideData.optString(KEY_ENGAGEMENT_ID, "0");
-        }
+        engagementId = jLastRideData.optString(KEY_ENGAGEMENT_ID, "0");
 
         String rideDate = jLastRideData.optString(KEY_RIDE_DATE, "");
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");

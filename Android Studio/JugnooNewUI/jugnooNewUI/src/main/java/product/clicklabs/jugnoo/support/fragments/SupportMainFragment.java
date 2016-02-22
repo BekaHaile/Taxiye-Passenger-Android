@@ -140,7 +140,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				if (endRideData != null && getRideSummaryResponse != null) {
 					new TransactionUtils().openRideIssuesFragment(activity,
 							activity.getContainer(),
-							-1, endRideData, getRideSummaryResponse);
+							Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse);
 				}
 			}
 		});
