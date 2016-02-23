@@ -266,20 +266,27 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public static void initializeServerURL(Context context) {
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
+		ConfigMode configModeToSet;
 		if (link.equalsIgnoreCase(Config.getLiveServerUrl())) {
-			Config.setConfigMode(ConfigMode.LIVE);
+			configModeToSet = ConfigMode.LIVE;
 		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV);
+			configModeToSet = ConfigMode.DEV;
 		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV_1);
+			configModeToSet = ConfigMode.DEV_1;
 		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV_2);
+			configModeToSet = ConfigMode.DEV_2;
 		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV_3);
+			configModeToSet = ConfigMode.DEV_3;
 		} else {
 			Config.CUSTOM_SERVER_URL = link;
-			Config.setConfigMode(ConfigMode.CUSTOM);
+			configModeToSet = ConfigMode.CUSTOM;
 		}
+
+		if(configModeToSet != Config.getConfigMode()){
+			RestClient.clearRestClient();
+		}
+		Config.setConfigMode(configModeToSet);
+
 		RestClient.setupRestClient();
 		Log.e("link", "=" + link);
 	}
