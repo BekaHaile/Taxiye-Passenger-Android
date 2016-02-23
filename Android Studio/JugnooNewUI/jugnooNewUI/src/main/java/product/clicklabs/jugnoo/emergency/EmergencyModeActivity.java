@@ -55,6 +55,9 @@ public class EmergencyModeActivity extends BaseFragmentActivity {
 
     }
 
+    public RelativeLayout getContainer(){
+        return relativeLayoutContainer;
+    }
 
     public void performBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {

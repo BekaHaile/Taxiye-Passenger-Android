@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="640px"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:splitMotionEvents="false" >
+
+
+    <ImageView
+        android:id="@+id/imageViewContact"
+        android:layout_width="128px"
+        android:layout_height="128px"
+        android:src="@drawable/ic_contact_placeholder"
+        android:tag="mwar"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="128px"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/textViewContactName"
+            android:layout_width="440px"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/text_color"
+            android:text="Contact Name"
+            android:layout_marginLeft="20px"
+            android:textSize="@dimen/text_size_34"
+            android:layout_marginTop="25px"
+
+            />
+
+        <TextView
+            android:id="@+id/textViewContactNumberType"
+            android:layout_width="440px"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/text_color_light"
+            android:text="Contact Name"
+            android:layout_marginLeft="20px"
+            android:textSize="@dimen/text_size_30"
+            android:layout_below="@+id/textViewContactName"
+            />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/text_color_hint"
+            />
+
+
+        <ImageView
+            android:id="@+id/imageViewOption"
+            android:layout_width="75px"
+            android:layout_height="75px"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:padding="20px"
+            android:src="@drawable/ic_cross_grey"
+            android:tag="mwar"/>
+
+        <!-- checkbox_signup_checked -->
+        <!-- checkbox_signup_unchecked -->
+        <!-- ic_phone_green -->
+        <!-- ic_cross_grey -->
+
+
+
+
+    </RelativeLayout>
+    
+
+</LinearLayout>

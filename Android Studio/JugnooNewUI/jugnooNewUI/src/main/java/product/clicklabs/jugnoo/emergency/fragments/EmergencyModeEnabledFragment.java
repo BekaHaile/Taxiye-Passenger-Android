@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.EmergencyModeActivity;
+import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -121,7 +122,10 @@ public class EmergencyModeEnabledFragment extends Fragment {
 						break;
 
 					case R.id.buttonCallEmergencyContact:
-
+						if(activity instanceof EmergencyModeActivity){
+							new FragTransUtils().openAddEmergencyContactsFragment(activity,
+									((EmergencyModeActivity)activity).getContainer());
+						}
 						break;
 
 					case R.id.buttonDisableEmergencyMode:
