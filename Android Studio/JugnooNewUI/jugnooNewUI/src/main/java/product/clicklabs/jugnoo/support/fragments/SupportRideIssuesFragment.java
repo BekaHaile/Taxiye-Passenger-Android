@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Utils;
 
-
+@SuppressLint("ValidFragment")
 public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private LinearLayout root;

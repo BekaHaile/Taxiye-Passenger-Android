@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
+@SuppressLint("ValidFragment")
 public class RideSummaryFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private final String TAG = RideSummaryFragment.class.getSimpleName();
@@ -75,10 +77,12 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	private View rootView;
     private FragmentActivity activity;
 
+	@SuppressLint("ValidFragment")
 	public RideSummaryFragment(int engagementId){
 		this.engagementId = engagementId;
 	}
 
+	@SuppressLint("ValidFragment")
 	public RideSummaryFragment(EndRideData endRideData){
 		this.engagementId = Integer.parseInt(endRideData.engagementId);
 		this.endRideData = endRideData;

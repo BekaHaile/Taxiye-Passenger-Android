@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-
+@SuppressLint("ValidFragment")
 public class SupportMainFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private final String TAG = SupportMainFragment.class.getSimpleName();

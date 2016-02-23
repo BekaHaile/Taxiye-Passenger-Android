@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,7 +27,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
-
+@SuppressLint("ValidFragment")
 public class SupportFAQItemsListFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private LinearLayout root;
