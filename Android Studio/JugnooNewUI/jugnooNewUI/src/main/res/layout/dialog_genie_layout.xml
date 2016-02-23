@@ -158,10 +158,18 @@
 
     <ImageView
         android:id="@+id/close"
-        android:layout_width="47px"
-        android:layout_height="47px"
         android:layout_marginLeft="15px"
         android:layout_marginTop="80px"
-        android:src="@drawable/pupup_cancel_icon" />
+
+
+        android:layout_width="74px"
+        android:layout_height="74px"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="20px"
+        android:paddingRight="20px"
+        android:src="@drawable/close_icon_selector"
+        android:tag="mwar"
+        />
 
 </RelativeLayout>

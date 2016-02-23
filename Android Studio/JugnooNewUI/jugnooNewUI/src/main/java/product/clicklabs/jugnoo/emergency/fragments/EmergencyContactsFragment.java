@@ -35,7 +35,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  *
  * Created by shankar on 2/22/16.
  */
-public class EmergencyModeEnabledFragment extends Fragment {
+public class EmergencyContactsFragment extends Fragment {
 
 	private RelativeLayout relative;
 
@@ -55,7 +55,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		super.onStart();
 		FlurryAgent.init(activity, Config.getFlurryKey());
 		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(EmergencyModeEnabledFragment.class.getSimpleName() + " started");
+		FlurryAgent.onEvent(EmergencyContactsFragment.class.getSimpleName() + " started");
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		locationFetcher = new LocationFetcher(activity, new LocationUpdate() {
 			@Override
 			public void onLocationChanged(Location location, int priority) {
-				EmergencyModeEnabledFragment.this.location = location;
+				EmergencyContactsFragment.this.location = location;
 			}
 		}, 1000, 2);
 

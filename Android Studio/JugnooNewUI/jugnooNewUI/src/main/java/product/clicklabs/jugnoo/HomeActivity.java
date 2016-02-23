@@ -110,7 +110,6 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -377,7 +376,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
-	public static final int PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT = 1;
 
     private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
 
@@ -1434,12 +1432,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
             }
 
-			if(Data.userData.paytmEnabled != 0 || Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) >= PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT){
-				if(!Data.locationSettingsNoPressed) {
-//					ReferralActions.incrementAppOpen(this);
-//					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
-				}
-			}
 
             switchUserScreen();
 
@@ -1744,16 +1736,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
-    public void sendToFareDetails() {
-        HelpParticularActivity.helpSection = HelpSection.FARE_DETAILS;
-        if(map != null) {
-            Data.lastRefreshLatLng = map.getCameraPosition().target;
-        }
-		startActivity(new Intent(HomeActivity.this, HelpParticularActivity.class));
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		FlurryEventLogger.event(FARE_DETAILS);
-    }
 
 
     public void initiateRequestRide(boolean newRequest) {
@@ -5826,6 +5808,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new EmergencyDialog(activity, new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
+                    Prefs.with(HomeActivity.this).save(SP_EMERGENCY_MODE_ENABLED, 1);
                     startActivity(new Intent(HomeActivity.this, EmergencyModeActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);
@@ -6275,60 +6258,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-
-
-	private void showPaytmTutorialPopup(final Activity activity) {
-		try {
-			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT) {
-				imageViewMenu.performClick();
-				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.dialog_paytm_tutorial);
-
-				LinearLayout linearLayoutPaytmTutorial = (LinearLayout) dialog.findViewById(R.id.linearLayoutPaytmTutorial);
-				new ASSL(activity, (LinearLayout) dialog.findViewById(R.id.linearLayoutPaytmTutorial), 1134, 720, true);
-
-				RelativeLayout relativeLayoutAdjustable = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutAdjustable);
-
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
-
-				RelativeLayout relativeLayoutWalletTut = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutWalletTut);
-				((TextView) dialog.findViewById(R.id.textViewWalletTut)).setTypeface(Fonts.latoRegular(activity));
-				TextView textViewWalletValueTut = (TextView) dialog.findViewById(R.id.textViewWalletValueTut);
-				textViewWalletValueTut.setTypeface(Fonts.latoRegular(activity));
-				textViewWalletValueTut.setText(activity.getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
-
-				relativeLayoutWalletTut.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-                        Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                        intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
-                        startActivity(intent);
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
-						FlurryEventLogger.event(WALLET_VIA_TUTORIAL);
-					}
-				});
-
-				linearLayoutPaytmTutorial.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-				dialog.show();
-
-				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) relativeLayoutAdjustable.getLayoutParams();
-				params.height = relativeLayoutWallet.getTop();
-				relativeLayoutAdjustable.setLayoutParams(params);
-
-				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, (Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0)+1));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
     private void uploadContactsApi(){
         HashMap<String, String> params = new HashMap<>();
