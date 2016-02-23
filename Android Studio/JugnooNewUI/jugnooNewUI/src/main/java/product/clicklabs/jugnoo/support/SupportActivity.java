@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class SupportActivity extends BaseFragmentActivity implements FlurryEventNames {
@@ -68,6 +69,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	
 	public void performBackPressed(){
+		Utils.hideSoftKeyboard(this, linearLayoutContainer);
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);

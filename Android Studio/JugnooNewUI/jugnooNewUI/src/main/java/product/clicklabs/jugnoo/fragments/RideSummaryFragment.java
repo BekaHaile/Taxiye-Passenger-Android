@@ -394,6 +394,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					}
 
 					@Override
+					public boolean onActionFailed(String message) {
+						return true;
+					}
+
+					@Override
 					public void onFailure() {
 					}
 

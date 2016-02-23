@@ -8,8 +8,7 @@
     android:id="@+id/linearLayoutRideShortInfo"
     android:layout_marginLeft="30px"
     android:layout_marginRight="30px"
-    android:layout_marginTop="35px"
-    android:layout_marginBottom="10px"
+    android:layout_marginTop="30px"
     >
 
     <RelativeLayout

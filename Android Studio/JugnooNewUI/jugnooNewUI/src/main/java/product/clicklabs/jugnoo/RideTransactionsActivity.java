@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class RideTransactionsActivity extends BaseFragmentActivity implements UpdateRideTransaction, FlurryEventNames {
@@ -89,6 +90,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 
 
 	public void performBackPressed(){
+		Utils.hideSoftKeyboard(this, relativeLayoutContainer);
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);

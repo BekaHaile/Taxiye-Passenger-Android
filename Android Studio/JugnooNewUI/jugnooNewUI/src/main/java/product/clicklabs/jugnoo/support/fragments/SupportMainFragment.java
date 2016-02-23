@@ -238,6 +238,13 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					}
 
 					@Override
+					public boolean onActionFailed(String message) {
+						linearLayoutRideShortInfo.setVisibility(View.GONE);
+						getRideSummaryCalled = 1;
+						return false;
+					}
+
+					@Override
 					public void onFailure() {
 						getRideSummaryCalled = -1;
 						linearLayoutRideShortInfo.setVisibility(View.GONE);

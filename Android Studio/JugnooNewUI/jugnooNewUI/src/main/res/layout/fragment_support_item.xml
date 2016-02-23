@@ -7,11 +7,12 @@
     android:background="@color/white_light_grey"
     >
     <LinearLayout
-        android:id="@+id/root"
+        android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:splitMotionEvents="false"
+        android:animateLayoutChanges="true"
         >
 
 
@@ -39,6 +40,7 @@
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_28"
             android:lineSpacingExtra="6px"
+            android:autoLink="web"
             />
 
         <EditText
@@ -59,6 +61,16 @@
             android:textColorHint="@color/text_color_hint"
             />
 
+        <TextView
+            android:id="@+id/textViewRSOtherError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50px"
+            android:layout_marginTop="20px"
+            android:text="@string/star_required"
+            android:textColor="@color/red_status"
+            android:textSize="22px"/>
+
         <Button
             android:id="@+id/buttonSubmit"
             style="@style/ButtonTheme"
@@ -67,6 +79,11 @@
             android:layout_marginBottom="30px"
             android:text="@string/submit"
             />
+
+        <TextView
+            android:id="@+id/textViewScroll"
+            android:layout_width="10px"
+            android:layout_height="10px"/>
 
 
     </LinearLayout>

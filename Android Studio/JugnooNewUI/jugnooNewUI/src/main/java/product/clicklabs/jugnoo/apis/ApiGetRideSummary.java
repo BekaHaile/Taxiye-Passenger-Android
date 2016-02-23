@@ -81,6 +81,7 @@ public class ApiGetRideSummary {
 						JSONObject jObj = new JSONObject(jsonString);
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 							int flag = jObj.getInt(Constants.KEY_FLAG);
+							String message = JSONParser.getServerMessage(jObj);
 							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
 								if(!finalShowRideMenu){
 									ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
@@ -94,7 +95,11 @@ public class ApiGetRideSummary {
 													getRideSummaryResponse.getMenu());
 								}
 								callback.onSuccess(JSONParser.parseEndRideData(jObj, String.valueOf(engagementId), fixedFare), getRideSummaryResponse);
-							} else {
+							} else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+								if(callback.onActionFailed(message)){
+									retryDialog(message);
+								}
+							} else{
 								retryDialog(DialogErrorType.NO_NET);
 							}
 						}
@@ -138,9 +143,28 @@ public class ApiGetRideSummary {
 				});
 	}
 
+	private void retryDialog(String message){
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+				activity.getResources().getString(R.string.retry),
+				activity.getResources().getString(R.string.cancel),
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						callback.onRetry(v);
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						callback.onNoRetry(v);
+					}
+				}, false, false);
+	}
+
 
 	public interface Callback{
 		void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse);
+		boolean onActionFailed(String message);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

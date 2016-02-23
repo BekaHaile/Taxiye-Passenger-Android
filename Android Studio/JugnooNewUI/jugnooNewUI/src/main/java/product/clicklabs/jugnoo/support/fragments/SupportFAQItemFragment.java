@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -38,6 +41,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -51,7 +55,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private final String TAG = SupportFAQItemFragment.class.getSimpleName();
 
 	private ScrollView scrollViewRoot;
-	private TextView textViewSubtitle, textViewDescription;
+	private LinearLayout linearLayoutMain;
+	private TextView textViewSubtitle, textViewDescription, textViewRSOtherError, textViewScroll;
 	private EditText editTextMessage;
 	private Button buttonSubmit;
 
@@ -99,10 +104,16 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			e.printStackTrace();
 		}
 
+		linearLayoutMain = (LinearLayout)rootView.findViewById(R.id.linearLayoutMain);
+
 		textViewSubtitle = (TextView)rootView.findViewById(R.id.textViewSubtitle);
 		textViewSubtitle.setTypeface(Fonts.mavenRegular(activity));
 		textViewDescription = (TextView)rootView.findViewById(R.id.textViewDescription);
 		textViewDescription.setTypeface(Fonts.mavenLight(activity));
+		textViewRSOtherError = (TextView) rootView.findViewById(R.id.textViewRSOtherError);
+		textViewRSOtherError.setTypeface(Fonts.mavenLight(activity));
+		textViewRSOtherError.setVisibility(View.GONE);
+		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		editTextMessage = (EditText)rootView.findViewById(R.id.editTextMessage);
 		editTextMessage.setTypeface(Fonts.mavenLight(activity));
 		buttonSubmit = (Button)rootView.findViewById(R.id.buttonSubmit);
@@ -130,23 +141,68 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
+				if (ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()) {
 					String feedbackText = editTextMessage.getText().toString().trim();
-					if(feedbackText.length() <= 0){
-						editTextMessage.requestFocus();
-						editTextMessage.setError(activity.getResources().getString(R.string.support_feedback_empty_error));
-					} else if(feedbackText.length() > 1000){
-						editTextMessage.requestFocus();
-						editTextMessage.setError(String.format(activity.getResources()
+					if (feedbackText.length() <= 0) {
+						textViewRSOtherError.setVisibility(View.VISIBLE);
+						textViewRSOtherError.setText(activity.getResources().getString(R.string.star_required));
+					} else if (feedbackText.length() > 1000) {
+						textViewRSOtherError.setVisibility(View.VISIBLE);
+						textViewRSOtherError.setText(String.format(activity.getResources()
 								.getString(R.string.support_feedback_lengthy_error_format), "1000"));
-					} else{
+					} else {
+						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
 					}
-				} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
+				} else if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
 				}
 			}
 		});
+
+		editTextMessage.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (s.length() > 0) {
+					textViewRSOtherError.setVisibility(View.GONE);
+				}
+			}
+		});
+
+		linearLayoutMain.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (editTextMessage.getText().length() > 0
+						&& editTextMessage.getText().length() < 1000) {
+					textViewRSOtherError.setVisibility(View.GONE);
+				}
+			}
+		});
+
+		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
+				new KeyboardLayoutListener.KeyBoardStateHandler() {
+					@Override
+					public void keyboardOpened() {
+						scrollViewRoot.smoothScrollTo(0, buttonSubmit.getBottom());
+					}
+
+					@Override
+					public void keyBoardClosed() {
+
+					}
+				});
+		keyboardLayoutListener.setResizeTextView(false);
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
 
 		return rootView;

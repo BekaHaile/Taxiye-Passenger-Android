@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -46,7 +44,6 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	private LinearLayout root;
 
 	private LinearLayout linearLayoutRideShortInfo;
-	private RelativeLayout relativeLayoutIssueWithRide;
 	private ImageView imageViewDriver;
 	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
 	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
@@ -101,8 +98,6 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
-		relativeLayoutIssueWithRide = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutIssueWithRide);
-		((TextView)rootView.findViewById(R.id.textViewIssueWithRide)).setTypeface(Fonts.mavenRegular(activity));
 		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
 		((TextView)rootView.findViewById(R.id.textViewTripTotal)).setTypeface(Fonts.mavenLight(activity));
@@ -140,7 +135,6 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
-		relativeLayoutIssueWithRide.setVisibility(View.GONE);
 		if(activity instanceof SupportActivity){
 			if(endRideData == null){
 				linearLayoutRideShortInfo.setVisibility(View.GONE);
@@ -239,6 +233,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 						updateIssuesList((ArrayList<ShowPanelResponse.Item>) SupportRideIssuesFragment.this.getRideSummaryResponse.getMenu());
 						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 						recyclerViewSupportFaq.setVisibility(View.VISIBLE);
+					}
+
+					@Override
+					public boolean onActionFailed(String message) {
+						return true;
 					}
 
 					@Override
