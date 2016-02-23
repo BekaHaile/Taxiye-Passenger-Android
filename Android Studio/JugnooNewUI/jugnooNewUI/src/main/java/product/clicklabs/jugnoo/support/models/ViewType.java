@@ -7,8 +7,11 @@ public enum ViewType {
 
 	LIST_VIEW(1),
 	TEXT_BOX(2),
-	CALL_BUTTON(3),
-	TEXT_ONLY(4)
+	CALL_DRIVER(3),
+	TEXT_VIEW(4),
+	CALL_JUGNOO(5),
+	CALL_DRIVER_AND_JUGNOO(6)
+
 	;
 
 

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -20,7 +21,6 @@ import com.flurry.android.FlurryAgent;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -59,6 +60,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private TextView textViewSubtitle, textViewDescription, textViewRSOtherError, textViewScroll;
 	private EditText editTextMessage;
 	private Button buttonSubmit;
+	private RelativeLayout relativeLayoutCallDriver, relativeLayoutCallJugnoo;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -118,6 +120,10 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		editTextMessage.setTypeface(Fonts.mavenLight(activity));
 		buttonSubmit = (Button)rootView.findViewById(R.id.buttonSubmit);
 		buttonSubmit.setTypeface(Fonts.mavenRegular(activity));
+		relativeLayoutCallDriver = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutCallDriver);
+		((TextView)rootView.findViewById(R.id.textViewCallDriver)).setTypeface(Fonts.mavenRegular(activity));
+		relativeLayoutCallJugnoo = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutCallJugnoo);
+		((TextView)rootView.findViewById(R.id.textViewCallJugnoo)).setTypeface(Fonts.mavenRegular(activity));
 
 		textViewSubtitle.setText(parentName);
 		textViewDescription.setText(item.getText());
@@ -125,17 +131,29 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.VISIBLE);
 			buttonSubmit.setVisibility(View.VISIBLE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
 		} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.GONE);
-			if(!"".equalsIgnoreCase(phoneNumber)) {
-				buttonSubmit.setVisibility(View.VISIBLE);
-				buttonSubmit.setText(activity.getResources().getString(R.string.call_driver).toUpperCase(Locale.ENGLISH));
+			buttonSubmit.setVisibility(View.GONE);
+			if(ViewType.CALL_DRIVER.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
+				relativeLayoutCallJugnoo.setVisibility(View.GONE);
+			} else if(ViewType.CALL_JUGNOO.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.GONE);
+				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
+			} else if(ViewType.CALL_DRIVER_AND_JUGNOO.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
+				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
 			} else{
-				buttonSubmit.setVisibility(View.GONE);
+				relativeLayoutCallDriver.setVisibility(View.GONE);
+				relativeLayoutCallJugnoo.setVisibility(View.GONE);
 			}
 		} else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
 			editTextMessage.setVisibility(View.GONE);
 			buttonSubmit.setVisibility(View.GONE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
 		}
 
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +163,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 					String feedbackText = editTextMessage.getText().toString().trim();
 					if (feedbackText.length() <= 0) {
 						textViewRSOtherError.setVisibility(View.VISIBLE);
-						textViewRSOtherError.setText(activity.getResources().getString(R.string.star_required));
+						textViewRSOtherError.setText(activity.getResources().getString(R.string.star_please_fill_required_information));
 					} else if (feedbackText.length() > 1000) {
 						textViewRSOtherError.setVisibility(View.VISIBLE);
 						textViewRSOtherError.setText(String.format(activity.getResources()
@@ -154,8 +172,24 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
 					}
-				} else if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
+				}
+			}
+		});
+
+		relativeLayoutCallDriver.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
+				}
+			}
+		});
+
+		relativeLayoutCallJugnoo.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
+					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
 				}
 			}
 		});

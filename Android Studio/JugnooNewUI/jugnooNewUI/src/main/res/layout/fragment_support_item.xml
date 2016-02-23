@@ -33,7 +33,7 @@
             android:id="@+id/textViewDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20px"
+            android:layout_marginBottom="10px"
             android:layout_marginLeft="35px"
             android:layout_marginRight="35px"
             android:text="Answer"
@@ -49,7 +49,6 @@
             android:layout_height="250px"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
-            android:layout_marginTop="40px"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/dropshadow_grey"
             android:gravity="left"
@@ -79,6 +78,75 @@
             android:layout_marginBottom="30px"
             android:text="@string/submit"
             />
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutCallDriver"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:background="@drawable/button_theme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:layout_marginBottom="30px"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:id="@+id/imageViewCallDriver"
+                android:layout_width="36px"
+                android:layout_height="36px"
+                android:tag="mwar"
+                android:src="@drawable/ic_phone_white"
+                />
+
+            <TextView
+                android:id="@+id/textViewCallDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_34"
+                android:textAllCaps="true"
+                android:text="@string/call_driver"
+                android:layout_toRightOf="@+id/imageViewCallDriver"
+                android:layout_marginLeft="10px"
+                />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutCallJugnoo"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:background="@drawable/button_theme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:layout_marginBottom="30px"
+            android:gravity="center"
+            >
+
+
+            <ImageView
+                android:id="@+id/imageViewCallJugnoo"
+                android:layout_width="36px"
+                android:layout_height="36px"
+                android:tag="mwar"
+                android:src="@drawable/ic_phone_white"
+                />
+
+            <TextView
+                android:id="@+id/textViewCallJugnoo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_34"
+                android:textAllCaps="true"
+                android:text="@string/call_jugnoo"
+                android:layout_toRightOf="@+id/imageViewCallJugnoo"
+                android:layout_marginLeft="10px"
+                />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textViewScroll"
