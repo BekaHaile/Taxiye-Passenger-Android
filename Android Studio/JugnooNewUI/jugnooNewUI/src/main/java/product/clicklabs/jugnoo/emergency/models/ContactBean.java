@@ -8,21 +8,29 @@ public class ContactBean {
 	private String name;
 	private String phoneNo;
 	private String type;
-	private String image;
 	private boolean selected;
 
 
-	public ContactBean(String name, String phoneNo, String type, String image) {
+	public ContactBean(String name, String phoneNo, String type) {
 		this.name = name;
 		this.phoneNo = phoneNo;
 		this.type = type;
-		this.image = image;
 		this.selected = false;
 	}
 
 	@Override
 	public String toString() {
-		return getName()+" "+getPhoneNo()+" "+getType()+" "+getImage();
+		return getName()+" "+getPhoneNo()+" "+getType();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		try{
+			return (o instanceof ContactBean && ((ContactBean)o).getPhoneNo().equalsIgnoreCase(this.getPhoneNo()));
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public String getName() {
@@ -47,14 +55,6 @@ public class ContactBean {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
 	}
 
 	public boolean isSelected() {

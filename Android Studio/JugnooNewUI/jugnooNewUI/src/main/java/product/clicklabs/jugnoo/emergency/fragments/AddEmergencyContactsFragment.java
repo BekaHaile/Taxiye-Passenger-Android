@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -13,18 +14,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+import com.tokenautocomplete.FilteredArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -34,6 +39,7 @@ import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.widgets.ContactsCompletionView;
 
 
 /**
@@ -49,10 +55,11 @@ public class AddEmergencyContactsFragment extends Fragment {
 	private TextView textViewTitle, textViewAdd;
 	private ImageView imageViewBack;
 
-	private EditText editTextContacts;
+	private ContactsCompletionView editTextContacts;
 	private RecyclerView recyclerViewContacts;
 	private ContactsListAdapter contactsListAdapter;
 	private ArrayList<ContactBean> contactBeans;
+	private ArrayAdapter<ContactBean> contactsArrayAdapter;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -97,7 +104,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 		((TextView)rootView.findViewById(R.id.textViewAddContacts)).setTypeface(Fonts.mavenLight(activity));
 
-		editTextContacts = (EditText) rootView.findViewById(R.id.editTextContacts);
+		editTextContacts = (ContactsCompletionView) rootView.findViewById(R.id.editTextContacts);
 		editTextContacts.setTypeface(Fonts.mavenLight(activity));
 
 		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
@@ -106,8 +113,58 @@ public class AddEmergencyContactsFragment extends Fragment {
 		recyclerViewContacts.setHasFixedSize(false);
 
 		contactBeans = new ArrayList<>();
-		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact);
+		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
+				new ContactsListAdapter.Callback() {
+					@Override
+					public void contactSelected(boolean selected, ContactBean contactBean) {
+						if(selected){
+							editTextContacts.addObject(contactBean);
+						} else{
+							editTextContacts.removeObject(contactBean);
+						}
+					}
+				});
 		recyclerViewContacts.setAdapter(contactsListAdapter);
+
+		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
+				((List<ContactBean>)contactBeans)) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				if (convertView == null) {
+					LayoutInflater l = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+					convertView = l.inflate(R.layout.list_item_contact, parent, false);
+				}
+
+				ContactBean p = getItem(position);
+				((TextView)convertView.findViewById(R.id.textViewContactName)).setText(p.getName());
+				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo()+" "+p.getType());
+				convertView.findViewById(R.id.imageViewOption).setVisibility(View.GONE);
+
+				return convertView;
+			}
+
+			@Override
+			protected boolean keepObject(ContactBean person, String mask) {
+				mask = mask.toLowerCase();
+				return person.getName().toLowerCase().startsWith(mask)
+						|| person.getPhoneNo().toLowerCase().startsWith(mask);
+			}
+		};
+
+		editTextContacts.setAdapter(contactsArrayAdapter);
+		editTextContacts.allowDuplicates(false);
+		editTextContacts.setTokenLimit(Constants.MAX_EMERGENCY_CONTACTS_ALLOWED);
+		editTextContacts.setTokenListener(new TokenCompleteTextView.TokenListener<ContactBean>() {
+			@Override
+			public void onTokenAdded(ContactBean token) {
+				setSelectedObject(true, token);
+			}
+
+			@Override
+			public void onTokenRemoved(ContactBean token) {
+				setSelectedObject(false, token);
+			}
+		});
 
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -146,9 +203,21 @@ public class AddEmergencyContactsFragment extends Fragment {
         System.gc();
 	}
 
+	private void setSelectedObject(boolean selected, ContactBean contactBean){
+		try{
+			contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
+					contactBean.getPhoneNo(), contactBean.getType()))).setSelected(selected);
+			contactsListAdapter.notifyDataSetChanged();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
 
 
 	class ContactsFetchAsync extends AsyncTask<String, Integer, String>{
+
+		private String type;
 
 		@Override
 		protected void onPreExecute() {
@@ -167,6 +236,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 			super.onPostExecute(s);
 
 			contactsListAdapter.notifyDataSetChanged();
+			contactsArrayAdapter.notifyDataSetChanged();
 			DialogPopup.dismissLoadingDialog();
 		}
 
@@ -193,10 +263,13 @@ public class AddEmergencyContactsFragment extends Fragment {
 								String phone = pCur
 										.getString(pCur
 												.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+								String type = getContactTypeString(pCur.getString(
+										pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+
 								phone = phone.replace(" ","");
 								phone = phone.replace("-", "");
 								if (phone != null && (phone.length() >= 10)) {
-									contactBeans.add(new ContactBean(name, phone, "", ""));
+									contactBeans.add(new ContactBean(name, phone, type));
 								}
 							}
 							pCur.close();
@@ -216,7 +289,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 			return;
 		}
 
-		public void loadList(ArrayList<ContactBean> list) {
+		private void loadList(ArrayList<ContactBean> list) {
 
 			Set set = new TreeSet(new Comparator<ContactBean>() {
 				@Override
@@ -234,6 +307,26 @@ public class AddEmergencyContactsFragment extends Fragment {
 			contactBeans.clear();
 			contactBeans.addAll(newList);
 
+		}
+
+
+		private String getContactTypeString(String type){
+			this.type = type;
+			try {
+				int typeInt = Integer.parseInt(type);
+				if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_HOME){
+					return "Home";
+				} else if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE){
+					return "Mobile";
+				} else if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_WORK){
+					return "Work";
+				} else{
+					return "Other";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "Mobile";
+			}
 		}
 
 	}

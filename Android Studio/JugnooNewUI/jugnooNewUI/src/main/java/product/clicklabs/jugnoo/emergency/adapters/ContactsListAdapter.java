@@ -6,16 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 
 
 /**
@@ -27,11 +27,15 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     private Activity activity;
     private int rowLayout;
     private ArrayList<ContactBean> contactBeans = new ArrayList<>();
+    private int selectedCount;
+    private Callback callback;
 
-    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, Activity activity, int rowLayout) {
+    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, Activity activity, int rowLayout, Callback callback) {
         this.contactBeans = contactBeans;
         this.activity = activity;
         this.rowLayout = rowLayout;
+        this.selectedCount = 0;
+        this.callback = callback;
     }
 
     public synchronized void setList(ArrayList<ContactBean> contactBeans){
@@ -69,11 +73,14 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                Log.i(TAG, "onBindViewHolder onClick position="+position);
                 if(contactBeans.get(position).isSelected()){
                     contactBeans.get(position).setSelected(false);
-                } else{
+                    selectedCount--;
+                    callback.contactSelected(false, contactBeans.get(position));
+                } else if(selectedCount < Constants.MAX_EMERGENCY_CONTACTS_ALLOWED){
                     contactBeans.get(position).setSelected(true);
+                    selectedCount++;
+                    callback.contactSelected(true, contactBeans.get(position));
                 }
                 notifyDataSetChanged();
             }
@@ -87,13 +94,12 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout relative;
-        public ImageView imageViewContact, imageViewOption;
+        public RelativeLayout relative;
+        public ImageView imageViewOption;
         public TextView textViewContactName, textViewContactNumberType;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
-            relative = (LinearLayout) itemView.findViewById(R.id.relative);
-            imageViewContact = (ImageView) itemView.findViewById(R.id.imageViewContact);
+            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
             imageViewOption = (ImageView)itemView.findViewById(R.id.imageViewOption);
             textViewContactName = (TextView)itemView.findViewById(R.id.textViewContactName);
             textViewContactName.setTypeface(Fonts.mavenLight(activity));
@@ -101,4 +107,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
             textViewContactNumberType.setTypeface(Fonts.mavenLight(activity));
         }
     }
+
+    public interface Callback{
+        void contactSelected(boolean selected, ContactBean contactBean);
+    }
+
 }

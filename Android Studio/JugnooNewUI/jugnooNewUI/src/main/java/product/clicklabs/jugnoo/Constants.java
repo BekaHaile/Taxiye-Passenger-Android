@@ -29,7 +29,6 @@ public interface Constants {
 	int ADD_HOME = 2, ADD_WORK = 3;
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
-	String KEY_DRIVER_ID = "driver_id";
 
 	String KEY_ALERT_TYPE = "alert_type";
 
@@ -116,5 +115,7 @@ public interface Constants {
 
 
 	String KEY_GET_GOGU = "get_gogu";
+
+	int MAX_EMERGENCY_CONTACTS_ALLOWED = 5;
 
 }

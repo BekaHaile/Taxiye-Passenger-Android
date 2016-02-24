@@ -15,12 +15,10 @@
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:layout_toRightOf="@+id/imageViewBack"
             android:text="@string/emergency_contacts"
             android:textColor="@color/white"
             android:textSize="@dimen/top_bar_title_text_size"
+            android:layout_centerInParent="true"
             />
 
         <ImageView
@@ -94,15 +92,25 @@
         </LinearLayout>
         
         
-        <EditText
+        <product.clicklabs.jugnoo.widgets.ContactsCompletionView
             android:id="@+id/editTextContacts"
             android:layout_width="match_parent"
-            android:layout_height="70px"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
             android:layout_marginTop="10px"
             android:background="@drawable/background_transparent"
+            android:hint="@string/search"
+            android:textSize="@dimen/text_size_30"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
+            android:paddingLeft="10px"
+            android:paddingRight="10px"
+            android:paddingTop="20px"
+            android:paddingBottom="20px"
             />
+
+
 
         <ImageView
             android:layout_width="match_parent"
