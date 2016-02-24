@@ -826,7 +826,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, SupportActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(SUPPORT_OPTIONS);
             }
         });
 
@@ -1098,6 +1097,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 initDropLocationSearchUI(true);
+            }
+        });
+
+        linearLayoutInRideDriverInfo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
 
@@ -3423,11 +3428,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     //textViewInitialInstructions.setVisibility(View.VISIBLE);
                     try {
                         Log.e(TAG, "findADriverCall error=" + error.toString());
-                        if(Data.driverInfos.size() == 0){
-							textViewInitialInstructions.setText("Couldn't find drivers nearby.");
-							textViewCentrePinETA.setText("-");
-							noDriverNearbyToast("Couldn't find drivers nearby.");
-						}
+                        if (Data.driverInfos.size() == 0) {
+                            textViewInitialInstructions.setText("Couldn't find drivers nearby.");
+                            textViewCentrePinETA.setText("-");
+                            noDriverNearbyToast("Couldn't find drivers nearby.");
+                        }
                         setServiceAvailablityUI(farAwayCity);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -3453,7 +3458,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     try {
                         String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "showAvailablePromotionsCall response="+jsonString);
+                        Log.i(TAG, "showAvailablePromotionsCall response=" + jsonString);
                         JSONObject jObj = new JSONObject(jsonString);
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             if (ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == showPromotionsResponse.getFlag()) {

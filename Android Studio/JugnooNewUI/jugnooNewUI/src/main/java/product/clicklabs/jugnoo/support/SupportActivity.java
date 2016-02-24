@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -64,6 +65,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 				.addToBackStack(SupportMainFragment.class.getName())
 				.commitAllowingStateLoss();
 
+
+		FlurryEventLogger.event(SUPPORT_MAIN_OPENED);
 	}
 
 	

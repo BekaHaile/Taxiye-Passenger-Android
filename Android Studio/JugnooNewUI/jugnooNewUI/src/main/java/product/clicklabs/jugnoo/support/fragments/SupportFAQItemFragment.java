@@ -173,7 +173,6 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
-						FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);
 					}
 				}
 			}
@@ -310,6 +309,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 									performBackPressed();
 								}
 							});
+							FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);
 						} else {
 							DialogPopup.alertPopup(activity, "", message);
 						}

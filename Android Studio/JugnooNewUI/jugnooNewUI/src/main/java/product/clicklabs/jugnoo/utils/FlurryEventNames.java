@@ -102,7 +102,6 @@ public interface FlurryEventNames {
         RIDE_HISTORY = "Ride history",
         RIDE_RATED_ON_RIDE_HISTORY = "Ride rated on ride history",
         FARE_DETAILS = "Fare details",
-        SUPPORT_OPTIONS = "Support options",
         SEND_EMAIL_SUPPORT = "Send email_support",
         CALL_SUPPORT = "call_support",
         FAQS_SUPPORT = "FAQS_Support",
@@ -164,11 +163,12 @@ public interface FlurryEventNames {
 
                     ;
 
-    String SUPPORT_ISSUE_WITH_RECENT_RIDE = "support_issue_with_recent_ride",
+    String SUPPORT_MAIN_OPENED = "support_main_opened",
+            SUPPORT_ISSUE_WITH_RECENT_RIDE = "support_issue_with_recent_ride",
             SUPPORT_ISSUE_OPENED = "support_issue_opened",
+            SUPPORT_ISSUE_FEEDBACK_SUBMITTED = "support_issue_feedback_submitted",
             SUPPORT_RIDE_HISTORY_OPENED = "support_ride_history_opened",
             SUPPORT_NEXT_LEVEL_OPENED = "support_next_level_opened",
-            SUPPORT_ISSUE_FEEDBACK_SUBMITTED = "support_issue_feedback_submitted",
             SUPPORT_ISSUE_CALL_DRIVER = "support_issue_call_driver",
             SUPPORT_ISSUE_CALL_JUGNOO = "support_issue_call_jugnoo",
             RIDE_SUMMARY_NEED_HELP = "ride_summary_need_help"
