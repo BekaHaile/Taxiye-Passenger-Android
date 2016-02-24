@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,7 +58,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 	private RelativeLayout relativeLayoutRoot;
 	private RecyclerView recyclerViewRideTransactions;
-	private TextView textViewInfo;
+	private LinearLayout linearLayoutNoRides;
 	private Button buttonGetRide;
 
 	private RideTransactionsAdapter rideTransactionsAdapter;
@@ -109,9 +110,10 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		recyclerViewRideTransactions.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewRideTransactions.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewRideTransactions.setHasFixedSize(false);
-		textViewInfo = (TextView) rootView.findViewById(R.id.textViewInfo); textViewInfo.setTypeface(Fonts.mavenLight(activity));
+		linearLayoutNoRides = (LinearLayout)rootView.findViewById(R.id.linearLayoutNoRides);
+		((TextView) rootView.findViewById(R.id.textViewNoRides)).setTypeface(Fonts.mavenLight(activity));
 		buttonGetRide = (Button) rootView.findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.mavenRegular(activity));
-		textViewInfo.setVisibility(View.GONE);
+		linearLayoutNoRides.setVisibility(View.GONE);
 		buttonGetRide.setVisibility(View.GONE);
 
 		rideTransactionsAdapter = new RideTransactionsAdapter(rideInfosList, activity, R.layout.list_item_ride_transaction,
@@ -161,14 +163,17 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 				}, totalRides);
 		recyclerViewRideTransactions.setAdapter(rideTransactionsAdapter);
 
-
-		textViewInfo.setOnClickListener(new View.OnClickListener() {
-
+		buttonGetRide.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getRecentRidesAPI(activity, true);
+				if(activity instanceof RideTransactionsActivity) {
+					((RideTransactionsActivity)activity).performBackPressed();
+				} else{
+					buttonGetRide.setVisibility(View.GONE);
+				}
 			}
 		});
+
 
 		getRecentRidesAPI(activity, true);
 		setActivityTitle();
@@ -182,7 +187,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(relativeLayoutRoot);
-        System.gc();
+		System.gc();
 	}
 
 
@@ -212,7 +217,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 				}
 
 				DialogPopup.showLoadingDialog(activity, "Loading...");
-				textViewInfo.setVisibility(View.GONE);
+				linearLayoutNoRides.setVisibility(View.GONE);
+				buttonGetRide.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
@@ -302,23 +308,28 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 	}
 
 	public void updateListData(String message, boolean errorOccurred){
-
 		if(errorOccurred){
-			textViewInfo.setText(message);
-			textViewInfo.setVisibility(View.VISIBLE);
-			buttonGetRide.setVisibility(View.GONE);
+			linearLayoutNoRides.setVisibility(View.VISIBLE);
+			if(activity instanceof RideTransactionsActivity) {
+				buttonGetRide.setVisibility(View.VISIBLE);
+			} else{
+				buttonGetRide.setVisibility(View.GONE);
+			}
 
 			rideInfosList.clear();
 			rideTransactionsAdapter.notifyList(totalRides);
 		}
 		else{
 			if(rideInfosList.size() == 0){
-				textViewInfo.setVisibility(View.VISIBLE);
-				textViewInfo.setText(message);
-				buttonGetRide.setVisibility(View.VISIBLE);
+				linearLayoutNoRides.setVisibility(View.VISIBLE);
+				if(activity instanceof RideTransactionsActivity) {
+					buttonGetRide.setVisibility(View.VISIBLE);
+				} else{
+					buttonGetRide.setVisibility(View.GONE);
+				}
 			}
 			else{
-				textViewInfo.setVisibility(View.GONE);
+				linearLayoutNoRides.setVisibility(View.GONE);
 				buttonGetRide.setVisibility(View.GONE);
 			}
 			rideTransactionsAdapter.notifyList(totalRides);

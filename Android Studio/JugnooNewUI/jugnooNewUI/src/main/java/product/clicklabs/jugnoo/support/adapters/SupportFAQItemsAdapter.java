@@ -65,11 +65,24 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
                 callback.onClick(clickedPosition, items.get(clickedPosition));
             }
         });
-        if(position < getItemCount()-1){
-            holder.imageViewSep.setVisibility(View.VISIBLE);
-        } else{
+
+        if(position == 0){
             holder.imageViewSep.setVisibility(View.GONE);
+            holder.root.setBackgroundResource(R.drawable.background_white_top_rounded_bordered);
         }
+        else if(position == getItemCount()-2){
+            holder.imageViewSep.setVisibility(View.GONE);
+            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
+        }
+        else if(position == getItemCount()-1){
+            holder.imageViewSep.setVisibility(View.GONE);
+            holder.root.setBackgroundResource(R.drawable.background_white_bottom_rounded_bordered);
+        }
+        else{
+            holder.imageViewSep.setVisibility(View.VISIBLE);
+            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
+        }
+
 	}
 
     @Override

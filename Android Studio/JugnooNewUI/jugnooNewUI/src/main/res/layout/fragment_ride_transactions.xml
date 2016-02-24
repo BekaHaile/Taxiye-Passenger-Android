@@ -15,16 +15,33 @@
         android:splitMotionEvents="false">
     </android.support.v7.widget.RecyclerView>
 
-    <TextView
-        android:id="@+id/textViewInfo"
+    <LinearLayout
+        android:id="@+id/linearLayoutNoRides"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text=""
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_30"
-        android:visibility="gone"
-        />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
+        <ImageView
+            android:layout_width="241px"
+            android:layout_height="342px"
+            android:src="@drawable/ic_no_items"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/textViewNoRides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No Rides Currently"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_32"
+            android:layout_marginTop="30px"
+            />
+
+    </LinearLayout>
 
 
     <Button
@@ -34,7 +51,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70px"
         android:text="GET A RIDE"
-        android:visibility="gone"
+        android:visibility="visible"
         />
 
 </RelativeLayout>

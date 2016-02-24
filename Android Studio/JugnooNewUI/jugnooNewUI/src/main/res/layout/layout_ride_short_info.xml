@@ -67,7 +67,9 @@
                 android:textColor="@color/text_color"
                 android:text="Driver Name"
                 android:textSize="@dimen/text_size_30"
-                android:layout_marginLeft="20px"
+                android:gravity="center"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="20px"
                 />
 
             <TextView
@@ -78,7 +80,8 @@
                 android:textColor="@color/text_color"
                 android:text="PB65AC0123"
                 android:textSize="@dimen/text_size_26"
-                android:layout_marginLeft="20px"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="20px"
                 />
 
         </LinearLayout>
@@ -99,7 +102,8 @@
                 android:textColor="@color/text_color"
                 android:text="Trip Total"
                 android:textSize="@dimen/text_size_30"
-                android:layout_marginRight="20px"
+                android:layout_marginRight="10px"
+                android:layout_marginLeft="10px"
                 />
 
             <TextView
@@ -110,7 +114,8 @@
                 android:textColor="@color/text_color"
                 android:text="@string/rupee_0"
                 android:textSize="@dimen/text_size_40"
-                android:layout_marginRight="20px"
+                android:layout_marginRight="10px"
+                android:layout_marginLeft="10px"
                 />
 
         </LinearLayout>
