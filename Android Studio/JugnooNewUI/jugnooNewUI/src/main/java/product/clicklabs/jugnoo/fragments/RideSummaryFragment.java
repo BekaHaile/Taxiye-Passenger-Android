@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -211,6 +212,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					new TransactionUtils().openRideIssuesFragment(activity,
 							((RideTransactionsActivity)activity).getContainer(),
 							engagementId, endRideData, getRideSummaryResponse);
+					FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_NEED_HELP);
 				} else {
 					performBackPressed();
 				}

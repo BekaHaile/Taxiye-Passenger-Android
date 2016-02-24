@@ -164,4 +164,15 @@ public interface FlurryEventNames {
 
                     ;
 
+    String SUPPORT_ISSUE_WITH_RECENT_RIDE = "support_issue_with_recent_ride",
+            SUPPORT_ISSUE_OPENED = "support_issue_opened",
+            SUPPORT_RIDE_HISTORY_OPENED = "support_ride_history_opened",
+            SUPPORT_NEXT_LEVEL_OPENED = "support_next_level_opened",
+            SUPPORT_ISSUE_FEEDBACK_SUBMITTED = "support_issue_feedback_submitted",
+            SUPPORT_ISSUE_CALL_DRIVER = "support_issue_call_driver",
+            SUPPORT_ISSUE_CALL_JUGNOO = "support_issue_call_jugnoo",
+            RIDE_SUMMARY_NEED_HELP = "ride_summary_need_help"
+
+            ;
+
 }

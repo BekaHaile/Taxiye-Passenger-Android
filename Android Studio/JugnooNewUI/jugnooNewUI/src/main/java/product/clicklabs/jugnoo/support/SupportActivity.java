@@ -13,7 +13,6 @@ import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -103,15 +102,17 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	}
 
 	public void openRideSummaryFragment(EndRideData endRideData){
-		getSupportFragmentManager().beginTransaction()
-				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-				.add(getContainer().getId(),
-						new RideSummaryFragment(endRideData),
-						RideTransactionsFragment.class.getName())
-				.addToBackStack(RideTransactionsFragment.class.getName())
-				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-				.commitAllowingStateLoss();
+		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
+			getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(getContainer().getId(),
+							new RideSummaryFragment(endRideData),
+							RideSummaryFragment.class.getName())
+					.addToBackStack(RideSummaryFragment.class.getName())
+					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
 	}
 
 

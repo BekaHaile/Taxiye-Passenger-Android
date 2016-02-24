@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -172,6 +173,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
+						FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);
 					}
 				}
 			}
@@ -182,6 +184,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
+					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_DRIVER);
 				}
 			}
 		});
@@ -191,6 +194,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
+					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_JUGNOO);
 				}
 			}
 		});

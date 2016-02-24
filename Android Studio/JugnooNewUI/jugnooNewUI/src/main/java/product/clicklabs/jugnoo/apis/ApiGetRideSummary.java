@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.view.View;
 
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class ApiGetRideSummary {
 			showRideMenu = false;
 		}
 		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
-			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+			final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
@@ -74,7 +75,13 @@ public class ApiGetRideSummary {
 			RestClient.getApiServices().getRideSummary(params, new retrofit.Callback<GetRideSummaryResponse>() {
 				@Override
 				public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
-					DialogPopup.dismissLoadingDialog();
+					try {
+						if(progressDialog != null) {
+							progressDialog.dismiss();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getRideSummary jsonString=" + jsonString);
@@ -112,7 +119,13 @@ public class ApiGetRideSummary {
 				@Override
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "getRideSummary error=>"+error.toString());
-					DialogPopup.dismissLoadingDialog();
+					try {
+						if(progressDialog != null) {
+							progressDialog.dismiss();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					retryDialog(DialogErrorType.NO_NET);
 					callback.onFailure();
 				}

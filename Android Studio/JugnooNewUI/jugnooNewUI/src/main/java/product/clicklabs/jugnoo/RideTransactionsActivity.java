@@ -10,6 +10,7 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -77,15 +78,17 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	}
 
 	public void openRideSummaryFragment(int engagementId){
-		getSupportFragmentManager().beginTransaction()
-				.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-				.add(relativeLayoutContainer.getId(),
-						new RideSummaryFragment(engagementId),
-						RideTransactionsFragment.class.getName())
-				.addToBackStack(RideTransactionsFragment.class.getName())
-				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-				.commitAllowingStateLoss();
+		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
+			getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(relativeLayoutContainer.getId(),
+							new RideSummaryFragment(engagementId),
+							RideSummaryFragment.class.getName())
+					.addToBackStack(RideSummaryFragment.class.getName())
+					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
 	}
 
 
