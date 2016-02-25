@@ -78,23 +78,29 @@ import android.widget.TextView;
 /*     */
 /*     */   public static void closeActivity(View rootLayout)
 /*     */   {
-/* 135 */     if (rootLayout.getBackground() != null) {
-/* 136 */       rootLayout.getBackground().setCallback(null);
-/*     */     }
-/*     */ 
-/* 139 */     if (((rootLayout instanceof ViewGroup)) &&
-/* 140 */       (!(rootLayout instanceof AdapterView))) {
-/* 141 */       for (int i = 0; i < ((ViewGroup)rootLayout).getChildCount(); i++)
-/* 142 */         closeActivity(((ViewGroup)rootLayout).getChildAt(i));
-/*     */       try
-/*     */       {
-/* 145 */         ((ViewGroup)rootLayout).removeAllViews();
-/*     */       } catch (UnsupportedOperationException localUnsupportedOperationException) {
-/*     */       }
-/*     */     }
-/*     */     else {
-/* 150 */       rootLayout = null;
-/*     */     }
+/* 135 */
+    try {
+        if (rootLayout.getBackground() != null) {
+		/* 136 */       rootLayout.getBackground().setCallback(null);
+		/*     */     }
+/*     */
+/* 139 */
+        if (((rootLayout instanceof ViewGroup)) &&
+		/* 140 */       (!(rootLayout instanceof AdapterView))) {
+		/* 141 */       for (int i = 0; i < ((ViewGroup)rootLayout).getChildCount(); i++)
+		/* 142 */         closeActivity(((ViewGroup)rootLayout).getChildAt(i));
+		/*     */       try
+		/*     */       {
+		/* 145 */         ((ViewGroup)rootLayout).removeAllViews();
+		/*     */       } catch (UnsupportedOperationException localUnsupportedOperationException) {
+		/*     */       }
+		/*     */     }
+		/*     */     else {
+		/* 150 */       rootLayout = null;
+		/*     */     }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 /*     */   }
 /*     */
 /*     */   public static void DoMagic(View rootLayout)
