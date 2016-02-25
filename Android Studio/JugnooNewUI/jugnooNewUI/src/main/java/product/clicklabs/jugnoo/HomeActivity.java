@@ -3369,11 +3369,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             Log.i("params in find_a_driver", "=" + params);
-
+            final long startTime = System.currentTimeMillis();
             RestClient.getApiServices().findADriverCall(params, new Callback<FindADriverResponse>() {
                 @Override
                 public void success(FindADriverResponse findADriverResponse, Response response) {
                     try {
+                        FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_FIND_A_DRIVER, startTime);
                         Log.e(TAG, "findADriverCall response=" + new String(((TypedByteArray) response.getBody()).getBytes()));
                         Data.driverInfos.clear();
                         for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
@@ -3452,11 +3453,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             params.put("longitude", "" + promoLatLng.longitude);
             Log.i("params", "=" + params);
 
+            final long startTime = System.currentTimeMillis();
             RestClient.getApiServices().showAvailablePromotionsCall(params, new Callback<ShowPromotionsResponse>() {
                 @Override
                 public void success(ShowPromotionsResponse showPromotionsResponse, Response response) {
 
                     try {
+                        FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_SHOW_AVAILABLE_PROMOTIONS, startTime);
                         String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "showAvailablePromotionsCall response=" + jsonString);
                         JSONObject jObj = new JSONObject(jsonString);
@@ -4210,6 +4213,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             && (Data.assignedDriverInfo != null)
 								&& (Data.pickupLatLng != null)) {
 
+                            long startTime = System.currentTimeMillis();
                             HashMap<String, String> nameValuePairs = new HashMap<>();
                             nameValuePairs.put("access_token", Data.userData.accessToken);
                             nameValuePairs.put("driver_id", Data.assignedDriverInfo.userId);
@@ -4218,6 +4222,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             Response response = RestClient.getApiServices().getDriverCurrentLocation(nameValuePairs);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
+                            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_DRIVER_CURRENT_LOCATION, startTime);
 
 //                            HttpRequester simpleJSONParser = new HttpRequester();
 //                            String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_driver_current_location", nameValuePairs);
@@ -4366,6 +4371,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void run() {
                     try {
+                        long startTime = System.currentTimeMillis();
                         HashMap<String, String> nameValuePairs = new HashMap<>();
                         nameValuePairs.put("last_sent_max_id", "" +
                             Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo());
@@ -4374,6 +4380,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         Response response = RestClient.getApiServices().getOngoingRidePath(nameValuePairs);
                         String result = new String(((TypedByteArray)response.getBody()).getBytes());
+                        FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_ONGOING_RIDE_PATH, startTime);
 
                         Log.e(TAG, "getOngoingRidePath result=" + result);
 
@@ -5304,6 +5311,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 updateCancelButtonUI();
 
+                                long apiStartTime = System.currentTimeMillis();
                                 HashMap<String, String> nameValuePairs = new HashMap<>();
                                 nameValuePairs.put("access_token", Data.userData.accessToken);
                                 nameValuePairs.put("latitude", "" + Data.pickupLatLng.latitude);
@@ -5358,6 +5366,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
+                                FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
                                 Log.e(TAG, "requestRide result=" + response);
 
@@ -6184,9 +6193,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					params.put("client_id", Config.getClientId());
 					params.put("is_access_token_new", "1");
 
+                    final long startTime = System.currentTimeMillis();
                     RestClient.getApiServices().paytmCheckBalance(params, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
+                            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_PAYTM_CHECK_BALANCE, startTime);
                             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                             Log.i(TAG, "paytmCheckBalance response = " + responseStr);
                             try {

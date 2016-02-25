@@ -22,6 +22,15 @@ public class FlurryEventLogger {
 		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
 	}
 
+
+	public static void eventApiResponseTime(String apiName, long startTime){
+		long responseTime = System.currentTimeMillis() - startTime;
+		HashMap<String, String> map = new HashMap<>();
+		map.put("api_name", apiName);
+		map.put("response_time_millis", String.valueOf(responseTime));
+		event(FlurryEventNames.API_RESPONSE_TIME_LOG, map);
+	}
+
 	public static void eventWithSessionOpenAndClose(Context context, String eventName){
 		try{
 			FlurryAgent.init(context, Config.getFlurryKey());

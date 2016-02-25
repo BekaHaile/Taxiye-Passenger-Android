@@ -1284,9 +1284,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				Log.e("params login_using_access_token", "=" + params);
 
+				final long startTime = System.currentTimeMillis();
 				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
+						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 						Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
 						performLoginSuccess(activity, responseStr);

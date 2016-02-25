@@ -40,6 +40,8 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
@@ -466,10 +468,12 @@ public class JSONParser implements Constants {
 
     public String getUserStatus(Context context, String accessToken, int currentUserStatus) {
         try {
+            long startTime = System.currentTimeMillis();
             HashMap<String, String> nameValuePairs = new HashMap<>();
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
             Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
             Log.i(TAG, "getCurrentUserStatus response="+responseStr);
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
