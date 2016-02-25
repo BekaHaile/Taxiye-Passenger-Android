@@ -43,6 +43,16 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         notifyDataSetChanged();
     }
 
+    public synchronized void setCountAndNotify(){
+        selectedCount = 0;
+        for(ContactBean contactBean : contactBeans){
+            if(contactBean.isSelected()){
+                selectedCount++;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);

@@ -14,7 +14,8 @@ import product.clicklabs.jugnoo.emergency.fragments.AddEmergencyContactsFragment
 public class FragTransUtils {
 
 	public void openAddEmergencyContactsFragment(FragmentActivity activity, View container){
-		activity.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+		activity.getSupportFragmentManager().beginTransaction()
+				.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
 				.add(container.getId(), new AddEmergencyContactsFragment(), AddEmergencyContactsFragment.class.getName())
 				.addToBackStack(AddEmergencyContactsFragment.class.getName())
 				.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

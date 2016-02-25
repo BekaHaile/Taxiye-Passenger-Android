@@ -39,6 +39,8 @@ import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.ContactsCompletionView;
 
 
@@ -176,12 +178,21 @@ public class AddEmergencyContactsFragment extends Fragment {
 						performBackPressed();
 						break;
 
+					case R.id.textViewAdd:
+						for(ContactBean contactBean : contactBeans){
+							if(contactBean.isSelected()){
+								Log.i(TAG, "contact selected="+contactBean);
+							}
+						}
+						break;
+
 				}
 			}
 		};
 
 
 		imageViewBack.setOnClickListener(onClickListener);
+		textViewAdd.setOnClickListener(onClickListener);
 
 		new ContactsFetchAsync().execute();
 
@@ -191,6 +202,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 
 	private void performBackPressed() {
+		Utils.hideSoftKeyboard(activity, editTextContacts);
 		if(activity instanceof EmergencyModeActivity){
 			((EmergencyModeActivity)activity).performBackPressed();
 		}
@@ -207,7 +219,8 @@ public class AddEmergencyContactsFragment extends Fragment {
 		try{
 			contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
 					contactBean.getPhoneNo(), contactBean.getType()))).setSelected(selected);
-			contactsListAdapter.notifyDataSetChanged();
+
+			contactsListAdapter.setCountAndNotify();
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -216,8 +229,6 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 
 	class ContactsFetchAsync extends AsyncTask<String, Integer, String>{
-
-		private String type;
 
 		@Override
 		protected void onPreExecute() {
@@ -235,7 +246,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 
-			contactsListAdapter.notifyDataSetChanged();
+			contactsListAdapter.setCountAndNotify();
 			contactsArrayAdapter.notifyDataSetChanged();
 			DialogPopup.dismissLoadingDialog();
 		}
@@ -311,7 +322,6 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 
 		private String getContactTypeString(String type){
-			this.type = type;
 			try {
 				int typeInt = Integer.parseInt(type);
 				if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_HOME){
