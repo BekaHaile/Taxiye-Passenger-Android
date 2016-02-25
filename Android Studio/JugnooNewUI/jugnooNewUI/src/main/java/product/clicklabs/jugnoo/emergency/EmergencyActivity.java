@@ -7,6 +7,7 @@ import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -16,6 +17,11 @@ import product.clicklabs.jugnoo.utils.ASSL;
 
 
 public class EmergencyActivity extends BaseFragmentActivity {
+
+    private final String TAG = EmergencyActivity.class.getSimpleName();
+
+    public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED = 5;
+    public static int EMERGENCY_CONTACTS_ALLOWED = 5;
 
     RelativeLayout relative, relativeLayoutContainer;
 
@@ -67,6 +73,18 @@ public class EmergencyActivity extends BaseFragmentActivity {
                     .commitAllowingStateLoss();
         }
 
+        setEmergencyContactsAllowed();
+
+
+    }
+
+    public static void setEmergencyContactsAllowed(){
+        if(Data.emergencyContactsList != null){
+            EMERGENCY_CONTACTS_ALLOWED = MAX_EMERGENCY_CONTACTS_ALLOWED - Data.emergencyContactsList.size();
+            if(EMERGENCY_CONTACTS_ALLOWED < 0){
+                EMERGENCY_CONTACTS_ALLOWED = 0;
+            }
+        }
     }
 
     public RelativeLayout getContainer(){

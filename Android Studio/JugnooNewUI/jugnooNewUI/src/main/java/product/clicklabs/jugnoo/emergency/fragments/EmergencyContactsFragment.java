@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -22,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
@@ -62,7 +62,6 @@ public class EmergencyContactsFragment extends Fragment {
 	private TextView textViewTitle, textViewEdit;
 	private ImageView imageViewBack;
 
-	private ScrollView scrollView;
 	private RecyclerView recyclerViewContacts;
 	private Button buttonAddContact;
 	private ContactsListAdapter contactsListAdapter;
@@ -109,8 +108,6 @@ public class EmergencyContactsFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewEdit = (TextView) rootView.findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Fonts.mavenRegular(activity));
 
-		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
-
 		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenLight(activity));
 
 		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
@@ -125,8 +122,25 @@ public class EmergencyContactsFragment extends Fragment {
 		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
 				new ContactsListAdapter.Callback() {
 					@Override
-					public void contactClicked(int position, ContactBean contactBean) {
+					public void contactClicked(int position, final ContactBean contactBean) {
+						if(ContactsListAdapter.ListMode.DELETE_CONTACTS == contactsListAdapter.getListMode()){
+							DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+									activity.getResources().getString(R.string.delete_emergency_contact_message),
+									activity.getResources().getString(R.string.delete),
+									activity.getResources().getString(R.string.cancel),
+									new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											deleteEmergencyContactAPI(activity, contactBean.getId());
+										}
+									},
+									new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
 
+										}
+									}, true, false);
+						}
 					}
 				}, ContactsListAdapter.ListMode.EMERGENCY_CONTACTS);
 		recyclerViewContacts.setAdapter(contactsListAdapter);
@@ -145,12 +159,12 @@ public class EmergencyContactsFragment extends Fragment {
 						if(ContactsListAdapter.ListMode.EMERGENCY_CONTACTS == contactsListAdapter.getListMode()) {
 							contactsListAdapter.setListMode(ContactsListAdapter.ListMode.DELETE_CONTACTS);
 							contactsListAdapter.setCountAndNotify();
-							buttonAddContact.setText(activity.getResources().getString(R.string.done));
+							textViewEdit.setText(activity.getResources().getString(R.string.done));
 						}
-						else{
+						else if(ContactsListAdapter.ListMode.DELETE_CONTACTS == contactsListAdapter.getListMode()) {
 							contactsListAdapter.setListMode(ContactsListAdapter.ListMode.EMERGENCY_CONTACTS);
 							contactsListAdapter.setCountAndNotify();
-							buttonAddContact.setText(activity.getResources().getString(R.string.edit));
+							textViewEdit.setText(activity.getResources().getString(R.string.edit));
 						}
 						break;
 
@@ -170,7 +184,7 @@ public class EmergencyContactsFragment extends Fragment {
 		buttonAddContact.setOnClickListener(onClickListener);
 
 
-		getAllEmergencyContacts(activity);
+		setEmergencyContactsToList();
 
 
 		return rootView;
@@ -195,10 +209,10 @@ public class EmergencyContactsFragment extends Fragment {
 	public void getAllEmergencyContacts(final Activity activity) {
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
-			params.put("access_token", Data.userData.accessToken);
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			Log.i("params", "=" + params.toString());
 
 			RestClient.getApiServices().emergencyContactsList(params, new Callback<SettleUserDebt>() {
@@ -245,12 +259,78 @@ public class EmergencyContactsFragment extends Fragment {
 	}
 
 	private void setEmergencyContactsToList(){
-		if(Data.emergencyContactsList != null){
+		if(Data.emergencyContactsList != null) {
 			contactBeans.clear();
-			for(EmergencyContact emergencyContact : Data.emergencyContactsList){
-				contactBeans.add(new ContactBean(emergencyContact.name, emergencyContact.phoneNo, ""));
+			for (EmergencyContact emergencyContact : Data.emergencyContactsList) {
+				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "");
+				contactBean.setId(emergencyContact.id);
+				contactBeans.add(contactBean);
 			}
-			contactsListAdapter.notifyDataSetChanged();
+			notifyListAndShowAddContactsButton();
+			EmergencyActivity.setEmergencyContactsAllowed();
+		}
+	}
+
+	private void notifyListAndShowAddContactsButton(){
+		contactsListAdapter.notifyDataSetChanged();
+		if(contactBeans.size() < 5){
+			buttonAddContact.setVisibility(View.VISIBLE);
+		} else{
+			buttonAddContact.setVisibility(View.GONE);
+		}
+	}
+
+
+
+	public void deleteEmergencyContactAPI(final Activity activity, int id) {
+		if(AppStatus.getInstance(activity).isOnline(activity)) {
+
+			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+			HashMap<String, String> params = new HashMap<>();
+
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_ID, String.valueOf(id));
+
+			Log.i("params", "=" + params.toString());
+
+			RestClient.getApiServices().emergencyContactsDelete(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "emergencyContactsDelete response = " + responseStr);
+					DialogPopup.dismissLoadingDialog();
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						String message = JSONParser.getServerMessage(jObj);
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							int flag = jObj.getInt(Constants.KEY_FLAG);
+							if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+								DialogPopup.dialogBanner(activity, message);
+							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dialogBanner(activity, message);
+								getAllEmergencyContacts(activity);
+							} else {
+								DialogPopup.dialogBanner(activity, message);
+							}
+						}
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 

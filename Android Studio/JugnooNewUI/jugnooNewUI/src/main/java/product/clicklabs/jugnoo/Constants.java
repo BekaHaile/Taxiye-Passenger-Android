@@ -31,6 +31,7 @@ public interface Constants {
 	String KEY_LONGITUDE = "longitude";
 
 	String KEY_ALERT_TYPE = "alert_type";
+	String KEY_ID = "id";
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
@@ -115,8 +116,6 @@ public interface Constants {
 
 
 	String KEY_GET_GOGU = "get_gogu";
-
-	int MAX_EMERGENCY_CONTACTS_ALLOWED = 5;
 
 	String KEY_EMERGENCY_ACTIVITY_MODE = "emergency_activity_mode";
 	String KEY_EMERGENCY_CONTACTS = "emergency_contacts";

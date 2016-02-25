@@ -5,6 +5,7 @@ package product.clicklabs.jugnoo.emergency.models;
  */
 public class ContactBean {
 
+	private int id;
 	private String name;
 	private String phoneNo;
 	private String type;
@@ -63,5 +64,13 @@ public class ContactBean {
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

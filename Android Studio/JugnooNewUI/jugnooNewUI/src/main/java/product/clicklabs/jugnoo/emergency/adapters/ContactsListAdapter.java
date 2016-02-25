@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -113,7 +113,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                         contactBeans.get(position).setSelected(false);
                         selectedCount--;
                         callback.contactClicked(position, contactBeans.get(position));
-                    } else if (selectedCount < Constants.MAX_EMERGENCY_CONTACTS_ALLOWED) {
+                    } else if (selectedCount < EmergencyActivity.EMERGENCY_CONTACTS_ALLOWED) {
                         contactBeans.get(position).setSelected(true);
                         selectedCount++;
                         callback.contactClicked(position, contactBeans.get(position));

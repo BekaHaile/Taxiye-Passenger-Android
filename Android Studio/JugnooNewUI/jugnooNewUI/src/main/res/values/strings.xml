@@ -723,6 +723,8 @@
 	<string name="add">Add</string>
 	<string name="add_contacts">Add Contacts</string>
 	<string name="edit">Edit</string>
+	<string name="delete">Delete</string>
+	<string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
 
 
 </resources>

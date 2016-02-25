@@ -5738,7 +5738,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             EmergencyContact emergencyContact = new EmergencyContact(emergencyContactId);
             if (Data.emergencyContactsList != null && Data.emergencyContactsList.contains(emergencyContact)) {
-                Data.emergencyContactsList.get(Data.emergencyContactsList.indexOf(emergencyContact)).verificationStatus = 1;
                 if (EmergencyContactsActivity.refreshEmergencyContacts != null) {
                     EmergencyContactsActivity.refreshEmergencyContacts.refreshEmergencyContacts();
                 }
@@ -5763,39 +5762,39 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 separator = ", ";
             }
 
-            if(Data.emergencyContactsList.size() > 1){
-                if(1 == Data.emergencyContactsList.get(0).verificationStatus && 1 == Data.emergencyContactsList.get(1).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(0).phoneNo + separator + Data.emergencyContactsList.get(1).phoneNo;
-                }
-                else if(1 == Data.emergencyContactsList.get(0).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
-                }
-                else if(1 == Data.emergencyContactsList.get(1).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(1).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(1).phoneNo;
-                }
-                else{
-                    sosContactVerified = false;
-                }
-            }
-            else if(Data.emergencyContactsList.size() > 0){
-                if(1 == Data.emergencyContactsList.get(0).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
-                }
-                else{
-                    sosContactVerified = false;
-                }
-            }
-            else{
-                sosContactVerified = false;
-            }
+//            if(Data.emergencyContactsList.size() > 1){
+//                if(1 == Data.emergencyContactsList.get(0).verificationStatus && 1 == Data.emergencyContactsList.get(1).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(0).phoneNo + separator + Data.emergencyContactsList.get(1).phoneNo;
+//                }
+//                else if(1 == Data.emergencyContactsList.get(0).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
+//                }
+//                else if(1 == Data.emergencyContactsList.get(1).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(1).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(1).phoneNo;
+//                }
+//                else{
+//                    sosContactVerified = false;
+//                }
+//            }
+//            else if(Data.emergencyContactsList.size() > 0){
+//                if(1 == Data.emergencyContactsList.get(0).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
+//                }
+//                else{
+//                    sosContactVerified = false;
+//                }
+//            }
+//            else{
+//                sosContactVerified = false;
+//            }
 
 
 //            if(sosContactVerified){

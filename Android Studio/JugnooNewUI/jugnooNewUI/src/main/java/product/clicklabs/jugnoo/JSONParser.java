@@ -1046,11 +1046,8 @@ public class JSONParser implements Constants {
             for(int i=0; i<jEmergencyContactsArr.length(); i++){
                 JSONObject jECont = jEmergencyContactsArr.getJSONObject(i);
                 emergencyContactsList.add(new EmergencyContact(jECont.getInt("id"),
-                    jECont.getInt("user_id"),
                     jECont.getString("name"),
-                    jECont.getString("email"),
-                    jECont.getString("phone_no"),
-                    jECont.getInt("verification_status")));
+                    jECont.getString("phone_no")));
             }
         } catch(Exception e){
             e.printStackTrace();
