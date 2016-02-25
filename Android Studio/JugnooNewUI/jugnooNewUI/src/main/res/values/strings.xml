@@ -722,6 +722,7 @@
 	<string name="emergency_contacts">Emergency Contacts</string>
 	<string name="add">Add</string>
 	<string name="add_contacts">Add Contacts</string>
+	<string name="edit">Edit</string>
 
 
 </resources>

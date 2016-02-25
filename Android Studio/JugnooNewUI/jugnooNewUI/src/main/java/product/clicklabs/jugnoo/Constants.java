@@ -118,4 +118,10 @@ public interface Constants {
 
 	int MAX_EMERGENCY_CONTACTS_ALLOWED = 5;
 
+	String KEY_EMERGENCY_ACTIVITY_MODE = "emergency_activity_mode";
+	String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
+	String KEY_NAME = "name";
+
+
+
 }

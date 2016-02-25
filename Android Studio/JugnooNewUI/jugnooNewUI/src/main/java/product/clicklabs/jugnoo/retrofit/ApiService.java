@@ -308,6 +308,11 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/emergency/contacts/add_multiple")
+    void emergencyContactsAddMultiple(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/emergency/contacts/edit")
     void emergencyContactsEdit(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);

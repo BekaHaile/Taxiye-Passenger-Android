@@ -1,0 +1,135 @@
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/emergency_contacts"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"/>
+
+        <TextView
+            android:id="@+id/textViewEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:padding="20px"
+            android:text="@string/edit"
+            android:textAllCaps="true"
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/text_size_36"
+            />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
+        />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar">
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
+            >
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40px"
+                android:layout_marginTop="50px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="43px"
+                    android:layout_height="32px"
+                    android:src="@drawable/ic_siren_orange"
+                    android:tag="mwar"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewContacts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20px"
+                    android:text="@string/emergency_contacts"
+                    android:textAllCaps="true"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size_30"
+                    />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+                android:layout_marginTop="20px"
+                android:background="@color/theme_color"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewContacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+                android:layout_marginTop="10px"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                />
+
+
+            <Button
+                android:id="@+id/buttonAddContact"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30px"
+                android:layout_marginTop="30px"
+                android:text="@string/add_contacts"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

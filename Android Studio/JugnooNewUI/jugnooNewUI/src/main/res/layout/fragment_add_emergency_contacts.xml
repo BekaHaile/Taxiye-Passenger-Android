@@ -86,7 +86,7 @@
                 android:text="@string/add_contacts"
                 android:textAllCaps="true"
                 android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_34"
+                android:textSize="@dimen/text_size_30"
                 />
             
         </LinearLayout>

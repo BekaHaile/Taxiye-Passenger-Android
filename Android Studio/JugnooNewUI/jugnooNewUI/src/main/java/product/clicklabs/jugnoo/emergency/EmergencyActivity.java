@@ -6,14 +6,16 @@ import android.widget.RelativeLayout;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyModeEnabledFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 
-public class EmergencyModeActivity extends BaseFragmentActivity {
+public class EmergencyActivity extends BaseFragmentActivity {
 
     RelativeLayout relative, relativeLayoutContainer;
 
@@ -22,7 +24,7 @@ public class EmergencyModeActivity extends BaseFragmentActivity {
         super.onStart();
         FlurryAgent.init(this, Config.getFlurryKey());
         FlurryAgent.onStartSession(this, Config.getFlurryKey());
-        FlurryAgent.onEvent(EmergencyModeActivity.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(EmergencyActivity.class.getSimpleName() + " started");
     }
 
     @Override
@@ -47,11 +49,23 @@ public class EmergencyModeActivity extends BaseFragmentActivity {
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new EmergencyModeEnabledFragment(),
-                        EmergencyModeEnabledFragment.class.getName())
-                .addToBackStack(EmergencyModeEnabledFragment.class.getName())
-                .commitAllowingStateLoss();
+        int mode = getIntent().getIntExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal());
+
+        if(mode == EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal()) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new EmergencyModeEnabledFragment(),
+                            EmergencyModeEnabledFragment.class.getName())
+                    .addToBackStack(EmergencyModeEnabledFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
+        else if(mode == EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal()){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new EmergencyContactsFragment(),
+                            EmergencyContactsFragment.class.getName())
+                    .addToBackStack(EmergencyContactsFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
 
     }
 
@@ -79,6 +93,29 @@ public class EmergencyModeActivity extends BaseFragmentActivity {
         ASSL.closeActivity(relative);
         System.gc();
         super.onDestroy();
+    }
+
+
+    public enum EmergencyActivityMode{
+        EMERGENCY_ACTIVATE(0),
+        EMERGENCY_CONTACTS(1),
+        SEND_RIDE_STATUS(2)
+
+        ;
+
+        private int ordinal;
+
+        EmergencyActivityMode(int ordinal){
+            this.ordinal = ordinal;
+        }
+
+        public int getOrdinal() {
+            return ordinal;
+        }
+
+        public void setOrdinal(int ordinal) {
+            this.ordinal = ordinal;
+        }
     }
 
 }

@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/textViewContactName"
-            android:layout_width="540px"
+            android:layout_width="440px"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
             android:layout_marginTop="25px"
@@ -43,7 +43,7 @@
 
         <TextView
             android:id="@+id/textViewContactNumberType"
-            android:layout_width="540px"
+            android:layout_width="440px"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewContactName"
             android:layout_marginBottom="25px"

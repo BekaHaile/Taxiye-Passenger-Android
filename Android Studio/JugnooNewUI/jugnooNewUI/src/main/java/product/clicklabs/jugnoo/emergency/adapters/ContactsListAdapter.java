@@ -29,13 +29,16 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     private ArrayList<ContactBean> contactBeans = new ArrayList<>();
     private int selectedCount;
     private Callback callback;
+    private ListMode listMode;
 
-    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, Activity activity, int rowLayout, Callback callback) {
+    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, Activity activity, int rowLayout,
+                               Callback callback, ListMode listMode) {
         this.contactBeans = contactBeans;
         this.activity = activity;
         this.rowLayout = rowLayout;
         this.selectedCount = 0;
         this.callback = callback;
+        this.listMode = listMode;
     }
 
     public synchronized void setList(ArrayList<ContactBean> contactBeans){
@@ -71,10 +74,32 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         holder.textViewContactName.setText(contactBean.getName());
         holder.textViewContactNumberType.setText(contactBean.getPhoneNo() + " " + contactBean.getType());
 
-        if(contactBean.isSelected()){
-            holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
-        } else{
-            holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_unchecked);
+        if(ListMode.ADD_CONTACTS == getListMode()) {
+            holder.imageViewOption.setVisibility(View.VISIBLE);
+            if (contactBean.isSelected()) {
+                holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
+            } else {
+                holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_unchecked);
+            }
+        }
+        else if(ListMode.EMERGENCY_CONTACTS == getListMode()){
+            holder.imageViewOption.setVisibility(View.GONE);
+        }
+        else if(ListMode.DELETE_CONTACTS == getListMode()){
+            holder.imageViewOption.setVisibility(View.VISIBLE);
+            holder.imageViewOption.setImageResource(R.drawable.ic_cross_grey);
+        }
+        else if(ListMode.CALL_CONTACTS == getListMode()){
+            holder.imageViewOption.setVisibility(View.VISIBLE);
+            holder.imageViewOption.setImageResource(R.drawable.ic_phone_green);
+        }
+        else if(ListMode.SEND_RIDE_STATUS == getListMode()){
+            holder.imageViewOption.setVisibility(View.VISIBLE);
+            if (contactBean.isSelected()) {
+                holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
+            } else {
+                holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_unchecked);
+            }
         }
 
         holder.relative.setTag(position);
@@ -83,16 +108,28 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                if(contactBeans.get(position).isSelected()){
-                    contactBeans.get(position).setSelected(false);
-                    selectedCount--;
-                    callback.contactSelected(false, contactBeans.get(position));
-                } else if(selectedCount < Constants.MAX_EMERGENCY_CONTACTS_ALLOWED){
-                    contactBeans.get(position).setSelected(true);
-                    selectedCount++;
-                    callback.contactSelected(true, contactBeans.get(position));
+                if(ListMode.ADD_CONTACTS == getListMode()) {
+                    if (contactBeans.get(position).isSelected()) {
+                        contactBeans.get(position).setSelected(false);
+                        selectedCount--;
+                        callback.contactClicked(position, contactBeans.get(position));
+                    } else if (selectedCount < Constants.MAX_EMERGENCY_CONTACTS_ALLOWED) {
+                        contactBeans.get(position).setSelected(true);
+                        selectedCount++;
+                        callback.contactClicked(position, contactBeans.get(position));
+                    }
+                    notifyDataSetChanged();
                 }
-                notifyDataSetChanged();
+                else if(ListMode.EMERGENCY_CONTACTS == getListMode()){
+                    callback.contactClicked(position, contactBeans.get(position));
+                }
+                else if(ListMode.DELETE_CONTACTS == getListMode()){
+                    callback.contactClicked(position, contactBeans.get(position));
+                }
+                else if(ListMode.CALL_CONTACTS == getListMode()){
+                }
+                else if(ListMode.SEND_RIDE_STATUS == getListMode()){
+                }
             }
         });
 
@@ -101,6 +138,14 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     @Override
     public int getItemCount() {
         return contactBeans == null ? 0 : contactBeans.size();
+    }
+
+    public ListMode getListMode() {
+        return listMode;
+    }
+
+    public void setListMode(ListMode listMode) {
+        this.listMode = listMode;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -119,7 +164,31 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     }
 
     public interface Callback{
-        void contactSelected(boolean selected, ContactBean contactBean);
+        void contactClicked(int position, ContactBean contactBean);
     }
 
+
+    public enum ListMode{
+        ADD_CONTACTS(0),
+        EMERGENCY_CONTACTS(1),
+        DELETE_CONTACTS(2),
+        CALL_CONTACTS(3),
+        SEND_RIDE_STATUS(4)
+
+        ;
+
+        private int ordinal;
+
+        ListMode(int ordinal){
+            this.ordinal = ordinal;
+        }
+
+        public int getOrdinal() {
+            return ordinal;
+        }
+
+        public void setOrdinal(int ordinal) {
+            this.ordinal = ordinal;
+        }
+    }
 }

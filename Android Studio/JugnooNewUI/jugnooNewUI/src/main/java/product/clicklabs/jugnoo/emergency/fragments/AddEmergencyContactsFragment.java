@@ -23,25 +23,40 @@ import com.flurry.android.FlurryAgent;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.emergency.EmergencyModeActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.ContactsCompletionView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -118,14 +133,14 @@ public class AddEmergencyContactsFragment extends Fragment {
 		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
 				new ContactsListAdapter.Callback() {
 					@Override
-					public void contactSelected(boolean selected, ContactBean contactBean) {
-						if(selected){
+					public void contactClicked(int position, ContactBean contactBean) {
+						if(contactBean.isSelected()){
 							editTextContacts.addObject(contactBean);
 						} else{
 							editTextContacts.removeObject(contactBean);
 						}
 					}
-				});
+				}, ContactsListAdapter.ListMode.ADD_CONTACTS);
 		recyclerViewContacts.setAdapter(contactsListAdapter);
 
 		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
@@ -179,10 +194,19 @@ public class AddEmergencyContactsFragment extends Fragment {
 						break;
 
 					case R.id.textViewAdd:
-						for(ContactBean contactBean : contactBeans){
-							if(contactBean.isSelected()){
-								Log.i(TAG, "contact selected="+contactBean);
+						try {
+							JSONArray jsonArray = new JSONArray();
+							for(ContactBean contactBean : contactBeans){
+								if(contactBean.isSelected()){
+									JSONObject jsonObject = new JSONObject();
+									jsonObject.put(Constants.KEY_NAME, contactBean.getName());
+									jsonObject.put(Constants.KEY_PHONE_NO, contactBean.getPhoneNo());
+									jsonArray.put(jsonObject);
+								}
 							}
+							addEmergencyContactsAPI(activity, jsonArray.toString());
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 						break;
 
@@ -203,8 +227,8 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 	private void performBackPressed() {
 		Utils.hideSoftKeyboard(activity, editTextContacts);
-		if(activity instanceof EmergencyModeActivity){
-			((EmergencyModeActivity)activity).performBackPressed();
+		if(activity instanceof EmergencyActivity){
+			((EmergencyActivity)activity).performBackPressed();
 		}
 	}
 
@@ -340,6 +364,63 @@ public class AddEmergencyContactsFragment extends Fragment {
 		}
 
 	}
+
+
+
+	public void addEmergencyContactsAPI(final Activity activity, String jsonArray) {
+		if(AppStatus.getInstance(activity).isOnline(activity)) {
+
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+			params.put(Constants.KEY_EMERGENCY_CONTACTS, jsonArray);
+
+			Log.e("params", "=" + params.toString());
+
+			RestClient.getApiServices().emergencyContactsAddMultiple(params, callback);
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+	}
+
+	Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
+		@Override
+		public void success(SettleUserDebt settleUserDebt, Response response) {
+			String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+			Log.i(TAG, "response = " + responseStr);
+			DialogPopup.dismissLoadingDialog();
+			try {
+				JSONObject jObj = new JSONObject(responseStr);
+				String message = JSONParser.getServerMessage(jObj);
+				if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+					int flag = jObj.getInt(Constants.KEY_FLAG);
+					if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+						DialogPopup.dialogBanner(activity, message);
+					} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+						DialogPopup.dialogBanner(activity, message);
+
+
+					} else {
+						DialogPopup.dialogBanner(activity, message);
+					}
+				}
+			} catch (Exception exception) {
+				exception.printStackTrace();
+				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+			}
+			DialogPopup.dismissLoadingDialog();
+		}
+
+		@Override
+		public void failure(RetrofitError error) {
+			Log.e(TAG, "error="+error.toString());
+			DialogPopup.dismissLoadingDialog();
+			DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+		}
+	};
 
 
 }

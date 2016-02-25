@@ -21,8 +21,7 @@ import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.emergency.EmergencyModeActivity;
-import product.clicklabs.jugnoo.emergency.FragTransUtils;
+import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -122,9 +121,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 						break;
 
 					case R.id.buttonCallEmergencyContact:
-						if(activity instanceof EmergencyModeActivity){
-							new FragTransUtils().openAddEmergencyContactsFragment(activity,
-									((EmergencyModeActivity)activity).getContainer());
+						if(activity instanceof EmergencyActivity){
+
 						}
 						break;
 
@@ -156,8 +154,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 
 	private void performBackPressed() {
-		if(activity instanceof EmergencyModeActivity){
-			((EmergencyModeActivity)activity).performBackPressed();
+		if(activity instanceof EmergencyActivity){
+			((EmergencyActivity)activity).performBackPressed();
 		}
 	}
 
