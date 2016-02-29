@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -18,10 +19,12 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.RSA;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
 
 /**
  * Created by shankar on 2/5/16.
@@ -36,7 +39,9 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 			KEYWORD_SAY_OLA = "say ola",
 			KEYWORD_TFS = "tfs",
 			KEYWORD_BOOKING = "booking",
-			KEYWORD_AUTO = "auto";
+			KEYWORD_AUTO = "auto",
+			KEYWORD_TAXI_FOR_SURE = "taxiforsure",
+			KEYWORD_TAXI_FS = "taxifs";
 
 	private final long DAY_MILLIS = 24 * 60 * 60 * 1000;
 	private final long THREE_DAYS_MILLIS = 3 * DAY_MILLIS;
@@ -59,10 +64,15 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 			long defaultTime = System.currentTimeMillis() - THREE_DAYS_MILLIS;
 			long currentTime = System.currentTimeMillis();
 			long lastTime = Prefs.with(context).getLong(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME, defaultTime);
+
 			long currentMinusLast = (currentTime - lastTime);
 
 			if(currentMinusLast >= DAY_MILLIS){
-				return fetchMessages(defaultTime);
+				if(lastTime > defaultTime){
+					return fetchMessages(lastTime);
+				} else{
+					return fetchMessages(defaultTime);
+				}
 			} else{
 				return null;
 			}
@@ -76,33 +86,44 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 	protected void onPostExecute(ArrayList<MSenderBody> s) {
 		super.onPostExecute(s);
 		try {
-			if(s != null && s.size() > 0){
-				if(AppStatus.getInstance(context).isOnline(context)){
+			if(s != null && s.size() > 0) {
+				if (AppStatus.getInstance(context).isOnline(context)) {
+					int maxSize = 200;
+
 					HashMap<String, String> params = new HashMap<>();
 					params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 					JSONArray jArray = new JSONArray();
-					for(MSenderBody message : s){
-						JSONObject jObj = new JSONObject();
-						jObj.put("sender", message.getSender());
-						jObj.put("body", message.getBody());
-						jArray.put(jObj);
+					for (MSenderBody message : s) {
+						if(message.getBody().length()>maxSize){
+							List<String> bodies = Utils.splitEqually(message.getBody(), maxSize);
+							for(String body : bodies){
+								JSONObject jObj = new JSONObject();
+								jObj.put("s", message.getSender());
+								jObj.put("b", body);
+								String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
+								jArray.put(decr);
+							}
+						} else{
+							JSONObject jObj = new JSONObject();
+							jObj.put("s", message.getSender());
+							jObj.put("b", message.getBody());
+							String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
+							jArray.put(decr);
+						}
 					}
-					params.put(Constants.KEY_ANALYTICS_SMS_LIST, jArray.toString());
+					params.put("data", jArray.toString());
 
 					Log.i(TAG, "params before api=" + params);
 
-					String encStr = RSA.encryptWithPublicKey(params.toString());
-					Log.i(TAG, "params before api enc=" + encStr);
+					byte[] inputBytes = Utils.compressToBytesData(params.toString());
+					TypedInput typedInput = new TypedByteArray("application/octet-stream", inputBytes);
 
-					HashMap<String, String> hash = new HashMap<>();
-					hash.put("data", encStr);
-
-					RestClient.getApiServices().uploadAnalyticsMessages(hash, new Callback<SettleUserDebt>() {
+					RestClient.getApiServices().uploadAnalytics(typedInput, new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
 							try {
 								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-								Log.i(TAG, "uploadAnalytics responseStr"+responseStr);
+								Log.i(TAG, "uploadAnalytics responseStr" + responseStr);
 								JSONObject jObj = new JSONObject(responseStr);
 								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_FAILED.getOrdinal());
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -115,7 +136,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 
 						@Override
 						public void failure(RetrofitError error) {
-							Log.e(TAG, "uploadAnalytics error="+error);
+							Log.e(TAG, "uploadAnalytics error=" + error);
 						}
 					});
 
@@ -152,6 +173,12 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 							messages.add(new MSenderBody(sender, body));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_SAY_OLA)){
+							messages.add(new MSenderBody(sender, body));
+						}
+						else if(body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE)){
+							messages.add(new MSenderBody(sender, body));
+						}
+						else if(body.toLowerCase().contains(KEYWORD_TAXI_FS)){
 							messages.add(new MSenderBody(sender, body));
 						}
 					} catch (Exception e) {

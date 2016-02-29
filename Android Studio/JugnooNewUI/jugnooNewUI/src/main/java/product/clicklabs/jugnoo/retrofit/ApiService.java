@@ -16,6 +16,7 @@ import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
@@ -328,12 +329,13 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/analytics")
-    void uploadAnalyticsMessages(@FieldMap Map<String, String> params,
-                                              Callback<SettleUserDebt> callback);
+    void uploadAnalytics(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
 
+    @Headers("Content-Encoding: gzip")
     @POST("/analytics")
-    void uploadAnalyticsMessagesByte(@Body TypedInput bytes,
-                                 Callback<SettleUserDebt> callback);
+    void uploadAnalytics(@Body TypedInput typedInput,
+                         Callback<SettleUserDebt> callback);
 
 
 }
