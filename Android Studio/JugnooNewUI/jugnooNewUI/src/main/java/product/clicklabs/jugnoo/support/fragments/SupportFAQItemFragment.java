@@ -68,7 +68,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
     private FragmentActivity activity;
 
 	private int engagementId;
-	private String parentName, phoneNumber;
+	private String parentName, phoneNumber, rideDate;
 	private ShowPanelResponse.Item item;
 
     @Override
@@ -85,11 +85,12 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemFragment(int engagementId, String parentName, ShowPanelResponse.Item item, String phoneNumber){
+	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber){
 		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
 		this.phoneNumber = phoneNumber;
+		this.rideDate = rideDate;
 	}
 
     @Override
@@ -290,6 +291,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 			if(engagementId != -1){
 				params.put(Constants.KEY_ENGAGEMENT_ID, ""+engagementId);
+				params.put(Constants.KEY_RIDE_DATE, rideDate);
 			}
 
 			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {

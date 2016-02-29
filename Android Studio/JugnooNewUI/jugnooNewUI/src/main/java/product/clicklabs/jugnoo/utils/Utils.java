@@ -185,13 +185,13 @@ public class Utils {
 	
 	public static void openCallIntent(Activity activity, String phoneNumber){
 		Intent callIntent = new Intent(Intent.ACTION_VIEW);
-        callIntent.setData(Uri.parse("tel:"+phoneNumber));
+        callIntent.setData(Uri.parse("tel"+phoneNumber));
         activity.startActivity(callIntent);
 	}
 
     public static void openSMSIntent(Activity activity, String numbers, String message){
         try {
-            Uri sms_uri = Uri.parse("smsto:"+numbers);
+            Uri sms_uri = Uri.parse("smsto"+numbers);
             Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
             sms_intent.putExtra("sms_body", message);
             activity.startActivity(sms_intent);
@@ -343,14 +343,14 @@ public class Utils {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.e("KeyHash:", ","
+                Log.e("KeyHash", ","
                     + Base64.encodeToString(md.digest(),
                     Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("error:", "," + e.toString());
+            Log.e("error", "," + e.toString());
         } catch (NoSuchAlgorithmException e) {
-            Log.e("error:", "," + e.toString());
+            Log.e("error", "," + e.toString());
         }
     }
 
@@ -628,8 +628,5 @@ public class Utils {
 		context.startActivity(i);
 	}
 
-	public static int currentTimeMillisInt() {
-		return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
-	}
 
 }
