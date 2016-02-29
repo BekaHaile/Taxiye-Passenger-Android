@@ -1483,7 +1483,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			}
 
-            new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+            if(Data.userData.getGetGogu() == 1) {
+                new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1501,6 +1503,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		try{
 			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
+            FlurryAgent.setUserId(Data.userData.getUserId());
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -3329,7 +3332,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if(fromDeepLink){
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put(KEY_PHONE_NO, Data.userData.phoneNo);
+				map.put(KEY_USER_ID, Data.userData.getUserId());
 				FlurryEventLogger.event(INVITE_SCREEN_THROUGH_PUSH, map);
 			} else{
 				FlurryEventLogger.event(INVITE_EARN_MENU);
