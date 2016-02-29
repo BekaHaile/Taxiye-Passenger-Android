@@ -24,7 +24,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedInput;
 
 /**
  * Created by shankar on 2/5/16.
@@ -115,10 +114,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 
 					Log.i(TAG, "params before api=" + params);
 
-					byte[] inputBytes = Utils.compressToBytesData(params.toString());
-					TypedInput typedInput = new TypedByteArray("application/octet-stream", inputBytes);
-
-					RestClient.getApiServices().uploadAnalytics(typedInput, new Callback<SettleUserDebt>() {
+					RestClient.getApiServices().uploadAnalytics(params, new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
 							try {

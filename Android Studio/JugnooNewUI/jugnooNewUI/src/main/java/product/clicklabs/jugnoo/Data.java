@@ -247,7 +247,7 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
 
 			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
-			Prefs.with(context).remove(Constants.SP_USER_PHONE_NO);
+			Prefs.with(context).remove(Constants.SP_USER_ID);
 
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
 			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
