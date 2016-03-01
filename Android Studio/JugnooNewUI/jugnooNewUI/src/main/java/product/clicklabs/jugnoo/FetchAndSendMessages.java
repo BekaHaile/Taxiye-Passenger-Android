@@ -127,7 +127,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 								JSONObject jObj = new JSONObject(responseStr);
 								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_FAILED.getOrdinal());
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-//									Prefs.with(context).save(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME, System.currentTimeMillis());
+									Prefs.with(context).save(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME, System.currentTimeMillis());
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
