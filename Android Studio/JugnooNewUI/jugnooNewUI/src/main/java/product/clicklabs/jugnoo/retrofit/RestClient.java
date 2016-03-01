@@ -15,8 +15,8 @@ import retrofit.RestAdapter;
  * Rest client
  */
 public class RestClient {
-    private static ApiService API_SERVICES;
-    private static GoogleAPIServices GOOGLE_API_SERVICES;
+    private static ApiService API_SERVICES = null;
+    private static GoogleAPIServices GOOGLE_API_SERVICES = null;
 
     static {
         setupRestClient();
@@ -44,26 +44,31 @@ public class RestClient {
     }
 
 
-
     public static void setupRestClient() {
-       RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override
-            public void log(String message) {
-            }
-        };
+        if(API_SERVICES == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
 
-        RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(Config.getServerUrl())
-                .setClient(new Ok3Client(getOkHttpClient()))
-                .setLog(fooLog)
-                .setLogLevel(RestAdapter.LogLevel.FULL);
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
 
-        RestAdapter restAdapter = builder.build();
-        API_SERVICES = restAdapter.create(ApiService.class);
+            RestAdapter restAdapter = builder.build();
+            API_SERVICES = restAdapter.create(ApiService.class);
+        }
     }
 
     public static ApiService getApiServices() {
         return API_SERVICES;
+    }
+
+    public static void clearRestClient(){
+        API_SERVICES = null;
     }
 
 
@@ -88,21 +93,22 @@ public class RestClient {
 
 
     public static void setupGoogleAPIRestClient() {
+        if(GOOGLE_API_SERVICES == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
 
-        RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override public void log(String message) {
-            }
-        };
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint("http://maps.googleapis.com/maps/api")
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
 
-        RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint("http://maps.googleapis.com/maps/api")
-                .setClient(new Ok3Client(getOkHttpClient()))
-                .setLog(fooLog)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                ;
-
-        RestAdapter restAdapter = builder.build();
-        GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
+            RestAdapter restAdapter = builder.build();
+            GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
+        }
     }
 
     public static GoogleAPIServices getGoogleApiServices() {

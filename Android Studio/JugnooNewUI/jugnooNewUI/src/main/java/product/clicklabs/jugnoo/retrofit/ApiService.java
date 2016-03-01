@@ -7,6 +7,8 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Field;
@@ -54,6 +56,21 @@ public interface ApiService {
     @POST("/verify_otp")
     void verifyOtp(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/show_panel")
+    void showPanel(@FieldMap Map<String, String> params,
+                   Callback<ShowPanelResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/get_ride_summary")
+    void getRideSummary(@FieldMap Map<String, String> params,
+                   Callback<GetRideSummaryResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/generate_support_ticket")
+    void generateSupportTicket(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/login_using_access_token")
@@ -171,11 +188,6 @@ public interface ApiService {
     @POST("/accept_app_rating_request")
     void acceptAppRatingRequest(@FieldMap Map<String, String> params,
                           Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
-    @POST("/get_ride_summary")
-    void getRideSummary(@FieldMap Map<String, String> params,
-                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/add_drop_location")

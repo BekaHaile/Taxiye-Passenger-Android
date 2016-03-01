@@ -102,7 +102,6 @@ public interface FlurryEventNames {
         RIDE_HISTORY = "Ride history",
         RIDE_RATED_ON_RIDE_HISTORY = "Ride rated on ride history",
         FARE_DETAILS = "Fare details",
-        SUPPORT_OPTIONS = "Support options",
         SEND_EMAIL_SUPPORT = "Send email_support",
         CALL_SUPPORT = "call_support",
         FAQS_SUPPORT = "FAQS_Support",
@@ -161,6 +160,31 @@ public interface FlurryEventNames {
     String INVITE_PUSH_RECEIVED = "invite_push_received",
             INVITE_SCREEN_THROUGH_PUSH = "invite_screen_through_push",
             INVITE_SHARE_GENERIC_THROUGH_PUSH = "invite_share_generic_through_push"
+
+                    ;
+
+    String SUPPORT_MAIN_OPENED = "support_main_opened",
+            SUPPORT_ISSUE_WITH_RECENT_RIDE = "support_issue_with_recent_ride",
+            SUPPORT_ISSUE_OPENED = "support_issue_opened",
+            SUPPORT_ISSUE_FEEDBACK_SUBMITTED = "support_issue_feedback_submitted",
+            SUPPORT_RIDE_HISTORY_OPENED = "support_ride_history_opened",
+            SUPPORT_NEXT_LEVEL_OPENED = "support_next_level_opened",
+            SUPPORT_ISSUE_CALL_DRIVER = "support_issue_call_driver",
+            SUPPORT_ISSUE_CALL_JUGNOO = "support_issue_call_jugnoo",
+            RIDE_SUMMARY_NEED_HELP = "ride_summary_need_help"
+
+            ;
+
+    String API_RESPONSE_TIME_LOG = "api_response_time_log";
+
+    String API_GET_ONGOING_RIDE_PATH = "/get_ongoing_ride_path",
+            API_GET_DRIVER_CURRENT_LOCATION = "/get_driver_current_location",
+            API_FIND_A_DRIVER = "/find_a_driver",
+            API_SHOW_AVAILABLE_PROMOTIONS = "/show_available_promotions",
+            API_LOGIN_USING_ACCESS_TOKEN = "/login_using_access_token",
+            API_GET_CURRENT_USER_STATUS = "/get_current_user_status",
+            API_REQUEST_RIDE = "/request_ride",
+            API_PAYTM_CHECK_BALANCE = "/paytm/check_balance"
 
                     ;
 

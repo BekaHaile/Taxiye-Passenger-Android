@@ -429,6 +429,24 @@ public class Utils {
 		}
 	}
 
+	public static void enableReceiver(Context context, Class classT, boolean enable){
+		try {
+			ComponentName receiver = new ComponentName(context, classT);
+			PackageManager pm = context.getPackageManager();
+			if(enable) {
+				pm.setComponentEnabledSetting(receiver,
+						PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+						PackageManager.DONT_KILL_APP);
+			} else{
+				pm.setComponentEnabledSetting(receiver,
+						PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+						PackageManager.DONT_KILL_APP);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	private static DecimalFormat decimalFormatMoney;
 	public static DecimalFormat getMoneyDecimalFormat(){

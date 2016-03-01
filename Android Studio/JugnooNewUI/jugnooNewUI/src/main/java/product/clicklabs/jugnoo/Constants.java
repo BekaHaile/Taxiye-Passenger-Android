@@ -28,6 +28,7 @@ public interface Constants {
 	int ADD_HOME = 2, ADD_WORK = 3;
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
+	String KEY_DRIVER_ID = "driver_id";
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
@@ -97,5 +98,15 @@ public interface Constants {
 
 
 
+
+	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
+	String KEY_SUPPORT_ID = "support_id";
+	String KEY_SUPPORT_ISSUE_TITLE = "issue_title";
+
+	String KEY_RIDE_DATE = "ride_date";
+
+	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
+	String SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION = "in_app_ride_support_panel_version";
+	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
 
 }

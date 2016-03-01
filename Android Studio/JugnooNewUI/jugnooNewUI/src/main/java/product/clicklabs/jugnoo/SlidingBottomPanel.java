@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
+import retrofit.http.HEAD;
 
 /**
  * Created by Ankit on 1/7/16.
