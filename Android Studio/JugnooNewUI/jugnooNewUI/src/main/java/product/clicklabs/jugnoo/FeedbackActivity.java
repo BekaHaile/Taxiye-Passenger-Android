@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +29,6 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
-import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -382,9 +380,6 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
 
     public void performBackPressed() {
-		if (FeedbackMode.SUPPORT == feedbackMode) {
-			startActivity(new Intent(this, SupportActivity.class));
-		}
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

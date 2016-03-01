@@ -124,13 +124,12 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
-import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -2598,8 +2597,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 getSupportFragmentManager().beginTransaction()
                         .add(linearLayoutRideSummaryContainer.getId(),
                                 new RideSummaryFragment(-1),
-                                RideTransactionsFragment.class.getName())
-                        .addToBackStack(RideTransactionsFragment.class.getName())
+                                RideSummaryFragment.class.getName())
+                        .addToBackStack(RideSummaryFragment.class.getName())
                         .commitAllowingStateLoss();
             }
         } else{

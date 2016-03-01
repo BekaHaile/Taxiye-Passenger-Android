@@ -66,13 +66,15 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 
 			long currentMinusLast = (currentTime - lastTime);
 
-			ArrayList<MSenderBody> mSenderBodies = new ArrayList<>();
+			ArrayList<MSenderBody> mSenderBodies;
 			if(currentMinusLast >= DAY_MILLIS){
 				if(lastTime > defaultTime){
 					mSenderBodies =  fetchMessages(lastTime);
 				} else{
 					mSenderBodies =  fetchMessages(defaultTime);
 				}
+			} else{
+				mSenderBodies = new ArrayList<>();
 			}
 
 			if(mSenderBodies.size() > 0){
