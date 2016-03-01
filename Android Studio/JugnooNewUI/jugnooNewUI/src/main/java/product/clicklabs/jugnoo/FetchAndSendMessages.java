@@ -28,7 +28,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 2/5/16.
  */
-public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<FetchAndSendMessages.MSenderBody>>{
+public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<String, String>>{
 
 	private final String TAG = FetchAndSendMessages.class.getSimpleName();
 
@@ -58,7 +58,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 	}
 
 	@Override
-	protected ArrayList<MSenderBody> doInBackground(String... params) {
+	protected HashMap<String, String> doInBackground(String... params) {
 		try {
 			long defaultTime = System.currentTimeMillis() - THREE_DAYS_MILLIS;
 			long currentTime = System.currentTimeMillis();
@@ -66,12 +66,40 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 
 			long currentMinusLast = (currentTime - lastTime);
 
+			ArrayList<MSenderBody> mSenderBodies = new ArrayList<>();
 			if(currentMinusLast >= DAY_MILLIS){
 				if(lastTime > defaultTime){
-					return fetchMessages(lastTime);
+					mSenderBodies =  fetchMessages(lastTime);
 				} else{
-					return fetchMessages(defaultTime);
+					mSenderBodies =  fetchMessages(defaultTime);
 				}
+			}
+
+			if(mSenderBodies.size() > 0){
+				int maxSize = 200;
+				HashMap<String, String> hParams = new HashMap<>();
+				hParams.put(Constants.KEY_ACCESS_TOKEN, accessToken);
+				JSONArray jArray = new JSONArray();
+				for (MSenderBody message : mSenderBodies) {
+					if(message.getBody().length()>maxSize){
+						List<String> bodies = Utils.splitEqually(message.getBody(), maxSize);
+						for(String body : bodies){
+							JSONObject jObj = new JSONObject();
+							jObj.put("s", message.getSender());
+							jObj.put("b", body);
+							String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
+							jArray.put(decr);
+						}
+					} else{
+						JSONObject jObj = new JSONObject();
+						jObj.put("s", message.getSender());
+						jObj.put("b", message.getBody());
+						String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
+						jArray.put(decr);
+					}
+				}
+				hParams.put("data", jArray.toString());
+				return hParams;
 			} else{
 				return null;
 			}
@@ -82,38 +110,12 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 	}
 
 	@Override
-	protected void onPostExecute(ArrayList<MSenderBody> s) {
-		super.onPostExecute(s);
+	protected void onPostExecute(HashMap<String, String> params) {
+		super.onPostExecute(params);
 		try {
-			if(s != null && s.size() > 0) {
+			if(params != null) {
 				if (AppStatus.getInstance(context).isOnline(context)) {
-					int maxSize = 200;
-
-					HashMap<String, String> params = new HashMap<>();
-					params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
-					JSONArray jArray = new JSONArray();
-					for (MSenderBody message : s) {
-						if(message.getBody().length()>maxSize){
-							List<String> bodies = Utils.splitEqually(message.getBody(), maxSize);
-							for(String body : bodies){
-								JSONObject jObj = new JSONObject();
-								jObj.put("s", message.getSender());
-								jObj.put("b", body);
-								String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
-								jArray.put(decr);
-							}
-						} else{
-							JSONObject jObj = new JSONObject();
-							jObj.put("s", message.getSender());
-							jObj.put("b", message.getBody());
-							String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
-							jArray.put(decr);
-						}
-					}
-					params.put("data", jArray.toString());
-
 					Log.i(TAG, "params before api=" + params);
-
 					RestClient.getApiServices().uploadAnalytics(params, new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -123,7 +125,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, ArrayList<F
 								JSONObject jObj = new JSONObject(responseStr);
 								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_FAILED.getOrdinal());
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									Prefs.with(context).save(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME, System.currentTimeMillis());
+//									Prefs.with(context).save(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME, System.currentTimeMillis());
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
