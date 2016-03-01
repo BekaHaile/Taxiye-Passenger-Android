@@ -792,12 +792,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			@Override
 			public void onClick(View v) {
-
-				if(Data.userData.showJugnooSharing == 1) {
-					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
-					overridePendingTransition(R.anim.right_in, R.anim.right_out);
-					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
-				}
+//					startActivity(new Intent(HomeActivity.this, JugnooLineActivity.class));
+//					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//					FlurryEventLogger.event(JUGNOO_LINE_CLICK);
 			}
 		});
 
@@ -1660,17 +1657,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-		try{
-			if(Data.userData.showJugnooSharing == 1) {
-				relativeLayoutJugnooLine.setVisibility(View.VISIBLE);
-			}
-			else{
-				relativeLayoutJugnooLine.setVisibility(View.GONE);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-			relativeLayoutJugnooLine.setVisibility(View.GONE);
-		}
+		relativeLayoutJugnooLine.setVisibility(View.GONE);
 
 
 
@@ -1900,13 +1887,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                     map != null &&
                     HomeActivity.this.hasWindowFocus()) {
-                    if (Data.userData.canChangeLocation == 1) {
-                        Data.pickupLatLng = map.getCameraPosition().target;
-                    } else {
-                        if (myLocation != null) {
-                            Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                        }
-                    }
+                    Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
                         callFindADriverAndShowPromotionsAPIS(Data.pickupLatLng);
                     }
@@ -1954,17 +1935,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Data.cEngagementId = "";
                             dropLocationSearchText = "";
 
-                            if (Data.userData.canChangeLocation == 1) {
-                                if (Data.pickupLatLng == null) {
-                                    Data.pickupLatLng = map.getCameraPosition().target;
-                                }
-                                double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                                if (distance > MAP_PAN_DISTANCE_CHECK) {
-                                    switchRequestRideUI();
-                                    startTimerRequestRide();
-                                } else {
-                                    checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
-                                }
+                            if (Data.pickupLatLng == null) {
+                                Data.pickupLatLng = map.getCameraPosition().target;
+                            }
+                            double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                            if (distance > MAP_PAN_DISTANCE_CHECK) {
+                                switchRequestRideUI();
+                                startTimerRequestRide();
                             } else {
                                 checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
                             }
@@ -2190,13 +2167,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
 						requestFinalLayout.setVisibility(View.GONE);
-                        if (Data.userData != null && Data.userData.canChangeLocation == 1) {
-                            centreLocationRl.setVisibility(View.VISIBLE);
-                            relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
-                        } else {
-                            centreLocationRl.setVisibility(View.GONE);
-                            relativeLayoutInitialSearchBar.setVisibility(View.GONE);
-                        }
+                        centreLocationRl.setVisibility(View.VISIBLE);
+                        relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
                         textViewInitialInstructions.setVisibility(View.GONE);
 
@@ -3539,7 +3511,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void findDriversETACall(final LatLng destination){
         try {
             if (userMode == UserMode.PASSENGER) {
-                addCurrentLocationAddressMarker(destination);
                 textViewInitialInstructions.setVisibility(View.GONE);
                 dontCallRefreshDriver = false;
                 etaMinutes = "5";
@@ -3800,14 +3771,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         map.addMarker(markerOptions);
     }
 
-    public void addCurrentLocationAddressMarker(LatLng latLng) {
-        try {
-            if (Data.userData.canChangeLocation == 0) {
-                addUserCurrentLocationAddressMarker(latLng);
-            }
-        } catch (Exception e) {
-        }
-    }
 
     public void addUserCurrentLocationAddressMarker(LatLng latLng) {
         try {
@@ -3832,7 +3795,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								|| PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
 					if (map != null) {
 						map.clear();
-						addCurrentLocationAddressMarker(userLatLng);
 						setDropLocationMarker();
 						for (int i = 0; i < Data.driverInfos.size(); i++) {
 							addDriverMarkerForCustomer(Data.driverInfos.get(i));
