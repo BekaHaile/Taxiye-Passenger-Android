@@ -130,7 +130,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
 						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
-								-1, activity.getResources().getString(R.string.support_main_title), item, "");
+								-1, "", activity.getResources().getString(R.string.support_main_title), item, "");
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);

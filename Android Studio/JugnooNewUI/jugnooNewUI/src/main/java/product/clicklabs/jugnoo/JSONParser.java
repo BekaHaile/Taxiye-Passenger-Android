@@ -123,7 +123,6 @@ public class JSONParser implements Constants {
         Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(userData));
 
         String userIdentifier = userData.optString("user_identifier", userEmail);
-        Prefs.with(context).save(SP_USER_PHONE_NO, phoneNo);
 
 		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
         Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
@@ -187,13 +186,18 @@ public class JSONParser implements Constants {
 
         String inAppSupportPanelVersion = userData.optString(KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "0");
 
+        int getGogu = userData.optInt(KEY_GET_GOGU, 0);
+
+        String userId = userData.optString(KEY_USER_ID, phoneNo);
+        Prefs.with(context).save(SP_USER_ID, userId);
+
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
-                jugnooCashTNC, inAppSupportPanelVersion);
+                jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId);
 
     }
 

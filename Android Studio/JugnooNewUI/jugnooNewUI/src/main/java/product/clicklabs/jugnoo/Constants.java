@@ -94,7 +94,7 @@ public interface Constants {
 
 	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
 
-	String SP_USER_PHONE_NO = "user_phone_no";
+	String SP_USER_ID = "sp_user_id";
 
 
 
@@ -108,5 +108,8 @@ public interface Constants {
 	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
 	String SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION = "in_app_ride_support_panel_version";
 	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
+
+
+	String KEY_GET_GOGU = "get_gogu";
 
 }

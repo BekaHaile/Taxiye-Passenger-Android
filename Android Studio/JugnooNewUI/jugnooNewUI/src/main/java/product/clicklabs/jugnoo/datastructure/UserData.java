@@ -22,7 +22,8 @@ public class UserData {
 	private String branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl;
 
 	private String jugnooCashTNC;
-	private String inAppSupportPanelVersion;
+	private String inAppSupportPanelVersion, userId;
+	private int getGogu;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -31,7 +32,7 @@ public class UserData {
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
-					String jugnooCashTNC, String inAppSupportPanelVersion){
+					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu, String userId){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -74,6 +75,8 @@ public class UserData {
 
 		this.jugnooCashTNC = jugnooCashTNC;
 		this.inAppSupportPanelVersion = inAppSupportPanelVersion;
+		this.getGogu = getGogu;
+		this.userId = userId;
 	}
 
 	public double getJugnooBalance() {
@@ -224,5 +227,21 @@ public class UserData {
 
 	public void setInAppSupportPanelVersion(String inAppSupportPanelVersion) {
 		this.inAppSupportPanelVersion = inAppSupportPanelVersion;
+	}
+
+	public int getGetGogu() {
+		return getGogu;
+	}
+
+	public void setGetGogu(int getGogu) {
+		this.getGogu = getGogu;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

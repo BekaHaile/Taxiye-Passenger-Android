@@ -11,12 +11,15 @@ import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import retrofit.Callback;
 import retrofit.client.Response;
+import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
+import retrofit.mime.TypedInput;
 
 /**
  *Define all server calls here
@@ -325,9 +328,14 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/upload_analytics_messages")
-    void uploadAnalyticsMessages(@FieldMap Map<String, String> params,
-                                              Callback<SettleUserDebt> callback);
+    @POST("/analytics")
+    void uploadAnalytics(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @Headers("Content-Encoding: gzip")
+    @POST("/analytics")
+    void uploadAnalytics(@Body TypedInput typedInput,
+                         Callback<SettleUserDebt> callback);
 
 
 }

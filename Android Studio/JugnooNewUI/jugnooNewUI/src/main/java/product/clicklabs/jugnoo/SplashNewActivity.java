@@ -1332,7 +1332,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					DialogPopup.dismissLoadingDialog();
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-						new AccessTokenDataParseAsync(activity, response).execute();
+						accessTokenDataParseAsync(activity, response);
 
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						Editor editor = pref1.edit();
@@ -1363,42 +1363,60 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		changeUIState(State.SPLASH_NO_NET);
 	}
 
-
-	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String> {
-
-		Activity activity;
-		String response;
-
-		public AccessTokenDataParseAsync(Activity activity, String response) {
-			this.activity = activity;
-			this.response = response;
+	public void accessTokenDataParseAsync(Activity activity, String response){
+		String resp;
+		try {
+			resp = new JSONParser().parseAccessTokenLoginData(activity, response);
+			Log.e("AccessTokenDataParseAsync resp", "=" + resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp = Constants.SERVER_TIMEOUT;
 		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
-				Log.e("AccessTokenDataParseAsync resp", "=" + resp);
-				return resp;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return Constants.SERVER_TIMEOUT;
-			}
+		if (resp.contains(Constants.SERVER_TIMEOUT)) {
+			loginDataFetched = false;
+			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+		} else {
+			loginDataFetched = true;
 		}
+		DialogPopup.dismissLoadingDialog();
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			Log.e("AccessTokenDataParseAsync result", "=" + result);
-			if (result.contains(Constants.SERVER_TIMEOUT)) {
-				loginDataFetched = false;
-				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-			} else {
-				loginDataFetched = true;
-			}
-			DialogPopup.dismissLoadingDialog();
-		}
 	}
+
+//	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String> {
+//
+//		Activity activity;
+//		String response;
+//
+//		public AccessTokenDataParseAsync(Activity activity, String response) {
+//			this.activity = activity;
+//			this.response = response;
+//		}
+//
+//		@Override
+//		protected String doInBackground(String... params) {
+//			try {
+//				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
+//				Log.e("AccessTokenDataParseAsync resp", "=" + resp);
+//				return resp;
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return Constants.SERVER_TIMEOUT;
+//			}
+//		}
+//
+//		@Override
+//		protected void onPostExecute(String result) {
+//			super.onPostExecute(result);
+//			Log.e("AccessTokenDataParseAsync result", "=" + result);
+//			if (result.contains(Constants.SERVER_TIMEOUT)) {
+//				loginDataFetched = false;
+//				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//			} else {
+//				loginDataFetched = true;
+//			}
+//			DialogPopup.dismissLoadingDialog();
+//		}
+//	}
 
 
 	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception {

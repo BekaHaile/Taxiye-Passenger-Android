@@ -247,7 +247,7 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
 
 			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
-			Prefs.with(context).remove(Constants.SP_USER_PHONE_NO);
+			Prefs.with(context).remove(Constants.SP_USER_ID);
 
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
 			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
@@ -311,7 +311,7 @@ public class Data {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			//jungooautos://open?link_click_id=link-178470536899245547&target_url=http%3A%2F%2Fshare.jugnoo.in%2Fm%2F7MPH22Lyln%3Fdeepindex%3D0
 			try {
 				Intent intent = newIntent;
@@ -338,7 +338,7 @@ public class Data {
 					Log.e("deepLinkPickupLongitude =", "=" + Data.deepLinkPickupLongitude);
 				}
 			} catch (Exception e1) {
-				e1.printStackTrace();
+//				e1.printStackTrace();
 			}
 		}
 

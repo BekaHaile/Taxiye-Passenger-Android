@@ -515,7 +515,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
 							HashMap<String, String> map = new HashMap<String, String>();
-							map.put(KEY_PHONE_NO, Prefs.with(this).getString(SP_USER_PHONE_NO, ""));
+							map.put(KEY_USER_ID, Prefs.with(this).getString(SP_USER_ID, ""));
 							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED, map);
 						}
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
