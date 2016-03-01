@@ -5,9 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.ConsoleMessage;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -73,7 +70,6 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
         //override the web client to open all links in the same webview
         webview.setWebViewClient(new MyWebViewClient1());
-        webview.setWebChromeClient(new MyWebChromeClient());
 
 
         if (helpSection != null) {
@@ -148,45 +144,9 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             Log.e("onPageFinished", "url="+url);
 
         }
-
-//        @Override
-//        public void onReceivedSslError(WebView view, SslErrorHandler handler,
-//                                       SslError error) {
-//            Log.e("onReceivedSslError", "error=" + error);
-//            handler.proceed();
-//        }
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-            Log.i("onLoadResource", "url=" + url);
-            super.onLoadResource(view, url);
-        }
-
-
     }
 
 
-    private class MyWebChromeClient extends WebChromeClient {
-
-        //display alert message in Web View
-        @Override
-        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-            Log.e("message", message);
-            return false;
-        }
-
-        @Override
-        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-            Log.e("consoleMessage", "="+consoleMessage);
-            return super.onConsoleMessage(consoleMessage);
-        }
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            Log.i("newProgress", "="+newProgress);
-            super.onProgressChanged(view, newProgress);
-        }
-    }
 
 
     public void openHelpData(String data, boolean errorOccured) {

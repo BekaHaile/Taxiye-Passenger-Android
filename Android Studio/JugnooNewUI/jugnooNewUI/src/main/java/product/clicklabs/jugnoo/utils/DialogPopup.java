@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 
 
 public class DialogPopup {
@@ -239,7 +240,20 @@ public class DialogPopup {
 		}
 	}
 
-
+	public static void dialogNoInternet(Activity activity, DialogErrorType dialogErrorType,
+										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface) {
+		String title = activity.getResources().getString(R.string.no_net_title);
+		String text = activity.getResources().getString(R.string.no_net_text);
+		if(dialogErrorType.getOrdinal() == DialogErrorType.CONNECTION_LOST.getOrdinal()){
+			title = activity.getResources().getString(R.string.conn_lost_title);
+			text = activity.getResources().getString(R.string.conn_lost_text);
+		}
+		else if(dialogErrorType.getOrdinal() == DialogErrorType.SERVER_ERROR.getOrdinal()){
+			title = activity.getResources().getString(R.string.server_error_title);
+			text = activity.getResources().getString(R.string.server_error_text);
+		}
+		dialogNoInternet(activity, title, text, alertCallBackWithButtonsInterface);
+	}
 
 	
 	public static void alertPopupHtml(Activity activity, String title, String message) {

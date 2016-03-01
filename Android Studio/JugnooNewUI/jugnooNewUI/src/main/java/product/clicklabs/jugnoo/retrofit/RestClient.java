@@ -1,22 +1,22 @@
 package product.clicklabs.jugnoo.retrofit;
 
-import com.squareup.okhttp.ConnectionPool;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Protocol;
+import com.jakewharton.retrofit.Ok3Client;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import product.clicklabs.jugnoo.config.Config;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 
 /**
  * Rest client
  */
 public class RestClient {
-    private static ApiService API_SERVICES;
-    private static GoogleAPIServices GOOGLE_API_SERVICES;
+    private static ApiService API_SERVICES = null;
+    private static GoogleAPIServices GOOGLE_API_SERVICES = null;
 
     static {
         setupRestClient();
@@ -30,40 +30,45 @@ public class RestClient {
         protocolList.add(Protocol.SPDY_3);
         protocolList.add(Protocol.HTTP_1_1);
 
-        ConnectionPool connectionPool = new ConnectionPool(3, 5 * 60 * 1000);
+        ConnectionPool connectionPool = new ConnectionPool(3, 5 * 60 * 1000, TimeUnit.MILLISECONDS);
 
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setConnectionPool(connectionPool);
-        okHttpClient.setReadTimeout(15, TimeUnit.SECONDS);
-        okHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
-        okHttpClient.setWriteTimeout(15, TimeUnit.SECONDS);
-        okHttpClient.setRetryOnConnectionFailure(false);
-        okHttpClient.setProtocols(protocolList);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectionPool(connectionPool);
+        builder.readTimeout(15, TimeUnit.SECONDS);
+        builder.connectTimeout(15, TimeUnit.SECONDS);
+        builder.writeTimeout(15, TimeUnit.SECONDS);
+        builder.retryOnConnectionFailure(false);
+        builder.protocols(protocolList);
 
-        return okHttpClient;
+        return builder.build();
     }
 
 
-
     public static void setupRestClient() {
-       RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override
-            public void log(String message) {
-            }
-        };
+        if(API_SERVICES == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
 
-        RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(Config.getServerUrl())
-                .setClient(new OkClient(getOkHttpClient()))
-                .setLog(fooLog)
-                .setLogLevel(RestAdapter.LogLevel.FULL);
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
 
-        RestAdapter restAdapter = builder.build();
-        API_SERVICES = restAdapter.create(ApiService.class);
+            RestAdapter restAdapter = builder.build();
+            API_SERVICES = restAdapter.create(ApiService.class);
+        }
     }
 
     public static ApiService getApiServices() {
         return API_SERVICES;
+    }
+
+    public static void clearRestClient(){
+        API_SERVICES = null;
     }
 
 
@@ -76,7 +81,7 @@ public class RestClient {
 
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())
-                .setClient(new OkClient(getOkHttpClient()))
+                .setClient(new Ok3Client(getOkHttpClient()))
                 .setConverter(new StringConverter())
                 .setLog(fooLog)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
@@ -88,21 +93,22 @@ public class RestClient {
 
 
     public static void setupGoogleAPIRestClient() {
+        if(GOOGLE_API_SERVICES == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
 
-        RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override public void log(String message) {
-            }
-        };
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint("http://maps.googleapis.com/maps/api")
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
 
-        RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint("http://maps.googleapis.com/maps/api")
-                .setClient(new OkClient(getOkHttpClient()))
-                .setLog(fooLog)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                ;
-
-        RestAdapter restAdapter = builder.build();
-        GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
+            RestAdapter restAdapter = builder.build();
+            GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
+        }
     }
 
     public static GoogleAPIServices getGoogleApiServices() {

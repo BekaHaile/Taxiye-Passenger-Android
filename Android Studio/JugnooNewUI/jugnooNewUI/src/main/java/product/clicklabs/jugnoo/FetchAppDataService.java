@@ -17,7 +17,6 @@ import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
@@ -64,7 +63,7 @@ public class FetchAppDataService extends IntentService implements Constants {
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i(TAG, "getActiveAppList responseStr="+responseStr);
+//						Log.i(TAG, "getActiveAppList responseStr="+responseStr);
 						JSONObject jObj = new JSONObject(responseStr);
 						int flag = jObj.getInt("flag");
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -79,7 +78,7 @@ public class FetchAppDataService extends IntentService implements Constants {
 							Utils.checkAppsArrayInstall(context, appPackageList);
 							Gson gson = new Gson();
 							String arr = gson.toJson(appPackageList);
-							Log.e("appPackageList", "=" + arr);
+//							Log.e("appPackageList", "=" + arr);
 							returnAppList(context, accessToken, arr, timeToSave);
 						}
 					} catch (Exception e) {
@@ -100,14 +99,12 @@ public class FetchAppDataService extends IntentService implements Constants {
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", accessToken);
 				params.put("app_data", appPackagesStr);
-				Log.i("112", accessToken);
-				Log.i("113",appPackagesStr);
 
 				Response response = RestClient.getApiServices().updateUserInstalledApp(params);
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i(TAG, "updateUserInstalledApp responseStr="+responseStr);
+//						Log.i(TAG, "updateUserInstalledApp responseStr="+responseStr);
 						JSONObject jObj = new JSONObject(responseStr);
 						int flag = jObj.getInt("flag");
 

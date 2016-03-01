@@ -28,7 +28,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
@@ -43,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
@@ -343,14 +346,14 @@ public class Utils {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.e("KeyHash:", ","
+                Log.e("KeyHash", ","
                     + Base64.encodeToString(md.digest(),
                     Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("error:", "," + e.toString());
+            Log.e("error", "," + e.toString());
         } catch (NoSuchAlgorithmException e) {
-            Log.e("error:", "," + e.toString());
+            Log.e("error", "," + e.toString());
         }
     }
 
@@ -424,6 +427,24 @@ public class Utils {
 			pm.setComponentEnabledSetting(receiver,
 					PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
 					PackageManager.DONT_KILL_APP);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void enableReceiver(Context context, Class classT, boolean enable){
+		try {
+			ComponentName receiver = new ComponentName(context, classT);
+			PackageManager pm = context.getPackageManager();
+			if(enable) {
+				pm.setComponentEnabledSetting(receiver,
+						PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+						PackageManager.DONT_KILL_APP);
+			} else{
+				pm.setComponentEnabledSetting(receiver,
+						PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+						PackageManager.DONT_KILL_APP);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -610,8 +631,28 @@ public class Utils {
 		context.startActivity(i);
 	}
 
-	public static int currentTimeMillisInt() {
-		return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+	public static List<String> splitEqually(String text, int size) {
+		// Give the list the right capacity to start with. You could use an array
+		// instead if you wanted.
+		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
+
+		for (int start = 0; start < text.length(); start += size) {
+			ret.add(text.substring(start, Math.min(text.length(), start + size)));
+		}
+		return ret;
+	}
+
+
+	public static byte[] compressToBytesData(String string) throws IOException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
+		GZIPOutputStream gos = new GZIPOutputStream(os);
+		gos.write(string.getBytes());
+		gos.close();
+		byte[] compressed = os.toByteArray();
+		os.close();
+		return compressed;
 	}
 
 }
+
+

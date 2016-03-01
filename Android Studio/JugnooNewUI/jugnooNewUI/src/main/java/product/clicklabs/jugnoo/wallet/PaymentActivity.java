@@ -23,6 +23,8 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -154,9 +156,11 @@ public class PaymentActivity extends BaseFragmentActivity{
 					params.put("client_id", Config.getClientId());
 					params.put("is_access_token_new", "1");
 
+					final long startTime = System.currentTimeMillis();
 					RestClient.getApiServices().paytmCheckBalance(params, new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
+							FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_PAYTM_CHECK_BALANCE, startTime);
 							String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 							Log.i(TAG, "paytmCheckBalance response = " + responseStr);
 							try {

@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -381,9 +380,6 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
 
     public void performBackPressed() {
-		if (FeedbackMode.SUPPORT == feedbackMode) {
-			startActivity(new Intent(this, SupportActivity.class));
-		}
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

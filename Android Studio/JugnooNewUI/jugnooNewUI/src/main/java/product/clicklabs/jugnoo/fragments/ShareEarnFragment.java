@@ -99,7 +99,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 					try {
 						if(activity.fromDeepLink){
 							HashMap<String, String> map = new HashMap<>();
-							map.put(KEY_PHONE_NO, Data.userData.phoneNo);
+							map.put(KEY_USER_ID, Data.userData.getUserId());
 							FlurryEventLogger.event(INVITE_SHARE_GENERIC_THROUGH_PUSH, map);
 						} else{
 							FlurryEventLogger.event(INVITE_GENERIC);

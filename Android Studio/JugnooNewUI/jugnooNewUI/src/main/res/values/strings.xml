@@ -667,6 +667,35 @@
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
+	<!-- Support Screen-->
+	<string name="issue_with_a_recent_ride">Issue with a recent ride?</string>
+	<string name="date_colon_format">Date: %s</string>
+	<string name="start">Start</string>
+	<string name="end">End</string>
+	<string name="ride_history">Ride History</string>
+	<string name="ride_summary">Ride Summary</string>
+	<string name="support_main_title">How can we help?</string>
+	<string name="support_ride_issues_title">Select an Issue</string>
+	<string name="support_select_a_ride_title">Select a Ride</string>
+	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
+	<string name="support_feedback_empty_error">Please fill some feedback</string>
+	<string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
+	<string name="need_help">Need Help?</string>
+	<string name="help">Help</string>
+
+	<!-- Ride transactions-->
+	<string name="rate_this_ride">Rate this ride</string>
+	<string name="show_more">Show more</string>
+
+
+
+	<string name="no_net_title">CONNECTION LOST</string>
+	<string name="no_net_text">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="conn_lost_title">CONNECTION LOST</string>
+	<string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+	<string name="server_error_title">CONNECTION LOST</string>
+	<string name="server_error_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+
 	<string name="app_quit_message">Are you sure you want to quit the app?</string>
 
 
@@ -675,9 +704,8 @@
 	<string name="priority_tip_format">Priority Tip %sx</string>
 
 	<string name="support_call_us_dialog_message">Give us a Missed Call and we will get back to you</string>
+	<string name="call_jugnoo">Call Jugnoo</string>
+	<string name="star_please_fill_required_information">* Please fill required information</string>
 
-
-	<string name="start">Start</string>
-	<string name="end">End</string>
 
 </resources>

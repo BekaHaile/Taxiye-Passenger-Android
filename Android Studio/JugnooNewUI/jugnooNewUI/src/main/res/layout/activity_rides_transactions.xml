@@ -5,91 +5,59 @@
     android:layout_height="match_parent"
     android:background="@color/sliding_bottom_bg_color" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/nl_background_theme_color"
+        android:animateLayoutChanges="true"
+        >
 
-        <RelativeLayout
-            android:id="@+id/topBar"
-            android:layout_width="@dimen/screen_width"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/nl_background_theme_color" >
-
-            <TextView
-                android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="RIDE HISTORY"
-                android:textColor="@color/white"
-                android:textSize="@dimen/top_bar_title_text_size" />
-
-            <ImageView
-                android:id="@+id/imageViewBack"
-                android:layout_width="60.7px"
-                android:layout_height="76.9px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:padding="20px"
-                android:src="@drawable/back_white_selector" />
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:background="@drawable/shadow_down"
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="560px"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/ride_history"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"
+            android:textAllCaps="true"
+            android:gravity="center"
             />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:layout_marginTop="20px"
-            android:splitMotionEvents="false" >
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector" />
 
-            <ListView
-                android:id="@+id/listViewRideTransactions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/background_transparent"
-                android:dividerHeight="0px"
-                android:listSelector="@drawable/background_transparent"
-                android:splitMotionEvents="false" >
-            </ListView>
-
-            <TextView
-                android:id="@+id/textViewInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="TextView"
-                android:textColor="@color/black_text"
-                android:textSize="34px"
-                android:visibility="gone"
-                />
+    </RelativeLayout>
 
 
-            <Button
-                android:id="@+id/buttonGetRide"
-                android:layout_width="648px"
-                android:layout_height="100px"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="70px"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/button_yellow"
-                android:text="GET A RIDE"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size"
-                android:visibility="gone"
-                />
 
+    <RelativeLayout
+        android:id="@+id/relativeLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_below="@+id/topBar"
+        >
+    </RelativeLayout>
 
-        </RelativeLayout>
-    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topBar"
+        />
+
 
 </RelativeLayout>

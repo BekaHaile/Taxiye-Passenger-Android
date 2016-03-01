@@ -7,15 +7,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -69,6 +76,13 @@ public class Database2 {                                                        
     private static final String TABLE_LINKS = "table_links";
     private static final String LINK = "link";
     private static final String LINK_TIME = "link_time";
+
+
+
+    private static final String TABLE_SUPPORT_DATA = "table_support_data";
+    private static final String SUPPORT_CATEGORY = "support_category";
+    private static final String SUPPORT_DATA = "support_data";
+
 
     /**
      * Creates and opens database for the application use
@@ -129,6 +143,11 @@ public class Database2 {                                                        
             + ");");
 
 
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_SUPPORT_DATA + " ("
+                + SUPPORT_CATEGORY + " INTEGER, "
+                + SUPPORT_DATA + " TEXT"
+                + ");");
 
     }
 
@@ -447,7 +466,7 @@ public class Database2 {                                                        
         try{
             ContentValues contentValues = new ContentValues();
             contentValues.put(LINK, link);
-            contentValues.put(LINK_TIME, ""+System.currentTimeMillis());
+            contentValues.put(LINK_TIME, "" + System.currentTimeMillis());
             database.insert(TABLE_LINKS, null, contentValues);
         } catch(Exception e){
             e.printStackTrace();
@@ -491,6 +510,69 @@ public class Database2 {                                                        
         }
         return linksArr.toString();
     }
+
+
+
+
+
+
+
+
+    private void insertSupportData(int category, String supportData) {
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(SUPPORT_CATEGORY, category);
+            contentValues.put(SUPPORT_DATA, supportData);
+            database.insert(TABLE_SUPPORT_DATA, null, contentValues);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void insertUpdateSupportData(int category, List<ShowPanelResponse.Item> supportData){
+        try{
+            Gson gson = new Gson();
+            JsonElement element = gson.toJsonTree(supportData, new TypeToken<List<ShowPanelResponse.Item>>() {}.getType());
+
+            if (!element.isJsonArray()) {
+                throw new Exception();
+            }
+
+            JsonArray jsonArray = element.getAsJsonArray();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(SUPPORT_DATA, jsonArray.toString());
+            int rowsAffected = database.update(TABLE_SUPPORT_DATA, contentValues, SUPPORT_CATEGORY + "=" + category, null);
+            if(rowsAffected == 0){
+                insertSupportData(category, jsonArray.toString());
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<ShowPanelResponse.Item> getSupportDataItems(int category){
+        ArrayList<ShowPanelResponse.Item> menu = new ArrayList<>();
+        try{
+            String[] columns = new String[] { SUPPORT_DATA };
+            Cursor cursor = database.query(TABLE_SUPPORT_DATA, columns, SUPPORT_CATEGORY + "=" + category,
+                    null, null, null, null);
+
+            if(cursor.getCount() > 0){
+                cursor.moveToFirst();
+                String data = cursor.getString(cursor.getColumnIndex(SUPPORT_DATA));
+
+                Gson gson = new Gson();
+                menu = gson.fromJson(data, new TypeToken<List<ShowPanelResponse.Item>>(){}.getType());
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return menu;
+    }
+
 
 
 }

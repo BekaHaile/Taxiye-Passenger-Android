@@ -125,53 +125,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayoutJugnooLine"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:visibility="gone"
-                android:background="@drawable/background_menu_item_selector"
-                android:splitMotionEvents="false">
-
-                <ImageView
-                    android:id="@+id/imageViewJugnooLine"
-                    android:layout_width="46px"
-                    android:layout_height="51px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="50px"
-                    android:src="@drawable/ic_jugnoo_line_selector"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewJugnooLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewJugnooLine"
-                    android:text="Jugnoo Line"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36" />
-
-                <ImageView
-                    android:id="@+id/imageViewJugnooLineArrow"
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:visibility="gone"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="120px"
-                    android:background="@color/text_color_hint" />
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/relativeLayoutInvite"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
@@ -356,68 +309,6 @@
                     android:background="@color/text_color_hint" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutNotificationMenu"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:background="@drawable/background_menu_item_selector"
-                android:splitMotionEvents="false"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/imageViewNotificationMenu"
-                    android:layout_width="40px"
-                    android:layout_height="45px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="50px"
-                    android:src="@drawable/ic_notification_center_thin_selector"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewNotificationMenu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewNotificationMenu"
-                    android:text="Notification Center"
-                    android:textColor="@color/text_color"
-                    android:textSize="30px" />
-
-                <TextView
-                    android:id="@+id/textViewNotificationValueMenu"
-                    android:layout_width="55px"
-                    android:layout_height="55px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
-                    android:layout_toLeftOf="@+id/imageViewNotificationArrowMenu"
-                    android:background="@drawable/circle_yellow"
-                    android:gravity="center"
-                    android:padding="10px"
-                    android:tag="mwar"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_36" />
-
-                <ImageView
-                    android:id="@+id/imageViewNotificationArrowMenu"
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:visibility="gone"
-                    android:src="@color/text_color"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="120px"
-                    android:background="@color/text_color_hint" />
-            </RelativeLayout>
-
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutTransactions"
@@ -465,100 +356,6 @@
                     android:background="@color/text_color_hint" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFareEstimate"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:visibility="gone"
-                android:background="@drawable/background_menu_item_selector"
-                android:splitMotionEvents="false">
-
-                <ImageView
-                    android:id="@+id/imageViewFareEstimate"
-                    android:layout_width="37px"
-                    android:layout_height="45px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="50px"
-                    android:src="@drawable/ic_fare_estimate_selector"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewFareEstimate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewFareEstimate"
-                    android:text="Fare Estimate"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36" />
-
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:visibility="gone"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="120px"
-                    android:background="@color/text_color_hint" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFareDetails"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:background="@drawable/background_menu_item_selector"
-                android:splitMotionEvents="false"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/imageViewFareDetails"
-                    android:layout_width="36px"
-                    android:layout_height="45px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="50px"
-                    android:src="@drawable/ic_notification_center_grey"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewFareDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewFareDetails"
-                    android:text="Fare Details"
-                    android:textColor="@color/text_color"
-                    android:textSize="30px" />
-
-                <ImageView
-                    android:id="@+id/imageViewFareDetailsArrow"
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:visibility="gone"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="120px"
-                    android:background="@color/text_color_hint" />
-            </RelativeLayout>
-
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutSupport"
@@ -584,7 +381,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="35px"
                     android:layout_toRightOf="@+id/imageViewSupport"
-                    android:text="Support"
+                    android:text="@string/support"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
 
