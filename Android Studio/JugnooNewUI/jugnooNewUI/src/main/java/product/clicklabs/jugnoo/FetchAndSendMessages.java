@@ -163,16 +163,10 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 						if(body.toLowerCase().contains(KEYWORD_PAYTM) && body.toLowerCase().contains(KEYWORD_UBER)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_TFS) && body.toLowerCase().contains(KEYWORD_BOOKING)){
+						else if(body.toLowerCase().contains(KEYWORD_TFS)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_OLA) && body.toLowerCase().contains(KEYWORD_BOOKING)){
-							messages.add(new MSenderBody(sender, body));
-						}
-						else if(body.toLowerCase().contains(KEYWORD_OLA) && body.toLowerCase().contains(KEYWORD_AUTO)){
-							messages.add(new MSenderBody(sender, body));
-						}
-						else if(body.toLowerCase().contains(KEYWORD_SAY_OLA)){
+						else if(body.toLowerCase().contains(KEYWORD_OLA)){
 							messages.add(new MSenderBody(sender, body));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE)){
