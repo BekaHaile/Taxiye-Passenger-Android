@@ -113,7 +113,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                         contactBeans.get(position).setSelected(false);
                         selectedCount--;
                         callback.contactClicked(position, contactBeans.get(position));
-                    } else if (selectedCount < EmergencyActivity.EMERGENCY_CONTACTS_ALLOWED) {
+                    } else if (selectedCount < EmergencyActivity.EMERGENCY_CONTACTS_ALLOWED_TO_ADD) {
                         contactBeans.get(position).setSelected(true);
                         selectedCount++;
                         callback.contactClicked(position, contactBeans.get(position));

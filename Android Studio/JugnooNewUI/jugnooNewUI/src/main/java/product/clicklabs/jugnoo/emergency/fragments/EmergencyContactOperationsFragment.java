@@ -1,37 +1,38 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
-import product.clicklabs.jugnoo.Constants;
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
-import product.clicklabs.jugnoo.LocationFetcher;
-import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.EmergencyContact;
+import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
+import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
- * For emergency mode enabled fragment
- * Shows Call Police, Call Emergency Contacts
- * and Disable emergency mode options
+ * For
  *
  * Created by shankar on 2/22/16.
  */
@@ -39,16 +40,21 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 	private RelativeLayout relative;
 
-	private TextView textViewTitle;
+	private TextView textViewTitle, textViewSend;
 	private ImageView imageViewBack;
-
-	private TextView textViewEmergencyModeEnabledMessage;
-	private Button buttonCallPolice, buttonCallEmergencyContact, buttonDisableEmergencyMode;
+	private RecyclerView recyclerViewContacts;
+	private ContactsListAdapter contactsListAdapter;
+	private ArrayList<ContactBean> contactBeans;
+	private ArrayAdapter<ContactBean> contactsArrayAdapter;
+	private ContactsListAdapter.ListMode listMode;
 
 	private View rootView;
     private FragmentActivity activity;
-	private LocationFetcher locationFetcher;
-	private Location location;
+
+
+	public EmergencyContactOperationsFragment(ContactsListAdapter.ListMode listMode){
+		this.listMode = listMode;
+	}
 
 	@Override
 	public void onStart() {
@@ -68,18 +74,16 @@ public class EmergencyContactOperationsFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(activity);
-		locationFetcher.connect();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		locationFetcher.destroy();
 	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_emergency_mode_enabled, container, false);
+        rootView = inflater.inflate(R.layout.fragment_emergency_contacts_operations, container, false);
 
 
         activity = getActivity();
@@ -93,17 +97,22 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
+		textViewSend = (TextView) rootView.findViewById(R.id.textViewSend); textViewSend.setTypeface(Fonts.mavenRegular(activity));
 
-		textViewEmergencyModeEnabledMessage = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledMessage);
-		textViewEmergencyModeEnabledMessage.setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOr)).setTypeface(Fonts.mavenLight(activity));
+		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
+		recyclerViewContacts.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewContacts.setHasFixedSize(false);
 
-		buttonCallPolice = (Button) rootView.findViewById(R.id.buttonCallPolice);
-		buttonCallPolice.setTypeface(Fonts.mavenRegular(activity));
-		buttonCallEmergencyContact = (Button) rootView.findViewById(R.id.buttonCallEmergencyContact);
-		buttonCallEmergencyContact.setTypeface(Fonts.mavenRegular(activity));
-		buttonDisableEmergencyMode = (Button) rootView.findViewById(R.id.buttonDisableEmergencyMode);
-		buttonDisableEmergencyMode.setTypeface(Fonts.mavenRegular(activity));
+		contactBeans = new ArrayList<>();
+		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
+				new ContactsListAdapter.Callback() {
+					@Override
+					public void contactClicked(int position, ContactBean contactBean) {
+
+					}
+				}, listMode);
+		recyclerViewContacts.setAdapter(contactsListAdapter);
 
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -115,18 +124,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 						performBackPressed();
 						break;
 
-					case R.id.buttonCallPolice:
-						Utils.openCallIntent(activity, "100");
-						new ApiEmergencyAlert(activity).raiseEmergencyAlertAPI(getLocation(), Constants.EMERGENCY_CALL_100);
-						break;
-
-					case R.id.buttonCallEmergencyContact:
-
-						break;
-
-					case R.id.buttonDisableEmergencyMode:
-						Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-						performBackPressed();
+					case R.id.textViewSend:
 						break;
 
 				}
@@ -135,16 +133,21 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 
 		imageViewBack.setOnClickListener(onClickListener);
-		buttonCallPolice.setOnClickListener(onClickListener);
-		buttonCallEmergencyContact.setOnClickListener(onClickListener);
-		buttonDisableEmergencyMode.setOnClickListener(onClickListener);
+		textViewSend.setOnClickListener(onClickListener);
 
-		locationFetcher = new LocationFetcher(activity, new LocationUpdate() {
+		setEmergencyContactsToList();
+
+		new ContactsFetchAsync(activity, contactBeans, new ContactsFetchAsync.Callback() {
 			@Override
-			public void onLocationChanged(Location location, int priority) {
-				EmergencyContactOperationsFragment.this.location = location;
+			public void onPreExecute() {
+				contactBeans.add(new ContactBean("", "", "", ContactBean.ContactBeanViewType.PHONE_CONTACTS));
 			}
-		}, 1000, 2);
+
+			@Override
+			public void onPostExecute(ArrayList<ContactBean> contactBeans) {
+				contactsListAdapter.notifyDataSetChanged();
+			}
+		}).execute();
 
 
 		return rootView;
@@ -157,19 +160,26 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		}
 	}
 
-	private Location getLocation(){
-		if(location != null){
-			return location;
-		} else{
-			return HomeActivity.myLocation;
-		}
-	}
-
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(rootView);
-        System.gc();
+		ASSL.closeActivity(rootView);
+		System.gc();
+	}
+
+
+	private void setEmergencyContactsToList(){
+		if(Data.emergencyContactsList != null) {
+			contactBeans.clear();
+			contactBeans.add(new ContactBean("", "", "", ContactBean.ContactBeanViewType.EMERGENCY_CONTACTS));
+			for (EmergencyContact emergencyContact : Data.emergencyContactsList) {
+				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "",
+						ContactBean.ContactBeanViewType.CONTACT);
+				contactBean.setId(emergencyContact.id);
+				contactBeans.add(contactBean);
+			}
+			contactsListAdapter.notifyDataSetChanged();
+		}
 	}
 
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="40px"
+        android:layout_marginTop="50px"
+        android:gravity="center_vertical"
+        >
+
+        <ImageView
+            android:layout_width="30px"
+            android:layout_height="35px"
+            android:src="@drawable/emergency_pick_contact_icon"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/textViewContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:text="@string/contacts"
+            android:textAllCaps="true"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_30"
+            />
+
+    </LinearLayout>
+
+
+    <product.clicklabs.jugnoo.widgets.ContactsCompletionView
+        android:id="@+id/editTextContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
+        android:layout_marginTop="10px"
+        android:background="@drawable/background_transparent"
+        android:hint="@string/type_a_name_or_mobile_number"
+        android:textSize="@dimen/text_size_30"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color_hint"
+        android:paddingLeft="10px"
+        android:paddingRight="10px"
+        android:paddingTop="20px"
+        android:paddingBottom="20px"
+        />
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
+        android:background="@color/theme_color"
+        />
+
+</LinearLayout>

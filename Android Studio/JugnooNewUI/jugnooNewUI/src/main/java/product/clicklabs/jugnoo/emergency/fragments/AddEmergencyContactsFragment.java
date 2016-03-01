@@ -1,11 +1,7 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,11 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -41,6 +34,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
@@ -143,19 +137,18 @@ public class AddEmergencyContactsFragment extends Fragment {
 				}, ContactsListAdapter.ListMode.ADD_CONTACTS);
 		recyclerViewContacts.setAdapter(contactsListAdapter);
 
-		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
+		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact_no_margin,
 				((List<ContactBean>)contactBeans)) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				if (convertView == null) {
 					LayoutInflater l = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-					convertView = l.inflate(R.layout.list_item_contact, parent, false);
+					convertView = l.inflate(R.layout.list_item_contact_no_margin, parent, false);
 				}
 
 				ContactBean p = getItem(position);
 				((TextView)convertView.findViewById(R.id.textViewContactName)).setText(p.getName());
-				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo()+" "+p.getType());
-				convertView.findViewById(R.id.imageViewOption).setVisibility(View.GONE);
+				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo() + " " + p.getType());
 
 				return convertView;
 			}
@@ -170,7 +163,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 		editTextContacts.setAdapter(contactsArrayAdapter);
 		editTextContacts.allowDuplicates(false);
-		editTextContacts.setTokenLimit(EmergencyActivity.EMERGENCY_CONTACTS_ALLOWED);
+		editTextContacts.setTokenLimit(EmergencyActivity.EMERGENCY_CONTACTS_ALLOWED_TO_ADD);
 		editTextContacts.setTokenListener(new TokenCompleteTextView.TokenListener<ContactBean>() {
 			@Override
 			public void onTokenAdded(ContactBean token) {
@@ -218,8 +211,18 @@ public class AddEmergencyContactsFragment extends Fragment {
 		imageViewBack.setOnClickListener(onClickListener);
 		textViewAdd.setOnClickListener(onClickListener);
 
-		new ContactsFetchAsync().execute();
+		new ContactsFetchAsync(activity, contactBeans, new ContactsFetchAsync.Callback() {
+			@Override
+			public void onPreExecute() {
 
+			}
+
+			@Override
+			public void onPostExecute(ArrayList<ContactBean> contactBeans) {
+				contactsListAdapter.setCountAndNotify();
+				contactsArrayAdapter.notifyDataSetChanged();
+			}
+		}).execute();
 
 		return rootView;
 	}
@@ -242,7 +245,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 	private void setSelectedObject(boolean selected, ContactBean contactBean){
 		try{
 			contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
-					contactBean.getPhoneNo(), contactBean.getType()))).setSelected(selected);
+					contactBean.getPhoneNo(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT))).setSelected(selected);
 
 			contactsListAdapter.setCountAndNotify();
 		} catch(Exception e){
@@ -252,171 +255,61 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 
 
-	class ContactsFetchAsync extends AsyncTask<String, Integer, String>{
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			fetchContacts();
-			return "";
-		}
-
-		@Override
-		protected void onPostExecute(String s) {
-			super.onPostExecute(s);
-
-			contactsListAdapter.setCountAndNotify();
-			contactsArrayAdapter.notifyDataSetChanged();
-			DialogPopup.dismissLoadingDialog();
-		}
-
-		private void fetchContacts() {
-			ArrayList<ContactBean> contactBeans = new ArrayList<>();
-			try {
-
-				ContentResolver cr = activity.getContentResolver();
-				Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-
-				if (cur.getCount() > 0) {
-					while (cur.moveToNext()) {
-						String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-						String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-						String hasPhoneNumber = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-						if (Integer.parseInt(hasPhoneNumber) > 0) {
-							Cursor pCur = cr.query(
-									ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-									null,
-									ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
-									new String[]{id}, null);
-
-							while (pCur.moveToNext()) {
-								String phone = pCur
-										.getString(pCur
-												.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-								String type = getContactTypeString(pCur.getString(
-										pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
-
-								phone = phone.replace(" ","");
-								phone = phone.replace("-", "");
-								if (phone != null && (phone.length() >= 10)) {
-									contactBeans.add(new ContactBean(name, phone, type));
-								}
-							}
-							pCur.close();
-						}
-					}
-				}
-				cur.close();
-
-				loadList(contactBeans);
-
-
-				return;
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-
-		private void loadList(ArrayList<ContactBean> list) {
-
-			Set set = new TreeSet(new Comparator<ContactBean>() {
-				@Override
-				public int compare(ContactBean o1, ContactBean o2) {
-					if (o1.getPhoneNo().toString().equalsIgnoreCase(o2.getPhoneNo().toString())) {
-						return 0;
-					}
-					return 1;
-				}
-			});
-
-			set.addAll(list);
-
-			final ArrayList<ContactBean> newList = new ArrayList<ContactBean>(set);
-			contactBeans.clear();
-			contactBeans.addAll(newList);
-
-		}
-
-
-		private String getContactTypeString(String type){
-			try {
-				int typeInt = Integer.parseInt(type);
-				if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_HOME){
-					return "Home";
-				} else if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE){
-					return "Mobile";
-				} else if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_WORK){
-					return "Work";
-				} else{
-					return "Other";
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "Mobile";
-			}
-		}
-
-	}
-
 
 
 	public void addEmergencyContactsAPI(final Activity activity, String jsonArray) {
-		if(AppStatus.getInstance(activity).isOnline(activity)) {
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			HashMap<String, String> params = new HashMap<>();
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-			params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
-			params.put(Constants.KEY_EMERGENCY_CONTACTS, jsonArray);
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_EMERGENCY_CONTACTS, jsonArray);
 
-			Log.e("params", "=" + params.toString());
+				Log.e("params", "=" + params.toString());
 
-			RestClient.getApiServices().emergencyContactsAddMultiple(params, new Callback<SettleUserDebt>() {
-				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
-					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i(TAG, "response = " + responseStr);
-					DialogPopup.dismissLoadingDialog();
-					try {
-						JSONObject jObj = new JSONObject(responseStr);
-						String message = JSONParser.getServerMessage(jObj);
-						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							int flag = jObj.getInt(Constants.KEY_FLAG);
-							if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-								DialogPopup.dialogBanner(activity, message);
-							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-								DialogPopup.dialogBanner(activity, message);
-								//TODO handle successful case of adding contacts
-
-							} else {
-								DialogPopup.dialogBanner(activity, message);
+				RestClient.getApiServices().emergencyContactsAddMultiple(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt(Constants.KEY_FLAG);
+								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+									DialogPopup.dialogBanner(activity, message);
+								} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+									DialogPopup.dialogBanner(activity, message);
+									performBackPressed();
+								} else {
+									DialogPopup.dialogBanner(activity, message);
+								}
 							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 						}
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
 					}
-					DialogPopup.dismissLoadingDialog();
-				}
 
-				@Override
-				public void failure(RetrofitError error) {
-					Log.e(TAG, "error="+error.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-				}
-			});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "error="+error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+			}
+			else {
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

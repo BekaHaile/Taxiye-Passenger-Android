@@ -5819,6 +5819,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSendRideStatusClick(View view) {
 
+                    Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
+                    intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                            EmergencyActivity.EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
 
                 @Override

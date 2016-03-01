@@ -204,56 +204,69 @@ public class EmergencyContactsFragment extends Fragment {
         System.gc();
 	}
 
-
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			getAllEmergencyContacts(activity);
+			if(ContactsListAdapter.ListMode.DELETE_CONTACTS == contactsListAdapter.getListMode()) {
+				textViewEdit.performClick();
+			}
+		}
+	}
 
 	public void getAllEmergencyContacts(final Activity activity) {
-		if(AppStatus.getInstance(activity).isOnline(activity)) {
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
 
-			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
-			HashMap<String, String> params = new HashMap<>();
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-			Log.i("params", "=" + params.toString());
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				Log.i("params", "=" + params.toString());
 
-			RestClient.getApiServices().emergencyContactsList(params, new Callback<SettleUserDebt>() {
-				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
-					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i(TAG, "emergencyContactsList response = " + responseStr);
-					DialogPopup.dismissLoadingDialog();
-					try {
-						JSONObject jObj = new JSONObject(responseStr);
-						String message = JSONParser.getServerMessage(jObj);
-						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							int flag = jObj.getInt("flag");
-							if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
-								if (Data.emergencyContactsList == null) {
-									Data.emergencyContactsList = new ArrayList<>();
+				RestClient.getApiServices().emergencyContactsList(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "emergencyContactsList response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
+									if (Data.emergencyContactsList == null) {
+										Data.emergencyContactsList = new ArrayList<>();
+									}
+									Data.emergencyContactsList.clear();
+									Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
+									setEmergencyContactsToList();
+								} else {
+									DialogPopup.alertPopup(activity, "", message);
 								}
-								Data.emergencyContactsList.clear();
-								Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
-								setEmergencyContactsToList();
-							} else {
-								DialogPopup.alertPopup(activity, "", message);
 							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 						}
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
 					}
-					DialogPopup.dismissLoadingDialog();
-				}
 
-				@Override
-				public void failure(RetrofitError error) {
-					Log.e(TAG, "emergencyContactsList error"+error.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-				}
-			});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "emergencyContactsList error"+error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+			}
+			else {
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -262,12 +275,13 @@ public class EmergencyContactsFragment extends Fragment {
 		if(Data.emergencyContactsList != null) {
 			contactBeans.clear();
 			for (EmergencyContact emergencyContact : Data.emergencyContactsList) {
-				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "");
+				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "",
+						ContactBean.ContactBeanViewType.CONTACT);
 				contactBean.setId(emergencyContact.id);
 				contactBeans.add(contactBean);
 			}
 			notifyListAndShowAddContactsButton();
-			EmergencyActivity.setEmergencyContactsAllowed();
+			EmergencyActivity.setEmergencyContactsAllowedToAdd();
 		}
 	}
 
@@ -283,54 +297,58 @@ public class EmergencyContactsFragment extends Fragment {
 
 
 	public void deleteEmergencyContactAPI(final Activity activity, int id) {
-		if(AppStatus.getInstance(activity).isOnline(activity)) {
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
 
-			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
-			HashMap<String, String> params = new HashMap<>();
+				HashMap<String, String> params = new HashMap<>();
 
-			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-			params.put(Constants.KEY_ID, String.valueOf(id));
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_ID, String.valueOf(id));
 
-			Log.i("params", "=" + params.toString());
+				Log.i("params", "=" + params.toString());
 
-			RestClient.getApiServices().emergencyContactsDelete(params, new Callback<SettleUserDebt>() {
-				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
-					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-					Log.i(TAG, "emergencyContactsDelete response = " + responseStr);
-					DialogPopup.dismissLoadingDialog();
-					try {
-						JSONObject jObj = new JSONObject(responseStr);
-						String message = JSONParser.getServerMessage(jObj);
-						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							int flag = jObj.getInt(Constants.KEY_FLAG);
-							if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-								DialogPopup.dialogBanner(activity, message);
-							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-								DialogPopup.dialogBanner(activity, message);
-								getAllEmergencyContacts(activity);
-							} else {
-								DialogPopup.dialogBanner(activity, message);
+				RestClient.getApiServices().emergencyContactsDelete(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "emergencyContactsDelete response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt(Constants.KEY_FLAG);
+								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+									DialogPopup.dialogBanner(activity, message);
+								} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+									DialogPopup.dialogBanner(activity, message);
+									getAllEmergencyContacts(activity);
+								} else {
+									DialogPopup.dialogBanner(activity, message);
+								}
 							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 						}
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
 					}
-					DialogPopup.dismissLoadingDialog();
-				}
 
-				@Override
-				public void failure(RetrofitError error) {
-					Log.e(TAG, "error="+error.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-				}
-			});
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "error="+error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+			}
+			else {
+				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

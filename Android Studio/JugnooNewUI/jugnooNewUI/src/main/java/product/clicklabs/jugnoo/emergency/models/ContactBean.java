@@ -10,12 +10,14 @@ public class ContactBean {
 	private String phoneNo;
 	private String type;
 	private boolean selected;
+	private ContactBeanViewType contactBeanViewType;
 
 
-	public ContactBean(String name, String phoneNo, String type) {
+	public ContactBean(String name, String phoneNo, String type, ContactBeanViewType contactBeanViewType) {
 		this.name = name;
 		this.phoneNo = phoneNo;
 		this.type = type;
+		this.contactBeanViewType = contactBeanViewType;
 		this.selected = false;
 	}
 
@@ -73,4 +75,36 @@ public class ContactBean {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public ContactBeanViewType getContactBeanViewType() {
+		return contactBeanViewType;
+	}
+
+	public void setContactBeanViewType(ContactBeanViewType contactBeanViewType) {
+		this.contactBeanViewType = contactBeanViewType;
+	}
+
+
+	public enum ContactBeanViewType{
+		CONTACT(0),
+		EMERGENCY_CONTACTS(1),
+		PHONE_CONTACTS(2)
+		;
+
+
+		private int ordinal;
+
+		ContactBeanViewType(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+
+		public void setOrdinal(int ordinal) {
+			this.ordinal = ordinal;
+		}
+	}
+
 }

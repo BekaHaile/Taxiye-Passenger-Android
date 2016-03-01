@@ -718,13 +718,17 @@
 	<string name="emergency_mode_enabled_message">You have enabled emergency\nWe have sent your location to your\nemergency contacts and Jugnoo support.</string>
 	<string name="call_police">Call Police</string>
 	<string name="call_emergency_contact">Call Emergency Contact</string>
+	<string name="call_your_contacts">Call Your Contacts</string>
 	<string name="disable_emergency_mode">Disable Emergency Mode</string>
 	<string name="emergency_contacts">Emergency Contacts</string>
 	<string name="add">Add</string>
 	<string name="add_contacts">Add Contacts</string>
+	<string name="contacts">Contacts</string>
 	<string name="edit">Edit</string>
 	<string name="delete">Delete</string>
+	<string name="send">Send</string>
 	<string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
+	<string name="type_a_name_or_mobile_number">Type a name or a mobile number</string>
 
 
 </resources>

@@ -11,6 +11,8 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
+import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactOperationsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyModeEnabledFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -20,8 +22,8 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
     private final String TAG = EmergencyActivity.class.getSimpleName();
 
-    public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED = 5;
-    public static int EMERGENCY_CONTACTS_ALLOWED = 5;
+    public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
+    public static int EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
 
     RelativeLayout relative, relativeLayoutContainer;
 
@@ -72,17 +74,25 @@ public class EmergencyActivity extends BaseFragmentActivity {
                     .addToBackStack(EmergencyContactsFragment.class.getName())
                     .commitAllowingStateLoss();
         }
+        else if(mode == EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal()){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(),
+                            new EmergencyContactOperationsFragment(ContactsListAdapter.ListMode.SEND_RIDE_STATUS),
+                            EmergencyContactsFragment.class.getName())
+                    .addToBackStack(EmergencyContactsFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
 
-        setEmergencyContactsAllowed();
+        setEmergencyContactsAllowedToAdd();
 
 
     }
 
-    public static void setEmergencyContactsAllowed(){
+    public static void setEmergencyContactsAllowedToAdd(){
         if(Data.emergencyContactsList != null){
-            EMERGENCY_CONTACTS_ALLOWED = MAX_EMERGENCY_CONTACTS_ALLOWED - Data.emergencyContactsList.size();
-            if(EMERGENCY_CONTACTS_ALLOWED < 0){
-                EMERGENCY_CONTACTS_ALLOWED = 0;
+            EMERGENCY_CONTACTS_ALLOWED_TO_ADD = MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD - Data.emergencyContactsList.size();
+            if(EMERGENCY_CONTACTS_ALLOWED_TO_ADD < 0){
+                EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 0;
             }
         }
     }
@@ -117,7 +127,8 @@ public class EmergencyActivity extends BaseFragmentActivity {
     public enum EmergencyActivityMode{
         EMERGENCY_ACTIVATE(0),
         EMERGENCY_CONTACTS(1),
-        SEND_RIDE_STATUS(2)
+        SEND_RIDE_STATUS(2),
+        CALL_CONTACTS(3)
 
         ;
 

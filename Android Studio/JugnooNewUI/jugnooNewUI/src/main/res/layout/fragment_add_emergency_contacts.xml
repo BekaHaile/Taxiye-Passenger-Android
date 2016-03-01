@@ -19,6 +19,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/top_bar_title_text_size"
             android:layout_centerInParent="true"
+            android:textAllCaps="true"
             />
 
         <ImageView
@@ -100,7 +101,7 @@
             android:layout_marginRight="40px"
             android:layout_marginTop="10px"
             android:background="@drawable/background_transparent"
-            android:hint="@string/search"
+            android:hint="@string/type_a_name_or_mobile_number"
             android:textSize="@dimen/text_size_30"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
@@ -125,9 +126,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10px"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
             />
 
 

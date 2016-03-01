@@ -1,0 +1,117 @@
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/nl_background_theme_color">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/call_your_contacts"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="70px"
+            android:layout_height="71px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/ic_cross_white_grey_selector"/>
+
+        <TextView
+            android:id="@+id/textViewSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:padding="20px"
+            android:text="@string/send"
+            android:textAllCaps="true"
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/text_size_36"
+            />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/topBar"
+        >
+        <LinearLayout
+            android:id="@+id/linearLayoutEmergencyContacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <include
+                layout="@layout/layout_emergency_contacts_header"
+                />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewEmergencyContacts"
+                android:layout_width="match_parent"
+                android:layout_height="260px"
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPhoneContacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <include
+                layout="@layout/layout_emergency_contacts_search_header"
+                />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewPhoneContacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="40px"
+                android:layout_marginRight="40px"
+
+                />
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>
