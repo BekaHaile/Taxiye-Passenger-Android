@@ -323,6 +323,11 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/emergency/send_ride_status_message")
+    void emergencySendRideStatusMessage(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/emergency/contacts/request_verification")
     void emergencyContactsRequestVerification(@FieldMap Map<String, String> params,
                                  Callback<SettleUserDebt> callback);

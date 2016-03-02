@@ -74,15 +74,73 @@
                 />
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerViewEmergencyContacts"
-                android:layout_width="match_parent"
-                android:layout_height="256px"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                android:layout_marginTop="5px"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerViewEmergencyContacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="256px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:tag="mwar"
+
+                    />
+
+                <Button
+                    android:id="@+id/buttonAddContact"
+                    style="@style/ButtonTheme"
+                    android:text="@string/add_contacts"
+                    android:layout_centerInParent="true"
+                    />
+                
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/imageViewEmergencyContactsSep"
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/text_color_hint"
                 />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutOr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20px"
+                    android:layout_toLeftOf="@+id/textViewOr"
+                    android:background="@color/text_color_hint"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewOr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/or_call_directly"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_32"
+                    />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/textViewOr"
+                    android:background="@color/text_color_hint"
+                    />
+
+            </RelativeLayout>
+
 
         </LinearLayout>
 
@@ -105,7 +163,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
-                android:layout_marginTop="5px"
 
                 />
 

@@ -729,6 +729,10 @@
 	<string name="send">Send</string>
 	<string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
 	<string name="type_a_name_or_mobile_number">Type a name or a mobile number</string>
+	<string name="or_call_directly">or Call directly</string>
+	<string name="or_send_directly">or Send directly</string>
+	<string name="send_ride_status_no_contacts_message">Please select some contacts first</string>
+	<string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only to %2$s contacts at once.</string>
 
 
 </resources>

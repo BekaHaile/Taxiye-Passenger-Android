@@ -22,6 +22,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
     private final String TAG = EmergencyActivity.class.getSimpleName();
 
+    public static final  int MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS = 10;
     public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
     public static int EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
 
@@ -75,9 +76,10 @@ public class EmergencyActivity extends BaseFragmentActivity {
                     .commitAllowingStateLoss();
         }
         else if(mode == EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal()){
+            int engagementId = getIntent().getIntExtra(Constants.KEY_ENGAGEMENT_ID, 0);
             getSupportFragmentManager().beginTransaction()
                     .add(relativeLayoutContainer.getId(),
-                            new EmergencyContactOperationsFragment(ContactsListAdapter.ListMode.SEND_RIDE_STATUS),
+                            new EmergencyContactOperationsFragment(engagementId, ContactsListAdapter.ListMode.SEND_RIDE_STATUS),
                             EmergencyContactsFragment.class.getName())
                     .addToBackStack(EmergencyContactsFragment.class.getName())
                     .commitAllowingStateLoss();

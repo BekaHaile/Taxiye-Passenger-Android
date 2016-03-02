@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,13 +27,17 @@ import java.util.List;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiEmergencyContactsList;
+import product.clicklabs.jugnoo.apis.ApiEmergencySendRideStatus;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -55,6 +60,10 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 	private LinearLayout linearLayoutEmergencyContacts;
 	private RecyclerView recyclerViewEmergencyContacts;
+	private ImageView imageViewEmergencyContactsSep;
+	private RelativeLayout relativeLayoutOr;
+	private TextView textViewOr;
+	private Button buttonAddContact;
 
 	private AutoCompleteTextView editTextPhoneContacts;
 	private RecyclerView recyclerViewPhoneContacts;
@@ -63,13 +72,15 @@ public class EmergencyContactOperationsFragment extends Fragment {
 	private ArrayList<ContactBean> emergencyContactBeans, phoneContactBeans;
 	private ArrayAdapter<ContactBean> phoneContactsArrayAdapter;
 
+	private int engagementId;
 	private ContactsListAdapter.ListMode listMode;
 
 	private View rootView;
     private FragmentActivity activity;
 
 
-	public EmergencyContactOperationsFragment(ContactsListAdapter.ListMode listMode){
+	public EmergencyContactOperationsFragment(int engagementId, ContactsListAdapter.ListMode listMode){
+		this.engagementId = engagementId;
 		this.listMode = listMode;
 	}
 
@@ -121,6 +132,13 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 		linearLayoutEmergencyContacts = (LinearLayout) rootView.findViewById(R.id.linearLayoutEmergencyContacts);
 		((TextView) rootView.findViewById(R.id.textViewEmergencyContacts)).setTypeface(Fonts.mavenLight(activity));
+		imageViewEmergencyContactsSep = (ImageView) rootView.findViewById(R.id.imageViewEmergencyContactsSep);
+		relativeLayoutOr = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutOr);
+		textViewOr = (TextView) rootView.findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(activity));
+		buttonAddContact = (Button) rootView.findViewById(R.id.buttonAddContact); buttonAddContact.setTypeface(Fonts.mavenRegular(activity));
+		buttonAddContact.setVisibility(View.GONE);
+		relativeLayoutOr.setVisibility(View.GONE);
+
 		recyclerViewEmergencyContacts = (RecyclerView) rootView.findViewById(R.id.recyclerViewEmergencyContacts);
 		recyclerViewEmergencyContacts.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewEmergencyContacts.setItemAnimator(new DefaultItemAnimator());
@@ -214,12 +232,17 @@ public class EmergencyContactOperationsFragment extends Fragment {
 						break;
 
 					case R.id.textViewSend:
+						clickOnSend();
 						break;
 
 					case R.id.linearLayoutMain:
 						Utils.hideSoftKeyboard(activity, editTextPhoneContacts);
 						break;
 
+					case R.id.buttonAddContact:
+						new FragTransUtils().openAddEmergencyContactsFragment(activity,
+								((EmergencyActivity)activity).getContainer());
+						break;
 				}
 			}
 		};
@@ -228,6 +251,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		imageViewBack.setOnClickListener(onClickListener);
 		textViewSend.setOnClickListener(onClickListener);
 		linearLayoutMain.setOnClickListener(onClickListener);
+		buttonAddContact.setOnClickListener(onClickListener);
 
 		setEmergencyContactsToList();
 
@@ -276,6 +300,14 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		System.gc();
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			getAllEmergencyContacts();
+		}
+	}
+
 
 	private void setEmergencyContactsToList(){
 		if(Data.emergencyContactsList != null) {
@@ -287,6 +319,29 @@ public class EmergencyContactOperationsFragment extends Fragment {
 				emergencyContactBeans.add(contactBean);
 			}
 			emergencyContactsListAdapter.notifyDataSetChanged();
+			if(emergencyContactBeans.size() > 0){
+				imageViewEmergencyContactsSep.setVisibility(View.VISIBLE);
+				relativeLayoutOr.setVisibility(View.GONE);
+				buttonAddContact.setVisibility(View.GONE);
+			} else{
+				imageViewEmergencyContactsSep.setVisibility(View.GONE);
+				relativeLayoutOr.setVisibility(View.VISIBLE);
+				buttonAddContact.setVisibility(View.VISIBLE);
+				if(listMode == ContactsListAdapter.ListMode.SEND_RIDE_STATUS){
+					textViewOr.setText(activity.getResources().getString(R.string.or_send_directly));
+				} else if(listMode == ContactsListAdapter.ListMode.CALL_CONTACTS){
+					textViewOr.setText(activity.getResources().getString(R.string.or_call_directly));
+				}
+			}
+		} else{
+			imageViewEmergencyContactsSep.setVisibility(View.GONE);
+			relativeLayoutOr.setVisibility(View.VISIBLE);
+			buttonAddContact.setVisibility(View.VISIBLE);
+			if(listMode == ContactsListAdapter.ListMode.SEND_RIDE_STATUS){
+				textViewOr.setText(activity.getResources().getString(R.string.or_send_directly));
+			} else if(listMode == ContactsListAdapter.ListMode.CALL_CONTACTS){
+				textViewOr.setText(activity.getResources().getString(R.string.or_call_directly));
+			}
 		}
 	}
 
@@ -300,6 +355,102 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+
+	public void getAllEmergencyContacts() {
+		new ApiEmergencyContactsList(activity, new ApiEmergencyContactsList.Callback() {
+			@Override
+			public void onSuccess() {
+				setEmergencyContactsToList();
+			}
+
+			@Override
+			public void onFailure() {
+
+			}
+
+			@Override
+			public void onRetry(View view) {
+				getAllEmergencyContacts();
+			}
+
+			@Override
+			public void onNoRetry(View view) {
+
+			}
+		}).emergencyContactsList();
+	}
+
+	public void clickOnSend(){
+		final ArrayList<String> contacts = new ArrayList<>();
+		for(ContactBean contactBean : emergencyContactBeans){
+			if(contactBean.isSelected()){
+				contacts.add(contactBean.getPhoneNo());
+			}
+		}
+		for(ContactBean contactBean : phoneContactBeans){
+			if(contactBean.isSelected()){
+				contacts.add(contactBean.getPhoneNo());
+			}
+		}
+
+		if(contacts.size() == 0){
+			DialogPopup.alertPopup(activity, "",
+					activity.getResources().getString(R.string.send_ride_status_no_contacts_message));
+		} else if(contacts.size() > 10){
+			DialogPopup.alertPopupTwoButtonsWithListeners(activity,
+					"",
+					String.format(activity.getResources()
+									.getString(R.string.send_ride_status_more_contacts_message_format),
+							"" + EmergencyActivity.MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS,
+							"" + EmergencyActivity.MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS),
+					activity.getResources().getString(R.string.ok),
+					activity.getResources().getString(R.string.cancel),
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							sendRideStatusApi(engagementId, contacts);
+						}
+					},
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+						}
+					}, true, false);
+		} else{
+			sendRideStatusApi(engagementId, contacts);
+		}
+	}
+
+	public void sendRideStatusApi(final int engagementId, final ArrayList<String> contacts){
+		new ApiEmergencySendRideStatus(activity, new ApiEmergencySendRideStatus.Callback() {
+			@Override
+			public void onSuccess(String message) {
+				DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						performBackPressed();
+					}
+				});
+			}
+
+			@Override
+			public void onFailure() {
+
+			}
+
+			@Override
+			public void onRetry(View view) {
+				sendRideStatusApi(engagementId, contacts);
+			}
+
+			@Override
+			public void onNoRetry(View view) {
+
+			}
+		}).emergencyContactsList(engagementId, contacts);
 	}
 
 

@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.apis.ApiEmergencyContactsList;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -216,59 +217,27 @@ public class EmergencyContactsFragment extends Fragment {
 	}
 
 	public void getAllEmergencyContacts(final Activity activity) {
-		try {
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
-
-				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-				HashMap<String, String> params = new HashMap<>();
-				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				Log.i("params", "=" + params.toString());
-
-				RestClient.getApiServices().emergencyContactsList(params, new Callback<SettleUserDebt>() {
-					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
-						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "emergencyContactsList response = " + responseStr);
-						DialogPopup.dismissLoadingDialog();
-						try {
-							JSONObject jObj = new JSONObject(responseStr);
-							String message = JSONParser.getServerMessage(jObj);
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								int flag = jObj.getInt("flag");
-								if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
-									if (Data.emergencyContactsList == null) {
-										Data.emergencyContactsList = new ArrayList<>();
-									}
-									Data.emergencyContactsList.clear();
-									Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
-									setEmergencyContactsToList();
-								} else {
-									DialogPopup.alertPopup(activity, "", message);
-								}
-							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-						}
-						DialogPopup.dismissLoadingDialog();
-					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e(TAG, "emergencyContactsList error"+error.toString());
-						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-					}
-				});
+		new ApiEmergencyContactsList(activity, new ApiEmergencyContactsList.Callback() {
+			@Override
+			public void onSuccess() {
+				setEmergencyContactsToList();
 			}
-			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+			@Override
+			public void onFailure() {
+
+			}
+
+			@Override
+			public void onRetry(View view) {
+
+			}
+
+			@Override
+			public void onNoRetry(View view) {
+
+			}
+		}).emergencyContactsList();
 	}
 
 	private void setEmergencyContactsToList(){
