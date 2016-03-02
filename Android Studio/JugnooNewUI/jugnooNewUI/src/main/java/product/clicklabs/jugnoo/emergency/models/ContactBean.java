@@ -23,7 +23,7 @@ public class ContactBean {
 
 	@Override
 	public String toString() {
-		return getName()+" "+getPhoneNo()+" "+getType();
+		return "";
 	}
 
 	@Override

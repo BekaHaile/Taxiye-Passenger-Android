@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,13 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+import com.tokenautocomplete.FilteredArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeActivity;
@@ -29,6 +34,8 @@ import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -42,10 +49,20 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 	private TextView textViewTitle, textViewSend;
 	private ImageView imageViewBack;
-	private RecyclerView recyclerViewContacts;
-	private ContactsListAdapter contactsListAdapter;
-	private ArrayList<ContactBean> contactBeans;
-	private ArrayAdapter<ContactBean> contactsArrayAdapter;
+
+	private LinearLayout linearLayoutMain;
+	private TextView textViewScroll;
+
+	private LinearLayout linearLayoutEmergencyContacts;
+	private RecyclerView recyclerViewEmergencyContacts;
+
+	private AutoCompleteTextView editTextPhoneContacts;
+	private RecyclerView recyclerViewPhoneContacts;
+
+	private ContactsListAdapter emergencyContactsListAdapter, phoneContactsListAdapter;
+	private ArrayList<ContactBean> emergencyContactBeans, phoneContactBeans;
+	private ArrayAdapter<ContactBean> phoneContactsArrayAdapter;
+
 	private ContactsListAdapter.ListMode listMode;
 
 	private View rootView;
@@ -99,20 +116,92 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewSend = (TextView) rootView.findViewById(R.id.textViewSend); textViewSend.setTypeface(Fonts.mavenRegular(activity));
 
-		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
-		recyclerViewContacts.setLayoutManager(new LinearLayoutManager(activity));
-		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
-		recyclerViewContacts.setHasFixedSize(false);
+		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 
-		contactBeans = new ArrayList<>();
-		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
+		linearLayoutEmergencyContacts = (LinearLayout) rootView.findViewById(R.id.linearLayoutEmergencyContacts);
+		((TextView) rootView.findViewById(R.id.textViewEmergencyContacts)).setTypeface(Fonts.mavenLight(activity));
+		recyclerViewEmergencyContacts = (RecyclerView) rootView.findViewById(R.id.recyclerViewEmergencyContacts);
+		recyclerViewEmergencyContacts.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewEmergencyContacts.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewEmergencyContacts.setHasFixedSize(false);
+
+		emergencyContactBeans = new ArrayList<>();
+		emergencyContactsListAdapter = new ContactsListAdapter(emergencyContactBeans, activity, R.layout.list_item_contact,
 				new ContactsListAdapter.Callback() {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
 
 					}
 				}, listMode);
-		recyclerViewContacts.setAdapter(contactsListAdapter);
+		recyclerViewEmergencyContacts.setAdapter(emergencyContactsListAdapter);
+
+
+
+		((TextView)rootView.findViewById(R.id.textViewPhoneContacts)).setTypeface(Fonts.mavenLight(activity));
+		editTextPhoneContacts = (AutoCompleteTextView) rootView.findViewById(R.id.editTextPhoneContacts);
+		editTextPhoneContacts.setTypeface(Fonts.mavenLight(activity));
+		recyclerViewPhoneContacts = (RecyclerView) rootView.findViewById(R.id.recyclerViewPhoneContacts);
+		recyclerViewPhoneContacts.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewPhoneContacts.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewPhoneContacts.setHasFixedSize(false);
+
+		phoneContactBeans = new ArrayList<>();
+		phoneContactsListAdapter = new ContactsListAdapter(phoneContactBeans, activity, R.layout.list_item_contact,
+				new ContactsListAdapter.Callback() {
+					@Override
+					public void contactClicked(int position, ContactBean contactBean) {
+
+					}
+				}, listMode);
+		recyclerViewPhoneContacts.setAdapter(phoneContactsListAdapter);
+
+		phoneContactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
+				((List<ContactBean>)phoneContactBeans)) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				if (convertView == null) {
+					LayoutInflater l = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+					convertView = l.inflate(R.layout.list_item_contact, parent, false);
+				}
+
+				ContactBean p = getItem(position);
+				((TextView)convertView.findViewById(R.id.textViewContactName)).setTypeface(Fonts.mavenLight(activity));
+				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setTypeface(Fonts.mavenLight(activity));
+				((TextView)convertView.findViewById(R.id.textViewContactName)).setText(p.getName());
+				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo() + " " + p.getType());
+				convertView.findViewById(R.id.imageViewOption).setVisibility(View.GONE);
+
+				convertView.findViewById(R.id.relative).setTag(position);
+				convertView.findViewById(R.id.relative).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							int position = (int) v.getTag();
+							ContactBean p = getItem(position);
+							setSelectedObject(true, p);
+							editTextPhoneContacts.dismissDropDown();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+
+
+				return convertView;
+			}
+
+			@Override
+			protected boolean keepObject(ContactBean person, String mask) {
+				mask = mask.toLowerCase();
+				boolean matched = person.getName().toLowerCase().startsWith(mask)
+						|| person.getPhoneNo().toLowerCase().startsWith(mask);
+				return matched;
+			}
+
+		};
+		editTextPhoneContacts.setAdapter(phoneContactsArrayAdapter);
+
 
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -127,6 +216,10 @@ public class EmergencyContactOperationsFragment extends Fragment {
 					case R.id.textViewSend:
 						break;
 
+					case R.id.linearLayoutMain:
+						Utils.hideSoftKeyboard(activity, editTextPhoneContacts);
+						break;
+
 				}
 			}
 		};
@@ -134,20 +227,36 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 		imageViewBack.setOnClickListener(onClickListener);
 		textViewSend.setOnClickListener(onClickListener);
+		linearLayoutMain.setOnClickListener(onClickListener);
 
 		setEmergencyContactsToList();
 
-		new ContactsFetchAsync(activity, contactBeans, new ContactsFetchAsync.Callback() {
+		new ContactsFetchAsync(activity, phoneContactBeans, new ContactsFetchAsync.Callback() {
 			@Override
 			public void onPreExecute() {
-				contactBeans.add(new ContactBean("", "", "", ContactBean.ContactBeanViewType.PHONE_CONTACTS));
 			}
 
 			@Override
 			public void onPostExecute(ArrayList<ContactBean> contactBeans) {
-				contactsListAdapter.notifyDataSetChanged();
+				phoneContactsListAdapter.notifyDataSetChanged();
 			}
 		}).execute();
+
+
+		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
+				new KeyboardLayoutListener.KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+				linearLayoutEmergencyContacts.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void keyBoardClosed() {
+				linearLayoutEmergencyContacts.setVisibility(View.VISIBLE);
+			}
+		});
+		keyboardLayoutListener.setResizeTextView(false);
+		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
 
 		return rootView;
@@ -170,15 +279,26 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 	private void setEmergencyContactsToList(){
 		if(Data.emergencyContactsList != null) {
-			contactBeans.clear();
-			contactBeans.add(new ContactBean("", "", "", ContactBean.ContactBeanViewType.EMERGENCY_CONTACTS));
+			emergencyContactBeans.clear();
 			for (EmergencyContact emergencyContact : Data.emergencyContactsList) {
 				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "",
 						ContactBean.ContactBeanViewType.CONTACT);
 				contactBean.setId(emergencyContact.id);
-				contactBeans.add(contactBean);
+				emergencyContactBeans.add(contactBean);
 			}
-			contactsListAdapter.notifyDataSetChanged();
+			emergencyContactsListAdapter.notifyDataSetChanged();
+		}
+	}
+
+	private void setSelectedObject(boolean selected, ContactBean contactBean){
+		try{
+			int index = phoneContactBeans.indexOf(new ContactBean(contactBean.getName(),
+					contactBean.getPhoneNo(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT));
+			phoneContactBeans.get(index).setSelected(selected);
+			phoneContactsListAdapter.notifyDataSetChanged();
+			((LinearLayoutManager)recyclerViewPhoneContacts.getLayoutManager()).scrollToPositionWithOffset(index, 20);
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 

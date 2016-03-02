@@ -74,7 +74,8 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         holder.textViewContactName.setText(contactBean.getName());
         holder.textViewContactNumberType.setText(contactBean.getPhoneNo() + " " + contactBean.getType());
 
-        if(ListMode.ADD_CONTACTS == getListMode()) {
+        if(ListMode.ADD_CONTACTS == getListMode()
+                || ListMode.SEND_RIDE_STATUS == getListMode()) {
             holder.imageViewOption.setVisibility(View.VISIBLE);
             if (contactBean.isSelected()) {
                 holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
@@ -92,14 +93,6 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         else if(ListMode.CALL_CONTACTS == getListMode()){
             holder.imageViewOption.setVisibility(View.VISIBLE);
             holder.imageViewOption.setImageResource(R.drawable.ic_phone_green);
-        }
-        else if(ListMode.SEND_RIDE_STATUS == getListMode()){
-            holder.imageViewOption.setVisibility(View.VISIBLE);
-            if (contactBean.isSelected()) {
-                holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
-            } else {
-                holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_unchecked);
-            }
         }
 
         holder.relative.setTag(position);
@@ -129,6 +122,14 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                 else if(ListMode.CALL_CONTACTS == getListMode()){
                 }
                 else if(ListMode.SEND_RIDE_STATUS == getListMode()){
+                    if (contactBeans.get(position).isSelected()) {
+                        contactBeans.get(position).setSelected(false);
+                        callback.contactClicked(position, contactBeans.get(position));
+                    } else {
+                        contactBeans.get(position).setSelected(true);
+                        callback.contactClicked(position, contactBeans.get(position));
+                    }
+                    notifyDataSetChanged();
                 }
             }
         });

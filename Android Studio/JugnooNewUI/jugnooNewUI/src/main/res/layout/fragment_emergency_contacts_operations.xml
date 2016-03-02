@@ -55,17 +55,20 @@
         />
 
     <LinearLayout
+        android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_below="@+id/topBar"
+        android:orientation="vertical"
         >
+
         <LinearLayout
             android:id="@+id/linearLayoutEmergencyContacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
             <include
                 layout="@layout/layout_emergency_contacts_header"
                 />
@@ -74,9 +77,10 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewEmergencyContacts"
                 android:layout_width="match_parent"
-                android:layout_height="260px"
+                android:layout_height="256px"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
+                android:layout_marginTop="5px"
 
                 />
 
@@ -89,6 +93,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
             <include
                 layout="@layout/layout_emergency_contacts_search_header"
                 />
@@ -100,18 +105,20 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
+                android:layout_marginTop="5px"
 
                 />
 
         </LinearLayout>
 
 
-
+        <TextView
+            android:id="@+id/textViewScroll"
+            android:layout_width="10px"
+            android:layout_height="10px"/>
 
 
     </LinearLayout>
-
-
 
 
 </RelativeLayout>

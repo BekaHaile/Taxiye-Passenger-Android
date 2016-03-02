@@ -137,18 +137,21 @@ public class AddEmergencyContactsFragment extends Fragment {
 				}, ContactsListAdapter.ListMode.ADD_CONTACTS);
 		recyclerViewContacts.setAdapter(contactsListAdapter);
 
-		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact_no_margin,
+		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
 				((List<ContactBean>)contactBeans)) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				if (convertView == null) {
 					LayoutInflater l = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-					convertView = l.inflate(R.layout.list_item_contact_no_margin, parent, false);
+					convertView = l.inflate(R.layout.list_item_contact, parent, false);
 				}
 
 				ContactBean p = getItem(position);
+				((TextView)convertView.findViewById(R.id.textViewContactName)).setTypeface(Fonts.mavenLight(activity));
+				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setTypeface(Fonts.mavenLight(activity));
 				((TextView)convertView.findViewById(R.id.textViewContactName)).setText(p.getName());
 				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo() + " " + p.getType());
+				convertView.findViewById(R.id.imageViewOption).setVisibility(View.GONE);
 
 				return convertView;
 			}
