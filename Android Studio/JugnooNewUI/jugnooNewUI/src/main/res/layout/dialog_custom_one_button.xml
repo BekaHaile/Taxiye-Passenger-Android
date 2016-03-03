@@ -38,8 +38,8 @@
                 android:paddingRight="40px"
                 android:text="Title"
                 android:textColor="@color/text_color"
-                android:textSize="50px"
-                android:visibility="gone" />
+                android:textSize="40px"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/textMessage"

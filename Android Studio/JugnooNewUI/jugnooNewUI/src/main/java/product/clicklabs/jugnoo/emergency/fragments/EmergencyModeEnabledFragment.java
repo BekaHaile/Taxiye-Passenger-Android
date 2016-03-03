@@ -186,6 +186,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 				public void onSuccess() {
 					linearLayoutDisableEmergencyMode.setVisibility(View.VISIBLE);
 					Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 1);
+					HomeActivity.localModeEnabled = 1;
 				}
 
 				@Override

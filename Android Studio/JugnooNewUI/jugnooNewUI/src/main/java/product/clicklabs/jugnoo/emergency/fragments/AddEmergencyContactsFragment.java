@@ -169,7 +169,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 								public void run() {
 									editTextContacts.dismissDropDown();
 								}
-							}, 1000);
+							}, 500);
 							editTextContacts.addObject(p);
 						} catch (Exception e) {
 							e.printStackTrace();

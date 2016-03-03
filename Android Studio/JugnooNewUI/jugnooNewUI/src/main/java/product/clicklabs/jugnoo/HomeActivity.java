@@ -5858,7 +5858,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
+    public static int localModeEnabled = -1;
     private void updateTopBar(){
         try{
             int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
@@ -5866,9 +5866,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 topRl.setBackgroundResource(R.drawable.background_red_dark);
                 title.setText(getResources().getString(R.string.emergency_mode_enabled));
             } else{
+                if(localModeEnabled == 1){
+                    DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
+                            getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
+                }
                 topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
                 title.setText(getResources().getString(R.string.app_name));
             }
+            localModeEnabled = modeEnabled;
         } catch(Exception e){
             e.printStackTrace();
         }

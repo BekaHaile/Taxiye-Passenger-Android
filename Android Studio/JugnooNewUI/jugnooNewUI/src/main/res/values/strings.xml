@@ -735,6 +735,8 @@
 	<string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only to %2$s contacts at once.</string>
 	<string name="configure_your_emergency_contacts">Configure your\nemergency contacts</string>
 	<string name="inform_your_friends">Inform your friends and family\nabout your current location everytime\nyou ride with Jugnoo</string>
+	<string name="everything_is_alright_caps">EVERYTHING IS ALRIGHT</string>
+	<string name="you_have_disabled_jugnoo_emergency">You have disabled the Jugnoo\nEmergency mode</string>
 
 
 </resources>
