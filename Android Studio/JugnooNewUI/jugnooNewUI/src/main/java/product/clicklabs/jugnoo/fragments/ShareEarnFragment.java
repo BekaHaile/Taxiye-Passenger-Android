@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -31,6 +33,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 
 	private LinearLayout linearLayoutRoot;
 
+	private ImageView imageViewLogo;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo;
 	private Button buttonInvite;
 
@@ -68,6 +71,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			e.printStackTrace();
 		}
 
+		imageViewLogo = (ImageView) rootView.findViewById(R.id.imageViewLogo);
 		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.mavenLight(activity));
 		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenLight(activity));
 		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenLight(activity));
@@ -116,6 +120,13 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 		try {
 			textViewCode.setText(Data.userData.referralCode);
 			textViewDesc.setText(Data.referralMessages.referralShortMessage);
+
+			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
+				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
+						.placeholder(R.drawable.free_rides_pic_new).error(R.drawable.free_rides_pic_new)
+						.into(imageViewLogo);
+			}
+
 		} catch(Exception e){
 			e.printStackTrace();
 		}
