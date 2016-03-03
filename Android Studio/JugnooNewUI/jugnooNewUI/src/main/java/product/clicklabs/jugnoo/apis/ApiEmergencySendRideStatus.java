@@ -44,7 +44,7 @@ public class ApiEmergencySendRideStatus {
 		this.callback = callback;
 	}
 
-	public void emergencyContactsList(String engagementId, ArrayList<String> selectedContacts) {
+	public void emergencySendRideStatusMessage(String engagementId, ArrayList<String> selectedContacts) {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
 

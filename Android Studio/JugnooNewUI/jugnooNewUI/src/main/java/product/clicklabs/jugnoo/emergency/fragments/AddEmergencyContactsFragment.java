@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.emergency.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -156,6 +157,26 @@ public class AddEmergencyContactsFragment extends Fragment {
 				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo() + " " + p.getType());
 				convertView.findViewById(R.id.imageViewOption).setVisibility(View.GONE);
 
+				convertView.findViewById(R.id.relative).setTag(position);
+				convertView.findViewById(R.id.relative).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							int position = (int) v.getTag();
+							ContactBean p = getItem(position);
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									editTextContacts.dismissDropDown();
+								}
+							}, 1000);
+							editTextContacts.addObject(p);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+
 				return convertView;
 			}
 
@@ -252,7 +273,6 @@ public class AddEmergencyContactsFragment extends Fragment {
 		try{
 			contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
 					contactBean.getPhoneNo(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT))).setSelected(selected);
-
 			contactsListAdapter.setCountAndNotify();
 		} catch(Exception e){
 			e.printStackTrace();

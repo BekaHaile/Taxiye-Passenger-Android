@@ -2905,6 +2905,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     DialogPopup.alertPopup(this, "", alertMessage);
                 }
 
+                updateTopBar();
+
             }
 
             HomeActivity.checkForAccessTokenChange(this);
@@ -5804,7 +5806,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                call100Dialog(activity);
 //            }
 
-            new EmergencyDialog(activity, new EmergencyDialog.CallBack() {
+            new EmergencyDialog(activity, Data.cEngagementId, new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
                     Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
@@ -5815,6 +5817,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);
+                }
+
+                @Override
+                public void onEmergencyModeDisabled() {
+                    updateTopBar();
                 }
 
                 @Override
@@ -5848,6 +5855,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         } else {
 //            call100Dialog(activity);
+        }
+    }
+
+
+    private void updateTopBar(){
+        try{
+            int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+            if(modeEnabled == 1){
+                topRl.setBackgroundResource(R.drawable.background_red_dark);
+                title.setText(getResources().getString(R.string.emergency_mode_enabled));
+            } else{
+                topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                title.setText(getResources().getString(R.string.app_name));
+            }
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 

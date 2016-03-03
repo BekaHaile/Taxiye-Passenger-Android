@@ -120,6 +120,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                     callback.contactClicked(position, contactBeans.get(position));
                 }
                 else if(ListMode.CALL_CONTACTS == getListMode()){
+                    callback.contactClicked(position, contactBeans.get(position));
                 }
                 else if(ListMode.SEND_RIDE_STATUS == getListMode()){
                     if (contactBeans.get(position).isSelected()) {

@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,7 +42,7 @@ public class ApiEmergencyDisable {
 		this.callback = callback;
 	}
 
-	public void emergencyContactsList(String engagementId) {
+	public void emergencyDisable(String engagementId) {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
 
@@ -64,6 +65,7 @@ public class ApiEmergencyDisable {
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+									Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
 									callback.onSuccess();
 								} else {
 									DialogPopup.alertPopup(activity, "", message);

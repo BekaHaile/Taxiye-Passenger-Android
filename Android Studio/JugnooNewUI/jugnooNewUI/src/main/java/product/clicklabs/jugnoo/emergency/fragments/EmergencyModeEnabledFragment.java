@@ -178,7 +178,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 
 	public void callEmergencyAlert(){
-		if(Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0) == 0) {
+		int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+		if(modeEnabled == 0) {
 			linearLayoutDisableEmergencyMode.setVisibility(View.GONE);
 			new ApiEmergencyAlert(activity, new ApiEmergencyAlert.Callback() {
 				@Override
@@ -202,7 +203,6 @@ public class EmergencyModeEnabledFragment extends Fragment {
 			@Override
 			public void onSuccess() {
 				performBackPressed();
-				Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
 			}
 
 			@Override
@@ -219,7 +219,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 			public void onNoRetry(View view) {
 
 			}
-		}).emergencyContactsList(driverId);
+		}).emergencyDisable(engagementId);
 	}
 
 

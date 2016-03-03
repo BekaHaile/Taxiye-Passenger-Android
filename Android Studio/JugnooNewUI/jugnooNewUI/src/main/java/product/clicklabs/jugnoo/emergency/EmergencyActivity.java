@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.emergency;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.widget.RelativeLayout;
 
@@ -128,13 +129,20 @@ public class EmergencyActivity extends BaseFragmentActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         try {
-            if(hasFocus
-					&& getSupportFragmentManager().getBackStackEntryCount() == 1
-					&& mode == EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal()){
-				Fragment frag = getSupportFragmentManager().findFragmentByTag(EmergencyModeEnabledFragment.class.getName());
-				if(frag != null && frag instanceof EmergencyModeEnabledFragment){
-					((EmergencyModeEnabledFragment)frag).callEmergencyAlert();
-				}
+            if(hasFocus){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(getSupportFragmentManager().getBackStackEntryCount() == 1
+                                && mode == EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal()) {
+                            Fragment frag = getSupportFragmentManager().findFragmentByTag(EmergencyModeEnabledFragment.class.getName());
+                            if (frag != null && frag instanceof EmergencyModeEnabledFragment) {
+                                ((EmergencyModeEnabledFragment) frag).callEmergencyAlert();
+                            }
+                        }
+                    }
+                }, 2000);
+
 			}
         } catch (Exception e) {
             e.printStackTrace();

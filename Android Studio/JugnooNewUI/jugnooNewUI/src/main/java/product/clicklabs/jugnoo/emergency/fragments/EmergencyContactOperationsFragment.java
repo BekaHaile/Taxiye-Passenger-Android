@@ -237,7 +237,9 @@ public class EmergencyContactOperationsFragment extends Fragment {
 						break;
 
 					case R.id.textViewSend:
-						clickOnSend();
+						if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
+							clickOnSend();
+						}
 						break;
 
 					case R.id.linearLayoutMain:
@@ -286,6 +288,15 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		});
 		keyboardLayoutListener.setResizeTextView(false);
 		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+
+		if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode){
+			textViewSend.setVisibility(View.VISIBLE);
+			textViewTitle.setText(activity.getResources().getString(R.string.send_ride_status));
+		} else if(ContactsListAdapter.ListMode.CALL_CONTACTS == listMode){
+			textViewSend.setVisibility(View.GONE);
+			textViewTitle.setText(activity.getResources().getString(R.string.call_your_contacts));
+		}
 
 
 		return rootView;
@@ -455,7 +466,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			public void onNoRetry(View view) {
 
 			}
-		}).emergencyContactsList(engagementId, contacts);
+		}).emergencySendRideStatusMessage(engagementId, contacts);
 	}
 
 

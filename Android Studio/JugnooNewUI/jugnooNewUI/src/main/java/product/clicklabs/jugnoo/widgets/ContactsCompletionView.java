@@ -38,4 +38,5 @@ public class ContactsCompletionView extends TokenCompleteTextView<ContactBean> {
 	protected ContactBean defaultObject(String completionText) {
 		return new ContactBean("", "", "", ContactBean.ContactBeanViewType.CONTACT);
 	}
+
 }
