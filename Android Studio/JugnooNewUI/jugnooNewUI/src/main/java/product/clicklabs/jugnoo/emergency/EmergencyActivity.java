@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.emergency;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.widget.RelativeLayout;
 
 import com.flurry.android.FlurryAgent;
@@ -12,7 +13,6 @@ import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
-import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactOperationsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyModeEnabledFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -27,6 +27,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
     public static int EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
 
     RelativeLayout relative, relativeLayoutContainer;
+    int mode;
 
     @Override
     public void onStart() {
@@ -58,12 +59,14 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
-        int mode = getIntent().getIntExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+        mode = getIntent().getIntExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
                 EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal());
 
         if(mode == EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal()) {
+            String engagementId = getIntent().getStringExtra(Constants.KEY_ENGAGEMENT_ID);
+            String driverId = getIntent().getStringExtra(Constants.KEY_DRIVER_ID);
             getSupportFragmentManager().beginTransaction()
-                    .add(relativeLayoutContainer.getId(), new EmergencyModeEnabledFragment(),
+                    .add(relativeLayoutContainer.getId(), new EmergencyModeEnabledFragment(driverId, engagementId),
                             EmergencyModeEnabledFragment.class.getName())
                     .addToBackStack(EmergencyModeEnabledFragment.class.getName())
                     .commitAllowingStateLoss();
@@ -76,13 +79,9 @@ public class EmergencyActivity extends BaseFragmentActivity {
                     .commitAllowingStateLoss();
         }
         else if(mode == EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal()){
-            int engagementId = getIntent().getIntExtra(Constants.KEY_ENGAGEMENT_ID, 0);
-            getSupportFragmentManager().beginTransaction()
-                    .add(relativeLayoutContainer.getId(),
-                            new EmergencyContactOperationsFragment(engagementId, ContactsListAdapter.ListMode.SEND_RIDE_STATUS),
-                            EmergencyContactsFragment.class.getName())
-                    .addToBackStack(EmergencyContactsFragment.class.getName())
-                    .commitAllowingStateLoss();
+            String engagementId = getIntent().getStringExtra(Constants.KEY_ENGAGEMENT_ID);
+            new FragTransUtils().openEmergencyContactsOperationsFragment(this, relativeLayoutContainer, engagementId,
+                    ContactsListAdapter.ListMode.SEND_RIDE_STATUS);
         }
 
         setEmergencyContactsAllowedToAdd();
@@ -125,6 +124,22 @@ public class EmergencyActivity extends BaseFragmentActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        try {
+            if(hasFocus
+					&& getSupportFragmentManager().getBackStackEntryCount() == 1
+					&& mode == EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal()){
+				Fragment frag = getSupportFragmentManager().findFragmentByTag(EmergencyModeEnabledFragment.class.getName());
+				if(frag != null && frag instanceof EmergencyModeEnabledFragment){
+					((EmergencyModeEnabledFragment)frag).callEmergencyAlert();
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public enum EmergencyActivityMode{
         EMERGENCY_ACTIVATE(0),

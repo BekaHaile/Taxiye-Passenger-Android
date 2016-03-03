@@ -18,9 +18,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/emergency_mode_enabled"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/top_bar_title_text_size"
-            android:textAllCaps="true"
             />
 
         <ImageView
@@ -91,54 +91,62 @@
             />
 
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/linearLayoutDisableEmergencyMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginTop="74px"
             >
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="80px"
-                android:layout_marginRight="20px"
-                android:layout_toLeftOf="@+id/textViewOr"
-                android:src="@color/text_color_hint"
-                />
-
-            <TextView
-                android:id="@+id/textViewOr"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="@string/or"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_36"
+                >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="80px"
+                    android:layout_marginRight="20px"
+                    android:layout_toLeftOf="@+id/textViewOr"
+                    android:src="@color/text_color_hint"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewOr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/or"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36"
+                    />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="80px"
+                    android:layout_toRightOf="@+id/textViewOr"
+                    android:src="@color/text_color_hint"
+                    />
+
+            </RelativeLayout>
+
+
+            <Button
+                android:id="@+id/buttonDisableEmergencyMode"
+                style="@style/ButtonThemeBig"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="74px"
+                android:text="@string/disable_emergency_mode"
                 />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                android:layout_marginRight="80px"
-                android:layout_toRightOf="@+id/textViewOr"
-                android:src="@color/text_color_hint"
-                />
-
-        </RelativeLayout>
-
-
-        <Button
-            android:id="@+id/buttonDisableEmergencyMode"
-            style="@style/ButtonThemeBig"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="74px"
-            android:text="@string/disable_emergency_mode"
-            />
-
+        </LinearLayout>
 
     </LinearLayout>
 

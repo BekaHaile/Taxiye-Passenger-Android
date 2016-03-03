@@ -3,10 +3,8 @@ package product.clicklabs.jugnoo.apis;
 import android.app.Activity;
 import android.view.View;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -16,7 +14,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -32,19 +29,19 @@ import retrofit.mime.TypedByteArray;
  *
  * Created by shankar on 3/2/16.
  */
-public class ApiEmergencySendRideStatus {
+public class ApiEmergencyDisable {
 
-	private final String TAG = ApiEmergencySendRideStatus.class.getSimpleName();
+	private final String TAG = ApiEmergencyDisable.class.getSimpleName();
 
 	private Activity activity;
 	private Callback callback;
 
-	public ApiEmergencySendRideStatus(Activity activity, Callback callback){
+	public ApiEmergencyDisable(Activity activity, Callback callback){
 		this.activity = activity;
 		this.callback = callback;
 	}
 
-	public void emergencyContactsList(String engagementId, ArrayList<String> selectedContacts) {
+	public void emergencyContactsList(String engagementId) {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
 
@@ -53,24 +50,13 @@ public class ApiEmergencySendRideStatus {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
-
-				JSONArray jsonArray = new JSONArray();
-				for(String contact : selectedContacts){
-					if(jsonArray.length() < EmergencyActivity.MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS) {
-						JSONObject jsonObject = new JSONObject();
-						jsonObject.put(Constants.KEY_PHONE_NO, contact);
-						jsonArray.put(jsonObject);
-					}
-				}
-				params.put(Constants.KEY_PHONE_NO, jsonArray.toString());
-
 				Log.i("params", "=" + params.toString());
 
-				RestClient.getApiServices().emergencySendRideStatusMessage(params, new retrofit.Callback<SettleUserDebt>() {
+				RestClient.getApiServices().emergencyDisable(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "emergencySendRideStatusMessage response = " + responseStr);
+						Log.i(TAG, "emergencyContactsList response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -78,7 +64,7 @@ public class ApiEmergencySendRideStatus {
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									callback.onSuccess(message);
+									callback.onSuccess();
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
 								}
@@ -92,7 +78,7 @@ public class ApiEmergencySendRideStatus {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "emergencySendRideStatusMessage error" + error.toString());
+						Log.e(TAG, "emergencyContactsList error" + error.toString());
 						DialogPopup.dismissLoadingDialog();
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
@@ -131,7 +117,7 @@ public class ApiEmergencySendRideStatus {
 
 
 	public interface Callback{
-		void onSuccess(String message);
+		void onSuccess();
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

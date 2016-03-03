@@ -206,6 +206,11 @@ public interface ApiService {
                          Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/emergency/disable")
+    void emergencyDisable(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/emergency/alert")
     Response emergencyAlertSync(@FieldMap Map<String, String> params);
 

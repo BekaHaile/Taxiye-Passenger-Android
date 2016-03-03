@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,8 @@ import product.clicklabs.jugnoo.utils.Utils;
  *
  * Created by shankar on 2/22/16.
  */
+
+@SuppressLint("ValidFragment")
 public class EmergencyContactOperationsFragment extends Fragment {
 
 	private RelativeLayout relative;
@@ -72,14 +75,14 @@ public class EmergencyContactOperationsFragment extends Fragment {
 	private ArrayList<ContactBean> emergencyContactBeans, phoneContactBeans;
 	private ArrayAdapter<ContactBean> phoneContactsArrayAdapter;
 
-	private int engagementId;
+	private String engagementId;
 	private ContactsListAdapter.ListMode listMode;
 
 	private View rootView;
     private FragmentActivity activity;
 
 
-	public EmergencyContactOperationsFragment(int engagementId, ContactsListAdapter.ListMode listMode){
+	public EmergencyContactOperationsFragment(String engagementId, ContactsListAdapter.ListMode listMode){
 		this.engagementId = engagementId;
 		this.listMode = listMode;
 	}
@@ -426,7 +429,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		}
 	}
 
-	private void sendRideStatusApi(final int engagementId, final ArrayList<String> contacts){
+	private void sendRideStatusApi(final String engagementId, final ArrayList<String> contacts){
 		new ApiEmergencySendRideStatus(activity, new ApiEmergencySendRideStatus.Callback() {
 			@Override
 			public void onSuccess(String message) {

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,8 @@ import retrofit.mime.TypedByteArray;
  *
  * Created by shankar on 2/22/16.
  */
+
+@SuppressLint("ValidFragment")
 public class AddEmergencyContactsFragment extends Fragment {
 
 	private final String TAG = AddEmergencyContactsFragment.class.getSimpleName();

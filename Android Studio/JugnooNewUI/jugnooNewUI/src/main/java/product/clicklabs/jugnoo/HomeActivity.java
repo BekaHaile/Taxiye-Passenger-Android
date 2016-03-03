@@ -5807,10 +5807,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new EmergencyDialog(activity, new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
-                    Prefs.with(HomeActivity.this).save(SP_EMERGENCY_MODE_ENABLED, 1);
                     Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
                     intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
                             EmergencyActivity.EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal());
+                    intent.putExtra(Constants.KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                    intent.putExtra(Constants.KEY_DRIVER_ID, Data.assignedDriverInfo.userId);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);

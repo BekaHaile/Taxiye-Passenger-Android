@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,8 +22,11 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
+import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.FragTransUtils;
+import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -35,6 +40,8 @@ import product.clicklabs.jugnoo.utils.Utils;
  *
  * Created by shankar on 2/22/16.
  */
+
+@SuppressLint("ValidFragment")
 public class EmergencyModeEnabledFragment extends Fragment {
 
 	private RelativeLayout relative;
@@ -44,11 +51,19 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 	private TextView textViewEmergencyModeEnabledMessage;
 	private Button buttonCallPolice, buttonCallEmergencyContact, buttonDisableEmergencyMode;
+	private LinearLayout linearLayoutDisableEmergencyMode;
 
 	private View rootView;
     private FragmentActivity activity;
 	private LocationFetcher locationFetcher;
 	private Location location;
+
+	private String driverId, engagementId;
+
+	public EmergencyModeEnabledFragment(String driverId, String engagementId){
+		this.driverId = driverId;
+		this.engagementId = engagementId;
+	}
 
 	@Override
 	public void onStart() {
@@ -105,6 +120,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonDisableEmergencyMode = (Button) rootView.findViewById(R.id.buttonDisableEmergencyMode);
 		buttonDisableEmergencyMode.setTypeface(Fonts.mavenRegular(activity));
 
+		linearLayoutDisableEmergencyMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutDisableEmergencyMode);
+
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
@@ -117,18 +134,18 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 					case R.id.buttonCallPolice:
 						Utils.openCallIntent(activity, "100");
-						new ApiEmergencyAlert(activity).raiseEmergencyAlertAPI(getLocation(), Constants.EMERGENCY_CALL_100);
 						break;
 
 					case R.id.buttonCallEmergencyContact:
-						if(activity instanceof EmergencyActivity){
-
+						if(activity instanceof EmergencyActivity) {
+							new FragTransUtils().openEmergencyContactsOperationsFragment(activity,
+									((EmergencyActivity)activity).getContainer(), engagementId,
+									ContactsListAdapter.ListMode.CALL_CONTACTS);
 						}
 						break;
 
 					case R.id.buttonDisableEmergencyMode:
-						Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-						performBackPressed();
+						disableEmergencyMode();
 						break;
 
 				}
@@ -149,7 +166,60 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		}, 1000, 2);
 
 
+		callEmergencyAlert();
+
+
+
 		return rootView;
+	}
+
+
+
+
+
+	public void callEmergencyAlert(){
+		if(Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0) == 0) {
+			linearLayoutDisableEmergencyMode.setVisibility(View.GONE);
+			new ApiEmergencyAlert(activity, new ApiEmergencyAlert.Callback() {
+				@Override
+				public void onSuccess() {
+					linearLayoutDisableEmergencyMode.setVisibility(View.VISIBLE);
+					Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 1);
+				}
+
+				@Override
+				public void onFailure() {
+
+				}
+			}).raiseEmergencyAlertAPI(getLocation(), "", driverId, engagementId);
+		} else{
+			linearLayoutDisableEmergencyMode.setVisibility(View.VISIBLE);
+		}
+	}
+
+	public void disableEmergencyMode(){
+		new ApiEmergencyDisable(activity, new ApiEmergencyDisable.Callback() {
+			@Override
+			public void onSuccess() {
+				performBackPressed();
+				Prefs.with(activity).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+			}
+
+			@Override
+			public void onFailure() {
+
+			}
+
+			@Override
+			public void onRetry(View view) {
+				disableEmergencyMode();
+			}
+
+			@Override
+			public void onNoRetry(View view) {
+
+			}
+		}).emergencyContactsList(driverId);
 	}
 
 
