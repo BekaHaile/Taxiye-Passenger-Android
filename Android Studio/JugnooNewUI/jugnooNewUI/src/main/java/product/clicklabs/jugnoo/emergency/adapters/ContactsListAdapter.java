@@ -67,6 +67,8 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         return new ViewHolder(v, activity);
     }
 
+    getVi
+
     @Override
     public void onBindViewHolder(ContactsListAdapter.ViewHolder holder, int position) {
         ContactBean contactBean = contactBeans.get(position);

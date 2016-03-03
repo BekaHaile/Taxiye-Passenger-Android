@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -148,7 +149,13 @@ public class AddEmergencyContactsFragment extends Fragment {
 				if (convertView == null) {
 					LayoutInflater l = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 					convertView = l.inflate(R.layout.list_item_contact, parent, false);
+					ListView.LayoutParams layoutParams = new ListView.LayoutParams(640, 128);
+					convertView.setLayoutParams(layoutParams);
+
+					ASSL.DoMagic(convertView);
 				}
+
+
 
 				ContactBean p = getItem(position);
 				((TextView)convertView.findViewById(R.id.textViewContactName)).setTypeface(Fonts.mavenLight(activity));
