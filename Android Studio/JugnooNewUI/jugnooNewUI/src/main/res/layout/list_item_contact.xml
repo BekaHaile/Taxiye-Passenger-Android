@@ -3,7 +3,7 @@
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="640px"
-    android:layout_height="wrap_content"
+    android:layout_height="128px"
     android:splitMotionEvents="false">
 
     <RelativeLayout
@@ -29,7 +29,7 @@
                 android:layout_width="128px"
                 android:layout_height="128px"
                 android:src="@drawable/ic_contact_placeholder"
-                android:tag="mwar"/>
+                />
 
 
             <TextView

@@ -85,8 +85,6 @@
                     android:layout_height="256px"
                     android:layout_marginLeft="40px"
                     android:layout_marginRight="40px"
-                    android:tag="mwar"
-
                     />
 
                 <Button

@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.emergency.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -156,33 +155,12 @@ public class AddEmergencyContactsFragment extends Fragment {
 				}
 
 
-
 				ContactBean p = getItem(position);
 				((TextView)convertView.findViewById(R.id.textViewContactName)).setTypeface(Fonts.mavenLight(activity));
 				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setTypeface(Fonts.mavenLight(activity));
 				((TextView)convertView.findViewById(R.id.textViewContactName)).setText(p.getName());
 				((TextView)convertView.findViewById(R.id.textViewContactNumberType)).setText(p.getPhoneNo() + " " + p.getType());
 				convertView.findViewById(R.id.imageViewOption).setVisibility(View.GONE);
-
-				convertView.findViewById(R.id.relative).setTag(position);
-				convertView.findViewById(R.id.relative).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						try {
-							int position = (int) v.getTag();
-							ContactBean p = getItem(position);
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									editTextContacts.dismissDropDown();
-								}
-							}, 500);
-							editTextContacts.addObject(p);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
 
 				return convertView;
 			}
