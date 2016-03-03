@@ -5851,7 +5851,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onDialogDismissed() {
 
                 }
-            }).show();
+            }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
 
         } else {
 //            call100Dialog(activity);
@@ -5861,7 +5861,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static int localModeEnabled = -1;
     private void updateTopBar(){
         try{
-            int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+            int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
             if(modeEnabled == 1){
                 topRl.setBackgroundResource(R.drawable.background_red_dark);
                 title.setText(getResources().getString(R.string.emergency_mode_enabled));

@@ -10,12 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * For the purpose of showing emergency options dialog
@@ -38,7 +36,7 @@ public class EmergencyDialog {
 	}
 
 
-	public Dialog show(){
+	public Dialog show(final int modeEnabled){
 		try {
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -72,7 +70,6 @@ public class EmergencyDialog {
 					switch (v.getId()){
 
 						case R.id.textViewEnableEmergencyMode:
-							int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
 							if(modeEnabled == 1){
 								disableEmergencyMode();
 							} else{
@@ -125,7 +122,6 @@ public class EmergencyDialog {
 			});
 
 
-			int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
 			if(modeEnabled == 1){
 				textViewEnableEmergencyMode.setText(activity.getResources().getString(R.string.disable_emergency_mode));
 			} else{
