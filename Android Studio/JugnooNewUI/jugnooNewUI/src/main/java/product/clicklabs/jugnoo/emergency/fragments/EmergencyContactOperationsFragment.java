@@ -149,7 +149,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 				new ContactsListAdapter.Callback() {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
-
+						contactCalledAccToListMode(contactBean);
 					}
 				}, listMode);
 		recyclerViewEmergencyContacts.setAdapter(emergencyContactsListAdapter);
@@ -169,7 +169,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 				new ContactsListAdapter.Callback() {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
-
+						contactCalledAccToListMode(contactBean);
 					}
 				}, listMode);
 		recyclerViewPhoneContacts.setAdapter(phoneContactsListAdapter);
@@ -197,8 +197,10 @@ public class EmergencyContactOperationsFragment extends Fragment {
 						try {
 							int position = (int) v.getTag();
 							ContactBean p = getItem(position);
-							setSelectedObject(true, p);
 							editTextPhoneContacts.dismissDropDown();
+							if(!contactCalledAccToListMode(p)) {
+								setSelectedObject(true, p);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -358,7 +360,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 	}
 
 
-	public void getAllEmergencyContacts() {
+	private void getAllEmergencyContacts() {
 		new ApiEmergencyContactsList(activity, new ApiEmergencyContactsList.Callback() {
 			@Override
 			public void onSuccess() {
@@ -382,7 +384,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		}).emergencyContactsList();
 	}
 
-	public void clickOnSend(){
+	private void clickOnSend(){
 		final ArrayList<String> contacts = new ArrayList<>();
 		for(ContactBean contactBean : emergencyContactBeans){
 			if(contactBean.isSelected()){
@@ -424,7 +426,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		}
 	}
 
-	public void sendRideStatusApi(final int engagementId, final ArrayList<String> contacts){
+	private void sendRideStatusApi(final int engagementId, final ArrayList<String> contacts){
 		new ApiEmergencySendRideStatus(activity, new ApiEmergencySendRideStatus.Callback() {
 			@Override
 			public void onSuccess(String message) {
@@ -452,6 +454,19 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			}
 		}).emergencyContactsList(engagementId, contacts);
 	}
+
+
+	private boolean contactCalledAccToListMode(ContactBean contactBean){
+		if(ContactsListAdapter.ListMode.CALL_CONTACTS == listMode){
+			Utils.openCallIntent(activity, contactBean.getPhoneNo());
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,7 +65,11 @@ public class EmergencyContactsFragment extends Fragment {
 	private TextView textViewTitle, textViewEdit;
 	private ImageView imageViewBack;
 
+	private LinearLayout linearLayoutContactsList;
 	private RecyclerView recyclerViewContacts;
+
+	private LinearLayout linearLayoutNoContacts;
+
 	private Button buttonAddContact;
 	private ContactsListAdapter contactsListAdapter;
 	private ArrayList<ContactBean> contactBeans;
@@ -109,12 +115,21 @@ public class EmergencyContactsFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewEdit = (TextView) rootView.findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Fonts.mavenRegular(activity));
 
+		linearLayoutContactsList = (LinearLayout) rootView.findViewById(R.id.linearLayoutContactsList);
 		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenLight(activity));
-
 		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
 		recyclerViewContacts.setLayoutManager(new LinearLayoutLayoutManagerResizableRecyclerView(activity));
 		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewContacts.setHasFixedSize(false);
+
+		linearLayoutNoContacts = (LinearLayout) rootView.findViewById(R.id.linearLayoutNoContacts);
+		((TextView)rootView.findViewById(R.id.textViewConfigureContacts)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		((TextView)rootView.findViewById(R.id.textViewInformYourFriends)).setTypeface(Fonts.mavenLight(activity));
+
+		textViewEdit.setVisibility(View.VISIBLE);
+		linearLayoutContactsList.setVisibility(View.VISIBLE);
+		linearLayoutNoContacts.setVisibility(View.GONE);
+
 
 		buttonAddContact = (Button) rootView.findViewById(R.id.buttonAddContact);
 		buttonAddContact.setTypeface(Fonts.mavenRegular(activity));
@@ -251,6 +266,16 @@ public class EmergencyContactsFragment extends Fragment {
 			}
 			notifyListAndShowAddContactsButton();
 			EmergencyActivity.setEmergencyContactsAllowedToAdd();
+
+			if(contactBeans.size() > 0) {
+				textViewEdit.setVisibility(View.VISIBLE);
+				linearLayoutContactsList.setVisibility(View.VISIBLE);
+				linearLayoutNoContacts.setVisibility(View.GONE);
+			} else{
+				textViewEdit.setVisibility(View.GONE);
+				linearLayoutContactsList.setVisibility(View.GONE);
+				linearLayoutNoContacts.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
