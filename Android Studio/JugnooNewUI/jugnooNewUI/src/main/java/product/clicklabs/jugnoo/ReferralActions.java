@@ -148,7 +148,7 @@ public class ReferralActions implements FlurryEventNames {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
                     sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
-                        + link);
+                            + link);
                     activity.startActivity(sms_intent);
                 }
 
@@ -239,7 +239,7 @@ public class ReferralActions implements FlurryEventNames {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ResolveInfo info = (ResolveInfo) adapter.getItem(which);
-                if (info.activityInfo.packageName.contains("facebook")) {
+                if (info.activityInfo.packageName.contains("com.facebook.katana")) {
                     shareToFacebookBasic(activity, callbackManager, link);
 					FlurryEventLogger.event(GENERIC_FACEBOOK);
                 }
@@ -279,24 +279,44 @@ public class ReferralActions implements FlurryEventNames {
 
     private static void sortApps(List<ResolveInfo> infos){
         try{
-            ResolveInfo fb = null, whatsapp = null, sms = null, mail = null;
+            //com.facebook.orca
+            //com.twitter.android
+
+            ResolveInfo fb = null, whatsapp = null, sms = null, mail = null, fbMsgr = null, twitter = null;
             for(int i=0; i<infos.size(); i++){
                 ResolveInfo info = infos.get(i);
                 if (info.activityInfo.packageName.contains("com.facebook.katana") && fb == null) {
                     fb = infos.remove(i);
+                    i--;
                 }
                 else if((info.activityInfo.packageName.contains("com.google.android.gm")
                     || info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
                     || info.activityInfo.packageName.contains("com.microsoft.office.outlook")
                     || info.activityInfo.packageName.contains("com.google.android.apps.inbox")) && mail == null){
                     mail = infos.remove(i);
+                    i--;
                 }
                 else if(info.activityInfo.packageName.contains("com.whatsapp") && whatsapp == null){
                     whatsapp = infos.remove(i);
+                    i--;
                 }
                 else if(info.activityInfo.packageName.contains("com.android.mms") && sms == null){
                     sms = infos.remove(i);
+                    i--;
                 }
+
+                else if(info.activityInfo.packageName.contains("com.facebook.orca") && fbMsgr == null){
+                    fbMsgr = infos.remove(i);
+                    i--;
+                }
+                else if(info.activityInfo.packageName.contains("com.twitter.android") && twitter == null){
+                    twitter = infos.remove(i);
+                    i--;
+                }
+            }
+
+            if(twitter != null){
+                infos.add(0, twitter);
             }
             if(mail != null){
                 infos.add(0, mail);
@@ -304,11 +324,14 @@ public class ReferralActions implements FlurryEventNames {
             if(sms != null){
                 infos.add(0, sms);
             }
-            if(whatsapp != null){
-                infos.add(0, whatsapp);
+            if(fbMsgr != null){
+                infos.add(0, fbMsgr);
             }
             if(fb != null){
                 infos.add(0, fb);
+            }
+            if(whatsapp != null){
+                infos.add(0, whatsapp);
             }
         } catch(Exception e){
             e.printStackTrace();

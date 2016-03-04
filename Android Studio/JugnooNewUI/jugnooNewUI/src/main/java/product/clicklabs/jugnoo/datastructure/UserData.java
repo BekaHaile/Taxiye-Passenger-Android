@@ -24,6 +24,7 @@ public class UserData {
 	private String jugnooCashTNC;
 	private String inAppSupportPanelVersion, userId;
 	private int getGogu;
+	private String inviteEarnScreenImage;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -32,7 +33,8 @@ public class UserData {
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
-					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu, String userId){
+					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
+					String userId, String inviteEarnScreenImage){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -77,6 +79,7 @@ public class UserData {
 		this.inAppSupportPanelVersion = inAppSupportPanelVersion;
 		this.getGogu = getGogu;
 		this.userId = userId;
+		this.inviteEarnScreenImage = inviteEarnScreenImage;
 	}
 
 	public double getJugnooBalance() {
@@ -243,5 +246,13 @@ public class UserData {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getInviteEarnScreenImage() {
+		return inviteEarnScreenImage;
+	}
+
+	public void setInviteEarnScreenImage(String inviteEarnScreenImage) {
+		this.inviteEarnScreenImage = inviteEarnScreenImage;
 	}
 }

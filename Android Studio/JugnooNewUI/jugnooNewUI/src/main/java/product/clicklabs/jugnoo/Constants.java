@@ -114,6 +114,7 @@ public interface Constants {
 
 
 	String KEY_GET_GOGU = "get_gogu";
+	String KEY_INVITE_EARN_SCREEN_IMAGE_ANDROID = "invite_earn_screen_image_android";
 
 	String KEY_EMERGENCY_ACTIVITY_MODE = "emergency_activity_mode";
 	String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
