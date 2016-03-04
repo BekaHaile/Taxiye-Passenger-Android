@@ -21,9 +21,9 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
     private final String TAG = EmergencyActivity.class.getSimpleName();
 
-    public static final  int MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS = 10;
-    public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
-    public static int EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 5;
+    public static final  int MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS = 5;
+    public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 3;
+    public static int EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 3;
 
     RelativeLayout relative, relativeLayoutContainer;
     int mode;
