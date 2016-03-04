@@ -119,6 +119,7 @@ public interface Constants {
 	String KEY_EMERGENCY_ACTIVITY_MODE = "emergency_activity_mode";
 	String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
 	String KEY_NAME = "name";
+	String KEY_TRIP_TOTAL = "trip_total";
 
 
 

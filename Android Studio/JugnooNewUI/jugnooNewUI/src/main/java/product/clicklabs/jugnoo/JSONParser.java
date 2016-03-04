@@ -453,6 +453,7 @@ public class JSONParser implements Constants {
 
         String rideDate = jLastRideData.optString(KEY_RIDE_DATE, "");
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
+        String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
@@ -467,7 +468,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber);
+                rideDate, phoneNumber, tripTotal);
 	}
 
 

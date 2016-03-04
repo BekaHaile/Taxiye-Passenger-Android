@@ -211,7 +211,13 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				textViewStart.append(" " + endRideData.pickupTime);
 				textViewEnd.append(" " + endRideData.dropTime);
 
-				textViewTripTotalValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.fare));
+				if("".equalsIgnoreCase(endRideData.getTripTotal())){
+					textViewTripTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				} else{
+					textViewTripTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+							endRideData.getTripTotal()));
+				}
 
 				if(!"".equalsIgnoreCase(endRideData.driverImage)){
 					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
