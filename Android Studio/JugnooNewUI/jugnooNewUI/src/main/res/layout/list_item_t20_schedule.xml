@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_white"
+    android:orientation="vertical"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="174px">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="19"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_50"
+                />
+
+            <TextView
+                android:id="@+id/textViewMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3px"
+                android:text="MAR"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                />
+
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3px"
+                android:text="19:30 IST"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_18"
+                />
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="474px"
+            android:layout_height="2px"
+            android:layout_above="@+id/relativeLayoutTeamInfo"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="70px"
+            android:background="@color/text_color_light"
+            />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutTeamInfo"
+            android:layout_width="474px"
+            android:layout_height="86px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="70px"
+            android:background="@color/sliding_bottom_bg_color"
+            >
+
+            <ImageView
+                android:id="@+id/imageViewTeam1Flag"
+                android:layout_width="84px"
+                android:layout_height="50px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8px"
+                />
+
+            <TextView
+                android:id="@+id/textViewTeam1"
+                android:layout_width="100px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10px"
+                android:layout_toLeftOf="@+id/textViewVS"
+                android:gravity="center"
+                android:text="IND"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_36"
+                />
+
+            <TextView
+                android:id="@+id/textViewVS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/vs"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_36"
+                />
+
+            <TextView
+                android:id="@+id/textViewTeam2"
+                android:layout_width="100px"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:layout_toRightOf="@+id/textViewVS"
+                android:gravity="center"
+                android:text="PAK"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_36"
+                />
+
+
+            <ImageView
+                android:id="@+id/imageViewTeam2Flag"
+                android:layout_width="84px"
+                android:layout_height="50px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8px"
+                />
+
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="474px"
+            android:layout_height="2px"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/relativeLayoutTeamInfo"
+            android:layout_marginRight="70px"
+            android:background="@color/text_color_light"
+            />
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/nl_white_dark"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100px">
+
+
+        <TextView
+            android:id="@+id/textViewYourGuess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/your_guess"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_28"
+            android:textAllCaps="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="60px"
+            />
+
+
+        <TextView
+            android:id="@+id/textViewYourGuessValue"
+            android:layout_width="200px"
+            android:layout_height="wrap_content"
+            android:text="IND"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_36"
+            android:textAllCaps="true"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="140px"
+            android:gravity="center"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@color/text_color_hint"
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

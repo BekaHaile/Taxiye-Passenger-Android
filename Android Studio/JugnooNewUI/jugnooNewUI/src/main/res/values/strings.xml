@@ -708,4 +708,7 @@
 	<string name="star_please_fill_required_information">* Please fill required information</string>
 
 
+	<string name="vs">vs</string>
+	<string name="your_guess">Your Guess</string>
+
 </resources>
