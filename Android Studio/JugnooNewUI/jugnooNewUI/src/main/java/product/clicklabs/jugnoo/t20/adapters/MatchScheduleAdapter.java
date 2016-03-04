@@ -13,10 +13,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.t20.models.MatchSchedule;
+import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
+import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.t20.models.Selection;
+import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -27,17 +28,17 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdapter.ViewHolder> {
 
     private Activity activity;
-    private ArrayList<MatchSchedule> matchSchedules = new ArrayList<>();
+    private MatchScheduleResponse matchScheduleResponse = null;
 
-    public MatchScheduleAdapter(ArrayList<MatchSchedule> matchSchedules, Activity activity) {
-        if(matchSchedules != null){
-            this.matchSchedules = matchSchedules;
+    public MatchScheduleAdapter(MatchScheduleResponse matchScheduleResponse, Activity activity) {
+        if(matchScheduleResponse != null){
+            this.matchScheduleResponse = matchScheduleResponse;
         }
         this.activity = activity;
     }
 
-    public void setResults(ArrayList<MatchSchedule> items){
-        this.matchSchedules = items;
+    public void setResults(MatchScheduleResponse matchScheduleResponse){
+        this.matchScheduleResponse = matchScheduleResponse;
         notifyDataSetChanged();
     }
 
@@ -55,40 +56,66 @@ public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdap
 
     @Override
     public void onBindViewHolder(MatchScheduleAdapter.ViewHolder holder, int position) {
-        MatchSchedule matchSchedule = matchSchedules.get(position);
-        holder.textViewDate.setText(matchSchedule.getDate());
-        holder.textViewMonth.setText(matchSchedule.getMonth());
+        Schedule schedule = matchScheduleResponse.getSchedule().get(position);
+
+        if(schedule.getTeam1() == null){
+            int index1 = matchScheduleResponse.getTeams().indexOf(new Team(schedule.getTeam1Id(), "", "", ""));
+            if (-1 != index1) {
+                matchScheduleResponse.getSchedule().get(position).setTeam1(matchScheduleResponse.getTeams().get(index1));
+            }
+        }
+        if(schedule.getTeam2() == null){
+            int index2 = matchScheduleResponse.getTeams().indexOf(new Team(schedule.getTeam2Id(), "", "", ""));
+            if (-1 != index2) {
+                matchScheduleResponse.getSchedule().get(position).setTeam2(matchScheduleResponse.getTeams().get(index2));
+            }
+        }
+        if(schedule.getSelectedTeamId() == null){
+            int index = matchScheduleResponse.getSelections().indexOf(new Selection(schedule.getScheduleId(), -1));
+            if(-1 != index){
+                matchScheduleResponse.getSchedule().get(position)
+                        .setSelectedTeamId(matchScheduleResponse.getSelections().get(index).getTeamId());
+            } else{
+                matchScheduleResponse.getSchedule().get(position).setSelectedTeamId(-1);
+            }
+        }
+        schedule = matchScheduleResponse.getSchedule().get(position);
+
+
+        holder.textViewDate.setText(schedule.getDate());
+        holder.textViewMonth.setText(schedule.getMonth());
         holder.textViewTime.setText(String.format(activity.getResources().getString(R.string.time_ist_format),
-                matchSchedule.getTime()));
-        holder.textViewTeam1.setText(matchSchedule.getTeam1NameShort());
-        holder.textViewTeam2.setText(matchSchedule.getTeam2NameShort());
-        if(matchSchedule.getGuessTeamId() == matchSchedule.getTeam1Id()){
-            holder.textViewYourGuessValue.setText(matchSchedule.getTeam1NameShort());
-        } else{
-            holder.textViewYourGuessValue.setText(matchSchedule.getTeam2NameShort());
-        }
-
-        try{
-            Picasso.with(activity).load(matchSchedule.getTeam1Flag()).into(holder.imageViewTeam1Flag);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            Picasso.with(activity).load(matchSchedule.getTeam2Flag()).into(holder.imageViewTeam2Flag);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-        if(matchSchedule.getGuessTeamId() == -1){
-            holder.relativeLayoutGuess.setVisibility(View.GONE);
-        } else{
+                schedule.getTime()));
+        holder.textViewTeam1.setText(schedule.getTeam1().getShortName());
+        holder.textViewTeam2.setText(schedule.getTeam2().getShortName());
+        if(!schedule.getSelectedTeamId().equals(-1)) {
             holder.relativeLayoutGuess.setVisibility(View.VISIBLE);
+            if (schedule.getSelectedTeamId().equals(schedule.getTeam1Id())) {
+                holder.textViewYourGuessValue.setText(schedule.getTeam1().getName());
+            } else {
+                holder.textViewYourGuessValue.setText(schedule.getTeam2().getName());
+            }
+        } else{
+            holder.relativeLayoutGuess.setVisibility(View.GONE);
+            holder.textViewYourGuessValue.setText("-");
         }
+
+        try{
+            Picasso.with(activity).load(schedule.getTeam1().getFlagImageUrl()).into(holder.imageViewTeam1Flag);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            Picasso.with(activity).load(schedule.getTeam2().getFlagImageUrl()).into(holder.imageViewTeam2Flag);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
 	}
 
     @Override
     public int getItemCount() {
-        return matchSchedules == null ? 0 : matchSchedules.size();
+        return matchScheduleResponse == null ? 0 : matchScheduleResponse.getSchedule().size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -16,17 +16,13 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchT20Schedule;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.t20.adapters.MatchScheduleAdapter;
-import product.clicklabs.jugnoo.t20.models.MatchSchedule;
+import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -43,7 +39,7 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 
 	private RecyclerView recyclerViewSchedule;
 	private MatchScheduleAdapter matchScheduleAdapter;
-	private ArrayList<MatchSchedule> matchSchedules;
+	private MatchScheduleResponse matchScheduleResponse;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -86,7 +82,8 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 		recyclerViewSchedule.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewSchedule.setHasFixedSize(false);
 
-		matchScheduleAdapter = new MatchScheduleAdapter(matchSchedules, activity);
+		matchScheduleAdapter = new MatchScheduleAdapter(null, activity);
+		recyclerViewSchedule.setAdapter(matchScheduleAdapter);
 
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -117,13 +114,9 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 	private void fetchT20Schedule(){
 		new ApiFetchT20Schedule(activity, new ApiFetchT20Schedule.Callback() {
 			@Override
-			public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
-
-			}
-
-			@Override
-			public boolean onActionFailed(String message) {
-				return false;
+			public void onSuccess(MatchScheduleResponse matchScheduleResponse) {
+				T20ScheduleFragment.this.matchScheduleResponse = matchScheduleResponse;
+				matchScheduleAdapter.setResults(T20ScheduleFragment.this.matchScheduleResponse);
 			}
 
 			@Override

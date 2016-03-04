@@ -15,10 +15,8 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -49,19 +47,18 @@ public class ApiFetchT20Schedule {
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-			RestClient.getApiServices().fetchT20ScheduleAndUserSelections(params, new retrofit.Callback<SettleUserDebt>() {
+			RestClient.getApiServices().fetchT20ScheduleAndUserSelections(params, new retrofit.Callback<MatchScheduleResponse>() {
 				@Override
-				public void success(SettleUserDebt getRideSummaryResponse, Response response) {
+				public void success(MatchScheduleResponse matchScheduleResponse, Response response) {
 					DialogPopup.dismissLoadingDialog();
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "fetchT20ScheduleAndUserSelections jsonString=" + jsonString);
 						JSONObject jObj = new JSONObject(jsonString);
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-							int flag = jObj.getInt(Constants.KEY_FLAG);
 							String message = JSONParser.getServerMessage(jObj);
-							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-
+							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == matchScheduleResponse.getFlag()){
+								callback.onSuccess(matchScheduleResponse);
 							} else{
 								DialogPopup.alertPopup(activity, "", message);
 							}
@@ -106,28 +103,8 @@ public class ApiFetchT20Schedule {
 				});
 	}
 
-	private void retryDialog(String message){
-		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
-				activity.getResources().getString(R.string.retry),
-				activity.getResources().getString(R.string.cancel),
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						callback.onRetry(v);
-					}
-				},
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						callback.onNoRetry(v);
-					}
-				}, false, false);
-	}
-
-
 	public interface Callback{
-		void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse);
-		boolean onActionFailed(String message);
+		void onSuccess(MatchScheduleResponse matchScheduleResponse);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);
