@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -710,5 +710,12 @@
 
 	<string name="vs">vs</string>
 	<string name="your_guess">Your Guess</string>
+	<string name="t20_world_cup_2016">T20 World Cup 2016</string>
+	<string name="time_ist_format">%s IST</string>
+	<string name="str_new">New</string>
+	<string name="play_predict_win">Play, Predict &amp; Win</string>
+	<string name="team_vs_team_format">%s Vs %s</string>
+	<string name="t20_terms">Guess the winner of today's T20 match after your ride starts and win exciting Offers from Jugnoo</string>
+	<string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
 
 </resources>

@@ -193,13 +193,17 @@ public class JSONParser implements Constants {
 
         String inviteEarnScreenImage = userData.optString(KEY_INVITE_EARN_SCREEN_IMAGE_ANDROID, "");
 
+        int t20WCEnable = userData.optInt(KEY_T20_WC_ENABLE, 0);
+        String t20WCScheduleVersion = userData.optString(KEY_T20_WC_SCHEDULE_VERSION, "0");
+
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
-                jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage);
+                jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
+                t20WCEnable, t20WCScheduleVersion);
 
     }
 

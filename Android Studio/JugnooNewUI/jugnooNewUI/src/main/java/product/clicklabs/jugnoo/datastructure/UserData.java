@@ -26,6 +26,9 @@ public class UserData {
 	private int getGogu;
 	private String inviteEarnScreenImage;
 
+	private int t20WCEnable;
+	private String t20WCScheduleVersion;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
 			String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
@@ -34,7 +37,8 @@ public class UserData {
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
 					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
-					String userId, String inviteEarnScreenImage){
+					String userId, String inviteEarnScreenImage,
+					int t20WCEnable, String t20WCScheduleVersion){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -80,6 +84,9 @@ public class UserData {
 		this.getGogu = getGogu;
 		this.userId = userId;
 		this.inviteEarnScreenImage = inviteEarnScreenImage;
+
+		this.t20WCEnable = t20WCEnable;
+		this.t20WCScheduleVersion = t20WCScheduleVersion;
 	}
 
 	public double getJugnooBalance() {
@@ -254,5 +261,21 @@ public class UserData {
 
 	public void setInviteEarnScreenImage(String inviteEarnScreenImage) {
 		this.inviteEarnScreenImage = inviteEarnScreenImage;
+	}
+
+	public int getT20WCEnable() {
+		return t20WCEnable;
+	}
+
+	public void setT20WCEnable(int t20WCEnable) {
+		this.t20WCEnable = t20WCEnable;
+	}
+
+	public String getT20WCScheduleVersion() {
+		return t20WCScheduleVersion;
+	}
+
+	public void setT20WCScheduleVersion(String t20WCScheduleVersion) {
+		this.t20WCScheduleVersion = t20WCScheduleVersion;
 	}
 }

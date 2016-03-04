@@ -338,4 +338,10 @@ public interface ApiService {
                          Callback<SettleUserDebt> callback);
 
 
+
+    @FormUrlEncoded
+    @POST("/fetch_T20_schedule_and_user_selections")
+    void fetchT20ScheduleAndUserSelections(@FieldMap Map<String, String> params,
+                                           Callback<SettleUserDebt> callback);
+
 }

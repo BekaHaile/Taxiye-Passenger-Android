@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_white"
     android:orientation="vertical"
+    android:id="@+id/relative"
     >
 
 
@@ -143,17 +144,17 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="3px"
-        android:background="@color/nl_white_dark"
-        />
-
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutGuess"
         android:layout_width="match_parent"
         android:layout_height="100px">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:background="@color/nl_white_dark"
+            />
 
         <TextView
             android:id="@+id/textViewYourGuess"
@@ -182,15 +183,16 @@
             android:gravity="center"
             />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="3px"
-            android:background="@color/text_color_hint"
-            android:layout_alignParentBottom="true"
-            />
+
 
     </RelativeLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/text_color_hint"
+        android:layout_alignParentBottom="true"
+        />
 
 
 </LinearLayout>

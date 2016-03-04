@@ -131,6 +131,7 @@ import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -183,6 +184,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     LinearLayout linearLayoutProfile;
     ImageView imageViewProfile;
     TextView textViewUserName, textViewViewAccount;
+
+    RelativeLayout relativeLayoutT20WorldCup;
 
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
@@ -493,6 +496,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount);
         textViewViewAccount.setTypeface(Fonts.latoRegular(this));
 
+        relativeLayoutT20WorldCup = (RelativeLayout) findViewById(R.id.relativeLayoutT20WorldCup);
+        ((TextView)findViewById(R.id.textViewT20WorldCup)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewT20WorldCupNew)).setTypeface(Fonts.mavenLight(this));
+
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
         textViewGetRide.setTypeface(Fonts.mavenLight(this));
@@ -743,6 +750,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
+
+        relativeLayoutT20WorldCup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.userData.getT20WCEnable() == 1) {
+                    Intent intent = new Intent(HomeActivity.this, T20Activity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(WORLD_CUP_MENU);
+                }
+            }
+        });
 
         relativeLayoutGetRide.setOnClickListener(new OnClickListener() {
 
@@ -1484,6 +1503,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+            }
+
+            if(Data.userData.getT20WCEnable() == 1){
+                relativeLayoutT20WorldCup.setVisibility(View.VISIBLE);
+            } else{
+                relativeLayoutT20WorldCup.setVisibility(View.GONE);
             }
 
         } catch (Exception e) {
