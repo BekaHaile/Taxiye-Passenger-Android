@@ -27,6 +27,14 @@ public class MatchScheduleResponse {
 	@Expose
 	private String info;
 
+	public MatchScheduleResponse(Integer flag, List<Schedule> schedule, List<Team> teams,
+								 List<Selection> selections, String info){
+		this.flag = flag;
+		this.schedule = schedule;
+		this.teams = teams;
+		this.selections = selections;
+	}
+
 	/**
 	 *
 	 * @return

@@ -114,6 +114,6 @@ public interface Constants {
 	String KEY_INVITE_EARN_SCREEN_IMAGE_ANDROID = "invite_earn_screen_image_android";
 
 	String KEY_T20_WC_ENABLE = "t20_wc_enable";
-	String KEY_T20_WC_SCHEDULE_VERSION = "t20_wc_schedule_version";
+	String KEY_SP_T20_WC_SCHEDULE_VERSION = "t20_wc_schedule_version";
 
 }

@@ -23,6 +23,10 @@ import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.t20.models.Selection;
+import product.clicklabs.jugnoo.t20.models.T20DataType;
+import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -82,6 +86,11 @@ public class Database2 {                                                        
     private static final String TABLE_SUPPORT_DATA = "table_support_data";
     private static final String SUPPORT_CATEGORY = "support_category";
     private static final String SUPPORT_DATA = "support_data";
+
+
+    private static final String TABLE_T20_DATA = "table_t20_data";
+    private static final String T20_CATEGORY = "t20_category";
+    private static final String T20_DATA = "t20_data";
 
 
     /**
@@ -147,6 +156,11 @@ public class Database2 {                                                        
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_SUPPORT_DATA + " ("
                 + SUPPORT_CATEGORY + " INTEGER, "
                 + SUPPORT_DATA + " TEXT"
+                + ");");
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_T20_DATA + " ("
+                + T20_CATEGORY + " INTEGER, "
+                + T20_DATA + " TEXT"
                 + ");");
 
     }
@@ -573,6 +587,88 @@ public class Database2 {                                                        
         return menu;
     }
 
+
+
+
+
+
+
+
+
+
+
+    private void insertT20Data(int category, String t20Data) {
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(T20_CATEGORY, category);
+            contentValues.put(T20_DATA, t20Data);
+            database.insert(TABLE_T20_DATA, null, contentValues);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void insertUpdateT20Data(int category, List t20Data){
+        try{
+            Gson gson = new Gson();
+            JsonElement element = null;
+            if(T20DataType.SCHEDULE.getOrdinal() == category) {
+                element = gson.toJsonTree(t20Data, new TypeToken<List<Schedule>>() {}.getType());
+            } else if(T20DataType.SELECTION.getOrdinal() == category){
+                element = gson.toJsonTree(t20Data, new TypeToken<List<Selection>>() {}.getType());
+            } else if(T20DataType.TEAM.getOrdinal() == category){
+                element = gson.toJsonTree(t20Data, new TypeToken<List<Team>>() {}.getType());
+            } else{
+                return;
+            }
+
+            if (element == null || !element.isJsonArray()) {
+                throw new Exception();
+            }
+
+            JsonArray jsonArray = element.getAsJsonArray();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(T20_DATA, jsonArray.toString());
+            int rowsAffected = database.update(TABLE_T20_DATA, contentValues, T20_CATEGORY + "=" + category, null);
+            if(rowsAffected == 0){
+                insertT20Data(category, jsonArray.toString());
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList getT20DataItems(int category){
+        ArrayList dataList = new ArrayList();
+        try{
+            String[] columns = new String[] { T20_DATA };
+            Cursor cursor = database.query(TABLE_T20_DATA, columns, T20_CATEGORY + "=" + category,
+                    null, null, null, null);
+
+            if(cursor.getCount() > 0){
+                cursor.moveToFirst();
+                String data = cursor.getString(cursor.getColumnIndex(T20_DATA));
+
+                Gson gson = new Gson();
+
+                if(T20DataType.SCHEDULE.getOrdinal() == category) {
+                    dataList = gson.fromJson(data, new TypeToken<List<Schedule>>() {}.getType());
+                } else if(T20DataType.SELECTION.getOrdinal() == category){
+                    dataList = gson.fromJson(data, new TypeToken<List<Selection>>() {}.getType());
+                } else if(T20DataType.TEAM.getOrdinal() == category){
+                    dataList = gson.fromJson(data, new TypeToken<List<Team>>() {}.getType());
+                } else{
+                    throw new Exception();
+                }
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return dataList;
+    }
 
 
 }
