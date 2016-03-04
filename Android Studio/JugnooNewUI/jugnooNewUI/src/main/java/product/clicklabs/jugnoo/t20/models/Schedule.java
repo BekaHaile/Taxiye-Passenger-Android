@@ -135,7 +135,7 @@ public class Schedule {
 	}
 
 	public String getDate(){
-		return getCalendar().getDisplayName(Calendar.DATE, Calendar.SHORT, Locale.getDefault());
+		return String.valueOf(getCalendar().get(Calendar.DAY_OF_MONTH));
 	}
 
 	public String getMonth(){
@@ -143,9 +143,18 @@ public class Schedule {
 	}
 
 	public String getTime(){
-		return getCalendar().getDisplayName(Calendar.HOUR_OF_DAY, Calendar.SHORT, Locale.getDefault())
-				+" "+
-				getCalendar().getDisplayName(Calendar.MINUTE, Calendar.SHORT, Locale.getDefault());
+		int hour = getCalendar().get(Calendar.HOUR_OF_DAY);
+		int min = getCalendar().get(Calendar.MINUTE);
+		StringBuilder sb = new StringBuilder();
+		if(hour < 10){
+			sb.append("0");
+		}
+		sb.append(hour).append(":");
+		if(min < 10){
+			sb.append("0");
+		}
+		sb.append(min);
+		return sb.toString();
 	}
 
 	public Integer getSelectedTeamId() {

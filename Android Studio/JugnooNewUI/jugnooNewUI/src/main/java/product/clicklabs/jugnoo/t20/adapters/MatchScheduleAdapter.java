@@ -92,12 +92,13 @@ public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdap
             holder.relativeLayoutGuess.setVisibility(View.VISIBLE);
             if (schedule.getSelectedTeamId().equals(schedule.getTeam1Id())) {
                 holder.textViewYourGuessValue.setText(schedule.getTeam1().getName());
-            } else {
+            } else if (schedule.getSelectedTeamId().equals(schedule.getTeam2Id())){
                 holder.textViewYourGuessValue.setText(schedule.getTeam2().getName());
+            } else{
+                holder.textViewYourGuessValue.setText("-");
             }
         } else{
             holder.relativeLayoutGuess.setVisibility(View.GONE);
-            holder.textViewYourGuessValue.setText("-");
         }
 
         try{
@@ -128,12 +129,12 @@ public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdap
             super(itemView);
             relative = (LinearLayout) itemView.findViewById(R.id.relative);
             textViewDate = (TextView)itemView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-            textViewMonth = (TextView) itemView.findViewById(R.id.textViewMonth); textViewMonth.setTypeface(Fonts.mavenLight(activity));
-            textViewTime = (TextView) itemView.findViewById(R.id.textViewTime); textViewTime.setTypeface(Fonts.mavenLight(activity));
+            textViewMonth = (TextView) itemView.findViewById(R.id.textViewMonth); textViewMonth.setTypeface(Fonts.mavenRegular(activity));
+            textViewTime = (TextView) itemView.findViewById(R.id.textViewTime); textViewTime.setTypeface(Fonts.mavenRegular(activity));
             textViewTeam1 = (TextView) itemView.findViewById(R.id.textViewTeam1); textViewTeam1.setTypeface(Fonts.mavenRegular(activity));
             textViewVS = (TextView) itemView.findViewById(R.id.textViewVS); textViewVS.setTypeface(Fonts.mavenRegular(activity));
             textViewTeam2 = (TextView) itemView.findViewById(R.id.textViewTeam2); textViewTeam2.setTypeface(Fonts.mavenRegular(activity));
-            textViewYourGuess = (TextView) itemView.findViewById(R.id.textViewYourGuess); textViewYourGuess.setTypeface(Fonts.mavenLight(activity));
+            textViewYourGuess = (TextView) itemView.findViewById(R.id.textViewYourGuess); textViewYourGuess.setTypeface(Fonts.mavenRegular(activity));
             textViewYourGuessValue = (TextView) itemView.findViewById(R.id.textViewYourGuessValue); textViewYourGuessValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
             imageViewTeam1Flag = (ImageView) itemView.findViewById(R.id.imageViewTeam1Flag);
             imageViewTeam2Flag = (ImageView) itemView.findViewById(R.id.imageViewTeam2Flag);
