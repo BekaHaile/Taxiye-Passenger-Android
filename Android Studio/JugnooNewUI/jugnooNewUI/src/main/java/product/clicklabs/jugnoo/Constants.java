@@ -125,5 +125,7 @@ public interface Constants {
 	String KEY_TEAM_SHORT_NAME = "short_name";
 	String KEY_TEAM_FLAG_IMAGE_URL = "flag_image_url";
 	String KEY_T20_WC_INFO_TEXT = "t20_wc_info_text";
+	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
+	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
 
 }

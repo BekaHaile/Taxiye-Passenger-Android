@@ -3,9 +3,11 @@ package product.clicklabs.jugnoo.t20;
 import android.app.Activity;
 import android.app.Dialog;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 3/5/16.
@@ -27,7 +29,14 @@ public class T20Ops {
 					if (dialog != null && dialog.isShowing()) {
 						dialog.dismiss();
 					}
-					dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+					if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+							&& Prefs.with(activity).getInt(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0) == 0){
+						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+					}
+					else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+							&& Prefs.with(activity).getInt(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0) == 0){
+						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+					}
 
 				}
 			}

@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -117,6 +118,12 @@ public class T20Dialog {
 
 						case R.id.imageViewClose:
 							dialog.dismiss();
+							if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+								Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 1);
+							}
+							else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+								Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 1);
+							}
 							break;
 
 						case R.id.linearLayoutTeam1:

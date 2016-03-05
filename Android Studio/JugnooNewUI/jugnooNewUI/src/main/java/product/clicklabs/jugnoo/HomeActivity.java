@@ -929,6 +929,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (callRequestRide) {
                                     promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
                                     callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
+
+                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
+                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
+
                                     FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
                                     if (promoCouponSelectedForRide.id > 0) {
                                         FlurryEventLogger.event(COUPONS_SELECTED);
