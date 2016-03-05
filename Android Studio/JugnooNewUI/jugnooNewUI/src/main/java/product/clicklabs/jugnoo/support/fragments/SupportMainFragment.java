@@ -191,13 +191,13 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							public void success(ShowPanelResponse showPanelResponse, Response response) {
 								DialogPopup.dismissLoadingDialog();
 								try {
-									Log.i(TAG, "showPanel reader"+new String(((TypedByteArray)response.getBody()).getBytes()));
+									Log.i(TAG, "showPanel reader" + new String(((TypedByteArray) response.getBody()).getBytes()));
 									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
-									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
-											Data.userData.getInAppSupportPanelVersion());
 									Database2.getInstance(activity)
 											.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
 													showPanelResponse.getMenu());
+									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+											Data.userData.getInAppSupportPanelVersion());
 								} catch (Exception exception) {
 									exception.printStackTrace();
 									retryDialog(DialogErrorType.SERVER_ERROR);

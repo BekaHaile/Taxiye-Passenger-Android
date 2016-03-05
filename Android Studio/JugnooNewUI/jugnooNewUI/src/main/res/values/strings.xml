@@ -738,5 +738,15 @@
 	<string name="everything_is_alright_caps">EVERYTHING IS ALRIGHT</string>
 	<string name="you_have_disabled_jugnoo_emergency">You have disabled the Jugnoo\nEmergency mode</string>
 
+	<string name="vs">vs</string>
+	<string name="your_guess">Your Guess</string>
+	<string name="t20_world_cup_2016">T20 World Cup 2016</string>
+	<string name="time_ist_format">%s IST</string>
+	<string name="str_new">New</string>
+	<string name="play_predict_win">Play, Predict &amp; Win</string>
+	<string name="team_vs_team_format">%1$s Vs %2$s</string>
+	<string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from Jugnoo</string>
+	<string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
+	<string name="team_not_selected_error">Abey team select karna bhool gya kya????</string>
 
 </resources>

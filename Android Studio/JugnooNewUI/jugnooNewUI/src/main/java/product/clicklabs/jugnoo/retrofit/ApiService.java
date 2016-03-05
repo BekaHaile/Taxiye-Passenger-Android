@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -352,5 +353,16 @@ public interface ApiService {
     void uploadAnalytics(@Body TypedInput typedInput,
                          Callback<SettleUserDebt> callback);
 
+
+
+    @FormUrlEncoded
+    @POST("/fetch_T20_schedule_and_user_predictions")
+    void fetchT20ScheduleAndUserPrediction(@FieldMap Map<String, String> params,
+                                           Callback<MatchScheduleResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/insert_user_T20_prediction")
+    void insertUserT20Prediction(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
 
 }

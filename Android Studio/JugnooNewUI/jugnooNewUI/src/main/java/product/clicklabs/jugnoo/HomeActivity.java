@@ -132,6 +132,9 @@ import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.t20.T20Activity;
+import product.clicklabs.jugnoo.t20.T20Ops;
+import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -184,6 +187,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     LinearLayout linearLayoutProfile;
     ImageView imageViewProfile;
     TextView textViewUserName, textViewViewAccount;
+
+    RelativeLayout relativeLayoutT20WorldCup;
 
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
@@ -406,6 +411,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private String dropLocationSearchText = "";
     private SlidingBottomPanel slidingBottomPanel;
 
+    private T20Ops t20Ops = new T20Ops();
 
 
     @Override
@@ -492,6 +498,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewUserName.setTypeface(Fonts.mavenRegular(this));
         textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount);
         textViewViewAccount.setTypeface(Fonts.latoRegular(this));
+
+        relativeLayoutT20WorldCup = (RelativeLayout) findViewById(R.id.relativeLayoutT20WorldCup);
+        ((TextView)findViewById(R.id.textViewT20WorldCup)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewT20WorldCupNew)).setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
@@ -744,6 +754,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 
+        relativeLayoutT20WorldCup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.userData.getT20WCEnable() == 1) {
+                    Intent intent = new Intent(HomeActivity.this, T20Activity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(WORLD_CUP_MENU);
+                }
+            }
+        });
+
         relativeLayoutGetRide.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -907,6 +929,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (callRequestRide) {
                                     promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
                                     callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
+
+                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
+                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
+
                                     FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
                                     if (promoCouponSelectedForRide.id > 0) {
                                         FlurryEventLogger.event(COUPONS_SELECTED);
@@ -1478,6 +1504,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+            }
+
+            if(Data.userData.getT20WCEnable() == 1){
+                relativeLayoutT20WorldCup.setVisibility(View.VISIBLE);
+            } else{
+                relativeLayoutT20WorldCup.setVisibility(View.GONE);
             }
 
         } catch (Exception e) {
@@ -2369,7 +2401,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
 
-
+                t20Ops.openDialog(this, Data.cEngagementId, mode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4915,9 +4947,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
+            Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
+                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
+                    fareFixed, preferredPaymentMode, scheduleT20);
 
 
 

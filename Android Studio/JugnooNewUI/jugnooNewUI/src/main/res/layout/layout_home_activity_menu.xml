@@ -24,7 +24,8 @@
                 android:id="@+id/linearLayoutProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="10px">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutProfileImage"
@@ -78,10 +79,55 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/relativeLayoutT20WorldCup"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewT20WorldCup"
+                    android:layout_width="24px"
+                    android:layout_height="43px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_worldcup"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewT20WorldCup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35px"
+                    android:layout_toRightOf="@+id/imageViewT20WorldCup"
+                    android:text="@string/t20_world_cup_2016"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <TextView
+                    android:id="@+id/textViewT20WorldCupNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/str_new"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size_36"
+                    android:layout_marginRight="30px"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/relativeLayoutGetRide"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-                android:layout_marginTop="10px"
                 android:background="@drawable/background_menu_item_selector"
                 android:splitMotionEvents="false">
 

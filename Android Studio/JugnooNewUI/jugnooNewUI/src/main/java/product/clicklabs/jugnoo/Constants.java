@@ -122,5 +122,19 @@ public interface Constants {
 	String KEY_TRIP_TOTAL = "trip_total";
 
 
+	String KEY_T20_WC_ENABLE = "t20_wc_enable";
+	String KEY_SP_T20_WC_SCHEDULE_VERSION = "t20_wc_schedule_version";
+	String KEY_T20_SCHEDULE = "t20_schedule";
+	String KEY_SCHEDULE_ID = "schedule_id";
+	String KEY_TEAM_ID = "team_id";
+	String KEY_TEAM_1 = "team_1";
+	String KEY_TEAM_2 = "team_2";
+	String KEY_MATCH_TIME = "match_time";
+	String KEY_TEAM_NAME = "name";
+	String KEY_TEAM_SHORT_NAME = "short_name";
+	String KEY_TEAM_FLAG_IMAGE_URL = "flag_image_url";
+	String KEY_T20_WC_INFO_TEXT = "t20_wc_info_text";
+	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
+	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
 
 }
