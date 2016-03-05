@@ -21,20 +21,13 @@ public class T20Ops {
 	public void openDialog(Activity activity, String engagementId, PassengerScreenMode passengerScreenMode) {
 		if(Data.userData != null && Data.userData.getT20WCEnable() == 1 && Data.assignedDriverInfo != null){
 			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				Schedule schedule = Data.assignedDriverInfo.getScheduleT20();
 				if(schedule != null) {
-					if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
-						if(dialog == null || !dialog.isShowing()){
-							dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
-						}
-					} else{
-						if(dialog != null && dialog.isShowing()){
-							dialog.dismiss();
-						}
-						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+					if (dialog != null && dialog.isShowing()) {
+						dialog.dismiss();
 					}
+					dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
 
 				}
 			}

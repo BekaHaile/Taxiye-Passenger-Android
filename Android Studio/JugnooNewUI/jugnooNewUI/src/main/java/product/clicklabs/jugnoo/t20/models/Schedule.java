@@ -151,7 +151,13 @@ public class Schedule {
 	}
 
 	public String getDate(){
-		return String.valueOf(getCalendar().get(Calendar.DAY_OF_MONTH));
+		int day = getCalendar().get(Calendar.DAY_OF_MONTH);
+		StringBuilder sb = new StringBuilder();
+		if(day < 10){
+			sb.append("0");
+		}
+		sb.append(day);
+		return sb.toString();
 	}
 
 	public String getMonth(){

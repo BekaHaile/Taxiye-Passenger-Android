@@ -148,8 +148,7 @@ public class T20Dialog {
 
 
 
-			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
 				imageViewDialogTop.setImageResource(R.drawable.popup_t20_before_ride);
 				linearLayoutBeforeRide.setVisibility(View.VISIBLE);
 				linearLayoutAfterRide.setVisibility(View.GONE);

@@ -23,7 +23,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**
- * Created by Ankit on 7/17/15.
+ * Created by Shankar on 7/17/15.
  */
 public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdapter.ViewHolder> {
 
@@ -84,8 +84,7 @@ public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdap
 
         holder.textViewDate.setText(schedule.getDate());
         holder.textViewMonth.setText(schedule.getMonth());
-        holder.textViewTime.setText(String.format(activity.getResources().getString(R.string.time_ist_format),
-                schedule.getTime()));
+        holder.textViewTime.setText(schedule.getTime());
         holder.textViewTeam1.setText(schedule.getTeam1().getShortName());
         holder.textViewTeam2.setText(schedule.getTeam2().getShortName());
         if(!schedule.getSelectedTeamId().equals(-1)) {
