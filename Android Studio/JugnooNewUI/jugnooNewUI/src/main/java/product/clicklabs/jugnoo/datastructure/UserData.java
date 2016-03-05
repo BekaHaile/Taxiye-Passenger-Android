@@ -197,28 +197,28 @@ public class UserData {
 
 
 	public int getPaytmBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.amount_positive_color);
+		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getPaytmBalance() < 0){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		if(getPaytmError() == 1){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		return color;
 	}
 
 	public int getJugnooBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.amount_positive_color);
+		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getJugnooBalance() < 0){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		return color;
 	}
 
 	public int getTotalBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.amount_positive_color);
+		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getTotalWalletBalance() < 0){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		return color;
 	}

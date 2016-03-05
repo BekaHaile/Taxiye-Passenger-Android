@@ -453,6 +453,7 @@ public class JSONParser implements Constants {
 
         String rideDate = jLastRideData.optString(KEY_RIDE_DATE, "");
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
+        String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
@@ -467,7 +468,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber);
+                rideDate, phoneNumber, tripTotal);
 	}
 
 
@@ -1048,11 +1049,8 @@ public class JSONParser implements Constants {
             for(int i=0; i<jEmergencyContactsArr.length(); i++){
                 JSONObject jECont = jEmergencyContactsArr.getJSONObject(i);
                 emergencyContactsList.add(new EmergencyContact(jECont.getInt("id"),
-                    jECont.getInt("user_id"),
                     jECont.getString("name"),
-                    jECont.getString("email"),
-                    jECont.getString("phone_no"),
-                    jECont.getInt("verification_status")));
+                    jECont.getString("phone_no")));
             }
         } catch(Exception e){
             e.printStackTrace();

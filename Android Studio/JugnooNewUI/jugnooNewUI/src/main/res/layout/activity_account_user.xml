@@ -427,7 +427,7 @@
                             android:layout_marginLeft="30px"
                             android:layout_marginRight="70px"
                             android:gravity="center"
-                            android:text="Add Emergency Contact"
+                            android:text="@string/emergency_contacts"
                             android:textColor="@drawable/text_color_black_alpha_selector"
                             android:textSize="28px" />
 

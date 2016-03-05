@@ -56,7 +56,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textSize="@dimen/text_size_40"
-            android:textColor="@color/amount_positive_color"
+            android:textColor="@color/theme_green_color"
             android:layout_marginRight="30px"
             android:text="200"/>
 

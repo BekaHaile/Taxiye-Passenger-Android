@@ -247,6 +247,7 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
 
 			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
+			Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
 			Prefs.with(context).remove(Constants.SP_USER_ID);
 
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
@@ -260,6 +261,8 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.BRANCH_ANDROID_URL);
 			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);
 			Prefs.with(context).remove(SPLabels.BRANCH_FALLBACK_URL);
+
+			Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
 
 		} catch (Exception e) {
 			e.printStackTrace();

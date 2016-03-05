@@ -206,6 +206,11 @@ public interface ApiService {
                          Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/emergency/disable")
+    void emergencyDisable(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/emergency/alert")
     Response emergencyAlertSync(@FieldMap Map<String, String> params);
 
@@ -308,6 +313,11 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/emergency/contacts/add_multiple")
+    void emergencyContactsAddMultiple(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/emergency/contacts/edit")
     void emergencyContactsEdit(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);
@@ -316,6 +326,11 @@ public interface ApiService {
     @POST("/emergency/contacts/delete")
     void emergencyContactsDelete(@FieldMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/emergency/send_ride_status_message")
+    void emergencySendRideStatusMessage(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/emergency/contacts/request_verification")
