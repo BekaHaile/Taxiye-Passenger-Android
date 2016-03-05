@@ -197,6 +197,7 @@ public class JSONParser implements Constants {
 
         int t20WCEnable = userData.optInt(KEY_T20_WC_ENABLE, 0);
         String t20WCScheduleVersion = userData.optString(KEY_SP_T20_WC_SCHEDULE_VERSION, "0");
+        String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
 
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
@@ -205,7 +206,7 @@ public class JSONParser implements Constants {
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
-                t20WCEnable, t20WCScheduleVersion);
+                t20WCEnable, t20WCScheduleVersion, t20WCInfoText);
 
     }
 
@@ -1165,8 +1166,8 @@ public class JSONParser implements Constants {
     public static Schedule parseT20Schedule(JSONObject jObj){
         Schedule schedule = null;
         try {
-            if(jObj.has(KEY_SCHEDULE)){
-				JSONObject jSchedule = jObj.getJSONObject(KEY_SCHEDULE);
+            if(jObj.has(KEY_T20_SCHEDULE)){
+				JSONObject jSchedule = jObj.getJSONObject(KEY_T20_SCHEDULE);
 
                 JSONObject jTeam1 = jSchedule.getJSONObject(KEY_TEAM_1);
                 Team team1 = new Team(jTeam1.getInt(KEY_TEAM_ID),

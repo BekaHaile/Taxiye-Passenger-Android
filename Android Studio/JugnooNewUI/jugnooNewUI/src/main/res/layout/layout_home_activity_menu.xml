@@ -24,7 +24,8 @@
                 android:id="@+id/linearLayoutProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="10px">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutProfileImage"
@@ -81,7 +82,6 @@
                 android:id="@+id/relativeLayoutT20WorldCup"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-                android:layout_marginTop="10px"
                 android:background="@drawable/background_menu_item_selector"
                 android:splitMotionEvents="false">
 
@@ -113,7 +113,7 @@
                     android:layout_alignParentRight="true"
                     android:text="@string/str_new"
                     android:textColor="@color/theme_color"
-                    android:textSize="@dimen/text_size_32"
+                    android:textSize="@dimen/text_size_36"
                     android:layout_marginRight="30px"/>
 
                 <ImageView
@@ -128,7 +128,6 @@
                 android:id="@+id/relativeLayoutGetRide"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-                android:layout_marginTop="10px"
                 android:background="@drawable/background_menu_item_selector"
                 android:splitMotionEvents="false">
 

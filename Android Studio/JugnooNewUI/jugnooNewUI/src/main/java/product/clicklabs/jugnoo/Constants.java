@@ -115,7 +115,7 @@ public interface Constants {
 
 	String KEY_T20_WC_ENABLE = "t20_wc_enable";
 	String KEY_SP_T20_WC_SCHEDULE_VERSION = "t20_wc_schedule_version";
-	String KEY_SCHEDULE = "schedule";
+	String KEY_T20_SCHEDULE = "t20_schedule";
 	String KEY_SCHEDULE_ID = "schedule_id";
 	String KEY_TEAM_ID = "team_id";
 	String KEY_TEAM_1 = "team_1";
@@ -124,5 +124,6 @@ public interface Constants {
 	String KEY_TEAM_NAME = "name";
 	String KEY_TEAM_SHORT_NAME = "short_name";
 	String KEY_TEAM_FLAG_IMAGE_URL = "flag_image_url";
+	String KEY_T20_WC_INFO_TEXT = "t20_wc_info_text";
 
 }

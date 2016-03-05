@@ -341,13 +341,13 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/fetch_T20_schedule_and_user_selections")
-    void fetchT20ScheduleAndUserSelections(@FieldMap Map<String, String> params,
+    @POST("/fetch_T20_schedule_and_user_predictions")
+    void fetchT20ScheduleAndUserPrediction(@FieldMap Map<String, String> params,
                                            Callback<MatchScheduleResponse> callback);
 
     @FormUrlEncoded
-    @POST("/submit_T20_team_selection")
-    void submitT20TeamSelection(@FieldMap Map<String, String> params,
-                                Callback<SettleUserDebt> callback);
+    @POST("/insert_user_T20_prediction")
+    void insertUserT20Prediction(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
 
 }

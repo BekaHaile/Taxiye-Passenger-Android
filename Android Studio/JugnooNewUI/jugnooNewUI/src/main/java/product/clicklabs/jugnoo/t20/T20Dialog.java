@@ -64,7 +64,7 @@ public class T20Dialog {
 		this.schedule = schedule;
 	}
 
-	public void show() {
+	public Dialog show() {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -89,6 +89,10 @@ public class T20Dialog {
 			textViewTeams.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			TextView textViewConditions = (TextView) dialog.findViewById(R.id.textViewConditions);
 			textViewConditions.setTypeface(Fonts.mavenLight(activity));
+
+			if(Data.userData != null && !"".equalsIgnoreCase(Data.userData.getT20WCInfoText())){
+				textViewConditions.setText(Data.userData.getT20WCInfoText());
+			}
 
 			LinearLayout linearLayoutAfterRide = (LinearLayout) dialog.findViewById(R.id.linearLayoutAfterRide);
 			TextView textViewWhoDoYou = (TextView) dialog.findViewById(R.id.textViewWhoDoYou);
@@ -173,6 +177,7 @@ public class T20Dialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return dialog;
 	}
 
 	private void setSelectedTeamId(Integer selectedTeamId){
@@ -197,7 +202,7 @@ public class T20Dialog {
 			params.put(Constants.KEY_SCHEDULE_ID, String.valueOf(schedule.getScheduleId()));
 			params.put(Constants.KEY_TEAM_ID, String.valueOf(schedule.getSelectedTeamId()));
 
-			RestClient.getApiServices().submitT20TeamSelection(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().insertUserT20Prediction(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();

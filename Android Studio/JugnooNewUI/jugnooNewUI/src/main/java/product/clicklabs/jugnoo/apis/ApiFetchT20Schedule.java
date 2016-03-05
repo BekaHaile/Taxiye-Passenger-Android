@@ -47,19 +47,19 @@ public class ApiFetchT20Schedule {
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-			RestClient.getApiServices().fetchT20ScheduleAndUserSelections(params, new retrofit.Callback<MatchScheduleResponse>() {
+			RestClient.getApiServices().fetchT20ScheduleAndUserPrediction(params, new retrofit.Callback<MatchScheduleResponse>() {
 				@Override
 				public void success(MatchScheduleResponse matchScheduleResponse, Response response) {
 					DialogPopup.dismissLoadingDialog();
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "fetchT20ScheduleAndUserSelections jsonString=" + jsonString);
+						Log.i(TAG, "fetchT20ScheduleAndUserPrediction jsonString=" + jsonString);
 						JSONObject jObj = new JSONObject(jsonString);
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 							String message = JSONParser.getServerMessage(jObj);
-							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == matchScheduleResponse.getFlag()){
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == matchScheduleResponse.getFlag()) {
 								callback.onSuccess(matchScheduleResponse);
-							} else{
+							} else {
 								DialogPopup.alertPopup(activity, "", message);
 							}
 						}
