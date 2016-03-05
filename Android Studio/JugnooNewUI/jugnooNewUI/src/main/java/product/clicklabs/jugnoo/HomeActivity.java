@@ -132,6 +132,8 @@ import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.t20.T20Activity;
+import product.clicklabs.jugnoo.t20.T20Ops;
+import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -409,6 +411,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private String dropLocationSearchText = "";
     private SlidingBottomPanel slidingBottomPanel;
 
+    private T20Ops t20Ops = new T20Ops();
 
 
     @Override
@@ -2410,7 +2413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
 
-
+                t20Ops.openDialog(this, Data.cEngagementId, mode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4954,9 +4957,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
+            Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
+                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
+                    fareFixed, preferredPaymentMode, scheduleT20);
 
 
 

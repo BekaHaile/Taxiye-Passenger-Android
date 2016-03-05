@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class DriverInfo {
@@ -18,6 +19,8 @@ public class DriverInfo {
 	private double fareFixed;
 	private int preferredPaymentMode;
 	private double bearing;
+
+	private Schedule scheduleT20;
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -40,9 +43,9 @@ public class DriverInfo {
 	}
 
 	//for engagement
-	public DriverInfo(String userId, double latitude, double longitude, 
+	public DriverInfo(String userId, double latitude, double longitude,
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode){
+			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -60,6 +63,7 @@ public class DriverInfo {
 		}
 		this.fareFixed = fareFixed;
 		this.preferredPaymentMode = preferredPaymentMode;
+		this.scheduleT20 = scheduleT20;
 	}
 
 	//for last ride data
@@ -76,13 +80,6 @@ public class DriverInfo {
 	}
 
 	public void setEta(String eta){
-//        try {
-//            if(Integer.parseInt(eta) < 10){
-//                eta = "0"+eta;
-//            }
-//        } catch (NumberFormatException e) {
-//            e.printStackTrace();
-//        }
         this.eta = eta;
 	}
 
@@ -128,5 +125,13 @@ public class DriverInfo {
 
 	public void setBearing(double bearing) {
 		this.bearing = bearing;
+	}
+
+	public Schedule getScheduleT20() {
+		return scheduleT20;
+	}
+
+	public void setScheduleT20(Schedule scheduleT20) {
+		this.scheduleT20 = scheduleT20;
 	}
 }

@@ -37,6 +37,8 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -513,6 +515,7 @@ public class JSONParser implements Constants {
             int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
+            Schedule scheduleT20 = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -596,6 +599,7 @@ public class JSONParser implements Constants {
                             }
 							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
+                            scheduleT20 = parseT20Schedule(jObject);
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -651,7 +655,8 @@ public class JSONParser implements Constants {
 
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
-                        driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
+                        driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
+                        fareFixed, preferredPaymentMode, scheduleT20);
 
                 Data.userData.fareFactor = fareFactor;
 
@@ -1154,6 +1159,35 @@ public class JSONParser implements Constants {
 			e.printStackTrace();
 		}
 	}
+
+
+
+    public static Schedule parseT20Schedule(JSONObject jObj){
+        Schedule schedule = null;
+        try {
+            if(jObj.has(KEY_SCHEDULE)){
+				JSONObject jSchedule = jObj.getJSONObject(KEY_SCHEDULE);
+
+                JSONObject jTeam1 = jSchedule.getJSONObject(KEY_TEAM_1);
+                Team team1 = new Team(jTeam1.getInt(KEY_TEAM_ID),
+                        jTeam1.getString(KEY_TEAM_NAME),
+                        jTeam1.getString(KEY_TEAM_SHORT_NAME),
+                        jTeam1.getString(KEY_TEAM_FLAG_IMAGE_URL));
+
+                JSONObject jTeam2 = jSchedule.getJSONObject(KEY_TEAM_2);
+                Team team2 = new Team(jTeam2.getInt(KEY_TEAM_ID),
+                        jTeam2.getString(KEY_TEAM_NAME),
+                        jTeam2.getString(KEY_TEAM_SHORT_NAME),
+                        jTeam2.getString(KEY_TEAM_FLAG_IMAGE_URL));
+
+                schedule = new Schedule(jSchedule.getInt(KEY_SCHEDULE_ID), team1, team2,
+                        jSchedule.getString(KEY_MATCH_TIME));
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return schedule;
+    }
 
 
 

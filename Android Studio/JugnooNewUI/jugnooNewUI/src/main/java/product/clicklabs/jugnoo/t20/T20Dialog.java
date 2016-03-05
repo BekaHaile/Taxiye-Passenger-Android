@@ -15,9 +15,11 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
@@ -27,6 +29,8 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.t20.models.Selection;
+import product.clicklabs.jugnoo.t20.models.T20DataType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -204,6 +208,11 @@ public class T20Dialog {
 						int flag = jObj.getInt(Constants.KEY_FLAG);
 						String message = JSONParser.getServerMessage(jObj);
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+
+							List<Selection> selections = Database2.getInstance(activity).getT20DataItems(T20DataType.SELECTION.getOrdinal());
+							selections.add(new Selection(schedule.getScheduleId(), schedule.getSelectedTeamId()));
+							Database2.getInstance(activity).insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), selections);
+
 							dialog.dismiss();
 							DialogPopup.alertPopup(activity, "", message);
 							FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);

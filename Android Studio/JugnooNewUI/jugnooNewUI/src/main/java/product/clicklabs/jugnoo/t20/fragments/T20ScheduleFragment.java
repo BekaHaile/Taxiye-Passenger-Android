@@ -25,7 +25,9 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchT20Schedule;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.t20.T20Activity;
+import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.adapters.MatchScheduleAdapter;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -106,7 +108,10 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 						break;
 
 					case R.id.imageViewInfo:
-
+						if(matchScheduleResponse != null && matchScheduleResponse.getSchedule().size() > 0) {
+							new T20Dialog(activity, "1111",
+									PassengerScreenMode.P_IN_RIDE, matchScheduleResponse.getSchedule().get(0)).show();
+						}
 						break;
 
 				}
