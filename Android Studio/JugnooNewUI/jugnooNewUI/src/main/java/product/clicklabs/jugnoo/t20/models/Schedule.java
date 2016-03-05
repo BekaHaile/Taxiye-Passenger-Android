@@ -29,6 +29,22 @@ public class Schedule {
 	private Team team1 = null, team2 = null;
 	private Integer selectedTeamId = null;
 
+	public Schedule(Integer scheduleId, Integer team1Id, Integer team2Id, String matchTime){
+		this.scheduleId = scheduleId;
+		this.team1Id = team1Id;
+		this.team2Id = team2Id;
+		this.matchTime = matchTime;
+	}
+
+	public Schedule(Integer scheduleId, Team team1, Team team2, String matchTime){
+		this.scheduleId = scheduleId;
+		this.team1 = team1;
+		this.team1Id = team1.getTeamId();
+		this.team2 = team2;
+		this.team2Id = team2.getTeamId();
+		this.matchTime = matchTime;
+	}
+
 	/**
 	 *
 	 * @return

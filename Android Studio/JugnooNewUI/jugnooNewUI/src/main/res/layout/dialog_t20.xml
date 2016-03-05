@@ -147,7 +147,7 @@
                         android:id="@+id/imageViewTeam2Check"
                         android:layout_width="24px"
                         android:layout_height="24px"
-                        android:src="@drawable/check_box_checked"
+                        android:src="@drawable/check_box_unchecked"
                         android:layout_marginLeft="20px"
                         android:tag="mwar" />
 
@@ -190,7 +190,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/close"
+        android:id="@+id/imageViewClose"
         android:layout_width="74px"
         android:layout_height="74px"
         android:layout_alignRight="@+id/innerRl"

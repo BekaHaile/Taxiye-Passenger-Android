@@ -345,4 +345,9 @@ public interface ApiService {
     void fetchT20ScheduleAndUserSelections(@FieldMap Map<String, String> params,
                                            Callback<MatchScheduleResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/submit_T20_team_selection")
+    void submitT20TeamSelection(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
+
 }
