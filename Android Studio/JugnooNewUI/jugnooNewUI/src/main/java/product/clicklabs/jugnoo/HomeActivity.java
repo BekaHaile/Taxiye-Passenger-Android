@@ -121,8 +121,8 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
-import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -133,6 +133,7 @@ import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.t20.T20Activity;
+import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -2302,41 +2303,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-                        //******** If return 0 then show popup, contact not saved in database.
-                        if(Data.userData.contactSaved == 0
-                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-                                && dialogUploadContacts == null
-								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
-							drawerLayout.closeDrawer(menuLayout);
-                            dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-									Data.userData.referAllTitle,
-                                    Data.userData.referAllText,
-                                    getResources().getString(R.string.upload_contact_yes),
-                                    getResources().getString(R.string.upload_contact_no_thanks),
-                                    false ,
-                                    new OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
-                                            Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
-                                            syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
-                                            syncContactsIntent.putExtra("session_id", Data.cSessionId);
-                                            syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
-                                            startService(syncContactsIntent);
-                                            registerDialogDismissReceiver();
-                                        }
-                                    }, new OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
-                                            uploadContactsApi();
-                                        }
-                                    });
-                        }
-
-
-
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
@@ -2401,7 +2367,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
 
-                t20Ops.openDialog(this, Data.cEngagementId, mode);
+                updateTopBar();
+
+                t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
+                    @Override
+                    public void onDismiss() {
+                        showReferAllDialog();
+                    }
+
+                    @Override
+                    public void notShown() {
+                        showReferAllDialog();
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2870,6 +2848,48 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             return false;
         }
     }
+
+    private void showReferAllDialog(){
+        try {
+            if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                //******** If return 0 then show popup, contact not saved in database.
+                if (Data.userData.contactSaved == 0
+                        && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
+                        && dialogUploadContacts == null
+                        && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+                    drawerLayout.closeDrawer(menuLayout);
+                    dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
+                            Data.userData.referAllTitle,
+                            Data.userData.referAllText,
+                            getResources().getString(R.string.upload_contact_yes),
+                            getResources().getString(R.string.upload_contact_no_thanks),
+                            false,
+                            new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                    Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
+                                    Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                    syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                    syncContactsIntent.putExtra("session_id", Data.cSessionId);
+                                    syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                    startService(syncContactsIntent);
+                                    registerDialogDismissReceiver();
+                                }
+                            }, new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
+                                    uploadContactsApi();
+                                }
+                            });
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Override
@@ -5895,19 +5915,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static int localModeEnabled = -1;
     private void updateTopBar(){
         try{
-            int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-            if(modeEnabled == 1){
-                topRl.setBackgroundResource(R.drawable.background_red_dark);
-                title.setText(getResources().getString(R.string.emergency_mode_enabled));
-            } else{
-                if(localModeEnabled == 1){
-                    DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
-                            getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
+            if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                    || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                    || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+                    || PassengerScreenMode.P_RIDE_END == passengerScreenMode){
+                int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+                if(modeEnabled == 1){
+                    topRl.setBackgroundResource(R.drawable.background_red_dark);
+                    title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                } else{
+                    if(localModeEnabled == 1){
+                        DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
+                                getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
+                    }
+                    topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                    title.setText(getResources().getString(R.string.app_name));
                 }
+                localModeEnabled = modeEnabled;
+            } else{
+                Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
                 title.setText(getResources().getString(R.string.app_name));
+                localModeEnabled = 0;
             }
-            localModeEnabled = modeEnabled;
+
         } catch(Exception e){
             e.printStackTrace();
         }

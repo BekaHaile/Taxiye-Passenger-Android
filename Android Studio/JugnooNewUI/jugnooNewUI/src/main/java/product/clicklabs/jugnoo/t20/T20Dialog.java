@@ -52,17 +52,20 @@ public class T20Dialog {
 
 	private final String TAG = T20Dialog.class.getSimpleName();
 	private Activity activity;
+	private T20DialogCallback callback;
 	private String engagementId;
 	private PassengerScreenMode passengerScreenMode;
 	private Schedule schedule;
 	private Dialog dialog;
 	private ImageView imageViewTeam1Check, imageViewTeam2Check;
 
-	public T20Dialog(Activity activity, String engagementId, PassengerScreenMode passengerScreenMode, Schedule schedule) {
+	public T20Dialog(Activity activity, String engagementId, PassengerScreenMode passengerScreenMode, Schedule schedule,
+					 T20DialogCallback callback) {
 		this.activity = activity;
 		this.engagementId = engagementId;
 		this.passengerScreenMode = passengerScreenMode;
 		this.schedule = schedule;
+		this.callback = callback;
 	}
 
 	public Dialog show() {
@@ -124,6 +127,7 @@ public class T20Dialog {
 							else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 								Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 1);
 							}
+							callback.onDismiss();
 							break;
 
 						case R.id.linearLayoutTeam1:
@@ -154,7 +158,6 @@ public class T20Dialog {
 			buttonSubmit.setOnClickListener(onClickListener);
 
 
-
 			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
 				imageViewDialogTop.setImageResource(R.drawable.popup_t20_before_ride);
 				linearLayoutBeforeRide.setVisibility(View.VISIBLE);
@@ -178,6 +181,8 @@ public class T20Dialog {
 				imageViewTeam2Check.setImageResource(R.drawable.check_box_unchecked);
 
 				dialog.show();
+			} else{
+				callback.notShown();
 			}
 
 		} catch (Exception e) {
@@ -225,7 +230,18 @@ public class T20Dialog {
 							Database2.getInstance(activity).insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), selections);
 
 							dialog.dismiss();
-							DialogPopup.alertPopup(activity, "", message);
+							if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){
+								Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 1);
+							}
+							else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+								Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 1);
+							}
+							DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									callback.onDismiss();
+								}
+							});
 							FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);
 						} else {
 							DialogPopup.alertPopup(activity, "", message);
@@ -270,5 +286,9 @@ public class T20Dialog {
 	}
 
 
+	public interface T20DialogCallback{
+		void onDismiss();
+		void notShown();
+	}
 
 }

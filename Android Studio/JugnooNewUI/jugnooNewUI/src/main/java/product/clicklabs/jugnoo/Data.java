@@ -264,6 +264,10 @@ public class Data {
 
 			Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
 
+			Prefs.with(context).remove(Constants.KEY_SP_T20_WC_SCHEDULE_VERSION);
+			Prefs.with(context).remove(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED);
+			Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

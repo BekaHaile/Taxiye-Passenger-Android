@@ -20,7 +20,8 @@ public class T20Ops {
 		dialog = null;
 	}
 
-	public void openDialog(Activity activity, String engagementId, PassengerScreenMode passengerScreenMode) {
+	public void openDialog(Activity activity, String engagementId, PassengerScreenMode passengerScreenMode,
+						   T20Dialog.T20DialogCallback callback) {
 		if(Data.userData != null && Data.userData.getT20WCEnable() == 1 && Data.assignedDriverInfo != null){
 			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
@@ -29,18 +30,28 @@ public class T20Ops {
 					if (dialog != null && dialog.isShowing()) {
 						dialog.dismiss();
 					}
-					if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-							&& Prefs.with(activity).getInt(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0) == 0){
-						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+					if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+							&& Prefs.with(activity).getInt(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0) == 0)
+							||
+							(PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+									&& Prefs.with(activity).getInt(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0) == 0)){
+						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule, callback).show();
+					} else{
+						callback.notShown();
 					}
-					else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode
-							&& Prefs.with(activity).getInt(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0) == 0){
-						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
-					}
-
+				} else{
+					callback.notShown();
 				}
+			} else if (PassengerScreenMode.P_DRIVER_ARRIVED != passengerScreenMode){
+				if (dialog != null && dialog.isShowing()) {
+					dialog.dismiss();
+				}
+				callback.notShown();
 			}
+		} else{
+			callback.notShown();
 		}
+
 	}
 
 }
