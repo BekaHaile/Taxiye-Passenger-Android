@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.tokenautocomplete.FilteredArrayAdapter;
@@ -209,7 +210,13 @@ public class AddEmergencyContactsFragment extends Fragment {
 									jsonArray.put(jsonObject);
 								}
 							}
-							addEmergencyContactsAPI(activity, jsonArray.toString());
+							if(jsonArray.length() > 0) {
+								addEmergencyContactsAPI(activity, jsonArray.toString());
+							} else{
+								Toast.makeText(activity,
+										activity.getResources().getString(R.string.please_select_some_contacts_first),
+										Toast.LENGTH_SHORT).show();
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
