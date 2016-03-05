@@ -106,12 +106,16 @@ public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdap
         }
 
         try{
-            Picasso.with(activity).load(schedule.getTeam1().getFlagImageUrl()).into(holder.imageViewTeam1Flag);
+            Picasso.with(activity).load(schedule.getTeam1().getFlagImageUrl())
+                    .placeholder(R.drawable.ic_t20_flag).error(R.drawable.ic_t20_flag)
+                    .into(holder.imageViewTeam1Flag);
         } catch(Exception e){
             e.printStackTrace();
         }
         try{
-            Picasso.with(activity).load(schedule.getTeam2().getFlagImageUrl()).into(holder.imageViewTeam2Flag);
+            Picasso.with(activity).load(schedule.getTeam2().getFlagImageUrl())
+                    .placeholder(R.drawable.ic_t20_flag).error(R.drawable.ic_t20_flag)
+                    .into(holder.imageViewTeam2Flag);
         } catch(Exception e){
             e.printStackTrace();
         }
