@@ -98,7 +98,12 @@ public class MatchScheduleAdapter extends RecyclerView.Adapter<MatchScheduleAdap
                 holder.textViewYourGuessValue.setText("-");
             }
         } else{
-            holder.relativeLayoutGuess.setVisibility(View.GONE);
+            if(schedule.getCalendar().getTimeInMillis() > System.currentTimeMillis()){
+                holder.relativeLayoutGuess.setVisibility(View.GONE);
+            } else{
+                holder.relativeLayoutGuess.setVisibility(View.VISIBLE);
+                holder.textViewYourGuessValue.setText("-");
+            }
         }
 
         try{

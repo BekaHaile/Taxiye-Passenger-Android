@@ -25,10 +25,17 @@ public class T20Ops {
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				Schedule schedule = Data.assignedDriverInfo.getScheduleT20();
 				if(schedule != null) {
-					if(dialog != null && dialog.isShowing()){
-						dialog.dismiss();
+					if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+						if(dialog == null || !dialog.isShowing()){
+							dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+						}
+					} else{
+						if(dialog != null && dialog.isShowing()){
+							dialog.dismiss();
+						}
+						dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
 					}
-					dialog = new T20Dialog(activity, engagementId, passengerScreenMode, schedule).show();
+
 				}
 			}
 		}

@@ -25,9 +25,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchT20Schedule;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.t20.T20Activity;
-import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.adapters.MatchScheduleAdapter;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -35,6 +33,7 @@ import product.clicklabs.jugnoo.t20.models.Selection;
 import product.clicklabs.jugnoo.t20.models.T20DataType;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -108,9 +107,8 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 						break;
 
 					case R.id.imageViewInfo:
-						if(matchScheduleResponse != null && matchScheduleResponse.getSchedule().size() > 0) {
-							new T20Dialog(activity, "1111",
-									PassengerScreenMode.P_IN_RIDE, matchScheduleResponse.getSchedule().get(0)).show();
+						if(Data.userData != null && !"".equalsIgnoreCase(Data.userData.getT20WCInfoText())){
+							DialogPopup.alertPopup(activity, "", Data.userData.getT20WCInfoText());
 						}
 						break;
 
@@ -119,6 +117,11 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 		};
 		imageViewBack.setOnClickListener(onClickListener);
 		imageViewInfo.setOnClickListener(onClickListener);
+		if(Data.userData != null && !"".equalsIgnoreCase(Data.userData.getT20WCInfoText())){
+			imageViewInfo.setVisibility(View.VISIBLE);
+		} else{
+			imageViewInfo.setVisibility(View.GONE);
+		}
 
 
 		fetchT20Schedule();

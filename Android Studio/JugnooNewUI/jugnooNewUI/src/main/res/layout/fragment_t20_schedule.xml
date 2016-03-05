@@ -36,12 +36,12 @@
 
         <ImageView
             android:id="@+id/imageViewInfo"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"
+            android:padding="15px"
+            android:src="@drawable/ic_help"
             android:layout_alignParentRight="true"
             />
     </RelativeLayout>

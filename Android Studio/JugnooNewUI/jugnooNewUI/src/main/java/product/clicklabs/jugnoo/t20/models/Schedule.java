@@ -135,7 +135,7 @@ public class Schedule {
 	}
 
 
-	private Calendar getCalendar(){
+	public Calendar getCalendar(){
 		try{
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			setMatchTime(getMatchTime().replace("T", " "));
