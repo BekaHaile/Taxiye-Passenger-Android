@@ -40,6 +40,7 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -437,7 +438,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, EmergencyContactsActivity.class));
+                Intent intent = new Intent(AccountActivity.this, EmergencyActivity.class);
+                intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                        EmergencyActivity.EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal());
+                startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 dissmissEmailVerify();
                 FlurryEventLogger.event(EMERGENCY_CONTACT_TO_BE_ADDED);

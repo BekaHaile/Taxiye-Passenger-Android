@@ -191,13 +191,13 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 							public void success(ShowPanelResponse showPanelResponse, Response response) {
 								DialogPopup.dismissLoadingDialog();
 								try {
-									Log.i(TAG, "showPanel reader"+new String(((TypedByteArray)response.getBody()).getBytes()));
+									Log.i(TAG, "showPanel reader" + new String(((TypedByteArray) response.getBody()).getBytes()));
 									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
-									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
-											Data.userData.getInAppSupportPanelVersion());
 									Database2.getInstance(activity)
 											.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
 													showPanelResponse.getMenu());
+									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+											Data.userData.getInAppSupportPanelVersion());
 								} catch (Exception exception) {
 									exception.printStackTrace();
 									retryDialog(DialogErrorType.SERVER_ERROR);
@@ -309,7 +309,13 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				textViewStart.append(" " + endRideData.pickupTime);
 				textViewEnd.append(" " + endRideData.dropTime);
 
-				textViewTripTotalValue.setText(Utils.getMoneyDecimalFormat().format(endRideData.fare));
+				if("".equalsIgnoreCase(endRideData.getTripTotal())){
+					textViewTripTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				} else{
+					textViewTripTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+							endRideData.getTripTotal()));
+				}
 
 				if(!"".equalsIgnoreCase(endRideData.driverImage)){
 					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);

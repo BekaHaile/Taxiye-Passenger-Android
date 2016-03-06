@@ -80,7 +80,8 @@ public interface FlurryEventNames {
 		JUGNOO_LINE_PAYMENT = "Line_payed via JC",
         JUGNOO_CASH_MENU = "Jugnoo Cash_Menu",
             USER_DEBT_MAKE_PAYMENT = "User Debt make payment",
-			WALLET_MENU = "Wallet Menu",
+			WORLD_CUP_MENU = "World cup menu",
+            WALLET_MENU = "Wallet Menu",
 			WALLET_BEFORE_REQUEST_RIDE = "Wallet before request ride",
 			WALLET_VIA_TUTORIAL = "Wallet opened via Tutorial",
         RECENT_TRANSACTION_LOOK_UP = "Recent transaction look up",
@@ -102,6 +103,8 @@ public interface FlurryEventNames {
         RIDE_HISTORY = "Ride history",
         RIDE_RATED_ON_RIDE_HISTORY = "Ride rated on ride history",
         FARE_DETAILS = "Fare details",
+        SUPPORT_OPTIONS = "Support options",
+            SUPPORT_OPTIONS_THROUGH_EMERGENCY = "Support options through Emergency",
         SEND_EMAIL_SUPPORT = "Send email_support",
         CALL_SUPPORT = "call_support",
         FAQS_SUPPORT = "FAQS_Support",
@@ -187,5 +190,9 @@ public interface FlurryEventNames {
             API_PAYTM_CHECK_BALANCE = "/paytm/check_balance"
 
                     ;
+
+    String EMERGENCY_MODE_ENABLED = "emergency_mode_enabled"
+
+            ;
 
 }

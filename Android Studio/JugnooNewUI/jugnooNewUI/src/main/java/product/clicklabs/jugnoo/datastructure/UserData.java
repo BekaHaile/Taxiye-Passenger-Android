@@ -24,6 +24,10 @@ public class UserData {
 	private String jugnooCashTNC;
 	private String inAppSupportPanelVersion, userId;
 	private int getGogu;
+	private String inviteEarnScreenImage;
+
+	private int t20WCEnable;
+	private String t20WCScheduleVersion, t20WCInfoText;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -32,7 +36,9 @@ public class UserData {
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
-					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu, String userId){
+					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
+					String userId, String inviteEarnScreenImage,
+					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -77,6 +83,12 @@ public class UserData {
 		this.inAppSupportPanelVersion = inAppSupportPanelVersion;
 		this.getGogu = getGogu;
 		this.userId = userId;
+		this.inviteEarnScreenImage = inviteEarnScreenImage;
+
+		this.t20WCEnable = t20WCEnable;
+		this.t20WCScheduleVersion = t20WCScheduleVersion;
+		this.t20WCInfoText = t20WCInfoText;
+
 	}
 
 	public double getJugnooBalance() {
@@ -194,28 +206,28 @@ public class UserData {
 
 
 	public int getPaytmBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.amount_positive_color);
+		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getPaytmBalance() < 0){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		if(getPaytmError() == 1){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		return color;
 	}
 
 	public int getJugnooBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.amount_positive_color);
+		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getJugnooBalance() < 0){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		return color;
 	}
 
 	public int getTotalBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.amount_positive_color);
+		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getTotalWalletBalance() < 0){
-			color = context.getResources().getColor(R.color.amount_negative_color);
+			color = context.getResources().getColor(R.color.theme_red_color);
 		}
 		return color;
 	}
@@ -243,5 +255,37 @@ public class UserData {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getInviteEarnScreenImage() {
+		return inviteEarnScreenImage;
+	}
+
+	public void setInviteEarnScreenImage(String inviteEarnScreenImage) {
+		this.inviteEarnScreenImage = inviteEarnScreenImage;
+	}
+
+	public int getT20WCEnable() {
+		return t20WCEnable;
+	}
+
+	public void setT20WCEnable(int t20WCEnable) {
+		this.t20WCEnable = t20WCEnable;
+	}
+
+	public String getT20WCScheduleVersion() {
+		return t20WCScheduleVersion;
+	}
+
+	public void setT20WCScheduleVersion(String t20WCScheduleVersion) {
+		this.t20WCScheduleVersion = t20WCScheduleVersion;
+	}
+
+	public String getT20WCInfoText() {
+		return t20WCInfoText;
+	}
+
+	public void setT20WCInfoText(String t20WCInfoText) {
+		this.t20WCInfoText = t20WCInfoText;
 	}
 }

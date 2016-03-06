@@ -37,6 +37,8 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.t20.models.Schedule;
+import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -191,13 +193,20 @@ public class JSONParser implements Constants {
         String userId = userData.optString(KEY_USER_ID, phoneNo);
         Prefs.with(context).save(SP_USER_ID, userId);
 
+        String inviteEarnScreenImage = userData.optString(KEY_INVITE_EARN_SCREEN_IMAGE_ANDROID, "");
+
+        int t20WCEnable = userData.optInt(KEY_T20_WC_ENABLE, 0);
+        String t20WCScheduleVersion = userData.optString(KEY_SP_T20_WC_SCHEDULE_VERSION, "0");
+        String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
+
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
-                jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId);
+                jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
+                t20WCEnable, t20WCScheduleVersion, t20WCInfoText);
 
     }
 
@@ -451,6 +460,7 @@ public class JSONParser implements Constants {
 
         String rideDate = jLastRideData.optString(KEY_RIDE_DATE, "");
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
+        String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
@@ -465,7 +475,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber);
+                rideDate, phoneNumber, tripTotal);
 	}
 
 
@@ -507,6 +517,7 @@ public class JSONParser implements Constants {
             int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
+            Schedule scheduleT20 = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -590,6 +601,7 @@ public class JSONParser implements Constants {
                             }
 							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
+                            scheduleT20 = parseT20Schedule(jObject);
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -645,7 +657,8 @@ public class JSONParser implements Constants {
 
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
-                        driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
+                        driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
+                        fareFixed, preferredPaymentMode, scheduleT20);
 
                 Data.userData.fareFactor = fareFactor;
 
@@ -1046,11 +1059,8 @@ public class JSONParser implements Constants {
             for(int i=0; i<jEmergencyContactsArr.length(); i++){
                 JSONObject jECont = jEmergencyContactsArr.getJSONObject(i);
                 emergencyContactsList.add(new EmergencyContact(jECont.getInt("id"),
-                    jECont.getInt("user_id"),
                     jECont.getString("name"),
-                    jECont.getString("email"),
-                    jECont.getString("phone_no"),
-                    jECont.getInt("verification_status")));
+                    jECont.getString("phone_no")));
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -1148,6 +1158,35 @@ public class JSONParser implements Constants {
 			e.printStackTrace();
 		}
 	}
+
+
+
+    public static Schedule parseT20Schedule(JSONObject jObj){
+        Schedule schedule = null;
+        try {
+            if(jObj.has(KEY_T20_SCHEDULE)){
+				JSONObject jSchedule = jObj.getJSONObject(KEY_T20_SCHEDULE);
+
+                JSONObject jTeam1 = jSchedule.getJSONObject(KEY_TEAM_1);
+                Team team1 = new Team(jTeam1.getInt(KEY_TEAM_ID),
+                        jTeam1.getString(KEY_TEAM_NAME),
+                        jTeam1.getString(KEY_TEAM_SHORT_NAME),
+                        jTeam1.getString(KEY_TEAM_FLAG_IMAGE_URL));
+
+                JSONObject jTeam2 = jSchedule.getJSONObject(KEY_TEAM_2);
+                Team team2 = new Team(jTeam2.getInt(KEY_TEAM_ID),
+                        jTeam2.getString(KEY_TEAM_NAME),
+                        jTeam2.getString(KEY_TEAM_SHORT_NAME),
+                        jTeam2.getString(KEY_TEAM_FLAG_IMAGE_URL));
+
+                schedule = new Schedule(jSchedule.getInt(KEY_SCHEDULE_ID), team1, team2,
+                        jSchedule.getString(KEY_MATCH_TIME));
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return schedule;
+    }
 
 
 

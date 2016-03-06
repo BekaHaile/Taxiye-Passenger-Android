@@ -46,7 +46,6 @@ public class SPLabels {
 	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
     UPLOAD_CONTACT_NO_THANKS = "upload_contact_no_thanks",
 
-	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count",
     JUGNOO_JEANIE_TUTORIAL_SHOWN = "jugnoo_jeanie_tutorial_shown",
     NEW_LOOK_TUTORIAL_SHOWN = "new_look_tutorial_shown"
 

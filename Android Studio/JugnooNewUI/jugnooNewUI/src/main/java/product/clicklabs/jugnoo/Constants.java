@@ -14,6 +14,7 @@ public interface Constants {
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
 	String KEY_USER_ID = "user_id";
+	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
@@ -28,7 +29,9 @@ public interface Constants {
 	int ADD_HOME = 2, ADD_WORK = 3;
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
-	String KEY_DRIVER_ID = "driver_id";
+
+	String KEY_ALERT_TYPE = "alert_type";
+	String KEY_ID = "id";
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
@@ -86,7 +89,6 @@ public interface Constants {
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
 
 	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
-	String KEY_ANALYTICS_SMS_LIST= "analytics_sms_list";
 
 
 	String FIRST_TIME_DB= "first_time_db";
@@ -98,6 +100,7 @@ public interface Constants {
 
 
 
+	String SP_EMERGENCY_MODE_ENABLED = "sp_emergency_mode_enabled";
 
 	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
 	String KEY_SUPPORT_ID = "support_id";
@@ -111,5 +114,27 @@ public interface Constants {
 
 
 	String KEY_GET_GOGU = "get_gogu";
+	String KEY_INVITE_EARN_SCREEN_IMAGE_ANDROID = "invite_earn_screen_image_android";
+
+	String KEY_EMERGENCY_ACTIVITY_MODE = "emergency_activity_mode";
+	String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
+	String KEY_NAME = "name";
+	String KEY_TRIP_TOTAL = "trip_total";
+
+
+	String KEY_T20_WC_ENABLE = "t20_wc_enable";
+	String KEY_SP_T20_WC_SCHEDULE_VERSION = "t20_wc_schedule_version";
+	String KEY_T20_SCHEDULE = "t20_schedule";
+	String KEY_SCHEDULE_ID = "schedule_id";
+	String KEY_TEAM_ID = "team_id";
+	String KEY_TEAM_1 = "team_1";
+	String KEY_TEAM_2 = "team_2";
+	String KEY_MATCH_TIME = "match_time";
+	String KEY_TEAM_NAME = "name";
+	String KEY_TEAM_SHORT_NAME = "short_name";
+	String KEY_TEAM_FLAG_IMAGE_URL = "flag_image_url";
+	String KEY_T20_WC_INFO_TEXT = "t20_wc_info_text";
+	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
+	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
 
 }

@@ -110,7 +110,6 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -122,6 +121,8 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -131,6 +132,10 @@ import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.t20.T20Activity;
+import product.clicklabs.jugnoo.t20.T20Dialog;
+import product.clicklabs.jugnoo.t20.T20Ops;
+import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -183,6 +188,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     LinearLayout linearLayoutProfile;
     ImageView imageViewProfile;
     TextView textViewUserName, textViewViewAccount;
+
+    RelativeLayout relativeLayoutT20WorldCup;
 
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
@@ -324,7 +331,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     static long previousWaitTime = 0, previousRideTime = 0;
 
 
-    static Location myLocation;
+    public static Location myLocation;
 
 
     public static UserMode userMode;
@@ -375,7 +382,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
-	public static final int PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT = 1;
 
     private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
 
@@ -406,6 +412,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private String dropLocationSearchText = "";
     private SlidingBottomPanel slidingBottomPanel;
 
+    private T20Ops t20Ops = new T20Ops();
 
 
     @Override
@@ -492,6 +499,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewUserName.setTypeface(Fonts.mavenRegular(this));
         textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount);
         textViewViewAccount.setTypeface(Fonts.latoRegular(this));
+
+        relativeLayoutT20WorldCup = (RelativeLayout) findViewById(R.id.relativeLayoutT20WorldCup);
+        ((TextView)findViewById(R.id.textViewT20WorldCup)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewT20WorldCupNew)).setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
@@ -744,6 +755,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 
+        relativeLayoutT20WorldCup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Data.userData.getT20WCEnable() == 1) {
+                    Intent intent = new Intent(HomeActivity.this, T20Activity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(WORLD_CUP_MENU);
+                }
+            }
+        });
+
         relativeLayoutGetRide.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -907,6 +930,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (callRequestRide) {
                                     promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
                                     callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
+
+                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
+                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
+
                                     FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
                                     if (promoCouponSelectedForRide.id > 0) {
                                         FlurryEventLogger.event(COUPONS_SELECTED);
@@ -1432,12 +1459,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
             }
 
-			if(Data.userData.paytmEnabled != 0 || Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) >= PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT){
-				if(!Data.locationSettingsNoPressed) {
-//					ReferralActions.incrementAppOpen(this);
-//					ReferralActions.showReferralDialog(HomeActivity.this, callbackManager);
-				}
-			}
 
             switchUserScreen();
 
@@ -1484,6 +1505,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+            }
+
+            if(Data.userData.getT20WCEnable() == 1){
+                relativeLayoutT20WorldCup.setVisibility(View.VISIBLE);
+            } else{
+                relativeLayoutT20WorldCup.setVisibility(View.GONE);
             }
 
         } catch (Exception e) {
@@ -1742,16 +1769,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
-    public void sendToFareDetails() {
-        HelpParticularActivity.helpSection = HelpSection.FARE_DETAILS;
-        if(map != null) {
-            Data.lastRefreshLatLng = map.getCameraPosition().target;
-        }
-		startActivity(new Intent(HomeActivity.this, HelpParticularActivity.class));
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		FlurryEventLogger.event(FARE_DETAILS);
-    }
 
 
     public void initiateRequestRide(boolean newRequest) {
@@ -2286,41 +2303,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-                        //******** If return 0 then show popup, contact not saved in database.
-                        if(Data.userData.contactSaved == 0
-                                && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-                                && dialogUploadContacts == null
-								&& Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
-							drawerLayout.closeDrawer(menuLayout);
-                            dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-									Data.userData.referAllTitle,
-                                    Data.userData.referAllText,
-                                    getResources().getString(R.string.upload_contact_yes),
-                                    getResources().getString(R.string.upload_contact_no_thanks),
-                                    false ,
-                                    new OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
-                                            Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
-                                            syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
-                                            syncContactsIntent.putExtra("session_id", Data.cSessionId);
-                                            syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
-                                            startService(syncContactsIntent);
-                                            registerDialogDismissReceiver();
-                                        }
-                                    }, new OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
-                                            uploadContactsApi();
-                                        }
-                                    });
-                        }
-
-
-
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
@@ -2385,7 +2367,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
 
+                updateTopBar();
 
+                t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
+                    @Override
+                    public void onDismiss() {
+                        showReferAllDialog();
+                    }
+
+                    @Override
+                    public void notShown() {
+                        showReferAllDialog();
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2855,6 +2849,48 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private void showReferAllDialog(){
+        try {
+            if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                //******** If return 0 then show popup, contact not saved in database.
+                if (Data.userData.contactSaved == 0
+                        && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
+                        && dialogUploadContacts == null
+                        && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+                    drawerLayout.closeDrawer(menuLayout);
+                    dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
+                            Data.userData.referAllTitle,
+                            Data.userData.referAllText,
+                            getResources().getString(R.string.upload_contact_yes),
+                            getResources().getString(R.string.upload_contact_no_thanks),
+                            false,
+                            new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                    Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
+                                    Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                    syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                    syncContactsIntent.putExtra("session_id", Data.cSessionId);
+                                    syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                    startService(syncContactsIntent);
+                                    registerDialogDismissReceiver();
+                                }
+                            }, new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
+                                    uploadContactsApi();
+                                }
+                            });
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -2920,6 +2956,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Prefs.with(this).save(SPLabels.UPLOAD_CONTACTS_ERROR, "");
                     DialogPopup.alertPopup(this, "", alertMessage);
                 }
+
+                updateTopBar();
 
             }
 
@@ -4929,9 +4967,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
+            Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
-                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta, fareFixed, preferredPaymentMode);
+                driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
+                    fareFixed, preferredPaymentMode, scheduleT20);
 
 
 
@@ -5754,7 +5794,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             EmergencyContact emergencyContact = new EmergencyContact(emergencyContactId);
             if (Data.emergencyContactsList != null && Data.emergencyContactsList.contains(emergencyContact)) {
-                Data.emergencyContactsList.get(Data.emergencyContactsList.indexOf(emergencyContact)).verificationStatus = 1;
                 if (EmergencyContactsActivity.refreshEmergencyContacts != null) {
                     EmergencyContactsActivity.refreshEmergencyContacts.refreshEmergencyContacts();
                 }
@@ -5779,50 +5818,129 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 separator = ", ";
             }
 
-            if(Data.emergencyContactsList.size() > 1){
-                if(1 == Data.emergencyContactsList.get(0).verificationStatus && 1 == Data.emergencyContactsList.get(1).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(0).phoneNo + separator + Data.emergencyContactsList.get(1).phoneNo;
-                }
-                else if(1 == Data.emergencyContactsList.get(0).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
-                }
-                else if(1 == Data.emergencyContactsList.get(1).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(1).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(1).phoneNo;
-                }
-                else{
-                    sosContactVerified = false;
-                }
-            }
-            else if(Data.emergencyContactsList.size() > 0){
-                if(1 == Data.emergencyContactsList.get(0).verificationStatus){
-                    sosContactVerified = true;
-                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
-                }
-                else{
-                    sosContactVerified = false;
-                }
-            }
-            else{
-                sosContactVerified = false;
-            }
+//            if(Data.emergencyContactsList.size() > 1){
+//                if(1 == Data.emergencyContactsList.get(0).verificationStatus && 1 == Data.emergencyContactsList.get(1).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(0).phoneNo + separator + Data.emergencyContactsList.get(1).phoneNo;
+//                }
+//                else if(1 == Data.emergencyContactsList.get(0).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
+//                }
+//                else if(1 == Data.emergencyContactsList.get(1).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(1).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(1).phoneNo;
+//                }
+//                else{
+//                    sosContactVerified = false;
+//                }
+//            }
+//            else if(Data.emergencyContactsList.size() > 0){
+//                if(1 == Data.emergencyContactsList.get(0).verificationStatus){
+//                    sosContactVerified = true;
+//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
+//                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
+//                }
+//                else{
+//                    sosContactVerified = false;
+//                }
+//            }
+//            else{
+//                sosContactVerified = false;
+//            }
 
 
-            if(sosContactVerified){
-                sosAlertDialog(activity, primaryPhone, phoneString);
-            }
-            else{
-                call100Dialog(activity);
-            }
+//            if(sosContactVerified){
+//                sosAlertDialog(activity, primaryPhone, phoneString);
+//            }
+//            else{
+//                call100Dialog(activity);
+//            }
+
+            new EmergencyDialog(activity, Data.cEngagementId, new EmergencyDialog.CallBack() {
+                @Override
+                public void onEnableEmergencyModeClick(View view) {
+                    Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
+                    intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                            EmergencyActivity.EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal());
+                    intent.putExtra(Constants.KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                    intent.putExtra(Constants.KEY_DRIVER_ID, Data.assignedDriverInfo.userId);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);
+                }
+
+                @Override
+                public void onEmergencyModeDisabled() {
+                    updateTopBar();
+                }
+
+                @Override
+                public void onSendRideStatusClick(View view) {
+
+                    Intent intent = new Intent(HomeActivity.this, EmergencyActivity.class);
+                    intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                            EmergencyActivity.EmergencyActivityMode.SEND_RIDE_STATUS.getOrdinal());
+                    intent.putExtra(Constants.KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+
+                @Override
+                public void onInAppCustomerSupportClick(View view) {
+                    startActivity(new Intent(HomeActivity.this, SupportActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(SUPPORT_OPTIONS_THROUGH_EMERGENCY);
+                }
+
+                @Override
+                public void onDialogClosed(View view) {
+                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
+                }
+
+                @Override
+                public void onDialogDismissed() {
+
+                }
+            }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
 
         } else {
-            call100Dialog(activity);
+//            call100Dialog(activity);
+        }
+    }
+
+    public static int localModeEnabled = -1;
+    private void updateTopBar(){
+        try{
+            if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                    || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                    || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+                    || PassengerScreenMode.P_RIDE_END == passengerScreenMode){
+                int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+                if(modeEnabled == 1){
+                    topRl.setBackgroundResource(R.drawable.background_red_dark);
+                    title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                } else{
+                    if(localModeEnabled == 1){
+                        DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
+                                getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
+                    }
+                    topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                    title.setText(getResources().getString(R.string.app_name));
+                }
+                localModeEnabled = modeEnabled;
+            } else{
+                Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+                topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                title.setText(getResources().getString(R.string.app_name));
+                localModeEnabled = 0;
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -6242,60 +6360,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-
-
-	private void showPaytmTutorialPopup(final Activity activity) {
-		try {
-			if(Data.userData.paytmEnabled == 0 && Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0) < PAYTM_TUTORIAL_DIALOG_DISPLAY_COUNT) {
-				imageViewMenu.performClick();
-				final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-				dialog.setContentView(R.layout.dialog_paytm_tutorial);
-
-				LinearLayout linearLayoutPaytmTutorial = (LinearLayout) dialog.findViewById(R.id.linearLayoutPaytmTutorial);
-				new ASSL(activity, (LinearLayout) dialog.findViewById(R.id.linearLayoutPaytmTutorial), 1134, 720, true);
-
-				RelativeLayout relativeLayoutAdjustable = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutAdjustable);
-
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
-
-				RelativeLayout relativeLayoutWalletTut = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutWalletTut);
-				((TextView) dialog.findViewById(R.id.textViewWalletTut)).setTypeface(Fonts.latoRegular(activity));
-				TextView textViewWalletValueTut = (TextView) dialog.findViewById(R.id.textViewWalletValueTut);
-				textViewWalletValueTut.setTypeface(Fonts.latoRegular(activity));
-				textViewWalletValueTut.setText(activity.getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()));
-
-				relativeLayoutWalletTut.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-                        Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                        intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
-                        startActivity(intent);
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
-						FlurryEventLogger.event(WALLET_VIA_TUTORIAL);
-					}
-				});
-
-				linearLayoutPaytmTutorial.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-				dialog.show();
-
-				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) relativeLayoutAdjustable.getLayoutParams();
-				params.height = relativeLayoutWallet.getTop();
-				relativeLayoutAdjustable.setLayoutParams(params);
-
-				Prefs.with(activity).save(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, (Prefs.with(activity).getInt(SPLabels.PAYTM_TUTORIAL_SHOWN_COUNT, 0)+1));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
     private void uploadContactsApi(){
         HashMap<String, String> params = new HashMap<>();

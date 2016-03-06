@@ -28,9 +28,11 @@
                 android:layout_height="443px"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5px"
-                android:background="@drawable/free_rides_pic_new"
+                android:src="@drawable/free_rides_pic_new"
                 android:tag="mlar"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:scaleType="centerCrop"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"

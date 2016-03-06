@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -22,15 +17,12 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -39,111 +31,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
  * Created by socomo20 on 6/19/15.
  */
 public class ReferralActions implements FlurryEventNames {
-
-
-    public static boolean showReferralDialog(final Activity activity, final CallbackManager callbackManager){
-        try{
-            boolean showDialog = false;
-            long minus1 = -1l;
-            long lastOpenDate = Prefs.with(activity).getLong(SPLabels.REFERRAL_OPEN_DATE_MILLIS, minus1);
-            long oneDayMillis = 24 * 60 * 60 * 1000;
-            long dateDiff = DateOperations.getTimeDifference(System.currentTimeMillis(), lastOpenDate);
-
-            int lastAppOpen = Prefs.with(activity).getInt(SPLabels.REFERRAL_APP_OPEN_COUNT, 0);
-            int lastTransactionCount = Prefs.with(activity).getInt(SPLabels.REFERRAL_TRANSACTION_COUNT, 0);
-
-            if(dateDiff >= oneDayMillis){
-                if((lastTransactionCount > 0) && (lastTransactionCount % 2 == 0)){
-                    showDialog = true;
-                }
-                else if((lastAppOpen > 0) && (lastAppOpen % 5 == 0)){
-                    showDialog = true;
-                }
-                else{
-                    showDialog = false;
-                }
-            }
-            else{
-                showDialog = false;
-            }
-
-            if(showDialog) {
-                final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-                dialog.setContentView(R.layout.dialog_referral);
-
-                RelativeLayout rv = (RelativeLayout) dialog.findViewById(R.id.rv);
-                new ASSL(activity, rv, 1134, 720, true);
-
-                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-                layoutParams.dimAmount = 0.6f;
-                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(false);
-
-                ((TextView) dialog.findViewById(R.id.textViewGiftGet)).setTypeface(Fonts.latoRegular(activity));
-                ((TextView) dialog.findViewById(R.id.textViewInviteFriends)).setTypeface(Fonts.latoRegular(activity));
-                TextView textViewAmount = (TextView) dialog.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.latoRegular(activity));
-				textViewAmount.setText(Data.referralMessages.referralPopupText);
-                ((TextView) dialog.findViewById(R.id.textViewShareCodeToday)).setTypeface(Fonts.latoRegular(activity));
-
-
-                (dialog.findViewById(R.id.imageViewFacebook)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        shareToFacebook(activity, callbackManager);
-                        FlurryEventLogger.event(REFERRAL_POPUP_FACEBOOK);
-						dialog.dismiss();
-                    }
-                });
-
-                (dialog.findViewById(R.id.imageViewWhatsapp)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        shareToWhatsapp(activity);
-						FlurryEventLogger.event(REFERRAL_POPUP_WHATSAPP);
-						dialog.dismiss();
-                    }
-                });
-
-                (dialog.findViewById(R.id.imageViewSMS)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        sendSMSIntent(activity);
-						FlurryEventLogger.event(REFERRAL_POPUP_MESSAGE);
-						dialog.dismiss();
-                    }
-                });
-
-                (dialog.findViewById(R.id.imageViewEmail)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openMailIntent(activity);
-						FlurryEventLogger.event(REFERRAL_POPUP_EMAIL);
-						dialog.dismiss();
-                    }
-                });
-
-                (dialog.findViewById(R.id.imageViewCross)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-						dialog.dismiss();
-						FlurryEventLogger.event(REFERRAL_POPUP_CLOSE);
-                    }
-                });
-
-                dialog.show();
-                resetAppOpen(activity);
-                resetTransactionCount(activity);
-                updateOpenDate(activity);
-            }
-            return showDialog;
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     public static FacebookLoginHelper facebookLoginHelper;
     public static void shareToFacebook(final Activity activity, CallbackManager callbackManager){
@@ -261,7 +148,7 @@ public class ReferralActions implements FlurryEventNames {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
                     sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
-                        + link);
+                            + link);
                     activity.startActivity(sms_intent);
                 }
 
@@ -352,7 +239,7 @@ public class ReferralActions implements FlurryEventNames {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ResolveInfo info = (ResolveInfo) adapter.getItem(which);
-                if (info.activityInfo.packageName.contains("facebook")) {
+                if (info.activityInfo.packageName.contains("com.facebook.katana")) {
                     shareToFacebookBasic(activity, callbackManager, link);
 					FlurryEventLogger.event(GENERIC_FACEBOOK);
                 }
@@ -392,24 +279,44 @@ public class ReferralActions implements FlurryEventNames {
 
     private static void sortApps(List<ResolveInfo> infos){
         try{
-            ResolveInfo fb = null, whatsapp = null, sms = null, mail = null;
+            //com.facebook.orca
+            //com.twitter.android
+
+            ResolveInfo fb = null, whatsapp = null, sms = null, mail = null, fbMsgr = null, twitter = null;
             for(int i=0; i<infos.size(); i++){
                 ResolveInfo info = infos.get(i);
                 if (info.activityInfo.packageName.contains("com.facebook.katana") && fb == null) {
                     fb = infos.remove(i);
+                    i--;
                 }
                 else if((info.activityInfo.packageName.contains("com.google.android.gm")
                     || info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
                     || info.activityInfo.packageName.contains("com.microsoft.office.outlook")
                     || info.activityInfo.packageName.contains("com.google.android.apps.inbox")) && mail == null){
                     mail = infos.remove(i);
+                    i--;
                 }
                 else if(info.activityInfo.packageName.contains("com.whatsapp") && whatsapp == null){
                     whatsapp = infos.remove(i);
+                    i--;
                 }
                 else if(info.activityInfo.packageName.contains("com.android.mms") && sms == null){
                     sms = infos.remove(i);
+                    i--;
                 }
+
+                else if(info.activityInfo.packageName.contains("com.facebook.orca") && fbMsgr == null){
+                    fbMsgr = infos.remove(i);
+                    i--;
+                }
+                else if(info.activityInfo.packageName.contains("com.twitter.android") && twitter == null){
+                    twitter = infos.remove(i);
+                    i--;
+                }
+            }
+
+            if(twitter != null){
+                infos.add(0, twitter);
             }
             if(mail != null){
                 infos.add(0, mail);
@@ -417,11 +324,14 @@ public class ReferralActions implements FlurryEventNames {
             if(sms != null){
                 infos.add(0, sms);
             }
-            if(whatsapp != null){
-                infos.add(0, whatsapp);
+            if(fbMsgr != null){
+                infos.add(0, fbMsgr);
             }
             if(fb != null){
                 infos.add(0, fb);
+            }
+            if(whatsapp != null){
+                infos.add(0, whatsapp);
             }
         } catch(Exception e){
             e.printStackTrace();
