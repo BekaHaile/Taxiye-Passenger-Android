@@ -468,7 +468,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
 						message1 = jObj.getString("message");
-						if (HomeActivity.activity == null) {
+						if (HomeActivity.appInterruptHandler == null) {
 							notificationManager(this, title, "" + message1, false);
 						} else {
 							notificationManagerResume(this, title, "" + message1, false);

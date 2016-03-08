@@ -351,7 +351,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     LatLng lastSearchLatLng;
 
-    static double totalDistance = -1;
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
@@ -371,9 +370,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Polyline pathToDropLocationPolyline;
     PolylineOptions pathToDropLocationPolylineOptions;
 
-    static AppInterruptHandler appInterruptHandler;
-
-    static Activity activity;
+    public static AppInterruptHandler appInterruptHandler;
 
     boolean loggedOut = false,
         zoomedToMyLocation = false,
@@ -487,8 +484,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
-
-        activity = this;
 
         activityResumed = false;
         rechargedOnce = false;
@@ -802,6 +797,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawer(menuLayout);
+
+                new PaytmRechargeDialog(HomeActivity.this, "Driver 007", "9999999999", "234",
+                        new PaytmRechargeDialog.Callback() {
+                    @Override
+                    public void onOk() {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }).show();
             }
         });
 
@@ -961,8 +969,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
                                     callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
 
-                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
-                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
+                                    Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
+                                    Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
 
                                     FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
                                     if (promoCouponSelectedForRide.id > 0) {
@@ -1509,10 +1517,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 // ****** New Look Tutorial Screen ***** //
 
-                if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
-                    if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
+                if((Prefs.with(HomeActivity.this).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
+                    if((Prefs.with(HomeActivity.this).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
                             &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
-                        Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
+                        Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
                         Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
                         intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
                         startActivity(intent);
@@ -1527,7 +1535,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     centreLocationRl.setVisibility(View.VISIBLE);
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-                    Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
+                    Prefs.with(HomeActivity.this).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
                 }
 
 
@@ -1580,7 +1588,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
-		Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
@@ -2993,7 +3001,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             int sdkInt = android.os.Build.VERSION.SDK_INT;
             if (sdkInt < 19) {
-                DialogPopup.showLocationSettingsAlert(activity);
+                DialogPopup.showLocationSettingsAlert(HomeActivity.this);
             }
 
 
@@ -3974,7 +3982,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         HomeActivity.previousWaitTime = 0;
         HomeActivity.previousRideTime = 0;
-        HomeActivity.totalDistance = -1;
 
         clearRideSPData();
     }
@@ -4974,7 +4981,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			String promoName = JSONParser.getPromoName(jObj);
 
             Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
-			Data.startRidePreviousLatLng = Data.pickupLatLng;
 
 			double fareFactor = 1.0;
 			if (jObj.has("fare_factor")) {
@@ -5507,7 +5513,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             final int flag = jObj.getInt("flag");
                                             if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
                                                 cancelTimerRequestRide();
-                                                HomeActivity.logoutUser(activity);
+                                                HomeActivity.logoutUser(HomeActivity.this);
                                             } else {
                                                 if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
                                                     cancelTimerRequestRide();
@@ -5709,7 +5715,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-				rateAppPopup(activity);
+				rateAppPopup(HomeActivity.this);
 			} else {
 			}
             firstTimeZoom = false;

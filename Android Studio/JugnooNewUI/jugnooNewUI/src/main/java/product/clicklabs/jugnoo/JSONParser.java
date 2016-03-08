@@ -674,20 +674,7 @@ public class JSONParser implements Constants {
                 }
                 else if (Data.P_IN_RIDE.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-
-                    HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
-
-                    if (Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0) {
-                        Data.startRidePreviousLatLng = Data.pickupLatLng;
-                    } else {
-                        String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-                        String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-                        Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
-                    }
-                } else {
-
                 }
-
             }
         }
 
