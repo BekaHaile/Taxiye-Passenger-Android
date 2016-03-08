@@ -119,6 +119,8 @@
     <dimen name="leaderboard_activity_item_height">245px</dimen>
     <dimen name="leaderboard_activity_item_value_height">185px</dimen>
     <dimen name="share_lb_text_view_layout_height">80px</dimen>
+    <dimen name="text_size_68">68px</dimen>
+    <dimen name="text_size_60">60px</dimen>
     <dimen name="text_size_54">54px</dimen>
     <dimen name="text_size_50">50px</dimen>
     <dimen name="text_size_40">40px</dimen>

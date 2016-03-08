@@ -755,4 +755,8 @@
 	<string name="enter_your_destination">Enter your destination</string>
 
 
+	<string name="recharge">Recharge</string>
+	<string name="paytm_recharge_via_driver_info_format">Driver %s is recharging\nyour Paytm account registered\non number</string>
+	<string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
+
 </resources>

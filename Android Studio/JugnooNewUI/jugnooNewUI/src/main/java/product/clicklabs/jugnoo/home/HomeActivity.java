@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -97,6 +97,29 @@ import javax.crypto.spec.SecretKeySpec;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
+import product.clicklabs.jugnoo.AboutActivity;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Database;
+import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.EmergencyContactsActivity;
+import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.LocationFetcher;
+import product.clicklabs.jugnoo.LocationUpdate;
+import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.NotificationCenterActivity;
+import product.clicklabs.jugnoo.PromotionsActivity;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.ReferralActions;
+import product.clicklabs.jugnoo.RideCancellationActivity;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.ScheduleAlarmForGCM;
+import product.clicklabs.jugnoo.ShareActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -173,7 +196,7 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
 
 		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler,
-        SearchListAdapter.SearchListActionsHandler, Constants{
+        SearchListAdapter.SearchListActionsHandler, Constants {
 
 
     private final String TAG = HomeActivity.class.getSimpleName();

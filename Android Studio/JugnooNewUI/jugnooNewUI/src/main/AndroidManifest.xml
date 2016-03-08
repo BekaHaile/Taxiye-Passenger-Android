@@ -165,7 +165,7 @@
 
         
         <activity
-            android:name="product.clicklabs.jugnoo.HomeActivity"
+            android:name=".home.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
@@ -369,7 +369,7 @@
         <receiver android:name=".utils.LocationReceiver" />
 
         <service android:enabled="true"
-            android:name="product.clicklabs.jugnoo.ContactsUploadService" />
+            android:name=".home.ContactsUploadService" />
 
 
 
