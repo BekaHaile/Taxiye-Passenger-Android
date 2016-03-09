@@ -28,14 +28,14 @@ public class PaytmRechargeDialog {
 
     private Activity activity;
     private Dialog dialog;
-    private String engagementId, driverName, userPhoneNumber, amountToConfirm;
+    private String transferId, driverName, userPhoneNumber, amountToConfirm;
     private EditText editTextAmount;
     private Callback callback;
 
-    public PaytmRechargeDialog(Activity activity, String engagementId, String driverName, String userPhoneNumber, String amountToConfirm,
+    public PaytmRechargeDialog(Activity activity, String transferId, String driverName, String userPhoneNumber, String amountToConfirm,
                                Callback callback) {
         this.activity = activity;
-        this.engagementId = engagementId;
+        this.transferId = transferId;
         this.driverName = driverName;
         this.userPhoneNumber = userPhoneNumber;
         this.amountToConfirm = amountToConfirm;
@@ -105,7 +105,13 @@ public class PaytmRechargeDialog {
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    authenticatePaytmRechargeApi();
+                    if (editTextAmount.getText().toString().trim().equals(amountToConfirm)) {
+                        authenticatePaytmRechargeApi();
+                    } else{
+                        editTextAmount.requestFocus();
+                        editTextAmount.setError(String.format(activity.getResources()
+                                .getString(R.string.type_amount_to_confirm_the_transaction_format), amountToConfirm));
+                    }
                 }
             });
 
@@ -151,7 +157,7 @@ public class PaytmRechargeDialog {
             public void onNoRetry(View view) {
 
             }
-        }).authenticatePaytmRecharge(engagementId);
+        }).authenticatePaytmRecharge(transferId, amountToConfirm);
     }
 
 

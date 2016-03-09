@@ -366,7 +366,7 @@ public interface ApiService {
                                  Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/paytm/authenticate_recharge")
+    @POST("/complete_user_paytm_recharge")
     void paytmAuthenticateRecharge(@FieldMap Map<String, String> params,
                                  Callback<SettleUserDebt> callback);
 

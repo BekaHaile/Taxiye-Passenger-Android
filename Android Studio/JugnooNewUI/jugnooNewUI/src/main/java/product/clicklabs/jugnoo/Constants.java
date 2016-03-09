@@ -137,4 +137,7 @@ public interface Constants {
 	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
 	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
 
+	String KEY_TRANSFER_ID = "transfer_id";
+	String KEY_USER_AMOUNT = "user_amount";
+
 }

@@ -41,7 +41,7 @@ public class ApiAuthenticatePaytmRecharge {
 		this.callback = callback;
 	}
 
-	public void authenticatePaytmRecharge(String engagementId) {
+	public void authenticatePaytmRecharge(String transferId, String amount) {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
 
@@ -49,7 +49,8 @@ public class ApiAuthenticatePaytmRecharge {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+				params.put(Constants.KEY_TRANSFER_ID, transferId);
+				params.put(Constants.KEY_USER_AMOUNT, amount);
 				Log.i(TAG, "paytmAuthenticateRecharge params=" + params.toString());
 
 				RestClient.getApiServices().paytmAuthenticateRecharge(params, new retrofit.Callback<SettleUserDebt>() {
