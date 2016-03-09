@@ -4828,7 +4828,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public void startRideForCustomer(final int flag) {
+    public void startRideForCustomer(final int flag, final String message) {
         try {
             if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
                 Log.e("in ", "herestartRideForCustomer");
@@ -4857,7 +4857,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								pickupDropZoomed = false;
 								passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
-                                DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
+                                DialogPopup.alertPopup(HomeActivity.this, "", message);
                             }
                         }
                     });
