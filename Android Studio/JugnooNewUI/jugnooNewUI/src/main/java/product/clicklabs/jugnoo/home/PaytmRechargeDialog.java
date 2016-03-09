@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiAuthenticatePaytmRecharge;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -26,13 +27,15 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class PaytmRechargeDialog {
 
     private Activity activity;
-    private String driverName, userPhoneNumber, amountToConfirm;
+    private Dialog dialog;
+    private String engagementId, driverName, userPhoneNumber, amountToConfirm;
     private EditText editTextAmount;
     private Callback callback;
 
-    public PaytmRechargeDialog(Activity activity, String driverName, String userPhoneNumber, String amountToConfirm,
+    public PaytmRechargeDialog(Activity activity, String engagementId, String driverName, String userPhoneNumber, String amountToConfirm,
                                Callback callback) {
         this.activity = activity;
+        this.engagementId = engagementId;
         this.driverName = driverName;
         this.userPhoneNumber = userPhoneNumber;
         this.amountToConfirm = amountToConfirm;
@@ -41,7 +44,7 @@ public class PaytmRechargeDialog {
 
     public Dialog show(){
         try {
-            final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+            dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             dialog.setContentView(R.layout.dialog_paytm_recharge_via_driver);
 
@@ -102,8 +105,7 @@ public class PaytmRechargeDialog {
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
-                    callback.onOk();
+                    authenticatePaytmRechargeApi();
                 }
             });
 
@@ -125,6 +127,33 @@ public class PaytmRechargeDialog {
             return null;
         }
     }
+
+
+    private void authenticatePaytmRechargeApi(){
+        new ApiAuthenticatePaytmRecharge(activity, new ApiAuthenticatePaytmRecharge.Callback() {
+            @Override
+            public void onSuccess() {
+                dialog.dismiss();
+                callback.onOk();
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+
+            @Override
+            public void onRetry(View view) {
+
+            }
+
+            @Override
+            public void onNoRetry(View view) {
+
+            }
+        }).authenticatePaytmRecharge(engagementId);
+    }
+
 
 
     public interface Callback{
