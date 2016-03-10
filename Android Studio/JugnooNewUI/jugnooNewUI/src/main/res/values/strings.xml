@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -255,7 +255,7 @@
 
 
 	<!-- Search state strings -->
-	<string name="search_state_edit_text_hint">Set pick up location</string>
+	<string name="set_pickup_location">Set pick up location</string>
 
 	<!-- Assigning state strings -->
 	<string name="assigning_state_edit_text_hint">Set drop location</string>
@@ -751,5 +751,8 @@
 	<string name="team_not_selected_error">Please select a team</string>
 
 	<string name="ride_cancelled_by_driver">Driver has cancelled the ride. Please try again. Apologies for inconvenience!</string>
+
+	<string name="enter_your_destination">Enter your destination</string>
+
 
 </resources>
