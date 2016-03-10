@@ -378,7 +378,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -798,18 +798,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 drawerLayout.closeDrawer(menuLayout);
 
-                new PaytmRechargeDialog(HomeActivity.this, "Driver 007", "9999999999", "234",
+                //TODO remove at any cost
+                new PaytmRechargeDialog(HomeActivity.this,
+                        Data.userData.getPaytmRechargeInfo().getTransferId(),
+                        Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                        Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                        Data.userData.getPaytmRechargeInfo().getTransferAmount(),
                         new PaytmRechargeDialog.Callback() {
-                    @Override
-                    public void onOk() {
+                            @Override
+                            public void onOk() {
 
-                    }
+                            }
 
-                    @Override
-                    public void onCancel() {
+                            @Override
+                            public void onCancel() {
 
-                    }
-                }).show();
+                            }
+                        }).show();
             }
         });
 
@@ -1551,6 +1556,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutT20WorldCup.setVisibility(View.GONE);
             }
 
+            openPaytmRechargeDialog();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1811,7 +1818,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
-            Dialog dialogPriorityTip = new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
+            new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
                     new PriorityTipDialog.Callback() {
                         @Override
                         public void onConfirmed() {
@@ -6655,5 +6662,49 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onPlaceSaved() {
         placeAdded = true;
     }
+
+    @Override
+    public void onPaytmRechargePush(final JSONObject jObj) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(jObj));
+                    openPaytmRechargeDialog();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void openPaytmRechargeDialog(){
+        try {
+            if(Data.userData.getPaytmRechargeInfo() != null) {
+                if(dialogPaytmRecharge != null && dialogPaytmRecharge.isShowing()){
+                    dialogPaytmRecharge.dismiss();
+                }
+                dialogPaytmRecharge = new PaytmRechargeDialog(HomeActivity.this,
+                        Data.userData.getPaytmRechargeInfo().getTransferId(),
+                        Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                        Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                        Data.userData.getPaytmRechargeInfo().getTransferAmount(),
+                        new PaytmRechargeDialog.Callback() {
+                            @Override
+                            public void onOk() {
+
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        }).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

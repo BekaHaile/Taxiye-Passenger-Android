@@ -28,17 +28,18 @@ public class PaytmRechargeDialog {
 
     private Activity activity;
     private Dialog dialog;
-    private String transferId, driverName, userPhoneNumber, amountToConfirm;
+    private String transferId, transferSenderName, transferPhone, transferAmount;
     private EditText editTextAmount;
     private Callback callback;
 
-    public PaytmRechargeDialog(Activity activity, String transferId, String driverName, String userPhoneNumber, String amountToConfirm,
+    public PaytmRechargeDialog(Activity activity, String transferId, String transferSenderName,
+                               String transferPhone, String transferAmount,
                                Callback callback) {
         this.activity = activity;
         this.transferId = transferId;
-        this.driverName = driverName;
-        this.userPhoneNumber = userPhoneNumber;
-        this.amountToConfirm = amountToConfirm;
+        this.transferSenderName = transferSenderName;
+        this.transferPhone = transferPhone;
+        this.transferAmount = transferAmount;
         this.callback = callback;
     }
 
@@ -71,15 +72,15 @@ public class PaytmRechargeDialog {
             btnCancel.setTypeface(Fonts.mavenRegular(activity));
 
             textViewRechargeInfo.setText(String.format(activity.getResources()
-                    .getString(R.string.paytm_recharge_via_driver_info_format), driverName));
+                    .getString(R.string.paytm_recharge_via_driver_info_format), transferSenderName));
 
-            Spannable word = new SpannableString(userPhoneNumber);
+            Spannable word = new SpannableString(transferPhone);
             word.setSpan(new StyleSpan(Typeface.BOLD), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             textViewRechargeInfo.append(" ");
             textViewRechargeInfo.append(word);
 
-            editTextAmount.setHint(amountToConfirm);
+            editTextAmount.setHint(transferAmount);
 
             editTextAmount.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -94,7 +95,7 @@ public class PaytmRechargeDialog {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (s.toString().equals(amountToConfirm)) {
+                    if (s.toString().equals(transferAmount)) {
                         editTextAmount.setTextColor(activity.getResources().getColor(R.color.green_status));
                     } else {
                         editTextAmount.setTextColor(activity.getResources().getColor(R.color.red_status));
@@ -105,12 +106,12 @@ public class PaytmRechargeDialog {
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (editTextAmount.getText().toString().trim().equals(amountToConfirm)) {
-                        authenticatePaytmRechargeApi();
+                    if (editTextAmount.getText().toString().trim().equals(transferAmount)) {
+                        authenticatePaytmRechargeApi(editTextAmount.getText().toString().trim());
                     } else{
                         editTextAmount.requestFocus();
                         editTextAmount.setError(String.format(activity.getResources()
-                                .getString(R.string.type_amount_to_confirm_the_transaction_format), amountToConfirm));
+                                .getString(R.string.type_amount_to_confirm_the_transaction_format), transferAmount));
                     }
                 }
             });
@@ -135,7 +136,7 @@ public class PaytmRechargeDialog {
     }
 
 
-    private void authenticatePaytmRechargeApi(){
+    private void authenticatePaytmRechargeApi(final String amountEntered){
         new ApiAuthenticatePaytmRecharge(activity, new ApiAuthenticatePaytmRecharge.Callback() {
             @Override
             public void onSuccess() {
@@ -150,14 +151,14 @@ public class PaytmRechargeDialog {
 
             @Override
             public void onRetry(View view) {
-
+                authenticatePaytmRechargeApi(amountEntered);
             }
 
             @Override
             public void onNoRetry(View view) {
 
             }
-        }).authenticatePaytmRecharge(transferId, amountToConfirm);
+        }).authenticatePaytmRecharge(transferId, amountEntered);
     }
 
 

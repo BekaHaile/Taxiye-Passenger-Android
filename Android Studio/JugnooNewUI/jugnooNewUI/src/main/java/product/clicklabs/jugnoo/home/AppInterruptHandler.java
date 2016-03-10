@@ -30,4 +30,6 @@ public interface AppInterruptHandler {
 
 	void showDialog(String message);
 
+	void onPaytmRechargePush(JSONObject jObj);
+
 }

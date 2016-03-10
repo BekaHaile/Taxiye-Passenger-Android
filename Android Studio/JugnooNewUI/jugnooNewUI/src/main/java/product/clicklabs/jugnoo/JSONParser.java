@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -534,6 +535,10 @@ public class JSONParser implements Constants {
 
 
                     int flag = jObject1.getInt("flag");
+
+                    if(Data.userData != null) {
+                        Data.userData.setPaytmRechargeInfo(parsePaytmRechargeInfo(jObject1));
+                    }
 
                     if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
 
@@ -1174,6 +1179,27 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
         return schedule;
+    }
+
+
+    public static PaytmRechargeInfo parsePaytmRechargeInfo(JSONObject jObj){
+        PaytmRechargeInfo paytmRechargeInfo = null;
+        try {
+            JSONObject jPRI;
+            if(jObj.has(KEY_PAYTM_RECHARGE_INFO)) {
+                jPRI = jObj.getJSONObject(KEY_PAYTM_RECHARGE_INFO);
+            } else{
+                jPRI = jObj;
+            }
+            paytmRechargeInfo = new PaytmRechargeInfo(jPRI.getString(KEY_TRANSFER_ID),
+                    jPRI.getString(KEY_TRANSFER_PHONE),
+                    jPRI.getString(KEY_TRANSFER_AMOUNT),
+                    jPRI.getString(KEY_TRANSFER_SENDER_NAME));
+        } catch (Exception e) {
+            e.printStackTrace();
+            paytmRechargeInfo = null;
+        }
+        return paytmRechargeInfo;
     }
 
 
