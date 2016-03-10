@@ -1186,8 +1186,8 @@ public class JSONParser implements Constants {
         PaytmRechargeInfo paytmRechargeInfo = null;
         try {
             JSONObject jPRI;
-            if(jObj.has(KEY_PAYTM_RECHARGE_INFO)) {
-                jPRI = jObj.getJSONObject(KEY_PAYTM_RECHARGE_INFO);
+            if(jObj.has(KEY_PAYTM_TRANSFER_DATA)) {
+                jPRI = jObj.getJSONObject(KEY_PAYTM_TRANSFER_DATA);
             } else{
                 jPRI = jObj;
             }
