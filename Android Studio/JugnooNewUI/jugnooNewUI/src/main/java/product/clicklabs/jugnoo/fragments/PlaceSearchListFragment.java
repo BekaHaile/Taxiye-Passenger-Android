@@ -19,7 +19,6 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -224,7 +223,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		Bundle bundle = getArguments();
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
-		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, getString(R.string.search_state_edit_text_hint));
+		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
 		editTextSearch.setText(text);
 		editTextSearch.setHint(hint);
 		new Handler().post(new Runnable() {
