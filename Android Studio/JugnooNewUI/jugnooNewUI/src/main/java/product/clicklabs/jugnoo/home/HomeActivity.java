@@ -797,24 +797,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawer(menuLayout);
-
-                //TODO remove at any cost
-                new PaytmRechargeDialog(HomeActivity.this,
-                        Data.userData.getPaytmRechargeInfo().getTransferId(),
-                        Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
-                        Data.userData.getPaytmRechargeInfo().getTransferPhone(),
-                        Data.userData.getPaytmRechargeInfo().getTransferAmount(),
-                        new PaytmRechargeDialog.Callback() {
-                            @Override
-                            public void onOk() {
-
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        }).show();
             }
         });
 
@@ -1556,7 +1538,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutT20WorldCup.setVisibility(View.GONE);
             }
 
-            openPaytmRechargeDialog();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2395,6 +2376,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 dismissReferAllDialog(mode);
 
                 updateTopBar();
+
+                openPaytmRechargeDialog();
 
                 t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
                     @Override
@@ -6692,12 +6675,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new PaytmRechargeDialog.Callback() {
                             @Override
                             public void onOk() {
-
+                                if(Data.userData != null) {
+                                    Data.userData.setPaytmRechargeInfo(null);
+                                }
                             }
 
                             @Override
                             public void onCancel() {
-
+                                if(Data.userData != null) {
+                                    Data.userData.setPaytmRechargeInfo(null);
+                                }
                             }
                         }).show();
             }

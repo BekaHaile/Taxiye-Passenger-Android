@@ -63,7 +63,7 @@ public class ApiAuthenticatePaytmRecharge {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								int flag = jObj.getInt("flag");
+								int flag = jObj.getInt(Constants.KEY_FLAG);
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 									DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 										@Override

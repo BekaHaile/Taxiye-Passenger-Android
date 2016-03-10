@@ -80,7 +80,7 @@ public class PaytmRechargeDialog {
             textViewRechargeInfo.append(" ");
             textViewRechargeInfo.append(word);
 
-            editTextAmount.setHint(transferAmount);
+//            editTextAmount.setHint(transferAmount);
 
             editTextAmount.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -119,8 +119,7 @@ public class PaytmRechargeDialog {
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
-                    callback.onCancel();
+                    authenticatePaytmRechargeApi("-1");
                 }
             });
 
@@ -141,7 +140,11 @@ public class PaytmRechargeDialog {
             @Override
             public void onSuccess() {
                 dialog.dismiss();
-                callback.onOk();
+                if("-1".equalsIgnoreCase(amountEntered)){
+                    callback.onCancel();
+                } else{
+                    callback.onOk();
+                }
             }
 
             @Override
