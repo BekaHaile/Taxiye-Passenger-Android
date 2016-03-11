@@ -215,19 +215,19 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 						if(body.toLowerCase().contains(KEYWORD_PAYTM) && body.toLowerCase().contains(KEYWORD_UBER)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(" "+KEYWORD_TFS) || body.toLowerCase().contains(KEYWORD_TFS+" ")){
+						else if(body.toLowerCase().contains(KEYWORD_TFS) || body.toLowerCase().contains(KEYWORD_TFS)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(" "+KEYWORD_OLA) || body.toLowerCase().contains(KEYWORD_OLA+" ")){
+						else if(body.toLowerCase().contains(KEYWORD_OLA) || body.toLowerCase().contains(KEYWORD_OLA)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(" "+KEYWORD_OLAX) || body.toLowerCase().contains(KEYWORD_OLAX+" ")){
+						else if(body.toLowerCase().contains(KEYWORD_OLAX) || body.toLowerCase().contains(KEYWORD_OLAX)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(" "+KEYWORD_TAXI_FOR_SURE) || body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE+" ")){
+						else if(body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE) || body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(" "+KEYWORD_TAXI_FS) || body.toLowerCase().contains(KEYWORD_TAXI_FS+" ")){
+						else if(body.toLowerCase().contains(KEYWORD_TAXI_FS) || body.toLowerCase().contains(KEYWORD_TAXI_FS)){
 							messages.add(new MSenderBody(sender, body));
 						}
 					} catch (Exception e) {
@@ -269,6 +269,11 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 
 		public void setBody(String body) {
 			this.body = body;
+		}
+
+		@Override
+		public String toString() {
+			return getSender()+" "+getBody();
 		}
 	}
 }

@@ -33,7 +33,7 @@ public enum PushFlags {
 
 	private int ordinal;
 
-	private PushFlags(int ordinal) {
+	PushFlags(int ordinal) {
 		this.ordinal = ordinal;
 	}
 
