@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -36,6 +37,7 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
@@ -534,6 +536,10 @@ public class JSONParser implements Constants {
 
                     int flag = jObject1.getInt("flag");
 
+                    if(Data.userData != null) {
+                        Data.userData.setPaytmRechargeInfo(parsePaytmRechargeInfo(jObject1));
+                    }
+
                     if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
 
                         sessionId = jObject1.getString("session_id");
@@ -673,20 +679,7 @@ public class JSONParser implements Constants {
                 }
                 else if (Data.P_IN_RIDE.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-
-                    HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
-
-                    if (Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0) {
-                        Data.startRidePreviousLatLng = Data.pickupLatLng;
-                    } else {
-                        String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-                        String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-                        Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
-                    }
-                } else {
-
                 }
-
             }
         }
 
@@ -1186,6 +1179,27 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
         return schedule;
+    }
+
+
+    public static PaytmRechargeInfo parsePaytmRechargeInfo(JSONObject jObj){
+        PaytmRechargeInfo paytmRechargeInfo = null;
+        try {
+            JSONObject jPRI;
+            if(jObj.has(KEY_PAYTM_TRANSFER_DATA)) {
+                jPRI = jObj.getJSONObject(KEY_PAYTM_TRANSFER_DATA);
+            } else{
+                jPRI = jObj;
+            }
+            paytmRechargeInfo = new PaytmRechargeInfo(jPRI.getString(KEY_TRANSFER_ID),
+                    jPRI.getString(KEY_TRANSFER_PHONE),
+                    jPRI.getString(KEY_TRANSFER_AMOUNT),
+                    jPRI.getString(KEY_TRANSFER_SENDER_NAME));
+        } catch (Exception e) {
+            e.printStackTrace();
+            paytmRechargeInfo = null;
+        }
+        return paytmRechargeInfo;
     }
 
 

@@ -29,10 +29,12 @@ public class UserData {
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
 
+	private PaytmRechargeInfo paytmRechargeInfo = null;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
-			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
-			String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle,
+					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
+					String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
+					int contactSaved, String referAllText, String referAllTitle,
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
@@ -287,5 +289,13 @@ public class UserData {
 
 	public void setT20WCInfoText(String t20WCInfoText) {
 		this.t20WCInfoText = t20WCInfoText;
+	}
+
+	public PaytmRechargeInfo getPaytmRechargeInfo() {
+		return paytmRechargeInfo;
+	}
+
+	public void setPaytmRechargeInfo(PaytmRechargeInfo paytmRechargeInfo) {
+		this.paytmRechargeInfo = paytmRechargeInfo;
 	}
 }

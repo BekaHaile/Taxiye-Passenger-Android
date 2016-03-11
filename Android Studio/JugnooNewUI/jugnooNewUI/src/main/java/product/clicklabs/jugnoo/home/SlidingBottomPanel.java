@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;

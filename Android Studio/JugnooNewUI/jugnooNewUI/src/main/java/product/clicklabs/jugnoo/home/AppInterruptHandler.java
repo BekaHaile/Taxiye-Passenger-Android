@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import org.json.JSONObject;
 
@@ -29,5 +29,7 @@ public interface AppInterruptHandler {
     void onEmergencyContactVerified(int emergencyContactId);
 
 	void showDialog(String message);
+
+	void onPaytmRechargePush(JSONObject jObj);
 
 }

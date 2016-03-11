@@ -365,4 +365,9 @@ public interface ApiService {
     void insertUserT20Prediction(@FieldMap Map<String, String> params,
                                  Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/complete_user_paytm_recharge")
+    void paytmAuthenticateRecharge(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
 }

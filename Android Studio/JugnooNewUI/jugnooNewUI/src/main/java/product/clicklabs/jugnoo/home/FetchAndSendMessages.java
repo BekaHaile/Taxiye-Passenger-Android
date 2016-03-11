@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -25,9 +26,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-/**
- * Created by shankar on 2/5/16.
- */
 public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<String, String>>{
 
 	private final String TAG = FetchAndSendMessages.class.getSimpleName();

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;

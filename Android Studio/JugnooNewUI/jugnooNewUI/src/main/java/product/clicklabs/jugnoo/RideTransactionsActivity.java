@@ -10,6 +10,7 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;

@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -67,8 +68,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Intent notificationIntent = new Intent(context, SplashNewActivity.class);
-
+			Intent notificationIntent;
+			if(HomeActivity.appInterruptHandler != null){
+				notificationIntent = new Intent(context, HomeActivity.class);
+			} else{
+				notificationIntent = new Intent(context, SplashNewActivity.class);
+			}
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
@@ -107,54 +112,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
         }
 
     }
-
-    @SuppressWarnings("deprecation")
-    private void notificationManagerResume(Context context, String title, String message, boolean ring) {
-		clearNotifications(context);
-        try {
-            long when = System.currentTimeMillis();
-
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Intent notificationIntent = new Intent(context, HomeActivity.class);
-
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-			builder.setAutoCancel(true);
-			builder.setContentTitle(title);
-			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-			builder.setContentText(message);
-			builder.setTicker(message);
-
-            if (ring) {
-                builder.setLights(Color.GREEN, 500, 500);
-            } else {
-                builder.setDefaults(Notification.DEFAULT_ALL);
-            }
-
-			builder.setWhen(when);
-			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-			builder.setSmallIcon(R.drawable.notification_icon);
-            builder.setContentIntent(intent);
-			if(Build.VERSION.SDK_INT >= 16){
-				builder.setPriority(Notification.PRIORITY_HIGH);
-			}
-
-            Notification notification = builder.build();
-            notificationManager.notify(NOTIFICATION_ID, notification);
-
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
 
 
 
@@ -404,11 +361,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null);
 						} else{
-							if (HomeActivity.appInterruptHandler != null) {
-								notificationManagerResume(this, title, message1, false);
-							} else {
-								notificationManager(this, title, message1, false);
-							}
+							notificationManager(this, title, message1, false);
 						}
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
@@ -422,17 +375,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, driverArrivedMessage, NOTIFICATION_ID, phoneNo, null);
 						} else{
-							if (HomeActivity.appInterruptHandler != null) {
-								notificationManagerResume(this, title, driverArrivedMessage, false);
-							} else {
-								notificationManager(this, title, driverArrivedMessage, false);
-							}
+							notificationManager(this, title, driverArrivedMessage, false);
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
-							notificationManagerResume(this, title, message1, false);
 							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
 						} else {
 							String SHARED_PREF_NAME = "myPref",
@@ -442,36 +390,28 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							Editor editor = pref.edit();
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.commit();
-
-							notificationManager(this, title, message1, false);
 						}
+						notificationManager(this, title, message1, false);
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								notificationManagerResume(this, title, message1, false);
 								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 							}
-						} else {
-							notificationManager(this, title, message1, false);
 						}
+						notificationManager(this, title, message1, false);
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
-							notificationManagerResume(this, title, message1, false);
 						} else {
-							notificationManager(this, title, message1, false);
 						}
+						notificationManager(this, title, message1, false);
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
 						message1 = jObj.getString("message");
-						if (HomeActivity.activity == null) {
-							notificationManager(this, title, "" + message1, false);
-						} else {
-							notificationManagerResume(this, title, "" + message1, false);
-						}
+						notificationManager(this, title, "" + message1, false);
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
 						String log = jObj.getString("log");
 						if (HomeActivity.appInterruptHandler != null) {
@@ -481,10 +421,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						String logMessage = jObj.getString("message");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onChangeStatePushReceived();
-							notificationManagerResume(this, title, logMessage, false);
-						} else {
-							notificationManager(this, title, logMessage, false);
 						}
+						notificationManager(this, title, logMessage, false);
 					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
 
 						if (jObj.has("client_id")) {
@@ -522,18 +460,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
-							notificationManagerResume(this, title, message1, false);
-						} else {
-							notificationManager(this, title, message1, false);
 						}
+						notificationManager(this, title, message1, false);
 					} else if (PushFlags.EMERGENCY_CONTACT_VERIFIED.getOrdinal() == flag) {
 						int emergencyContactId = jObj.getInt("id");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onEmergencyContactVerified(emergencyContactId);
-							notificationManagerResume(this, title, message1, false);
-						} else {
-							notificationManager(this, title, message1, false);
 						}
+						notificationManager(this, title, message1, false);
 					} else if (PushFlags.OTP_VERIFIED_BY_CALL.getOrdinal() == flag) {
 						String otp = jObj.getString("message");
 						if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
@@ -580,7 +514,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
                         if(!"-1".equalsIgnoreCase(eta) && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta);
                         }
-                    }
+                    } else if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag){
+						if(HomeActivity.appInterruptHandler != null){
+							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
+						}
+						notificationManager(this, title, message1, false);
+					}
 
 					savePush(jObj, flag, title, message1, deepindex);
 

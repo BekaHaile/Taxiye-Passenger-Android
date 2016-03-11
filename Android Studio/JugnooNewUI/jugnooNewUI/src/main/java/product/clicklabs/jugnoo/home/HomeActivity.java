@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -97,6 +97,29 @@ import javax.crypto.spec.SecretKeySpec;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
+import product.clicklabs.jugnoo.AboutActivity;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Database;
+import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.EmergencyContactsActivity;
+import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.LocationFetcher;
+import product.clicklabs.jugnoo.LocationUpdate;
+import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.NotificationCenterActivity;
+import product.clicklabs.jugnoo.PromotionsActivity;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.ReferralActions;
+import product.clicklabs.jugnoo.RideCancellationActivity;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.ScheduleAlarmForGCM;
+import product.clicklabs.jugnoo.ShareActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
@@ -173,7 +196,7 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
 
 		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler,
-        SearchListAdapter.SearchListActionsHandler, Constants{
+        SearchListAdapter.SearchListActionsHandler, Constants {
 
 
     private final String TAG = HomeActivity.class.getSimpleName();
@@ -328,7 +351,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     LatLng lastSearchLatLng;
 
-    static double totalDistance = -1;
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
@@ -348,9 +370,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Polyline pathToDropLocationPolyline;
     PolylineOptions pathToDropLocationPolylineOptions;
 
-    static AppInterruptHandler appInterruptHandler;
-
-    static Activity activity;
+    public static AppInterruptHandler appInterruptHandler;
 
     boolean loggedOut = false,
         zoomedToMyLocation = false,
@@ -358,7 +378,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -464,8 +484,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
-
-        activity = this;
 
         activityResumed = false;
         rechargedOnce = false;
@@ -938,8 +956,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
                                     callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
 
-                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
-                                    Prefs.with(activity).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
+                                    Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
+                                    Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
 
                                     FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
                                     if (promoCouponSelectedForRide.id > 0) {
@@ -1486,10 +1504,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 // ****** New Look Tutorial Screen ***** //
 
-                if((Prefs.with(activity).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
-                    if((Prefs.with(activity).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
+                if((Prefs.with(HomeActivity.this).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
+                    if((Prefs.with(HomeActivity.this).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
                             &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
-                        Prefs.with(activity).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
+                        Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
                         Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
                         intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
                         startActivity(intent);
@@ -1504,7 +1522,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     centreLocationRl.setVisibility(View.VISIBLE);
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-                    Prefs.with(activity).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
+                    Prefs.with(HomeActivity.this).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
                 }
 
 
@@ -1519,6 +1537,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else{
                 relativeLayoutT20WorldCup.setVisibility(View.GONE);
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1557,7 +1576,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
-		Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
@@ -1780,7 +1799,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
-            Dialog dialogPriorityTip = new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
+            new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
                     new PriorityTipDialog.Callback() {
                         @Override
                         public void onConfirmed() {
@@ -2357,6 +2376,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 dismissReferAllDialog(mode);
 
                 updateTopBar();
+
+                openPaytmRechargeDialog();
 
                 t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
                     @Override
@@ -2970,7 +2991,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             int sdkInt = android.os.Build.VERSION.SDK_INT;
             if (sdkInt < 19) {
-                DialogPopup.showLocationSettingsAlert(activity);
+                DialogPopup.showLocationSettingsAlert(HomeActivity.this);
             }
 
 
@@ -3951,7 +3972,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         HomeActivity.previousWaitTime = 0;
         HomeActivity.previousRideTime = 0;
-        HomeActivity.totalDistance = -1;
 
         clearRideSPData();
     }
@@ -4951,7 +4971,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			String promoName = JSONParser.getPromoName(jObj);
 
             Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
-			Data.startRidePreviousLatLng = Data.pickupLatLng;
 
 			double fareFactor = 1.0;
 			if (jObj.has("fare_factor")) {
@@ -5484,7 +5503,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             final int flag = jObj.getInt("flag");
                                             if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
                                                 cancelTimerRequestRide();
-                                                HomeActivity.logoutUser(activity);
+                                                HomeActivity.logoutUser(HomeActivity.this);
                                             } else {
                                                 if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
                                                     cancelTimerRequestRide();
@@ -5686,7 +5705,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-				rateAppPopup(activity);
+				rateAppPopup(HomeActivity.this);
 			} else {
 			}
             firstTimeZoom = false;
@@ -6626,5 +6645,53 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onPlaceSaved() {
         placeAdded = true;
     }
+
+    @Override
+    public void onPaytmRechargePush(final JSONObject jObj) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(jObj));
+                    openPaytmRechargeDialog();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void openPaytmRechargeDialog(){
+        try {
+            if(Data.userData.getPaytmRechargeInfo() != null) {
+                if(dialogPaytmRecharge != null && dialogPaytmRecharge.isShowing()){
+                    dialogPaytmRecharge.dismiss();
+                }
+                dialogPaytmRecharge = new PaytmRechargeDialog(HomeActivity.this,
+                        Data.userData.getPaytmRechargeInfo().getTransferId(),
+                        Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                        Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                        Data.userData.getPaytmRechargeInfo().getTransferAmount(),
+                        new PaytmRechargeDialog.Callback() {
+                            @Override
+                            public void onOk() {
+                                if(Data.userData != null) {
+                                    Data.userData.setPaytmRechargeInfo(null);
+                                }
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                if(Data.userData != null) {
+                                    Data.userData.setPaytmRechargeInfo(null);
+                                }
+                            }
+                        }).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
