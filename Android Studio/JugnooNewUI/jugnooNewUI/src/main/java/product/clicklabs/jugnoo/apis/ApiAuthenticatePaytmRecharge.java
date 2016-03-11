@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.view.View;
 
 import org.json.JSONObject;
@@ -34,10 +35,12 @@ public class ApiAuthenticatePaytmRecharge {
 	private final String TAG = ApiAuthenticatePaytmRecharge.class.getSimpleName();
 
 	private Activity activity;
+	private Dialog dialog;
 	private Callback callback;
 
-	public ApiAuthenticatePaytmRecharge(Activity activity, Callback callback){
+	public ApiAuthenticatePaytmRecharge(Activity activity, Dialog dialog, Callback callback){
 		this.activity = activity;
+		this.dialog = dialog;
 		this.callback = callback;
 	}
 
@@ -59,6 +62,7 @@ public class ApiAuthenticatePaytmRecharge {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "paytmAuthenticateRecharge response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
+						dialog.dismiss();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);

@@ -3,11 +3,10 @@ package product.clicklabs.jugnoo.home;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -30,6 +29,8 @@ public class PaytmRechargeDialog {
     private Dialog dialog;
     private String transferId, transferSenderName, transferPhone, transferAmount;
     private EditText editTextAmount;
+    private LinearLayout linearLayoutAmount;
+    private Button btnOk;
     private Callback callback;
 
     public PaytmRechargeDialog(Activity activity, String transferId, String transferSenderName,
@@ -66,40 +67,34 @@ public class PaytmRechargeDialog {
             ((TextView)dialog.findViewById(R.id.textViewRupee)).setTypeface(Fonts.mavenRegular(activity));
             editTextAmount = (EditText) dialog.findViewById(R.id.editTextAmount);
             editTextAmount.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+            btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
+            linearLayoutAmount = (LinearLayout) dialog.findViewById(R.id.linearLayoutAmount);
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
             btnCancel.setTypeface(Fonts.mavenRegular(activity));
 
-            textViewRechargeInfo.setText(String.format(activity.getResources()
-                    .getString(R.string.paytm_recharge_via_driver_info_format), transferSenderName));
 
-            Spannable word = new SpannableString(transferPhone);
-            word.setSpan(new StyleSpan(Typeface.BOLD), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Spannable spannableName = new SpannableString(transferSenderName);
+            spannableName.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+            Spannable spannablePhone = new SpannableString(transferPhone);
+            spannablePhone.setSpan(new StyleSpan(Typeface.BOLD), 0, spannablePhone.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            textViewRechargeInfo.setText("");
+            textViewRechargeInfo.append(activity.getResources().getString(R.string.driver));
             textViewRechargeInfo.append(" ");
-            textViewRechargeInfo.append(word);
+            textViewRechargeInfo.append(spannableName);
+            textViewRechargeInfo.append(" ");
+            textViewRechargeInfo.append(activity.getResources().getString(R.string.paytm_recharge_via_driver_info));
+            textViewRechargeInfo.append(" ");
+            textViewRechargeInfo.append(spannablePhone);
 
-//            editTextAmount.setHint(transferAmount);
-
-            editTextAmount.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+            editTextAmount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (s.toString().equals(transferAmount)) {
-                        editTextAmount.setTextColor(activity.getResources().getColor(R.color.green_status));
-                    } else {
-                        editTextAmount.setTextColor(activity.getResources().getColor(R.color.red_status));
-                    }
+                public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                    btnOk.performClick();
+                    return true;
                 }
             });
 
@@ -110,8 +105,8 @@ public class PaytmRechargeDialog {
                         authenticatePaytmRechargeApi(editTextAmount.getText().toString().trim());
                     } else{
                         editTextAmount.requestFocus();
-                        editTextAmount.setError(String.format(activity.getResources()
-                                .getString(R.string.type_amount_to_confirm_the_transaction_format), transferAmount));
+                        editTextAmount.setError(activity.getResources()
+                                .getString(R.string.type_amount_to_confirm_the_transaction));
                     }
                 }
             });
@@ -136,10 +131,9 @@ public class PaytmRechargeDialog {
 
 
     private void authenticatePaytmRechargeApi(final String amountEntered){
-        new ApiAuthenticatePaytmRecharge(activity, new ApiAuthenticatePaytmRecharge.Callback() {
+        new ApiAuthenticatePaytmRecharge(activity, dialog, new ApiAuthenticatePaytmRecharge.Callback() {
             @Override
             public void onSuccess() {
-                dialog.dismiss();
                 if("-1".equalsIgnoreCase(amountEntered)){
                     callback.onCancel();
                 } else{

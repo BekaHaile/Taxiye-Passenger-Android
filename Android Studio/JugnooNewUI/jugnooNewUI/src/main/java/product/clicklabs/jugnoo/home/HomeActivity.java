@@ -6677,6 +6677,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onOk() {
                                 if(Data.userData != null) {
                                     Data.userData.setPaytmRechargeInfo(null);
+                                    Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+                                    getPaytmBalance(HomeActivity.this);
                                 }
                             }
 
