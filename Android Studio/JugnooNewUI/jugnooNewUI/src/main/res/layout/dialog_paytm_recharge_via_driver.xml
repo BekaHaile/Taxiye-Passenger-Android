@@ -75,7 +75,7 @@
                     android:layout_marginBottom="30px"
                     android:layout_marginTop="40px"
                     android:gravity="center"
-                    android:text="@string/paytm_recharge_via_driver_info_format"
+                    android:text="@string/paytm_recharge_via_driver_info"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34"
                     />
@@ -101,6 +101,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/linearLayoutAmount"
                     android:layout_width="370px"
                     android:layout_height="118px"
                     android:layout_marginBottom="40px"
@@ -138,11 +139,12 @@
                         android:background="@drawable/background_transparent"
                         android:digits="0123456789"
                         android:gravity="center"
-                        android:hint="---"
+                        android:hint="@string/amount"
                         android:inputType="number"
                         android:maxLength="5"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
                         android:textSize="@dimen/text_size_68"
 
                         />
