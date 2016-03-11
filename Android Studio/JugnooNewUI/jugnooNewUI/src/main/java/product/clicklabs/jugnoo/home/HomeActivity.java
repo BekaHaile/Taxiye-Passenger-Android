@@ -1514,7 +1514,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 
             if(Data.userData.getGetGogu() == 1) {
-                new FetchAndSendMessages(this, Data.userData.accessToken).execute();
+                new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
 
             if(Data.userData.getT20WCEnable() == 1){
@@ -6343,10 +6343,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                 }
             });
-        }
-        else {
-            //Database2.getInstance(ContactsUploadService.this).insertPendingAPICall(ContactsUploadService.this, Config.getServerUrl()+"/refer_all_contacts", params);
-            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
 

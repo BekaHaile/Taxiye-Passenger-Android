@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.RSA;
@@ -33,6 +34,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 	private final String KEYWORD_UBER = "uber",
 			KEYWORD_PAYTM = "paytm",
 			KEYWORD_OLA = "ola",
+			KEYWORD_OLAX = "ola!",
 			KEYWORD_SAY_OLA = "say ola",
 			KEYWORD_TFS = "tfs",
 			KEYWORD_BOOKING = "booking",
@@ -45,10 +47,21 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 
 	private Context context;
 	private String accessToken;
+	private boolean timeFrame;
+	private long startTime, endTime;
 
-	public FetchAndSendMessages(Context context, String accessToken){
+	public FetchAndSendMessages(Context context, String accessToken,
+								boolean timeFrame, String startTime, String endTime){
 		this.context = context;
 		this.accessToken = accessToken;
+		this.timeFrame = timeFrame;
+		if(this.timeFrame) {
+			this.startTime = DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(startTime));
+			this.endTime = DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(endTime));
+		} else{
+			this.startTime = 60000;
+			this.endTime = 60000;
+		}
 	}
 	@Override
 	protected void onPreExecute() {
@@ -57,6 +70,10 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 
 	@Override
 	protected HashMap<String, String> doInBackground(String... params) {
+		return getPreparedParams();
+	}
+
+	private HashMap<String, String> getPreparedParams(){
 		try {
 			long defaultTime = System.currentTimeMillis() - THREE_DAYS_MILLIS;
 			long currentTime = System.currentTimeMillis();
@@ -65,14 +82,18 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			long currentMinusLast = (currentTime - lastTime);
 
 			ArrayList<MSenderBody> mSenderBodies;
-			if(currentMinusLast >= DAY_MILLIS){
-				if(lastTime > defaultTime){
-					mSenderBodies =  fetchMessages(lastTime);
-				} else{
-					mSenderBodies =  fetchMessages(defaultTime);
+			if(timeFrame){
+				mSenderBodies = fetchMessages(defaultTime, true);
+			} else {
+				if (currentMinusLast >= DAY_MILLIS) {
+					if (lastTime > defaultTime) {
+						mSenderBodies = fetchMessages(lastTime, false);
+					} else {
+						mSenderBodies = fetchMessages(defaultTime, false);
+					}
+				} else {
+					mSenderBodies = new ArrayList<>();
 				}
-			} else{
-				mSenderBodies = new ArrayList<>();
 			}
 
 			if(mSenderBodies.size() > 0){
@@ -145,13 +166,46 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 		}
 	}
 
-	private ArrayList<MSenderBody> fetchMessages(long lastTime) {
+	public void syncUp(){
+		try {
+			HashMap<String, String> params = getPreparedParams();
+			if(params != null) {
+				if (AppStatus.getInstance(context).isOnline(context)) {
+					Log.i(TAG, "params before sync api=" + params);
+					Response response = RestClient.getApiServices().uploadAnalytics(params);
+
+					try {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "uploadAnalytics sync responseStr" + responseStr);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+	private ArrayList<MSenderBody> fetchMessages(long lastTime, boolean timeFrame) {
 		ArrayList<MSenderBody> messages = new ArrayList<>();
 		try {
 			Uri uri = Uri.parse("content://sms/inbox");
-			String[] selectionArgs = new String[]{Long.toString(lastTime)};
-			String selection = "date" + ">?";
-			Cursor cursor = context.getContentResolver().query(uri, null, selection, selectionArgs, null);
+			String[] selectionArgs;
+			String selection;
+			Cursor cursor;
+			if(timeFrame && startTime > 60000 && endTime > 60000){
+				selectionArgs = new String[]{Long.toString(startTime), Long.toString(endTime)};
+				selection = "date>? AND date<?";
+				cursor = context.getContentResolver().query(uri, null, selection, selectionArgs, null);
+			} else{
+				selectionArgs = new String[]{Long.toString(lastTime)};
+				selection = "date>?";
+				cursor = context.getContentResolver().query(uri, null, selection, selectionArgs, null);
+			}
 
 			if (cursor != null) {
 				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
@@ -161,16 +215,19 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 						if(body.toLowerCase().contains(KEYWORD_PAYTM) && body.toLowerCase().contains(KEYWORD_UBER)){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_TFS)){
+						else if(body.toLowerCase().contains(" "+KEYWORD_TFS) || body.toLowerCase().contains(KEYWORD_TFS+" ")){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_OLA)){
+						else if(body.toLowerCase().contains(" "+KEYWORD_OLA) || body.toLowerCase().contains(KEYWORD_OLA+" ")){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE)){
+						else if(body.toLowerCase().contains(" "+KEYWORD_OLAX) || body.toLowerCase().contains(KEYWORD_OLAX+" ")){
 							messages.add(new MSenderBody(sender, body));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_TAXI_FS)){
+						else if(body.toLowerCase().contains(" "+KEYWORD_TAXI_FOR_SURE) || body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE+" ")){
+							messages.add(new MSenderBody(sender, body));
+						}
+						else if(body.toLowerCase().contains(" "+KEYWORD_TAXI_FS) || body.toLowerCase().contains(KEYWORD_TAXI_FS+" ")){
 							messages.add(new MSenderBody(sender, body));
 						}
 					} catch (Exception e) {

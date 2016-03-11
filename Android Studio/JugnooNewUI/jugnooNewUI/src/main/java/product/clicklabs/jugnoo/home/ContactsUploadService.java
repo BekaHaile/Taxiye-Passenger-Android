@@ -426,10 +426,6 @@ public class ContactsUploadService extends IntentService {
                 doneWithSync();
             }
         }
-        else {
-            //Database2.getInstance(ContactsUploadService.this).insertPendingAPICall(ContactsUploadService.this, Config.getServerUrl()+"/refer_all_contacts", params);
-            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-        }
     }
 
 
