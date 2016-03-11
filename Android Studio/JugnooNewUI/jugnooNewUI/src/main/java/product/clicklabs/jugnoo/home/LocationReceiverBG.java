@@ -7,8 +7,8 @@ import android.location.Location;
 
 import com.google.android.gms.location.LocationServices;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.LocationFetcher;
-import product.clicklabs.jugnoo.utils.Log;
 
 public class LocationReceiverBG extends BroadcastReceiver {
 
@@ -17,7 +17,11 @@ public class LocationReceiverBG extends BroadcastReceiver {
 		final Location location = (Location) intent.getExtras().get(LocationServices.FusedLocationApi.KEY_LOCATION_CHANGED);
         if(location != null) {
             LocationFetcher.saveLatLngToSP(context, location.getLatitude(), location.getLongitude());
-            Log.i("LocationReceiverBG", "onReceive location=" + location);
+            Intent intent1 = new Intent();
+            intent1.setAction(Constants.ACTION_LOCATION_UPDATE);
+            intent1.putExtra(Constants.KEY_LATITUDE, location.getLatitude());
+            intent1.putExtra(Constants.KEY_LONGITUDE, location.getLongitude());
+            context.sendBroadcast(intent1);
         }
     }
 

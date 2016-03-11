@@ -6,11 +6,9 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.SystemClock;
-
-import com.google.android.gms.location.LocationServices;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -30,16 +28,23 @@ public class LocationUpdateService extends Service {
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			try{
+				Log.i(TAG, "customonReceive lat="+intent.getDoubleExtra(Constants.KEY_LATITUDE, 0));
+				Log.i(TAG, "customonReceive lng="+intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0));
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	};
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(TAG, "service onStartCommand");
-		BroadcastReceiver receiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				final Location location = (Location) intent.getExtras().get(LocationServices.FusedLocationApi.KEY_LOCATION_CHANGED);
-				Log.i(TAG, "onReceive location="+location);
-			}
-		};
+
+		registerReceiver(receiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
 
 		long locationUpdateInterval = Prefs.with(this).getLong(Constants.KEY_SP_LOCATION_UPDATE_INTERVAL,
 				Constants.LOCATION_UPDATE_INTERVAL);
@@ -48,7 +53,7 @@ public class LocationUpdateService extends Service {
 			locationFetcherBG.destroy();
 			locationFetcherBG = null;
 		}
-		locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval);
+		locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval, LocationReceiverBG.class);
 
 
 		return Service.START_STICKY;
@@ -56,6 +61,9 @@ public class LocationUpdateService extends Service {
 
 	@Override
 	public void onDestroy() {
+		if(receiver != null){
+			unregisterReceiver(receiver);
+		}
 		if (locationFetcherBG != null) {
 			locationFetcherBG.destroy();
 			locationFetcherBG = null;
