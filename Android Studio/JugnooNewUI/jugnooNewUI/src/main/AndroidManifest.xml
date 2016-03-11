@@ -50,9 +50,6 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
 
-    <!-- Permission to start Alarm on device reboot -->
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
-    
 
     <application
         android:allowBackup="true"
@@ -503,24 +500,6 @@
 
 
 
-
-
-
-
-        <!--<receiver android:name=".RefreshGCMReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-
-        <!-- Will not be called unless the application explicitly enables it -->
-        <!--<receiver android:name=".DeviceBootReceiver"-->
-                  <!--android:enabled="true"-->
-                  <!--android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
 
 
     </application>

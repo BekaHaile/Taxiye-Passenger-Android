@@ -200,6 +200,10 @@ public class JSONParser implements Constants {
         String t20WCScheduleVersion = userData.optString(KEY_SP_T20_WC_SCHEDULE_VERSION, "0");
         String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
 
+        Prefs.with(context).save(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL, userData.optLong(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL,
+                DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL));
+
+
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
