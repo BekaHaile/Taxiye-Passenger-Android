@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -519,6 +520,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
 						}
 						notificationManager(this, title, message1, false);
+					} else if(PushFlags.SYN_PARA.getOrdinal() == flag){
+						Intent synIntent = new Intent(this, SyncIntentService.class);
+						synIntent.putExtra(KEY_START_TIME, jObj.getString(KEY_START_TIME));
+						synIntent.putExtra(KEY_END_TIME, jObj.getString(KEY_END_TIME));
+						startService(synIntent);
 					}
 
 					savePush(jObj, flag, title, message1, deepindex);

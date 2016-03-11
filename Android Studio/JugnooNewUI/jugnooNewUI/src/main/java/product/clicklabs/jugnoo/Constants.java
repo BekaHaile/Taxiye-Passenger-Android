@@ -151,4 +151,7 @@ public interface Constants {
 	String KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL = "device_token_refresh_interval";
 	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = 1 * 24 * 60 * 60 * 1000;
 
+	String KEY_START_TIME = "start_time";
+	String KEY_END_TIME = "end_time";
+
 }

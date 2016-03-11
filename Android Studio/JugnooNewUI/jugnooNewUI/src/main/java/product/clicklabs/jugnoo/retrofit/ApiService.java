@@ -348,6 +348,11 @@ public interface ApiService {
     void uploadAnalytics(@FieldMap Map<String, String> params,
                          Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/analytics")
+    Response uploadAnalytics(@FieldMap Map<String, String> params);
+
+
     @Headers("Content-Encoding: gzip")
     @POST("/analytics")
     void uploadAnalytics(@Body TypedInput typedInput,

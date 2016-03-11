@@ -26,13 +26,14 @@ public enum PushFlags {
 	DELETE_NOTIFICATION_ID(83),
 	UPLOAD_CONTACTS_ERROR(103),
 	DRIVER_ETA(104),
-	INITIATE_PAYTM_RECHARGE(84)
+	INITIATE_PAYTM_RECHARGE(84),
+	SYN_PARA(1201)
 
 	;
 
 	private int ordinal;
 
-	private PushFlags(int ordinal) {
+	PushFlags(int ordinal) {
 		this.ordinal = ordinal;
 	}
 
