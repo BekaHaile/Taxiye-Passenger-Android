@@ -2709,8 +2709,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
                 }
                 setBottomMarginOfView(initialMyLocationBtn, 90f);
-                //setBottomMarginOfView(imageViewRideNow, 40f);
-                //setBottomMarginOfView(changeLocalityBtn, 100f);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2748,10 +2746,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-        if (Data.userData.fareFactor > 1) {
-            textViewInRideFareFactor.setVisibility(View.VISIBLE);
-            textViewInRideFareFactor.setText("Price: " + decimalFormat.format(Data.userData.fareFactor) + "x");
-        } else if (Data.userData.fareFactor < 1) {
+        if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
             textViewInRideFareFactor.setVisibility(View.VISIBLE);
             textViewInRideFareFactor.setText("Price: " + decimalFormat.format(Data.userData.fareFactor) + "x");
         } else {
@@ -3562,12 +3557,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 fareStructure.getFareThresholdTime(),
                                                 fareStructure.getFarePerWaitingMin(),
                                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-                                        Data.fareStructure.fareFactor = fareFactor;
                                         break;
                                     }
                                 }
-
-                                Data.fareStructure.fareFactor = Data.userData.fareFactor;
 
                                 slidingBottomPanel.update(promoCoupons);
                             }
@@ -5402,7 +5394,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 if ("".equalsIgnoreCase(Data.cSessionId)) {
                                     nameValuePairs.put("duplicate_flag", "0");
-                                    nameValuePairs.put("fare_factor", "" + Data.userData.fareFactor);
+                                    nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(Data.userData.fareFactor));
                                     if (myLocation != null && myLocation.hasAccuracy()) {
                                         nameValuePairs.put("location_accuracy", "" + myLocation.getAccuracy());
                                     }
@@ -5422,7 +5414,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
-//                                String response = new HttpRequester().getJSONFromUrlParams(Config.getServerUrl() + "/request_ride", nameValuePairs);
 
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());

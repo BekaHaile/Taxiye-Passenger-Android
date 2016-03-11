@@ -391,13 +391,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                 +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
                                     }
                                     else{
-                                        if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
-                                            textViewConvenienceCharge.setText("Convenience Charges "
-                                                    +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-                                        }
-                                        else{
-                                            textViewConvenienceCharge.setText("");
-                                        }
+                                        textViewConvenienceCharge.setText("");
                                     }
                                 } else {
                                     retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);

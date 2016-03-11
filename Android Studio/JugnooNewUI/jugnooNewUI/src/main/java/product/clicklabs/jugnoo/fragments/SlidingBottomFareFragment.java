@@ -82,9 +82,9 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
             } else{
                 textViewThreshold.setVisibility(View.GONE);
             }
-            if(Data.fareStructure.fareFactor > 1.0){
+            if(Data.userData.fareFactor > 1.0){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
-                textViewPriorityTipValue.setText(Data.fareStructure.fareFactor+"X");
+                textViewPriorityTipValue.setText(Data.userData.fareFactor+"X");
             } else{
                 relativeLayoutPriorityTip.setVisibility(View.GONE);
             }

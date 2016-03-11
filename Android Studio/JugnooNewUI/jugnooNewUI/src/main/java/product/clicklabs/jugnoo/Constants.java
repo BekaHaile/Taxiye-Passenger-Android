@@ -145,4 +145,6 @@ public interface Constants {
 	String KEY_TRANSFER_PHONE = "transfer_phone";
 	String KEY_USER_AMOUNT = "user_amount";
 
+	String KEY_CUSTOMER_FARE_FACTOR = "customer_fare_factor";
+
 }
