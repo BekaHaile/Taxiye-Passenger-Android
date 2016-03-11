@@ -2297,6 +2297,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 //                        genieLayout.setVisibility(View.GONE);
 
+                        startService(new Intent(this, LocationUpdateService.class));
+
                         break;
 
                     case P_RIDE_END:
@@ -2340,6 +2342,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         showReferAllDialog();
                     }
                 });
+
+                Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
             }
         } catch (Exception e) {
             e.printStackTrace();

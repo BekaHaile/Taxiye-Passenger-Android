@@ -205,6 +205,9 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL, userData.optLong(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL,
                 DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL));
 
+        Prefs.with(context).save(KEY_SP_LOCATION_UPDATE_INTERVAL, userData.optLong(KEY_SP_LOCATION_UPDATE_INTERVAL,
+                LOCATION_UPDATE_INTERVAL));
+
 
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="product.clicklabs.jugnoo"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="217"
-    android:versionName="2.1.7">
+<manifest package="product.clicklabs.jugnoo"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="217"
+          android:versionName="2.1.7">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -313,6 +312,7 @@
         </activity>
 
         <receiver android:name=".utils.LocationReceiver"/>
+        <receiver android:name=".home.LocationReceiverBG"/>
 
         <service
             android:name=".home.ContactsUploadService"
@@ -434,6 +434,11 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".home.LocationUpdateService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

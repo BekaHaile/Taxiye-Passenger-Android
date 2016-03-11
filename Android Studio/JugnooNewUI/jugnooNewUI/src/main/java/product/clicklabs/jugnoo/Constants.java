@@ -160,4 +160,8 @@ public interface Constants {
 	String KEY_START_TIME = "start_time";
 	String KEY_END_TIME = "end_time";
 
+	String KEY_SP_LOCATION_UPDATE_INTERVAL = "location_update_interval";
+	long LOCATION_UPDATE_INTERVAL = 5 * 1000;
+	String SP_CURRENT_STATE = "current_state";
+
 }
