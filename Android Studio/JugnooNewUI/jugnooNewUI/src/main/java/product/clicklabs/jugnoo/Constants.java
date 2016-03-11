@@ -147,4 +147,8 @@ public interface Constants {
 
 	String KEY_CUSTOMER_FARE_FACTOR = "customer_fare_factor";
 
+	String SP_LAST_DEVICE_TOKEN_REFRESH_TIME = "last_device_token_refresh_time";
+	String KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL = "device_token_refresh_interval";
+	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = 1 * 24 * 60 * 60 * 1000;
+
 }
