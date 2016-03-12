@@ -375,4 +375,9 @@ public interface ApiService {
     void paytmAuthenticateRecharge(@FieldMap Map<String, String> params,
                                  Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/update_customer_location")
+    void updateCustomerLocation(@FieldMap Map<String, String> params,
+                                   Callback<SettleUserDebt> callback);
+
 }

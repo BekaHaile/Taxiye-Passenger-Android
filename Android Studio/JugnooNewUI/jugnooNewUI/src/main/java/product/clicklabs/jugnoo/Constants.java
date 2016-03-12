@@ -164,5 +164,6 @@ public interface Constants {
 	long LOCATION_UPDATE_INTERVAL = 5 * 1000;
 	String SP_CURRENT_STATE = "current_state";
 	String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
+	String KEY_ONE_SHOT = "one_shot";
 
 }

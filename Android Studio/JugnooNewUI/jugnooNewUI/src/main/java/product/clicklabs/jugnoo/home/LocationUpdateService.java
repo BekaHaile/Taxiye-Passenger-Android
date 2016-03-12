@@ -9,16 +9,29 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.Pair;
 
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 public class LocationUpdateService extends Service {
 
 	private final String TAG = LocationUpdateService.class.getSimpleName();
 	private LocationFetcherBG locationFetcherBG;
+	private CustomLocationReceiver locationReceiver;
+	private boolean oneShot;
 
 	public LocationUpdateService() {
 	}
@@ -28,34 +41,29 @@ public class LocationUpdateService extends Service {
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
-	BroadcastReceiver locationReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			try{
-				Log.i(TAG, "customonReceive lat="+intent.getDoubleExtra(Constants.KEY_LATITUDE, 0));
-				Log.i(TAG, "customonReceive lng="+intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0));
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-	};
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(TAG, "service onStartCommand");
+		try {
+			oneShot = intent.getBooleanExtra(Constants.KEY_ONE_SHOT, true);
+			locationReceiver = new CustomLocationReceiver(oneShot);
+			registerReceiver(locationReceiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
 
-		registerReceiver(locationReceiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
+			long locationUpdateInterval = Prefs.with(this).getLong(Constants.KEY_SP_LOCATION_UPDATE_INTERVAL,
+					Constants.LOCATION_UPDATE_INTERVAL);
 
-		long locationUpdateInterval = Prefs.with(this).getLong(Constants.KEY_SP_LOCATION_UPDATE_INTERVAL,
-				Constants.LOCATION_UPDATE_INTERVAL);
+			if (locationFetcherBG != null) {
+				locationFetcherBG.destroy();
+				locationFetcherBG = null;
+			}
+			locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval);
 
-		if (locationFetcherBG != null) {
-			locationFetcherBG.destroy();
-			locationFetcherBG = null;
+			return Service.START_STICKY;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval);
-
-		return Service.START_STICKY;
+		return Service.START_NOT_STICKY;
 	}
 
 	@Override
@@ -72,17 +80,72 @@ public class LocationUpdateService extends Service {
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
 		try {
-			if(PassengerScreenMode.P_IN_RIDE.getOrdinal() == Prefs.with(this)
+			if(!oneShot && PassengerScreenMode.P_IN_RIDE.getOrdinal() == Prefs.with(this)
 					.getInt(Constants.SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal())) {
 				Intent restartService = new Intent(getApplicationContext(), this.getClass());
 				restartService.setPackage(getPackageName());
+				restartService.putExtra(Constants.KEY_ONE_SHOT, false);
 				PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
 				AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-				alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePI);
+				alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 5000, restartServicePI);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private class CustomLocationReceiver extends BroadcastReceiver{
+
+		private final String TAG = CustomLocationReceiver.class.getSimpleName();
+		private boolean oneShot;
+
+		public CustomLocationReceiver(boolean oneShot){
+			this.oneShot = oneShot;
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			try{
+				double latitude = intent.getDoubleExtra(Constants.KEY_LATITUDE, 0);
+				double longitude = intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0);
+				Log.i(TAG, "customonReceive lat=" + latitude + ", lng=" + longitude);
+
+				if(oneShot && locationFetcherBG != null){
+					locationFetcherBG.destroy();
+				}
+
+				Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(context);
+				if (!"".equalsIgnoreCase(pair.first)) {
+					HashMap<String, String> params = new HashMap<>();
+					params.put(Constants.KEY_ACCESS_TOKEN, pair.first);
+					params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
+					params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
+
+					SplashNewActivity.initializeServerURL(context);
+					RestClient.getApiServices().updateCustomerLocation(params, new Callback<SettleUserDebt>() {
+						@Override
+						public void success(SettleUserDebt settleUserDebt, Response response) {
+							String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+							Log.i(TAG, "updateCustomerLocation responseStr="+responseStr);
+							if(oneShot){
+								stopSelf();
+							}
+						}
+
+						@Override
+						public void failure(RetrofitError error) {
+							Log.e(TAG, "updateCustomerLocation error="+error);
+							if(oneShot){
+								stopSelf();
+							}
+						}
+					});
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }

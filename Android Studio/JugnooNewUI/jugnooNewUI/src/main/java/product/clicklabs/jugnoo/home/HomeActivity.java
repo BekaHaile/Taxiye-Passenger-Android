@@ -2297,7 +2297,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 //                        genieLayout.setVisibility(View.GONE);
 
-                        startService(new Intent(this, LocationUpdateService.class));
+                        Intent intent = new Intent(this, LocationUpdateService.class);
+                        intent.putExtra(KEY_ONE_SHOT, false);
+                        startService(intent);
 
                         break;
 
