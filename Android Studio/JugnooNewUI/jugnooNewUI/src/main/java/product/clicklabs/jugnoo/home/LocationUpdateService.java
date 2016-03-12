@@ -28,7 +28,7 @@ public class LocationUpdateService extends Service {
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
-	BroadcastReceiver receiver = new BroadcastReceiver() {
+	BroadcastReceiver locationReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			try{
@@ -44,7 +44,7 @@ public class LocationUpdateService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(TAG, "service onStartCommand");
 
-		registerReceiver(receiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
+		registerReceiver(locationReceiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
 
 		long locationUpdateInterval = Prefs.with(this).getLong(Constants.KEY_SP_LOCATION_UPDATE_INTERVAL,
 				Constants.LOCATION_UPDATE_INTERVAL);
@@ -53,16 +53,15 @@ public class LocationUpdateService extends Service {
 			locationFetcherBG.destroy();
 			locationFetcherBG = null;
 		}
-		locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval, LocationReceiverBG.class);
-
+		locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval);
 
 		return Service.START_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
-		if(receiver != null){
-			unregisterReceiver(receiver);
+		if(locationReceiver != null){
+			unregisterReceiver(locationReceiver);
 		}
 		if (locationFetcherBG != null) {
 			locationFetcherBG.destroy();

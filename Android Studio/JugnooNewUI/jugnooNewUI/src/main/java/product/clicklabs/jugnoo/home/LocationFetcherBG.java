@@ -26,29 +26,24 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 	
 	private long requestInterval;
 	private Context context;
-	private Class<?> receiver;
 
-	private static final int LOCATION_PI_ID = 697811;
+	private static final int LOCATION_PI_ID = 611;
 
 
 	/**
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcherBG(Context context, long requestInterval, Class<?> receiver){
+	public LocationFetcherBG(Context context, long requestInterval){
 		this.context = context;
 		this.requestInterval = requestInterval;
-		this.receiver = receiver;
 		connect();
 	}
 	
 	
 	
 	public boolean isConnected(){
-		if(googleApiClient != null){
-			return googleApiClient.isConnected();
-		}
-		return false;
+		return googleApiClient != null && googleApiClient.isConnected();
 	}
 
 
@@ -103,7 +98,7 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 
 	protected void startLocationUpdates(long interval) {
 		createLocationRequest(interval);
-		Intent intent = new Intent(context, receiver);
+		Intent intent = new Intent(context, LocationReceiverBG.class);
 		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
 	}

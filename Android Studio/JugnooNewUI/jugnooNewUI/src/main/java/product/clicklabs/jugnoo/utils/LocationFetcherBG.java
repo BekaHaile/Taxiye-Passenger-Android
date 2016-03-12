@@ -108,7 +108,11 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 		Intent intent = new Intent(context, receiver);
 		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
+		sendLocationInstantly();
+	}
 
+
+	private void sendLocationInstantly(){
 		if(Utils.compareDouble(LocationFetcher.getSavedLatFromSP(context), 0) != 0
 				&& Utils.compareDouble(LocationFetcher.getSavedLngFromSP(context), 0) != 0 ){
 			Intent serviceIntent = new Intent(context, GenieService.class);
@@ -116,7 +120,6 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 			serviceIntent.putExtra("longitude", LocationFetcher.getSavedLngFromSP(context));
 			context.startService(serviceIntent);
 		}
-
 	}
 
 
