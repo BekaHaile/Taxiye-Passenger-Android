@@ -28,6 +28,10 @@ public class UserData {
 
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
+	private String publicAccessToken;
+
+	private int gamePredictEnable;
+	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	private PaytmRechargeInfo paytmRechargeInfo = null;
 
@@ -40,7 +44,8 @@ public class UserData {
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
 					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
 					String userId, String inviteEarnScreenImage,
-					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText){
+					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
+					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -90,6 +95,14 @@ public class UserData {
 		this.t20WCEnable = t20WCEnable;
 		this.t20WCScheduleVersion = t20WCScheduleVersion;
 		this.t20WCInfoText = t20WCInfoText;
+
+		this.publicAccessToken = publicAccessToken;
+
+		this.gamePredictEnable = gamePredictEnable;
+		this.gamePredictUrl = gamePredictUrl;
+		this.gamePredictIconUrl = gamePredictIconUrl;
+		this.gamePredictName = gamePredictName;
+		this.gamePredictNew = gamePredictNew;
 
 	}
 
@@ -297,5 +310,53 @@ public class UserData {
 
 	public void setPaytmRechargeInfo(PaytmRechargeInfo paytmRechargeInfo) {
 		this.paytmRechargeInfo = paytmRechargeInfo;
+	}
+
+	public String getPublicAccessToken() {
+		return publicAccessToken;
+	}
+
+	public void setPublicAccessToken(String publicAccessToken) {
+		this.publicAccessToken = publicAccessToken;
+	}
+
+	public String getGamePredictUrl() {
+		return gamePredictUrl;
+	}
+
+	public void setGamePredictUrl(String gamePredictUrl) {
+		this.gamePredictUrl = gamePredictUrl;
+	}
+
+	public String getGamePredictIconUrl() {
+		return gamePredictIconUrl;
+	}
+
+	public void setGamePredictIconUrl(String gamePredictIconUrl) {
+		this.gamePredictIconUrl = gamePredictIconUrl;
+	}
+
+	public String getGamePredictName() {
+		return gamePredictName;
+	}
+
+	public void setGamePredictName(String gamePredictName) {
+		this.gamePredictName = gamePredictName;
+	}
+
+	public String getGamePredictNew() {
+		return gamePredictNew;
+	}
+
+	public void setGamePredictNew(String gamePredictNew) {
+		this.gamePredictNew = gamePredictNew;
+	}
+
+	public int getGamePredictEnable() {
+		return gamePredictEnable;
+	}
+
+	public void setGamePredictEnable(int gamePredictEnable) {
+		this.gamePredictEnable = gamePredictEnable;
 	}
 }

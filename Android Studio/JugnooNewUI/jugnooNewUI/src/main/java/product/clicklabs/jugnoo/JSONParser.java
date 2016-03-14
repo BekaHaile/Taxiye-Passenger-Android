@@ -50,6 +50,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
+import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
@@ -199,19 +200,34 @@ public class JSONParser implements Constants {
         int t20WCEnable = userData.optInt(KEY_T20_WC_ENABLE, 0);
         String t20WCScheduleVersion = userData.optString(KEY_SP_T20_WC_SCHEDULE_VERSION, "0");
         String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
+        String publicAccessToken = userData.optString(KEY_PUBLIC_ACCESS_TOKEN, "");
 
         Prefs.with(context).save(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL, userData.optLong(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL,
                 DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL));
 
 
-		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
+        int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
+        String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
+        String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
+
+        try {
+            String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
+            gamePredictIconUrl = gamePredictViewData.split(VIEW_DATA_SPLITTER)[0];
+            gamePredictName = gamePredictViewData.split(VIEW_DATA_SPLITTER)[1];
+            gamePredictNew = gamePredictViewData.split(VIEW_DATA_SPLITTER)[2];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
-                t20WCEnable, t20WCScheduleVersion, t20WCInfoText);
+                t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
+                gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew);
 
     }
 

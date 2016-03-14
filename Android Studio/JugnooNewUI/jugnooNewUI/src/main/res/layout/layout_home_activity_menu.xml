@@ -79,34 +79,33 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayoutT20WorldCup"
+                android:id="@+id/relativeLayoutGamePredict"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
                 android:background="@drawable/background_menu_item_selector"
                 android:splitMotionEvents="false">
 
                 <ImageView
-                    android:id="@+id/imageViewT20WorldCup"
-                    android:layout_width="24px"
-                    android:layout_height="43px"
+                    android:id="@+id/imageViewGamePredict"
+                    android:layout_width="100px"
+                    android:layout_height="90px"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="50px"
+                    android:layout_marginLeft="17px"
                     android:src="@drawable/ic_worldcup"
                     android:tag="mwar" />
 
                 <TextView
-                    android:id="@+id/textViewT20WorldCup"
+                    android:id="@+id/textViewGamePredict"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewT20WorldCup"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="@string/t20_world_cup_2016"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
 
                 <TextView
-                    android:id="@+id/textViewT20WorldCupNew"
+                    android:id="@+id/textViewGamePredictNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -128,6 +127,7 @@
                 android:id="@+id/relativeLayoutGetRide"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
+                android:layout_marginTop="-4px"
                 android:background="@drawable/background_menu_item_selector"
                 android:splitMotionEvents="false">
 
@@ -136,7 +136,7 @@
                     android:layout_width="43px"
                     android:layout_height="34px"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="50px"
+                    android:layout_marginLeft="46px"
                     android:src="@drawable/auto_icon_normal"
                     android:tag="mwar" />
 
@@ -145,8 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewGetRide"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="Get a Ride"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
@@ -192,8 +191,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewInvite"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="Free Rides"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
@@ -239,8 +237,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewWallet"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="Wallet"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
@@ -315,8 +312,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewPromotions"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="Promotions"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
@@ -378,8 +374,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewTransactions"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="Ride History"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
@@ -425,8 +420,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewSupport"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="@string/support"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
@@ -472,8 +466,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_toRightOf="@+id/imageViewAbout"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
                     android:text="About"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
