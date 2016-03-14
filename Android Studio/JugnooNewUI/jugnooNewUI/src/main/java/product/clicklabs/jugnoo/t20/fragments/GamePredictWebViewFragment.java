@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.t20.fragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,7 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.flurry.android.FlurryAgent;
@@ -27,14 +28,14 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 
 @SuppressLint("ValidFragment")
-public class T20WebViewFragment extends Fragment implements FlurryEventNames, Constants {
+public class GamePredictWebViewFragment extends Fragment implements FlurryEventNames, Constants {
 
-	private final String TAG = T20WebViewFragment.class.getSimpleName();
+	private final String TAG = GamePredictWebViewFragment.class.getSimpleName();
 
 	private RelativeLayout relative;
 
 	private WebView webView;
-	private ProgressBar progressBar;
+	private ImageView imageViewProgressBar;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -55,7 +56,7 @@ public class T20WebViewFragment extends Fragment implements FlurryEventNames, Co
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_t20_webview, container, false);
+        rootView = inflater.inflate(R.layout.fragment_game_predict_webview, container, false);
 
         activity = getActivity();
 
@@ -71,8 +72,17 @@ public class T20WebViewFragment extends Fragment implements FlurryEventNames, Co
 		webView = (WebView) rootView.findViewById(R.id.webView);
 		webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.GONE);
+		imageViewProgressBar = (ImageView) rootView.findViewById(R.id.imageViewProgressBar);
+		imageViewProgressBar.setBackgroundResource(R.drawable.anim);
+		imageViewProgressBar.post(new Runnable() {
+			@Override
+			public void run() {
+				AnimationDrawable frameAnimation =
+						(AnimationDrawable) imageViewProgressBar.getBackground();
+				frameAnimation.start();
+			}
+		});
+		imageViewProgressBar.setVisibility(View.GONE);
 
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setDomStorageEnabled(true);
@@ -80,10 +90,10 @@ public class T20WebViewFragment extends Fragment implements FlurryEventNames, Co
 		webView.setWebChromeClient(new WebChromeClient() {});
 		webView.setWebViewClient(new MyAppWebViewClient());
 
-		webView.loadUrl(Data.userData.getGameUrl());
+		webView.loadUrl(Data.userData.getGamePredictUrl());
 
 		String postData = Constants.KEY_PUBLIC_ACCESS_TOKEN+"="+Data.userData.getPublicAccessToken();
-		webView.postUrl(Data.userData.getGameUrl(), EncodingUtils.getBytes(postData, "BASE64"));
+		webView.postUrl(Data.userData.getGamePredictUrl(), EncodingUtils.getBytes(postData, "BASE64"));
 
 		return rootView;
 	}
@@ -93,14 +103,14 @@ public class T20WebViewFragment extends Fragment implements FlurryEventNames, Co
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
-			progressBar.setVisibility(View.VISIBLE);
+			imageViewProgressBar.setVisibility(View.VISIBLE);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			if (webView.getProgress() > 70) {
-				progressBar.setVisibility(View.GONE);
+				imageViewProgressBar.setVisibility(View.GONE);
 			}
 		}
 

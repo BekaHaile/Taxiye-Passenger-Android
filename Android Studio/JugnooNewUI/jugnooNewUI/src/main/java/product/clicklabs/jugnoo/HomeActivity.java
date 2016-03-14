@@ -189,7 +189,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewProfile;
     TextView textViewUserName, textViewViewAccount;
 
-    RelativeLayout relativeLayoutT20WorldCup;
+    RelativeLayout relativeLayoutGamePredict;
+    ImageView imageViewGamePredict;
+    TextView textViewGamePredict, textViewGamePredictNew;
 
     RelativeLayout relativeLayoutGetRide;
     TextView textViewGetRide;
@@ -500,9 +502,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount);
         textViewViewAccount.setTypeface(Fonts.latoRegular(this));
 
-        relativeLayoutT20WorldCup = (RelativeLayout) findViewById(R.id.relativeLayoutT20WorldCup);
-        ((TextView)findViewById(R.id.textViewT20WorldCup)).setTypeface(Fonts.mavenLight(this));
-        ((TextView)findViewById(R.id.textViewT20WorldCupNew)).setTypeface(Fonts.mavenLight(this));
+        relativeLayoutGamePredict = (RelativeLayout) findViewById(R.id.relativeLayoutGamePredict);
+        imageViewGamePredict = (ImageView) findViewById(R.id.imageViewGamePredict);
+        textViewGamePredict = (TextView)findViewById(R.id.textViewGamePredict); textViewGamePredict.setTypeface(Fonts.mavenLight(this));
+        textViewGamePredictNew = (TextView)findViewById(R.id.textViewGamePredictNew); textViewGamePredictNew.setTypeface(Fonts.mavenLight(this));
 
         relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
         textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
@@ -755,10 +758,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		});
 
-        relativeLayoutT20WorldCup.setOnClickListener(new OnClickListener() {
+        relativeLayoutGamePredict.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.userData.getT20WCEnable() == 1) {
+                if (Data.userData.getT20WCEnable() == 1) {
                     Intent intent = new Intent(HomeActivity.this, T20Activity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1508,9 +1511,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             if(Data.userData.getT20WCEnable() == 1){
-                relativeLayoutT20WorldCup.setVisibility(View.VISIBLE);
+                relativeLayoutGamePredict.setVisibility(View.VISIBLE);
+                textViewGamePredict.setText(Data.userData.getGamePredictName());
+                if(!"1".equalsIgnoreCase(Data.userData.getGamePredictIsNew())){
+                    textViewGamePredictNew.setVisibility(View.GONE);
+                }
+                try {
+                    if(!"".equalsIgnoreCase(Data.userData.getGamePredictIconUrl())){
+						Picasso.with(HomeActivity.this)
+								.load(Data.userData.getGamePredictIconUrl())
+								.placeholder(R.drawable.ic_worldcup)
+								.error(R.drawable.ic_worldcup)
+								.into(imageViewGamePredict);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else{
-                relativeLayoutT20WorldCup.setVisibility(View.GONE);
+                relativeLayoutGamePredict.setVisibility(View.GONE);
             }
 
         } catch (Exception e) {
@@ -3143,7 +3161,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				relativeLayoutNotification.performClick();
 			}
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
-                relativeLayoutT20WorldCup.performClick();
+                relativeLayoutGamePredict.performClick();
             }
 
         } catch(Exception e){

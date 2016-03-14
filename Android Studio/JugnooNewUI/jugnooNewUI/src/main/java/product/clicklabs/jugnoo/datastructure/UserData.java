@@ -28,19 +28,20 @@ public class UserData {
 
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
-	private String publicAccessToken, gameUrl;
+	private String publicAccessToken;
+	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictIsNew;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
-			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
-			String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
-                    int contactSaved, String referAllText, String referAllTitle,
+					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
+					String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
+					int contactSaved, String referAllText, String referAllTitle,
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
 					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
 					String userId, String inviteEarnScreenImage,
-					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText,
-					String publicAccessToken, String gameUrl){
+					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
+					String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictIsNew){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -90,8 +91,13 @@ public class UserData {
 		this.t20WCEnable = t20WCEnable;
 		this.t20WCScheduleVersion = t20WCScheduleVersion;
 		this.t20WCInfoText = t20WCInfoText;
+
 		this.publicAccessToken = publicAccessToken;
-		this.gameUrl = gameUrl;
+
+		this.gamePredictUrl = gamePredictUrl;
+		this.gamePredictIconUrl = gamePredictIconUrl;
+		this.gamePredictName = gamePredictName;
+		this.gamePredictIsNew = gamePredictIsNew;
 
 	}
 
@@ -301,11 +307,35 @@ public class UserData {
 		this.publicAccessToken = publicAccessToken;
 	}
 
-	public String getGameUrl() {
-		return gameUrl;
+	public String getGamePredictUrl() {
+		return gamePredictUrl;
 	}
 
-	public void setGameUrl(String gameUrl) {
-		this.gameUrl = gameUrl;
+	public void setGamePredictUrl(String gamePredictUrl) {
+		this.gamePredictUrl = gamePredictUrl;
+	}
+
+	public String getGamePredictIconUrl() {
+		return gamePredictIconUrl;
+	}
+
+	public void setGamePredictIconUrl(String gamePredictIconUrl) {
+		this.gamePredictIconUrl = gamePredictIconUrl;
+	}
+
+	public String getGamePredictName() {
+		return gamePredictName;
+	}
+
+	public void setGamePredictName(String gamePredictName) {
+		this.gamePredictName = gamePredictName;
+	}
+
+	public String getGamePredictIsNew() {
+		return gamePredictIsNew;
+	}
+
+	public void setGamePredictIsNew(String gamePredictIsNew) {
+		this.gamePredictIsNew = gamePredictIsNew;
 	}
 }

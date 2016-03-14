@@ -79,14 +79,14 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayoutT20WorldCup"
+                android:id="@+id/relativeLayoutGamePredict"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
                 android:background="@drawable/background_menu_item_selector"
                 android:splitMotionEvents="false">
 
                 <ImageView
-                    android:id="@+id/imageViewT20WorldCup"
+                    android:id="@+id/imageViewGamePredict"
                     android:layout_width="24px"
                     android:layout_height="43px"
                     android:layout_centerVertical="true"
@@ -95,7 +95,7 @@
                     android:tag="mwar" />
 
                 <TextView
-                    android:id="@+id/textViewT20WorldCup"
+                    android:id="@+id/textViewGamePredict"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -105,7 +105,7 @@
                     android:textSize="@dimen/text_size_36" />
 
                 <TextView
-                    android:id="@+id/textViewT20WorldCupNew"
+                    android:id="@+id/textViewGamePredictNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

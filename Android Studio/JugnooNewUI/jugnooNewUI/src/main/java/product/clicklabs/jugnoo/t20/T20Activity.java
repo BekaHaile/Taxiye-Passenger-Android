@@ -1,16 +1,14 @@
 package product.clicklabs.jugnoo.t20;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.t20.fragments.T20WebViewFragment;
+import product.clicklabs.jugnoo.t20.fragments.GamePredictWebViewFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 
@@ -45,9 +43,9 @@ public class T20Activity extends BaseFragmentActivity implements FlurryEventName
 //				.commitAllowingStateLoss();
 
 		getSupportFragmentManager().beginTransaction()
-				.add(linearLayoutContainer.getId(), new T20WebViewFragment(),
-						T20WebViewFragment.class.getName())
-				.addToBackStack(T20WebViewFragment.class.getName())
+				.add(linearLayoutContainer.getId(), new GamePredictWebViewFragment(),
+						GamePredictWebViewFragment.class.getName())
+				.addToBackStack(GamePredictWebViewFragment.class.getName())
 				.commitAllowingStateLoss();
 
 
@@ -66,22 +64,23 @@ public class T20Activity extends BaseFragmentActivity implements FlurryEventName
 
 	@Override
 	public void onBackPressed() {
-		DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
-				getResources().getString(R.string.quit_jugnoo_t20),
-				getResources().getString(R.string.ok),
-				getResources().getString(R.string.cancel),
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						performBackPressed();
-					}
-				},
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-
-					}
-				}, false, false);
+//		DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+//				getResources().getString(R.string.quit_jugnoo_t20),
+//				getResources().getString(R.string.ok),
+//				getResources().getString(R.string.cancel),
+//				new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						performBackPressed();
+//					}
+//				},
+//				new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//
+//					}
+//				}, false, false);
+		performBackPressed();
 	}
 
 	public LinearLayout getContainer(){

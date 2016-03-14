@@ -199,7 +199,11 @@ public class JSONParser implements Constants {
         String t20WCScheduleVersion = userData.optString(KEY_SP_T20_WC_SCHEDULE_VERSION, "0");
         String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
         String publicAccessToken = userData.optString(KEY_PUBLIC_ACCESS_TOKEN, "");
-        String gameUrl = userData.optString(KEY_GAME_URL, "https://jugnoo.in/wct20");
+
+        String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
+        String gamePredictIconUrl = userData.optString(KEY_GAME_PREDICT_ICON_URL, "");
+        String gamePredictName = userData.optString(KEY_GAME_PREDICT_NAME, context.getResources().getString(R.string.t20_world_cup_2016));
+        String gamePredictIsNew = userData.optString(KEY_GAME_PREDICT_IS_NEW, "1");
 
 		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
@@ -208,7 +212,8 @@ public class JSONParser implements Constants {
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
-                t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken, gameUrl);
+                t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
+                gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictIsNew);
 
     }
 

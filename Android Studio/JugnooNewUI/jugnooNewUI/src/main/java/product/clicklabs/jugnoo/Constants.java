@@ -137,6 +137,9 @@ public interface Constants {
 	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
 	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
 	String KEY_PUBLIC_ACCESS_TOKEN = "public_access_token";
-	String KEY_GAME_URL = "game_url";
+	String KEY_GAME_PREDICT_URL = "game_predict_url";
+	String KEY_GAME_PREDICT_ICON_URL = "game_predict_icon_url";
+	String KEY_GAME_PREDICT_NAME = "game_predict_name";
+	String KEY_GAME_PREDICT_IS_NEW = "game_predict_is_new";
 
 }
