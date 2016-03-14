@@ -275,7 +275,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Request Final Layout
     RelativeLayout requestFinalLayout;
     TextView textViewInRidePromoName, textViewInRideFareFactor;
-    LinearLayout linearLayoutFinalDropLocationClick;
+    RelativeLayout relativeLayoutFinalDropLocationClick;
+    TextView textViewFinalDropLocationClick;
+    ImageView imageViewFinalDropLocationEdit;
+    ProgressWheel progressBarFinalDropLocation;
     Button customerInRideMyLocationBtn;
 	LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
@@ -404,7 +407,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 //    GenieLayout genieLayout;
 
-	private GAPIAddress gapiAddressForPin;
 
 	private GoogleApiClient mGoogleApiClient;
 
@@ -638,8 +640,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRidePromoName.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
         textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
-        linearLayoutFinalDropLocationClick = (LinearLayout) findViewById(R.id.linearLayoutFinalDropLocationClick);
-        ((TextView)findViewById(R.id.textViewFinalDropLocationClick)).setTypeface(Fonts.latoRegular(this));
+        relativeLayoutFinalDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationClick);
+        textViewFinalDropLocationClick = (TextView)findViewById(R.id.textViewFinalDropLocationClick);
+        textViewFinalDropLocationClick.setTypeface(Fonts.latoRegular(this));
+        imageViewFinalDropLocationEdit = (ImageView) findViewById(R.id.imageViewFinalDropLocationEdit);
+        imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+        progressBarFinalDropLocation = (ProgressWheel) findViewById(R.id.progressBarFinalDropLocation);
+        progressBarFinalDropLocation.setVisibility(View.GONE);
         customerInRideMyLocationBtn = (Button) findViewById(R.id.customerInRideMyLocationBtn);
 		linearLayoutInRideDriverInfo = (LinearLayout) findViewById(R.id.linearLayoutInRideDriverInfo);
         imageViewInRideDriver = (ImageView) findViewById(R.id.imageViewInRideDriver);
@@ -1122,7 +1129,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
    	     });
 
 
-        linearLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
+        relativeLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 initDropLocationSearchUI(true);
@@ -1434,7 +1441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         callMapTouchedRefreshDrivers();
                     }
                     if (!zoomedForSearch && map != null) {
-                        getPickupAddress(map.getCameraPosition().target);
+                        getAddress(map.getCameraPosition().target, textViewInitialSearch, progressBarInitialSearch);
                     }
                 }
             };
@@ -2068,7 +2075,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						firstTimeZoom = true;
 
 						if(!zoomedForSearch && map != null) {
-							getPickupAddress(map.getCameraPosition().target);
+							getAddress(map.getCameraPosition().target, textViewInitialSearch, progressBarInitialSearch);
 						}
 
 						if(Data.locationSettingsNoPressed){
@@ -2206,12 +2213,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         setAssignedDriverData(mode);
 
-                        if(Data.dropLatLng == null){
-                            linearLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
-                        }
-                        else{
-                            linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
-                        }
                         if(dropLocationSearched){
                             initDropLocationSearchUI(true);
                         }
@@ -2273,12 +2274,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        if(Data.dropLatLng == null){
-                            linearLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
-                        }
-                        else{
-                            linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
-                        }
 						if(dropLocationSearched){
 							initDropLocationSearchUI(true);
 						}
@@ -2328,12 +2323,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        if(Data.dropLatLng == null){
-                            linearLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
-                        }
-                        else{
-                            linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
-                        }
 						if(dropLocationSearched){
 							initDropLocationSearchUI(true);
 						}
@@ -2525,7 +2514,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewInitialSearch.getText().toString());
-                bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.search_state_edit_text_hint));
+                bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
                         .add(relativeLayoutSearch.getId(), placeSearchListFragment,
@@ -2580,7 +2569,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(frag == null || frag.isRemoving()) {
                 PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
-                bundle.putString(KEY_SEARCH_FIELD_TEXT, text);
+                if(textViewFinalDropLocationClick.getText().length() > 0){
+                    bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewFinalDropLocationClick.getText().toString());
+                } else{
+                    bundle.putString(KEY_SEARCH_FIELD_TEXT, text);
+                }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
@@ -2650,11 +2643,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setDropLocationEngagedUI(){
         if(Data.dropLatLng == null){
-            linearLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
+            textViewFinalDropLocationClick.setText("");
+            imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+            progressBarFinalDropLocation.setVisibility(View.GONE);
         }
         else{
             setDropLocationMarker();
-            linearLayoutFinalDropLocationClick.setVisibility(View.GONE);
+            imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
+            if(textViewFinalDropLocationClick.getText().length() == 0){
+                getAddress(Data.dropLatLng, textViewFinalDropLocationClick, progressBarFinalDropLocation);
+            }
         }
     }
 
@@ -3825,27 +3823,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 	Thread pickupAddressFetcherThread;
-	private void getPickupAddress(final LatLng currentLatLng){
+	private void getAddress(final LatLng currentLatLng, final TextView textView, final ProgressWheel progressBar){
 		stopPickupAddressFetcherThread();
-		try{
-			if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-				progressBarInitialSearch.setVisibility(View.VISIBLE);
-				textViewInitialSearch.setText("");
-				textViewInitialSearch.setHint("Getting address...");
-				pickupAddressFetcherThread = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						gapiAddressForPin = MapUtils.getGAPIAddressObject(currentLatLng);
-						String address = gapiAddressForPin.getSearchableAddress();
-
-//						address = MapUtils.getGAPIAddress(currentLatLng);
-						setPickupAddress(address);
-						stopPickupAddressFetcherThread();
-					}
-				});
-				pickupAddressFetcherThread.start();
-			}
-		} catch(Exception e){
+		try {
+            progressBar.setVisibility(View.VISIBLE);
+            textView.setText("");
+            textView.setHint("Getting address...");
+            pickupAddressFetcherThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    GAPIAddress gapiAddressForPin = MapUtils.getGAPIAddressObject(currentLatLng);
+                    String address = gapiAddressForPin.getSearchableAddress();
+                    setAddress(address, textView, progressBar);
+                    stopPickupAddressFetcherThread();
+                }
+            });
+            pickupAddressFetcherThread.start();
+        } catch(Exception e){
 			e.printStackTrace();
 		}
 	}
@@ -3861,15 +3855,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		pickupAddressFetcherThread = null;
 	}
 
-	private void setPickupAddress(final String address){
+	private void setAddress(final String address, final TextView textView, final ProgressWheel progressBar){
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+                progressBar.setVisibility(View.GONE);
 				if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-					textViewInitialSearch.setHint("Set pick up location");
-					textViewInitialSearch.setText(address);
-				}
-				progressBarInitialSearch.setVisibility(View.GONE);
+					textView.setHint(getResources().getString(R.string.set_pickup_location));
+					textView.setText(address);
+				} else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                        || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                        || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                    textView.setHint(getResources().getString(R.string.enter_your_destination));
+                    textView.setText(address);
+                }
 			}
 		});
 	}
@@ -4849,7 +4848,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public void startRideForCustomer(final int flag) {
+    public void startRideForCustomer(final int flag, final String message) {
         try {
             if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
                 Log.e("in ", "herestartRideForCustomer");
@@ -4878,7 +4877,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								pickupDropZoomed = false;
 								passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
-                                DialogPopup.alertPopup(HomeActivity.this, "", "Your ride has been cancelled due to an unexpected issue");
+                                DialogPopup.alertPopup(HomeActivity.this, "", message);
                             }
                         }
                     });
@@ -6624,6 +6623,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            textViewFinalDropLocationClick.setText(searchResult.address);
             sendDropLocationAPI(HomeActivity.this, searchResult.latLng,
                     getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch());
             FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);

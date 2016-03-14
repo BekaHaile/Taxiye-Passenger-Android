@@ -433,7 +433,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
 							notificationManagerResume(this, title, message1, false);
-							HomeActivity.appInterruptHandler.startRideForCustomer(0);
+							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
 						} else {
 							String SHARED_PREF_NAME = "myPref",
 									SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
@@ -458,9 +458,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							notificationManager(this, title, message1, false);
 						}
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
-						message1 = jObj.optString(KEY_MESSAGE, "Your ride has been cancelled due to an unexpected issue");
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
-							HomeActivity.appInterruptHandler.startRideForCustomer(1);
+							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
 							notificationManagerResume(this, title, message1, false);
 						} else {
 							notificationManager(this, title, message1, false);

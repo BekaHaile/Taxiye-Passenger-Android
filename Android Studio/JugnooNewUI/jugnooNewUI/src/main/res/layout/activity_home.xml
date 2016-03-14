@@ -174,7 +174,7 @@
                     android:layout_marginLeft="20px"
                     android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
                     android:background="@color/transparent"
-                    android:hint="Set pick up location"
+                    android:hint="@string/set_pickup_location"
                     android:singleLine="true"
                     android:textColor="@color/black_text"
                     android:textSize="30px" />
