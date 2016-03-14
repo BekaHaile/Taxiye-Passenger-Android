@@ -117,6 +117,11 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 			}
 		}
 
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+			super.onReceivedError(view, errorCode, description, failingUrl);
+			imageViewProgressBar.setVisibility(View.GONE);
+		}
 	}
     @Override
 	public void onDestroy() {

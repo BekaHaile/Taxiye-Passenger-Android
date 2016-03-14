@@ -87,10 +87,10 @@
 
                 <ImageView
                     android:id="@+id/imageViewGamePredict"
-                    android:layout_width="24px"
-                    android:layout_height="43px"
+                    android:layout_width="100px"
+                    android:layout_height="90px"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="55px"
+                    android:layout_marginLeft="17px"
                     android:src="@drawable/ic_worldcup"
                     android:tag="mwar" />
 
