@@ -3739,7 +3739,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-                                if ((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+                                if ((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                                        || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                                        || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
                                     pickupDropZoomed = true;
@@ -4222,6 +4224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
                                         PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
 
+                                    pickupDropZoomed = false;
                                     stopDropLocationSearchUI(true);
                                     setDropLocationEngagedUI();
 
