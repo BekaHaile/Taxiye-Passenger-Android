@@ -28,6 +28,7 @@ public class UserData {
 
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
+	private String publicAccessToken, gameUrl;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 			String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -38,7 +39,8 @@ public class UserData {
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
 					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
 					String userId, String inviteEarnScreenImage,
-					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText){
+					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText,
+					String publicAccessToken, String gameUrl){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -88,6 +90,8 @@ public class UserData {
 		this.t20WCEnable = t20WCEnable;
 		this.t20WCScheduleVersion = t20WCScheduleVersion;
 		this.t20WCInfoText = t20WCInfoText;
+		this.publicAccessToken = publicAccessToken;
+		this.gameUrl = gameUrl;
 
 	}
 
@@ -287,5 +291,21 @@ public class UserData {
 
 	public void setT20WCInfoText(String t20WCInfoText) {
 		this.t20WCInfoText = t20WCInfoText;
+	}
+
+	public String getPublicAccessToken() {
+		return publicAccessToken;
+	}
+
+	public void setPublicAccessToken(String publicAccessToken) {
+		this.publicAccessToken = publicAccessToken;
+	}
+
+	public String getGameUrl() {
+		return gameUrl;
+	}
+
+	public void setGameUrl(String gameUrl) {
+		this.gameUrl = gameUrl;
 	}
 }

@@ -3142,8 +3142,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutNotification.performClick();
 			}
+            else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
+                relativeLayoutT20WorldCup.performClick();
+            }
 
-		} catch(Exception e){
+        } catch(Exception e){
 			e.printStackTrace();
 		}
 		Data.deepLinkIndex = -1;
