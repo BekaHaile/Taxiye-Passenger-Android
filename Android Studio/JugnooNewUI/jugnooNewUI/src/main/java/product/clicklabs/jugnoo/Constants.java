@@ -136,5 +136,11 @@ public interface Constants {
 	String KEY_T20_WC_INFO_TEXT = "t20_wc_info_text";
 	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
 	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
+	String KEY_PUBLIC_ACCESS_TOKEN = "public_access_token";
+
+	String KEY_GAME_PREDICT_ENABLE = "game_predict_enable";
+	String KEY_GAME_PREDICT_URL = "game_predict_url";
+	String KEY_GAME_PREDICT_VIEW_DATA = "game_predict_view_data";
+	String VIEW_DATA_SPLITTER = ";;;";
 
 }

@@ -151,6 +151,8 @@
     <dimen name="jugnoo_anim_loading_width">198px</dimen>
     <dimen name="jugnoo_anim_loading_height">92px</dimen>
 
+    <dimen name="menu_text_margin_left">121px</dimen>
+
     <item name="radius" format="float" type="dimen">326</item>
 
 

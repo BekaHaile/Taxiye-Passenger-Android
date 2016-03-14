@@ -12,7 +12,7 @@
         android:id="@+id/relativeLayoutInRideInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutFinalDropLocationClick"
+        android:layout_below="@+id/relativeLayoutFinalDropLocationClick"
         android:background="@color/sliding_bottom_bg_color">
 
         <TextView
@@ -52,21 +52,19 @@
         android:rotation="180"
         android:src="@drawable/shadow_up" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutFinalDropLocationClick"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutFinalDropLocationClick"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:layout_gravity="center_horizontal"
         android:background="@color/white"
-        android:orientation="horizontal"
         android:splitMotionEvents="false">
 
         <ImageView
+            android:id="@+id/imageViewFinalDropLocationSearch"
             android:layout_width="33px"
             android:layout_height="33px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30px"
-            android:layout_gravity="center_vertical"
             android:src="@drawable/search_icon"
             android:tag="mwar" />
 
@@ -74,21 +72,62 @@
             android:id="@+id/textViewFinalDropLocationClick"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginLeft="20px"
             android:background="@color/transparent"
             android:gravity="center_vertical"
-            android:hint="Enter your destination"
+            android:hint="@string/enter_your_destination"
             android:singleLine="true"
-            android:textColor="@color/black_text"
+            android:textColor="@color/text_color"
             android:textCursorDrawable="@null"
-            android:textSize="30px" />
-    </LinearLayout>
+            android:textSize="30px"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageViewFinalDropLocationSearch"
+            android:layout_toLeftOf="@+id/linearLayoutFinalDropLocationEditProgress"
+            />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutFinalDropLocationEditProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <product.clicklabs.jugnoo.utils.ProgressWheel
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progressBarFinalDropLocation"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:tag="mwar"
+                wheel:matProg_barColor="@color/theme_color"
+                wheel:matProg_barWidth="3dp"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
+                android:visibility="visible"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewFinalDropLocationEdit"
+                android:layout_width="60px"
+                android:layout_height="60px"
+                android:padding="15px"
+                android:src="@drawable/edit_icon_selector"
+                android:tag="mwar"
+                android:visibility="visible"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_below="@+id/linearLayoutFinalDropLocationClick"
+        android:layout_below="@+id/relativeLayoutFinalDropLocationClick"
         android:rotation="180"
         android:src="@drawable/shadow_up" />
 

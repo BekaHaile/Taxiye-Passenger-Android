@@ -18,7 +18,9 @@ public enum AppLinkIndex {
 
 	ACCOUNT(7), // opens Account Screen
 
-	NOTIFICATION_CENTER(8) // opens Notification center Screen
+	NOTIFICATION_CENTER(8), // opens Notification center Screen,
+
+	GAME_PAGE(9) // opens Game Screen (eg. T20)
 
 	;
 

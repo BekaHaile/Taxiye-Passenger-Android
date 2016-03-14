@@ -14,7 +14,7 @@ public interface AppInterruptHandler {
 	
 	void onNoDriversAvailablePushRecieved(String logMessage);
 	
-	void startRideForCustomer(final int flag);
+	void startRideForCustomer(final int flag, String message);
 	
 	void customerEndRideInterrupt(String engagementId);
 	
