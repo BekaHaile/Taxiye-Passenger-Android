@@ -200,12 +200,20 @@ public class JSONParser implements Constants {
         String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
         String publicAccessToken = userData.optString(KEY_PUBLIC_ACCESS_TOKEN, "");
 
+        int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
-        String gamePredictIconUrl = userData.optString(KEY_GAME_PREDICT_ICON_URL, "");
-        String gamePredictName = userData.optString(KEY_GAME_PREDICT_NAME, context.getResources().getString(R.string.t20_world_cup_2016));
-        String gamePredictIsNew = userData.optString(KEY_GAME_PREDICT_IS_NEW, "1");
+        String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
 
-		return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
+        try {
+            String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
+            gamePredictIconUrl = gamePredictViewData.split(VIEW_DATA_SPLITTER)[0];
+            gamePredictName = gamePredictViewData.split(VIEW_DATA_SPLITTER)[1];
+            gamePredictNew = gamePredictViewData.split(VIEW_DATA_SPLITTER)[2];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
                 contactSaved, referAllText, referAllTitle,
@@ -213,7 +221,7 @@ public class JSONParser implements Constants {
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
-                gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictIsNew);
+                gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew);
 
     }
 

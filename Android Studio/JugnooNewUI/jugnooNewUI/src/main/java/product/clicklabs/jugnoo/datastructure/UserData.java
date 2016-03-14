@@ -29,7 +29,9 @@ public class UserData {
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
 	private String publicAccessToken;
-	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictIsNew;
+
+	private int gamePredictEnable;
+	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -41,7 +43,7 @@ public class UserData {
 					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
 					String userId, String inviteEarnScreenImage,
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
-					String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictIsNew){
+					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -94,10 +96,11 @@ public class UserData {
 
 		this.publicAccessToken = publicAccessToken;
 
+		this.gamePredictEnable = gamePredictEnable;
 		this.gamePredictUrl = gamePredictUrl;
 		this.gamePredictIconUrl = gamePredictIconUrl;
 		this.gamePredictName = gamePredictName;
-		this.gamePredictIsNew = gamePredictIsNew;
+		this.gamePredictNew = gamePredictNew;
 
 	}
 
@@ -331,11 +334,19 @@ public class UserData {
 		this.gamePredictName = gamePredictName;
 	}
 
-	public String getGamePredictIsNew() {
-		return gamePredictIsNew;
+	public String getGamePredictNew() {
+		return gamePredictNew;
 	}
 
-	public void setGamePredictIsNew(String gamePredictIsNew) {
-		this.gamePredictIsNew = gamePredictIsNew;
+	public void setGamePredictNew(String gamePredictNew) {
+		this.gamePredictNew = gamePredictNew;
+	}
+
+	public int getGamePredictEnable() {
+		return gamePredictEnable;
+	}
+
+	public void setGamePredictEnable(int gamePredictEnable) {
+		this.gamePredictEnable = gamePredictEnable;
 	}
 }

@@ -768,7 +768,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutGamePredict.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Data.userData.getT20WCEnable() == 1) {
+                if (Data.userData.getGamePredictEnable() == 1) {
                     Intent intent = new Intent(HomeActivity.this, T20Activity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1517,10 +1517,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 new FetchAndSendMessages(this, Data.userData.accessToken).execute();
             }
 
-            if(Data.userData.getT20WCEnable() == 1){
+            if(Data.userData.getGamePredictEnable() == 1
+                    && !"".equalsIgnoreCase(Data.userData.getGamePredictName())){
                 relativeLayoutGamePredict.setVisibility(View.VISIBLE);
                 textViewGamePredict.setText(Data.userData.getGamePredictName());
-                if(!"1".equalsIgnoreCase(Data.userData.getGamePredictIsNew())){
+                if(!"".equalsIgnoreCase(Data.userData.getGamePredictNew())){
+                    textViewGamePredictNew.setText(Data.userData.getGamePredictNew());
+                } else{
                     textViewGamePredictNew.setVisibility(View.GONE);
                 }
                 try {

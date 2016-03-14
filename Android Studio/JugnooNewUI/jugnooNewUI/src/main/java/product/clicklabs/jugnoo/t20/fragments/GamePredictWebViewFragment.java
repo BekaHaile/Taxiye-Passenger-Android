@@ -18,14 +18,13 @@ import android.widget.RelativeLayout;
 
 import com.flurry.android.FlurryAgent;
 
-import org.apache.http.util.EncodingUtils;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import product.clicklabs.jugnoo.utils.Log;
 
 @SuppressLint("ValidFragment")
 public class GamePredictWebViewFragment extends Fragment implements FlurryEventNames, Constants {
@@ -87,13 +86,17 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setDomStorageEnabled(true);
 		webView.getSettings().setDatabaseEnabled(true);
-		webView.setWebChromeClient(new WebChromeClient() {});
+		webView.setWebChromeClient(new WebChromeClient() {
+		});
 		webView.setWebViewClient(new MyAppWebViewClient());
 
 		webView.loadUrl(Data.userData.getGamePredictUrl());
 
-		String postData = Constants.KEY_PUBLIC_ACCESS_TOKEN+"="+Data.userData.getPublicAccessToken();
-		webView.postUrl(Data.userData.getGamePredictUrl(), EncodingUtils.getBytes(postData, "BASE64"));
+		StringBuilder sb = new StringBuilder();
+		sb.append(Data.userData.getGamePredictUrl()).append("?")
+				.append(Constants.KEY_ACCESS_TOKEN).append("=").append(Data.userData.getPublicAccessToken());
+		Log.i(TAG, "link to hit="+sb.toString());
+		webView.loadUrl(sb.toString());
 
 		return rootView;
 	}
@@ -118,7 +121,6 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-		webView.destroy();
         ASSL.closeActivity(relative);
         System.gc();
 	}
