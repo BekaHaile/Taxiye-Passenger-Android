@@ -2297,10 +2297,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 //                        genieLayout.setVisibility(View.GONE);
 
-                        Intent intent = new Intent(this, LocationUpdateService.class);
-                        intent.putExtra(KEY_ONE_SHOT, false);
-                        startService(intent);
-
                         break;
 
                     case P_RIDE_END:
@@ -2346,6 +2342,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 });
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
+
+                startStopLocationUpdateService(mode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2358,6 +2356,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return slidingBottomPanel;
     }
 
+    private void startStopLocationUpdateService(PassengerScreenMode mode){
+        if(PassengerScreenMode.P_IN_RIDE == mode) {
+            Intent intent = new Intent(this, LocationUpdateService.class);
+            intent.putExtra(KEY_ONE_SHOT, false);
+            startService(intent);
+        } else{
+            Intent intent = new Intent(this, LocationUpdateService.class);
+            stopService(intent);
+        }
+    }
 
     private BroadcastReceiver receiver;
     private void registerDialogDismissReceiver() {

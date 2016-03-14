@@ -121,6 +121,8 @@ public class LocationUpdateService extends Service {
 					params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
+					Log.i(TAG, "customonReceive params=" + params);
+
 					SplashNewActivity.initializeServerURL(context);
 					RestClient.getApiServices().updateCustomerLocation(params, new Callback<SettleUserDebt>() {
 						@Override
