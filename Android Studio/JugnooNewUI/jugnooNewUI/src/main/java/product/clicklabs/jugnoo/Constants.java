@@ -165,6 +165,7 @@ public interface Constants {
 	String SP_CURRENT_STATE = "current_state";
 	String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
 	String KEY_ONE_SHOT = "one_shot";
+	String KEY_EMERGENCY_LOC = "emergency_loc";
 	String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
 
 }

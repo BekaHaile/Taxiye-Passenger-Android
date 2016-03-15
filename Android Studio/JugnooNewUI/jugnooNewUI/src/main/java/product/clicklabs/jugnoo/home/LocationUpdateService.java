@@ -46,7 +46,12 @@ public class LocationUpdateService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(TAG, "service onStartCommand");
 		try {
-			oneShot = intent.getBooleanExtra(Constants.KEY_ONE_SHOT, true);
+			SplashNewActivity.initializeServerURL(this);
+			try {
+				oneShot = intent.getBooleanExtra(Constants.KEY_ONE_SHOT, true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			locationReceiver = new CustomLocationReceiver(oneShot);
 			registerReceiver(locationReceiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
 
@@ -68,6 +73,10 @@ public class LocationUpdateService extends Service {
 
 	@Override
 	public void onDestroy() {
+		unregisterRec();
+	}
+
+	private void unregisterRec(){
 		if(locationReceiver != null){
 			unregisterReceiver(locationReceiver);
 		}
@@ -82,6 +91,7 @@ public class LocationUpdateService extends Service {
 		try {
 			if(!oneShot && PassengerScreenMode.P_IN_RIDE.getOrdinal() == Prefs.with(this)
 					.getInt(Constants.SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal())) {
+				stopSelf();
 				Intent restartService = new Intent(getApplicationContext(), this.getClass());
 				restartService.setPackage(getPackageName());
 				restartService.putExtra(Constants.KEY_ONE_SHOT, false);
@@ -97,10 +107,11 @@ public class LocationUpdateService extends Service {
 	private class CustomLocationReceiver extends BroadcastReceiver{
 
 		private final String TAG = CustomLocationReceiver.class.getSimpleName();
-		private boolean oneShot;
+		private boolean oneShot, emergencyLoc;
 
 		public CustomLocationReceiver(boolean oneShot){
 			this.oneShot = oneShot;
+			emergencyLoc = false;
 		}
 
 		@Override
@@ -108,6 +119,7 @@ public class LocationUpdateService extends Service {
 			try{
 				double latitude = intent.getDoubleExtra(Constants.KEY_LATITUDE, 0);
 				double longitude = intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0);
+				emergencyLoc = intent.getBooleanExtra(Constants.KEY_EMERGENCY_LOC, false);
 				Log.i(TAG, "customonReceive lat=" + latitude + ", lng=" + longitude);
 
 				if(oneShot && locationFetcherBG != null){
@@ -121,27 +133,32 @@ public class LocationUpdateService extends Service {
 					params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
-					if(oneShot){
-						SplashNewActivity.initializeServerURL(context);
+					if(oneShot || emergencyLoc){
 						RestClient.getApiServices().saveCustomerEmergencyLocation(params, new Callback<SettleUserDebt>() {
 							@Override
 							public void success(SettleUserDebt settleUserDebt, Response response) {
 								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 								Log.i(TAG, "updateCustomerLocation responseStr=" + responseStr);
+								if(oneShot) {
+									stopSelf();
+								}
 							}
 
 							@Override
 							public void failure(RetrofitError error) {
 								Log.e(TAG, "updateCustomerLocation error=" + error);
+								if(oneShot) {
+									stopSelf();
+								}
 							}
 						});
+						emergencyLoc = false;
 					} else{
 						String engagementId = Prefs.with(context).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "");
 						if(!"".equalsIgnoreCase(engagementId)) {
 							params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 							Log.i(TAG, "customonReceive params=" + params);
 
-							SplashNewActivity.initializeServerURL(context);
 							RestClient.getApiServices().updateCustomerRideLocation(params, new Callback<SettleUserDebt>() {
 								@Override
 								public void success(SettleUserDebt settleUserDebt, Response response) {
