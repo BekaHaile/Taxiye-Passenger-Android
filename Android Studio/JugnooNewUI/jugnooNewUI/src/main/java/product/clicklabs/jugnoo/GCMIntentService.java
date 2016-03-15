@@ -118,16 +118,22 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 
     @SuppressWarnings("deprecation")
-    private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex) {
+    private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
+											 String url) {
 
         try {
             long when = System.currentTimeMillis();
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+            Intent notificationIntent = new Intent();
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
-			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+			if("".equalsIgnoreCase(url)){
+				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+				notificationIntent.setClass(context, SplashNewActivity.class);
+			} else{
+				notificationIntent.setData(Uri.parse(url));
+			}
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -277,16 +283,22 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     }
 
 	@SuppressWarnings("deprecation")
-	private void notificationManagerCustomIDWithBitmap(Context context, String title, String message, int notificationId, int deepindex, Bitmap bitmap) {
+	private void notificationManagerCustomIDWithBitmap(Context context, String title, String message, int notificationId,
+													   int deepindex, Bitmap bitmap, String url) {
 
 		try {
 			long when = System.currentTimeMillis();
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			Intent notificationIntent = new Intent(context, SplashNewActivity.class);
+			Intent notificationIntent = new Intent();
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
-			notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+			if("".equalsIgnoreCase(url)){
+				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+				notificationIntent.setClass(context, SplashNewActivity.class);
+			} else{
+				notificationIntent.setData(Uri.parse(url));
+			}
 
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -402,6 +414,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 						}
 						notificationManager(this, title, message1, false);
+
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
@@ -415,15 +428,19 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_RIDE_END.getOrdinal());
 						Intent intent = new Intent(this, LocationUpdateService.class);
 						stopService(intent);
+
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
 						}
 						notificationManager(this, title, message1, false);
-					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
+
+					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag
+							|| PushFlags.WAITING_ENDED.getOrdinal() == flag) {
 						message1 = jObj.getString("message");
 						notificationManager(this, title, "" + message1, false);
+
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
 						String log = jObj.getString("log");
 						if (HomeActivity.appInterruptHandler != null) {
@@ -435,8 +452,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.onChangeStatePushReceived();
 						}
 						notificationManager(this, title, logMessage, false);
-					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
 
+					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag) {
 						if (jObj.has("client_id")) {
 							String clientId = jObj.getString("client_id");
 							if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
@@ -452,14 +469,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString("image", "");
 							}
-
+							String url = jObj.optString(KEY_URL, "");
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								new BigImageNotifAsync(title, message1, deepindex, picture).execute();
+								new BigImageNotifAsync(title, message1, deepindex, picture, url).execute();
 							}
 							else{
 								deepindex = jObj.optInt("deepindex", -1);
-								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex);
+								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex, url);
 							}
 						}
 
@@ -474,12 +491,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.onJugnooCashAddedByDriver(balance, message1);
 						}
 						notificationManager(this, title, message1, false);
+
 					} else if (PushFlags.EMERGENCY_CONTACT_VERIFIED.getOrdinal() == flag) {
 						int emergencyContactId = jObj.getInt("id");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onEmergencyContactVerified(emergencyContactId);
 						}
 						notificationManager(this, title, message1, false);
+
 					} else if (PushFlags.OTP_VERIFIED_BY_CALL.getOrdinal() == flag) {
 						String otp = jObj.getString("message");
 						if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
@@ -494,7 +513,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
-						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1);
+						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1, "");
+
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
@@ -531,11 +551,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
 						}
 						notificationManager(this, title, message1, false);
+
 					} else if(PushFlags.SYNC_PARA.getOrdinal() == flag){
 						Intent synIntent = new Intent(this, SyncIntentService.class);
 						synIntent.putExtra(KEY_START_TIME, jObj.getString(KEY_START_TIME));
 						synIntent.putExtra(KEY_END_TIME, jObj.getString(KEY_END_TIME));
 						startService(synIntent);
+
 					} else if (PushFlags.CUSTOMER_EMERGENCY_LOCATION.getOrdinal() == flag){
 						if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
 							Intent intent = new Intent(this, LocationUpdateService.class);
@@ -634,14 +656,15 @@ public class GCMIntentService extends GcmListenerService implements Constants {
     private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
 
         private Bitmap bitmap = null;
-        private String title, message, picture;
+        private String title, message, picture, url;
         private int deepindex;
 
-        public BigImageNotifAsync(String title, String message, int deepindex, String picture){
+        public BigImageNotifAsync(String title, String message, int deepindex, String picture, String url){
             this.deepindex = deepindex;
             this.picture = picture;
 			this.title = title;
             this.message = message;
+			this.url = url;
         }
 
 		@Override
@@ -666,11 +689,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
         protected void onPostExecute(Bitmap result) {
             // execution of result of Long time consuming operation
             try {
-                notificationManagerCustomIDWithBitmap(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex, result);
+                notificationManagerCustomIDWithBitmap(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex, result, url);
 				if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
             }catch (Exception e){
                 e.printStackTrace();
-                notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex);
+                notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex, url);
             }
         }
 

@@ -106,37 +106,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
-            <!-- https://jugnoo.in?deepindex=0 -->
-            <!-- jungooautos://app?deepindex=0 -->
-
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="jugnoo.in"
-                    android:scheme="https"/>
-                <data
-                    android:host="app"
-                    android:scheme="jungooautos"/>
-            </intent-filter>
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="smarturl.it"
-                    android:pathPrefix="/jugnooautos"
-                    android:scheme="http"/>
-                <data
-                    android:host="app"
-                    android:scheme="jungooautos"/>
-            </intent-filter>
-
             <!-- jugnooautos://app?deepindex=0 -->
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW"/>
