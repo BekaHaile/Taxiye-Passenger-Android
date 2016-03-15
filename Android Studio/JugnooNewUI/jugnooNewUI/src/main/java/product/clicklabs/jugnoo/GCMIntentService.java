@@ -355,6 +355,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
+						} else{
+							Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
 						}
 
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
@@ -392,6 +394,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							Editor editor = pref.edit();
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.commit();
+							if(!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
+									&& !Utils.isServiceRunning(this, LocationUpdateService.class.getName())){
+								Intent intent = new Intent(this, LocationUpdateService.class);
+								intent.putExtra(KEY_ONE_SHOT, false);
+								startService(intent);
+							}
 						}
 						notificationManager(this, title, message1, false);
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
@@ -404,11 +412,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 						}
 						notificationManager(this, title, message1, false);
+						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_RIDE_END.getOrdinal());
+						Intent intent = new Intent(this, LocationUpdateService.class);
+						stopService(intent);
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
-						} else {
 						}
 						notificationManager(this, title, message1, false);
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag || PushFlags.WAITING_ENDED.getOrdinal() == flag) {
@@ -533,10 +543,10 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							startService(intent);
 						} else{
 							Intent intent1 = new Intent();
-							intent1.setAction(Constants.ACTION_LOCATION_UPDATE);
-							intent1.putExtra(Constants.KEY_LATITUDE, LocationFetcher.getSavedLatFromSP(this));
-							intent1.putExtra(Constants.KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(this));
-							intent1.putExtra(Constants.KEY_EMERGENCY_LOC, true);
+							intent1.setAction(ACTION_LOCATION_UPDATE);
+							intent1.putExtra(KEY_LATITUDE, LocationFetcher.getSavedLatFromSP(this));
+							intent1.putExtra(KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(this));
+							intent1.putExtra(KEY_EMERGENCY_LOC, true);
 							sendBroadcast(intent1);
 						}
 					}

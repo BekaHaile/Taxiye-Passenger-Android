@@ -2357,16 +2357,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void startStopLocationUpdateService(PassengerScreenMode mode){
+        Prefs.with(this).save(Constants.SP_CURRENT_ENGAGEMENT_ID, Data.cEngagementId);
         if(PassengerScreenMode.P_IN_RIDE == mode
                 && Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
-            Prefs.with(this).save(Constants.SP_CURRENT_ENGAGEMENT_ID, Data.cEngagementId);
             if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
                 Intent intent = new Intent(this, LocationUpdateService.class);
                 intent.putExtra(KEY_ONE_SHOT, false);
                 startService(intent);
             }
         } else{
-            Prefs.with(this).remove(Constants.SP_CURRENT_ENGAGEMENT_ID);
             Intent intent = new Intent(this, LocationUpdateService.class);
             stopService(intent);
         }
