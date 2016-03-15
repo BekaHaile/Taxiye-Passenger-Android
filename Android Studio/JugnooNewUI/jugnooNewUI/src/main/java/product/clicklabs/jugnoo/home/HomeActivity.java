@@ -2357,7 +2357,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void startStopLocationUpdateService(PassengerScreenMode mode){
-        if(PassengerScreenMode.P_IN_RIDE == mode) {
+        if(PassengerScreenMode.P_IN_RIDE == mode
+                && Prefs.with(this).getLong(KEY_SP_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
             Intent intent = new Intent(this, LocationUpdateService.class);
             intent.putExtra(KEY_ONE_SHOT, false);
             startService(intent);
