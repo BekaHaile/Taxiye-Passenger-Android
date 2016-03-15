@@ -480,6 +480,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 								deepindex = jObj.optInt("deepindex", -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex, url);
 							}
+							Prefs.with(this).save(KEY_SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){

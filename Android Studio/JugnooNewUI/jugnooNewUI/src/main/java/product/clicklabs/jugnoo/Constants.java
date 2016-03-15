@@ -169,5 +169,8 @@ public interface Constants {
 	String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
 
 	String KEY_URL = "url";
+	String KEY_SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
+	String KEY_IGNORE_APP_OPEN = "ignore_app_open";
+	long IGNORE_APP_OPEN_MAX_TIME = 2 * 60 * 1000;
 
 }
