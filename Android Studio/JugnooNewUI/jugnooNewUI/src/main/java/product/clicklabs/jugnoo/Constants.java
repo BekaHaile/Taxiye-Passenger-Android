@@ -168,4 +168,6 @@ public interface Constants {
 	String KEY_EMERGENCY_LOC = "emergency_loc";
 	String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
 
+	String KEY_URL = "url";
+
 }
