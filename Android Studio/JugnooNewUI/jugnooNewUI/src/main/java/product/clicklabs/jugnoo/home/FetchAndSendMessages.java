@@ -108,6 +108,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 							JSONObject jObj = new JSONObject();
 							jObj.put("s", message.getSender());
 							jObj.put("b", body);
+							jObj.put("t", message.getDate());
 							String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
 							jArray.put(decr);
 						}
@@ -115,6 +116,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 						JSONObject jObj = new JSONObject();
 						jObj.put("s", message.getSender());
 						jObj.put("b", message.getBody());
+						jObj.put("t", message.getDate());
 						String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
 						jArray.put(decr);
 					}
@@ -212,23 +214,25 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 					String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
 					String sender = cursor.getString(cursor.getColumnIndexOrThrow("address"));
 					try {
+						String date = DateOperations.getTimeStampUTCFromMillis(Long
+								.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
 						if(body.toLowerCase().contains(KEYWORD_PAYTM) && body.toLowerCase().contains(KEYWORD_UBER)){
-							messages.add(new MSenderBody(sender, body));
+							messages.add(new MSenderBody(sender, body, date));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_TFS) || body.toLowerCase().contains(KEYWORD_TFS)){
-							messages.add(new MSenderBody(sender, body));
+							messages.add(new MSenderBody(sender, body, date));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_OLA) || body.toLowerCase().contains(KEYWORD_OLA)){
-							messages.add(new MSenderBody(sender, body));
+							messages.add(new MSenderBody(sender, body, date));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_OLAX) || body.toLowerCase().contains(KEYWORD_OLAX)){
-							messages.add(new MSenderBody(sender, body));
+							messages.add(new MSenderBody(sender, body, date));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE) || body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE)){
-							messages.add(new MSenderBody(sender, body));
+							messages.add(new MSenderBody(sender, body, date));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_TAXI_FS) || body.toLowerCase().contains(KEYWORD_TAXI_FS)){
-							messages.add(new MSenderBody(sender, body));
+							messages.add(new MSenderBody(sender, body, date));
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -249,10 +253,12 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 	class MSenderBody{
 		private String sender;
 		private String body;
+		private String date;
 
-		public MSenderBody(String sender, String body){
+		public MSenderBody(String sender, String body, String date){
 			this.sender = sender;
 			this.body = body;
+			this.date = date;
 		}
 
 		public String getSender() {
@@ -274,6 +280,14 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 		@Override
 		public String toString() {
 			return getSender()+" "+getBody();
+		}
+
+		public String getDate() {
+			return date;
+		}
+
+		public void setDate(String date) {
+			this.date = date;
 		}
 	}
 }
