@@ -418,4 +418,12 @@ public class DateOperations {
 		}
 	}
 
+
+	public static String getTimeStampUTCFromMillis(long millis){
+		Date date = new Date(millis);
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return formatter.format(date);
+	}
+
 }
