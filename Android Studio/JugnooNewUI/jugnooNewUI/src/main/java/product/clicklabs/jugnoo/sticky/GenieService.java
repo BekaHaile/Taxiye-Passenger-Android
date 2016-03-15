@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GeniePositonsSaver;
 import product.clicklabs.jugnoo.utils.LocationFetcherBG;
+import product.clicklabs.jugnoo.utils.LocationReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SimpleAnimator;
@@ -123,7 +124,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         FlurryAgent.init(this, Config.getFlurryKey());
         FlurryAgent.onStartSession(this, Config.getFlurryKey());
 
-        locationFetcherBG = new LocationFetcherBG(this, 60000);
+        locationFetcherBG = new LocationFetcherBG(this, 60000, LocationReceiver.class);
         //if(getIntent.hasExtra("package_name")){
         //packageName = intent.getStringExtra("package_name");
 

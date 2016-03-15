@@ -289,7 +289,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Config.setConfigMode(configModeToSet);
 
 		RestClient.setupRestClient();
-		Log.e("link", "=" + link);
 	}
 
 	@Override

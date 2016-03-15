@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -150,6 +151,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             else if(AppLinkIndex.ACCOUNT.getOrdinal() == deepInt){
                 intent.setClass(activity, AccountActivity.class);
                 activity.startActivity(intent);
+            }
+            else if(AppLinkIndex.GAME_PAGE.getOrdinal() == deepInt){
+                if (Data.userData.getGamePredictEnable() == 1) {
+                    intent.setClass(activity, T20Activity.class);
+                    activity.startActivity(intent);
+                }
             }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
