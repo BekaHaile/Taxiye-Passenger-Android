@@ -526,7 +526,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						synIntent.putExtra(KEY_START_TIME, jObj.getString(KEY_START_TIME));
 						synIntent.putExtra(KEY_END_TIME, jObj.getString(KEY_END_TIME));
 						startService(synIntent);
-					} else if (PushFlags.GET_CUSTOMER_LOCATION.getOrdinal() == flag){
+					} else if (PushFlags.CUSTOMER_EMERGENCY_LOCATION.getOrdinal() == flag){
 						Intent intent = new Intent(this, LocationUpdateService.class);
 						intent.putExtra(KEY_ONE_SHOT, true);
 						startService(intent);

@@ -376,8 +376,13 @@ public interface ApiService {
                                  Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/update_customer_location")
-    void updateCustomerLocation(@FieldMap Map<String, String> params,
+    @POST("/update_customer_ride_location")
+    void updateCustomerRideLocation(@FieldMap Map<String, String> params,
                                    Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/save_customer_emergency_location")
+    void saveCustomerEmergencyLocation(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
 
 }

@@ -13,7 +13,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -68,16 +67,8 @@ public class ApiAuthenticatePaytmRecharge {
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt(Constants.KEY_FLAG);
-								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											callback.onSuccess();
-										}
-									});
-								} else {
-									DialogPopup.alertPopup(activity, "", message);
-								}
+								callback.onSuccess();
+								DialogPopup.alertPopup(activity, "", message);
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();

@@ -2358,11 +2358,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void startStopLocationUpdateService(PassengerScreenMode mode){
         if(PassengerScreenMode.P_IN_RIDE == mode
-                && Prefs.with(this).getLong(KEY_SP_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
+                && Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
+            Prefs.with(this).save(Constants.SP_CURRENT_ENGAGEMENT_ID, Data.cEngagementId);
             Intent intent = new Intent(this, LocationUpdateService.class);
             intent.putExtra(KEY_ONE_SHOT, false);
             startService(intent);
         } else{
+            Prefs.with(this).remove(Constants.SP_CURRENT_ENGAGEMENT_ID);
             Intent intent = new Intent(this, LocationUpdateService.class);
             stopService(intent);
         }
@@ -6643,10 +6645,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void openPaytmRechargeDialog(){
         try {
+            if(dialogPaytmRecharge != null && dialogPaytmRecharge.isShowing()){
+                dialogPaytmRecharge.dismiss();
+            }
             if(Data.userData.getPaytmRechargeInfo() != null) {
-                if(dialogPaytmRecharge != null && dialogPaytmRecharge.isShowing()){
-                    dialogPaytmRecharge.dismiss();
-                }
                 dialogPaytmRecharge = new PaytmRechargeDialog(HomeActivity.this,
                         Data.userData.getPaytmRechargeInfo().getTransferId(),
                         Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
@@ -6657,7 +6659,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onOk() {
                                 if(Data.userData != null) {
                                     Data.userData.setPaytmRechargeInfo(null);
-                                    Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+                                    Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME,
+                                            (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
                                     getPaytmBalance(HomeActivity.this);
                                 }
                             }

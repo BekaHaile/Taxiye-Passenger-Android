@@ -160,10 +160,11 @@ public interface Constants {
 	String KEY_START_TIME = "start_time";
 	String KEY_END_TIME = "end_time";
 
-	String KEY_SP_LOCATION_UPDATE_INTERVAL = "location_update_interval";
+	String KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL = "customer_location_update_interval";
 	long LOCATION_UPDATE_INTERVAL = 60 * 1000;
 	String SP_CURRENT_STATE = "current_state";
 	String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
 	String KEY_ONE_SHOT = "one_shot";
+	String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
 
 }

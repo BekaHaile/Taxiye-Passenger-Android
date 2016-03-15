@@ -50,7 +50,7 @@ public class LocationUpdateService extends Service {
 			locationReceiver = new CustomLocationReceiver(oneShot);
 			registerReceiver(locationReceiver, new IntentFilter(Constants.ACTION_LOCATION_UPDATE));
 
-			long locationUpdateInterval = Prefs.with(this).getLong(Constants.KEY_SP_LOCATION_UPDATE_INTERVAL,
+			long locationUpdateInterval = Prefs.with(this).getLong(Constants.KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
 					Constants.LOCATION_UPDATE_INTERVAL);
 
 			if (locationFetcherBG != null) {
@@ -121,27 +121,42 @@ public class LocationUpdateService extends Service {
 					params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
-					Log.i(TAG, "customonReceive params=" + params);
-
-					SplashNewActivity.initializeServerURL(context);
-					RestClient.getApiServices().updateCustomerLocation(params, new Callback<SettleUserDebt>() {
-						@Override
-						public void success(SettleUserDebt settleUserDebt, Response response) {
-							String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-							Log.i(TAG, "updateCustomerLocation responseStr="+responseStr);
-							if(oneShot){
-								stopSelf();
+					if(oneShot){
+						SplashNewActivity.initializeServerURL(context);
+						RestClient.getApiServices().saveCustomerEmergencyLocation(params, new Callback<SettleUserDebt>() {
+							@Override
+							public void success(SettleUserDebt settleUserDebt, Response response) {
+								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+								Log.i(TAG, "updateCustomerLocation responseStr=" + responseStr);
 							}
-						}
 
-						@Override
-						public void failure(RetrofitError error) {
-							Log.e(TAG, "updateCustomerLocation error="+error);
-							if(oneShot){
-								stopSelf();
+							@Override
+							public void failure(RetrofitError error) {
+								Log.e(TAG, "updateCustomerLocation error=" + error);
 							}
+						});
+					} else{
+						String engagementId = Prefs.with(context).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "");
+						if(!"".equalsIgnoreCase(engagementId)) {
+							params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+							Log.i(TAG, "customonReceive params=" + params);
+
+							SplashNewActivity.initializeServerURL(context);
+							RestClient.getApiServices().updateCustomerRideLocation(params, new Callback<SettleUserDebt>() {
+								@Override
+								public void success(SettleUserDebt settleUserDebt, Response response) {
+									String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+									Log.i(TAG, "updateCustomerLocation responseStr=" + responseStr);
+								}
+
+								@Override
+								public void failure(RetrofitError error) {
+									Log.e(TAG, "updateCustomerLocation error=" + error);
+								}
+							});
 						}
-					});
+					}
+
 				}
 			} catch (Exception e){
 				e.printStackTrace();

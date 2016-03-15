@@ -50,7 +50,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
-import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
@@ -205,7 +204,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL, userData.optLong(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL,
                 DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL));
 
-        Prefs.with(context).save(KEY_SP_LOCATION_UPDATE_INTERVAL, userData.optLong(KEY_SP_LOCATION_UPDATE_INTERVAL,
+        Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, userData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
                 LOCATION_UPDATE_INTERVAL));
 
 
