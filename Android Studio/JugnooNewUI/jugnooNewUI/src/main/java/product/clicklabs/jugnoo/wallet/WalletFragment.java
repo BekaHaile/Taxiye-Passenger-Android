@@ -140,6 +140,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 								.commit();
 						FlurryEventLogger.event(PAYTM_WALLET_OPENED);
+						FlurryEventLogger.event(paymentActivity, CLICKS_ON_PAYTM_WALLET);
 					} else {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)

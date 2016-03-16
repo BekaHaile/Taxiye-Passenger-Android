@@ -812,6 +812,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(WALLET_MENU);
+                FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_WALLET);
             }
         });
 
@@ -909,7 +910,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					if(map != null) {
                         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
                             Data.pickupLatLng = map.getCameraPosition().target;
-                            FlurryEventLogger.event(AUTO_RIDE_ICON);
+                            FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
+                            FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
                             boolean proceed = slidingBottomPanel.displayAlertAndCheckForSelectedPaytmCoupon();
                             if(proceed) {
@@ -3378,9 +3380,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         try {
             if(fromDeepLink){
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put(KEY_USER_ID, Data.userData.getUserId());
-				FlurryEventLogger.event(INVITE_SCREEN_THROUGH_PUSH, map);
+				FlurryEventLogger.event(this, INVITE_SCREEN_THROUGH_PUSH);
 			} else{
 				FlurryEventLogger.event(INVITE_EARN_MENU);
 			}

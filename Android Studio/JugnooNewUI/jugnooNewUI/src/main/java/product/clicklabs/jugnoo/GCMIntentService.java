@@ -32,7 +32,6 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -130,6 +129,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			if("".equalsIgnoreCase(url)){
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 				notificationIntent.setClass(context, SplashNewActivity.class);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
@@ -295,6 +295,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			if("".equalsIgnoreCase(url)){
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 				notificationIntent.setClass(context, SplashNewActivity.class);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
@@ -484,10 +485,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
-							HashMap<String, String> map = new HashMap<>();
-							map.put(KEY_USER_ID, Prefs.with(this).getString(SP_USER_ID, ""));
-							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED, map);
+							FlurryEventLogger.eventWithSessionOpenAndCloseMap(this, FlurryEventNames.INVITE_PUSH_RECEIVED);
 						}
+						FlurryEventLogger.eventWithSessionOpenAndCloseMap(this, FlurryEventNames.TO_WHOM_A_PUSH_WAS_DELIVERED);
 					} else if (PushFlags.PAYMENT_RECEIVED.getOrdinal() == flag) {
 						double balance = jObj.getDouble("balance");
 						if (HomeActivity.appInterruptHandler != null) {

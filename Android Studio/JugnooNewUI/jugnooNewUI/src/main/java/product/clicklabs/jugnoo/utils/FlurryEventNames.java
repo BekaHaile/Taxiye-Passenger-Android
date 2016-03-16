@@ -195,4 +195,30 @@ public interface FlurryEventNames {
 
             ;
 
+
+    String WHO_VISITED_FREE_RIDE_SCREEN = "who_visited_free_ride_screen",
+            WHO_CLICKED_ON_INVITE_FRIENDS = "who_clicked_on_invite_friends",
+            WHO_CLICKED_ON_LEADERBOARD = "who_clicked_on_leaderboard",
+            WHO_CLICKED_ON_ACTIVITY = "who_clicked_on_activity",
+            WHO_CLICKED_ON_WHATSAPP = "who_clicked_on_whatsapp",
+            WHO_CLICKED_ON_FACEBOOK = "who_clicked_on_facebook",
+            WHO_CLICKED_ON_TWITTER = "who_clicked_on_twitter",
+            WHO_CLICKED_ON_EMAIL = "who_clicked_on_email",
+            WHO_CLICKED_ON_SMS = "who_clicked_on_sms",
+            WHO_CLICKED_ON_OTHERS = "who_clicked_on_others",
+            TO_WHOM_A_PUSH_WAS_DELIVERED = "to_whom_a_push_was_delivered",
+            WHO_CLICKED_THE_PUSH = "who_clicked_the_push",
+            WHO_VISITED_THE_NOTIFICATION_SCREEN = "who_visited_the_notification_screen",
+            CLICKS_ON_GET_A_RIDE = "clicks_on_get_a_ride",
+            CLICKS_ON_OFFERS = "clicks_on_offers",
+            CLICKS_ON_MIN_FARE = "clicks_on_min_fare",
+            CLICKS_ON_GET_FARE_ESTIMATE = "clicks_on_get_fare_estimate",
+            CLICKS_ON_PAYTM = "clicks_on_paytm",
+            CHANGED_MODE_FROM_PAYTM_TO_CASH = "changed_mode_from_paytm_to_cash",
+            CLICKS_ON_WALLET = "clicks_on_wallet",
+            CLICKS_ON_PAYTM_WALLET = "clicks_on_paytm_wallet",
+            CLICKS_ON_REMOVE_WALLET = "clicks_on_remove_wallet",
+            WHO_VISITED_T20_WORLD_CUP_SCREEN = "who_visited_T20_World_Cup_screen";
+    
+
 }

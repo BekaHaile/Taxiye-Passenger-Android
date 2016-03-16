@@ -169,6 +169,7 @@ public interface Constants {
 	String KEY_URL = "url";
 	String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
 	String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
+	String KEY_PUSH_CLICKED = "push_clicked";
 
 
 

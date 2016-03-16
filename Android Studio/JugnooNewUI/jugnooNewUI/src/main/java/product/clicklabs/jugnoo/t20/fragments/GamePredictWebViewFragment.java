@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 
@@ -99,6 +100,8 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 				.append(Constants.KEY_ACCESS_TOKEN).append("=").append(Data.userData.getPublicAccessToken());
 		Log.i(TAG, "link to hit="+sb.toString());
 		webView.loadUrl(sb.toString());
+
+		FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_T20_WORLD_CUP_SCREEN);
 
 		return rootView;
 	}
