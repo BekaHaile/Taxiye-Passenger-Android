@@ -155,13 +155,11 @@ public interface Constants {
 
 	String SP_LAST_DEVICE_TOKEN_REFRESH_TIME = "last_device_token_refresh_time";
 	String KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL = "device_token_refresh_interval";
-	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = 1 * 24 * 60 * 60 * 1000;
 
 	String KEY_START_TIME = "start_time";
 	String KEY_END_TIME = "end_time";
 
 	String KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL = "customer_location_update_interval";
-	long LOCATION_UPDATE_INTERVAL = 60 * 1000;
 	String SP_CURRENT_STATE = "current_state";
 	String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
 	String KEY_ONE_SHOT = "one_shot";
@@ -171,6 +169,17 @@ public interface Constants {
 	String KEY_URL = "url";
 	String KEY_SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
 	String KEY_IGNORE_APP_OPEN = "ignore_app_open";
-	long IGNORE_APP_OPEN_MAX_TIME = 2 * 60 * 1000;
+
+
+
+	long SECOND_MILLIS = 1000;
+	long MINUTE_MILLIS = 60 * SECOND_MILLIS;
+	long HOUR_MILLIS = 60 * MINUTE_MILLIS;
+	long DAY_MILLIS = 24 * HOUR_MILLIS;
+
+	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = DAY_MILLIS;
+	long LOCATION_UPDATE_INTERVAL = MINUTE_MILLIS;
+	long IGNORE_APP_OPEN_MAX_TIME = 2 * MINUTE_MILLIS;
+
 
 }

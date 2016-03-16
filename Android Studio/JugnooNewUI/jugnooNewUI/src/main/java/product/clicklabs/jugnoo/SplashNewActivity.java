@@ -150,7 +150,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private String enteredEmail = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
-	private final long HOUR_MILLIS = 60 * 60 * 1000;
 
 	public void resetFlags() {
 		loginDataFetched = false;
@@ -1283,9 +1282,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put("device_rooted", "0");
 				}
 
+				long currentTime = System.currentTimeMillis();
 				long lastPushReceivedTime = Prefs.with(activity).getLong(KEY_SP_LAST_PUSH_RECEIVED_TIME,
-						(System.currentTimeMillis() - HOUR_MILLIS));
-				if((System.currentTimeMillis() - lastPushReceivedTime) < IGNORE_APP_OPEN_MAX_TIME){
+						(currentTime - HOUR_MILLIS));
+				long diff = System.currentTimeMillis() - lastPushReceivedTime;
+				if(diff < IGNORE_APP_OPEN_MAX_TIME){
 					params.put(KEY_IGNORE_APP_OPEN, "1");
 					params.put(KEY_SP_LAST_PUSH_RECEIVED_TIME, String.valueOf(lastPushReceivedTime));
 				}
