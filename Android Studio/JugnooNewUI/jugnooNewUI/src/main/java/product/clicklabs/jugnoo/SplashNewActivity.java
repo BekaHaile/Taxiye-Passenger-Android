@@ -67,6 +67,7 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.CheckForAppOpen;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -1282,6 +1283,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put("device_rooted", "0");
 				}
 
+				new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+
 				Log.e("params login_using_access_token", "=" + params);
 
 				final long startTime = System.currentTimeMillis();
@@ -1918,6 +1921,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+
 			Log.i("params", "=" + params);
 
 			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<SettleUserDebt>() {
@@ -2025,6 +2030,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
@@ -2126,6 +2132,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
@@ -2524,7 +2531,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-
 			Log.i("register_using_email params", params.toString());
 
 
@@ -2640,7 +2646,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-
 			Log.e("register_using_facebook params", params.toString());
 
 
@@ -2741,7 +2746,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -3022,6 +3026,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			return link;
 		}
 	}
+
 
 
 
