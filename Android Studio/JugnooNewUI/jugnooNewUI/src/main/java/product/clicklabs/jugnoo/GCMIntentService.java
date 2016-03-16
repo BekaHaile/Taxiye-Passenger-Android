@@ -405,7 +405,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							SharedPreferences pref = getSharedPreferences(SHARED_PREF_NAME, 0);
 							Editor editor = pref.edit();
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
-							editor.commit();
+							editor.apply();
 							if(!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
 									&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
 									LOCATION_UPDATE_INTERVAL) > 0
@@ -483,7 +483,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
-							HashMap<String, String> map = new HashMap<String, String>();
+							HashMap<String, String> map = new HashMap<>();
 							map.put(KEY_USER_ID, Prefs.with(this).getString(SP_USER_ID, ""));
 							FlurryEventLogger.eventWithSessionOpenAndClose(this, FlurryEventNames.INVITE_PUSH_RECEIVED, map);
 						}
