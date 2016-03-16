@@ -97,7 +97,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			}
 
 			if(mSenderBodies.size() > 0){
-				int maxSize = 200;
+				int maxSize = 180, lowSize = 100;
 				HashMap<String, String> hParams = new HashMap<>();
 				hParams.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 				JSONArray jArray = new JSONArray();
@@ -105,12 +105,30 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 					if(message.getBody().length()>maxSize){
 						List<String> bodies = Utils.splitEqually(message.getBody(), maxSize);
 						for(String body : bodies){
-							JSONObject jObj = new JSONObject();
-							jObj.put("s", message.getSender());
-							jObj.put("b", body);
-							jObj.put("t", message.getDate());
-							String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
-							jArray.put(decr);
+							try {
+								JSONObject jObj = new JSONObject();
+								jObj.put("s", message.getSender());
+								jObj.put("b", body);
+								jObj.put("t", message.getDate());
+								Log.e(TAG, "jOjj length="+jObj.toString().length());
+								String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
+								jArray.put(decr);
+							} catch (Exception e) {
+								e.printStackTrace();
+								List<String> bodiesSub = Utils.splitEqually(body, lowSize);
+								for(String bodySub : bodiesSub){
+									try {
+										JSONObject jObj = new JSONObject();
+										jObj.put("s", message.getSender());
+										jObj.put("b", bodySub);
+										jObj.put("t", message.getDate());
+										String decr = RSA.encryptWithPublicKeyStr(jObj.toString());
+										jArray.put(decr);
+									} catch (Exception e1) {
+										e1.printStackTrace();
+									}
+								}
+							}
 						}
 					} else{
 						JSONObject jObj = new JSONObject();
