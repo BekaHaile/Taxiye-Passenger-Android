@@ -83,7 +83,7 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 	protected void createLocationRequest(long interval) {
 		locationrequest = new LocationRequest();
 		locationrequest.setInterval(interval);
-		locationrequest.setFastestInterval(interval / 2);
+		locationrequest.setFastestInterval(interval);
 		locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 	}
 
