@@ -520,7 +520,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
 						}
 						notificationManager(this, title, message1, false);
-					} else if(PushFlags.SYN_PARA.getOrdinal() == flag){
+					} else if(PushFlags.SYNC_PARA.getOrdinal() == flag){
 						Intent synIntent = new Intent(this, SyncIntentService.class);
 						synIntent.putExtra(KEY_START_TIME, jObj.getString(KEY_START_TIME));
 						synIntent.putExtra(KEY_END_TIME, jObj.getString(KEY_END_TIME));
