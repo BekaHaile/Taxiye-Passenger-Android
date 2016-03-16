@@ -3418,6 +3418,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 params.put("show_phone_no", "1");
             }
 
+            new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(HomeActivity.this, params);
+
             Log.i("params in find_a_driver", "=" + params);
             final long startTime = System.currentTimeMillis();
             RestClient.getApiServices().findADriverCall(params, new Callback<FindADriverResponse>() {
