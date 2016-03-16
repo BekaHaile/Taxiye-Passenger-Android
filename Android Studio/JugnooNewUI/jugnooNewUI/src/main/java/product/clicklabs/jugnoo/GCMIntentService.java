@@ -407,6 +407,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.commit();
 							if(!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
+									&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
+									LOCATION_UPDATE_INTERVAL) > 0
 									&& !Utils.isServiceRunning(this, LocationUpdateService.class.getName())){
 								Intent intent = new Intent(this, LocationUpdateService.class);
 								intent.putExtra(KEY_ONE_SHOT, false);
