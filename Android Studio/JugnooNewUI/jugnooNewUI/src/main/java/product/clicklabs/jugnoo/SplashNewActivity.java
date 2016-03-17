@@ -311,7 +311,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Data.splashIntentUri = getIntent().getData();
 
-			Data.getDeepLinkIndexFromIntent(getIntent());
+			Data.getDeepLinkIndexFromIntent(this, getIntent());
 
 
 			try {

@@ -33,9 +33,8 @@ public class FlurryEventLogger {
 	public static void eventApiResponseTime(String apiName, long startTime){
 		long responseTime = System.currentTimeMillis() - startTime;
 		HashMap<String, String> map = new HashMap<>();
-		map.put("api_name", apiName);
 		map.put("response_time_millis", String.valueOf(responseTime));
-		event(FlurryEventNames.API_RESPONSE_TIME_LOG, map);
+		event(apiName, map);
 	}
 
 	public static void eventWithSessionOpenAndClose(Context context, String eventName){

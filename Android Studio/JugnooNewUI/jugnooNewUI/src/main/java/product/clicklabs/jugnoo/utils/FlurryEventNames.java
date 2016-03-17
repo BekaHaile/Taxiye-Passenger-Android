@@ -178,16 +178,14 @@ public interface FlurryEventNames {
 
             ;
 
-    String API_RESPONSE_TIME_LOG = "api_response_time_log";
-
-    String API_GET_ONGOING_RIDE_PATH = "/get_ongoing_ride_path",
-            API_GET_DRIVER_CURRENT_LOCATION = "/get_driver_current_location",
-            API_FIND_A_DRIVER = "/find_a_driver",
-            API_SHOW_AVAILABLE_PROMOTIONS = "/show_available_promotions",
-            API_LOGIN_USING_ACCESS_TOKEN = "/login_using_access_token",
-            API_GET_CURRENT_USER_STATUS = "/get_current_user_status",
-            API_REQUEST_RIDE = "/request_ride",
-            API_PAYTM_CHECK_BALANCE = "/paytm/check_balance"
+    String API_GET_ONGOING_RIDE_PATH = "api_get_ongoing_ride_path",
+            API_GET_DRIVER_CURRENT_LOCATION = "api_get_driver_current_location",
+            API_FIND_A_DRIVER = "api_find_a_driver",
+            API_SHOW_AVAILABLE_PROMOTIONS = "api_show_available_promotions",
+            API_LOGIN_USING_ACCESS_TOKEN = "api_login_using_access_token",
+            API_GET_CURRENT_USER_STATUS = "api_get_current_user_status",
+            API_REQUEST_RIDE = "api_request_ride",
+            API_PAYTM_CHECK_BALANCE = "api_paytm_check_balance"
 
                     ;
 
@@ -220,5 +218,10 @@ public interface FlurryEventNames {
             CLICKS_ON_REMOVE_WALLET = "clicks_on_remove_wallet",
             WHO_VISITED_T20_WORLD_CUP_SCREEN = "who_visited_T20_World_Cup_screen";
     
+
+    String ERROR_CONNECTION_TIMEOUT = "error_connection_timeout",
+            ERROR_SOCKET_TIMEOUT = "error_socket_timeout",
+            ERROR_NO_INTERNET = "error_no_internet"
+    ;
 
 }
