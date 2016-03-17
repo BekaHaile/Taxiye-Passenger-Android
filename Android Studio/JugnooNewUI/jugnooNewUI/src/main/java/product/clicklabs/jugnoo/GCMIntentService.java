@@ -631,6 +631,10 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 				int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, flag);
 
+				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag && notificationId != flag){
+					FlurryEventLogger.event(this, FlurryEventNames.CAMPAIGN_+notificationId);
+				}
+
 				// store push in database for notificaion center screen...
 				String pushArrived = DateOperations.getCurrentTimeInUTC();
 				if (jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {

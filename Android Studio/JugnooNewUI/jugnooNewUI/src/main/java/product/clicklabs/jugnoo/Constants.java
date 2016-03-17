@@ -180,7 +180,11 @@ public interface Constants {
 
 	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = DAY_MILLIS;
 	long LOCATION_UPDATE_INTERVAL = MINUTE_MILLIS;
-	long IGNORE_APP_OPEN_MAX_TIME = 2 * MINUTE_MILLIS;
+
+
+	String SP_FIRST_OPEN_TIME = "sp_first_open_time";
+	String SP_FIRST_LOGIN_COMPLETE = "sp_first_login_complete";
+	String KEY_TIME_DIFF_SEC = "time_diff_sec";
 
 
 }

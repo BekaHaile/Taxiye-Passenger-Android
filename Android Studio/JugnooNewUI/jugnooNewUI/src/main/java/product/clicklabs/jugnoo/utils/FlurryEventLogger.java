@@ -30,6 +30,12 @@ public class FlurryEventLogger {
 		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
 	}
 
+	public static void event(Context context, String eventName, Map<String, String> map){
+		map.put(Constants.KEY_USER_ID, Prefs.with(context).getString(Constants.SP_USER_ID, ""));
+		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
+		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+	}
+
 	public static void eventApiResponseTime(String apiName, long startTime){
 		long responseTime = System.currentTimeMillis() - startTime;
 		HashMap<String, String> map = new HashMap<>();

@@ -221,6 +221,17 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
 
+        if(Prefs.with(context).getInt(SP_FIRST_LOGIN_COMPLETE, 0) == 0){
+            long appOpenTime = Prefs.with(context).getLong(SP_FIRST_OPEN_TIME, System.currentTimeMillis());
+            long diff = System.currentTimeMillis() - appOpenTime;
+            long diffSeconds = diff / 1000;
+            HashMap<String, String> map = new HashMap<>();
+            map.put(KEY_TIME_DIFF_SEC, String.valueOf(diffSeconds));
+            FlurryEventLogger.event(context, FlurryEventNames.LOGIN_SINCE_FIRST_APP_OPEN_DIFF, map);
+            Prefs.with(context).save(SP_FIRST_LOGIN_COMPLETE, 1);
+        }
+
+
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,

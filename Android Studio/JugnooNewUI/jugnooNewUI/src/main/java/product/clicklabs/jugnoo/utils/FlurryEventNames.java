@@ -224,4 +224,9 @@ public interface FlurryEventNames {
             ERROR_NO_INTERNET = "error_no_internet"
     ;
 
+
+    String CAMPAIGN_ = "campaign_",
+            LOGIN_SINCE_FIRST_APP_OPEN_DIFF = "login_since_first_app_open_diff";
+
+
 }
