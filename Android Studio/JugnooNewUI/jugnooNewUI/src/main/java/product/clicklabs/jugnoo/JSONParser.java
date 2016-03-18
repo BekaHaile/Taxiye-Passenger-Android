@@ -42,7 +42,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
-import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -1038,7 +1037,7 @@ public class JSONParser implements Constants {
 
                         promotionInfoList.add(promotionInfo);
                     }
-                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
+//                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
                 }
             }
         } catch(Exception e){

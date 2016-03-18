@@ -763,4 +763,7 @@
 	<string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
 	<string name="type_amount_to_confirm_the_transaction">Type correct amount to confirm\nthe transaction</string>
 
+	<string name="coupons_available">Coupons Available</string>
+	<string name="ongoing_offers">Ongoing Offers</string>
+
 </resources>

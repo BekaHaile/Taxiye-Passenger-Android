@@ -36,8 +36,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"
         android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
         />
 
     <LinearLayout
@@ -55,17 +55,17 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="36px"
             android:background="#0000"
+            android:capitalize="characters"
+            android:digits="@string/digits_characters_caps_numbers"
             android:gravity="center"
             android:hint="Enter Promo Code"
+            android:inputType="textCapCharacters"
             android:paddingLeft="20px"
             android:paddingRight="20px"
             android:singleLine="true"
+            android:textAllCaps="true"
             android:textColor="@color/black_text"
             android:textColorHint="@color/black_text_alpha"
-            android:inputType="textCapCharacters"
-            android:textAllCaps="true"
-            android:capitalize="characters"
-            android:digits="@string/digits_characters_caps_numbers"
             android:textSize="30px"/>
 
         <ImageView
@@ -86,7 +86,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30px"
+            android:layout_marginTop="20px"
             >
 
             <LinearLayout
@@ -94,143 +94,141 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 >
-                
+
                 <RelativeLayout
                     android:id="@+id/relativeLayoutListTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50px">
-                    
+                    android:layout_marginTop="20px"
+                    android:visibility="visible"
+                    >
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:src="@color/text_color_hint"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="30px"
                         android:layout_marginRight="20px"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/textViewCouponsAvailable"/>
+                        android:layout_toLeftOf="@+id/textViewCouponsAvailable"
+                        android:src="@color/text_color_hint"/>
 
                     <TextView
                         android:id="@+id/textViewCouponsAvailable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="COUPONS AVAILABLE"
+                        android:text="@string/coupons_available"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34"/>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:src="@color/text_color_hint"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="20px"
                         android:layout_marginRight="30px"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/textViewCouponsAvailable"/>
-                    
-                </RelativeLayout>
-
-                
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutCoupons"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="8px"
-                    android:orientation="vertical"
-                    android:splitMotionEvents="false">
-
-                    <product.clicklabs.jugnoo.utils.NonScrollGridView
-                        android:id="@+id/listViewCoupons"
-                        android:layout_width="match_parent"
-                        android:layout_height="100px"
-                        android:gravity="center_horizontal"
-                        android:layout_marginTop="0px"
-                        android:divider="@drawable/background_transparent"
-                        android:dividerHeight="0px"
-                        android:listSelector="@drawable/background_transparent"
-                        android:numColumns="2"
-                        android:splitMotionEvents="false"
-                        />
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutNoCoupons"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:layout_marginTop="150px"
-                        >
-                        <ImageView
-                            android:layout_width="241px"
-                            android:layout_height="342px"
-                            android:src="@drawable/ic_no_items"
-                            android:tag="mwar"
-                            />
-
-                        <TextView
-                            android:id="@+id/textViewNoCoupons"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="@string/no_coupons_currently"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30"
-                            android:layout_marginTop="30px"
-                            />
-
-                    </LinearLayout>
+                        android:layout_toRightOf="@+id/textViewCouponsAvailable"
+                        android:src="@color/text_color_hint"/>
 
                 </RelativeLayout>
 
-
-                <TextView
-                    android:id="@+id/textViewOngoingOffers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="36px"
-                    android:layout_marginRight="36px"
-                    android:layout_marginTop="30px"
-                    android:text="Ongoing Offers"
-                    android:visibility="gone"
-                    android:textColor="@color/grey_black_light"
-                    android:textSize="34px"/>
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutPromotions"
+                <product.clicklabs.jugnoo.utils.NonScrollGridView
+                    android:id="@+id/listViewCoupons"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14px"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:visibility="gone"
+                    android:layout_height="100px"
+                    android:layout_marginTop="10px"
+                    android:divider="@drawable/background_transparent"
+                    android:dividerHeight="0px"
+                    android:gravity="center_horizontal"
+                    android:listSelector="@drawable/background_transparent"
+                    android:numColumns="2"
                     android:splitMotionEvents="false"
+                    />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutPromoListTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:visibility="visible"
                     >
 
-                    <product.clicklabs.jugnoo.utils.NonScrollListView
-                        android:id="@+id/listViewPromotions"
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="100px"
-                        android:layout_marginLeft="40px"
-                        android:layout_marginRight="10px"
-                        android:layout_marginTop="0px"
-                        android:divider="@color/grey_dark_less"
-                        android:dividerHeight="2px"
-                        android:listSelector="@drawable/background_transparent"
-                        android:splitMotionEvents="false">
-                    </product.clicklabs.jugnoo.utils.NonScrollListView>
+                        android:layout_height="2px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:layout_marginRight="20px"
+                        android:layout_toLeftOf="@+id/textViewPromoAvailable"
+                        android:src="@color/text_color_hint"/>
 
                     <TextView
-                        android:id="@+id/textViewPromoInfo"
+                        android:id="@+id/textViewPromoAvailable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="TextView"
-                        android:textColor="@color/black"
-                        android:textSize="34px"/>
+                        android:text="@string/ongoing_offers"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_marginRight="30px"
+                        android:layout_toRightOf="@+id/textViewPromoAvailable"
+                        android:src="@color/text_color_hint"/>
 
                 </RelativeLayout>
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewPromotions"
+                    android:layout_width="match_parent"
+                    android:layout_height="100px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="10px"
+                    android:divider="@color/text_color_hint"
+                    android:dividerHeight="2px"
+                    android:listSelector="@drawable/background_transparent"
+                    android:splitMotionEvents="false">
+                </product.clicklabs.jugnoo.utils.NonScrollListView>
+
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutNoCoupons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="150px"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    >
+
+                    <ImageView
+                        android:layout_width="241px"
+                        android:layout_height="342px"
+                        android:src="@drawable/ic_no_items"
+                        android:tag="mwar"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewNoCoupons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="30px"
+                        android:text="@string/no_coupons_currently"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        />
+
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -246,7 +244,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="30px"
+        android:layout_marginTop="0px"
         android:background="@color/sliding_bottom_bg_color"
         >
 
