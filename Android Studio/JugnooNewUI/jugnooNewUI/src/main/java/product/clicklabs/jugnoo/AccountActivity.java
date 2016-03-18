@@ -156,8 +156,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		setUserData(false);
         setSavePlaces();
 
-        //setSavePlaces();
-
 
         linearLayoutMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -967,91 +965,45 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            Log.e(TAG, "setSavePlaces abc="+homeString);
             AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
-            Log.e(TAG, "setSavePlaces searchResult="+searchResult);
-            String s = "Home \n" + searchResult.address;
+            String s = getResources().getString(R.string.home)+" \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddHome.setText(ss1);
             imageViewEditHome.setVisibility(View.VISIBLE);
         } else{
+            textViewAddHome.setText(getResources().getString(R.string.add_home));
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
+            imageViewEditHome.setVisibility(View.GONE);
         }
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
             String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
             AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
-            //String s = "Work \n" + searchResult.name + ", " + searchResult.address;
-            String s = "Work \n" + searchResult.address;
+            String s = getResources().getString(R.string.work)+" \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddWork.setText(ss1);
             imageViewEditWork.setVisibility(View.VISIBLE);
         } else{
+            textViewAddWork.setText(getResources().getString(R.string.add_work));
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
+            imageViewEditWork.setVisibility(View.GONE);
         }
     }
 
     // Call Back method  to get the Message form other Activity
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK) {
-            // check if the request code is same as what is passed  here it is 2
-            String strResult = data.getStringExtra("PLACE");
-            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
-            if (requestCode == ADD_HOME) {
-                if(searchResult != null){
-                    //String s = "Home \n" + searchResult.name + " " + searchResult.address;
-                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
-                    String s = "Home \n" + searchResult.address;
-                    SpannableString ss1 = new SpannableString(s);
-                    ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
-                    textViewAddHome.setText(ss1);
-                    Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
-                    imageViewEditHome.setVisibility(View.VISIBLE);
-                    String savedWorkStr = Prefs.with(this).getString(SPLabels.ADD_WORK, "");
-                    if("".equalsIgnoreCase(savedWorkStr)){
-                        textViewAddWork.setText("Add Work");
-                        imageViewEditWork.setVisibility(View.GONE);
-                    }
-                }else {
-                    textViewAddHome.setText("Add Home");
-                    imageViewEditHome.setVisibility(View.GONE);
-                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
-                }
-
-            } else if (requestCode == ADD_WORK) {
-                if(searchResult != null) {
-                    //String s = "Work \n" + searchResult.name + " " + searchResult.address;
-                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
-                    String s = "Work \n" + searchResult.address;
-                    SpannableString ss1 = new SpannableString(s);
-                    ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
-                    textViewAddWork.setText(ss1);
-                    Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
-                    imageViewEditWork.setVisibility(View.VISIBLE);
-                    String savedHomeStr = Prefs.with(this).getString(SPLabels.ADD_HOME, "");
-                    if("".equalsIgnoreCase(savedHomeStr)){
-                        textViewAddHome.setText("Add Home");
-                        imageViewEditHome.setVisibility(View.GONE);
-                    }
-                }else{
-                    textViewAddWork.setText("Add Work");
-                    imageViewEditWork.setVisibility(View.GONE);
-                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
-                }
-            } else {
-                Log.v("onActivityResult else part", "onActivityResult else part");
-                }
-            }
+        if (resultCode == RESULT_OK) {
+            setSavePlaces();
+        } else if (resultCode == RESULT_CANCELED) {
+            setSavePlaces();
+        }
     }
 
 }

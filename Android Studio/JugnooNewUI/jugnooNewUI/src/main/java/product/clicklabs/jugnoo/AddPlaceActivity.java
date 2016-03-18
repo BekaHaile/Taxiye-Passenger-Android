@@ -324,7 +324,11 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
                                     Intent intent=new Intent();
                                     intent.putExtra("PLACE", strResult);
-                                    setResult(RESULT_OK, intent);
+                                    if("".equalsIgnoreCase(strResult)) {
+                                        setResult(RESULT_CANCELED, intent);
+                                    } else{
+                                        setResult(RESULT_OK, intent);
+                                    }
                                     finish();
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
                                 }
