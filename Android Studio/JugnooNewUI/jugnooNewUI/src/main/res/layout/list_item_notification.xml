@@ -4,53 +4,48 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/imageViewNotifCircle"
+            android:layout_width="68px"
+            android:layout_height="68px"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="30px"
+            android:src="@drawable/ic_notification_circle"
+            android:tag="mwar"
+            />
+
+
         <LinearLayout
             android:id="@+id/linearLayoutText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="120px"
+            android:layout_marginLeft="30px"
+            android:layout_toRightOf="@+id/imageViewNotifCircle"
             android:orientation="vertical"
             >
 
-            <RelativeLayout
+
+            <TextView
+                android:id="@+id/textViewTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="30px"
-                >
+                android:text="Title"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                />
 
-                <TextView
-                    android:id="@+id/textViewTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10px"
-                    android:layout_toLeftOf="@+id/textViewTime"
-                    android:text="Title"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewTime"
-                    android:layout_width="150px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="right"
-                    android:text="18 May, 2016"
-                    android:textColor="@color/theme_color"
-                    android:textSize="@dimen/text_size_24"/>
-
-            </RelativeLayout>
 
             <TextView
                 android:id="@+id/textViewDescription"
@@ -59,7 +54,7 @@
                 android:layout_marginBottom="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="5px"
-                android:text="Hello\nHello\nhello"
+                android:text="Hello"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_28"/>
 
@@ -69,19 +64,40 @@
     </RelativeLayout>
 
 
-    <ImageView
-        android:id="@+id/imageViewNotification"
-        android:layout_width="680px"
-        android:layout_height="340px"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="20px"
-        android:layout_marginBottom="20px"
-        android:background="@drawable/background_white_border_dropshadow"
-        android:padding="2px"
-        android:scaleType="centerCrop"
+    <LinearLayout
+        android:id="@+id/linearLayoutNotificationImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10px"
+        android:background="@drawable/background_grey_border_dropshadow"
+        android:orientation="vertical"
         android:tag="mwar"
-        android:visibility="visible"
-        />
+        >
+
+        <ImageView
+            android:id="@+id/imageViewNotification"
+            android:layout_width="680px"
+            android:layout_height="340px"
+            android:scaleType="centerCrop"
+            android:tag="mwar"
+            android:visibility="visible"
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/textViewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="30px"
+        android:layout_marginBottom="10px"
+        android:gravity="right"
+        android:text="18 May, 2016"
+        android:textColor="@color/theme_color"
+        android:textSize="@dimen/text_size_24"/>
+
 
     <ImageView
         android:layout_width="match_parent"

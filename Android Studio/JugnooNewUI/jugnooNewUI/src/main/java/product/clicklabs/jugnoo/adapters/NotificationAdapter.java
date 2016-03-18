@@ -76,26 +76,22 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 		try {
 			if(notification.getNotificationImage().equalsIgnoreCase("")){
-				holder.imageViewNotification.setVisibility(View.GONE);
+				holder.linearLayoutNotificationImage.setVisibility(View.GONE);
                 if(notification.isExpanded()){
-                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
                     holder.textViewTitle.setSingleLine(false);
                     holder.textViewDescription.setSingleLine(false);
                 } else{
-                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.sliding_bottom_bg_color));
                     holder.textViewTitle.setSingleLine(true);
                     holder.textViewDescription.setSingleLine(true);
                 }
 			}
 			else{
                 if(notification.isExpanded()){
-                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
-                    holder.imageViewNotification.setVisibility(View.VISIBLE);
+                    holder.linearLayoutNotificationImage.setVisibility(View.VISIBLE);
                     holder.textViewTitle.setSingleLine(false);
                     holder.textViewDescription.setSingleLine(false);
                 } else{
-                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.sliding_bottom_bg_color));
-                    holder.imageViewNotification.setVisibility(View.GONE);
+                    holder.linearLayoutNotificationImage.setVisibility(View.GONE);
                     holder.textViewTitle.setSingleLine(true);
                     holder.textViewDescription.setSingleLine(true);
                 }
@@ -192,13 +188,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout linearRoot, linearLayoutText;
+        public LinearLayout linearRoot, linearLayoutText, linearLayoutNotificationImage;
         public ImageView imageViewNotification;
         public TextView textViewTitle, textViewTime, textViewDescription;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             linearRoot = (LinearLayout) itemView.findViewById(R.id.linearRoot);
             linearLayoutText = (LinearLayout) itemView.findViewById(R.id.linearLayoutText);
+            linearLayoutNotificationImage = (LinearLayout) itemView.findViewById(R.id.linearLayoutNotificationImage);
             imageViewNotification = (ImageView)itemView.findViewById(R.id.imageViewNotification);
             textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);

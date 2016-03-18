@@ -44,8 +44,7 @@
     <!-- content background -->
     <item>
         <shape>
-            <solid android:color="@color/white" />
-            <stroke android:color="@color/text_color_hint" android:width="1dp"/>
+            <solid android:color="@color/text_color_hint" />
         </shape>
     </item>
 </layer-list>
