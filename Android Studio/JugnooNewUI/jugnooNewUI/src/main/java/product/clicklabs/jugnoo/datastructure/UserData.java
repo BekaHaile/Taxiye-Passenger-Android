@@ -144,7 +144,7 @@ public class UserData {
 		return totalWalletBalance;
 	}
 
-	public void setTotalWalletBalance() {
+	private void setTotalWalletBalance() {
 		this.totalWalletBalance = this.jugnooBalance + this.paytmBalance;
 	}
 

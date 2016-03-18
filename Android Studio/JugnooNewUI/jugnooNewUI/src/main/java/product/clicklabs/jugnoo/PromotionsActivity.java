@@ -568,8 +568,11 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
-                            double jugnooBalance = jObj.optDouble("jugnoo_balance", Data.userData.getJugnooBalance());
-                            Data.userData.setJugnooBalance(jugnooBalance);
+
+                            Data.userData.setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE,
+                                    Data.userData.getJugnooBalance()));
+                            Data.userData.setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE,
+                                    Data.userData.getPaytmBalance()));
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

@@ -191,4 +191,7 @@ public interface Constants {
 
 	String KEY_PLAY_SOUND = "play_sound";
 
+	String KEY_JUGNOO_BALANCE = "jugnoo_balance";
+	String KEY_PAYTM_BALANCE = "paytm_balance";
+
 }
