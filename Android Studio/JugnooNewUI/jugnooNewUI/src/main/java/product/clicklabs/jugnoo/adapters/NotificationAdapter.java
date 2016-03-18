@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private Activity activity;
     private int rowLayout;
-    NotificationData notification;
     private ArrayList<NotificationData> notificationList = new ArrayList<>();
 
     public NotificationAdapter(ArrayList<NotificationData> notificationList, Activity activity, int rowLayout) {
@@ -66,35 +65,58 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(NotificationAdapter.ViewHolder holder, int position) {
-        notification = notificationList.get(position);
+        NotificationData notification = notificationList.get(position);
 
-        holder.descriptionTxt.setText(notification.getMessage());
+        holder.textViewTitle.setText(notification.getTitle());
+        holder.textViewDescription.setText(notification.getMessage());
         holder.textViewTime.setText(DateOperations
                 .convertDateViaFormat(DateOperations.utcToLocal(notification.getTimePushArrived())));
-        holder.container.setTag(position);
+        holder.linearRoot.setTag(position);
+        holder.linearLayoutText.setTag(position);
 
 		try {
 			if(notification.getNotificationImage().equalsIgnoreCase("")){
-				holder.notificationImage.setVisibility(View.GONE);
+				holder.imageViewNotification.setVisibility(View.GONE);
+                if(notification.isExpanded()){
+                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                    holder.textViewTitle.setSingleLine(false);
+                    holder.textViewDescription.setSingleLine(false);
+                } else{
+                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.sliding_bottom_bg_color));
+                    holder.textViewTitle.setSingleLine(true);
+                    holder.textViewDescription.setSingleLine(true);
+                }
 			}
 			else{
-				holder.notificationImage.setVisibility(View.VISIBLE);
+                if(notification.isExpanded()){
+                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                    holder.imageViewNotification.setVisibility(View.VISIBLE);
+                    holder.textViewTitle.setSingleLine(false);
+                    holder.textViewDescription.setSingleLine(false);
+                } else{
+                    holder.linearRoot.setBackgroundColor(activity.getResources().getColor(R.color.sliding_bottom_bg_color));
+                    holder.imageViewNotification.setVisibility(View.GONE);
+                    holder.textViewTitle.setSingleLine(true);
+                    holder.textViewDescription.setSingleLine(true);
+                }
+
 				//Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
                 //Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
                 Picasso.with(activity).load(notification.getNotificationImage())
-                        .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
-                        .into(holder.notificationImage);
+//                        .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
+                        .into(holder.imageViewNotification);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        holder.linearRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     int position = (int) v.getTag();
-                    openDeepLink(notificationList.get(position).getDeepIndex());
+                    notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
+                    notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -170,18 +192,22 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout container;
-        public ImageView notificationImage;
-        public TextView descriptionTxt, textViewTime;
+        public LinearLayout linearRoot, linearLayoutText;
+        public ImageView imageViewNotification;
+        public TextView textViewTitle, textViewTime, textViewDescription;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
-            container = (LinearLayout) itemView.findViewById(R.id.container);
-            notificationImage = (ImageView)itemView.findViewById(R.id.notification_image);
-            descriptionTxt = (TextView) itemView.findViewById(R.id.description);
+            linearRoot = (LinearLayout) itemView.findViewById(R.id.linearRoot);
+            linearLayoutText = (LinearLayout) itemView.findViewById(R.id.linearLayoutText);
+            imageViewNotification = (ImageView)itemView.findViewById(R.id.imageViewNotification);
+            textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
+            textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+            textViewTitle.setSingleLine(true);
             textViewTime = (TextView) itemView.findViewById(R.id.textViewTime);
-
-            descriptionTxt.setTypeface(Fonts.mavenLight(activity));
             textViewTime.setTypeface(Fonts.mavenLight(activity));
+            textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
+            textViewDescription.setTypeface(Fonts.mavenLight(activity));
+            textViewDescription.setSingleLine(true);
         }
     }
 }

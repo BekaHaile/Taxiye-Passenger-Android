@@ -92,6 +92,7 @@ public interface Constants {
 
 
 	String FIRST_TIME_DB= "first_time_db";
+	String SECOND_TIME_DB= "second_time_db";
 
 
 	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
