@@ -189,4 +189,6 @@ public interface Constants {
 	String SP_APP_DOWNLOAD_SOURCE_SENT = "sp_app_download_source_sent";
 	String KEY_SOURCE = "source";
 
+	String KEY_PLAY_SOUND = "play_sound";
+
 }
