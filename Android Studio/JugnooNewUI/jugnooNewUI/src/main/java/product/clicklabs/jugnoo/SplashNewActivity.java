@@ -296,9 +296,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			if(!Prefs.with(this).contains(SP_FIRST_OPEN_TIME)){
-				Prefs.with(this).save(SP_FIRST_OPEN_TIME, System.currentTimeMillis());
-			}
+			firstTimeEvents();
 
 			Fabric.with(this, new Crashlytics());
 
@@ -2995,6 +2993,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
+
+
+
+	private void firstTimeEvents(){
+		if(!Prefs.with(this).contains(SP_FIRST_OPEN_TIME)){
+			Prefs.with(this).save(SP_FIRST_OPEN_TIME, System.currentTimeMillis());
+		}
+
+		if(!Prefs.with(this).contains(SP_APP_DOWNLOAD_SOURCE_SENT)){
+			HashMap<String, String> map = new HashMap<>();
+			map.put(KEY_SOURCE, Config.getDownloadSource());
+			FlurryEventLogger.event(FlurryEventNames.APP_DOWNLOAD_SOURCE, map);
+			Prefs.with(this).save(SP_APP_DOWNLOAD_SOURCE_SENT, 1);
+		}
+	}
 
 
 

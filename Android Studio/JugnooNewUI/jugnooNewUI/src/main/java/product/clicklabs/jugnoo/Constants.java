@@ -186,5 +186,7 @@ public interface Constants {
 	String SP_FIRST_LOGIN_COMPLETE = "sp_first_login_complete";
 	String KEY_TIME_DIFF_SEC = "time_diff_sec";
 
+	String SP_APP_DOWNLOAD_SOURCE_SENT = "sp_app_download_source_sent";
+	String KEY_SOURCE = "source";
 
 }

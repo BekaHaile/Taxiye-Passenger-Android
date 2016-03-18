@@ -226,7 +226,8 @@ public interface FlurryEventNames {
 
 
     String CAMPAIGN_ = "campaign_",
-            LOGIN_SINCE_FIRST_APP_OPEN_DIFF = "login_since_first_app_open_diff";
+            LOGIN_SINCE_FIRST_APP_OPEN_DIFF = "login_since_first_app_open_diff",
+            APP_DOWNLOAD_SOURCE = "app_download_source";
 
 
 }
