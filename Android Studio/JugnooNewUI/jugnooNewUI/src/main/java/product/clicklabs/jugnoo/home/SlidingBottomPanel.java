@@ -139,6 +139,7 @@ public class SlidingBottomPanel {
                 } else {
                     viewPager.setCurrentItem(0, true);
                 }
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 break;
 
             case R.id.linearLayoutFare:
@@ -148,6 +149,7 @@ public class SlidingBottomPanel {
                 } else {
                     viewPager.setCurrentItem(1, true);
                 }
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 break;
 
             case R.id.linearLayoutOffers:
@@ -157,6 +159,7 @@ public class SlidingBottomPanel {
                 } else {
                     viewPager.setCurrentItem(2, true);
                 }
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 break;
         }
     }

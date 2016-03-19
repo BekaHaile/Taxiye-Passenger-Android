@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -38,7 +39,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ShareActivity extends BaseFragmentActivity implements FlurryEventNames {
+public class ShareActivity extends BaseFragmentActivity {
 	
 	LinearLayout linearLayoutRoot;
 
@@ -127,6 +128,13 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 
 			@Override
 			public void onPageSelected(int position) {
+				if(position == 0){
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_INVITE_FRIENDS);
+				} else if(position == 1){
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_LEADERBOARD);
+				} else if(position == 2){
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
+				}
 			}
 
 			@Override

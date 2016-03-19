@@ -13,9 +13,6 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
-
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
@@ -29,7 +26,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class ShareEarnFragment extends Fragment implements FlurryEventNames, Constants {
+public class ShareEarnFragment extends Fragment {
 
 	private LinearLayout linearLayoutRoot;
 
@@ -83,7 +80,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			@Override
 			public void onClick(View view) {
 				try {
-					FlurryEventLogger.event(INVITE_EARN_MORE_INFO);
+					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
 					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
@@ -102,11 +99,9 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {
 						if(activity.fromDeepLink){
-							HashMap<String, String> map = new HashMap<>();
-							map.put(KEY_USER_ID, Data.userData.getUserId());
-							FlurryEventLogger.event(INVITE_SHARE_GENERIC_THROUGH_PUSH, map);
+							FlurryEventLogger.event(activity, FlurryEventNames.INVITE_SHARE_GENERIC_THROUGH_PUSH);
 						} else{
-							FlurryEventLogger.event(INVITE_GENERIC);
+							FlurryEventLogger.event(FlurryEventNames.INVITE_GENERIC);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -126,6 +121,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 						.placeholder(R.drawable.free_rides_pic_new).error(R.drawable.free_rides_pic_new)
 						.into(imageViewLogo);
 			}
+			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
 
 		} catch(Exception e){
 			e.printStackTrace();

@@ -25,7 +25,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomFareFragment extends Fragment implements FlurryEventNames{
+public class SlidingBottomFareFragment extends Fragment{
 
     private View rootView;
     private HomeActivity activity;
@@ -62,7 +62,8 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
             public void onClick(View v) {
                 startActivity(new Intent(activity, FareEstimateActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FARE_ESTIMATE);
+                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
             }
         });
 

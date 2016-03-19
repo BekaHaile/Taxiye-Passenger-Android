@@ -178,21 +178,56 @@ public interface FlurryEventNames {
 
             ;
 
-    String API_RESPONSE_TIME_LOG = "api_response_time_log";
-
-    String API_GET_ONGOING_RIDE_PATH = "/get_ongoing_ride_path",
-            API_GET_DRIVER_CURRENT_LOCATION = "/get_driver_current_location",
-            API_FIND_A_DRIVER = "/find_a_driver",
-            API_SHOW_AVAILABLE_PROMOTIONS = "/show_available_promotions",
-            API_LOGIN_USING_ACCESS_TOKEN = "/login_using_access_token",
-            API_GET_CURRENT_USER_STATUS = "/get_current_user_status",
-            API_REQUEST_RIDE = "/request_ride",
-            API_PAYTM_CHECK_BALANCE = "/paytm/check_balance"
+    String API_GET_ONGOING_RIDE_PATH = "api_get_ongoing_ride_path",
+            API_GET_DRIVER_CURRENT_LOCATION = "api_get_driver_current_location",
+            API_FIND_A_DRIVER = "api_find_a_driver",
+            API_SHOW_AVAILABLE_PROMOTIONS = "api_show_available_promotions",
+            API_LOGIN_USING_ACCESS_TOKEN = "api_login_using_access_token",
+            API_GET_CURRENT_USER_STATUS = "api_get_current_user_status",
+            API_REQUEST_RIDE = "api_request_ride",
+            API_PAYTM_CHECK_BALANCE = "api_paytm_check_balance"
 
                     ;
 
     String EMERGENCY_MODE_ENABLED = "emergency_mode_enabled"
 
             ;
+
+
+    String WHO_VISITED_FREE_RIDE_SCREEN = "who_visited_free_ride_screen",
+            WHO_CLICKED_ON_INVITE_FRIENDS = "who_clicked_on_invite_friends",
+            WHO_CLICKED_ON_LEADERBOARD = "who_clicked_on_leaderboard",
+            WHO_CLICKED_ON_ACTIVITY = "who_clicked_on_activity",
+            WHO_CLICKED_ON_WHATSAPP = "who_clicked_on_whatsapp",
+            WHO_CLICKED_ON_FACEBOOK = "who_clicked_on_facebook",
+            WHO_CLICKED_ON_TWITTER = "who_clicked_on_twitter",
+            WHO_CLICKED_ON_EMAIL = "who_clicked_on_email",
+            WHO_CLICKED_ON_SMS = "who_clicked_on_sms",
+            WHO_CLICKED_ON_OTHERS = "who_clicked_on_others",
+            TO_WHOM_A_PUSH_WAS_DELIVERED = "to_whom_a_push_was_delivered",
+            WHO_CLICKED_THE_PUSH = "who_clicked_the_push",
+            WHO_VISITED_THE_NOTIFICATION_SCREEN = "who_visited_the_notification_screen",
+            CLICKS_ON_GET_A_RIDE = "clicks_on_get_a_ride",
+            CLICKS_ON_OFFERS = "clicks_on_offers",
+            CLICKS_ON_MIN_FARE = "clicks_on_min_fare",
+            CLICKS_ON_GET_FARE_ESTIMATE = "clicks_on_get_fare_estimate",
+            CLICKS_ON_PAYTM = "clicks_on_paytm",
+            CHANGED_MODE_FROM_PAYTM_TO_CASH = "changed_mode_from_paytm_to_cash",
+            CLICKS_ON_WALLET = "clicks_on_wallet",
+            CLICKS_ON_PAYTM_WALLET = "clicks_on_paytm_wallet",
+            CLICKS_ON_REMOVE_WALLET = "clicks_on_remove_wallet",
+            WHO_VISITED_T20_WORLD_CUP_SCREEN = "who_visited_T20_World_Cup_screen";
+    
+
+    String ERROR_CONNECTION_TIMEOUT = "error_connection_timeout",
+            ERROR_SOCKET_TIMEOUT = "error_socket_timeout",
+            ERROR_NO_INTERNET = "error_no_internet"
+    ;
+
+
+    String CAMPAIGN_ = "campaign_",
+            LOGIN_SINCE_FIRST_APP_OPEN_DIFF = "login_since_first_app_open_diff",
+            APP_DOWNLOAD_SOURCE = "app_download_source";
+
 
 }
