@@ -21,7 +21,7 @@ public class FindADriverResponse {
     private List<Driver> drivers = new ArrayList<Driver>();
     @SerializedName("eta")
     @Expose
-    private Integer eta;
+    private Double eta;
     @SerializedName("fare_factor")
     @Expose
     private Double fareFactor;
@@ -76,14 +76,14 @@ public class FindADriverResponse {
     /**
      * @return The eta
      */
-    public Integer getEta() {
+    public Double getEta() {
         return eta;
     }
 
     /**
      * @param eta The eta
      */
-    public void setEta(Integer eta) {
+    public void setEta(Double eta) {
         this.eta = eta;
     }
 

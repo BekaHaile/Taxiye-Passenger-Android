@@ -1757,6 +1757,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 clearSPData();
                 switchPassengerScreen(passengerScreenMode);
             } else {
+                //TODO
+//                mapTouched = false;
                 switchPassengerScreen(passengerScreenMode);
             }
 

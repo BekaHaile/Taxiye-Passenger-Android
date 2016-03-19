@@ -28,16 +28,16 @@ public class Coupon {
 	private Integer type;
 	@SerializedName("discount_percentage")
 	@Expose
-	private Integer discountPercentage;
+	private Double discountPercentage;
 	@SerializedName("discount_maximum")
 	@Expose
-	private Integer discountMaximum;
+	private Double discountMaximum;
 	@SerializedName("discount")
 	@Expose
-	private Integer discount;
+	private Double discount;
 	@SerializedName("maximum")
 	@Expose
-	private Integer maximum;
+	private Double maximum;
 	@SerializedName("start_time")
 	@Expose
 	private String startTime;
@@ -173,7 +173,7 @@ public class Coupon {
 	 * @return
 	 * The discountPercentage
 	 */
-	public Integer getDiscountPercentage() {
+	public Double getDiscountPercentage() {
 		return discountPercentage;
 	}
 
@@ -182,7 +182,7 @@ public class Coupon {
 	 * @param discountPercentage
 	 * The discount_percentage
 	 */
-	public void setDiscountPercentage(Integer discountPercentage) {
+	public void setDiscountPercentage(Double discountPercentage) {
 		this.discountPercentage = discountPercentage;
 	}
 
@@ -191,7 +191,7 @@ public class Coupon {
 	 * @return
 	 * The discountMaximum
 	 */
-	public Integer getDiscountMaximum() {
+	public Double getDiscountMaximum() {
 		return discountMaximum;
 	}
 
@@ -200,7 +200,7 @@ public class Coupon {
 	 * @param discountMaximum
 	 * The discount_maximum
 	 */
-	public void setDiscountMaximum(Integer discountMaximum) {
+	public void setDiscountMaximum(Double discountMaximum) {
 		this.discountMaximum = discountMaximum;
 	}
 
@@ -209,7 +209,7 @@ public class Coupon {
 	 * @return
 	 * The discount
 	 */
-	public Integer getDiscount() {
+	public Double getDiscount() {
 		return discount;
 	}
 
@@ -218,7 +218,7 @@ public class Coupon {
 	 * @param discount
 	 * The discount
 	 */
-	public void setDiscount(Integer discount) {
+	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
 
@@ -227,7 +227,7 @@ public class Coupon {
 	 * @return
 	 * The maximum
 	 */
-	public Integer getMaximum() {
+	public Double getMaximum() {
 		return maximum;
 	}
 
@@ -236,7 +236,7 @@ public class Coupon {
 	 * @param maximum
 	 * The maximum
 	 */
-	public void setMaximum(Integer maximum) {
+	public void setMaximum(Double maximum) {
 		this.maximum = maximum;
 	}
 
