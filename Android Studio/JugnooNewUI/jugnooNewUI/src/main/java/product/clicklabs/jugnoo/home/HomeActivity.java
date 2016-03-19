@@ -109,6 +109,7 @@ import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -6300,65 +6301,54 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
+    private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
 	private void getPaytmBalance(final Activity activity) {
-		try {
-			long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
-			long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
-			Log.e("lastCallDiff", "=" + lastCallDiff);
-			if(1 == Data.userData.paytmEnabled && lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
-				if (AppStatus.getInstance(this).isOnline(this)) {
-					slidingBottomPanel.setPaytmLoadingVisiblity(View.VISIBLE);
-					progressBarMenuPaytmWalletLoading.setVisibility(View.VISIBLE);
-					textViewWalletValue.setVisibility(View.GONE);
+        try {
+            if(apiPaytmCheckBalance == null){
+				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
+					@Override
+					public void onSuccess() {
+                        setUserData();
+					}
 
-					HashMap<String, String> params = new HashMap<>();
-					params.put("access_token", Data.userData.accessToken);
-					params.put("client_id", Config.getClientId());
-					params.put("is_access_token_new", "1");
-
-                    final long startTime = System.currentTimeMillis();
-                    RestClient.getApiServices().paytmCheckBalance(params, new Callback<SettleUserDebt>() {
-                        @Override
-                        public void success(SettleUserDebt settleUserDebt, Response response) {
-                            FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_PAYTM_CHECK_BALANCE, startTime);
-                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                            Log.i(TAG, "paytmCheckBalance response = " + responseStr);
-                            try {
-                                JSONObject jObj = new JSONObject(responseStr);
-                                JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
-                                Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                                Data.userData.setJugnooBalance(jObj.optDouble(KEY_JUGNOO_BALANCE,
-                                        Data.userData.getJugnooBalance()));
-                                setUserData();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+					@Override
+					public void onFailure() {
+                        try {
+                            JSONParser.setPaytmErrorCase();
+                            setUserData();
                             progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
                             slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
                             textViewWalletValue.setVisibility(View.VISIBLE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+                    }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            try {
-                                Log.e(TAG, "paytmCheckBalance error="+error.toString());
-                                JSONParser.setPaytmErrorCase();
-                                setUserData();
-                                progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
-                                slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
-                                textViewWalletValue.setVisibility(View.VISIBLE);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    @Override
+                    public void onFinish() {
+                        progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+                        slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
+                        textViewWalletValue.setVisibility(View.VISIBLE);
+                    }
 
-				}
+                    @Override
+					public void onRetry(View view) {
+					}
+
+					@Override
+					public void onNoRetry(View view) {
+					}
+				});
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+            long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
+            if(lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
+                apiPaytmCheckBalance.getBalance(Data.userData.paytmEnabled, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

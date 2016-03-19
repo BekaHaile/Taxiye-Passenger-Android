@@ -54,6 +54,7 @@ public interface Constants {
 
 	String KEY_USER_DEBT = "user_debt";
 	String KEY_CLIENT_ID = "client_id";
+	String KEY_IS_ACCESS_TOKEN_NEW = "is_access_token_new";
 	String KEY_IP_ADDRESS= "ip_addr";
 
 

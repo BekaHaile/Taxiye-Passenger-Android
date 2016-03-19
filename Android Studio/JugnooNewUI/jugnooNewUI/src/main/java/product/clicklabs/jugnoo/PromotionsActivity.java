@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -565,6 +566,34 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                                 DialogPopup.dialogBanner(activity, message);
                                 getAccountInfoAsync(activity);
                                 FlurryEventLogger.event(PROMO_CODE_APPLIED);
+
+                                new ApiPaytmCheckBalance(activity, new ApiPaytmCheckBalance.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure() {
+
+                                    }
+
+                                    @Override
+                                    public void onRetry(View view) {
+
+                                    }
+
+                                    @Override
+                                    public void onNoRetry(View view) {
+
+                                    }
+                                }).getBalance(Data.userData.paytmEnabled, false);
+
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
@@ -610,5 +639,8 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             }
         }
 	}
+
+
+
 	
 }
