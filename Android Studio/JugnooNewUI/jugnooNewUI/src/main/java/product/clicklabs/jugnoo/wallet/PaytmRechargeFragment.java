@@ -575,7 +575,6 @@ public class PaytmRechargeFragment extends Fragment {
 			} catch(Exception e){
 				e.printStackTrace();
 			}
-			Data.paytmPaymentState = PaytmPaymentState.INIT;
 		}
 	}
 }
