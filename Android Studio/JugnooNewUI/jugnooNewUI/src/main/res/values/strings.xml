@@ -252,6 +252,8 @@
 	<!-- Account Settings Strings -->
 	<string name="add_home">Add Home</string>
 	<string name="add_work">Add Work</string>
+	<string name="home">Home</string>
+	<string name="work">Work</string>
 
 
 	<!-- Search state strings -->
