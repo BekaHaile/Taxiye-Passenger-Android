@@ -5,6 +5,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -41,7 +42,7 @@ public interface ApiService {
                                Callback<LeaderboardActivityResponse> callback);
 
     @FormUrlEncoded
-    @POST("/find_a_driver")
+    @POST("/v2/find_a_driver")
     void findADriverCall(@FieldMap Map<String, String> params,
                                        Callback<FindADriverResponse> callback);
 
@@ -77,9 +78,9 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/login_using_access_token")
+    @POST("/v2/login_using_access_token")
     void loginUsingAccessToken(@FieldMap Map<String, String> params,
-                   Callback<SettleUserDebt> callback);
+                   Callback<LoginResponse> callback);
 
     @FormUrlEncoded
     @POST("/login_using_email_or_phone_no")

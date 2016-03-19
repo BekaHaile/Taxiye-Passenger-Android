@@ -662,6 +662,7 @@
 	<string name="call_me">Call Me</string>
 	<string name="receive_otp_via_call">Receive the OTP via call</string>
 	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
+	<string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 
 	<string name="tnc_apply">T&amp;C Apply</string>
 	<string name="tnc">T&amp;C</string>

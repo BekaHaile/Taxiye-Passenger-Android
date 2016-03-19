@@ -110,6 +110,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
+import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -119,7 +120,6 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
-import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -137,9 +137,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -1739,7 +1737,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     HomeActivity.this.hasWindowFocus()) {
                     Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
-                        callFindADriverAndShowPromotionsAPIS(Data.pickupLatLng);
+                        findDriversETACall();
                     }
                 }
             }
@@ -3328,7 +3326,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	}
 
 
-
     @Override
     public void onBackPressed() {
         try {
@@ -3422,67 +3419,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-
-    private void callFindADriverAndShowPromotionsAPIS(LatLng requestLatLng){
-        promoCouponSelectedForRide = null;
-
-        findDriversETACall(Data.pickupLatLng);
-        fetchPromotionsAPI(this, Data.pickupLatLng);
-    }
-
-    private void findDriversETACall(final LatLng destination){
-        try {
-            if (userMode == UserMode.PASSENGER) {
-                textViewInitialInstructions.setVisibility(View.GONE);
-                dontCallRefreshDriver = false;
-                etaMinutes = "5";
-            }
-
-            HashMap<String, String> params = new HashMap<>();
-            params.put("access_token", Data.userData.accessToken);
-            params.put("latitude", "" + destination.latitude);
-            params.put("longitude", "" + destination.longitude);
-
-            if (1 == showAllDrivers) {
-                params.put("show_all", "1");
-            }
-            if(1 == showDriverInfo){
-                params.put("show_phone_no", "1");
-            }
-
-            new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(HomeActivity.this, params);
-
-            Log.i("params in find_a_driver", "=" + params);
-            final long startTime = System.currentTimeMillis();
-            RestClient.getApiServices().findADriverCall(params, new Callback<FindADriverResponse>() {
+    private ApiFindADriver apiFindADriver = null;
+    private void findDriversETACall(){
+        if(apiFindADriver == null) {
+            apiFindADriver = new ApiFindADriver(this, new ApiFindADriver.Callback() {
                 @Override
-                public void success(FindADriverResponse findADriverResponse, Response response) {
+                public void onPre() {
                     try {
-                        FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_FIND_A_DRIVER, startTime);
-                        Log.e(TAG, "findADriverCall response=" + new String(((TypedByteArray) response.getBody()).getBytes()));
-                        Data.driverInfos.clear();
-                        for (FindADriverResponse.Driver driver : findADriverResponse.getDrivers()) {
-                            double bearing = 0;
-                            if (driver.getBearing() != null) {
-                                bearing = driver.getBearing();
-                            }
-                            Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-                                    "", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
+                        promoCouponSelectedForRide = null;
+                        if (userMode == UserMode.PASSENGER) {
+                            textViewInitialInstructions.setVisibility(View.GONE);
+                            dontCallRefreshDriver = false;
+                            etaMinutes = "5";
                         }
-                        etaMinutes = String.valueOf(findADriverResponse.getEta());
-                        if (findADriverResponse.getPriorityTipCategory() != null) {
-                            priorityTipCategory = findADriverResponse.getPriorityTipCategory();
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-                        Data.userData.fareFactor = findADriverResponse.getFareFactor();
-                        if (findADriverResponse.getFarAwayCity() == null) {
-                            farAwayCity = "";
-                        } else {
-                            farAwayCity = findADriverResponse.getFarAwayCity();
-                        }
+                @Override
+                public void onComplete() {
+                    try {
+                        HomeActivity.this.etaMinutes = Data.etaMinutes;
+                        HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
+                        HomeActivity.this.farAwayCity = Data.farAwayCity;
 
                         if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                            showDriverMarkersAndPanMap(destination);
+                            showDriverMarkersAndPanMap(Data.pickupLatLng);
                             dontCallRefreshDriver = true;
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -3492,8 +3455,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, 300);
 
                             if (Data.driverInfos.size() == 0) {
-                                //textViewInitialInstructions.setVisibility(View.VISIBLE);
-                                //textViewInitialInstructions.setText("No drivers nearby");
                                 textViewCentrePinETA.setText("-");
                             } else {
                                 textViewInitialInstructions.setVisibility(View.GONE);
@@ -3506,17 +3467,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    try {
+                        slidingBottomPanel.update(Data.promoCoupons);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
-                    //textViewInitialInstructions.setVisibility(View.VISIBLE);
+                public void onFailure() {
                     try {
-                        Log.e(TAG, "findADriverCall error=" + error.toString());
                         if (Data.driverInfos.size() == 0) {
-                            textViewInitialInstructions.setText("Couldn't find drivers nearby.");
+                            textViewInitialInstructions.setText(getResources().getString(R.string.couldnt_find_drivers_nearby));
                             textViewCentrePinETA.setText("-");
-                            noDriverNearbyToast("Couldn't find drivers nearby.");
+                            noDriverNearbyToast(getResources().getString(R.string.couldnt_find_drivers_nearby));
                         }
                         setServiceAvailablityUI(farAwayCity);
                     } catch (Exception e) {
@@ -3524,91 +3488,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
             });
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        apiFindADriver.hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo);
     }
 
-    private void fetchPromotionsAPI(final Activity activity, LatLng promoLatLng) {
-        try {
-            HashMap<String, String> params = new HashMap<>();
-            params.put("access_token", Data.userData.accessToken);
-            params.put("latitude", "" + promoLatLng.latitude);
-            params.put("longitude", "" + promoLatLng.longitude);
-            Log.i("params", "=" + params);
-
-            final long startTime = System.currentTimeMillis();
-            RestClient.getApiServices().showAvailablePromotionsCall(params, new Callback<ShowPromotionsResponse>() {
-                @Override
-                public void success(ShowPromotionsResponse showPromotionsResponse, Response response) {
-
-                    try {
-                        FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_SHOW_AVAILABLE_PROMOTIONS, startTime);
-                        String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "showAvailablePromotionsCall response=" + jsonString);
-                        JSONObject jObj = new JSONObject(jsonString);
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            if (ApiResponseFlags.AVAILABLE_PROMOTIONS.getOrdinal() == showPromotionsResponse.getFlag()) {
-                                ArrayList<PromoCoupon> promoCoupons = new ArrayList<PromoCoupon>();
-                                for (ShowPromotionsResponse.Coupon coupon : showPromotionsResponse.getCoupons()) {
-                                    promoCoupons.add(new CouponInfo(coupon.getAccountId(),
-                                            coupon.getCouponType(),
-                                            coupon.getStatus(),
-                                            coupon.getTitle(),
-                                            coupon.getSubtitle(),
-                                            coupon.getDescription(),
-                                            coupon.getImage(),
-                                            coupon.getRedeemedOn(),
-                                            coupon.getExpiryDate(), "", ""));
-                                }
-                                for (ShowPromotionsResponse.Promotion promotion : showPromotionsResponse.getPromotions()) {
-                                    promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
-                                            promotion.getTitle(),
-                                            promotion.getTermsNConds()));
-                                }
-
-                                double fareFactor = Double.parseDouble(showPromotionsResponse.getDynamicFactor());
-                                for (ShowPromotionsResponse.FareStructure fareStructure : showPromotionsResponse.getFareStructure()) {
-                                    String startTime = fareStructure.getStartTime();
-                                    String endTime = fareStructure.getEndTime();
-                                    String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
-                                    String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
-                                    long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
-                                    long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
-                                    double convenienceCharges = 0;
-                                    if (fareStructure.getConvenienceCharge() != null) {
-                                        convenienceCharges = fareStructure.getConvenienceCharge();
-                                    }
-                                    if (diffStart >= 0 && diffEnd <= 0) {
-                                        Data.fareStructure = new FareStructure(fareStructure.getFareFixed(),
-                                                fareStructure.getFareThresholdDistance(),
-                                                fareStructure.getFarePerKm(),
-                                                fareStructure.getFarePerMin(),
-                                                fareStructure.getFareThresholdTime(),
-                                                fareStructure.getFarePerWaitingMin(),
-                                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-                                        break;
-                                    }
-                                }
-
-                                slidingBottomPanel.update(promoCoupons);
-                            }
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e(TAG, "showAvailablePromotionsCall error=" + error.toString());
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
 	private void checkForGoogleLogoVisibilityBeforeRide(){
@@ -3670,7 +3553,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     .fromBitmap(CustomMapMarkerCreator
                             .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 11)));
         }
-//
         return markerOptions;
     }
 
@@ -4792,7 +4674,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else {
                             if (Data.driverInfos.size() == 0) {
                                 noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
-                                //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
                             } else{
                                 initiateRequestRide(true);
                             }
@@ -5328,7 +5209,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     editor.commit();
 
 					if (myLocation != null) {
-                        callFindADriverAndShowPromotionsAPIS(Data.pickupLatLng);
+                        findDriversETACall();
 					}
                 }
             } else if (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {

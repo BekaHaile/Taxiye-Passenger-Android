@@ -28,11 +28,22 @@ public class FindADriverResponse {
     @SerializedName("priority_tip_category")
     @Expose
     private Integer priorityTipCategory;
-
-
     @SerializedName("far_away_city")
     @Expose
     private String farAwayCity;
+    @SerializedName("coupons")
+    @Expose
+    private List<Coupon> coupons = new ArrayList<Coupon>();
+    @SerializedName("promotions")
+    @Expose
+    private List<Promotion> promotions = new ArrayList<Promotion>();
+    @SerializedName("dynamic_factor")
+    @Expose
+    private String dynamicFactor;
+    @SerializedName("fare_structure")
+    @Expose
+    private List<FareStructure> fareStructure = new ArrayList<FareStructure>();
+
 
     /**
      * @return The flag
@@ -112,155 +123,80 @@ public class FindADriverResponse {
         this.farAwayCity = farAwayCity;
     }
 
-    public class Driver {
-
-        @SerializedName("user_id")
-        @Expose
-        private Integer userId;
-        @SerializedName("user_name")
-        @Expose
-        private String userName;
-        @SerializedName("phone_no")
-        @Expose
-        private String phoneNo;
-        @SerializedName("latitude")
-        @Expose
-        private Double latitude;
-        @SerializedName("longitude")
-        @Expose
-        private Double longitude;
-        @SerializedName("vehicle_type")
-        @Expose
-        private Integer vehicleType;
-        @SerializedName("distance")
-        @Expose
-        private Double distance;
-        @SerializedName("rating")
-        @Expose
-        private Double rating;
-        @SerializedName("bearing")
-        @Expose
-        private Double bearing;
-
-        /**
-         * @return The userId
-         */
-        public Integer getUserId() {
-            return userId;
-        }
-
-        /**
-         * @param userId The user_id
-         */
-        public void setUserId(Integer userId) {
-            this.userId = userId;
-        }
-
-        /**
-         * @return The userName
-         */
-        public String getUserName() {
-            return userName;
-        }
-
-        /**
-         * @param userName The user_name
-         */
-        public void setUserName(String userName) {
-            this.userName = userName;
-        }
-
-        /**
-         * @return The phoneNo
-         */
-        public String getPhoneNo() {
-            return phoneNo;
-        }
-
-        /**
-         * @param phoneNo The phone_no
-         */
-        public void setPhoneNo(String phoneNo) {
-            this.phoneNo = phoneNo;
-        }
-
-        /**
-         * @return The latitude
-         */
-        public Double getLatitude() {
-            return latitude;
-        }
-
-        /**
-         * @param latitude The latitude
-         */
-        public void setLatitude(Double latitude) {
-            this.latitude = latitude;
-        }
-
-        /**
-         * @return The longitude
-         */
-        public Double getLongitude() {
-            return longitude;
-        }
-
-        /**
-         * @param longitude The longitude
-         */
-        public void setLongitude(Double longitude) {
-            this.longitude = longitude;
-        }
-
-        /**
-         * @return The vehicleType
-         */
-        public Integer getVehicleType() {
-            return vehicleType;
-        }
-
-        /**
-         * @param vehicleType The vehicle_type
-         */
-        public void setVehicleType(Integer vehicleType) {
-            this.vehicleType = vehicleType;
-        }
-
-        /**
-         * @return The distance
-         */
-        public Double getDistance() {
-            return distance;
-        }
-
-        /**
-         * @param distance The distance
-         */
-        public void setDistance(Double distance) {
-            this.distance = distance;
-        }
-
-        /**
-         * @return The rating
-         */
-        public Double getRating() {
-            return rating;
-        }
-
-        /**
-         * @param rating The rating
-         */
-        public void setRating(Double rating) {
-            this.rating = rating;
-        }
-
-        public Double getBearing() {
-            return bearing;
-        }
-
-        public void setBearing(Double bearing) {
-            this.bearing = bearing;
-        }
+    /**
+     *
+     * @return
+     * The coupons
+     */
+    public List<Coupon> getCoupons() {
+        return coupons;
     }
+
+    /**
+     *
+     * @param coupons
+     * The coupons
+     */
+    public void setCoupons(List<Coupon> coupons) {
+        this.coupons = coupons;
+    }
+
+    /**
+     *
+     * @return
+     * The promotions
+     */
+    public List<Promotion> getPromotions() {
+        return promotions;
+    }
+
+    /**
+     *
+     * @param promotions
+     * The promotions
+     */
+    public void setPromotions(List<Promotion> promotions) {
+        this.promotions = promotions;
+    }
+
+    /**
+     *
+     * @return
+     * The dynamicFactor
+     */
+    public String getDynamicFactor() {
+        return dynamicFactor;
+    }
+
+    /**
+     *
+     * @param dynamicFactor
+     * The dynamic_factor
+     */
+    public void setDynamicFactor(String dynamicFactor) {
+        this.dynamicFactor = dynamicFactor;
+    }
+
+    /**
+     *
+     * @return
+     * The fareStructure
+     */
+    public List<FareStructure> getFareStructure() {
+        return fareStructure;
+    }
+
+    /**
+     *
+     * @param fareStructure
+     * The fare_structure
+     */
+    public void setFareStructure(List<FareStructure> fareStructure) {
+        this.fareStructure = fareStructure;
+    }
+
+
+
+
 
 }

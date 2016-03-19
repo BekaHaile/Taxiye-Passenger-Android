@@ -71,6 +71,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.CheckForAppOpen;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -1300,9 +1301,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				Log.e("params login_using_access_token", "=" + params);
 
 				final long startTime = System.currentTimeMillis();
-				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<LoginResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(LoginResponse settleUserDebt, Response response) {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 						Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
