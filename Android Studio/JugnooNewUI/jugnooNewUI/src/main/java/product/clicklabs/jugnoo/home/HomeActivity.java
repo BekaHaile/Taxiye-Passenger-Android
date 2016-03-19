@@ -35,6 +35,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -179,7 +181,6 @@ import retrofit.mime.TypedByteArray;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-
 		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler,
         SearchListAdapter.SearchListActionsHandler, Constants {
 
@@ -2097,6 +2098,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						textViewFindingDriver.setText("Finding a Jugnoo driver...");
                         initialCancelRideBtn.setVisibility(View.GONE);
 
+
                         if (map != null) {
                             MarkerOptions markerOptions = new MarkerOptions();
                             markerOptions.title("pickup location");
@@ -2622,6 +2624,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             else{
                 linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+                linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
                 textViewAssigningDropLocationClick.setText("");
                 imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
                 progressBarAssigningDropLocation.setVisibility(View.GONE);
@@ -2629,6 +2633,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         else{
             linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+            Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+            linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
             setDropLocationMarker();
             imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
             if(textViewAssigningDropLocationClick.getText().length() == 0){

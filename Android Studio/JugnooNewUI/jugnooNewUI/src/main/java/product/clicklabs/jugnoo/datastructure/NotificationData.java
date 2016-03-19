@@ -7,20 +7,24 @@ public class NotificationData {
 
     private int notificationId;
     private String timePushArrived;
+    private String title;
     private String message;
     private String deepIndex;
     private String timeToDisplay;
     private String timeTillDisplay;
     private String notificationImage;
+    private boolean expanded;
 
-    public NotificationData(int notificationId, String timePushArrived, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
+    public NotificationData(int notificationId, String timePushArrived, String title, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
         this.notificationId = notificationId;
         this.timePushArrived = timePushArrived;
+        this.title = title;
         this.message = message;
         this.deepIndex = deepIndex;
         this.timeToDisplay = timeToDisplay;
         this.timeTillDisplay = timeTillDisplay;
         this.notificationImage = notificationImage;
+        this.expanded = false;
     }
 
     public int getNotificationId() {
@@ -77,5 +81,21 @@ public class NotificationData {
 
     public void setNotificationImage(String notificationImage) {
         this.notificationImage = notificationImage;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

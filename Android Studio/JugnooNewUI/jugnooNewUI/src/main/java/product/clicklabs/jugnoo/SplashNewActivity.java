@@ -967,6 +967,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+		try {
+			String message = "hello\nhikhjasd";
+			String[] arr = message.split("\\\n");
+			Log.e(TAG, "arr0="+arr[0]);
+			Log.e(TAG, "arr1="+arr[1]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void changeUIState(State state) {
