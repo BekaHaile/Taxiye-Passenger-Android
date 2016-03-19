@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="product.clicklabs.jugnoo"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="217"
-          android:versionName="2.1.7">
+          android:versionCode="218"
+          android:versionName="2.1.8">
 
     <uses-sdk
         android:minSdkVersion="14"

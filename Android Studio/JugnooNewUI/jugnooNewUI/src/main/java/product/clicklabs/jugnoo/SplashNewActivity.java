@@ -233,6 +233,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		FlurryAgent.init(this, Config.getFlurryKey());
 		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 		FlurryAgent.onEvent("Splash started");
+
+		firstTimeEvents();
 	}
 
 
@@ -296,7 +298,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			firstTimeEvents();
 
 			Fabric.with(this, new Crashlytics());
 
