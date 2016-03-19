@@ -108,7 +108,7 @@ public class JSONParser implements Constants {
         String phoneNo = userData.optString("phone_no", "");
         String userImage = userData.optString("user_image", "");
         String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
-        double jugnooBalance = userData.optDouble("jugnoo_balance", 0);
+        double jugnooBalance = userData.optDouble(KEY_JUGNOO_BALANCE, 0);
         String userEmail = userData.optString("user_email", "");
         int emailVerificationStatus = userData.optInt("email_verification_status", 1);
         String jugnooFbBanner = userData.optString("jugnoo_fb_banner", "");

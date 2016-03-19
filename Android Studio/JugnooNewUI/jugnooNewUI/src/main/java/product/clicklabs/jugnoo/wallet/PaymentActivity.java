@@ -166,6 +166,8 @@ public class PaymentActivity extends BaseFragmentActivity{
 							try {
 								JSONObject jObj = new JSONObject(responseStr);
 								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
+								Data.userData.setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE,
+										Data.userData.getJugnooBalance()));
 								performGetBalanceSuccess(fragName);
 							} catch (Exception e) {
 								e.printStackTrace();

@@ -2776,7 +2776,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				imageViewIRPaymentOptionCash.setVisibility(View.GONE);
 				textViewIRPaymentOption.setText(getResources().getString(R.string.paytm));
 				textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
-				textViewIRPaymentOptionValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+				textViewIRPaymentOptionValue.setText(String.format(getResources()
+                        .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
                 textViewIRPaymentOptionValue.setTextColor(Data.userData.getPaytmBalanceColor(this));
 			}
 			else{
@@ -4106,20 +4107,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
 
-                                    try {
-                                        if (jObj.has("jugnoo_balance")) {
-                                            Data.userData.setJugnooBalance(jObj.getDouble("jugnoo_balance"));
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    try {
-                                        if (jObj.has("paytm_balance")) {
-                                            Data.userData.setPaytmBalance(jObj.getDouble("paytm_balance"));
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    Data.userData.setJugnooBalance(jObj.optDouble(KEY_JUGNOO_BALANCE,
+                                            Data.userData.getJugnooBalance()));
+                                    Data.userData.setPaytmBalance(jObj.optDouble(KEY_PAYTM_BALANCE,
+                                            Data.userData.getPaytmBalance()));
 
                                     Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 
@@ -6330,6 +6321,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 JSONObject jObj = new JSONObject(responseStr);
                                 JSONParser.parsePaytmBalanceStatus(HomeActivity.this, jObj);
                                 Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                                Data.userData.setJugnooBalance(jObj.optDouble(KEY_JUGNOO_BALANCE,
+                                        Data.userData.getJugnooBalance()));
                                 setUserData();
                             } catch (Exception e) {
                                 e.printStackTrace();
