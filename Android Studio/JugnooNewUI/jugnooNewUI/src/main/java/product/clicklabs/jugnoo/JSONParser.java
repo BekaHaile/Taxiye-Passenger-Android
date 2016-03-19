@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -25,12 +26,12 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
-import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
@@ -39,9 +40,15 @@ import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.Coupon;
+import product.clicklabs.jugnoo.retrofit.model.Driver;
+import product.clicklabs.jugnoo.retrofit.model.FareStructure;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -75,30 +82,6 @@ public class JSONParser implements Constants {
         return message;
     }
 
-    public void parseFareDetails(JSONObject userData) {
-        try {
-            JSONArray fareDetailsArr = userData.getJSONArray("fare_details");
-            JSONObject fareDetails0 = fareDetailsArr.getJSONObject(0);
-            double farePerMin = 0;
-            double freeMinutes = 0;
-            if (fareDetails0.has("fare_per_min")) {
-                farePerMin = fareDetails0.getDouble("fare_per_min");
-            }
-            if (fareDetails0.has("fare_threshold_time")) {
-                freeMinutes = fareDetails0.getDouble("fare_threshold_time");
-            }
-			double convenienceCharges = fareDetails0.optDouble("convenience_charge", 0);
-
-            Data.fareStructure = new FareStructure(fareDetails0.getDouble("fare_fixed"),
-                    fareDetails0.getDouble("fare_threshold_distance"),
-                    fareDetails0.getDouble("fare_per_km"),
-                    farePerMin, freeMinutes, 0, 0, convenienceCharges, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Data.fareStructure = new FareStructure(15, 0, 4, 1, 0, 0, 0, 0, false);
-        }
-    }
-
 
     public UserData parseUserData(Context context, JSONObject userData) throws Exception {
 
@@ -117,12 +100,6 @@ public class JSONParser implements Constants {
         AccessTokenGenerator.saveAuthKey(context, authKey);
         String authSecret = authKey + Config.getClientSharedSecret();
         String accessToken = SHA256Convertor.getSHA256String(authSecret);
-
-        if(Data.emergencyContactsList == null){
-            Data.emergencyContactsList = new ArrayList<>();
-        }
-        Data.emergencyContactsList.clear();
-        Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(userData));
 
         String userIdentifier = userData.optString("user_identifier", userEmail);
 
@@ -244,45 +221,41 @@ public class JSONParser implements Constants {
     }
 
 
-    public String parseAccessTokenLoginData(Context context, String response) throws Exception {
+    public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse) throws Exception {
 
         JSONObject jObj = new JSONObject(response);
 
         //Fetching login data
         JSONObject jLoginObject = jObj.getJSONObject("login");
-        Log.i("jLoginObject", "=" + jLoginObject);
 
         Data.userData = parseUserData(context, jLoginObject);
 
-		String supportContact = Config.getSupportNumber(context);
-		if(jLoginObject.has("support_number")){
-			supportContact = jLoginObject.getString("support_number");
-			Config.saveSupportNumber(context, supportContact);
+        //emergency contacts
+        if(Data.emergencyContactsList == null){
+            Data.emergencyContactsList = new ArrayList<>();
+        }
+        Data.emergencyContactsList.clear();
+        Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jLoginObject));
+
+        parseFindDriverResp(loginResponse);
+        parsePromoCoupons(loginResponse);
+
+		if(loginResponse.getLogin().getSupportNumber() != null){
+			Config.saveSupportNumber(context, loginResponse.getLogin().getSupportNumber());
 		}
 
-        parseFareDetails(jLoginObject);
-
-        //current_user_status = 1 driver or 2 user
-        int currentUserStatus = jLoginObject.getInt("current_user_status");
-        if (currentUserStatus == 2) {
-            //Fetching drivers info
-            parseDriversToShow(jObj, "drivers");
-        } else if (currentUserStatus == 1) {
-        }
-
-
         //Fetching user current status
-        JSONObject jUserStatusObject = jObj.getJSONObject("status");
-        String resp = parseCurrentUserStatus(context, currentUserStatus, jUserStatusObject);
+        JSONObject jUserStatusObject = jObj.getJSONObject(KEY_STATUS);
+        String resp = parseCurrentUserStatus(context, loginResponse.getLogin().getCurrentUserStatus(), jUserStatusObject);
 
-        parseCancellationReasons(jObj);
-        parseFeedbackReasonArrayList(jObj);
+        parseCancellationReasons(loginResponse);
+        parseFeedbackReasonArrayList(loginResponse);
 
-        Data.referralMessages = parseReferralMessages(jObj);
+        Data.referralMessages = parseReferralMessages(loginResponse);
 
-        int userAppMonitoring = jLoginObject.optInt("user_app_monitoring", 0);
+        int userAppMonitoring = jLoginObject.optInt(KEY_USER_APP_MONITORING, 0);
         if(userAppMonitoring == 1){
-			double serverTimeInDays = jLoginObject.optDouble("user_app_monitoring_duration", 1.0);
+			double serverTimeInDays = jLoginObject.optDouble(KEY_USER_APP_MONITORING_DURATION, 1.0);
 			long serverTimeInMillis = (long)(serverTimeInDays * (double)(24 * 60 * 60 * 1000));
             long currentTime = System.currentTimeMillis();
             long savedTime = Prefs.with(context).getLong(SPLabels.APP_MONITORING_TRIGGER_TIME, currentTime);
@@ -292,10 +265,7 @@ public class JSONParser implements Constants {
 				intent.putExtra(KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
 				context.startService(intent);
-			} else {
-
 			}
-
         }
 
 
@@ -303,7 +273,82 @@ public class JSONParser implements Constants {
     }
 
 
-    public ReferralMessages parseReferralMessages(JSONObject jObj) {
+    private void parseFindDriverResp(LoginResponse loginResponse){
+        try {
+            //current_user_status = 1 driver or 2 user
+            if (loginResponse.getLogin().getCurrentUserStatus() == 2) {
+				parseDriversToShow(loginResponse.getDrivers());
+			}
+
+            Data.etaMinutes = String.valueOf(loginResponse.getEta());
+            Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
+            if (loginResponse.getLogin().getPriorityTipCategory() != null) {
+				Data.priorityTipCategory = loginResponse.getLogin().getPriorityTipCategory();
+			}
+            Data.userData.fareFactor = loginResponse.getLogin().getFareFactor();
+            if (loginResponse.getLogin().getFarAwayCity() == null) {
+				Data.farAwayCity = "";
+			} else {
+				Data.farAwayCity = loginResponse.getLogin().getFarAwayCity();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parsePromoCoupons(LoginResponse loginResponse){
+        try{
+            if(Data.promoCoupons == null){
+                Data.promoCoupons = new ArrayList<>();
+            } else{
+                Data.promoCoupons.clear();
+            }
+            for (Coupon coupon : loginResponse.getLogin().getCoupons()) {
+                Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
+                        coupon.getCouponType(),
+                        coupon.getStatus(),
+                        coupon.getTitle(),
+                        coupon.getSubtitle(),
+                        coupon.getDescription(),
+                        coupon.getImage(),
+                        coupon.getRedeemedOn(),
+                        coupon.getExpiryDate(), "", ""));
+            }
+            for (Promotion promotion : loginResponse.getLogin().getPromotions()) {
+                Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
+                        promotion.getTitle(),
+                        promotion.getTermsNConds()));
+            }
+
+            for (FareStructure fareStructure : loginResponse.getLogin().getFareStructure()) {
+                String startTime = fareStructure.getStartTime();
+                String endTime = fareStructure.getEndTime();
+                String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
+                String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
+                long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
+                long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
+                double convenienceCharges = 0;
+                if (fareStructure.getConvenienceCharge() != null) {
+                    convenienceCharges = fareStructure.getConvenienceCharge();
+                }
+                if (diffStart >= 0 && diffEnd <= 0) {
+                    Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
+                            fareStructure.getFareThresholdDistance(),
+                            fareStructure.getFarePerKm(),
+                            fareStructure.getFarePerMin(),
+                            fareStructure.getFareThresholdTime(),
+                            fareStructure.getFarePerWaitingMin(),
+                            fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
+                    break;
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public ReferralMessages parseReferralMessages(LoginResponse loginResponse) {
         String referralMessage = "Share your referral code " + Data.userData.referralCode +
                 " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
         String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
@@ -318,36 +363,33 @@ public class JSONParser implements Constants {
         String referralShortMessage = "", referralMoreInfoMessage = "";
 
         try {
-            if (jObj.has("referral_message")) {
-                referralMessage = jObj.getString("referral_message");
+            if (loginResponse.getReferralMessage() != null) {
+                referralMessage = loginResponse.getReferralMessage();
             }
-            if (jObj.has("referral_sharing_message")) {
-                referralSharingMessage = jObj.getString("referral_sharing_message");
+            if (loginResponse.getReferralSharingMessage() != null) {
+                referralSharingMessage = loginResponse.getReferralSharingMessage();
             }
-            if (jObj.has("fb_share_caption")) {
-                fbShareCaption = jObj.getString("fb_share_caption");
+            if (loginResponse.getFbShareCaption() != null) {
+                fbShareCaption = loginResponse.getFbShareCaption();
             }
-            if (jObj.has("fb_share_description")) {
-                fbShareDescription = jObj.getString("fb_share_description");
+            if (loginResponse.getFbShareDescription() != null) {
+                fbShareDescription = loginResponse.getFbShareDescription();
             }
-            if (jObj.has("referral_caption")) {
-                referralCaption = jObj.getString("referral_caption");
+            if (loginResponse.getReferralCaption() != null) {
+                referralCaption = loginResponse.getReferralCaption();
                 referralCaption = referralCaption.replaceAll("</br>", "<br/>");
             }
-            if (jObj.has("referral_caption_enabled")) {
-                referralCaptionEnabled = jObj.getInt("referral_caption_enabled");
+            if(loginResponse.getReferralEmailSubject() != null){
+                referralEmailSubject = loginResponse.getReferralEmailSubject();
             }
-            if(jObj.has("referral_email_subject")){
-                referralEmailSubject = jObj.getString("referral_email_subject");
-            }
-			if (jObj.has("referral_popup_text")) {
-				referralPopupText = jObj.getString("referral_popup_text");
+			if (loginResponse.getReferralPopupText() != null) {
+				referralPopupText = loginResponse.getReferralPopupText();
 			}
-            if(jObj.has("invite_earn_short_msg")){
-                referralShortMessage = jObj.getString("invite_earn_short_msg");
+            if(loginResponse.getInviteEarnShortMsg() != null){
+                referralShortMessage = loginResponse.getInviteEarnShortMsg();
             }
-            if(jObj.has("invite_earn_more_info")){
-                referralMoreInfoMessage = jObj.getString("invite_earn_more_info");
+            if(loginResponse.getInviteEarnMoreInfo() != null){
+                referralMoreInfoMessage = loginResponse.getInviteEarnMoreInfo();
             }
 		} catch (Exception e) {
             e.printStackTrace();
@@ -769,23 +811,20 @@ public class JSONParser implements Constants {
     }
 
 
-    public void parseDriversToShow(JSONObject jObject, String jsonArrayKey) {
+    public void parseDriversToShow(List<Driver> drivers) {
         try {
-            JSONArray data = jObject.getJSONArray(jsonArrayKey);
             Data.driverInfos.clear();
-
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject dataI = data.getJSONObject(i);
-                String userId = dataI.getString("user_id");
-                double latitude = dataI.getDouble("latitude");
-                double longitude = dataI.getDouble("longitude");
-                String userName = dataI.getString("user_name");
-                String phoneNo = dataI.getString("phone_no");
-                String rating = dataI.getString("rating");
+            for (Driver driver : drivers) {
+                String userId = String.valueOf(driver.getUserId());
+                double latitude = driver.getLatitude();
+                double longitude = driver.getLongitude();
+                String userName = driver.getUserName();
+                String phoneNo = driver.getPhoneNo();
+                String rating = String.valueOf(driver.getRating());
                 String userImage = "";
                 String driverCarImage = "";
                 String carNumber = "";
-                double bearing = dataI.optDouble("bearing", 0);
+                double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
                 Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0, bearing));
             }
         } catch (Exception e) {
@@ -861,7 +900,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public static void parseCancellationReasons(JSONObject jObj) {
+    public static void parseCancellationReasons(LoginResponse loginResponse) {
 
 //		"cancellation": {
 //      "message": "Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20",
@@ -885,18 +924,12 @@ public class JSONParser implements Constants {
             Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
                     "will lead to cancellation charges of Rs. 20", "");
 
-            JSONObject jCancellation = jObj.getJSONObject("cancellation");
-
-            String message = jCancellation.getString("message");
-
-            String additionalReason = jCancellation.getString("addn_reason");
-
-            JSONArray jReasons = jCancellation.getJSONArray("reasons");
-
+            LoginResponse.Cancellation jCancellation = loginResponse.getCancellation();
+            String message = jCancellation.getMessage();
+            String additionalReason = jCancellation.getAddnReason();
             options.clear();
-
-            for (int i = 0; i < jReasons.length(); i++) {
-                options.add(new CancelOption(jReasons.getString(i)));
+            for (String reason : jCancellation.getReasons()) {
+                options.add(new CancelOption(reason));
             }
 
             Data.cancelOptionsList = new CancelOptionsList(options, message, additionalReason);
@@ -907,24 +940,13 @@ public class JSONParser implements Constants {
     }
 
 
-    public static void parseFeedbackReasonArrayList(JSONObject jObj){
+    public static void parseFeedbackReasonArrayList(LoginResponse loginResponse){
         if(Data.feedbackReasons == null) {
             Data.feedbackReasons = new ArrayList<>();
         }
-//        Data.feedbackReasons.add(new FeedbackReason("Late Arrival"));
-//        Data.feedbackReasons.add(new FeedbackReason("Speed"));
-//        Data.feedbackReasons.add(new FeedbackReason("Driver Behavior"));
-//        Data.feedbackReasons.add(new FeedbackReason("Trip Route"));
-//        Data.feedbackReasons.add(new FeedbackReason("Auto Quality"));
-//        Data.feedbackReasons.add(new FeedbackReason("Other"));
-
         try{
-            JSONArray jReasons = jObj.getJSONArray("bad_rating_reasons");
-            if(jReasons.length() > 0){
-                Data.feedbackReasons.clear();
-            }
-            for(int i=0; i<jReasons.length(); i++){
-                Data.feedbackReasons.add(new FeedbackReason(jReasons.getString(i)));
+            for(String resason : loginResponse.getBadRatingReasons()){
+                Data.feedbackReasons.add(new FeedbackReason(resason));
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -1060,30 +1082,14 @@ public class JSONParser implements Constants {
 
     public static ArrayList<EmergencyContact> parseEmergencyContacts(JSONObject jObj){
         ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
-
-//        "emergency_contacts": [
-//        {
-//            "id": 1,
-//            "user_id": 493,
-//            "name": "Gagandeep",
-//            "email": "gagandeep@jugnoo.in",
-//            "phone_no": "8146536536",
-//            "verification_status": 0,
-//            "user_verification_token": "988e7c29",
-//            "contact_verification_token": "0b95b8d3",
-//            "requests_made": 3,
-//            "requested_on": "2015-06-30T10:02:44.000Z",
-//            "verified_on": "0000-00-00 00:00:00"
-//        }
-//        ],
         try{
             JSONArray jEmergencyContactsArr = jObj.getJSONArray("emergency_contacts");
 
             for(int i=0; i<jEmergencyContactsArr.length(); i++){
                 JSONObject jECont = jEmergencyContactsArr.getJSONObject(i);
                 emergencyContactsList.add(new EmergencyContact(jECont.getInt("id"),
-                    jECont.getString("name"),
-                    jECont.getString("phone_no")));
+                        jECont.getString("name"),
+                        jECont.getString("phone_no")));
             }
         } catch(Exception e){
             e.printStackTrace();

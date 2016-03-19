@@ -244,6 +244,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout mapLayout;
     GoogleMap map;
     TouchableMapFragment mapFragment;
+    boolean mapTouched = false;
 
 
     //Initial layout
@@ -388,7 +389,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_REFRESH = -1; // in meters
+    public static final double MIN_DISTANCE_FOR_REFRESH = 100; // in meters
 
     public static final float MAX_ZOOM = 15;
 
@@ -564,6 +565,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         mapLayout = (RelativeLayout) findViewById(R.id.mapLayout);
         map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        mapTouched = false;
 
 
         //Passenger main layout
@@ -1408,7 +1410,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapTouched() {
                     // Map touched
-
+                    mapTouched = true;
                 }
 
                 @Override
@@ -1454,7 +1456,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             refresh = true;
                         }
                     }
-                    if(refresh) {
+                    if(refresh && mapTouched) {
                         callMapTouchedRefreshDrivers();
                     }
                     if (!zoomedForSearch && map != null) {
@@ -2066,6 +2068,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 
                         checkForFareAvailablity();
+
+                        findADriverFinishing();
 
                         break;
 
@@ -3439,39 +3443,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onComplete() {
-                    try {
-                        HomeActivity.this.etaMinutes = Data.etaMinutes;
-                        HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
-                        HomeActivity.this.farAwayCity = Data.farAwayCity;
-
-                        if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                            showDriverMarkersAndPanMap(Data.pickupLatLng);
-                            dontCallRefreshDriver = true;
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dontCallRefreshDriver = false;
-                                }
-                            }, 300);
-
-                            if (Data.driverInfos.size() == 0) {
-                                textViewCentrePinETA.setText("-");
-                            } else {
-                                textViewInitialInstructions.setVisibility(View.GONE);
-                                textViewCentrePinETA.setText(etaMinutes);
-                            }
-
-                            setServiceAvailablityUI(farAwayCity);
-                        }
-                        setFareFactorToInitialState();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        slidingBottomPanel.update(Data.promoCoupons);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    findADriverFinishing();
                 }
 
                 @Override
@@ -3490,6 +3462,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
         }
         apiFindADriver.hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo);
+    }
+
+    private void findADriverFinishing(){
+        try {
+            HomeActivity.this.etaMinutes = Data.etaMinutes;
+            HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
+            HomeActivity.this.farAwayCity = Data.farAwayCity;
+
+            if (relativeLayoutLocationError.getVisibility() == View.GONE) {
+                showDriverMarkersAndPanMap(Data.pickupLatLng);
+                dontCallRefreshDriver = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dontCallRefreshDriver = false;
+                    }
+                }, 300);
+
+                if (Data.driverInfos.size() == 0) {
+                    textViewCentrePinETA.setText("-");
+                } else {
+                    textViewInitialInstructions.setVisibility(View.GONE);
+                    textViewCentrePinETA.setText(etaMinutes);
+                }
+
+                setServiceAvailablityUI(farAwayCity);
+            }
+            setFareFactorToInitialState();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            slidingBottomPanel.update(Data.promoCoupons);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
