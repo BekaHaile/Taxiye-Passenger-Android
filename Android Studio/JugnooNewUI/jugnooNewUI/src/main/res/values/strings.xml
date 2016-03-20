@@ -768,4 +768,7 @@
 	<string name="coupons_available">Coupons Available</string>
 	<string name="ongoing_offers">Ongoing Offers</string>
 
+	<string name="uninstall_driver_app">You need to uninstall Jugnoo Drivers App first to use this app</string>
+	<string name="disable_mock_location">Disable mock location first</string>
+
 </resources>

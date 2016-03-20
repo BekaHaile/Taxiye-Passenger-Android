@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -365,6 +366,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			holdForBranch = false;
 			clickCount = 0;
 
+			if (Data.locationFetcher == null) {
+				Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+			} else{
+				Data.locationFetcher.connect();
+			}
 
 			linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 			textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -1142,61 +1148,65 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	};
 
 	public void getDeviceToken() {
-		if (ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
-			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
+		boolean mockLocationEnabled = false;
+		if(Data.locationFetcher != null){
+			mockLocationEnabled = Utils.mockLocationEnabled(Data.locationFetcher.getLocationUnchecked());
+		}
+		if(mockLocationEnabled) {
+			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
+					getResources().getString(R.string.disable_mock_location),
 					new View.OnClickListener() {
+
 						@Override
 						public void onClick(View v) {
-							try {
-								Intent i = new Intent();
-								i.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-								i.addCategory(Intent.CATEGORY_DEFAULT);
-								i.setData(Uri.parse("package:" + Data.DRIVER_APP_PACKAGE));
-								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-								try {
-									startActivity(i);
-								} catch (Exception ex) {
-									ex.printStackTrace();
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
+							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+							finish();
+							if(Data.locationFetcher != null) {
+								Data.locationFetcher.destroy();
 							}
-						}
-					},
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							ActivityCompat.finishAffinity(SplashNewActivity.this);
-						}
-					}, false, false);
-
-		} else {
-			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
-
-				@Override
-				public void deviceTokenReceived(final String regId) {
-					runOnUiThread(new Runnable() {
-
-						@Override
-						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							Data.deviceToken = regId;
-							Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-							accessTokenLogin(SplashNewActivity.this);
-							FlurryEventLogger.appStarted(regId);
+							Data.locationFetcher = null;
 						}
 					});
+		} else {
+			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())
+					&& Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
+				DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
+						getResources().getString(R.string.uninstall_driver_app),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								ActivityCompat.finishAffinity(SplashNewActivity.this);
+							}
+						});
 
-				}
-			});
+			} else {
+				DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
+				new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+
+					@Override
+					public void deviceTokenReceived(final String regId) {
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								DialogPopup.dismissLoadingDialog();
+								Data.deviceToken = regId;
+								Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+								accessTokenLogin(SplashNewActivity.this);
+								FlurryEventLogger.appStarted(regId);
+							}
+						});
+
+					}
+				});
+			}
 		}
 	}
 
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 
 		if (Data.locationFetcher == null) {
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
@@ -1204,9 +1214,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationFetcher.connect();
 		}
 
-
-		super.onResume();
-		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;
 
