@@ -260,15 +260,14 @@
             </LinearLayout>
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideDriverImage"
-                android:layout_width="130px"
-                android:layout_height="130px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:tag="mwar">
+                android:layout_centerHorizontal="true">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="130px"
+                    android:layout_height="130px"
                     android:background="@drawable/circle_grey"
                     android:tag="mwar" />
 
@@ -276,8 +275,53 @@
                     android:id="@+id/imageViewInRideDriver"
                     android:layout_width="120px"
                     android:layout_height="120px"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5px"
                     android:tag="mwar" />
+                
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutDriverRating"
+                    android:layout_width="85px"
+                    android:layout_height="36px"
+                    android:background="@drawable/background_white_bordered"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="110px"
+
+                    >
+                    
+                    <ImageView
+                        android:layout_width="24px"
+                        android:layout_height="23px"
+                        android:src="@drawable/ic_star_orange_small"
+                        android:tag="mwar"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10px"
+
+                        />
+                    
+                    <ImageView
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:src="@color/text_color_light"
+                        android:layout_centerHorizontal="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewDriverRating"
+                        android:layout_width="42px"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"
+                        android:text="3.4"
+                        android:gravity="center"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+
+                        />
+
+                </RelativeLayout>
+                
+                
             </RelativeLayout>
 
 

@@ -295,7 +295,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button customerInRideMyLocationBtn;
 	LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
-    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState;
+    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
+    RelativeLayout relativeLayoutDriverRating;
     Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent;
 	RelativeLayout relativeLayoutIRPaymentOption;
@@ -339,7 +340,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     // data variables declaration
 
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    DecimalFormat decimalFormatNoDecimal = new DecimalFormat("#");
+    DecimalFormat decimalFormat1DigitAD = new DecimalFormat("#.#");
 
     LatLng lastSearchLatLng;
 
@@ -668,6 +669,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideDriverCarNumber.setTypeface(Fonts.mavenLight(this));
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
         textViewInRideState.setTypeface(Fonts.mavenLight(this));
+        textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
+        textViewDriverRating.setTypeface(Fonts.mavenLight(this));
+        relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenLight(this));
@@ -2732,42 +2736,57 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 	public void setAssignedDriverData(PassengerScreenMode mode) {
-        textViewInRideDriverName.setText(Data.assignedDriverInfo.name);
-        if (!"".equalsIgnoreCase(Data.assignedDriverInfo.carNumber)) {
-            textViewInRideDriverCarNumber.setText(Data.assignedDriverInfo.carNumber);
-        } else {
-            textViewInRideDriverCarNumber.setText("");
-        }
-
-        if (!Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
-            textViewInRidePromoName.setVisibility(View.VISIBLE);
-            textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
-        } else {
-            textViewInRidePromoName.setVisibility(View.GONE);
-            textViewInRidePromoName.setText("");
-        }
-
-
-        if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
-            textViewInRideFareFactor.setVisibility(View.VISIBLE);
-            textViewInRideFareFactor.setText("Price: " + decimalFormat.format(Data.userData.fareFactor) + "x");
-        } else {
-            textViewInRideFareFactor.setVisibility(View.GONE);
-            textViewInRideFareFactor.setText("");
-        }
-
-
-        if (PassengerScreenMode.P_REQUEST_FINAL == mode || PassengerScreenMode.P_DRIVER_ARRIVED == mode) {
-            updateDriverETAText(mode);
-        } else {
-            textViewInRideState.setText("Ride in\nprogress");
-        }
-
-
-        Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
         try {
-			if(!"".equalsIgnoreCase(Data.assignedDriverInfo.image)) {
-				Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewInRideDriver);
+            textViewInRideDriverName.setText(Data.assignedDriverInfo.name);
+            if (!"".equalsIgnoreCase(Data.assignedDriverInfo.carNumber)) {
+				textViewInRideDriverCarNumber.setText(Data.assignedDriverInfo.carNumber);
+			} else {
+				textViewInRideDriverCarNumber.setText("");
+			}
+
+            if (!Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
+				textViewInRidePromoName.setVisibility(View.VISIBLE);
+				textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
+			} else {
+				textViewInRidePromoName.setVisibility(View.GONE);
+				textViewInRidePromoName.setText("");
+			}
+
+
+            if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
+				textViewInRideFareFactor.setVisibility(View.VISIBLE);
+				textViewInRideFareFactor.setText("Price: " + decimalFormat.format(Data.userData.fareFactor) + "x");
+			} else {
+				textViewInRideFareFactor.setVisibility(View.GONE);
+				textViewInRideFareFactor.setText("");
+			}
+
+
+            if (PassengerScreenMode.P_REQUEST_FINAL == mode || PassengerScreenMode.P_DRIVER_ARRIVED == mode) {
+				updateDriverETAText(mode);
+			} else {
+				textViewInRideState.setText("Ride in\nprogress");
+			}
+
+            try {
+                double rating = Double.parseDouble(Data.assignedDriverInfo.rating);
+                if(rating > 0) {
+                    relativeLayoutDriverRating.setVisibility(View.VISIBLE);
+                    textViewDriverRating.setText(decimalFormat1DigitAD.format(rating));
+                } else{
+                    relativeLayoutDriverRating.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                relativeLayoutDriverRating.setVisibility(View.GONE);
+            }
+
+            Data.assignedDriverInfo.image = Data.assignedDriverInfo.image.replace("http://graph.facebook", "https://graph.facebook");
+            try {
+				if(!"".equalsIgnoreCase(Data.assignedDriverInfo.image)) {
+					Picasso.with(HomeActivity.this).load(Data.assignedDriverInfo.image).transform(new CircleTransform()).into(imageViewInRideDriver);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
         } catch (Exception e) {
             e.printStackTrace();
