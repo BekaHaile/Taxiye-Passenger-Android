@@ -30,8 +30,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	private long requestInterval;
 	private LocationUpdate locationUpdate;
 	private Context context;
-	private boolean wantCached;
-	
+
 	
 	private static String LOCATION_SP = "location_sp",
 			LOCATION_LAT = "location_lat",
@@ -49,16 +48,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		this.context = (Context) locationUpdate;
 		this.requestInterval = requestInterval;
 		this.priority = priority;
-		this.wantCached = true;
-		connect();
-	}
-
-	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority, boolean wantCached) {
-		this.locationUpdate = locationUpdate;
-		this.context = (Context) locationUpdate;
-		this.requestInterval = requestInterval;
-		this.priority = priority;
-		this.wantCached = wantCached;
 		connect();
 	}
 
@@ -67,7 +56,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		this.context = context;
 		this.requestInterval = requestInterval;
 		this.priority = priority;
-		this.wantCached = true;
 		connect();
 	}
 	
@@ -198,7 +186,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 				return location;
 			}
 			else{
-				if(googleApiClient != null && googleApiClient.isConnected() && wantCached){
+				if(googleApiClient != null && googleApiClient.isConnected()){
 					location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 					return location;
 				}

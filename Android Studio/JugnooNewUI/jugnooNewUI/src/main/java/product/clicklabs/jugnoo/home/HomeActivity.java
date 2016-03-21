@@ -5209,14 +5209,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         destroyFusedLocationFetchers();
         if (myLocation == null) {
             if (lowPowerLF == null) {
-                lowPowerLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 0, false);
+                lowPowerLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 0);
             }
             if (highAccuracyLF == null) {
-                highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2, false);
+                highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2);
             }
         } else {
             if (highAccuracyLF == null) {
-                highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2, false);
+                highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2);
             }
         }
     }
