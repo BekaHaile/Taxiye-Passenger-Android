@@ -187,8 +187,12 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			}
 			else{
 				if(googleApiClient != null && googleApiClient.isConnected()){
-					location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-					return location;
+					locationUnchecked = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+					Log.i(TAG, "getLocation = "+locationUnchecked);
+					if(!Utils.mockLocationEnabled(locationUnchecked)) {
+						location = locationUnchecked;
+						return location;
+					}
 				}
 			}
 		} catch(Exception e){e.printStackTrace();}
@@ -239,7 +243,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			}
             bundle.putBoolean("cached", true);
             loc.setExtras(bundle);
-			locationUnchecked = loc;
 			locationUpdate.onLocationChanged(loc, priority);
 		}
 		startRequest();
@@ -267,6 +270,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	@Override
 	public void onLocationChanged(Location location) {
 		try{
+			Log.i(TAG, "onLocationChanged = "+location);
 			locationUnchecked = location;
 			if(location != null && !Utils.mockLocationEnabled(location)) {
 				this.location = location;
