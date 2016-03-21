@@ -98,22 +98,28 @@ public class ApiFindADriver {
 	public void parseFindADriverResponse(FindADriverResponse findADriverResponse){
 		try {
 			Data.driverInfos.clear();
-			for (Driver driver : findADriverResponse.getDrivers()) {
-				double bearing = 0;
-				if (driver.getBearing() != null) {
-					bearing = driver.getBearing();
+			if(findADriverResponse.getDrivers() != null) {
+				for (Driver driver : findADriverResponse.getDrivers()) {
+					double bearing = 0;
+					if (driver.getBearing() != null) {
+						bearing = driver.getBearing();
+					}
+					Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
+							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
 				}
-				Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-						"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
 			}
-			DecimalFormat df = new DecimalFormat("#");
-			Data.etaMinutes = df.format(findADriverResponse.getEta());
+			if(findADriverResponse.getEta() != null) {
+				DecimalFormat df = new DecimalFormat("#");
+				Data.etaMinutes = df.format(findADriverResponse.getEta());
+			}
 			Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 			if (findADriverResponse.getPriorityTipCategory() != null) {
 				Data.priorityTipCategory = findADriverResponse.getPriorityTipCategory();
 			}
 
-			Data.userData.fareFactor = findADriverResponse.getFareFactor();
+			if(findADriverResponse.getFareFactor() != null) {
+				Data.userData.fareFactor = findADriverResponse.getFareFactor();
+			}
 			Data.farAwayCity = "";
 			if (findADriverResponse.getFarAwayCity() == null) {
 				Data.farAwayCity = "";
@@ -130,43 +136,49 @@ public class ApiFindADriver {
 			} else{
 				Data.promoCoupons.clear();
 			}
-			for (Coupon coupon : findADriverResponse.getCoupons()) {
-				Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
-						coupon.getCouponType(),
-						coupon.getStatus(),
-						coupon.getTitle(),
-						coupon.getSubtitle(),
-						coupon.getDescription(),
-						coupon.getImage(),
-						coupon.getRedeemedOn(),
-						coupon.getExpiryDate(), "", ""));
+			if(findADriverResponse.getCoupons() != null) {
+				for (Coupon coupon : findADriverResponse.getCoupons()) {
+					Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
+							coupon.getCouponType(),
+							coupon.getStatus(),
+							coupon.getTitle(),
+							coupon.getSubtitle(),
+							coupon.getDescription(),
+							coupon.getImage(),
+							coupon.getRedeemedOn(),
+							coupon.getExpiryDate(), "", ""));
+				}
 			}
-			for (Promotion promotion : findADriverResponse.getPromotions()) {
-				Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
-						promotion.getTitle(),
-						promotion.getTermsNConds()));
+			if(findADriverResponse.getPromotions() != null) {
+				for (Promotion promotion : findADriverResponse.getPromotions()) {
+					Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
+							promotion.getTitle(),
+							promotion.getTermsNConds()));
+				}
 			}
 
-			for (FareStructure fareStructure : findADriverResponse.getFareStructure()) {
-				String startTime = fareStructure.getStartTime();
-				String endTime = fareStructure.getEndTime();
-				String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
-				String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
-				long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
-				long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
-				double convenienceCharges = 0;
-				if (fareStructure.getConvenienceCharge() != null) {
-					convenienceCharges = fareStructure.getConvenienceCharge();
-				}
-				if (diffStart >= 0 && diffEnd <= 0) {
-					Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
-							fareStructure.getFareThresholdDistance(),
-							fareStructure.getFarePerKm(),
-							fareStructure.getFarePerMin(),
-							fareStructure.getFareThresholdTime(),
-							fareStructure.getFarePerWaitingMin(),
-							fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-					break;
+			if(findADriverResponse.getFareStructure() != null) {
+				for (FareStructure fareStructure : findADriverResponse.getFareStructure()) {
+					String startTime = fareStructure.getStartTime();
+					String endTime = fareStructure.getEndTime();
+					String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
+					String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
+					long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
+					long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
+					double convenienceCharges = 0;
+					if (fareStructure.getConvenienceCharge() != null) {
+						convenienceCharges = fareStructure.getConvenienceCharge();
+					}
+					if (diffStart >= 0 && diffEnd <= 0) {
+						Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
+								fareStructure.getFareThresholdDistance(),
+								fareStructure.getFarePerKm(),
+								fareStructure.getFarePerMin(),
+								fareStructure.getFareThresholdTime(),
+								fareStructure.getFarePerWaitingMin(),
+								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
+						break;
+					}
 				}
 			}
 

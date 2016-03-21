@@ -2829,18 +2829,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
             if (!"".equalsIgnoreCase(Data.assignedDriverInfo.getEta())) {
                 try {
-//                    double etaMin = Double.parseDouble(Data.assignedDriverInfo.getEta());
-//                    if (etaMin > 1) {
-//                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
-//                    } else {
-//                        textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minute");
-//                    }
                     pickupLocationMarker.setIcon(BitmapDescriptorFactory
                             .fromBitmap(CustomMapMarkerCreator
                                     .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 11)));
                 } catch (Exception e) {
                     e.printStackTrace();
-//                    textViewInRideState.setText("Will arrive in " + Data.assignedDriverInfo.getEta() + " minutes");
                 }
                 textViewInRideState.setText("Driver\nEnroute");
             }
@@ -2950,6 +2943,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (activityResumed) {
                         if (!feedbackSkipped && !promoOpened && !placeAdded
                             && PassengerScreenMode.P_RIDE_END != passengerScreenMode) {
+                            mapTouched = false;
                             callAndHandleStateRestoreAPI(false);
                         }
                         initiateTimersForStates(passengerScreenMode);

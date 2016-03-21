@@ -280,17 +280,19 @@ public class JSONParser implements Constants {
     private void parseFindDriverResp(LoginResponse loginResponse){
         try {
             //current_user_status = 1 driver or 2 user
-            if (loginResponse.getLogin().getCurrentUserStatus() == 2) {
-				parseDriversToShow(loginResponse.getDrivers());
-			}
+            parseDriversToShow(loginResponse.getDrivers());
 
-            DecimalFormat df = new DecimalFormat("#");
-            Data.etaMinutes = df.format(loginResponse.getEta());
+            if(loginResponse.getEta() != null) {
+                DecimalFormat df = new DecimalFormat("#");
+                Data.etaMinutes = df.format(loginResponse.getEta());
+            }
             Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
             if (loginResponse.getLogin().getPriorityTipCategory() != null) {
 				Data.priorityTipCategory = loginResponse.getLogin().getPriorityTipCategory();
 			}
-            Data.userData.fareFactor = loginResponse.getLogin().getFareFactor();
+            if(loginResponse.getLogin().getFareFactor() != null) {
+                Data.userData.fareFactor = loginResponse.getLogin().getFareFactor();
+            }
             if (loginResponse.getLogin().getFarAwayCity() == null) {
 				Data.farAwayCity = "";
 			} else {
@@ -308,43 +310,49 @@ public class JSONParser implements Constants {
             } else{
                 Data.promoCoupons.clear();
             }
-            for (Coupon coupon : loginResponse.getLogin().getCoupons()) {
-                Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
-                        coupon.getCouponType(),
-                        coupon.getStatus(),
-                        coupon.getTitle(),
-                        coupon.getSubtitle(),
-                        coupon.getDescription(),
-                        coupon.getImage(),
-                        coupon.getRedeemedOn(),
-                        coupon.getExpiryDate(), "", ""));
+            if(loginResponse.getLogin().getCoupons() != null) {
+                for (Coupon coupon : loginResponse.getLogin().getCoupons()) {
+                    Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
+                            coupon.getCouponType(),
+                            coupon.getStatus(),
+                            coupon.getTitle(),
+                            coupon.getSubtitle(),
+                            coupon.getDescription(),
+                            coupon.getImage(),
+                            coupon.getRedeemedOn(),
+                            coupon.getExpiryDate(), "", ""));
+                }
             }
-            for (Promotion promotion : loginResponse.getLogin().getPromotions()) {
-                Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
-                        promotion.getTitle(),
-                        promotion.getTermsNConds()));
+            if(loginResponse.getLogin().getPromotions() != null) {
+                for (Promotion promotion : loginResponse.getLogin().getPromotions()) {
+                    Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
+                            promotion.getTitle(),
+                            promotion.getTermsNConds()));
+                }
             }
 
-            for (FareStructure fareStructure : loginResponse.getLogin().getFareStructure()) {
-                String startTime = fareStructure.getStartTime();
-                String endTime = fareStructure.getEndTime();
-                String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
-                String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
-                long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
-                long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
-                double convenienceCharges = 0;
-                if (fareStructure.getConvenienceCharge() != null) {
-                    convenienceCharges = fareStructure.getConvenienceCharge();
-                }
-                if (diffStart >= 0 && diffEnd <= 0) {
-                    Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
-                            fareStructure.getFareThresholdDistance(),
-                            fareStructure.getFarePerKm(),
-                            fareStructure.getFarePerMin(),
-                            fareStructure.getFareThresholdTime(),
-                            fareStructure.getFarePerWaitingMin(),
-                            fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-                    break;
+            if(loginResponse.getLogin().getFareStructure() != null) {
+                for (FareStructure fareStructure : loginResponse.getLogin().getFareStructure()) {
+                    String startTime = fareStructure.getStartTime();
+                    String endTime = fareStructure.getEndTime();
+                    String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
+                    String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
+                    long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
+                    long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
+                    double convenienceCharges = 0;
+                    if (fareStructure.getConvenienceCharge() != null) {
+                        convenienceCharges = fareStructure.getConvenienceCharge();
+                    }
+                    if (diffStart >= 0 && diffEnd <= 0) {
+                        Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
+                                fareStructure.getFareThresholdDistance(),
+                                fareStructure.getFarePerKm(),
+                                fareStructure.getFarePerMin(),
+                                fareStructure.getFareThresholdTime(),
+                                fareStructure.getFarePerWaitingMin(),
+                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
+                        break;
+                    }
                 }
             }
         } catch(Exception e){
@@ -825,18 +833,20 @@ public class JSONParser implements Constants {
     public void parseDriversToShow(List<Driver> drivers) {
         try {
             Data.driverInfos.clear();
-            for (Driver driver : drivers) {
-                String userId = String.valueOf(driver.getUserId());
-                double latitude = driver.getLatitude();
-                double longitude = driver.getLongitude();
-                String userName = driver.getUserName();
-                String phoneNo = driver.getPhoneNo();
-                String rating = String.valueOf(driver.getRating());
-                String userImage = "";
-                String driverCarImage = "";
-                String carNumber = "";
-                double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
-                Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0, bearing));
+            if(drivers != null) {
+                for (Driver driver : drivers) {
+                    String userId = String.valueOf(driver.getUserId());
+                    double latitude = driver.getLatitude();
+                    double longitude = driver.getLongitude();
+                    String userName = driver.getUserName();
+                    String phoneNo = driver.getPhoneNo();
+                    String rating = String.valueOf(driver.getRating());
+                    String userImage = "";
+                    String driverCarImage = "";
+                    String carNumber = "";
+                    double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
+                    Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0, bearing));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
