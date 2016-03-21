@@ -778,6 +778,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
 				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_ACCOUNT);
 			}
 		});
 
@@ -832,7 +833,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Data.longitude = map.getCameraPosition().target.longitude;
                         startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        FlurryEventLogger.event(PROMOTIONS_CHECKED);
+                        FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_PROMOTIONS_SCREEN);
                     } else {
                         DialogPopup.dialogNoInternet(HomeActivity.this,
                                 Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
