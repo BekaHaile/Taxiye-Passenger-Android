@@ -156,10 +156,11 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(PromotionsActivity.this, ENTERED_PROMO_CODE);
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if(promoCode.length() > 0){
 					applyPromoCodeAPI(PromotionsActivity.this, promoCode);
-                    FlurryEventLogger.event(PROMO_CODE_ENTERED);
+                    FlurryEventLogger.event(PromotionsActivity.this, CLICKS_ON_APPLY);
 				}
 				else{
 					editTextPromoCode.requestFocus();
@@ -201,7 +202,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             public void onClick(View v) {
                 startActivity(new Intent(PromotionsActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(INVITE_EARN_PROMOTIONS);
+                FlurryEventLogger.event(PromotionsActivity.this, CLICKS_ON_INVITE);
             }
         });
 
@@ -349,7 +350,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                     holder = (ViewHolderCoupon) v.getTag();
                     CouponInfo couponInfo = couponInfosList.get(holder.id);
                     DialogPopup.alertPopupLeftOriented(PromotionsActivity.this, "", couponInfo.description);
-                    FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.couponType);
+                    FlurryEventLogger.event(PromotionsActivity.this, TNC_VIEWS);
 				}
 			});
 			
@@ -427,7 +428,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                     holder = (ViewHolderPromotion) v.getTag();
                     PromotionInfo promotionInfo = promotionInfoList.get(holder.id);
                     DialogPopup.alertPopupHtml(PromotionsActivity.this, "", promotionInfo.terms);
-                    FlurryEventLogger.event(ONGOING_OFFERS_CHECKED);
+                    FlurryEventLogger.event(PromotionsActivity.this, TNC_VIEWS_PROMO);
                 }
             });
 

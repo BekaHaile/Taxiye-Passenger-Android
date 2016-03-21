@@ -229,5 +229,23 @@ public interface FlurryEventNames {
             LOGIN_SINCE_FIRST_APP_OPEN_DIFF = "login_since_first_app_open_diff",
             APP_DOWNLOAD_SOURCE = "app_download_source";
 
+    String CLICKS_ON_PROMOTIONS_SCREEN = "clicks_on_promotions_screen",
+            ENTERED_PROMO_CODE = "entered_promo_code",
+            CLICKS_ON_APPLY = "clicks_on_apply",
+            CLICKS_ON_INVITE = "clicks_on_invite_on_promotions_screen",
+            TNC_VIEWS = "coupon_tnc_views",
+            TNC_VIEWS_PROMO = "promotion_tnc_views",
+            HOW_MANY_USERS_ADDED_ADD_HOME = "how_many_users_added_add_home",
+            HOW_MANY_USERS_ADDED_ADD_WORK = "how_many_users_added_add_work",
+            CLICKS_ON_LOGOUT = "clicks_on_logout",
+            CLICKS_ON_EMERGENCY_CONTACTS = "clicks_on_emergency_contacts",
+            CLICKS_ON_ADDED_EMERGENCY_CONTACTS = "clicks_on_added_emergency_contacts",
+            CLICKS_ON_RIDE_SUMMARY = "clicks_on_ride_summary",
+            CLICKS_ON_NEED_HELP = "clicks_on_need_help",
+            CLICKS_ON_SUPPORT_ISSUES = "clicks_on_support_issues",
+            CLICKS_ON_SUPPORT = "clicks_on_support",
+            CLICKS_ON_RIDE_HISTORY = "clicks_on_ride_history",
+            CLICKS_ON_ACCOUNT = "clicks_on_account";
+
 
 }

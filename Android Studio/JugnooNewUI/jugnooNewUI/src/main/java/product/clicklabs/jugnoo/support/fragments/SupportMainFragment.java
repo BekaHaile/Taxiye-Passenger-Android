@@ -40,6 +40,7 @@ import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
@@ -150,6 +151,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		recyclerViewSupportFaq.setVisibility(View.GONE);
 		getRideSummaryAPI(activity);
 		showPanel();
+
+		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
 
 		return rootView;

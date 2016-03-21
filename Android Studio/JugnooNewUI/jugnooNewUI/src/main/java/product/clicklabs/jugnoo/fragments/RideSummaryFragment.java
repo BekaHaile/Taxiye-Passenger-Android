@@ -212,7 +212,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					new TransactionUtils().openRideIssuesFragment(activity,
 							((RideTransactionsActivity)activity).getContainer(),
 							engagementId, endRideData, getRideSummaryResponse);
-					FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_NEED_HELP);
+					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
 				} else {
 					performBackPressed();
 				}

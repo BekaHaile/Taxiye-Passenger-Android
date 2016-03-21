@@ -130,6 +130,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 												((SupportActivity) activity).getContainer(),
 												rideInfo.engagementId, null, null);
 									}
+									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 								}

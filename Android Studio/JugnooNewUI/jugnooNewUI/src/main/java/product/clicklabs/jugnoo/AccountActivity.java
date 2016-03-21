@@ -443,7 +443,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 dissmissEmailVerify();
-                FlurryEventLogger.event(EMERGENCY_CONTACT_TO_BE_ADDED);
+                FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_EMERGENCY_CONTACTS);
             }
         });
 
@@ -455,6 +455,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
                 startActivityForResult(intent, ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
 
                 /*startActivity(new Intent(AccountActivity.this, AddPlaceActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -471,6 +472,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
                 startActivityForResult(intent, ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
 
                 /*startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -504,6 +506,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                             @Override
                             public void onClick(View v) {
+                                FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_LOGOUT);
                                 logoutAsync(AccountActivity.this);
                             }
                         },
