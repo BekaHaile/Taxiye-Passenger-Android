@@ -132,18 +132,20 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 
 	private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
-	public void getBalance(final String fragName) {
+	private String fragName = "Refresh";
+	public void getBalance(String fragName) {
 		try {
+			this.fragName = fragName;
 			if(apiPaytmCheckBalance == null){
 				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
 					@Override
 					public void onSuccess() {
-						performGetBalanceSuccess(fragName);
+						performGetBalanceSuccess(PaymentActivity.this.fragName);
 					}
 
 					@Override
 					public void onFailure() {
-						getBalance(fragName);
+						getBalance(PaymentActivity.this.fragName);
 					}
 
 					@Override
@@ -153,7 +155,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 					@Override
 					public void onRetry(View view) {
-						getBalance(fragName);
+						getBalance(PaymentActivity.this.fragName);
 					}
 
 					@Override
