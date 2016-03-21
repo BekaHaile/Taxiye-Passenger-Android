@@ -2628,18 +2628,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
             }
             else{
-                linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+                if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+                    linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                    Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+                    linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+                }
                 textViewAssigningDropLocationClick.setText("");
                 imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
                 progressBarAssigningDropLocation.setVisibility(View.GONE);
             }
         }
         else{
-            linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-            Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-            linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+            if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+                linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+                linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+            }
             setDropLocationMarker();
             imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
             if(textViewAssigningDropLocationClick.getText().length() == 0){

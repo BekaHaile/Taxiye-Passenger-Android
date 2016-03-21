@@ -182,7 +182,8 @@ public class Database2 {                                                        
                     + PUSH_TITLE + " TEXT"
                     + ");");
 
-            for (NotificationData data : notifications) {
+            for (int i = notifications.size()-1; i >= 0; i--) {
+                NotificationData data = notifications.get(i);
                 insertNotification(context, data.getNotificationId(),
                         data.getTimePushArrived(),
                         data.getTitle(),
