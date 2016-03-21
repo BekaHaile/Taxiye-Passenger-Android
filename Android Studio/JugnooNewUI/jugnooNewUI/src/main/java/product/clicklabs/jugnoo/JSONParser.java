@@ -7,15 +7,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
@@ -43,6 +46,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -280,7 +284,8 @@ public class JSONParser implements Constants {
 				parseDriversToShow(loginResponse.getDrivers());
 			}
 
-            Data.etaMinutes = String.valueOf(loginResponse.getEta());
+            DecimalFormat df = new DecimalFormat("#");
+            Data.etaMinutes = df.format(loginResponse.getEta());
             Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
             if (loginResponse.getLogin().getPriorityTipCategory() != null) {
 				Data.priorityTipCategory = loginResponse.getLogin().getPriorityTipCategory();
@@ -555,7 +560,7 @@ public class JSONParser implements Constants {
 
 
 
-    public String getUserStatus(Context context, String accessToken, int currentUserStatus) {
+    public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver) {
         try {
             long startTime = System.currentTimeMillis();
             HashMap<String, String> nameValuePairs = new HashMap<>();
@@ -568,7 +573,13 @@ public class JSONParser implements Constants {
                 return Constants.SERVER_TIMEOUT;
             } else {
                 JSONObject jObject1 = new JSONObject(responseStr);
-                return parseCurrentUserStatus(context, currentUserStatus, jObject1);
+                String resp = parseCurrentUserStatus(context, currentUserStatus, jObject1);
+
+                Gson gson = new Gson();
+                FindADriverResponse findADriverResponse = gson.fromJson(responseStr, FindADriverResponse.class);
+                apiFindADriver.parseFindADriverResponse(findADriverResponse);
+
+                return resp;
             }
         } catch (Exception e) {
             e.printStackTrace();

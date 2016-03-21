@@ -1757,11 +1757,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 clearSPData();
                 switchPassengerScreen(passengerScreenMode);
             } else {
-                //TODO
-//                mapTouched = false;
                 switchPassengerScreen(passengerScreenMode);
             }
-
         }
     }
 
@@ -3424,9 +3421,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-
-    private ApiFindADriver apiFindADriver = null;
-    private void findDriversETACall(){
+    private ApiFindADriver createApiFindADriver(){
         if(apiFindADriver == null) {
             apiFindADriver = new ApiFindADriver(this, new ApiFindADriver.Callback() {
                 @Override
@@ -3463,42 +3458,49 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             });
         }
-        apiFindADriver.hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo);
+        return apiFindADriver;
+    }
+
+    private ApiFindADriver apiFindADriver = null;
+    private void findDriversETACall(){
+        createApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo);
     }
 
     private void findADriverFinishing(){
-        try {
-            HomeActivity.this.etaMinutes = Data.etaMinutes;
-            HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
-            HomeActivity.this.farAwayCity = Data.farAwayCity;
+        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            try {
+                HomeActivity.this.etaMinutes = Data.etaMinutes;
+                HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
+                HomeActivity.this.farAwayCity = Data.farAwayCity;
 
-            if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                showDriverMarkersAndPanMap(Data.pickupLatLng);
-                dontCallRefreshDriver = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        dontCallRefreshDriver = false;
+                if (relativeLayoutLocationError.getVisibility() == View.GONE) {
+                    showDriverMarkersAndPanMap(Data.pickupLatLng);
+                    dontCallRefreshDriver = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dontCallRefreshDriver = false;
+                        }
+                    }, 300);
+
+                    if (Data.driverInfos.size() == 0) {
+                        textViewCentrePinETA.setText("-");
+                    } else {
+                        textViewInitialInstructions.setVisibility(View.GONE);
+                        textViewCentrePinETA.setText(etaMinutes);
                     }
-                }, 300);
 
-                if (Data.driverInfos.size() == 0) {
-                    textViewCentrePinETA.setText("-");
-                } else {
-                    textViewInitialInstructions.setVisibility(View.GONE);
-                    textViewCentrePinETA.setText(etaMinutes);
+                    setServiceAvailablityUI(farAwayCity);
                 }
-
-                setServiceAvailablityUI(farAwayCity);
+                setFareFactorToInitialState();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            setFareFactorToInitialState();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            slidingBottomPanel.update(Data.promoCoupons);
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                slidingBottomPanel.update(Data.promoCoupons);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -4299,7 +4301,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
             };
-            timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 100, 60000);
+            timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 60000, 60000);
             Log.i("timerUpdateDrivers", "started");
         } catch (Exception e) {
             e.printStackTrace();
@@ -5998,9 +6000,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         });
                         int currentUserStatus = 2;
-                        String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+                        String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
+                                currentUserStatus, createApiFindADriver());
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
-                            String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken, currentUserStatus);
+                            String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
+                                    currentUserStatus, createApiFindADriver());
                             if (resp1.contains(Constants.SERVER_TIMEOUT)) {
                                 runOnUiThread(new Runnable() {
                                     @Override

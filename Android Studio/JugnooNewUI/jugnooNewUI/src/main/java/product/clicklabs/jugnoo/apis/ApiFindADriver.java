@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -105,7 +106,8 @@ public class ApiFindADriver {
 				Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
 						"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
 			}
-			Data.etaMinutes = String.valueOf(findADriverResponse.getEta());
+			DecimalFormat df = new DecimalFormat("#");
+			Data.etaMinutes = df.format(findADriverResponse.getEta());
 			Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 			if (findADriverResponse.getPriorityTipCategory() != null) {
 				Data.priorityTipCategory = findADriverResponse.getPriorityTipCategory();

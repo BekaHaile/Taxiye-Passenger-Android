@@ -37,9 +37,6 @@ public class FindADriverResponse {
     @SerializedName("promotions")
     @Expose
     private List<Promotion> promotions = new ArrayList<Promotion>();
-    @SerializedName("dynamic_factor")
-    @Expose
-    private String dynamicFactor;
     @SerializedName("fare_structure")
     @Expose
     private List<FareStructure> fareStructure = new ArrayList<FareStructure>();
@@ -157,24 +154,6 @@ public class FindADriverResponse {
      */
     public void setPromotions(List<Promotion> promotions) {
         this.promotions = promotions;
-    }
-
-    /**
-     *
-     * @return
-     * The dynamicFactor
-     */
-    public String getDynamicFactor() {
-        return dynamicFactor;
-    }
-
-    /**
-     *
-     * @param dynamicFactor
-     * The dynamic_factor
-     */
-    public void setDynamicFactor(String dynamicFactor) {
-        this.dynamicFactor = dynamicFactor;
     }
 
     /**

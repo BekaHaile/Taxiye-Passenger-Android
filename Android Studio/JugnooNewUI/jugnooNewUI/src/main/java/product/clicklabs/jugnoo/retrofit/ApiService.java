@@ -340,7 +340,7 @@ public interface ApiService {
                                  Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/get_current_user_status")
+    @POST("/v2/get_current_user_status")
     Response getCurrentUserStatus(@FieldMap Map<String, String> params);
 
 
