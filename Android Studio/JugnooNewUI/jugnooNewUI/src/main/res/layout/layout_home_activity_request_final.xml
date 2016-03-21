@@ -274,8 +274,8 @@
 
                 <ImageView
                     android:id="@+id/imageViewInRideDriver"
-                    android:layout_width="130px"
-                    android:layout_height="130px"
+                    android:layout_width="135px"
+                    android:layout_height="135px"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5px"
                     android:tag="mwar" />
