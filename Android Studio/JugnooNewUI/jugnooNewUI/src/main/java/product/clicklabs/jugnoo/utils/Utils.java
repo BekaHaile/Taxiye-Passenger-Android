@@ -14,8 +14,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
@@ -26,6 +28,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.google.android.gms.location.FusedLocationProviderApi;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -50,6 +54,7 @@ import java.util.zip.GZIPOutputStream;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 
 
@@ -651,6 +656,23 @@ public class Utils {
 		byte[] compressed = os.toByteArray();
 		os.close();
 		return compressed;
+	}
+
+	public static boolean mockLocationEnabled(Location location) {
+		try {
+			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())) {
+				boolean isMockLocation = false;
+				if(location != null){
+					Bundle extras = location.getExtras();
+					isMockLocation = extras != null && extras.getBoolean(FusedLocationProviderApi.KEY_MOCK_LOCATION, false);
+				}
+				return isMockLocation;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
