@@ -327,6 +327,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				e.printStackTrace();
 			}
 
+
 			FacebookSdk.sdkInitialize(this);
 
 			Utils.disableSMSReceiver(this);
@@ -973,14 +974,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
-		try {
-			String message = "hello\nhikhjasd";
-			String[] arr = message.split("\\\n");
-			Log.e(TAG, "arr0="+arr[0]);
-			Log.e(TAG, "arr1="+arr[1]);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 	}
 
@@ -2513,6 +2506,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.i("register_using_email params", params.toString());
 
@@ -2628,6 +2622,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -2729,6 +2724,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.e("register_using_facebook params", params.toString());
 

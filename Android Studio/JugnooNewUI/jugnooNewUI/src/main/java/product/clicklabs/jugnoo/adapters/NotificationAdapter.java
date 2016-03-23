@@ -7,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -101,6 +99,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 				//Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
                 //Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
                 Picasso.with(activity).load(notification.getNotificationImage())
+                        .placeholder(R.drawable.ic_notification_placeholder)
+                        .error(R.drawable.ic_notification_placeholder)
 //                        .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
                         .into(holder.imageViewNotification);
 			}
