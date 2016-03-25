@@ -5724,6 +5724,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             slidingBottomPanel.setSelectedCoupon(null);
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
+
+            Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+            setUserData();
+
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
             BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
@@ -6332,6 +6336,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
 					@Override
 					public void onSuccess() {
+                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
                         setUserData();
 					}
 

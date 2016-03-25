@@ -29,7 +29,7 @@ public class PaytmRechargeDialog {
     private Dialog dialog;
     private String transferId, transferSenderName, transferPhone, transferAmount;
     private EditText editTextAmount;
-    private LinearLayout linearLayoutAmount;
+    private TextView textViewTypeAmount;
     private Button btnOk;
     private Callback callback;
 
@@ -43,6 +43,7 @@ public class PaytmRechargeDialog {
         this.transferAmount = transferAmount;
         this.callback = callback;
     }
+
 
     public Dialog show(){
         try {
@@ -63,13 +64,13 @@ public class PaytmRechargeDialog {
             ((TextView)dialog.findViewById(R.id.textViewRecharge)).setTypeface(Fonts.mavenRegular(activity));
             TextView textViewRechargeInfo = (TextView) dialog.findViewById(R.id.textViewRechargeInfo);
             textViewRechargeInfo.setTypeface(Fonts.mavenLight(activity));
-            ((TextView)dialog.findViewById(R.id.textViewTypeAmount)).setTypeface(Fonts.mavenRegular(activity));
+            textViewTypeAmount = (TextView)dialog.findViewById(R.id.textViewTypeAmount);
+            textViewTypeAmount.setTypeface(Fonts.mavenRegular(activity));
             ((TextView)dialog.findViewById(R.id.textViewRupee)).setTypeface(Fonts.mavenRegular(activity));
             editTextAmount = (EditText) dialog.findViewById(R.id.editTextAmount);
             editTextAmount.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
             btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
-            linearLayoutAmount = (LinearLayout) dialog.findViewById(R.id.linearLayoutAmount);
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
             btnCancel.setTypeface(Fonts.mavenRegular(activity));
 
@@ -121,7 +122,7 @@ public class PaytmRechargeDialog {
 
             dialog.show();
             activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            btnOk.requestFocus();
+            textViewTypeAmount.requestFocus();
             return dialog;
         } catch (Exception e) {
             e.printStackTrace();
