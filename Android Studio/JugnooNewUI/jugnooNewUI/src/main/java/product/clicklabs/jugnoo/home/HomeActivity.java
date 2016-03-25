@@ -136,6 +136,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
@@ -3491,7 +3492,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
             try {
-                slidingBottomPanel.update(Data.promoCoupons);
+                Data.vehicleTypes = new ArrayList<>();
+                Data.vehicleTypes.add(new VehicleType(1, "Autos"));
+                Data.vehicleTypes.add(new VehicleType(2, "Bike"));
+                slidingBottomPanel.update(Data.promoCoupons, Data.vehicleTypes);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -3,46 +3,63 @@ package product.clicklabs.jugnoo.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
 import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
+import product.clicklabs.jugnoo.home.fragments.BottomVehiclesFragment;
 
 /**
  * Created by Ankit on 12/29/15.
  */
 public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 
-	public SlidingBottomFragmentAdapter(FragmentManager fm) {
+	private boolean showVehicles;
+	public SlidingBottomFragmentAdapter(FragmentManager fm, boolean showVehicles) {
 		super(fm);
+		this.showVehicles = showVehicles;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
-		Fragment fragment = null;
+		if(showVehicles){
+			if(position == 0){
+				return new BottomVehiclesFragment();
+			} else{
+				position--;
+			}
+		}
 		switch(position){
 			case 0:
-				fragment = new SlidingBottomCashFragment();
-				break;
+				return new SlidingBottomCashFragment();
 
 			case 1:
-				fragment = new SlidingBottomFareFragment();
-				break;
+				return new SlidingBottomFareFragment();
 
 			case 2:
-				fragment = new SlidingBottomOffersFragment();
-				break;
+				return new SlidingBottomOffersFragment();
 		}
-
-		return fragment;
+		return null;
 	}
 
 	@Override
 	public int getCount() {
-		return 3;
+		if(showVehicles) {
+			return 4;
+		} else{
+			return 3;
+		}
 	}
 
 	@Override
 	public CharSequence getPageTitle(int position) {
+		if(showVehicles) {
+			if(position == 0){
+				return "Vehicles";
+			} else{
+				position--;
+			}
+		}
 		switch (position) {
 			case 0:
 				return "Cash";
@@ -51,7 +68,6 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 			case 2:
 				return "Offers";
 		}
-
 		return null;
 	}
 

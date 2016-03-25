@@ -14,67 +14,6 @@
         android:layout_height="wrap_content"
         android:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutPromotion1"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/nl_button_size"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/radioPromotion1"
-            android:layout_width="33px"
-            android:layout_height="33px"
-            android:layout_marginLeft="23px"
-            android:src="@drawable/radio_unselected_icon"
-            android:tag="mwar" />
-
-        <TextView
-            android:id="@+id/textViewPromotion1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="39px"
-            android:text="cashback"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_40" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/linearLayoutPromotion2"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/nl_button_size"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:layout_marginTop="25px"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/radioPromotion2"
-            android:layout_width="33px"
-            android:layout_height="33px"
-            android:layout_marginLeft="23px"
-            android:src="@drawable/radio_unselected_icon"
-            android:tag="mwar" />
-
-        <TextView
-            android:id="@+id/textViewPromotion2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="39px"
-            android:text="cashback"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_40" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutNoOffers"
