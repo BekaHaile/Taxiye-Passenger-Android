@@ -445,9 +445,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
         if(!HomeActivity.checkIfUserDataNull(activity)) {
                 if (AppStatus.getInstance(activity).isOnline(activity)) {
                     DialogPopup.showLoadingDialog(activity, "Loading...");
-                    couponInfosList.clear();
-                    couponsListAdapter.notifyDataSetChanged();
-                    linearLayoutNoCoupons.setVisibility(View.GONE);
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("access_token", Data.userData.accessToken);
