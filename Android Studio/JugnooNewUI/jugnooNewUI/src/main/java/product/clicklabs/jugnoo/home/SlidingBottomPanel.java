@@ -132,6 +132,9 @@ public class SlidingBottomPanel {
         });
 
         update(null, null);
+
+        vehicleTypeSelected = vehicleTypeDefault;
+        relativeLayoutVehicleType.setVisibility(View.GONE);
     }
 
     public void slideOnClick(View view) {

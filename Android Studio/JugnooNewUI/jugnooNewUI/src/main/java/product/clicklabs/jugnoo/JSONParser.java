@@ -354,6 +354,8 @@ public class JSONParser implements Constants {
                         break;
                     }
                 }
+            }else{
+                Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false);
             }
         } catch(Exception e){
             e.printStackTrace();
