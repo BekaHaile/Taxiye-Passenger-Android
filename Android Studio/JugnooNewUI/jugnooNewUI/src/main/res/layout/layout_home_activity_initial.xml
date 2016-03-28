@@ -6,12 +6,15 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayoutInitialSearchBarMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -42,9 +45,9 @@
                 android:layout_toLeftOf="@+id/progressBarInitialSearch"
                 android:background="@color/transparent"
                 android:gravity="center_vertical"
-                android:hint="Set pick up location"
+                android:hint="@string/set_pickup_location"
                 android:singleLine="true"
-                android:textColor="@color/black_text"
+                android:textColor="@color/text_color"
                 android:textSize="30px" />
 
             <product.clicklabs.jugnoo.utils.ProgressWheel
@@ -60,12 +63,6 @@
                 wheel:matProg_barWidth="3dp"
                 wheel:matProg_fillRadius="true"
                 wheel:matProg_progressIndeterminate="true" />
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:rotation="180"
-                android:src="@drawable/shadow_down" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -124,16 +121,20 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutInitialFareFactor"
             android:layout_width="match_parent"
-            android:layout_height="50px"
+            android:layout_height="55px"
             android:layout_gravity="center_horizontal"
             android:background="@color/sliding_bottom_bg_color"
-            android:animateLayoutChanges="true"
             android:visibility="visible">
 
             <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:src="@color/text_color_hint"/>
+
+            <ImageView
                 android:id="@+id/imageViewPriorityTip"
-                android:layout_width="36px"
-                android:layout_height="41px"
+                android:layout_width="34px"
+                android:layout_height="39px"
                 android:layout_marginLeft="30px"
                 android:layout_centerVertical="true"
                 android:src="@drawable/surge_icon_top"/>
@@ -154,7 +155,7 @@
                     android:gravity="left"
                     android:singleLine="true"
                     android:text="1.2x"
-                    android:textColor="@color/black_text_grey"
+                    android:textColor="@color/text_color"
                     android:textSize="26px" />
 
 
@@ -166,21 +167,22 @@
                     android:gravity="left"
                     android:singleLine="true"
                     android:text="of standard rates applicable right now"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/text_color"
                     android:textSize="24px" />
 
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:rotation="180"
-                android:src="@drawable/shadow_up" />
+
         </RelativeLayout>
 
-    </LinearLayout>
 
+    </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/shadow_down" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/initialMyLocationBtn"
@@ -199,128 +201,14 @@
         android:layout_height="187px"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60px"
+        android:layout_marginBottom="40px"
         android:src="@drawable/auto_icon_r_selector"
         android:tag="mwar" />
 
-    <LinearLayout
-        android:id="@+id/changeLocalityLayout"
-        android:layout_width="match_parent"
-        android:layout_height="224px"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        android:background="@color/sliding_bottom_bg_color"
-        android:layout_alignParentBottom="true">
-
-        <TextView
-            android:id="@+id/textViewChangeLocality"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32"
-            android:gravity="center"/>
-
-        <Button
-            android:id="@+id/changeLocalityBtn"
-            style="@style/ButtonTheme"
-            android:layout_marginTop="30px"
-            android:layout_centerHorizontal="true"
-            android:text="@string/nl_change_locality"
-            android:visibility="visible" />
-    </LinearLayout>
-    <Button
-        android:id="@+id/initialMyLocationBtnChangeLoc"
-        android:layout_width="87px"
-        android:layout_height="87px"
-        android:layout_above="@+id/changeLocalityLayout"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="40px"
-        android:layout_marginRight="50px"
-        android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar"
-        android:visibility="gone" />
 
 
 
-    <!-- Location error -->
-    <RelativeLayout
-        android:id="@+id/relativeLayoutLocationError"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black_translucent_less"
-        android:visibility="gone">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutLocationErrorSearchBar"
-            android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15px"
-            android:layout_marginLeft="10px"
-            android:layout_marginRight="10px"
-            android:layout_marginTop="15px"
-            android:background="@drawable/dropshadow_grey"
-            android:splitMotionEvents="false">
-
-            <ImageView
-                android:id="@+id/imageViewLocationErrorSearchGPSIcon"
-                android:layout_width="30px"
-                android:layout_height="44px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="18px"
-                android:src="@drawable/search_location_icon"
-                android:tag="mwar" />
-
-            <TextView
-                android:id="@+id/textViewLocationErrorSearch"
-                android:layout_width="580px"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
-                android:background="@color/transparent"
-                android:hint="Set pick up location"
-                android:singleLine="true"
-                android:textColor="@color/black_text"
-                android:textSize="30px" />
-
-        </RelativeLayout>
-
-
-        <ImageView
-            android:id="@+id/imageViewLocationErrorArrow"
-            android:layout_width="39px"
-            android:layout_height="230px"
-            android:layout_below="@+id/relativeLayoutLocationErrorSearchBar"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="37px"
-            android:src="@drawable/curly_arrow"
-            android:tag="mwar" />
-
-        <ImageView
-            android:id="@+id/imageViewLocationErrorText"
-            android:layout_width="375px"
-            android:layout_height="146px"
-            android:layout_below="@+id/imageViewLocationErrorArrow"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="47px"
-            android:src="@drawable/mark_location_text"
-            android:tag="mwar" />
-
-
-        <ImageView
-            android:id="@+id/imageViewLocationError"
-            android:layout_width="110px"
-            android:layout_height="140px"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="190px"
-            android:src="@drawable/location_error_icon"
-            android:tag="mwar" />
-
-    </RelativeLayout>
 
 
 </RelativeLayout>

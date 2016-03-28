@@ -5,7 +5,7 @@ import java.util.Locale;
 
 public class EndRideData {
 	
-	public String engagementId, driverName, driverCarNumber,
+	public String engagementId, driverName, driverCarNumber, driverImage,
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
@@ -13,14 +13,18 @@ public class EndRideData {
 	public double paidUsingPaytm;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
+	private String rideDate, phoneNumber, tripTotal;
 	
-	public EndRideData(String engagementId, String driverName, String driverCarNumber, String pickupAddress, String dropAddress, String pickupTime, String dropTime,
+	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
+					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
-					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm){
+					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
+					   String rideDate, String phoneNumber, String tripTotal){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
+		this.driverImage = driverImage;
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 		this.pickupTime = pickupTime;
@@ -54,6 +58,10 @@ public class EndRideData {
 		}
 
 		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount;
+
+		this.rideDate = rideDate;
+		this.phoneNumber = phoneNumber;
+		this.tripTotal = tripTotal;
 	}
 
 
@@ -61,5 +69,28 @@ public class EndRideData {
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber;
 	}
-	
+
+	public String getRideDate() {
+		return rideDate;
+	}
+
+	public void setRideDate(String rideDate) {
+		this.rideDate = rideDate;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getTripTotal() {
+		return tripTotal;
+	}
+
+	public void setTripTotal(String tripTotal) {
+		this.tripTotal = tripTotal;
+	}
 }

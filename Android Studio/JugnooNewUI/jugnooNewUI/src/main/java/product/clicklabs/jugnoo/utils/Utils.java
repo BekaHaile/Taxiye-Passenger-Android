@@ -14,8 +14,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
@@ -27,11 +29,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.google.android.gms.location.FusedLocationProviderApi;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
@@ -44,11 +47,14 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 
 
@@ -345,14 +351,14 @@ public class Utils {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.e("KeyHash:", ","
+                Log.e("KeyHash", ","
                     + Base64.encodeToString(md.digest(),
                     Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("error:", "," + e.toString());
+            Log.e("error", "," + e.toString());
         } catch (NoSuchAlgorithmException e) {
-            Log.e("error:", "," + e.toString());
+            Log.e("error", "," + e.toString());
         }
     }
 
@@ -381,15 +387,17 @@ public class Utils {
     }
 
 
-    public static ArrayList<NameValuePair> convertQueryToNameValuePairArr(String query) throws UnsupportedEncodingException {
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            nameValuePairs.add(new BasicNameValuePair(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
-        }
-        return nameValuePairs;
-    }
+	public static HashMap<String, String> convertQueryToNameValuePairArr(String query)
+			throws UnsupportedEncodingException {
+		HashMap<String, String> nameValuePairs = new HashMap<>();
+		String[] pairs = query.substring(2, query.length()-2).split(", ");
+		for (String pair : pairs) {
+			int idx = pair.indexOf("=");
+			nameValuePairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+					URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+		}
+		return nameValuePairs;
+	}
 
 
     public static boolean isServiceRunning(Context context, String className) {
@@ -424,6 +432,24 @@ public class Utils {
 			pm.setComponentEnabledSetting(receiver,
 					PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
 					PackageManager.DONT_KILL_APP);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void enableReceiver(Context context, Class classT, boolean enable){
+		try {
+			ComponentName receiver = new ComponentName(context, classT);
+			PackageManager pm = context.getPackageManager();
+			if(enable) {
+				pm.setComponentEnabledSetting(receiver,
+						PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+						PackageManager.DONT_KILL_APP);
+			} else{
+				pm.setComponentEnabledSetting(receiver,
+						PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+						PackageManager.DONT_KILL_APP);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -597,11 +623,11 @@ public class Utils {
 	}
 
 	public interface AlertCallBackWithButtonsInterface {
-		void positiveClick();
+		void positiveClick(View view);
 
-		void neutralClick();
+		void neutralClick(View view);
 
-		void negativeClick();
+		void negativeClick(View view);
 	}
 
 	public static void openUrl(Context context, String url){
@@ -610,4 +636,45 @@ public class Utils {
 		context.startActivity(i);
 	}
 
+	public static List<String> splitEqually(String text, int size) {
+		// Give the list the right capacity to start with. You could use an array
+		// instead if you wanted.
+		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
+
+		for (int start = 0; start < text.length(); start += size) {
+			ret.add(text.substring(start, Math.min(text.length(), start + size)));
+		}
+		return ret;
+	}
+
+
+	public static byte[] compressToBytesData(String string) throws IOException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
+		GZIPOutputStream gos = new GZIPOutputStream(os);
+		gos.write(string.getBytes());
+		gos.close();
+		byte[] compressed = os.toByteArray();
+		os.close();
+		return compressed;
+	}
+
+	public static boolean mockLocationEnabled(Location location) {
+		try {
+			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())) {
+				boolean isMockLocation = false;
+				if(location != null){
+					Bundle extras = location.getExtras();
+					isMockLocation = extras != null && extras.getBoolean(FusedLocationProviderApi.KEY_MOCK_LOCATION, false);
+				}
+				return isMockLocation;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 }
+
+

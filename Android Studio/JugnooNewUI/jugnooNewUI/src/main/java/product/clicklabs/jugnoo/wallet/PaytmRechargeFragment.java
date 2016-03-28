@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -19,17 +18,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -37,17 +35,26 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class PaytmRechargeFragment extends Fragment {
+
+	private final String TAG = PaytmRechargeFragment.class.getSimpleName();
 
 	LinearLayout relative;
 
@@ -59,8 +66,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 	TextView textViewAddCash;
 	EditText editTextAmount;
-	Button buttonAmount1, buttonAmount2, buttonAmount3, buttonAddMoney;
-	Button buttonMakePayment, buttonMakePaymentOTP, buttonWithdrawMoney, buttonRemoveWallet;
+	Button buttonAmount1, buttonAmount2, buttonAmount3, buttonAddMoney, buttonRemoveWallet;
 
 	View rootView;
 	PaymentActivity paymentActivity;
@@ -123,10 +129,6 @@ public class PaytmRechargeFragment extends Fragment {
 		buttonAmount2 = (Button) rootView.findViewById(R.id.buttonAmount2);	buttonAmount2.setTypeface(Fonts.mavenLight(paymentActivity));
 		buttonAmount3 = (Button) rootView.findViewById(R.id.buttonAmount3);	buttonAmount3.setTypeface(Fonts.mavenLight(paymentActivity));
 		buttonAddMoney = (Button) rootView.findViewById(R.id.buttonAddMoney); buttonAddMoney.setTypeface(Fonts.mavenRegular(paymentActivity));
-
-		buttonMakePaymentOTP = (Button) rootView.findViewById(R.id.buttonMakePaymentOTP); buttonMakePaymentOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
-		buttonMakePayment = (Button) rootView.findViewById(R.id.buttonMakePayment);	buttonMakePayment.setTypeface(Fonts.mavenRegular(paymentActivity));
-		buttonWithdrawMoney = (Button) rootView.findViewById(R.id.buttonWithdrawMoney);	buttonWithdrawMoney.setTypeface(Fonts.mavenRegular(paymentActivity));
 		buttonRemoveWallet = (Button) rootView.findViewById(R.id.buttonRemoveWallet);	buttonRemoveWallet.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 
@@ -146,9 +148,9 @@ public class PaytmRechargeFragment extends Fragment {
 		});
 
 
-		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.ruppes_value_format_without_space), amount1));
-		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.ruppes_value_format_without_space), amount2));
-		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.ruppes_value_format_without_space), amount3));
+		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount1));
+		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount2));
+		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount3));
 
 		buttonAmount1.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -183,16 +185,14 @@ public class PaytmRechargeFragment extends Fragment {
 			public void onClick(View v) {
 				try {
 					String amount = editTextAmount.getText().toString().trim();
-					if("".equalsIgnoreCase(amount)){
+					if ("".equalsIgnoreCase(amount)) {
 						DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
-					}
-					else{
+					} else {
 						int amountInt = Integer.parseInt(amount);
-						if(amountInt < Config.getMinAmount() || amountInt > Config.getMaxAmount()) {
+						if (amountInt < Config.getMinAmount() || amountInt > Config.getMaxAmount()) {
 							DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
-						}
-						else{
-							if(Data.userData != null) {
+						} else {
+							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
 							}
 						}
@@ -235,6 +235,7 @@ public class PaytmRechargeFragment extends Fragment {
 							}
 						}, false, false);
 				}
+				FlurryEventLogger.event(paymentActivity, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
 			}
 		});
 
@@ -247,12 +248,12 @@ public class PaytmRechargeFragment extends Fragment {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				Log.v("Amount value is","--> "+s.toString());
-				if(s.toString().equals(amount1)){
+				Log.v("Amount value is", "--> " + s.toString());
+				if (s.toString().equals(amount1)) {
 					setButtonBackground(buttonAmount1);
-				} else if(s.toString().equals(amount2)){
+				} else if (s.toString().equals(amount2)) {
 					setButtonBackground(buttonAmount2);
-				} else if(s.toString().equals(amount3)){
+				} else if (s.toString().equals(amount3)) {
 					setButtonBackground(buttonAmount3);
 				} else {
 					setButtonBackground(null);
@@ -262,30 +263,6 @@ public class PaytmRechargeFragment extends Fragment {
 			@Override
 			public void afterTextChanged(Editable s) {
 
-			}
-		});
-
-		buttonMakePayment.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				genrateOTP();
-			}
-		});
-
-		buttonMakePaymentOTP.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				sendOTP(editTextAmount.getText().toString().trim());
-			}
-		});
-
-		buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				withdrawMoney(editTextAmount.getText().toString().trim());
 			}
 		});
 
@@ -315,13 +292,7 @@ public class PaytmRechargeFragment extends Fragment {
 		paymentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-		try{
-			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		updatePaytmBalance();
 
 
 		if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
@@ -351,17 +322,21 @@ public class PaytmRechargeFragment extends Fragment {
 		}
 	}
 
-
-	@Override
-	public void onResume() {
-		super.onResume();
+	private void updatePaytmBalance(){
 		try{
 			if(Data.userData != null){
 				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
+				textViewCurrentBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updatePaytmBalance();
 	}
 
 	/**
@@ -414,6 +389,7 @@ public class PaytmRechargeFragment extends Fragment {
 					.popBackStack(PaytmRechargeFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
 			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
 				paymentActivity.getSupportFragmentManager().beginTransaction()
+						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
 						.addToBackStack(WalletFragment.class.getName())
 						.commitAllowingStateLoss();
@@ -432,109 +408,29 @@ public class PaytmRechargeFragment extends Fragment {
 	}
 
 
-	public void genrateOTP() {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			DialogPopup.showLoadingDialog(paymentActivity, "Generating OTP...");
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
-
-			AsyncHttpClient client = Data.getClient();
-
-			client.post(Config.getTXN_URL() + "paytm/login/request_otp", params, new CustomAsyncHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					try {
-						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-						JSONObject res = new JSONObject(response.toString());
-
-					} catch (Exception e) {
-						DialogPopup.dismissLoadingDialog();
-						e.printStackTrace();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-					}
-
-					DialogPopup.dismissLoadingDialog();
-
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-				}
-			});
-		}
-	}
-
-	private void sendOTP(String otp) {
-		if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
-			DialogPopup.showLoadingDialog(paymentActivity, "Sending OTP...");
-			RequestParams params = new RequestParams();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("client_id", Config.getClientId());
-			params.put("is_access_token_new", "1");
-
-			params.put("otp", "" + otp);
-
-			AsyncHttpClient client = Data.getClient();
-
-			client.post(Config.getTXN_URL() + "paytm/wallet/login_with_otp", params, new CustomAsyncHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(String response) {
-					Log.i("request succesfull", "response = " + response);
-					try {
-						Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-
-						JSONObject res = new JSONObject(response.toString());
-
-					} catch (Exception e) {
-						DialogPopup.dismissLoadingDialog();
-						e.printStackTrace();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-					}
-
-					DialogPopup.dismissLoadingDialog();
-
-				}
-
-				@Override
-				public void onFailure(Throwable arg0) {
-					Log.e("request fail", arg0.toString());
-					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-				}
-			});
-		}
-	}
 
 
 
-	private void addBalance(String amount) {
+
+	private void addBalance(final String amount) {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Adding Balance...");
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "1");
+				params.put("amount", amount);
 
-				params.put("amount", "" + amount);
-
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getTXN_URL() + "/paytm/add_money", params, new CustomAsyncHttpResponseHandler() {
-
+				RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
 					@Override
-					public void onSuccess(String response) {
-						Log.i("request succesfull", "response = " + response);
+					public void success(String settleUserDebt, Response response) {
+						Log.i(TAG, "paytmAddMoney settleUserDebt = " + settleUserDebt);
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "paytmAddMoney response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
-							openWebView(response);
+							openWebView(responseStr);
 						} catch (Exception e) {
 							DialogPopup.dismissLoadingDialog();
 							e.printStackTrace();
@@ -543,76 +439,54 @@ public class PaytmRechargeFragment extends Fragment {
 					}
 
 					@Override
-					public void onFailure(Throwable arg0) {
-						Log.e("request fail", arg0.toString());
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "paytmAddMoney error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
 				});
 			}
 			else{
-				DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								addBalance(amount);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void withdrawMoney(String amount) {
-		DialogPopup.showLoadingDialog(paymentActivity, "Withdrawing money...");
-		RequestParams params = new RequestParams();
-		params.put("access_token", Data.userData.accessToken);
-		params.put("client_id", Config.getClientId());
-		params.put("is_access_token_new", "1");
-
-		params.put("amount", "" + amount);
-		params.put("appIP", "" + Utils.getLocalIpAddress());
-
-		AsyncHttpClient client = Data.getClient();
-
-		client.post(Config.getTXN_URL() + "paytm/wallet/withdraw", params, new CustomAsyncHttpResponseHandler() {
-
-			@Override
-			public void onSuccess(String response) {
-				Log.i("request succesfull", "response = " + response);
-				DialogPopup.dismissLoadingDialog();
-				try {
-					Toast.makeText(paymentActivity, "res = " + response, Toast.LENGTH_SHORT).show();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-				}
-				DialogPopup.dismissLoadingDialog();
-			}
-
-			@Override
-			public void onFailure(Throwable arg0) {
-				Log.e("request fail", arg0.toString());
-				DialogPopup.dismissLoadingDialog();
-				DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-			}
-		});
-	}
 
 	private void removeWallet() {
 		try {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "1");
 
-				AsyncHttpClient client = Data.getClient();
-
-				client.post(Config.getTXN_URL() + "/paytm/delete_paytm", params, new CustomAsyncHttpResponseHandler() {
-
+				RestClient.getApiServices().paytmDeletePaytm(params, new Callback<SettleUserDebt>() {
 					@Override
-					public void onSuccess(String response) {
-						Log.i("request succesfull", "response = " + response);
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+						Log.i(TAG, "paytmDeletePaytm response = " + responseStr);
 						try {
-							JSONObject jObj = new JSONObject(response);
+							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							int flag = jObj.getInt("flag");
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -632,14 +506,30 @@ public class PaytmRechargeFragment extends Fragment {
 					}
 
 					@Override
-					public void onFailure(Throwable arg0) {
-						Log.e("request fail", arg0.toString());
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "paytmDeletePaytm error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
 				});
 			} else{
-				DialogPopup.alertPopup(paymentActivity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								removeWallet();
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -685,7 +575,6 @@ public class PaytmRechargeFragment extends Fragment {
 			} catch(Exception e){
 				e.printStackTrace();
 			}
-			Data.paytmPaymentState = PaytmPaymentState.INIT;
 		}
 	}
 }

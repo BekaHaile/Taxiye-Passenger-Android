@@ -2,12 +2,9 @@ package product.clicklabs.jugnoo.utils;
 
 
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -32,16 +29,18 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 	private Context context;
 	
 	private static final int LOCATION_PI_ID = 6978;
-	
+
+	private Class<?> receiver;
 	
 	
 	/**
 	 * Constructor for initializing LocationFetcher class' object
 	 * @param context application context
 	 */
-	public LocationFetcherBG(Context context, long requestInterval){
+	public LocationFetcherBG(Context context, long requestInterval, Class<?> receiver){
 		this.context = context;
 		this.requestInterval = requestInterval;
+		this.receiver = receiver;
 		connect();
 	}
 	
@@ -106,10 +105,14 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 
 	protected void startLocationUpdates(long interval) {
 		createLocationRequest(interval);
-		Intent intent = new Intent(context, LocationReceiver.class);
+		Intent intent = new Intent(context, receiver);
 		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
+		sendLocationInstantly();
+	}
 
+
+	private void sendLocationInstantly(){
 		if(Utils.compareDouble(LocationFetcher.getSavedLatFromSP(context), 0) != 0
 				&& Utils.compareDouble(LocationFetcher.getSavedLngFromSP(context), 0) != 0 ){
 			Intent serviceIntent = new Intent(context, GenieService.class);
@@ -117,7 +120,6 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 			serviceIntent.putExtra("longitude", LocationFetcher.getSavedLngFromSP(context));
 			context.startService(serviceIntent);
 		}
-
 	}
 
 

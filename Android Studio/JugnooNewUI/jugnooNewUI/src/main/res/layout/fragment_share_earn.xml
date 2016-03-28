@@ -28,9 +28,11 @@
                 android:layout_height="443px"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5px"
-                android:background="@drawable/free_rides_pic_new"
+                android:src="@drawable/free_rides_pic_new"
                 android:tag="mlar"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:scaleType="centerCrop"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -40,7 +42,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="173px"
-                    android:layout_marginLeft="50px"
+                    android:layout_marginLeft="30px"
                     android:layout_marginTop="15px"
                     android:src="@drawable/free_rides_earn_dashed_line"/>
 
@@ -80,7 +82,7 @@
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="173px"
-                    android:layout_marginRight="50px"
+                    android:layout_marginRight="30px"
                     android:scaleX="-1"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15px"

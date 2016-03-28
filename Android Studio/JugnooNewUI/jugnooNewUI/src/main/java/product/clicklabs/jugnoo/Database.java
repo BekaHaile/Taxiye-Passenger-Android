@@ -147,25 +147,30 @@ public class Database {																	// class for handling database related a
 	 * @return string array containing email
 	 */
 	public String[] getEmails() {																	// get login Email array
-		String[] columns = new String[] { Database.EMAIL };
+		try {
+			String[] columns = new String[] { Database.EMAIL };
 
-		Cursor cursor = database.query(Database.TABLE_EMAILS, columns, null,
-				null, null, null, null);
+			Cursor cursor = database.query(Database.TABLE_EMAILS, columns, null,
+					null, null, null, null);
 
-		String result = "";
-		
-		if (cursor.getCount() > 0) {																		// if there are more than one emails
-			
-			int emailColumnIndex = cursor.getColumnIndex(Database.EMAIL);
-	
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-				result = result + cursor.getString(emailColumnIndex) + "\n";
+			String result = "";
+
+			if (cursor.getCount() > 0) {																		// if there are more than one emails
+
+				int emailColumnIndex = cursor.getColumnIndex(Database.EMAIL);
+
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+					result = result + cursor.getString(emailColumnIndex) + "\n";
+				}
+
+				String[] emails = result.split("\n");
+
+				return emails;
+			} else {
+				return null;
 			}
-	
-			String[] emails = result.split("\n");
-
-			return emails;
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 

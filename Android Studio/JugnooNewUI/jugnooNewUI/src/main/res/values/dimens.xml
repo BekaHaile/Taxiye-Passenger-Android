@@ -85,6 +85,8 @@
     <dimen name="dialog_border_width">2px</dimen>
     <dimen name="button_width">400px</dimen>
     <dimen name="button_height">80px</dimen>
+    <dimen name="button_big_width">576px</dimen>
+    <dimen name="button_big_height">88px</dimen>
 
 
 
@@ -117,6 +119,8 @@
     <dimen name="leaderboard_activity_item_height">245px</dimen>
     <dimen name="leaderboard_activity_item_value_height">185px</dimen>
     <dimen name="share_lb_text_view_layout_height">80px</dimen>
+    <dimen name="text_size_68">68px</dimen>
+    <dimen name="text_size_60">60px</dimen>
     <dimen name="text_size_54">54px</dimen>
     <dimen name="text_size_50">50px</dimen>
     <dimen name="text_size_40">40px</dimen>
@@ -131,18 +135,27 @@
     <dimen name="text_size_26">26px</dimen>
     <dimen name="text_size_24">24px</dimen>
     <dimen name="text_size_22">22px</dimen>
+    <dimen name="text_size_20">20px</dimen>
+    <dimen name="text_size_18">18px</dimen>
 
 
 
     <!-- NL dimensions-->
     <dimen name="button_stroke_width">1dp</dimen>
-    <dimen name="nl_sliding_bottom_with_tabs">388px</dimen>
-    <dimen name="nl_sliding_bottom_without_tabs">278px</dimen>
+    <dimen name="nl_sliding_bottom_with_tabs">408px</dimen>
+    <dimen name="nl_sliding_bottom_without_tabs">272px</dimen>
     <dimen name="nl_button_size">87px</dimen>
 
     <!-- NL splash screen-->
-    <dimen name="splash_button_width">300px</dimen>
+    <dimen name="splash_button_width">473px</dimen>
     <dimen name="splash_button_height">100px</dimen>
+
+    <dimen name="jugnoo_anim_loading_width">198px</dimen>
+    <dimen name="jugnoo_anim_loading_height">92px</dimen>
+
+    <dimen name="menu_text_margin_left">121px</dimen>
+
+    <item name="radius" format="float" type="dimen">326</item>
 
 
 </resources>

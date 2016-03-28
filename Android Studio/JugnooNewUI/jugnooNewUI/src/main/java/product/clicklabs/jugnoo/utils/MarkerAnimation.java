@@ -22,7 +22,14 @@ import com.google.android.gms.maps.model.Marker;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
+
 public class MarkerAnimation {
+
+    private static final String TAG = MarkerAnimation.class.getSimpleName();
+
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
@@ -74,48 +81,23 @@ public class MarkerAnimation {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void animateMarkerToICS(Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
 
-//        TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
-//            @Override
-//            public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
-//                return latLngInterpolator.interpolate(fraction, startValue, endValue);
-//            }
-//        };
-//        Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
-//        ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
-//        animator.setDuration((long) (10.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
-//        animator.start();
-//
-//
-//
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//
-//            }
-//        });
-
-        if(MapUtils.distance(marker.getPosition(), finalPosition) < 50){
-            List<LatLng> list = new ArrayList<>();
-            list.add(finalPosition);
-            animateMarkerToICSRecursive(marker, list, latLngInterpolator, false);
-        }
-        else{
-            new GetDirectionsAsync(marker, finalPosition, latLngInterpolator).execute();
+        try {
+            if(MapUtils.distance(marker.getPosition(), finalPosition) < 150
+					|| MapUtils.distance(marker.getPosition(), finalPosition) > 20000){
+				List<LatLng> list = new ArrayList<>();
+				list.add(finalPosition);
+				animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
+			}
+			else{
+				new GetDirectionsAsync(marker, finalPosition, latLngInterpolator).execute();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                marker.setPosition(finalPosition);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
 
     }
@@ -141,9 +123,10 @@ public class MarkerAnimation {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String url = MapUtils.makeDirectionsURL(source, destination);
-                String result = new HttpRequester().getJSONFromUrl(url);
-                return result;
+                Response response = RestClient.getGoogleApiServices().getDirections(source.latitude + "," + source.longitude,
+                        destination.latitude + "," + destination.longitude, false, "driving", false);
+                String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                return responseStr;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,7 +144,8 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void animateMarkerToICSRecursive(final Marker marker, final List<LatLng> list, final LatLngInterpolator latLngInterpolator, final boolean rotation) {
+    public static void animateMarkerToICSRecursive(final Marker marker, final List<LatLng> list,
+                                                   final LatLngInterpolator latLngInterpolator, final boolean rotation) {
         if(list.size() > 0) {
             final LatLng finalPosition = list.remove(0);
             TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {

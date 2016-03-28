@@ -13,6 +13,8 @@ public interface Constants {
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
+	String KEY_USER_ID = "user_id";
+	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
 	String KEY_DRIVER_CAR_NO = "driver_car_no";
@@ -28,10 +30,16 @@ public interface Constants {
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 
+	String KEY_ALERT_TYPE = "alert_type";
+	String KEY_ID = "id";
+
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
 
 	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
+
+	String KEY_PROMO_SUCCESS = "promo_success";
+	String KEY_PROMO_MESSAGE = "promo_message";
 
 	String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
 
@@ -46,6 +54,7 @@ public interface Constants {
 
 	String KEY_USER_DEBT = "user_debt";
 	String KEY_CLIENT_ID = "client_id";
+	String KEY_IS_ACCESS_TOKEN_NEW = "is_access_token_new";
 	String KEY_IP_ADDRESS= "ip_addr";
 
 
@@ -70,5 +79,124 @@ public interface Constants {
 
 	String KEY_ALREADY_VERIFIED_EMAIL = "already_verified_email";
 	String KEY_ALREADY_REGISTERED_EMAIL = "already_registered_email";
+	String KEY_TUTORIAL_NO_OF_PAGES = "NumOfPages";
+
+	String KEY_SAVE_NOTIFICATION = "save_notification";
+	String KEY_NOTIFICATION_ID = "notification_id";
+
+	String LINKED_WALLET = "linked_wallet";
+	String LINKED_WALLET_MESSAGE = "linked_wallet_message";
+
+	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
+
+	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
+
+
+	String FIRST_TIME_DB= "first_time_db";
+	String SECOND_TIME_DB= "second_time_db";
+
+
+	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
+
+	String SP_USER_ID = "sp_user_id";
+
+
+
+	String SP_EMERGENCY_MODE_ENABLED = "sp_emergency_mode_enabled";
+
+	String KEY_SUPPORT_FEEDBACK_TEXT = "support_feedback_text";
+	String KEY_SUPPORT_ID = "support_id";
+	String KEY_SUPPORT_ISSUE_TITLE = "issue_title";
+
+	String KEY_RIDE_DATE = "ride_date";
+
+	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
+	String SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION = "in_app_ride_support_panel_version";
+	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
+
+
+	String KEY_GET_GOGU = "get_gogu";
+	String KEY_INVITE_EARN_SCREEN_IMAGE_ANDROID = "invite_earn_screen_image_android";
+
+	String KEY_EMERGENCY_ACTIVITY_MODE = "emergency_activity_mode";
+	String KEY_EMERGENCY_CONTACTS = "emergency_contacts";
+	String KEY_NAME = "name";
+	String KEY_TRIP_TOTAL = "trip_total";
+
+
+	String KEY_T20_WC_ENABLE = "t20_wc_enable";
+	String KEY_SP_T20_WC_SCHEDULE_VERSION = "t20_wc_schedule_version";
+	String KEY_T20_SCHEDULE = "t20_schedule";
+	String KEY_SCHEDULE_ID = "schedule_id";
+	String KEY_TEAM_ID = "team_id";
+	String KEY_TEAM_1 = "team_1";
+	String KEY_TEAM_2 = "team_2";
+	String KEY_MATCH_TIME = "match_time";
+	String KEY_TEAM_NAME = "name";
+	String KEY_TEAM_SHORT_NAME = "short_name";
+	String KEY_TEAM_FLAG_IMAGE_URL = "flag_image_url";
+	String KEY_T20_WC_INFO_TEXT = "t20_wc_info_text";
+	String SP_T20_DIALOG_BEFORE_START_CROSSED = "sp_t20_dialog_before_start_crossed";
+	String SP_T20_DIALOG_IN_RIDE_CROSSED = "sp_t20_dialog_in_ride_crossed";
+	String KEY_PUBLIC_ACCESS_TOKEN = "public_access_token";
+
+	String KEY_GAME_PREDICT_ENABLE = "game_predict_enable";
+	String KEY_GAME_PREDICT_URL = "game_predict_url";
+	String KEY_GAME_PREDICT_VIEW_DATA = "game_predict_view_data";
+	String VIEW_DATA_SPLITTER = ";;;";
+
+
+	String KEY_PAYTM_TRANSFER_DATA = "paytm_transfer_data";
+	String KEY_TRANSFER_ID = "transfer_id";
+	String KEY_TRANSFER_AMOUNT = "transfer_amount";
+	String KEY_TRANSFER_SENDER_NAME = "transfer_sender_name";
+	String KEY_TRANSFER_PHONE = "transfer_phone";
+	String KEY_USER_AMOUNT = "user_amount";
+
+	String KEY_CUSTOMER_FARE_FACTOR = "customer_fare_factor";
+
+	String SP_LAST_DEVICE_TOKEN_REFRESH_TIME = "last_device_token_refresh_time";
+	String KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL = "device_token_refresh_interval";
+
+	String KEY_START_TIME = "start_time";
+	String KEY_END_TIME = "end_time";
+
+	String KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL = "customer_location_update_interval";
+	String SP_CURRENT_STATE = "current_state";
+	String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
+	String KEY_ONE_SHOT = "one_shot";
+	String KEY_EMERGENCY_LOC = "emergency_loc";
+	String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
+
+	String KEY_URL = "url";
+	String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
+	String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
+	String KEY_PUSH_CLICKED = "push_clicked";
+
+
+
+	long SECOND_MILLIS = 1000;
+	long MINUTE_MILLIS = 60 * SECOND_MILLIS;
+	long HOUR_MILLIS = 60 * MINUTE_MILLIS;
+	long DAY_MILLIS = 24 * HOUR_MILLIS;
+
+	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = DAY_MILLIS;
+	long LOCATION_UPDATE_INTERVAL = MINUTE_MILLIS;
+
+
+	String SP_FIRST_OPEN_TIME = "sp_first_open_time";
+	String SP_FIRST_LOGIN_COMPLETE = "sp_first_login_complete";
+	String KEY_TIME_DIFF_SEC = "time_diff_sec";
+
+	String SP_APP_DOWNLOAD_SOURCE_SENT = "sp_app_download_source_sent";
+	String KEY_SOURCE = "source";
+
+	String KEY_PLAY_SOUND = "play_sound";
+
+	String KEY_JUGNOO_BALANCE = "jugnoo_balance";
+	String KEY_PAYTM_BALANCE = "paytm_balance";
+
+	String SP_INSTALL_REFERRER_CONTENT = "sp_install_referrer_content";
+	String KEY_REFERRER = "referrer";
 
 }

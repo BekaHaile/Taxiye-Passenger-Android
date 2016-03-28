@@ -25,36 +25,41 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants{
+
+    private final String TAG = FareEstimateActivity.class.getSimpleName();
 
     LinearLayout relative;
 
@@ -128,9 +133,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
         textViewDropLocation.setTypeface(Fonts.mavenLight(this));
         textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
-        textViewEstimateTime.setTypeface(Fonts.mavenLight(this));
+        textViewEstimateTime.setTypeface(Fonts.mavenRegular(this));
         textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
-        textViewEstimateDistance.setTypeface(Fonts.mavenLight(this));
+        textViewEstimateDistance.setTypeface(Fonts.mavenRegular(this));
         textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
         textViewEstimateFare.setTypeface(Fonts.mavenRegular(this));
 		textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
@@ -142,6 +147,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         buttonOk.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
+
+        ((TextView)findViewById(R.id.textViewStart)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewEnd)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewEstimateDistanceText)).setTypeface(Fonts.mavenLight(this));
+        ((TextView)findViewById(R.id.textViewEstimateRideTimeText)).setTypeface(Fonts.mavenLight(this));
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {
@@ -180,10 +190,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                     public void run() {
                         try {
                             if (sourceLatLng != null && destLatLng != null) {
-                                String url = MapUtils.makeDirectionsURL(sourceLatLng, destLatLng);
-                                Log.i("url", "=" + url);
-                                HttpRequester.setTimeouts(30000);
-                                String result = new HttpRequester().getJSONFromUrl(url);
+                                Response response = RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                                        destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false);
+                                String result = new String(((TypedByteArray)response.getBody()).getBytes());
                                 Log.i("result", "=" + result);
                                 if (result != null) {
                                     JSONObject jObj = new JSONObject(result);
@@ -351,67 +360,58 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 	public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final double distanceValue, final double timeValue) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("start_latitude", "" + sourceLatLng.latitude);
 				params.put("start_longitude", "" + sourceLatLng.longitude);
 				params.put("ride_distance", "" + distanceValue);
 				params.put("ride_time", "" + timeValue);
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getServerUrl() + "/get_fare_estimate", params,
-						new CustomAsyncHttpResponseHandler() {
-							private JSONObject jObj;
+                RestClient.getApiServices().getFareEstimate(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.e(TAG, "getFareEstimate response = " + responseStr);
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
 
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								DialogPopup.dismissLoadingDialog();
-								retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
-							}
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    String minFare = jObj.getString("min_fare");
+                                    String maxFare = jObj.getString("max_fare");
+                                    double convenienceCharge = jObj.optDouble("convenience_charge", 0);
 
-							@Override
-							public void onSuccess(String response) {
-								Log.e("Server response", "response = " + response);
-								try {
-									jObj = new JSONObject(response);
+                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
+                                            getResources().getString(R.string.rupee) + "" + maxFare);
 
-									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-										int flag = jObj.getInt("flag");
-										String message = JSONParser.getServerMessage(jObj);
-										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-											String minFare = jObj.getString("min_fare");
-											String maxFare = jObj.getString("max_fare");
-											double convenienceCharge = jObj.optDouble("convenience_charge", 0);
+                                    if(convenienceCharge > 0){
+                                        textViewConvenienceCharge.setText("Convenience Charges "
+                                                +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                                    }
+                                    else{
+                                        textViewConvenienceCharge.setText("");
+                                    }
+                                } else {
+                                    retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
 
-											textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
-													getResources().getString(R.string.rupee) + "" + maxFare);
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "getFareEstimate error="+error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
+                    }
+                });
 
-											if(convenienceCharge > 0){
-												textViewConvenienceCharge.setText("Convenience Charges "
-														+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
-											}
-											else{
-												if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
-													textViewConvenienceCharge.setText("Convenience Charges "
-															+getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-												}
-												else{
-													textViewConvenienceCharge.setText("");
-												}
-											}
-										} else {
-											retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
-										}
-									}
-								} catch (Exception exception) {
-									exception.printStackTrace();
-									retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
-								}
-								DialogPopup.dismissLoadingDialog();
-							}
-
-						});
 			} else {
 				retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, distanceValue, timeValue);
                 DialogPopup.dismissLoadingDialog();

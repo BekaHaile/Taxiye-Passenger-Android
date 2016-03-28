@@ -19,20 +19,26 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class PhoneNoOTPConfirmScreen extends BaseActivity{
@@ -344,7 +350,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 		
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
@@ -352,51 +358,93 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("phone_no", phoneNo);
 			params.put("verification_token", otp);
 			
-			Log.i("params", ">"+params);
+			Log.i("params", ">" + params);
 		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/verify_my_contact_number", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+//			AsyncHttpClient client = Data.getClient();
+//			client.post(Config.getServerUrl() + "/verify_my_contact_number", params,
+//					new CustomAsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//
+//						@Override
+//						public void onFailure(Throwable arg3) {
+//							Log.e("request fail", arg3.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//						}
+//
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.i("Server response", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+//									int flag = jObj.getInt("flag");
+//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+//										String error = jObj.getString("error");
+//										DialogPopup.dialogBanner(activity, error);
+//									}
+//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+//										String message = jObj.getString("message");
+//										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+//											@Override
+//											public void onClick(View v) {
+//												performBackPressed();
+//											}
+//										});
+//									}
+//									else{
+//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//									}
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//							}
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//					});
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.dialogBanner(activity, error);
+			RestClient.getApiServices().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("Server response", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.dialogBanner(activity, error);
+							}
+							else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								String message = jObj.getString("message");
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										performBackPressed();
 									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												performBackPressed();
-											}
-										});
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+								});
+							}
+							else{
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("request fail", error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -413,7 +461,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 		
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
@@ -421,44 +469,82 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("phone_no", phoneNo);
 			Log.i("params", ">"+params);
 		
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+//			AsyncHttpClient client = Data.getClient();
+//			client.post(Config.getServerUrl() + "/send_new_number_otp_via_call", params,
+//					new CustomAsyncHttpResponseHandler() {
+//					private JSONObject jObj;
+//
+//						@Override
+//						public void onFailure(Throwable arg3) {
+//							Log.e("request fail", arg3.toString());
+//							DialogPopup.dismissLoadingDialog();
+//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//						}
+//
+//						@Override
+//						public void onSuccess(String response) {
+//							Log.i("Server response", "response = " + response);
+//							try {
+//								jObj = new JSONObject(response);
+//								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+//									int flag = jObj.getInt("flag");
+//									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+//										String error = jObj.getString("error");
+//										DialogPopup.dialogBanner(activity, error);
+//									}
+//									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+//										String message = jObj.getString("message");
+//										DialogPopup.dialogBanner(activity, message);
+//									}
+//									else{
+//										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//									}
+//								}
+//							}  catch (Exception exception) {
+//								exception.printStackTrace();
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//							}
+//							DialogPopup.dismissLoadingDialog();
+//						}
+//					});
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.dialogBanner(activity, error);
-									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.dialogBanner(activity, message);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+			RestClient.getApiServices().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("Server response", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							int flag = jObj.getInt("flag");
+							if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.dialogBanner(activity, error);
+							}
+							else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+								String message = jObj.getString("message");
+								DialogPopup.dialogBanner(activity, message);
+							}
+							else{
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("request fail", error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

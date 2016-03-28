@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -25,6 +26,8 @@ import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -45,9 +48,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
@@ -65,14 +65,16 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
+import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.CheckForAppOpen;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
@@ -83,7 +85,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
-import product.clicklabs.jugnoo.utils.HttpRequester;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
@@ -109,13 +110,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
-	ImageView imageViewBack, imageViewJugnooLogo;
+	ImageView imageViewBack, imageViewJugnooLogo, imageViewAddPaytm;
 	ImageView imageViewDebug1, imageViewDebug2, imageViewDebug3;
 
 	RelativeLayout relativeLayoutLS;
-	LinearLayout linearLayoutLoginSignupButtons;
+	LinearLayout linearLayoutLoginSignupButtons, linearLayoutAddPatym;
 	Button buttonLogin, buttonRegister;
-	TextView textViewTerms;
+	TextView textViewTerms, textViewAddPaytm;
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
 	Button buttonNoNetCall, buttonRefresh;
@@ -137,10 +138,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0;
+	int clickCount = 0, linkedWallet = 0;
 
 	private State state = State.SPLASH_LS;
-
 
 
 	CallbackManager callbackManager;
@@ -148,11 +148,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	boolean emailRegister = false, facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "",
-			emailNeedRegister = "";
+			emailNeedRegister = "", linkedWalletErrorMsg = "";
 	private String enteredEmail = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
-	public void resetFlags(){
+
+	public void resetFlags() {
 		loginDataFetched = false;
 		emailRegister = false;
 		facebookRegister = false;
@@ -166,10 +167,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "";
-	private static final int GOOGLE_SIGNIN_REQ_CODE_SIGNUP = 1125;
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
-
 
 
 	@Override
@@ -235,6 +234,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		FlurryAgent.init(this, Config.getFlurryKey());
 		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 		FlurryAgent.onEvent("Splash started");
+
+		firstTimeEvents();
 	}
 
 
@@ -270,638 +271,715 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public static void initializeServerURL(Context context) {
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
+		ConfigMode configModeToSet;
 		if (link.equalsIgnoreCase(Config.getLiveServerUrl())) {
-			Config.setConfigMode(ConfigMode.LIVE);
+			configModeToSet = ConfigMode.LIVE;
 		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV);
+			configModeToSet = ConfigMode.DEV;
 		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV_1);
+			configModeToSet = ConfigMode.DEV_1;
 		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV_2);
+			configModeToSet = ConfigMode.DEV_2;
 		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-			Config.setConfigMode(ConfigMode.DEV_3);
+			configModeToSet = ConfigMode.DEV_3;
 		} else {
 			Config.CUSTOM_SERVER_URL = link;
-			Config.setConfigMode(ConfigMode.CUSTOM);
+			configModeToSet = ConfigMode.CUSTOM;
 		}
+
+		if(configModeToSet != Config.getConfigMode()){
+			RestClient.clearRestClient();
+		}
+		Config.setConfigMode(configModeToSet);
+
 		RestClient.setupRestClient();
-		Log.e("link", "=" + link);
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Fabric.with(this, new Crashlytics());
-
 		try {
-			if (getIntent().hasExtra("deep_link_class")) {
-				Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
-			} else {
+
+			Fabric.with(this, new Crashlytics());
+
+			try {
+				if (getIntent().hasExtra("deep_link_class")) {
+					Data.deepLinkClassName = getIntent().getStringExtra("deep_link_class");
+				} else {
+					Data.deepLinkClassName = "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 				Data.deepLinkClassName = "";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			Data.deepLinkClassName = "";
-		}
 
-		Data.splashIntentUri = getIntent().getData();
+			Data.splashIntentUri = getIntent().getData();
 
-		Data.getDeepLinkIndexFromIntent(getIntent());
+			Data.getDeepLinkIndexFromIntent(this, getIntent());
 
 
-		try {
-			NewRelic.withApplicationToken(
-					Config.getNewRelicKey()
-			).start(this.getApplication());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-
-		try{
-			Data.TRANSFER_FROM_JEANIE = 0;
-			if(getIntent().hasExtra("transfer_from_jeanie")){
-				Data.TRANSFER_FROM_JEANIE = getIntent().getIntExtra("transfer_from_jeanie", 0);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
-		FacebookSdk.sdkInitialize(this);
-
-		Utils.disableSMSReceiver(this);
-
-		Data.locationSettingsNoPressed = false;
-
-		Data.userData = null;
-
-		initializeServerURL(this);
-
-		FlurryAgent.init(this, Config.getFlurryKey());
-
-
-		Locale locale = new Locale("en");
-		Locale.setDefault(locale);
-		Configuration config = new Configuration();
-		config.locale = locale;
-		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-
-
-		setContentView(R.layout.activity_splash_new);
-
-
-
-
-		resumed = false;
-
-		debugState = 0;
-
-		resetFlags();
-		enteredEmail = "";
-
-		hold1 = false; hold2 = false;
-
-		root = (RelativeLayout) findViewById(R.id.root);
-		new ASSL(SplashNewActivity.this, root, 1134, 720, false);
-
-		holdForBranch = false;
-		clickCount = 0;
-
-
-		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
-		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
-
-		viewInitJugnoo = (ImageView) findViewById(R.id.viewInitJugnoo);
-		viewInitSplashJugnoo = (ImageView) findViewById(R.id.viewInitSplashJugnoo);
-		viewInitLS = (ImageView) findViewById(R.id.viewInitLS);
-
-		relativeLayoutJugnooLogo = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLogo);
-		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		imageViewJugnooLogo = (ImageView) findViewById(R.id.imageViewJugnooLogo);
-		imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
-		imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
-		imageViewDebug3 = (ImageView) findViewById(R.id.imageViewDebug3);
-
-		relativeLayoutLS = (RelativeLayout) findViewById(R.id.relativeLayoutLS);
-		linearLayoutLoginSignupButtons = (LinearLayout) findViewById(R.id.linearLayoutLoginSignupButtons);
-		buttonLogin = (Button) findViewById(R.id.buttonLogin);
-		buttonLogin.setTypeface(Fonts.mavenRegular(this));
-		buttonRegister = (Button) findViewById(R.id.buttonRegister);
-		buttonRegister.setTypeface(Fonts.mavenRegular(this));
-		textViewTerms = (TextView) findViewById(R.id.textViewTerms);
-		textViewTerms.setTypeface(Fonts.latoRegular(this));
-		((TextView)findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.latoRegular(this));
-
-		linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
-		textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
-		textViewNoNet.setTypeface(Fonts.latoRegular(this));
-		buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
-		buttonNoNetCall.setTypeface(Fonts.mavenRegular(this));
-		buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
-		buttonRefresh.setTypeface(Fonts.mavenRegular(this));
-
-
-		String[] emails = Database.getInstance(this).getEmails();
-		ArrayAdapter<String> adapter;
-		if (emails == null) { emails = new String[]{}; }
-		adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
-		adapter.setDropDownViewResource(R.layout.dropdown_textview);
-
-		linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
-		editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
-		editTextEmail.setTypeface(Fonts.latoRegular(this)); editTextEmail.setAdapter(adapter);
-		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-		editTextPassword.setTypeface(Fonts.latoRegular(this), Typeface.ITALIC);
-		textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
-		textViewEmailRequired.setTypeface(Fonts.latoRegular(this));
-		textViewPasswordRequired = (TextView) findViewById(R.id.textViewPasswordRequired);
-		textViewPasswordRequired.setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewLoginOr)).setTypeface(Fonts.latoRegular(this));
-		textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
-		textViewForgotPassword.setTypeface(Fonts.mavenRegular(this));
-		buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin);
-		buttonEmailLogin.setTypeface(Fonts.mavenRegular(this));
-		buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin);
-		buttonFacebookLogin.setTypeface(Fonts.mavenRegular(this));
-		buttonGoogleLogin = (Button) findViewById(R.id.buttonGoogleLogin);
-		buttonGoogleLogin.setTypeface(Fonts.mavenRegular(this));
-
-
-
-
-		linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
-		editTextSName = (EditText) findViewById(R.id.editTextSName); editTextSName.setTypeface(Fonts.latoRegular(this));
-		editTextSEmail = (EditText) findViewById(R.id.editTextSEmail); editTextSEmail.setTypeface(Fonts.latoRegular(this));
-		editTextSPhone = (EditText) findViewById(R.id.editTextSPhone); editTextSPhone.setTypeface(Fonts.latoRegular(this));
-		editTextSPassword = (EditText) findViewById(R.id.editTextSPassword); editTextSPassword.setTypeface(Fonts.latoRegular(this));
-		editTextSPromo = (EditText) findViewById(R.id.editTextSPromo); editTextSPromo.setTypeface(Fonts.latoRegular(this));
-		textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired); textViewSNameRequired.setTypeface(Fonts.latoRegular(this));
-		textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired); textViewSEmailRequired.setTypeface(Fonts.latoRegular(this));
-		textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired); textViewSPhoneRequired.setTypeface(Fonts.latoRegular(this));
-		textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired); textViewSPasswordRequired.setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.latoRegular(this));
-		buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup); buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
-		buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup); buttonFacebookSignup.setTypeface(Fonts.mavenRegular(this));
-		buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup); buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
-		textViewSTerms = (TextView) findViewById(R.id.textViewSTerms); textViewSTerms.setTypeface(Fonts.latoRegular(this));
-
-
-		root.setOnClickListener(onClickListenerKeybordHide);
-
-		relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
-
-		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
-				new KeyboardLayoutListener.KeyBoardStateHandler() {
-					@Override
-					public void keyboardOpened() {
-//						if(State.LOGIN == state){
-//							relativeLayoutJugnooLogo.setVisibility(View.GONE);
-//						}
-					}
-
-					@Override
-					public void keyBoardClosed() {
-//						if(State.LOGIN == state){
-//							relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
-//						}
-					}
-				});
-		keyboardLayoutListener.setResizeTextView(false);
-		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
-		buttonLogin.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (isBranchLinkNotClicked()) {
-					FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-					changeUIState(State.LOGIN);
-				} else {
-					clickCount = clickCount + 1;
+			try {
+				Data.TRANSFER_FROM_JEANIE = 0;
+				if (getIntent().hasExtra("transfer_from_jeanie")) {
+					Data.TRANSFER_FROM_JEANIE = getIntent().getIntExtra("transfer_from_jeanie", 0);
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		});
 
-		buttonRegister.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				if(isBranchLinkNotClicked()) {
-					FlurryEventLogger.event(SIGNUP);
-					SplashNewActivity.registerationType = RegisterationType.EMAIL;
-					changeUIState(State.SIGNUP);
-				} else{
-					clickCount = clickCount + 1;
-				}
+			FacebookSdk.sdkInitialize(this);
+
+			Utils.disableSMSReceiver(this);
+
+			Data.locationSettingsNoPressed = false;
+
+			Data.userData = null;
+
+			initializeServerURL(this);
+
+			FlurryAgent.init(this, Config.getFlurryKey());
+
+
+			Locale locale = new Locale("en");
+			Locale.setDefault(locale);
+			Configuration config = new Configuration();
+			config.locale = locale;
+			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+
+			setContentView(R.layout.activity_splash_new);
+
+
+			resumed = false;
+
+			debugState = 0;
+
+			resetFlags();
+			enteredEmail = "";
+
+			hold1 = false;
+			hold2 = false;
+
+			root = (RelativeLayout) findViewById(R.id.root);
+			new ASSL(SplashNewActivity.this, root, 1134, 720, false);
+
+			holdForBranch = false;
+			clickCount = 0;
+
+			if (Data.locationFetcher == null) {
+				Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+			} else{
+				Data.locationFetcher.connect();
 			}
-		});
 
-		textViewTerms.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
-					startActivity(browserIntent);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+			textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+			viewInitJugnoo = (ImageView) findViewById(R.id.viewInitJugnoo);
+			viewInitSplashJugnoo = (ImageView) findViewById(R.id.viewInitSplashJugnoo);
+			viewInitLS = (ImageView) findViewById(R.id.viewInitLS);
+
+			relativeLayoutJugnooLogo = (RelativeLayout) findViewById(R.id.relativeLayoutJugnooLogo);
+			imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+			imageViewJugnooLogo = (ImageView) findViewById(R.id.imageViewJugnooLogo);
+			imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
+			imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
+			imageViewDebug3 = (ImageView) findViewById(R.id.imageViewDebug3);
+			textViewAddPaytm = (TextView) findViewById(R.id.textViewAddPaytm);
+			textViewAddPaytm.setTypeface(Fonts.mavenLight(this));
+			imageViewAddPaytm = (ImageView) findViewById(R.id.imageViewAddPaytm);
+			linearLayoutAddPatym = (LinearLayout) findViewById(R.id.linearLayoutAddPatym);
+
+			relativeLayoutLS = (RelativeLayout) findViewById(R.id.relativeLayoutLS);
+			linearLayoutLoginSignupButtons = (LinearLayout) findViewById(R.id.linearLayoutLoginSignupButtons);
+			buttonLogin = (Button) findViewById(R.id.buttonLogin);
+			buttonLogin.setTypeface(Fonts.mavenRegular(this));
+			buttonRegister = (Button) findViewById(R.id.buttonRegister);
+			buttonRegister.setTypeface(Fonts.mavenRegular(this));
+			textViewTerms = (TextView) findViewById(R.id.textViewTerms);
+			textViewTerms.setTypeface(Fonts.latoRegular(this));
+			((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.latoRegular(this));
+
+			linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
+			textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
+			textViewNoNet.setTypeface(Fonts.latoRegular(this));
+			buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
+			buttonNoNetCall.setTypeface(Fonts.mavenRegular(this));
+			buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
+			buttonRefresh.setTypeface(Fonts.mavenRegular(this));
+
+			ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
+			scale.setDuration(300);
+			scale.setInterpolator(new OvershootInterpolator());
+
+			//buttonLogin.startAnimation(scale);
+
+
+			String[] emails = Database.getInstance(this).getEmails();
+			ArrayAdapter<String> adapter;
+			if (emails == null) {
+				emails = new String[]{};
 			}
-		});
+			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
+			adapter.setDropDownViewResource(R.layout.dropdown_textview);
 
-		buttonNoNetCall.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
-				FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
-			}
-		});
-
-		buttonRefresh.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(!loginDataFetched){
-					getDeviceToken();
-				}
-			}
-		});
-
-
-		imageViewBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (State.LOGIN == state) {
-					performLoginBackPressed();
-				} else if (State.SIGNUP == state) {
-					performSignupBackPressed();
-				}
-			}
-		});
+			linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
+			editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
+			editTextEmail.setTypeface(Fonts.latoRegular(this));
+			editTextEmail.setAdapter(adapter);
+			editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+			editTextPassword.setTypeface(Fonts.latoRegular(this), Typeface.ITALIC);
+			textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
+			textViewEmailRequired.setTypeface(Fonts.latoRegular(this));
+			textViewPasswordRequired = (TextView) findViewById(R.id.textViewPasswordRequired);
+			textViewPasswordRequired.setTypeface(Fonts.latoRegular(this));
+			((TextView) findViewById(R.id.textViewLoginOr)).setTypeface(Fonts.latoRegular(this));
+			textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
+			textViewForgotPassword.setTypeface(Fonts.mavenRegular(this));
+			buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin);
+			buttonEmailLogin.setTypeface(Fonts.mavenRegular(this));
+			buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin);
+			buttonFacebookLogin.setTypeface(Fonts.mavenRegular(this));
+			buttonGoogleLogin = (Button) findViewById(R.id.buttonGoogleLogin);
+			buttonGoogleLogin.setTypeface(Fonts.mavenRegular(this));
 
 
-		imageViewDebug1.setOnClickListener(onClickListenerKeybordHide);
-		imageViewDebug2.setOnClickListener(onClickListenerKeybordHide);
-		imageViewDebug3.setOnClickListener(onClickListenerKeybordHide);
-		imageViewDebug1.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				hold1 = true;
-				callAfterBothHoldSuccessfully();
-				return false;
-			}
-		});
+			linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
+			editTextSName = (EditText) findViewById(R.id.editTextSName);
+			editTextSName.setTypeface(Fonts.latoRegular(this));
+			editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
+			editTextSEmail.setTypeface(Fonts.latoRegular(this));
+			editTextSPhone = (EditText) findViewById(R.id.editTextSPhone);
+			editTextSPhone.setTypeface(Fonts.latoRegular(this));
+			editTextSPassword = (EditText) findViewById(R.id.editTextSPassword);
+			editTextSPassword.setTypeface(Fonts.latoRegular(this));
+			editTextSPromo = (EditText) findViewById(R.id.editTextSPromo);
+			editTextSPromo.setTypeface(Fonts.latoRegular(this));
+			textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired);
+			textViewSNameRequired.setTypeface(Fonts.latoRegular(this));
+			textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired);
+			textViewSEmailRequired.setTypeface(Fonts.latoRegular(this));
+			textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired);
+			textViewSPhoneRequired.setTypeface(Fonts.latoRegular(this));
+			textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired);
+			textViewSPasswordRequired.setTypeface(Fonts.latoRegular(this));
+			((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.latoRegular(this));
+			((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.latoRegular(this));
+			buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
+			buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
+			buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup);
+			buttonFacebookSignup.setTypeface(Fonts.mavenRegular(this));
+			buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup);
+			buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
+			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
+			textViewSTerms.setTypeface(Fonts.latoRegular(this));
 
-		imageViewDebug2.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				hold2 = true;
-				callAfterBothHoldSuccessfully();
-				return false;
-			}
-		});
+			root.setOnClickListener(onClickListenerKeybordHide);
 
-		imageViewDebug3.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				if (debugState == 1) {
-					confirmDebugPasswordPopup(SplashNewActivity.this);
-					resetDebugFlags();
-				}
-				return false;
-			}
-		});
+			relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
 
-		editTextEmail.addTextChangedListener(new CustomTextWatcher(textViewEmailRequired));
-		editTextPassword.addTextChangedListener(new CustomTextWatcher(textViewPasswordRequired));
-		editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
-		editTextPassword.setOnFocusChangeListener(onFocusChangeListener);
-
-		buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-				String email = editTextEmail.getText().toString().trim();
-				String password = editTextPassword.getText().toString().trim();
-				if ("".equalsIgnoreCase(email)) {
-					editTextEmail.requestFocus();
-					editTextEmail.setError(getResources().getString(R.string.nl_login_email_empty_error));
-				} else {
-					if ("".equalsIgnoreCase(password)) {
-						editTextPassword.requestFocus();
-						editTextPassword.setError(getResources().getString(R.string.nl_login_empty_password_error));
-					} else {
-						boolean onlyDigits = Utils.checkIfOnlyDigits(email);
-						if (onlyDigits) {
-							email = Utils.retrievePhoneNumberTenChars(email);
-							if (!Utils.validPhoneNumber(email)) {
-								editTextEmail.requestFocus();
-								editTextEmail.setError(getResources().getString(R.string.nl_login_invalid_email_error));
-							} else {
-								email = "+91" + email;
-								sendLoginValues(SplashNewActivity.this, email, password, true);
-								phoneNoLogin = true;
-							}
-						} else {
-							if (Utils.isEmailValid(email)) {
-								enteredEmail = email;
-								sendLoginValues(SplashNewActivity.this, email, password, false);
-								phoneNoLogin = false;
-							} else {
-								editTextEmail.requestFocus();
-								editTextEmail.setError("Please enter valid email");
-							}
+			KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
+					new KeyboardLayoutListener.KeyBoardStateHandler() {
+						@Override
+						public void keyboardOpened() {
+	//						if(State.LOGIN == state){
+	//							relativeLayoutJugnooLogo.setVisibility(View.GONE);
+	//						}
 						}
 
-						FlurryEventLogger.event(LOGIN_VIA_EMAIL);
+						@Override
+						public void keyBoardClosed() {
+	//						if(State.LOGIN == state){
+	//							relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
+	//						}
+						}
+					});
+			keyboardLayoutListener.setResizeTextView(false);
+			linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+			linearLayoutAddPatym.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+						linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+						imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
+					} else {
+						linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal();
+						imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
 					}
 				}
-			}
-		});
-		editTextEmail.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			});
 
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if (Utils.checkIfOnlyDigits(s.toString())) {
-					InputFilter[] fArray = new InputFilter[1];
-					fArray[0] = new InputFilter.LengthFilter(10);
-					editTextEmail.setFilters(fArray);
-				} else {
-					InputFilter[] fArray = new InputFilter[1];
-					fArray[0] = new InputFilter.LengthFilter(1000);
-					editTextEmail.setFilters(fArray);
-				}
-			}
-		});
-
-
-		buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
-					FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
-					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-					facebookLoginHelper.openFacebookSession();
-				} else{
-					DialogPopup.dialogNoInternet(SplashNewActivity.this,
-							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-							new Utils.AlertCallBackWithButtonsInterface() {
-								@Override
-								public void positiveClick() {
-									buttonFacebookLogin.performClick();
-								}
-
-								@Override
-								public void neutralClick() {
-								}
-
-								@Override
-								public void negativeClick() {
-								}
-							});
-				}
-			}
-		});
-		buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
-				FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
-						GOOGLE_SIGNIN_REQ_CODE_LOGIN);
-				} else{
-					DialogPopup.dialogNoInternet(SplashNewActivity.this,
-							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-							new Utils.AlertCallBackWithButtonsInterface() {
-								@Override
-								public void positiveClick() {
-									buttonGoogleLogin.performClick();
-								}
-
-								@Override
-								public void neutralClick() {
-								}
-
-								@Override
-								public void negativeClick() {
-								}
-							});
-				}
-			}
-		});
-		textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-				ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
-				startActivity(new Intent(SplashNewActivity.this, ForgotPasswordScreen.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				finish();
-				FlurryEventLogger.event(FORGOT_PASSWORD);
-			}
-		});
-
-		callbackManager = CallbackManager.Factory.create();
-
-		facebookLoginHelper = new FacebookLoginHelper(this, callbackManager, new FacebookLoginCallback() {
-			@Override
-			public void facebookLoginDone(FacebookUserData facebookUserData) {
-				Data.facebookUserData = facebookUserData;
-				if(State.LOGIN == state) {
-					sendFacebookLoginValues(SplashNewActivity.this);
-					FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
-				} else if(State.SIGNUP == state){
-					fillSocialAccountInfo(RegisterationType.FACEBOOK);
-					FlurryEventLogger.registerViaFBClicked(Data.facebookUserData.fbId);
-				}
-			}
-
-			@Override
-			public void facebookLoginError(String message) {
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-			}
-		});
-		editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				buttonEmailLogin.performClick();
-				return true;
-			}
-		});
-
-		editTextSName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired));
-		editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));
-		editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
-		editTextSPassword.addTextChangedListener(new CustomTextWatcher(textViewSPasswordRequired));
-
-		editTextSName.setOnFocusChangeListener(onFocusChangeListener);
-		editTextSEmail.setOnFocusChangeListener(onFocusChangeListener);
-		editTextSPhone.setOnFocusChangeListener(onFocusChangeListener);
-		editTextSPassword.setOnFocusChangeListener(onFocusChangeListener);
-		editTextSPromo.setOnFocusChangeListener(onFocusChangeListener);
-
-		buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-
-				String name = editTextSName.getText().toString().trim();
-				if (name.length() > 0) {
-					name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-				}
-				String referralCode = editTextSPromo.getText().toString().trim();
-				String emailId = editTextSEmail.getText().toString().trim();
-				boolean noFbEmail = false;
-
-				if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
-					emailId = "n@n.c";
-					noFbEmail = true;
-				}
-
-
-				String phoneNo = editTextSPhone.getText().toString().trim();
-				String password = editTextSPassword.getText().toString().trim();
-
-
-				if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
-					editTextSName.requestFocus();
-					editTextSName.setError("Please enter name");
-				} else if (!Utils.hasAlphabets(name)) {
-					editTextSName.requestFocus();
-					editTextSName.setError("Please enter at least one alphabet");
-				} else {
-					if ("".equalsIgnoreCase(emailId)) {
-						editTextSEmail.requestFocus();
-						editTextSEmail.setError("Please enter email id");
+			buttonLogin.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (isBranchLinkNotClicked()) {
+						linkedWallet = 0;
+						FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+						changeUIState(State.LOGIN);
 					} else {
-						if ("".equalsIgnoreCase(phoneNo)) {
-							editTextSPhone.requestFocus();
-							editTextSPhone.setError("Please enter phone number");
-						} else {
-							phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
-							if (!Utils.validPhoneNumber(phoneNo)) {
-								editTextSPhone.requestFocus();
-								editTextSPhone.setError("Please enter valid phone number");
-							} else {
-								phoneNo = "+91" + phoneNo;
-								if ("".equalsIgnoreCase(password)) {
-									editTextSPassword.requestFocus();
-									editTextSPassword.setError("Please enter password");
-								} else {
-									if (Utils.isEmailValid(emailId)) {
-										if (password.length() >= 6) {
+						clickCount = clickCount + 1;
+					}
+				}
+			});
 
-											if (RegisterationType.FACEBOOK == registerationType) {
-												if (noFbEmail) {
-													emailId = "";
+			buttonRegister.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(isBranchLinkNotClicked()) {
+						linkedWallet = 1;
+						FlurryEventLogger.event(SIGNUP);
+						SplashNewActivity.registerationType = RegisterationType.EMAIL;
+						changeUIState(State.SIGNUP);
+					} else{
+						clickCount = clickCount + 1;
+					}
+				}
+			});
+
+			textViewTerms.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+	//				try {
+	//					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+	//					startActivity(browserIntent);
+	//				} catch (Exception e) {
+	//					e.printStackTrace();
+	//				}
+				}
+			});
+
+			buttonNoNetCall.setVisibility(View.GONE);
+			buttonNoNetCall.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Utils.openCallIntent(SplashNewActivity.this, Config.getSupportNumber(SplashNewActivity.this));
+					FlurryEventLogger.event(CALL_WHEN_NO_INTERNET);
+				}
+			});
+
+			buttonRefresh.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (!loginDataFetched) {
+						getDeviceToken();
+					}
+				}
+			});
+
+
+			imageViewBack.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (State.LOGIN == state) {
+						performLoginBackPressed();
+					} else if (State.SIGNUP == state) {
+						performSignupBackPressed();
+					}
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+				}
+			});
+
+
+			imageViewDebug1.setOnClickListener(onClickListenerKeybordHide);
+			imageViewDebug2.setOnClickListener(onClickListenerKeybordHide);
+			imageViewDebug3.setOnClickListener(onClickListenerKeybordHide);
+			imageViewDebug1.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					hold1 = true;
+					callAfterBothHoldSuccessfully();
+					return false;
+				}
+			});
+
+			imageViewDebug2.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					hold2 = true;
+					callAfterBothHoldSuccessfully();
+					return false;
+				}
+			});
+
+			imageViewDebug3.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					if (debugState == 1) {
+						confirmDebugPasswordPopup(SplashNewActivity.this);
+						resetDebugFlags();
+					}
+					return false;
+				}
+			});
+
+			editTextEmail.addTextChangedListener(new CustomTextWatcher(textViewEmailRequired));
+			editTextPassword.addTextChangedListener(new CustomTextWatcher(textViewPasswordRequired));
+			editTextEmail.setOnFocusChangeListener(onFocusChangeListener);
+			editTextPassword.setOnFocusChangeListener(onFocusChangeListener);
+
+			buttonEmailLogin.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					String email = editTextEmail.getText().toString().trim();
+					String password = editTextPassword.getText().toString().trim();
+					if ("".equalsIgnoreCase(email)) {
+						editTextEmail.requestFocus();
+						editTextEmail.setError(getResources().getString(R.string.nl_login_email_empty_error));
+					} else {
+						if ("".equalsIgnoreCase(password)) {
+							editTextPassword.requestFocus();
+							editTextPassword.setError(getResources().getString(R.string.nl_login_empty_password_error));
+						} else {
+							boolean onlyDigits = Utils.checkIfOnlyDigits(email);
+							if (onlyDigits) {
+								email = Utils.retrievePhoneNumberTenChars(email);
+								if (!Utils.validPhoneNumber(email)) {
+									editTextEmail.requestFocus();
+									editTextEmail.setError(getResources().getString(R.string.nl_login_invalid_email_error));
+								} else {
+									email = "+91" + email;
+									sendLoginValues(SplashNewActivity.this, email, password, true);
+									phoneNoLogin = true;
+								}
+							} else {
+								if (Utils.isEmailValid(email)) {
+									enteredEmail = email;
+									sendLoginValues(SplashNewActivity.this, email, password, false);
+									phoneNoLogin = false;
+								} else {
+									editTextEmail.requestFocus();
+									editTextEmail.setError("Please enter valid email");
+								}
+							}
+
+							FlurryEventLogger.event(LOGIN_VIA_EMAIL);
+						}
+					}
+				}
+			});
+			editTextEmail.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if (Utils.checkIfOnlyDigits(s.toString())) {
+						InputFilter[] fArray = new InputFilter[1];
+						fArray[0] = new InputFilter.LengthFilter(10);
+						editTextEmail.setFilters(fArray);
+					} else {
+						InputFilter[] fArray = new InputFilter[1];
+						fArray[0] = new InputFilter.LengthFilter(1000);
+						editTextEmail.setFilters(fArray);
+					}
+				}
+			});
+
+
+			buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+						FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+						Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+						facebookLoginHelper.openFacebookSession();
+					} else {
+						DialogPopup.dialogNoInternet(SplashNewActivity.this,
+								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+								new Utils.AlertCallBackWithButtonsInterface() {
+									@Override
+									public void positiveClick(View v) {
+										buttonFacebookLogin.performClick();
+									}
+
+									@Override
+									public void neutralClick(View v) {
+									}
+
+									@Override
+									public void negativeClick(View v) {
+									}
+								});
+					}
+				}
+			});
+			buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
+							GOOGLE_SIGNIN_REQ_CODE_LOGIN);
+					} else{
+						DialogPopup.dialogNoInternet(SplashNewActivity.this,
+								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+								new Utils.AlertCallBackWithButtonsInterface() {
+									@Override
+									public void positiveClick(View v) {
+										buttonGoogleLogin.performClick();
+									}
+
+									@Override
+									public void neutralClick(View v) {
+									}
+
+									@Override
+									public void negativeClick(View v) {
+									}
+								});
+					}
+				}
+			});
+			textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
+					ForgotPasswordScreen.emailAlready = editTextEmail.getText().toString();
+					startActivity(new Intent(SplashNewActivity.this, ForgotPasswordScreen.class));
+					overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					finish();
+					FlurryEventLogger.event(FORGOT_PASSWORD);
+				}
+			});
+
+			callbackManager = CallbackManager.Factory.create();
+
+			facebookLoginHelper = new FacebookLoginHelper(this, callbackManager, new FacebookLoginCallback() {
+				@Override
+				public void facebookLoginDone(FacebookUserData facebookUserData) {
+					Data.facebookUserData = facebookUserData;
+					if(State.LOGIN == state || State.SIGNUP == state) {
+						sendFacebookLoginValues(SplashNewActivity.this);
+						FlurryEventLogger.facebookLoginClicked(Data.facebookUserData.fbId);
+					}
+				}
+
+				@Override
+				public void facebookLoginError(String message) {
+					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+				}
+			});
+			editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					editTextPassword.requestFocus();
+					return true;
+				}
+			});
+			editTextPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					buttonEmailLogin.performClick();
+					return true;
+				}
+			});
+
+			editTextSName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired));
+			editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));
+			editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
+			editTextSPassword.addTextChangedListener(new CustomTextWatcher(textViewSPasswordRequired));
+
+			editTextSName.setOnFocusChangeListener(onFocusChangeListener);
+			editTextSEmail.setOnFocusChangeListener(onFocusChangeListener);
+			editTextSPhone.setOnFocusChangeListener(onFocusChangeListener);
+			editTextSPassword.setOnFocusChangeListener(onFocusChangeListener);
+			editTextSPromo.setOnFocusChangeListener(onFocusChangeListener);
+
+			buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+
+					String name = editTextSName.getText().toString().trim();
+					if (name.length() > 0) {
+						name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+					}
+					String referralCode = editTextSPromo.getText().toString().trim();
+					String emailId = editTextSEmail.getText().toString().trim();
+					boolean noFbEmail = false;
+
+					if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
+						emailId = "n@n.c";
+						noFbEmail = true;
+					}
+
+
+					String phoneNo = editTextSPhone.getText().toString().trim();
+					String password = editTextSPassword.getText().toString().trim();
+
+
+					if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
+						editTextSName.requestFocus();
+						editTextSName.setError("Please enter name");
+					} else if (!Utils.hasAlphabets(name)) {
+						editTextSName.requestFocus();
+						editTextSName.setError("Please enter at least one alphabet");
+					} else {
+						if ("".equalsIgnoreCase(emailId)) {
+							editTextSEmail.requestFocus();
+							editTextSEmail.setError("Please enter email id");
+						} else {
+							if ("".equalsIgnoreCase(phoneNo)) {
+								editTextSPhone.requestFocus();
+								editTextSPhone.setError("Please enter phone number");
+							} else {
+								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
+								if (!Utils.validPhoneNumber(phoneNo)) {
+									editTextSPhone.requestFocus();
+									editTextSPhone.setError("Please enter valid phone number");
+								} else {
+									phoneNo = "+91" + phoneNo;
+									if ("".equalsIgnoreCase(password)) {
+										editTextSPassword.requestFocus();
+										editTextSPassword.setError("Please enter password");
+									} else {
+										if (Utils.isEmailValid(emailId)) {
+											if (password.length() >= 6) {
+
+												if (RegisterationType.FACEBOOK == registerationType) {
+													if (noFbEmail) {
+														emailId = "";
+													}
+													sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password, linkedWallet);
+												} else if (RegisterationType.GOOGLE == registerationType) {
+													sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password, linkedWallet);
+												} else {
+													sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password, linkedWallet);
 												}
-												sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
-											} else if (RegisterationType.GOOGLE == registerationType) {
-												sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password);
+												FlurryEventLogger.event(SIGNUP_FINAL);
 											} else {
-												sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password);
+												editTextSPassword.requestFocus();
+												editTextSPassword.setError("Password must be of atleast six characters");
 											}
-											FlurryEventLogger.event(SIGNUP_FINAL);
+
 										} else {
-											editTextSPassword.requestFocus();
-											editTextSPassword.setError("Password must be of atleast six characters");
+											editTextSEmail.requestFocus();
+											editTextSEmail.setError("Please enter valid email id");
 										}
 
-									} else {
-										editTextSEmail.requestFocus();
-										editTextSEmail.setError("Please enter valid email id");
 									}
 								}
 							}
 						}
 					}
+
 				}
-
-			}
-		});
-		buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP_VIA_FACEBOOK);
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-				facebookLoginHelper.openFacebookSession();
-			}
-		});
-		buttonGoogleSignup.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				FlurryEventLogger.event(SIGNUP_VIA_GOOGLE);
-				Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
-				startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
-						GOOGLE_SIGNIN_REQ_CODE_SIGNUP);
-			}
-		});
-		editTextSPromo.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				buttonEmailSignup.performClick();
-				return true;
-			}
-		});
-		textViewSTerms.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				textViewTerms.performClick();
-			}
-		});
-
-
-		initiateDeviceInfoVariables();
-		startService(new Intent(this, PushPendingCallsService.class));
-		showLocationEnableDialog();
-
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
-
-
-		try{
-			if(getIntent().hasExtra(KEY_SPLASH_STATE)){
-				int stateInt = getIntent().getIntExtra(KEY_SPLASH_STATE, State.SPLASH_INIT.getOrdinal());
-				if(State.LOGIN.getOrdinal() == stateInt){
-					state = State.LOGIN;
+			});
+			buttonFacebookSignup.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					buttonFacebookLogin.performClick();
 				}
-				else if(State.SIGNUP.getOrdinal() == stateInt){
-					state = State.SIGNUP;
+			});
+			buttonGoogleSignup.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					buttonGoogleLogin.performClick();
 				}
-				else if(State.SPLASH_LS.getOrdinal() == stateInt){
-					state = State.SPLASH_LS;
+			});
+			editTextSName.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					editTextSEmail.requestFocus();
+					return true;
 				}
-				else{
+			});
+			editTextSEmail.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					editTextSPhone.requestFocus();
+					return true;
+				}
+			});
+			editTextSPhone.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					editTextSPassword.requestFocus();
+					return true;
+				}
+			});
+			editTextSPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					editTextSPromo.requestFocus();
+					return true;
+				}
+			});
+			editTextSPromo.setOnEditorActionListener(new OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+					buttonEmailSignup.performClick();
+					return true;
+				}
+			});
+			textViewSTerms.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+						startActivity(browserIntent);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+
+			initiateDeviceInfoVariables();
+			startService(new Intent(this, PushPendingCallsService.class));
+			showLocationEnableDialog();
+
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+			try {
+				if (getIntent().hasExtra(KEY_SPLASH_STATE)) {
+					int stateInt = getIntent().getIntExtra(KEY_SPLASH_STATE, State.SPLASH_INIT.getOrdinal());
+					if (State.LOGIN.getOrdinal() == stateInt) {
+						state = State.LOGIN;
+					} else if (State.SIGNUP.getOrdinal() == stateInt) {
+						state = State.SIGNUP;
+					} else if (State.SPLASH_LS.getOrdinal() == stateInt) {
+						state = State.SPLASH_LS;
+					} else {
+						state = State.SPLASH_INIT;
+					}
+				} else {
 					state = State.SPLASH_INIT;
 				}
-			}
-			else{
+			} catch (Exception e) {
+				e.printStackTrace();
 				state = State.SPLASH_INIT;
 			}
-		} catch(Exception e){
+
+			changeUIState(state);
+		} catch (Exception e) {
 			e.printStackTrace();
-			state = State.SPLASH_INIT;
 		}
 
-		changeUIState(state);
 
 	}
 
-	private void changeUIState(State state){
+	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
-		switch(state){
+		switch (state) {
 			case SPLASH_INIT:
 				viewInitJugnoo.setVisibility(View.VISIBLE);
 				viewInitSplashJugnoo.setVisibility(View.VISIBLE);
@@ -1014,8 +1092,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	private void callAfterBothHoldSuccessfully(){
-		if(hold1 && hold2) {
+	private void callAfterBothHoldSuccessfully() {
+		if (hold1 && hold2) {
 			debugState = 1;
 			root.setBackgroundColor(getResources().getColor(R.color.theme_color_pressed));
 			new Handler().postDelayed(new Runnable() {
@@ -1029,15 +1107,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	private void resetDebugFlags(){
+	private void resetDebugFlags() {
 		hold1 = false;
 		hold2 = false;
 		debugState = 0;
 	}
 
 
-	private void sendToRegisterThroughSms(String referralCode){
-		if(!"".equalsIgnoreCase(referralCode)) {
+	private void sendToRegisterThroughSms(String referralCode) {
+		if (!"".equalsIgnoreCase(referralCode)) {
 			Data.deepLinkIndex = -1;
 			FlurryEventLogger.event(SIGNUP_THROUGH_REFERRAL);
 			SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1056,69 +1134,72 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
-			if(!hasFocus && v instanceof EditText){
-				((EditText)v).setError(null);
+			if (!hasFocus && v instanceof EditText) {
+				((EditText) v).setError(null);
 			}
 		}
 	};
 
 	public void getDeviceToken() {
-		if(ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)){
-			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							try {
-								Intent i = new Intent();
-								i.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-								i.addCategory(Intent.CATEGORY_DEFAULT);
-								i.setData(Uri.parse("package:" + Data.DRIVER_APP_PACKAGE));
-								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-								try {
-									startActivity(i);
-								} catch (Exception ex) {
-									ex.printStackTrace();
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					},
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							ActivityCompat.finishAffinity(SplashNewActivity.this);
-						}
-					}, false, false);
-
+		boolean mockLocationEnabled = false;
+		if(Data.locationFetcher != null){
+			mockLocationEnabled = Utils.mockLocationEnabled(Data.locationFetcher.getLocationUnchecked());
 		}
-		else{
-			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
-
-				@Override
-				public void deviceTokenReceived(final String regId) {
-					runOnUiThread(new Runnable() {
+		if(mockLocationEnabled) {
+			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
+					getResources().getString(R.string.disable_mock_location),
+					new View.OnClickListener() {
 
 						@Override
-						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							Data.deviceToken = regId;
-							Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-							accessTokenLogin(SplashNewActivity.this);
-							FlurryEventLogger.appStarted(regId);
+						public void onClick(View v) {
+							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+							finish();
+							if(Data.locationFetcher != null) {
+								Data.locationFetcher.destroy();
+							}
+							Data.locationFetcher = null;
 						}
 					});
+		} else {
+			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())
+					&& Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
+				DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
+						getResources().getString(R.string.uninstall_driver_app),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								ActivityCompat.finishAffinity(SplashNewActivity.this);
+							}
+						});
 
-				}
-			});
+			} else {
+				DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
+				new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+
+					@Override
+					public void deviceTokenReceived(final String regId) {
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								DialogPopup.dismissLoadingDialog();
+								Data.deviceToken = regId;
+								Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+								accessTokenLogin(SplashNewActivity.this);
+								FlurryEventLogger.appStarted(regId);
+							}
+						});
+
+					}
+				});
+			}
 		}
 	}
 
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 
 		if (Data.locationFetcher == null) {
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
@@ -1126,9 +1207,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationFetcher.connect();
 		}
 
-
-		super.onResume();
-		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;
 
@@ -1164,17 +1242,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if (0 == resultCode) {
 					Data.locationSettingsNoPressed = true;
 				}
-			}
-			else if(requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN){
-				if(RESULT_OK == resultCode){
+			} else if (requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN) {
+				if (RESULT_OK == resultCode) {
 					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
 					sendGoogleLoginValues(this);
-				}
-			}
-			else if(requestCode == GOOGLE_SIGNIN_REQ_CODE_SIGNUP){
-				if(RESULT_OK == resultCode) {
-					Data.googleSignInAccount = data.getParcelableExtra(KEY_GOOGLE_PARCEL);
-					fillSocialAccountInfo(RegisterationType.GOOGLE);
 				}
 			}
 			else{
@@ -1203,7 +1274,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					Data.loginLongitude = Data.locationFetcher.getLongitude();
 				}
 
-				RequestParams params = new RequestParams();
+				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", accessToken);
 				params.put("device_token", Data.getDeviceToken());
 
@@ -1218,40 +1289,40 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "" + pair.second);
 
-				if(Utils.isDeviceRooted()){
+				if (Utils.isDeviceRooted()) {
 					params.put("device_rooted", "1");
-				}
-				else{
+				} else {
 					params.put("device_rooted", "0");
 				}
 
+				new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+
 				Log.e("params login_using_access_token", "=" + params);
 
-				Log.e("Config.getServerUrl() + \"/login_using_access_token\"", "=" + Config.getServerUrl() + "/login_using_access_token");
+				final long startTime = System.currentTimeMillis();
+				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
+						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+						Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
+						performLoginSuccess(activity, responseStr);
+					}
 
-				AsyncHttpClient client = Data.getClient();
-				client.post(Config.getServerUrl() + "/login_using_access_token", params,
-						new CustomAsyncHttpResponseHandler() {
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "loginUsingAccessToken error="+error.toString());
+						performLoginFailure(activity);
+					}
+				});
 
-							@Override
-							public void onFailure(Throwable arg3) {
-								Log.e("request fail", arg3.toString());
-								performLoginFailure(activity);
-							}
-
-							@Override
-							public void onSuccess(String response) {
-								Log.e("Server response of access_token", "response = " + response);
-								performLoginSuccess(activity, response);
-							}
-						});
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				changeUIState(State.SPLASH_LS);
-			} else{
+			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
@@ -1276,7 +1347,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					DialogPopup.dismissLoadingDialog();
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-						new AccessTokenDataParseAsync(activity, response).execute();
+						accessTokenDataParseAsync(activity, response);
 
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						Editor editor = pref1.edit();
@@ -1307,41 +1378,23 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		changeUIState(State.SPLASH_NO_NET);
 	}
 
-
-	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String> {
-
-		Activity activity;
-		String response;
-
-		public AccessTokenDataParseAsync(Activity activity, String response) {
-			this.activity = activity;
-			this.response = response;
+	public void accessTokenDataParseAsync(Activity activity, String response){
+		String resp;
+		try {
+			resp = new JSONParser().parseAccessTokenLoginData(activity, response);
+			Log.e("AccessTokenDataParseAsync resp", "=" + resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp = Constants.SERVER_TIMEOUT;
 		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			try {
-				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
-				Log.e("AccessTokenDataParseAsync resp", "=" + resp);
-				return resp;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return HttpRequester.SERVER_TIMEOUT;
-			}
+		if (resp.contains(Constants.SERVER_TIMEOUT)) {
+			loginDataFetched = false;
+			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+		} else {
+			loginDataFetched = true;
 		}
+		DialogPopup.dismissLoadingDialog();
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			Log.e("AccessTokenDataParseAsync result", "=" + result);
-			if (result.contains(HttpRequester.SERVER_TIMEOUT)) {
-				loginDataFetched = false;
-				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-			} else {
-				loginDataFetched = true;
-			}
-			DialogPopup.dismissLoadingDialog();
-		}
 	}
 
 
@@ -1480,7 +1533,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
+				if (State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
 					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 						loginDataFetched = false;
 						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
@@ -1490,11 +1543,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
 				}
-				else if(State.LOGIN == state){
+				else if(State.LOGIN == state || State.SIGNUP == state){
 					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
-						Database2.getInstance(SplashNewActivity.this).updateDriverLastLocationTime();
-						Database2.getInstance(SplashNewActivity.this).close();
-
 						Map<String, String> articleParams = new HashMap<String, String>();
 						articleParams.put("username", Data.userData.userName);
 						FlurryAgent.logEvent("App Login", articleParams);
@@ -1513,17 +1563,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					else if(SplashNewActivity.this.hasWindowFocus() && facebookRegister){
 						facebookRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.FACEBOOK);
-					}
-					else if(SplashNewActivity.this.hasWindowFocus() && googleRegister){
+					} else if (SplashNewActivity.this.hasWindowFocus() && googleRegister) {
 						googleRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.GOOGLE);
-					}
-					else if(SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen){
-						sendIntentToOtpScreen();
-					}
-				}
-				else if(State.SIGNUP == state){
-					if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
+					} else if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
 						sendIntentToOtpScreen();
 					}
 				}
@@ -1545,13 +1588,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	public void onBackPressed() {
-		if(State.LOGIN == state){
+		if (State.LOGIN == state) {
 			performLoginBackPressed();
-		}
-		else if(State.SIGNUP == state){
+		} else if (State.SIGNUP == state) {
 			performSignupBackPressed();
-		}
-		else{
+		} else {
 			super.onBackPressed();
 		}
 	}
@@ -1669,7 +1710,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void showLocationEnableDialog(){
+	private void showLocationEnableDialog() {
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (resp != ConnectionResult.SUCCESS) {
 			Log.e("Google Play Service Error ", "=" + resp);
@@ -1679,7 +1720,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	private void initiateDeviceInfoVariables(){
+	private void initiateDeviceInfoVariables() {
 		try {                                                                                        // to get AppVersion, OS version, country code and device name
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			Data.appVersion = pInfo.versionCode;
@@ -1691,10 +1732,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
 			Log.i("deviceName", Data.deviceName + "..");
 
-			if(Config.getConfigMode() == ConfigMode.LIVE){
+			if (Config.getConfigMode() == ConfigMode.LIVE) {
 				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
-			}
-			else{
+			} else {
 				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			}
 
@@ -1708,11 +1748,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	public enum State{
+	public enum State {
 		SPLASH_INIT(0), SPLASH_LS(1), SPLASH_NO_NET(2), LOGIN(3), SIGNUP(4);
 
 		private int ordinal;
-		State(int ordinal){
+
+		State(int ordinal) {
 			this.ordinal = ordinal;
 		}
 
@@ -1724,7 +1765,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	public class CustomTextWatcher implements TextWatcher {
 		private TextView textViewRequired;
-		public CustomTextWatcher(TextView textViewRequired){
+
+		public CustomTextWatcher(TextView textViewRequired) {
 			this.textViewRequired = textViewRequired;
 		}
 
@@ -1745,14 +1787,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void setLoginScreenValuesOnCreate(){
+	private void setLoginScreenValuesOnCreate() {
 		// set email screen values according to intent
+		editTextEmail.setText("");
+		editTextPassword.setText("");
 		try {
-			if(getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterationType.EMAIL == SplashNewActivity.registerationType){
-				if(phoneNoLogin) {
+			if (getIntent().hasExtra(KEY_BACK_FROM_OTP) && RegisterationType.EMAIL == SplashNewActivity.registerationType) {
+				if (phoneNoLogin) {
 					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
-				}
-				else{
+				} else {
 					editTextEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
 				}
 			}
@@ -1764,11 +1807,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				String previousLoginEmail = getIntent().getStringExtra(KEY_PREVIOUS_LOGIN_EMAIL);
 				editTextEmail.setText(previousLoginEmail);
 				fromPreviousAccounts = true;
-			}
-			else{
+			} else {
 				fromPreviousAccounts = false;
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			fromPreviousAccounts = false;
 		}
@@ -1778,7 +1820,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				String forgotLoginEmail = getIntent().getStringExtra(KEY_FORGOT_LOGIN_EMAIL);
 				editTextEmail.setText(forgotLoginEmail);
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -1804,15 +1846,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-
-	public void performLoginBackPressed(){
-		if(fromPreviousAccounts){
+	public void performLoginBackPressed() {
+		if (fromPreviousAccounts) {
 			Intent intent = new Intent(SplashNewActivity.this, MultipleAccountsActivity.class);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
-		}
-		else {
+		} else {
 			FacebookLoginHelper.logoutFacebook();
 			changeUIState(State.SPLASH_LS);
 		}
@@ -1827,111 +1867,102 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
-			if(Data.locationFetcher != null){
+			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 
-			if(isPhoneNumber){
+			if (isPhoneNumber) {
 				params.put("phone_no", emailId);
-			}
-			else{
+			} else {
 				params.put("email", emailId);
 			}
 			params.put("password", password);
 			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", ""+Data.appVersion);
+			params.put("app_version", "" + Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.loginLatitude);
-			params.put("longitude", ""+Data.loginLongitude);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
-			Log.i("params", "="+params);
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/login_using_email_or_phone_no", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
+			Log.i("params", "=" + params);
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
 
+						int flag = jObj.getInt("flag");
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-
-							try {
-								jObj = new JSONObject(response);
-
-								int flag = jObj.getInt("flag");
-
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										emailNeedRegister = emailId;
-										emailRegister = true;
-										notRegisteredMsg = error;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-										if(isPhoneNumber){
-											enteredEmail = jObj.getString("user_email");
-										}
-										else{
-											enteredEmail = emailId;
-										}
-										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-										accessToken = jObj.getString("access_token");
-										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-										otpErrorMsg = jObj.getString("error");
-										SplashNewActivity.registerationType = RegisterationType.EMAIL;
-										sendToOtpScreen = true;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
-											new JSONParser().parseAccessTokenLoginData(activity, response);
-											Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
-											loginDataFetched = true;
-										}
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-									DialogPopup.dismissLoadingDialog();
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								emailNeedRegister = emailId;
+								emailRegister = true;
+								notRegisteredMsg = error;
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								if (isPhoneNumber) {
+									enteredEmail = jObj.getString("user_email");
+								} else {
+									enteredEmail = emailId;
 								}
-								else{
-									DialogPopup.dismissLoadingDialog();
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+								accessToken = jObj.getString("access_token");
+								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.EMAIL;
+								sendToOtpScreen = true;
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
+									loginDataFetched = true;
 								}
-
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
 							}
+							DialogPopup.dismissLoadingDialog();
+						} else {
+							DialogPopup.dismissLoadingDialog();
 						}
-					});
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -1944,9 +1975,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
-			if(Data.locationFetcher != null){
+			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
@@ -1961,89 +1992,84 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", ""+Data.appVersion);
+			params.put("app_version", "" + Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.loginLatitude);
-			params.put("longitude", ""+Data.loginLongitude);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
-			Log.i("params", ""+params);
+			Log.i("params", "" + params);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/login_using_facebook", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
+			RestClient.getApiServices().loginUsingFacebook(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
+						int flag = jObj.getInt("flag");
 
-							try {
-								jObj = new JSONObject(response);
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								facebookRegister = true;
+								notRegisteredMsg = error;
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+								accessToken = jObj.getString("access_token");
+								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+								SplashNewActivity.this.accessToken = jObj.getString("access_token");
+								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
+								sendToOtpScreen = true;
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+									loginDataFetched = true;
 
-								int flag = jObj.getInt("flag");
-
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										facebookRegister = true;
-										notRegisteredMsg = error;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-										accessToken = jObj.getString("access_token");
-										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-										otpErrorMsg = jObj.getString("error");
-										SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
-										sendToOtpScreen = true;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
-											new JSONParser().parseAccessTokenLoginData(activity, response);
-											loginDataFetched = true;
-
-											Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
-										}
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-									DialogPopup.dismissLoadingDialog();
+									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
 								}
-								else{
-									DialogPopup.dismissLoadingDialog();
-								}
-
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
 							}
-
+							DialogPopup.dismissLoadingDialog();
+						} else {
+							DialogPopup.dismissLoadingDialog();
 						}
-					});
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingFacebook error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -2056,9 +2082,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
-			if(Data.locationFetcher != null){
+			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
@@ -2068,88 +2094,90 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", Data.deviceName);
-			params.put("app_version", ""+Data.appVersion);
+			params.put("app_version", "" + Data.appVersion);
 			params.put("os_version", Data.osVersion);
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
-			params.put("latitude", ""+Data.loginLatitude);
-			params.put("longitude", ""+Data.loginLongitude);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getClientId());
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			} else{
+			} else {
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
-			Log.i("params", ""+params);
+			Log.i("params", "" + params);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/login_using_google", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+			RestClient.getApiServices().loginUsingGoogle(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingGoogle response = " + responseStr);
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
 
-							try {
-								jObj = new JSONObject(response);
+						int flag = jObj.getInt("flag");
 
-								int flag = jObj.getInt("flag");
-
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										googleRegister = true;
-										notRegisteredMsg = error;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
-										phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-										accessToken = jObj.getString("access_token");
-										Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-										Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-										otpErrorMsg = jObj.getString("error");
-										SplashNewActivity.registerationType = RegisterationType.GOOGLE;
-										sendToOtpScreen = true;
-									}
-									else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-										if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
-											new JSONParser().parseAccessTokenLoginData(activity, response);
-											loginDataFetched = true;
-
-											Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
-										}
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-									DialogPopup.dismissLoadingDialog();
-								}
-								else{
-									DialogPopup.dismissLoadingDialog();
-								}
-
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								googleRegister = true;
+								notRegisteredMsg = error;
 							}
+							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							}
+							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+								accessToken = jObj.getString("access_token");
+								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+								SplashNewActivity.this.accessToken = jObj.getString("access_token");
+								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
+								sendToOtpScreen = true;
+							}
+							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+								if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+									loginDataFetched = true;
 
+									Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
+								}
+							}
+							else{
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+							DialogPopup.dismissLoadingDialog();
 						}
-					});
+						else{
+							DialogPopup.dismissLoadingDialog();
+						}
+
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingGoogle error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -2160,10 +2188,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	/**
 	 * Send intent to otp screen by making required data objects
-	 *  flag 0 for email, 1 for Facebook
+	 * flag 0 for email, 1 for Facebook
 	 */
-	public void sendIntentToOtpScreen(){
-		if(State.LOGIN == state) {
+	public void sendIntentToOtpScreen() {
+		if (State.LOGIN == state) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
 
 				@Override
@@ -2190,17 +2218,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 					intent.putExtra("show_timer", 0);
+					intent.putExtra(LINKED_WALLET, linkedWallet);
 					startActivity(intent);
 					finish();
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 			});
-		}
-		else if(State.SIGNUP == state){
+		} else if (State.SIGNUP == state) {
 			OTPConfirmScreen.intentFromRegister = true;
 			generateOTPRegisterData();
 			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 			intent.putExtra("show_timer", 1);
+			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
+			intent.putExtra(LINKED_WALLET, linkedWallet);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -2209,19 +2239,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	public void sendIntentToRegisterScreen(final RegisterationType registerationType){
-		DialogPopup.alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
+		if(State.LOGIN == state){
+			DialogPopup.alertPopupWithListener(this, "", notRegisteredMsg, new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				SplashNewActivity.registerationType = registerationType;
-				changeUIState(State.SIGNUP);
-			}
-		});
+				@Override
+				public void onClick(View v) {
+					linkedWallet = 1;
+					SplashNewActivity.registerationType = registerationType;
+					changeUIState(State.SIGNUP);
+				}
+			});
+		} else{
+			SplashNewActivity.registerationType = registerationType;
+			changeUIState(State.SIGNUP);
+		}
 	}
-
-
-
-
 
 
 	public void performSignupBackPressed() {
@@ -2229,22 +2261,28 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		changeUIState(State.SPLASH_LS);
 	}
 
-	public enum RegisterationType{
+	public enum RegisterationType {
 		EMAIL(0), FACEBOOK(1), GOOGLE(2);
 
 		private int ordinal;
-		RegisterationType(int ordinal){
+
+		RegisterationType(int ordinal) {
 			this.ordinal = ordinal;
 		}
 
-		public int getOrdinal(){
+		public int getOrdinal() {
 			return ordinal;
 		}
 	}
 
 
+	private void setSignupScreenValuesOnCreate() {
 
-	private void setSignupScreenValuesOnCreate(){
+		editTextSName.setText(""); editTextSName.setEnabled(true);
+		editTextSEmail.setText(""); editTextSEmail.setEnabled(true);
+		editTextSPromo.setText("");
+		editTextSPhone.setText("");
+		editTextSPassword.setText("");
 
 		fillSocialAccountInfo(SplashNewActivity.registerationType);
 
@@ -2255,13 +2293,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					editTextSPromo.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
 					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
 					editTextSPassword.setText(OTPConfirmScreen.facebookRegisterData.password);
-				}
-				else if(RegisterationType.GOOGLE == registerationType){
+				} else if (RegisterationType.GOOGLE == registerationType) {
 					editTextSPromo.setText(OTPConfirmScreen.googleRegisterData.referralCode);
 					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo));
 					editTextSPassword.setText(OTPConfirmScreen.googleRegisterData.password);
-				}
-				else {
+				} else {
 					editTextSName.setText(OTPConfirmScreen.emailRegisterData.name);
 					editTextSEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
 					editTextSPromo.setText(OTPConfirmScreen.emailRegisterData.referralCode);
@@ -2280,12 +2316,18 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				String referralCode = getIntent().getStringExtra(KEY_REFERRAL_CODE);
 				editTextSPromo.setText(referralCode);
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		if (Data.previousAccountInfoList == null) {
 			Data.previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
+		}
+
+		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
+		} else {
+			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
 		}
 
 
@@ -2294,35 +2336,34 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private void fillSocialAccountInfo(RegisterationType registerationType){
+	private void fillSocialAccountInfo(RegisterationType registerationType) {
 		try {
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
 				editTextSEmail.setText(Data.facebookUserData.userEmail);
 
-				if(Data.facebookUserData.firstName != null && !Data.facebookUserData.firstName.equalsIgnoreCase("")){
+				if (Data.facebookUserData.firstName != null && !Data.facebookUserData.firstName.equalsIgnoreCase("")) {
 					editTextSName.setEnabled(false);
-				} else{
+				} else {
 					editTextSName.setEnabled(true);
 				}
-				if(Data.facebookUserData.userEmail != null && !Data.facebookUserData.userEmail.equalsIgnoreCase("")) {
+				if (Data.facebookUserData.userEmail != null && !Data.facebookUserData.userEmail.equalsIgnoreCase("")) {
 					editTextSEmail.setEnabled(false);
 				} else {
 
 					editTextSEmail.setEnabled(true);
 				}
-			}
-			else if(RegisterationType.GOOGLE == SplashNewActivity.registerationType){
+			} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.googleSignInAccount.getDisplayName());
 				editTextSEmail.setText(Data.googleSignInAccount.getEmail());
 
-				if(Data.googleSignInAccount.getDisplayName() != null && !Data.googleSignInAccount.getDisplayName().equalsIgnoreCase("")){
+				if (Data.googleSignInAccount.getDisplayName() != null && !Data.googleSignInAccount.getDisplayName().equalsIgnoreCase("")) {
 					editTextSName.setEnabled(false);
-				} else{
+				} else {
 					editTextSName.setEnabled(true);
 				}
-				if(Data.googleSignInAccount.getEmail() != null && !Data.googleSignInAccount.getEmail().equalsIgnoreCase("")) {
+				if (Data.googleSignInAccount.getEmail() != null && !Data.googleSignInAccount.getEmail().equalsIgnoreCase("")) {
 					editTextSEmail.setEnabled(false);
 				} else {
 					editTextSEmail.setEnabled(true);
@@ -2341,7 +2382,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private class ReadSMSAsync extends AsyncTask<String, Integer, String>{
+	private class ReadSMSAsync extends AsyncTask<String, Integer, String> {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -2349,7 +2390,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		@Override
 		protected String doInBackground(String... params) {
-			String referralCode = getSmsFindReferralCode(1*60*60*1000);
+			String referralCode = getSmsFindReferralCode(1 * 60 * 60 * 1000);
 			return referralCode;
 		}
 
@@ -2393,18 +2434,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 //                            typeOfSMS = "DRAFT";
 //                            break;
 //                    }
-					Log.e("body", "="+body);
+					Log.e("body", "=" + body);
 					try {
-						if(body.contains("Jugnoo")){
+						if (body.contains("Jugnoo")) {
 							String[] codeArr = body.split("code ");
 							String[] spaceArr = codeArr[1].split(" ");
 							String rCode = spaceArr[0];
-							if(!"".equalsIgnoreCase(rCode)){
+							if (!"".equalsIgnoreCase(rCode)) {
 								referralCode = rCode;
 								break;
 							}
 						}
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 //                    stringBuffer.append("\nPhone Number:--- " + number + " \nMessage Type:--- "
 //                            + typeOfSMS + " \nMessage Date:--- " + smsDayTime
 //                            + " \nMessage Body:--- " + body);
@@ -2413,7 +2455,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				}
 //                DialogPopup.alertPopup(this, "", stringBuffer.toString());
 			}
-			if (cursor != null){
+			if (cursor != null) {
 				cursor.close();
 			}
 		} catch (Exception e) {
@@ -2423,16 +2465,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-
 	/**
 	 * ASync for register from server
 	 */
-	public void sendSignupValues(final Activity activity, final String name, final String referralCode, final String emailId, final String phoneNo, final String password) {
+	public void sendSignupValues(final Activity activity, final String name, final String referralCode, final String emailId, final String phoneNo,
+								 final String password, final int linkedWallet) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
 			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
@@ -2457,82 +2499,78 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
-
-
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
-
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.i("register_using_email params", params.toString());
 
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/register_using_email", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+			RestClient.getApiServices().registerUsingEmail(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "registerUsingEmail response = " + responseStr);
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response register_using_email", "response = " + response);
-
-							try {
-								jObj = new JSONObject(response);
-								SplashNewActivity.registerationType = RegisterationType.EMAIL;
-								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-										int flag = jObj.getInt("flag");
-										if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
-											String error = jObj.getString("error");
-											DialogPopup.alertPopup(activity, "", error);
-										} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
-											String error = jObj.getString("error");
-											setIntent(new Intent().putExtra(KEY_ALREADY_REGISTERED_EMAIL, emailId));
-											DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
-										} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-											SplashNewActivity.this.name = name;
-											SplashNewActivity.this.emailId = emailId;
-											SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
-											SplashNewActivity.this.password = password;
-											SplashNewActivity.this.referralCode = referralCode;
-											SplashNewActivity.this.accessToken = jObj.getString("access_token");
-											Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-											Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-											sendToOtpScreen = true;
-										} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
-											SplashNewActivity.this.name = name;
-											SplashNewActivity.this.emailId = emailId;
-											SplashNewActivity.this.phoneNo = phoneNo;
-											SplashNewActivity.this.password = password;
-											SplashNewActivity.this.referralCode = referralCode;
-											SplashNewActivity.this.accessToken = "";
-											parseDataSendToMultipleAccountsScreen(activity, jObj);
-										} else {
-											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
-									}
-								} else {
-									DialogPopup.dismissLoadingDialog();
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						SplashNewActivity.registerationType = RegisterationType.EMAIL;
+						if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									setIntent(new Intent().putExtra(KEY_ALREADY_REGISTERED_EMAIL, emailId));
+									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
+								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+									SplashNewActivity.this.name = name;
+									SplashNewActivity.this.emailId = emailId;
+									parseOTPSignUpData(jObj, password, referralCode);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									SplashNewActivity.this.name = name;
+									SplashNewActivity.this.emailId = emailId;
+									SplashNewActivity.this.phoneNo = phoneNo;
+									SplashNewActivity.this.password = password;
+									SplashNewActivity.this.referralCode = referralCode;
+									SplashNewActivity.this.accessToken = "";
+									parseDataSendToMultipleAccountsScreen(activity, jObj);
+								} else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag){
+									SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
+									SplashNewActivity.this.name = name;
+									SplashNewActivity.this.emailId = emailId;
+									parseOTPSignUpData(jObj, password, referralCode);
+								} else{
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
-							} catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								DialogPopup.dismissLoadingDialog();
 							}
+						} else {
+							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "registerUsingEmail error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
@@ -2543,12 +2581,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	/**
 	 * ASync for login from server
 	 */
-	public void sendFacebookSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password) {
+	public void sendFacebookSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password
+			, final int linkedWallet) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
 			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
@@ -2575,76 +2614,71 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
+			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
-
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.e("register_using_facebook params", params.toString());
 
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/register_using_facebook", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
+			RestClient.getApiServices().registerUsingFacebook(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "registerUsingFacebook response = " + response);
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response register_using_facebook", "response = " + response);
-
-							try {
-								jObj = new JSONObject(response);
-								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
-								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-										int flag = jObj.getInt("flag");
-										if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
-											String error = jObj.getString("error");
-											DialogPopup.alertPopup(activity, "", error);
-										} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
-											String error = jObj.getString("error");
-											DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
-										} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-											SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
-											SplashNewActivity.this.password = password;
-											SplashNewActivity.this.referralCode = referralCode;
-											SplashNewActivity.this.accessToken = jObj.getString("access_token");
-											Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-											Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-											sendToOtpScreen = true;
-										} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
-											SplashNewActivity.this.phoneNo = phoneNo;
-											SplashNewActivity.this.password = password;
-											SplashNewActivity.this.referralCode = referralCode;
-											SplashNewActivity.this.accessToken = "";
-											parseDataSendToMultipleAccountsScreen(activity, jObj);
-										} else {
-											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
-									}
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
+						if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
+								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+									parseOTPSignUpData(jObj, password, referralCode);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									SplashNewActivity.this.phoneNo = phoneNo;
+									SplashNewActivity.this.password = password;
+									SplashNewActivity.this.referralCode = referralCode;
+									SplashNewActivity.this.accessToken = "";
+									parseDataSendToMultipleAccountsScreen(activity, jObj);
+								} else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
+									SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else {
-									DialogPopup.dismissLoadingDialog();
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
-							} catch (Exception exception) {
-								exception.printStackTrace();
 								DialogPopup.dismissLoadingDialog();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
+						} else {
+							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "registerUsingFacebook error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
@@ -2654,12 +2688,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	/**
 	 * ASync for login from server
 	 */
-	public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password) {
+	public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password, final int linkedWallet) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
 			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();
@@ -2682,104 +2716,105 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("country", Data.country);
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
+			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
 
-			if(Utils.isDeviceRooted()){
+			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
-			}
-			else{
+			} else {
 				params.put("device_rooted", "0");
 			}
-
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.e("register_using_facebook params", params.toString());
 
+			RestClient.getApiServices().registerUsingGoogle(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "registerUsingGoogle response = " + responseStr);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/register_using_google", params,
-					new CustomAsyncHttpResponseHandler() {
-						private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response register_using_google", "response = " + response);
-
-							try {
-								jObj = new JSONObject(response);
-								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
-								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-										int flag = jObj.getInt("flag");
-										if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
-											String error = jObj.getString("error");
-											DialogPopup.alertPopup(activity, "", error);
-										} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
-											String error = jObj.getString("error");
-											DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
-										} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-											SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
-											SplashNewActivity.this.password = password;
-											SplashNewActivity.this.referralCode = referralCode;
-											SplashNewActivity.this.accessToken = jObj.getString("access_token");
-											Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-											Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
-											sendToOtpScreen = true;
-										} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
-											SplashNewActivity.this.phoneNo = phoneNo;
-											SplashNewActivity.this.password = password;
-											SplashNewActivity.this.referralCode = referralCode;
-											SplashNewActivity.this.accessToken = "";
-											parseDataSendToMultipleAccountsScreen(activity, jObj);
-										} else {
-											DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-										}
-										DialogPopup.dismissLoadingDialog();
-									}
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						SplashNewActivity.registerationType = RegisterationType.GOOGLE;
+						if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt("flag");
+								if (ApiResponseFlags.AUTH_REGISTRATION_FAILURE.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								} else if (ApiResponseFlags.AUTH_ALREADY_REGISTERED.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
+								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+									parseOTPSignUpData(jObj, password, referralCode);
+								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+									SplashNewActivity.this.phoneNo = phoneNo;
+									SplashNewActivity.this.password = password;
+									SplashNewActivity.this.referralCode = referralCode;
+									SplashNewActivity.this.accessToken = "";
+									parseDataSendToMultipleAccountsScreen(activity, jObj);
+								} else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
+									SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
+									parseOTPSignUpData(jObj, password, referralCode);
 								} else {
-									DialogPopup.dismissLoadingDialog();
+									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
-							} catch (Exception exception) {
-								exception.printStackTrace();
 								DialogPopup.dismissLoadingDialog();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
+						} else {
+							DialogPopup.dismissLoadingDialog();
 						}
-					});
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "registerUsingGoogle error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		} else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
 
+	private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode) throws Exception{
+		SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
+		SplashNewActivity.this.password = password;
+		SplashNewActivity.this.referralCode = referralCode;
+		SplashNewActivity.this.accessToken = jObj.getString("access_token");
+		Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
+		Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+		sendToOtpScreen = true;
+		linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
+	}
 
-	private void generateOTPRegisterData(){
-		if(RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
+	private void generateOTPRegisterData() {
+		if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 			OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
 					Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
 					Data.facebookUserData.accessToken,
 					Data.facebookUserData.userEmail,
 					Data.facebookUserData.userName,
 					phoneNo, password, referralCode, accessToken);
-		}
-		else if(RegisterationType.GOOGLE == SplashNewActivity.registerationType){
+		} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 			OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
 					Data.googleSignInAccount.getDisplayName(),
 					Data.googleSignInAccount.getEmail(),
 					"",
 					phoneNo, password, referralCode, accessToken);
-		}
-		else{
+		} else {
 			OTPConfirmScreen.intentFromRegister = true;
 			OTPConfirmScreen.emailRegisterData = new EmailRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
 		}
 	}
-
 
 
 	public void parseDataSendToMultipleAccountsScreen(Activity activity, JSONObject jObj) {
@@ -2801,7 +2836,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			changeUIState(State.LOGIN);
 		}
 	};
-	
 
 
 
@@ -2845,7 +2879,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i("Server response", "jsonString = " + jsonString);
+						Log.i(TAG, "verifyOtp jsonString = " + jsonString);
 						JSONObject jObj = new JSONObject(jsonString);
 
 						int flag = jObj.getInt("flag");
@@ -2892,7 +2926,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e("RetrofitError", "error=" + error);
+					Log.e(TAG, "verifyOtp error=" + error);
 					if(progressDialog != null) progressDialog.dismiss();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2969,6 +3003,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				e.printStackTrace();
 			}
 			return link;
+		}
+	}
+
+
+
+
+	private void firstTimeEvents(){
+		if(!Prefs.with(this).contains(SP_FIRST_OPEN_TIME)){
+			Prefs.with(this).save(SP_FIRST_OPEN_TIME, System.currentTimeMillis());
+		}
+
+		if(!Prefs.with(this).contains(SP_APP_DOWNLOAD_SOURCE_SENT)){
+			HashMap<String, String> map = new HashMap<>();
+			map.put(KEY_SOURCE, Config.getDownloadSource());
+			FlurryEventLogger.event(FlurryEventNames.APP_DOWNLOAD_SOURCE, map);
+			Prefs.with(this).save(SP_APP_DOWNLOAD_SOURCE_SENT, 1);
 		}
 	}
 

@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,16 +11,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -52,7 +55,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         linearLayoutCash = (LinearLayout)rootView.findViewById(R.id.linearLayoutCash);
         radioBtnPaytm = (ImageView)rootView.findViewById(R.id.radio_paytm);
         radioBtnCash = (ImageView)rootView.findViewById(R.id.radio_cash);
-        textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenRegular(getActivity()), Typeface.BOLD);
+        textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(getActivity()));
         textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(getActivity()));
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(getActivity()));
         progressBarPaytm = (ProgressWheel) rootView.findViewById(R.id.progressBarPaytm);
@@ -66,6 +69,11 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePreferredPaymentOptionUI();
+    }
 
     private void paymentSelection(ImageView selected, ImageView unSelected){
         selected.setImageResource(R.drawable.radio_selected_icon);
@@ -78,14 +86,27 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             case R.id.relativeLayoutPaytm:
                 if(Data.userData.getPaytmBalance() > 0) {
                     Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                    Prefs.with(activity).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
                     setSelectedPaymentOptionUI(Data.pickupPaymentOption);
                 } else if(Data.userData.getPaytmError() == 1){
                     DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                 } else{
                     if(Data.userData.paytmEnabled == 1
                             && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_no_cash));
+                        DialogPopup.alertPopupWithListener(activity, "",
+                                activity.getResources().getString(R.string.paytm_no_cash),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(activity, PaymentActivity.class);
+                                        if(Data.userData.paytmEnabled == 1) {
+                                            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                                        } else {
+                                            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                                        }
+                                        activity.startActivity(intent);
+                                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                    }
+                                });
                     }
                     else{
                         activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
@@ -94,8 +115,10 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 break;
 
             case R.id.linearLayoutCash:
+                if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
+                    FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
+                }
                 Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                Prefs.with(activity).save(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.CASH.getOrdinal());
                 setSelectedPaymentOptionUI(Data.pickupPaymentOption);
                 break;
         }
@@ -103,7 +126,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
     public void updatePreferredPaymentOptionUI(){
         try{
-            int preferredPaymentOption = Prefs.with(activity).getInt(SPLabels.PREFERRED_PAYMENT_OPTION, PaymentOption.PAYTM.getOrdinal());
+            int preferredPaymentOption = Data.pickupPaymentOption;
             if(PaymentOption.PAYTM.getOrdinal() == preferredPaymentOption){
                 if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
                     Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
@@ -124,9 +147,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             }
 
             textViewPaytmValue.setText(String.format(activity.getResources()
-                    .getString(R.string.ruppes_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+                    .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 
-            if(Data.userData.paytmEnabled == 1){
+            if(Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_paytm_wallet));
             }
@@ -135,7 +158,18 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
             }
 
+            if(Data.userData.getPaytmError() == 1){
+                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                relativeLayoutPaytm.setVisibility(View.GONE);
+            }
+            else{
+                relativeLayoutPaytm.setVisibility(View.VISIBLE);
+            }
+
             setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+
+            textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
+
         } catch(Exception e){
             e.printStackTrace();
         }

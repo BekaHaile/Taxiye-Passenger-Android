@@ -1,8 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,9 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -25,13 +25,13 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by Ankit on 1/8/16.
  */
-public class SlidingBottomFareFragment extends Fragment implements FlurryEventNames{
+public class SlidingBottomFareFragment extends Fragment{
 
     private View rootView;
     private HomeActivity activity;
     private LinearLayout linearLayoutRoot;
     private RelativeLayout relativeLayoutPriorityTip;
-    private TextView textViewPriorityTipValue, textViewKMValue, textViewMinValue, textViewFareEstimage;
+    private TextView textViewPriorityTipValue, textViewKMValue, textViewMinValue, textViewFareEstimage, textViewThreshold;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
         textViewKMValue = (TextView)rootView.findViewById(R.id.textViewKMValue);textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
         textViewMinValue = (TextView)rootView.findViewById(R.id.textViewMinValue);textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
         textViewFareEstimage = (TextView)rootView.findViewById(R.id.textViewFareEstimage);textViewFareEstimage.setTypeface(Fonts.mavenLight(activity));
+        textViewThreshold = (TextView)rootView.findViewById(R.id.textViewThreshold);textViewThreshold.setTypeface(Fonts.mavenLight(activity));
 
         update();
 
@@ -61,7 +62,8 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
             public void onClick(View v) {
                 startActivity(new Intent(activity, FareEstimateActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FARE_ESTIMATE);
+                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
             }
         });
 
@@ -70,13 +72,20 @@ public class SlidingBottomFareFragment extends Fragment implements FlurryEventNa
 
     public void update(){
         try {
-            textViewKMValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space),
+            textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
-            textViewMinValue.setText(String.format(activity.getResources().getString(R.string.ruppes_value_format_without_space),
+            textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
-            if(Data.fareStructure.fareFactor > 1.0){
+            if(Data.fareStructure.thresholdDistance > 1.0){
+                textViewThreshold.setVisibility(View.VISIBLE);
+                DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                textViewThreshold.setText("First "+decimalFormat.format(Data.fareStructure.thresholdDistance)+" Kms included in base fare");
+            } else{
+                textViewThreshold.setVisibility(View.GONE);
+            }
+            if(Data.userData.fareFactor > 1.0){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
-                textViewPriorityTipValue.setText(Data.fareStructure.fareFactor+"X");
+                textViewPriorityTipValue.setText(Data.userData.fareFactor+"X");
             } else{
                 relativeLayoutPriorityTip.setVisibility(View.GONE);
             }

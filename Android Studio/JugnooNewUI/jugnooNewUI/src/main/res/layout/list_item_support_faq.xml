@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    >
+
+    <TextView
+        android:id="@+id/textViewFaqItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30px"
+        android:maxLines="2"
+        android:text="Account"
+        android:textColor="@color/text_color_light_selector"
+        android:textSize="@dimen/text_size_36"
+
+        />
+
+    <ImageView
+        android:id="@+id/imageViewSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/text_color_hint"
+        />
+
+</LinearLayout>

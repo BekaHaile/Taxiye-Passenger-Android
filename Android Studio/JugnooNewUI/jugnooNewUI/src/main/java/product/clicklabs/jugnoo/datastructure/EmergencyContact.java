@@ -5,16 +5,13 @@ package product.clicklabs.jugnoo.datastructure;
  */
 public class EmergencyContact {
 
-    public int id, userId, verificationStatus;
-    public String name, email, phoneNo;
+    public int id;
+    public String name, phoneNo;
 
-    public EmergencyContact(int id, int userId, String name, String email, String phoneNo, int verificationStatus){
+    public EmergencyContact(int id, String name, String phoneNo){
         this.id = id;
-        this.userId = userId;
         this.name = name;
-        this.email = email;
         this.phoneNo = phoneNo;
-        this.verificationStatus = verificationStatus;
     }
 
     public EmergencyContact(int id){

@@ -1,187 +1,73 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
 
-        <RelativeLayout
-            android:id="@+id/topBar"
-            android:layout_width="@dimen/screen_width"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/nl_background_theme_color" >
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/nl_background_theme_color"
+        android:animateLayoutChanges="true"
+        >
 
-            <TextView
-                android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="SUPPORT"
-                android:textColor="@color/white"
-                android:textSize="@dimen/top_bar_title_text_size" />
-
-            <ImageView
-                android:id="@+id/imageViewBack"
-                android:layout_width="60.7px"
-                android:layout_height="76.9px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:padding="20px"
-                android:src="@drawable/back_white_selector" />
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:background="@drawable/shadow_down"
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="560px"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="SUPPORT"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"
+            android:gravity="center"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:splitMotionEvents="false" 
-            android:background="@color/white_light_grey"
-            
-            >
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"/>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutSendUsEmail"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
+        <ImageView
+            android:id="@+id/imageViewInvoice"
+            android:layout_width="75px"
+            android:layout_height="75px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:padding="20px"
+            android:src="@drawable/ic_invoice_white"
+            android:tag="mwar"/>
 
-                <TextView
-                    android:id="@+id/textViewSendUsEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:text="Send us an Email"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
+    </RelativeLayout>
 
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
+    <LinearLayout
+        android:id="@+id/linearLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        >
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutCallUs"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
-
-                <TextView
-                    android:id="@+id/textViewCallUs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:text="Call Us"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
-            </RelativeLayout>
-            
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFAQ"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
-
-                <TextView
-                    android:id="@+id/textViewFAQ"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:text="FAQs"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
-            </RelativeLayout>
-            
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFeedback"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
-
-                <TextView
-                    android:id="@+id/textViewFeedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:text="Feedback"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
-            </RelativeLayout>
-            
-        </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
+        />
 
 </RelativeLayout>

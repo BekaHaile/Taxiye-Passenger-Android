@@ -19,6 +19,9 @@ public class SPLabels {
         PENDING_CALLS_RETRY_COUNT = "pendingCallsRetryCount",
 
     USER_IDENTIFIER = "userIdentifier",
+    BRANCH_LINK_DESCRIPTION = "branch_link_description",
+            BRANCH_LINK_IMAGE = "branch_link_image",
+
     //Branch Links keys
     BRANCH_SMS_LINK = "branchSMSLink",
     BRANCH_WHATSAPP_LINK = "branchWhatsappLink",
@@ -41,10 +44,8 @@ public class SPLabels {
 	NOTIFICATION_UNREAD_COUNT = "notification_unread_count",
 
 	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
-	PREFERRED_PAYMENT_OPTION = "preferredPaymentOption",
     UPLOAD_CONTACT_NO_THANKS = "upload_contact_no_thanks",
 
-	PAYTM_TUTORIAL_SHOWN_COUNT = "paytm_tutorial_shown_count",
     JUGNOO_JEANIE_TUTORIAL_SHOWN = "jugnoo_jeanie_tutorial_shown",
     NEW_LOOK_TUTORIAL_SHOWN = "new_look_tutorial_shown"
 

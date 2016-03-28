@@ -5,32 +5,24 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
-import org.json.JSONObject;
-
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.HomeActivity;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
  * Created by socomo30 on 7/8/15.
  */
 public class PaymentActivity extends BaseFragmentActivity{
+
+	private final String TAG = PaymentActivity.class.getSimpleName();
 
 	public int addPaymentPathInt = AddPaymentPath.WALLET.getOrdinal();
 
@@ -122,6 +114,8 @@ public class PaymentActivity extends BaseFragmentActivity{
 		HomeActivity.checkForAccessTokenChange(this);
 		if(Data.paytmPaymentState != PaytmPaymentState.SUCCESS) {
 			getBalance("Refresh");
+		} else{
+			Data.paytmPaymentState = PaytmPaymentState.INIT;
 		}
 	}
 
@@ -137,59 +131,40 @@ public class PaymentActivity extends BaseFragmentActivity{
 	}
 
 
-	public void getBalance(final String fragName) {
+	private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
+	private String fragName = "Refresh";
+	public void getBalance(String fragName) {
 		try {
-			if(1 == Data.userData.paytmEnabled) {
-				if (AppStatus.getInstance(this).isOnline(this)) {
-					DialogPopup.showLoadingDialog(this, "Loading...");
-					RequestParams params = new RequestParams();
-					params.put("access_token", Data.userData.accessToken);
-					params.put("client_id", Config.getClientId());
-					params.put("is_access_token_new", "1");
+			this.fragName = fragName;
+			if(apiPaytmCheckBalance == null){
+				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
+					@Override
+					public void onSuccess() {
+						performGetBalanceSuccess(PaymentActivity.this.fragName);
+					}
 
-					AsyncHttpClient client = Data.getClient();
-					client.post(Config.getTXN_URL() + "/paytm/check_balance", params, new CustomAsyncHttpResponseHandler() {
-						@Override
-						public void onSuccess(String response) {
-							Log.i("request succesfull", "response = " + response);
-							try {
-								JSONObject jObj = new JSONObject(response.toString());
-								JSONParser.parsePaytmBalanceStatus(PaymentActivity.this, jObj);
-								performGetBalanceSuccess(fragName);
-							} catch (Exception e) {
-								e.printStackTrace();
-								retryDialog(Data.SERVER_ERROR_MSG, fragName);
-							}
-							DialogPopup.dismissLoadingDialog();
-						}
+					@Override
+					public void onFailure() {
+						getBalance(PaymentActivity.this.fragName);
+					}
 
-						@Override
-						public void onFailure(Throwable arg0) {
-							Log.e("request fail", arg0.toString());
-							DialogPopup.dismissLoadingDialog();
-							retryDialog(Data.SERVER_NOT_RESOPNDING_MSG, fragName);
-						}
-					});
-				} else {
-					//retryDialog(Data.CHECK_INTERNET_MSG, fragName);
-					DialogPopup.dialogNoInternet(PaymentActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
-						@Override
-						public void positiveClick() {
-							getBalance("Refresh");
-						}
+					@Override
+					public void onFinish() {
 
-						@Override
-						public void neutralClick() {
+					}
 
-						}
+					@Override
+					public void onRetry(View view) {
+						getBalance(PaymentActivity.this.fragName);
+					}
 
-						@Override
-						public void negativeClick() {
+					@Override
+					public void onNoRetry(View view) {
 
-						}
-					});
-				}
+					}
+				});
 			}
+			apiPaytmCheckBalance.getBalance(Data.userData.paytmEnabled, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -20,12 +20,14 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.fragments.ShareActivityFragment;
 import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -37,7 +39,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ShareActivity extends BaseFragmentActivity implements FlurryEventNames {
+public class ShareActivity extends BaseFragmentActivity {
 	
 	LinearLayout linearLayoutRoot;
 
@@ -48,6 +50,7 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	ShareFragmentAdapter shareFragmentAdapter;
 	PagerSlidingTabStrip tabs;
     private CallbackManager callbackManager;
+	public boolean fromDeepLink = false;
 
 	public LeaderboardResponse leaderboardResponse;
 	public LeaderboardActivityResponse leaderboardActivityResponse;
@@ -83,6 +86,14 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
 
+		try {
+			if(getIntent().hasExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK)){
+				fromDeepLink = getIntent().getBooleanExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		linearLayoutRoot = (LinearLayout) findViewById(R.id.linearLayoutRoot);
 		new ASSL(ShareActivity.this, linearLayoutRoot, 1134, 720, false);
 
@@ -117,6 +128,13 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 
 			@Override
 			public void onPageSelected(int position) {
+				if(position == 0){
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_INVITE_FRIENDS);
+				} else if(position == 1){
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_LEADERBOARD);
+				} else if(position == 2){
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
+				}
 			}
 
 			@Override
@@ -155,11 +173,11 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 	public void onDestroy() {
 		try {
 			ASSL.closeActivity(linearLayoutRoot);
+			System.gc();
+			super.onDestroy();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.gc();
-		super.onDestroy();
 	}
 
 	public void getLeaderboardCall() {
@@ -205,17 +223,17 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 				//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
 				DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
-					public void positiveClick() {
+					public void positiveClick(View v) {
 						getLeaderboardCall();
 					}
 
 					@Override
-					public void neutralClick() {
+					public void neutralClick(View v) {
 
 					}
 
 					@Override
-					public void negativeClick() {
+					public void negativeClick(View v) {
 
 					}
 				});
@@ -288,6 +306,24 @@ public class ShareActivity extends BaseFragmentActivity implements FlurryEventNa
 							DialogPopup.dismissLoadingDialog();
 						}
 					});
+		} else {
+			//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
+			DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+				@Override
+				public void positiveClick(View v) {
+					getLeaderboardActivityCall();
+				}
+
+				@Override
+				public void neutralClick(View v) {
+
+				}
+
+				@Override
+				public void negativeClick(View v) {
+
+				}
+			});
 		}
 	}
 }

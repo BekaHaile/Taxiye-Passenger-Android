@@ -3,9 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -16,10 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,15 +23,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.google.gson.Gson;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.BlurTransform;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
@@ -48,20 +40,30 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class AccountActivity extends BaseActivity implements FlurryEventNames {
+
+    private final String TAG = AccountActivity.class.getSimpleName();
 
 	RelativeLayout relative;
 
@@ -153,8 +155,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		setUserData(false);
         setSavePlaces();
-
-        //setSavePlaces();
 
 
         linearLayoutMain.setOnClickListener(new View.OnClickListener() {
@@ -265,6 +265,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             editTextUserName.requestFocus();
                             editTextUserName.setError("Changed Username is same as the previous one.");
                         } else {
+                            imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
                             updateUserProfileAPI(AccountActivity.this, nameChanged, ProfileUpdateMode.NAME);
                         }
                     }
@@ -272,7 +273,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextUserName.requestFocus();
                     editTextUserName.setEnabled(true);
                     editTextUserName.setSelection(editTextUserName.getText().length());
+                    imageViewEditName.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
+
+                    editTextEmail.setEnabled(false);
+                    editTextPhone.setEnabled(false);
+                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -282,18 +289,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditName.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditName.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditName.performClick();
                 return true;
             }
         });
@@ -317,6 +313,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             editTextEmail.requestFocus();
                             editTextEmail.setError("Changed email is same as the previous one.");
                         } else {
+                            imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
                             updateUserProfileAPI(AccountActivity.this, emailChanged, ProfileUpdateMode.EMAIL);
                         }
                     }
@@ -324,7 +321,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextEmail.requestFocus();
                     editTextEmail.setEnabled(true);
                     editTextEmail.setSelection(editTextEmail.getText().length());
+                    imageViewEditEmail.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
+
+                    editTextUserName.setEnabled(false);
+                    editTextPhone.setEnabled(false);
+                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -334,18 +337,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditEmail.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditEmail.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditEmail.performClick();
                 return true;
             }
         });
@@ -369,6 +361,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 editTextPhone.requestFocus();
                                 editTextPhone.setError("Changed Phone number is same as the previous one.");
                             } else {
+                                imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                                 updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
                             }
                         } else {
@@ -380,7 +373,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextPhone.requestFocus();
                     editTextPhone.setEnabled(true);
                     editTextPhone.setSelection(editTextPhone.getText().length());
+                    imageViewEditPhoneNo.setImageResource(R.drawable.profile_save);
                     Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
+
+                    editTextUserName.setEnabled(false);
+                    editTextEmail.setEnabled(false);
+                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
+                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
                 }
                 dissmissEmailVerify();
             }
@@ -390,18 +389,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                int result = actionId & EditorInfo.IME_MASK_ACTION;
-                switch (result) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        imageViewEditPhoneNo.performClick();
-                        break;
-
-                    case EditorInfo.IME_ACTION_NEXT:
-                        imageViewEditPhoneNo.performClick();
-                        break;
-
-                    default:
-                }
+                imageViewEditPhoneNo.performClick();
                 return true;
             }
         });
@@ -449,10 +437,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, EmergencyContactsActivity.class));
+                Intent intent = new Intent(AccountActivity.this, EmergencyActivity.class);
+                intent.putExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
+                        EmergencyActivity.EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal());
+                startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 dissmissEmailVerify();
-                FlurryEventLogger.event(EMERGENCY_CONTACT_TO_BE_ADDED);
+                FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_EMERGENCY_CONTACTS);
             }
         });
 
@@ -464,6 +455,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
                 startActivityForResult(intent, ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
 
                 /*startActivity(new Intent(AccountActivity.this, AddPlaceActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -480,6 +472,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
                 startActivityForResult(intent, ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
 
                 /*startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -513,6 +506,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                             @Override
                             public void onClick(View v) {
+                                FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_LOGOUT);
                                 logoutAsync(AccountActivity.this);
                             }
                         },
@@ -530,43 +524,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 
-		final View activityRootView = findViewById(R.id.linearLayoutMain);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-
-					@Override
-					public void onGlobalLayout() {
-						Rect r = new Rect();
-						// r will be populated with the coordinates of your view
-						// that area still visible.
-						activityRootView.getWindowVisibleDisplayFrame(r);
-
-						int heightDiff = activityRootView.getRootView()
-								.getHeight() - (r.bottom - r.top);
-						if (heightDiff > 100) { // if more than 100 pixels, its
-												// probably a keyboard...
-
-							/************** Adapter for the parent List *************/
-
-							ViewGroup.LayoutParams params_12 = textViewScroll
-									.getLayoutParams();
-
-							params_12.height = (int)(heightDiff);
-
-							textViewScroll.setLayoutParams(params_12);
-							textViewScroll.requestLayout();
-
-						} else {
-
-							ViewGroup.LayoutParams params = textViewScroll
-									.getLayoutParams();
-							params.height = 0;
-							textViewScroll.setLayoutParams(params);
-							textViewScroll.requestLayout();
-
-						}
-					}
-				});
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -583,29 +540,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		}
 	}
 
-    /*private void setSavePlaces(){
-        if(!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")){
-            String abc =Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            String s = "Home \n" + searchResult.name+", "+searchResult.address;
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
-            textViewHome.setText(ss1);
-        }
-
-        if(!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")){
-            String abc =Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            String s = "Work \n" + searchResult.name+", "+searchResult.address;
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);// set color
-            textViewWork.setText(ss1);
-        }
-    }*/
 
 
     public void setUserData(boolean refreshed){
@@ -730,7 +664,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
-			RequestParams params = new RequestParams();
+			HashMap<String, String> params = new HashMap<>();
 
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
@@ -746,62 +680,54 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 				params.put("updated_user_name", updatedField);
 			}
 
+            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "updateUserProfile response = " + responseStr);
+                    DialogPopup.dismissLoadingDialog();
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                String error = jObj.getString("error");
+                                DialogPopup.dialogBanner(activity, error);
+                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                String message = jObj.getString("message");
+                                if (ProfileUpdateMode.EMAIL.getOrdinal() == profileUpdateMode.getOrdinal()) {
+                                    DialogPopup.dialogBanner(activity, message);
+                                    editTextEmail.setEnabled(false);
+                                    reloadProfileAPI(activity);
+                                } else if (ProfileUpdateMode.PHONE.getOrdinal() == profileUpdateMode.getOrdinal()) {
+                                    Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);
+                                    intent.putExtra("phone_no_verify", updatedField);
+                                    activity.startActivity(intent);
+                                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                } else {
+                                    DialogPopup.dialogBanner(activity, message);
+                                    Data.userData.userName = updatedField;
+                                    editTextUserName.setEnabled(false);
+                                    editTextUserName.setText(Data.userData.userName);
+                                }
+                            } else {
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                }
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/update_user_profile", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
-
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							DialogPopup.dismissLoadingDialog();
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.dialogBanner(activity, error);
-									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										if(ProfileUpdateMode.EMAIL.getOrdinal() == profileUpdateMode.getOrdinal()){
-											DialogPopup.dialogBanner(activity, message);
-											editTextEmail.setEnabled(false);
-											reloadProfileAPI(activity);
-										}
-										else if(ProfileUpdateMode.PHONE.getOrdinal() == profileUpdateMode.getOrdinal()){
-											Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);
-											intent.putExtra("phone_no_verify", updatedField);
-											activity.startActivity(intent);
-											activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-										}
-										else{
-											DialogPopup.dialogBanner(activity, message);
-											Data.userData.userName = updatedField;
-											editTextUserName.setEnabled(false);
-											editTextUserName.setText(Data.userData.userName);
-										}
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
-							}
-						}
-					});
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "updateUserProfile error="+error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -815,59 +741,54 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if(!HomeActivity.checkIfUserDataNull(activity)) {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-
-                RequestParams params = new RequestParams();
-
+                HashMap<String, String> params = new HashMap<>();
                 params.put("client_id", Config.getClientId());
                 params.put("access_token", Data.userData.accessToken);
                 params.put("is_access_token_new", "1");
 
-                AsyncHttpClient client = Data.getClient();
-                client.post(Config.getServerUrl() + "/reload_my_profile", params,
-                    new CustomAsyncHttpResponseHandler() {
-                        private JSONObject jObj;
+                RestClient.getApiServices().reloadMyProfile(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i(TAG, "reloadMyProfile response = " + responseStr);
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                if (ApiResponseFlags.PROFILE_INFORMATION.getOrdinal() == flag) {
 
-                        @Override
-                        public void onFailure(Throwable arg3) {
-                            Log.e("request fail", arg3.toString());
-                        }
+                                    String userName = jObj.getString("user_name");
+                                    String email = jObj.getString("user_email");
+                                    String phoneNo = jObj.getString("phone_no");
+                                    int emailVerificationStatus = jObj.getInt("email_verification_status");
 
-                        @Override
-                        public void onSuccess(String response) {
-                            Log.i("Server response", "response = " + response);
-                            try {
-                                jObj = new JSONObject(response);
-                                if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                    int flag = jObj.getInt("flag");
-                                    if (ApiResponseFlags.PROFILE_INFORMATION.getOrdinal() == flag) {
+                                    Data.userData.userName = userName;
+                                    Data.userData.phoneNo = phoneNo;
+                                    Data.userData.userEmail = email;
 
-                                        String userName = jObj.getString("user_name");
-                                        String email = jObj.getString("user_email");
-                                        String phoneNo = jObj.getString("phone_no");
-                                        int emailVerificationStatus = jObj.getInt("email_verification_status");
+                                    boolean refresh = false;
 
-                                        Data.userData.userName = userName;
-                                        Data.userData.phoneNo = phoneNo;
-                                        Data.userData.userEmail = email;
-
-                                        boolean refresh = false;
-
-                                        if (EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
+                                    if (EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
                                             && EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() == emailVerificationStatus) {
-                                            refresh = true;
-                                        }
-
-                                        Data.userData.emailVerificationStatus = emailVerificationStatus;
-
-
-                                        setUserData(refresh);
+                                        refresh = true;
                                     }
+
+                                    Data.userData.emailVerificationStatus = emailVerificationStatus;
+
+
+                                    setUserData(refresh);
                                 }
-                            } catch (Exception exception) {
-                                exception.printStackTrace();
                             }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
                         }
-                    });
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "reloadMyProfile error="+error.toString());
+                    }
+                });
             }
         }
 	}
@@ -880,51 +801,45 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
-			RequestParams params = new RequestParams();
-
+			HashMap<String, String> params = new HashMap<>();
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/send_verify_email_link", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+            RestClient.getApiServices().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "sendVerifyEmailLink response = " + responseStr);
+                    DialogPopup.dismissLoadingDialog();
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                String error = jObj.getString("error");
+                                DialogPopup.dialogBanner(activity, error);
+                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                String message = jObj.getString("message");
+                                DialogPopup.dialogBanner(activity, message);
+                            } else {
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                }
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
-
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							DialogPopup.dismissLoadingDialog();
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.dialogBanner(activity, error);
-									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.dialogBanner(activity, message);
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
-							}
-						}
-					});
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "sendVerifyEmailLink error="+error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -937,75 +852,70 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
 
-			RequestParams params = new RequestParams();
-
+			HashMap<String, String> params = new HashMap<>();
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("client_id", Config.getClientId());
 
 			Log.i("access_token", "=" + Data.userData.accessToken);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl()+"/logout_user", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
+            RestClient.getApiServices().logoutUser(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                    Log.v(TAG, "logoutUser response = " + responseStr);
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
 
-						@Override
-						public void onSuccess(String response) {
-							Log.v("Server response", "response = " + response);
+                        if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                            int flag = jObj.getInt("flag");
+                            if(ApiResponseFlags.AUTH_LOGOUT_FAILURE.getOrdinal() == flag){
+                                String error = jObj.getString("error");
+                                DialogPopup.alertPopup(activity, "", error);
+                            }
+                            else if(ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag){
 
-							try {
-								jObj = new JSONObject(response);
+                                try {
+                                    PicassoTools.clearCache(Picasso.with(activity));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.AUTH_LOGOUT_FAILURE.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
-									}
-									else if(ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag){
+                                FacebookLoginHelper.logoutFacebook();
 
-                                        try {
-                                            PicassoTools.clearCache(Picasso.with(activity));
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                                GCMIntentService.clearNotifications(activity);
 
-                                        FacebookLoginHelper.logoutFacebook();
+                                Data.clearDataOnLogout(activity);
 
-										GCMIntentService.clearNotifications(activity);
+                                HomeActivity.userMode = UserMode.PASSENGER;
+                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
 
-										Data.clearDataOnLogout(activity);
+                                ActivityCompat.finishAffinity(activity);
+                                Intent intent = new Intent(activity, SplashNewActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
-										HomeActivity.userMode = UserMode.PASSENGER;
-										HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                Branch.getInstance(activity).logout();
+                            }
+                            else{
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                        }
+                    }  catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                    }
+                    DialogPopup.dismissLoadingDialog();
+                }
 
-										ActivityCompat.finishAffinity(activity);
-										Intent intent = new Intent(activity, SplashNewActivity.class);
-										startActivity(intent);
-										overridePendingTransition(R.anim.left_in, R.anim.left_out);
-
-										Branch.getInstance(activity).logout();
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-							}
-							DialogPopup.dismissLoadingDialog();
-						}
-
-					});
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "logoutUser error="+error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
@@ -1057,94 +967,46 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
-            String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            //String s = "Home \n" + searchResult.name + ", " + searchResult.address;
-            String s = "Home \n" + searchResult.address;
+            String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            String s = getResources().getString(R.string.home)+" \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddHome.setText(ss1);
             imageViewEditHome.setVisibility(View.VISIBLE);
         } else{
+            textViewAddHome.setText(getResources().getString(R.string.add_home));
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
+            imageViewEditHome.setVisibility(View.GONE);
         }
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
-            String abc = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(abc, AutoCompleteSearchResult.class);
-            //String s = "Work \n" + searchResult.name + ", " + searchResult.address;
-            String s = "Work \n" + searchResult.address;
+            String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
+            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+            String s = getResources().getString(R.string.work)+" \n" + searchResult.address;
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
             textViewAddWork.setText(ss1);
             imageViewEditWork.setVisibility(View.VISIBLE);
         } else{
+            textViewAddWork.setText(getResources().getString(R.string.add_work));
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
+            imageViewEditWork.setVisibility(View.GONE);
         }
     }
 
     // Call Back method  to get the Message form other Activity
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK) {
-            // check if the request code is same as what is passed  here it is 2
-            String strResult = data.getStringExtra("PLACE");
-            Gson gson = new Gson();
-            AutoCompleteSearchResult searchResult = gson.fromJson(strResult, AutoCompleteSearchResult.class);
-            if (requestCode == ADD_HOME) {
-                if(searchResult != null){
-                    //String s = "Home \n" + searchResult.name + " " + searchResult.address;
-                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
-                    String s = "Home \n" + searchResult.address;
-                    SpannableString ss1 = new SpannableString(s);
-                    ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
-                    textViewAddHome.setText(ss1);
-                    Prefs.with(AccountActivity.this).save(SPLabels.ADD_HOME, strResult);
-                    imageViewEditHome.setVisibility(View.VISIBLE);
-                    String savedWorkStr = Prefs.with(this).getString(SPLabels.ADD_WORK, "");
-                    if("".equalsIgnoreCase(savedWorkStr)){
-                        textViewAddWork.setText("Add Work");
-                        imageViewEditWork.setVisibility(View.GONE);
-                    }
-                }else {
-                    textViewAddHome.setText("Add Home");
-                    imageViewEditHome.setVisibility(View.GONE);
-                    textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
-                }
-
-            } else if (requestCode == ADD_WORK) {
-                if(searchResult != null) {
-                    //String s = "Work \n" + searchResult.name + " " + searchResult.address;
-                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
-                    String s = "Work \n" + searchResult.address;
-                    SpannableString ss1 = new SpannableString(s);
-                    ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-                    ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
-                    textViewAddWork.setText(ss1);
-                    Prefs.with(AccountActivity.this).save(SPLabels.ADD_WORK, strResult);
-                    imageViewEditWork.setVisibility(View.VISIBLE);
-                    String savedHomeStr = Prefs.with(this).getString(SPLabels.ADD_HOME, "");
-                    if("".equalsIgnoreCase(savedHomeStr)){
-                        textViewAddHome.setText("Add Home");
-                        imageViewEditHome.setVisibility(View.GONE);
-                    }
-                }else{
-                    textViewAddWork.setText("Add Work");
-                    imageViewEditWork.setVisibility(View.GONE);
-                    textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
-                }
-            } else {
-                Log.v("onActivityResult else part", "onActivityResult else part");
-                }
-            }
+        if (resultCode == RESULT_OK) {
+            setSavePlaces();
+        } else if (resultCode == RESULT_CANCELED) {
+            setSavePlaces();
+        }
     }
 
 }

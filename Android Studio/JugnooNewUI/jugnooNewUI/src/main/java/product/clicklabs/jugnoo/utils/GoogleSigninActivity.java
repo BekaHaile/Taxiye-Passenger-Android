@@ -63,7 +63,11 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 		// Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
 		if (requestCode == RC_SIGN_IN) {
 			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+			DialogPopup.dismissLoadingDialog();
 			handleSignInResult(result);
+		} else{
+			setResult(RESULT_CANCELED);
+			finish();
 		}
 	}
 
@@ -89,12 +93,15 @@ public class GoogleSigninActivity extends FragmentActivity implements GoogleApiC
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			setResult(RESULT_CANCELED);
+			finish();
 		}
 	}
 
 	private void signIn() {
 		Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
 		startActivityForResult(signInIntent, RC_SIGN_IN);
+		DialogPopup.showLoadingDialog(this, getResources().getString(R.string.loading));
 	}
 
 	private void signOut() {

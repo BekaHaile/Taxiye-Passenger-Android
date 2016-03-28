@@ -155,7 +155,23 @@ public class DateOperations {
 			return dateTime;
 		}
 	}
-	
+
+	/**
+	 * Converts date string from 2014-01-12 00:00 to 12 Jan, 2014 12:00 AM
+	 * @param dateTime
+	 * @return
+	 */
+	public static String convertDateViaFormat(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy hh:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return convertDate(dateTime);
+		}
+	}
 	
 	public static String getTimeAMPM(String dateTime){
 		try{
@@ -385,5 +401,29 @@ public class DateOperations {
         }
     }
 
+
+	@SuppressLint("SimpleDateFormat")
+	public static String utcToLocalWithTZFallback(String utcTime) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		try {
+			Date myDate = simpleDateFormat.parse(utcTime);
+			String localDate = sdf.format(myDate);
+			return localDate;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return utcToLocalTZ(utcTime);
+		}
+	}
+
+
+	public static String getTimeStampUTCFromMillis(long millis){
+		Date date = new Date(millis);
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return formatter.format(date);
+	}
 
 }

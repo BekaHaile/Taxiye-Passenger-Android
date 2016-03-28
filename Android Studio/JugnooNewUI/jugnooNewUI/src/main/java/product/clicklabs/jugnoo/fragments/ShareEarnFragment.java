@@ -1,18 +1,18 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
+import com.squareup.picasso.Picasso;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
@@ -26,10 +26,11 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class ShareEarnFragment extends Fragment implements FlurryEventNames, Constants {
+public class ShareEarnFragment extends Fragment {
 
 	private LinearLayout linearLayoutRoot;
 
+	private ImageView imageViewLogo;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo;
 	private Button buttonInvite;
 
@@ -67,6 +68,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			e.printStackTrace();
 		}
 
+		imageViewLogo = (ImageView) rootView.findViewById(R.id.imageViewLogo);
 		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.mavenLight(activity));
 		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenLight(activity));
 		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenLight(activity));
@@ -78,7 +80,7 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			@Override
 			public void onClick(View view) {
 				try {
-					FlurryEventLogger.event(INVITE_EARN_MORE_INFO);
+					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
 					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
@@ -95,7 +97,15 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 			public void onClick(View view) {
 				if(AppStatus.getInstance(activity).isOnline(activity)) {
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
-					FlurryEventLogger.event(INVITE_GENERIC);
+					try {
+						if(activity.fromDeepLink){
+							FlurryEventLogger.event(activity, FlurryEventNames.INVITE_SHARE_GENERIC_THROUGH_PUSH);
+						} else{
+							FlurryEventLogger.event(FlurryEventNames.INVITE_GENERIC);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 				}
@@ -105,6 +115,14 @@ public class ShareEarnFragment extends Fragment implements FlurryEventNames, Con
 		try {
 			textViewCode.setText(Data.userData.referralCode);
 			textViewDesc.setText(Data.referralMessages.referralShortMessage);
+
+			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
+				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
+						.placeholder(R.drawable.free_rides_pic_new).error(R.drawable.free_rides_pic_new)
+						.into(imageViewLogo);
+			}
+			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
+
 		} catch(Exception e){
 			e.printStackTrace();
 		}

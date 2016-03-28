@@ -1,60 +1,138 @@
 package product.clicklabs.jugnoo.retrofit;
 
-import com.squareup.okhttp.OkHttpClient;
+import com.jakewharton.retrofit.Ok3Client;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
+import retrofit.RetrofitError;
 
 /**
  * Rest client
  */
 public class RestClient {
-    private static ApiService API_SERVICES;
+    private static ApiService API_SERVICES = null;
+    private static GoogleAPIServices GOOGLE_API_SERVICES = null;
 
     static {
         setupRestClient();
+        setupGoogleAPIRestClient();
     }
+
+    private static OkHttpClient getOkHttpClient(){
+
+        ArrayList<Protocol> protocolList = new ArrayList<>();
+        protocolList.add(Protocol.HTTP_2);
+        protocolList.add(Protocol.SPDY_3);
+        protocolList.add(Protocol.HTTP_1_1);
+
+        ConnectionPool connectionPool = new ConnectionPool(3, 5 * 60 * 1000, TimeUnit.MILLISECONDS);
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectionPool(connectionPool);
+        builder.readTimeout(15, TimeUnit.SECONDS);
+        builder.connectTimeout(15, TimeUnit.SECONDS);
+        builder.writeTimeout(15, TimeUnit.SECONDS);
+        builder.retryOnConnectionFailure(false);
+        builder.protocols(protocolList);
+
+        return builder.build();
+    }
+
 
     public static void setupRestClient() {
-       /* RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override
-            public void log(String message) {
-            }
-        };*/
+        if(API_SERVICES == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
 
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.setRetryOnConnectionFailure(false);
-        RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(Config.getServerUrl())
-                .setClient(new OkClient(okHttpClient))
-                //.setLog(fooLog)
-                .setLogLevel(RestAdapter.LogLevel.FULL);
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setErrorHandler(new ErrorHandler() {
+                        @Override
+                        public Throwable handleError(RetrofitError cause) {
+                            if (cause != null) {
+                                if (cause.getKind() == RetrofitError.Kind.NETWORK) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_CONNECTION_TIMEOUT);
+                                } else if (cause.getKind() == RetrofitError.Kind.HTTP) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_SOCKET_TIMEOUT);
+                                } else if (cause.getKind() == RetrofitError.Kind.UNEXPECTED) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
+                                }
+                            }
+                            return cause;
+                        }
+                    })
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
 
-        RestAdapter restAdapter = builder.build();
-        API_SERVICES = restAdapter.create(ApiService.class);
-    }
-
-    public static ApiService getApiServiceForLink(String url) {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.setRetryOnConnectionFailure(false);
-        RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(url)
-                .setClient(new OkClient(okHttpClient))
-                .setLogLevel(RestAdapter.LogLevel.FULL);
-        RestAdapter restAdapter = builder.build();
-        return restAdapter.create(ApiService.class);
+            RestAdapter restAdapter = builder.build();
+            API_SERVICES = restAdapter.create(ApiService.class);
+        }
     }
 
     public static ApiService getApiServices() {
         return API_SERVICES;
     }
+
+    public static void clearRestClient(){
+        API_SERVICES = null;
+    }
+
+
+    public static StringAPIService getStringRestClient() {
+        RestAdapter.Log fooLog = new RestAdapter.Log() {
+            @Override
+            public void log(String message) {
+            }
+        };
+
+        RestAdapter.Builder builder = new RestAdapter.Builder()
+                .setEndpoint(Config.getServerUrl())
+                .setClient(new Ok3Client(getOkHttpClient()))
+                .setConverter(new StringConverter())
+                .setLog(fooLog)
+                .setLogLevel(RestAdapter.LogLevel.FULL);
+
+        RestAdapter restAdapter = builder.build();
+        return restAdapter.create(StringAPIService.class);
+    }
+
+
+
+    public static void setupGoogleAPIRestClient() {
+        if(GOOGLE_API_SERVICES == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
+
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint("http://maps.googleapis.com/maps/api")
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+
+            RestAdapter restAdapter = builder.build();
+            GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
+        }
+    }
+
+    public static GoogleAPIServices getGoogleApiServices() {
+        return GOOGLE_API_SERVICES;
+    }
+
+
 }

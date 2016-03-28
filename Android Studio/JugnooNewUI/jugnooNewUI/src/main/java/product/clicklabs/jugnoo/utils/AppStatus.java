@@ -28,17 +28,24 @@ public class AppStatus {
 
 	public boolean isOnline(Context con) {
 		try {
-			connectManager = (ConnectivityManager) con
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-			NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
-			connected = networkInfo != null && networkInfo.isAvailable()
-					&& networkInfo.isConnected();
-			return connected;
-
+			connectManager = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
+			if (connectManager != null) {
+				NetworkInfo[] info = connectManager.getAllNetworkInfo();
+				if (info != null) {
+					for (int i = 0; i < info.length; i++) {
+						if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+							return true;
+						}
+					}
+				}
+			}
+			FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
+			return false;
 		} catch (Exception e) {
 			System.out.println("CheckConnectivity Exception: " + e.getMessage());
 		}
+		FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
 		return connected;
 	}
+
 }

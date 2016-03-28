@@ -1,13 +1,9 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,22 +14,30 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class ChangePasswordActivity extends BaseActivity {
+
+	private final String TAG = ChangePasswordActivity.class.getSimpleName();
 
 	LinearLayout relative;
 	
@@ -46,7 +50,7 @@ public class ChangePasswordActivity extends BaseActivity {
 	
 	ScrollView scrollView;
 	
-	TextView textViewScroll;
+	TextView textViewScroll, textViewOld, textViewNew, textViewRetype;
 	
 	// *****************************Used for flurry work***************//
 	@Override
@@ -79,6 +83,9 @@ public class ChangePasswordActivity extends BaseActivity {
 		editTextRetypeNewPassword = (EditText) findViewById(R.id.editTextRetypeNewPassword); editTextRetypeNewPassword.setTypeface(Fonts.latoRegular(this));
 
 		buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword); buttonChangePassword.setTypeface(Fonts.mavenRegular(this));
+		textViewOld = (TextView)findViewById(R.id.textViewOld); textViewOld.setTypeface(Fonts.mavenLight(this));
+		textViewNew = (TextView)findViewById(R.id.textViewNew); textViewNew.setTypeface(Fonts.mavenLight(this));
+		textViewRetype = (TextView)findViewById(R.id.textViewRetype); textViewRetype.setTypeface(Fonts.mavenLight(this));
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -134,7 +141,27 @@ public class ChangePasswordActivity extends BaseActivity {
 				}
 			}
 		});
-		
+
+		textViewOld.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextOldPassword.requestFocus();
+			}
+		});
+
+		textViewNew.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextNewPassword.requestFocus();
+			}
+		});
+
+		textViewRetype.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextRetypeNewPassword.requestFocus();
+			}
+		});
 		
 		
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -197,48 +224,11 @@ public class ChangePasswordActivity extends BaseActivity {
 				return true;
 			}
 		});
+
+
+		editTextOldPassword.requestFocus();
 		
-		
-		
-		
-		final View activityRootView = findViewById(R.id.mainLinear);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
 
-					@Override
-					public void onGlobalLayout() {
-						Rect r = new Rect();
-						// r will be populated with the coordinates of your view
-						// that area still visible.
-						activityRootView.getWindowVisibleDisplayFrame(r);
-
-						int heightDiff = activityRootView.getRootView()
-								.getHeight() - (r.bottom - r.top);
-						if (heightDiff > 100) { // if more than 100 pixels, its
-												// probably a keyboard...
-
-							/************** Adapter for the parent List *************/
-
-							ViewGroup.LayoutParams params_12 = textViewScroll
-									.getLayoutParams();
-
-							params_12.height = (int)(heightDiff);
-
-							textViewScroll.setLayoutParams(params_12);
-							textViewScroll.requestLayout();
-
-						} else {
-
-							ViewGroup.LayoutParams params = textViewScroll
-									.getLayoutParams();
-							params.height = 0;
-							textViewScroll.setLayoutParams(params);
-							textViewScroll.requestLayout();
-
-						}
-					}
-				});
-		
 		
 	}
 	
@@ -284,60 +274,53 @@ public class ChangePasswordActivity extends BaseActivity {
 			
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 			
-			RequestParams params = new RequestParams();
-		
+			HashMap<String, String> params = new HashMap<>();
 			params.put("client_id", Config.getClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("old_password", oldPassword);
 			params.put("new_password", newPassword);
-			
-			
-			AsyncHttpClient client = Data.getClient();
-			client.post(Config.getServerUrl() + "/update_user_profile", params,
-					new CustomAsyncHttpResponseHandler() {
-					private JSONObject jObj;
 
-						@Override
-						public void onFailure(Throwable arg3) {
-							Log.e("request fail", arg3.toString());
-							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-						}
+			RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "updateUserProfile response = " + responseStr);
+					DialogPopup.dismissLoadingDialog();
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							int flag = jObj.getInt("flag");
+							if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								String message = jObj.getString("message");
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 
-						@Override
-						public void onSuccess(String response) {
-							Log.i("Server response", "response = " + response);
-							DialogPopup.dismissLoadingDialog();
-							try {
-								jObj = new JSONObject(response);
-								if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
-									int flag = jObj.getInt("flag");
-									if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag){
-										String error = jObj.getString("error");
-										DialogPopup.alertPopup(activity, "", error);
+									@Override
+									public void onClick(View v) {
+										performBackPressed();
 									}
-									else if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-										String message = jObj.getString("message");
-										DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-											
-											@Override
-											public void onClick(View v) {
-												performBackPressed();
-											}
-										});
-									}
-									else{
-										DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-									}
-								}
-							}  catch (Exception exception) {
-								exception.printStackTrace();
+								});
+							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-								DialogPopup.dismissLoadingDialog();
 							}
 						}
-					});
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "updateUserProfile error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);

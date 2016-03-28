@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live-->
+	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
+	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -52,6 +52,7 @@
 	<string name="sign_up">Sign Up</string>
 	<string name="or">or</string>
 	<string name="sign_in_with_facebook">Sign in with Facebook</string>
+	<string name="signup_add_patym">Use Mobile Wallet powered by</string>
 	
 	<string name="save_to_favorite">Save To Favorite</string>
 	<string name="enter_name_for_favorite">Enter Name for Favorite</string>
@@ -225,7 +226,7 @@
 
     <string name="amount_range">Recharge amount should be between Rs. 1 - Rs. 5000</string>
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
-	<string name="share_your_code">SHARE YOUR CODE</string>
+	<string name="share_your_code">Share your referral code</string>
 	<string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9 100!</string>
 
 
@@ -251,10 +252,12 @@
 	<!-- Account Settings Strings -->
 	<string name="add_home">Add Home</string>
 	<string name="add_work">Add Work</string>
+	<string name="home">Home</string>
+	<string name="work">Work</string>
 
 
 	<!-- Search state strings -->
-	<string name="search_state_edit_text_hint">Set pick up location</string>
+	<string name="set_pickup_location">Set pick up location</string>
 
 	<!-- Assigning state strings -->
 	<string name="assigning_state_edit_text_hint">Set drop location</string>
@@ -269,8 +272,9 @@
 	<string name="star_required">* Required</string>
 	<string name="leave_a_comment">Leave a comment</string>
 	<string name="what_could_we_improve">What could we improve?</string>
-	<string name="ruppes_value_format">\u20B9 %s</string>
-	<string name="ruppes_value_format_without_space">\u20B9%s</string>
+	<string name="rupees_value_format">\u20B9 %s</string>
+	<string name="rupees_value_format_without_space">\u20B9%s</string>
+	<string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
 	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
@@ -315,6 +319,7 @@
 	<string name="nl_get_fare_estimate">Get fare estimate</string>
 	<string name="nl_per_km">Per Km</string>
 	<string name="nl_per_min">Per Min</string>
+	<string name="service_not_available">Our service is not available in this area</string>
 
 	<!-- NL Forgot Passowrd screen-->
 	<string name="nl_forgot_password">Forgot Password</string>
@@ -328,7 +333,7 @@
 	<string name="nl_splash_policy">and <u>Private Policy</u></string>
 	<string name="nl_paytm_wallet">Paytm Wallet</string>
 	<string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
-	<string name="nl_splash_required">required</string>
+	<string name="nl_splash_required">Required</string>
 
 
 	<!-- NL Login-->
@@ -356,6 +361,9 @@
 	<string name="nl_otp_verify">Verify Me</string>
 	<string name="nl_otp_receive_otp_via_call">Receive the OTP via call</string>
 	<string name="nl_otp_give_missed_call">Give a missed call</string>
+	<string name="nl_otp_paytm">Pay for Jugnoo Rides with a Mobile Wallet</string>
+	<string name="nl_otp_verify_your_account">VERIFY YOUR ACCOUNT</string>
+	<string name="nl_otp_with_just_a_missed_call">WITH JUST A MISSED CALL</string>
 
 	<!-- NL Change Phone Number-->
 	<string name="nl_change_phone_number">Change Phone Number</string>
@@ -633,6 +641,7 @@
 
 	<string name="remove">Remove</string>
 	<string name="change">Change</string>
+	<string name="change_password">CHANGE PASSWORD</string>
 	<string name="verify">Verify</string>
 	<string name="apply">Apply</string>
 	<string name="request_otp">Request Otp</string>
@@ -655,8 +664,113 @@
 	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
 
 	<string name="tnc_apply">T&amp;C Apply</string>
+	<string name="tnc">T&amp;C</string>
 	<string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
+
+	<!-- Support Screen-->
+	<string name="issue_with_a_recent_ride">Issue with a recent ride?</string>
+	<string name="date_colon_format">Date: %s</string>
+	<string name="start">Start</string>
+	<string name="end">End</string>
+	<string name="ride_history">Ride History</string>
+	<string name="ride_summary">Ride Summary</string>
+	<string name="support_main_title">How can we help?</string>
+	<string name="support_ride_issues_title">Select an Issue</string>
+	<string name="support_select_a_ride_title">Select a Ride</string>
+	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
+	<string name="support_feedback_empty_error">Please fill some feedback</string>
+	<string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
+	<string name="need_help">Need Help?</string>
+	<string name="help">Help</string>
+
+	<!-- Ride transactions-->
+	<string name="rate_this_ride">Rate this ride</string>
+	<string name="show_more">Show more</string>
+
+
+
+	<string name="no_net_title">CONNECTION LOST</string>
+	<string name="no_net_text">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="conn_lost_title">CONNECTION LOST</string>
+	<string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+	<string name="server_error_title">CONNECTION LOST</string>
+	<string name="server_error_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+
+	<string name="app_quit_message">Are you sure you want to quit the app?</string>
+
+
+	<string name="no_coupons_currently">No coupons currently</string>
+
+	<string name="priority_tip_format">Priority Tip %sx</string>
+
+	<string name="support_call_us_dialog_message">Give us a Missed Call and we will get back to you</string>
+	<string name="call_jugnoo">Call Jugnoo</string>
+	<string name="star_please_fill_required_information">* Please fill required information</string>
+
+
+
+
+	<!-- Emergency New -->
+	<string name="enable_emergency_mode">Enable Emergency Mode</string>
+	<string name="send_ride_status">Send Ride Status</string>
+	<string name="in_app_customer_support">In App Customer Support</string>
+	<string name="emergency_mode_enabled">Emergency Mode Enabled</string>
+	<string name="emergency_mode_enabled_message">You have enabled emergency\nWe have sent your location to your\nemergency contacts and Jugnoo support.</string>
+	<string name="call_police">Call Police</string>
+	<string name="call_emergency_contact">Call Emergency Contact</string>
+	<string name="call_your_contacts">Call Your Contacts</string>
+	<string name="disable_emergency_mode">Disable Emergency Mode</string>
+	<string name="emergency_contacts">Emergency Contacts</string>
+	<string name="add">Add</string>
+	<string name="add_contacts">Add Contacts</string>
+	<string name="contacts">Contacts</string>
+	<string name="edit">Edit</string>
+	<string name="delete">Delete</string>
+	<string name="send">Send</string>
+	<string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
+	<string name="type_a_name_or_mobile_number">Type a name or a mobile number</string>
+	<string name="or_call_directly">or Call directly</string>
+	<string name="or_send_directly">or Send directly</string>
+	<string name="send_ride_status_no_contacts_message">Please select some contacts first</string>
+	<string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only %2$s contacts at once.</string>
+	<string name="configure_your_emergency_contacts">Configure your\nemergency contacts</string>
+	<string name="inform_your_friends">Inform your friends and family\nabout your current location everytime\nyou ride with Jugnoo</string>
+	<string name="everything_is_alright_caps">EVERYTHING IS ALRIGHT</string>
+	<string name="you_have_disabled_jugnoo_emergency">You have disabled the Jugnoo\nEmergency mode</string>
+	<string name="please_select_some_contacts_first">Please select some contacts first</string>
+
+	<string name="vs">vs</string>
+	<string name="your_guess">Your Guess</string>
+	<string name="t20_world_cup_2016">T20 World Cup 2016</string>
+	<string name="time_ist_format">%s IST</string>
+	<string name="str_new">New</string>
+	<string name="play_predict_win">Play, Predict &amp; Win</string>
+	<string name="team_vs_team_format">%1$s Vs %2$s</string>
+	<string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from Jugnoo</string>
+	<string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
+	<string name="team_not_selected_error">Please select a team</string>
+	<string name="quit_jugnoo_t20">Are you sure you want to quit Jugnoo T20 WC?</string>
+
+	<string name="ride_cancelled_by_driver">Driver has cancelled the ride. Please try again. Apologies for inconvenience!</string>
+
+	<string name="enter_your_destination">Enter your destination</string>
+
+
+	<string name="recharge">Recharge</string>
+	<string name="amount">Amount</string>
+	<string name="driver">Driver</string>
+	<string name="paytm_recharge_via_driver_info">is recharging\nyour Paytm account registered\non number</string>
+	<string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
+	<string name="type_amount_to_confirm_the_transaction">Type correct amount to confirm\nthe transaction</string>
+
+	<string name="coupons_available">Coupons Available</string>
+	<string name="ongoing_offers">Ongoing Offers</string>
+
+	<string name="uninstall_driver_app">You need to uninstall Jugnoo Drivers App first to use this app</string>
+	<string name="disable_mock_location">Disable mock location first</string>
+
+	<string name="notifications">Notifications</string>
 
 </resources>

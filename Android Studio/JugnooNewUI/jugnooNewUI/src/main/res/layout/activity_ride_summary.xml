@@ -65,17 +65,13 @@
             layout="@layout/layout_ride_summary"
             ></include>
 
-        <product.clicklabs.jugnoo.utils.ProgressWheel
-            android:id="@+id/progressWheel"
-            wheel:matProg_barColor="@color/theme_color"
-            wheel:matProg_fillRadius="true"
-            wheel:matProg_progressIndeterminate="false"
-            android:layout_width="120px"
-            android:layout_height="120px"
-            android:layout_centerHorizontal="true"
+        <ImageView
+            android:id="@+id/imageViewJugnooAnimation"
+            android:layout_width="@dimen/jugnoo_anim_loading_width"
+            android:layout_height="@dimen/jugnoo_anim_loading_height"
             android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:tag="mwar"/>
+            android:background="@drawable/anim"
+            android:layout_gravity="center_horizontal"/>
 
 
     </RelativeLayout>

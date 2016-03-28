@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_alignParentTop="true"
-            android:src="@color/text_color_light"/>
+            android:src="@color/text_color_hint"/>
 
         <TextView
             android:id="@+id/textViewDaily"
@@ -69,7 +69,7 @@
         <ImageView
             android:layout_width="2px"
             android:layout_height="match_parent"
-            android:src="@color/text_color_light"
+            android:src="@color/text_color_hint"
             android:layout_toRightOf="@+id/textViewDaily"/>
 
         <TextView
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_alignParentBottom="true"
-            android:src="@color/text_color_light"/>
+            android:src="@color/text_color_hint"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -139,7 +139,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/grey_light"/>
+        android:background="@color/text_color_hint"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewLb"

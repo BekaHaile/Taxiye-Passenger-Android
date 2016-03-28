@@ -16,7 +16,7 @@
             android:layout_width="112px"
             android:layout_height="112px"
             android:layout_marginTop="400px"
-            android:src="@drawable/meals_icon_r_selector"
+            android:src="@drawable/jugnoo_icon"
             android:tag="mwar"
             android:visibility="gone" />
 
@@ -25,7 +25,7 @@
             android:layout_width="112px"
             android:layout_height="112px"
             android:layout_marginTop="400px"
-            android:src="@drawable/fatafat_icon_r_selector"
+            android:src="@drawable/jugnoo_icon"
             android:tag="mwar"
             android:visibility="gone" />
 
@@ -34,7 +34,7 @@
             android:layout_width="112px"
             android:layout_height="112px"
             android:layout_marginTop="400px"
-            android:src="@drawable/autos_icon_r_selector"
+            android:src="@drawable/jugnoo_icon"
             android:tag="mwar"
             android:visibility="gone" />
     </RelativeLayout>
@@ -48,7 +48,7 @@
             android:id="@+id/imageViewMeals2"
             android:layout_width="112px"
             android:layout_height="112px"
-            android:src="@drawable/meals_icon_r_selector"
+            android:src="@drawable/jugnoo_icon"
             android:tag="mwar"
             android:visibility="gone" />
 
@@ -56,7 +56,7 @@
             android:id="@+id/imageViewFatafat2"
             android:layout_width="112px"
             android:layout_height="112px"
-            android:src="@drawable/fatafat_icon_r_selector"
+            android:src="@drawable/jugnoo_icon"
             android:tag="mwar"
             android:visibility="gone" />
 
@@ -64,7 +64,7 @@
             android:id="@+id/imageViewAutos2"
             android:layout_width="112px"
             android:layout_height="112px"
-            android:src="@drawable/autos_icon_r_selector"
+            android:src="@drawable/jugnoo_icon"
             android:tag="mwar"
             android:visibility="gone" />
     </RelativeLayout>

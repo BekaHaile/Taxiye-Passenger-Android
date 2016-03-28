@@ -1,9 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -24,26 +22,34 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.datastructure.PendingCall;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
+
+    private final String TAG = FeedbackActivity.class.getSimpleName();
 
     RelativeLayout relative;
 
@@ -341,7 +347,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
                         params_12.height = (int) (heightDiff);
 
-                        textViewScroll.setLayoutParams(params_12);
+//                        textViewScroll.setLayoutParams(params_12);
                         textViewScroll.requestLayout();
                         editTextFeedback.setHint("");
                         if(!scrolled) {
@@ -359,7 +365,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                         ViewGroup.LayoutParams params = textViewScroll
                             .getLayoutParams();
                         params.height = 0;
-                        textViewScroll.setLayoutParams(params);
+//                        textViewScroll.setLayoutParams(params);
                         textViewScroll.requestLayout();
                         editTextFeedback.setHint("Please share your valuable feedback");
                         scrolled = false;
@@ -375,9 +381,6 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
 
     public void performBackPressed() {
-		if (FeedbackMode.SUPPORT == feedbackMode) {
-			startActivity(new Intent(this, SupportActivity.class));
-		}
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
@@ -401,7 +404,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
             DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
+            HashMap<String, String> params = new HashMap<>();
 
             params.put("access_token", Data.userData.accessToken);
             params.put("given_rating", "" + givenRating);
@@ -412,47 +415,47 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
             Log.i("params", "=" + params);
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/rate_the_driver", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        try {
-                            jObj = new JSONObject(response);
-                            int flag = jObj.getInt("flag");
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
-                                    if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
-                                        HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
-                                    }
-                                    else if(FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null){
-                                        RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
-                                    }
-									try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
-                                    finish();
-                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+            RestClient.getApiServices().rateTheDriver(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "rateTheDriver response = " + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        int flag = jObj.getInt("flag");
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
+                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
+                                } else if (FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null) {
+                                    RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
                                 }
+                                try {
+                                    Data.driverInfos.clear();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                finish();
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            } else {
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                        DialogPopup.dismissLoadingDialog();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
-                });
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "rateTheDriver error="+error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
         } else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
@@ -462,11 +465,9 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
     public void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
 
 		try {
-			final RequestParams params = new RequestParams();
+			final HashMap<String, String> params = new HashMap<>();
 			params.put("access_token", Data.userData.accessToken);
 			params.put("engagement_id", engagementId);
-
-			final String url = Config.getServerUrl() + "/skip_rating_by_customer";
 
 			try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
 
@@ -475,35 +476,33 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 			finish();
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-			AsyncHttpClient client = Data.getClient();
-			client.post(url, params,
-				new CustomAsyncHttpResponseHandler() {
+            RestClient.getApiServices().skipRatingByCustomer(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.e(TAG, "skipRatingByCustomer response="+responseStr);
+                }
 
-					@Override
-					public void onFailure(Throwable arg3) {
-						Log.e("request fail", arg3.toString());
-					}
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "skipRatingByCustomer error="+error.toString());
+                }
+            });
 
-					@Override
-					public void onSuccess(String response) {
-						Log.i("Server response", "response = " + response);
-
-					}
-				});
-
-			Database2.getInstance(activity).insertPendingAPICall(activity, url, params);
+			Database2.getInstance(activity).insertPendingAPICall(activity,
+                    PendingCall.SKIP_RATING_BY_CUSTOMER.getPath(), params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-    public void submitFeedbackSupportAsync(final Activity activity, int givenRating, String feedbackText) {
+    public void submitFeedbackSupportAsync(final Activity activity, final int givenRating, final String feedbackText) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
+            HashMap<String, String> params = new HashMap<>();
 
             params.put("access_token", Data.userData.accessToken);
             params.put("given_rating", "" + givenRating);
@@ -511,45 +510,59 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
             Log.i("params", "=" + params);
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/submit_feedback", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
-
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.i("Server response", "response = " + response);
-                        try {
-                            jObj = new JSONObject(response);
-                            int flag = jObj.getInt("flag");
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                    String error = jObj.getString("error");
-                                    DialogPopup.alertPopup(activity, "", error);
-                                } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									Data.supportFeedbackSubmitted = true;
-									finish();
-									overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-                                }
+            RestClient.getApiServices().submitFeedback(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "submitFeedback response = " + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        int flag = jObj.getInt("flag");
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                String error = jObj.getString("error");
+                                DialogPopup.alertPopup(activity, "", error);
+                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                Data.supportFeedbackSubmitted = true;
+                                finish();
+                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                            } else {
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                        DialogPopup.dismissLoadingDialog();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
-                });
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "submitFeedback error="+error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.dialogNoInternet(FeedbackActivity.this,
+                    Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                    new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View v) {
+                            submitFeedbackSupportAsync(activity, givenRating, feedbackText);
+                        }
+
+                        @Override
+                        public void neutralClick(View v) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View v) {
+
+                        }
+                    });
         }
     }
 

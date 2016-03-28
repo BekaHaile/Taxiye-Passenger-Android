@@ -18,21 +18,27 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAsyncHttpResponseHandler;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNames {
@@ -211,7 +217,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
-            RequestParams params = new RequestParams();
+            HashMap<String, String> params = new HashMap<>();
 
             if(isPhoneNumber){
                 params.put("phone_no", email);
@@ -222,49 +228,88 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
 
             Log.i("params", "=" + params);
 
-            AsyncHttpClient client = Data.getClient();
-            client.post(Config.getServerUrl() + "/forgot_password", params,
-                new CustomAsyncHttpResponseHandler() {
-                    private JSONObject jObj;
+//            AsyncHttpClient client = Data.getClient();
+//            client.post(Config.getServerUrl() + "/forgot_password", params,
+//                new CustomAsyncHttpResponseHandler() {
+//                    private JSONObject jObj;
+//
+//                    @Override
+//                    public void onSuccess(String response) {
+//                        Log.v("Server response", "response = " + response);
+//
+//                        try {
+//                            jObj = new JSONObject(response);
+//
+//                            if (!jObj.isNull("error")) {
+//                                String errorMessage = jObj.getString("error");
+//                                DialogPopup.alertPopup(activity, "", errorMessage);
+//                            } else {
+//                                DialogPopup.alertPopupWithListener(activity, "", jObj.getString("log"), new View.OnClickListener() {
+//
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        Intent intent = getLoginIntent(email);
+//                                        startActivity(intent);
+//                                        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//                                        finish();
+//                                    }
+//                                });
+//                            }
+//                        } catch (Exception exception) {
+//                            exception.printStackTrace();
+//                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//                        }
+//                        DialogPopup.dismissLoadingDialog();
+//                    }
+//
+//
+//                    @Override
+//                    public void onFailure(Throwable arg3) {
+//                        Log.e("request fail", arg3.toString());
+//                        DialogPopup.dismissLoadingDialog();
+//                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//                    }
+//
+//                });
 
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.v("Server response", "response = " + response);
+            RestClient.getApiServices().forgotPassword(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.v("Server response", "response = " + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
 
-                        try {
-                            jObj = new JSONObject(response);
+                        if (!jObj.isNull("error")) {
+                            String errorMessage = jObj.getString("error");
+                            DialogPopup.alertPopup(activity, "", errorMessage);
+                        } else {
+                            DialogPopup.alertPopupWithListener(activity, "", jObj.getString("log"), new View.OnClickListener() {
 
-                            if (!jObj.isNull("error")) {
-                                String errorMessage = jObj.getString("error");
-                                DialogPopup.alertPopup(activity, "", errorMessage);
-                            } else {
-                                DialogPopup.alertPopupWithListener(activity, "", jObj.getString("log"), new View.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = getLoginIntent(email);
-                                        startActivity(intent);
-                                        overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                        finish();
-                                    }
-                                });
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = getLoginIntent(email);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                    finish();
+                                }
+                            });
                         }
-                        DialogPopup.dismissLoadingDialog();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
+                    DialogPopup.dismissLoadingDialog();
+                }
 
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("request fail", error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
 
-                    @Override
-                    public void onFailure(Throwable arg3) {
-                        Log.e("request fail", arg3.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-
-                });
         } else {
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
