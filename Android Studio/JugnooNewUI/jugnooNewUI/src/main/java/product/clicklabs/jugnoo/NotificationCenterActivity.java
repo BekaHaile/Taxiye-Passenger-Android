@@ -10,17 +10,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -70,7 +78,9 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			}
 		});
 
-		loadListFromDB();
+		//loadListFromDB();
+
+		getNotificationInboxApi();
 
 		FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
     }
@@ -115,6 +125,33 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			@Override
 			public void run() {
 				loadListFromDB();
+			}
+		});
+	}
+
+	private void getNotificationInboxApi(){
+
+		HashMap<String, String> params = new HashMap<>();
+		params.put("access_token", Data.userData.accessToken);
+		params.put("offset", "0");
+
+		RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
+			@Override
+			public void success(NotificationInboxResponse notificationInboxResponse, Response response) {
+				notificationList.clear();
+				notificationList.addAll(notificationInboxResponse.getPushes());
+				Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+				if(notificationList.size() > 0){
+					linearLayoutNoNotifications.setVisibility(View.GONE);
+				} else{
+					linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+				}
+				myNotificationAdapter.notifyDataSetChanged();
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+
 			}
 		});
 	}

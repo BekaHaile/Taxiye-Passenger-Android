@@ -70,7 +70,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.textViewTitle.setText(notification.getTitle());
         holder.textViewDescription.setText(notification.getMessage());
         holder.textViewTime.setText(DateOperations
-                .convertDateViaFormat(DateOperations.utcToLocal(notification.getTimePushArrived())));
+                .convertDateViaFormat(DateOperations.utcToLocalTZ(notification.getTimePushArrived())));
         holder.linearRoot.setTag(position);
         holder.linearLayoutText.setTag(position);
 

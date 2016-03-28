@@ -188,7 +188,7 @@ public class Database2 {                                                        
                         data.getTimePushArrived(),
                         data.getTitle(),
                         data.getMessage(),
-                        data.getDeepIndex(),
+                        String.valueOf(data.getDeepIndex()),
                         data.getTimeToDisplay(),
                         data.getTimeTillDisplay(),
                         data.getNotificationImage());
@@ -398,21 +398,21 @@ public class Database2 {                                                        
 									(currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
                                         cursor.getString(in2),
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
                                         cursor.getString(in2),
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
                             if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
                                         cursor.getString(in2),
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }
@@ -467,19 +467,19 @@ public class Database2 {                                                        
                             if ((currentTimeLong < pushArrAndTimeToDisVal) &&
                                     (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
                                 added = true;
                             }
                         }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
                                 added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
                             if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
                                 added = true;
                             }
                         }
