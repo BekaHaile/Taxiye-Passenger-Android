@@ -35,13 +35,14 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
-import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.Vehicle;
+import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
@@ -305,6 +306,21 @@ public class JSONParser implements Constants {
 
     private void parsePromoCoupons(LoginResponse loginResponse){
         try{
+            if(Data.vehicleTypes == null){
+                Data.vehicleTypes = new ArrayList<>();
+            } else{
+                Data.vehicleTypes.clear();
+            }
+            if(loginResponse.getLogin().getVehicleTypes() != null) {
+                for (VehicleType vehicleType : loginResponse.getLogin().getVehicleTypes()) {
+                    Data.vehicleTypes.add(new VehicleType(vehicleType.getId(),
+                            vehicleType.getName()));
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
             if(Data.promoCoupons == null){
                 Data.promoCoupons = new ArrayList<>();
             } else{
@@ -344,14 +360,21 @@ public class JSONParser implements Constants {
                         convenienceCharges = fareStructure.getConvenienceCharge();
                     }
                     if (diffStart >= 0 && diffEnd <= 0) {
-                        Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
+                        product.clicklabs.jugnoo.datastructure.FareStructure fareStructure1 = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
                                 fareStructure.getFareThresholdDistance(),
                                 fareStructure.getFarePerKm(),
                                 fareStructure.getFarePerMin(),
                                 fareStructure.getFareThresholdTime(),
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-                        break;
+                        for (int i = 0; i < Data.vehicleTypes.size(); i++) {
+                            try {if (Data.vehicleTypes.get(i).getId().equals(fareStructure.getVehicleType())) {
+                                Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
+                            }} catch (Exception e) {e.printStackTrace();}
+                        }
+                        if(Vehicle.AUTO.getId() == fareStructure.getVehicleType()){
+                            Data.fareStructure = fareStructure1;
+                        }
                     }
                 }
             }else{
@@ -418,30 +441,6 @@ public class JSONParser implements Constants {
 
 
     public void parseLastRideData(JSONObject jObj) {
-
-//		  "last_ride": {
-//        "engagement_id": 6973,
-//        "session_id": 3822,
-//        "pickup_address": "Unnamed",
-//        "drop_address": "Unnamed",
-//        "fare": 26,
-//        "discount": 0,
-//        "paid_using_wallet": 0,
-//        "to_pay": 26,
-//        "distance": 0,
-//        "ride_time": 1,
-//        "rate_app": 0,
-//        "drop_time": "05:14 AM",
-//        "pickup_time": "05:14 AM",
-//        "coupon": null,
-//        "promotion": null,
-//        "driver_info": {
-//            "id": 231,
-//            "name": "Driver 3",
-//            "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png"
-//        }
-//    }
-
         try {
             JSONObject jLastRideData = jObj.getJSONObject("last_ride");
             Data.cSessionId = "";
@@ -452,8 +451,10 @@ public class JSONParser implements Constants {
 
             Data.pickupLatLng = new LatLng(0, 0);
 
+            int vehicleId = jDriverInfo.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
+
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
-                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
+                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"), vehicleId);
 
             try {
                 if (jLastRideData.has("rate_app")) {
@@ -470,8 +471,6 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -552,6 +551,7 @@ public class JSONParser implements Constants {
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
         String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
+        int vehicleId = jLastRideData.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -565,7 +565,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber, tripTotal);
+                rideDate, phoneNumber, tripTotal, vehicleId);
 	}
 
 
@@ -614,6 +614,7 @@ public class JSONParser implements Constants {
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
             Schedule scheduleT20 = null;
+            int vehicleId = Vehicle.AUTO.getId();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -702,6 +703,8 @@ public class JSONParser implements Constants {
 							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
 
                             scheduleT20 = parseT20Schedule(jObject);
+
+                            vehicleId = jObject.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -744,12 +747,10 @@ public class JSONParser implements Constants {
 
                 Data.pickupLatLng = new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude));
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
-                    Data.dropLatLng =null;
-                }
-                else{
+                    Data.dropLatLng = null;
+                } else{
                     Data.dropLatLng = new LatLng(dropLatitude, dropLongitude);
                 }
-
 
                 double dLatitude = Double.parseDouble(latitude);
                 double dLongitude = Double.parseDouble(longitude);
@@ -757,7 +758,7 @@ public class JSONParser implements Constants {
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleId);
 
                 Data.userData.fareFactor = fareFactor;
 
@@ -847,7 +848,9 @@ public class JSONParser implements Constants {
                     String driverCarImage = "";
                     String carNumber = "";
                     double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
-                    Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage, phoneNo, rating, carNumber, 0, bearing));
+                    int vehicleType = driver.getVehicleType() == null ? Vehicle.AUTO.getId() : driver.getVehicleType();
+                    Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
+                            phoneNo, rating, carNumber, 0, bearing, vehicleType));
                 }
             }
         } catch (Exception e) {
@@ -856,87 +859,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public static ArrayList<PromoCoupon> parsePromoCoupons(JSONObject jObj) throws Exception {
-        ArrayList<PromoCoupon> promoCouponList = new ArrayList<PromoCoupon>();
-
-//		{
-//	    "flag": 174,
-//	    "coupons": [
-//	        {
-//	            "title": "Free ride",
-//	            "subtitle": "upto Rs. 100",
-//	            "description": "Your next ride",
-//	            "discount": 100,
-//	            "maximum": 100,
-//	            "image": "",
-//	            "couponType": 0,
-//	            "redeemed_on": "0000-00-00 00:00:00",
-//	            "status": 1,
-//	            "expiry_date": "December 31st 2015"
-//	        }
-//	    ],
-//	    "promotions": [
-//	        {
-//	            "promo_id": 1,
-//	            "title": "Flat 100% off",
-//	            "terms_n_conds": "t"
-//	        }
-//	    ],
-//	    "dynamic_factor": "1.0"
-//	}
-
-
-        JSONArray jCouponsArr = jObj.getJSONArray("coupons");
-        for (int i = 0; i < jCouponsArr.length(); i++) {
-            JSONObject coData = jCouponsArr.getJSONObject(i);
-            promoCouponList.add(new CouponInfo(coData.getInt("account_id"),
-                    coData.getInt("coupon_type"),
-                    coData.getInt("status"),
-                    coData.getString("title"),
-                    coData.getString("subtitle"),
-                    coData.getString("description"),
-                    coData.getString("image"),
-                    coData.getString("redeemed_on"),
-                    coData.getString("expiry_date"), "", ""));
-        }
-
-        JSONArray jPromoArr = jObj.getJSONArray("promotions");
-        for (int i = 0; i < jPromoArr.length(); i++) {
-            JSONObject coData = jPromoArr.getJSONObject(i);
-            promoCouponList.add(new PromotionInfo(coData.getInt("promo_id"),
-                    coData.getString("title"),
-                    coData.getString("terms_n_conds")));
-        }
-
-//
-//		promoCouponList.clear();
-//		for (int i = 0; i < jPromoArr.length(); i++) {
-//			JSONObject coData = jPromoArr.getJSONObject(i);
-//			promoCouponList.add(new PromotionInfo(coData.getInt("promo_id"),
-//					coData.getString("title") + "\nabcd",
-//					coData.getString("terms_n_conds")));
-//			break;
-//		}
-//
-
-        return promoCouponList;
-    }
-
-
     public static void parseCancellationReasons(LoginResponse loginResponse) {
-
-//		"cancellation": {
-//      "message": "Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20",
-//      "reasons": [
-//          "Driver is late",
-//          "Driver denied duty",
-//          "Changed my mind",
-//          "Booked another auto"
-//      ],
-//        "addn_reason":"foo"
-//  }
-
-
         try {
             ArrayList<CancelOption> options = new ArrayList<CancelOption>();
             options.add(new CancelOption("Driver is late"));
@@ -979,20 +902,6 @@ public class JSONParser implements Constants {
 
     public static ArrayList<PreviousAccountInfo> parsePreviousAccounts(JSONObject jsonObject) {
         ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
-
-//        {
-//            "flag": 400,
-//            "users": [
-//            {
-//                "user_id": 145,
-//                "user_name": "Shankar16",
-//                "user_email": "shankar+16@jugnoo.in",
-//                "phone_no": "+919780111116",
-//                "date_registered": "2015-01-26T13:55:58.000Z"
-//            }
-//            ]
-//        }
-
         try {
 
             JSONArray jPreviousAccountsArr = jsonObject.getJSONArray("users");
@@ -1019,33 +928,6 @@ public class JSONParser implements Constants {
 
     public static ArrayList<CouponInfo> parseCouponsArray(JSONObject jObj){
         ArrayList<CouponInfo> couponInfoList = new ArrayList<CouponInfo>();
-
-        //                                                {
-//                                                    "coupon_id": 12,
-//                                                    "title": "Drop Capped C",
-//                                                    "subtitle": "upto Rs. 100 ",
-//                                                    "description": "Your 30.771823, 76.769595",
-//                                                    "coupon_type": 3,
-//                                                    "type": 3,
-//                                                    "discount_percentage": 0,
-//                                                    "discount_maximum": 0,
-//                                                    "discount": 0,
-//                                                    "maximum": 0,
-//                                                    "start_time": "00:00:00",
-//                                                    "end_time": "23:00:00",
-//                                                    "pickup_latitude": 30.7188,
-//                                                    "pickup_longitude": 76.8108,
-//                                                    "pickup_radius": 200,
-//                                                    "drop_latitude": 30.7718,
-//                                                    "drop_longitude": 76.7696,
-//                                                    "drop_radius": 200,
-//                                                    "image": "",
-//                                                    "account_id": 2568,
-//                                                    "redeemed_on": "0000-00-00 00:00:00",
-//                                                    "status": 1,
-//                                                    "expiry_date": "2015-08-31 18:29:59"
-//                                                }
-
         try{
             if (jObj.has("coupons")) {
                 JSONArray couponsData = jObj.getJSONArray("coupons");

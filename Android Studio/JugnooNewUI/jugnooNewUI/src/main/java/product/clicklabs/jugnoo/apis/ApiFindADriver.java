@@ -15,6 +15,8 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.CheckForAppOpen;
+import product.clicklabs.jugnoo.home.models.Vehicle;
+import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
@@ -38,9 +40,11 @@ public class ApiFindADriver {
 
 	private Activity activity;
 	private Callback callback;
+	private VehicleType vehicleTypeSelected;
 
-	public ApiFindADriver(Activity activity, Callback callback){
+	public ApiFindADriver(Activity activity, VehicleType vehicleTypeSelected, Callback callback){
 		this.activity = activity;
+		this.vehicleTypeSelected = vehicleTypeSelected;
 		this.callback = callback;
 	}
 
@@ -104,8 +108,9 @@ public class ApiFindADriver {
 					if (driver.getBearing() != null) {
 						bearing = driver.getBearing();
 					}
+					int vehicleType = driver.getVehicleType() == null ? Vehicle.AUTO.getId() : driver.getVehicleType();
 					Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing));
+							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType));
 				}
 			}
 			if(findADriverResponse.getEta() != null) {
@@ -127,6 +132,22 @@ public class ApiFindADriver {
 				Data.farAwayCity = findADriverResponse.getFarAwayCity();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try{
+			if(Data.vehicleTypes == null){
+				Data.vehicleTypes = new ArrayList<>();
+			} else{
+				Data.vehicleTypes.clear();
+			}
+			if(findADriverResponse.getVehicleTypes() != null) {
+				for (VehicleType vehicleType : findADriverResponse.getVehicleTypes()) {
+					Data.vehicleTypes.add(new VehicleType(vehicleType.getId(),
+							vehicleType.getName()));
+				}
+			}
+		} catch(Exception e){
 			e.printStackTrace();
 		}
 
@@ -170,14 +191,21 @@ public class ApiFindADriver {
 						convenienceCharges = fareStructure.getConvenienceCharge();
 					}
 					if (diffStart >= 0 && diffEnd <= 0) {
-						Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
+						product.clicklabs.jugnoo.datastructure.FareStructure fareStructure1 = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
 								fareStructure.getFareThresholdDistance(),
 								fareStructure.getFarePerKm(),
 								fareStructure.getFarePerMin(),
 								fareStructure.getFareThresholdTime(),
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-						break;
+						for (int i = 0; i < Data.vehicleTypes.size(); i++) {
+							try {if (Data.vehicleTypes.get(i).getId().equals(fareStructure.getVehicleType())) {
+									Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
+								}} catch (Exception e) {e.printStackTrace();}
+						}
+						if(vehicleTypeSelected.getId().equals(fareStructure.getVehicleType())){
+							Data.fareStructure = fareStructure1;
+						}
 					}
 				}
 			}

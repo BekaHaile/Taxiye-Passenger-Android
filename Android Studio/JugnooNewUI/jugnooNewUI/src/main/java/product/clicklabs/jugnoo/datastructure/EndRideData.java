@@ -14,13 +14,14 @@ public class EndRideData {
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	private String rideDate, phoneNumber, tripTotal;
+	private int vehicleType;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
-					   String rideDate, String phoneNumber, String tripTotal){
+					   String rideDate, String phoneNumber, String tripTotal, int vehicleType){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
@@ -62,6 +63,7 @@ public class EndRideData {
 		this.rideDate = rideDate;
 		this.phoneNumber = phoneNumber;
 		this.tripTotal = tripTotal;
+		this.vehicleType = vehicleType;
 	}
 
 
@@ -92,5 +94,13 @@ public class EndRideData {
 
 	public void setTripTotal(String tripTotal) {
 		this.tripTotal = tripTotal;
+	}
+
+	public int getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(int vehicleType) {
+		this.vehicleType = vehicleType;
 	}
 }

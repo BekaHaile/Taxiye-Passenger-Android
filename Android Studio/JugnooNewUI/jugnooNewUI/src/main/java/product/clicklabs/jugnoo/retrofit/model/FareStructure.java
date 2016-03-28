@@ -38,6 +38,9 @@ public class FareStructure {
 	@SerializedName("convenience_charge")
 	@Expose
 	private Double convenienceCharge;
+	@SerializedName("vehicle_type")
+	@Expose
+	private Integer vehicleType;
 
 	/**
 	 *
@@ -207,5 +210,13 @@ public class FareStructure {
 
 	public void setConvenienceCharge(Double convenienceCharge) {
 		this.convenienceCharge = convenienceCharge;
+	}
+
+	public Integer getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(Integer vehicleType) {
+		this.vehicleType = vehicleType;
 	}
 }

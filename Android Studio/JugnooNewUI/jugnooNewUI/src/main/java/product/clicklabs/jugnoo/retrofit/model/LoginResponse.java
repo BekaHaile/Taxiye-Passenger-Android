@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.home.models.VehicleType;
+
 /**
  * Created by shankar on 1/5/16.
  */
@@ -348,6 +350,9 @@ public class LoginResponse {
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
+		@SerializedName("vehicle_type")
+		@Expose
+		private List<VehicleType> vehicleTypes = new ArrayList<>();
 
 
 		/**
@@ -442,6 +447,14 @@ public class LoginResponse {
 
 		public void setFareFactor(Double fareFactor) {
 			this.fareFactor = fareFactor;
+		}
+
+		public List<VehicleType> getVehicleTypes() {
+			return vehicleTypes;
+		}
+
+		public void setVehicleTypes(List<VehicleType> vehicleTypes) {
+			this.vehicleTypes = vehicleTypes;
 		}
 	}
 }

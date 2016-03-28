@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
@@ -12,12 +12,17 @@ import product.clicklabs.jugnoo.home.fragments.BottomVehiclesFragment;
 /**
  * Created by Ankit on 12/29/15.
  */
-public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
+public class SlidingBottomFragmentAdapter extends FragmentStatePagerAdapter {
 
 	private boolean showVehicles;
 	public SlidingBottomFragmentAdapter(FragmentManager fm, boolean showVehicles) {
 		super(fm);
 		this.showVehicles = showVehicles;
+	}
+
+	public void setShowVehicles(boolean showVehicles){
+		this.showVehicles = showVehicles;
+		this.notifyDataSetChanged();
 	}
 
 	@Override
@@ -40,6 +45,11 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 				return new SlidingBottomOffersFragment();
 		}
 		return null;
+	}
+
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
 	}
 
 	@Override

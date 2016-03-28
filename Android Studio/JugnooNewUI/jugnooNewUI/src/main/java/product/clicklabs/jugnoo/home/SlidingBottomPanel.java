@@ -26,7 +26,7 @@ import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.home.fragments.BottomVehiclesFragment;
-import product.clicklabs.jugnoo.home.models.VehicleId;
+import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -55,8 +55,7 @@ public class SlidingBottomPanel {
     private ArrayList<PromoCoupon> promoCoupons;
 
     private VehicleType vehicleTypeSelected = null,
-                        vehicleTypeDefault = new VehicleType(1, "Auto");
-    private ArrayList<VehicleType> vehicleTypes;
+                        vehicleTypeDefault = new VehicleType(Vehicle.AUTO.getId(), Vehicle.AUTO.getName());
 
     private RelativeLayout relativeLayoutVehicleType;
     private TextView textViewVehicleType;
@@ -116,11 +115,12 @@ public class SlidingBottomPanel {
         });
 
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager(), false);
-        viewPager.setAdapter(slidingBottomFragmentAdapter);
 
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
         tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
+
+        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager(), false);
+        viewPager.setAdapter(slidingBottomFragmentAdapter);
         tabs.setViewPager(viewPager);
 
         imageViewExtraForSliding.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +131,7 @@ public class SlidingBottomPanel {
             }
         });
 
-        update(null, null);
+        update(null);
 
         vehicleTypeSelected = vehicleTypeDefault;
         relativeLayoutVehicleType.setVisibility(View.GONE);
@@ -141,7 +141,7 @@ public class SlidingBottomPanel {
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         }
-        int increment = vehicleTypes == null ? 0 : 1;
+        int increment = Data.vehicleTypes.size() < 2 ? 0 : 1;
         switch (view.getId()) {
             case R.id.relativeLayoutVehicleType:
                 if(viewPager.getCurrentItem() == 0){
@@ -181,12 +181,9 @@ public class SlidingBottomPanel {
         }
     }
 
-    public void update(ArrayList<PromoCoupon> promoCoupons, ArrayList<VehicleType> vehicleTypes) {
+    public void update(ArrayList<PromoCoupon> promoCoupons) {
         try {
             this.promoCoupons = promoCoupons;
-
-            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-					, Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
 
             if (promoCoupons != null) {
 				if(selectedCoupon == null) {
@@ -208,12 +205,9 @@ public class SlidingBottomPanel {
 				textViewOffersValue.setText("");
 			}
 
-            int increment = vehicleTypes == null ? 0 : 1;
-            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + (1+increment));
-            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
-				((SlidingBottomFareFragment) frag1).update();
-			}
+            updateFareFrag();
 
+            int increment = Data.vehicleTypes == null ? 0 : 1;
             Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + (2+increment));
             if (frag != null && frag instanceof SlidingBottomOffersFragment) {
 				((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
@@ -221,21 +215,15 @@ public class SlidingBottomPanel {
 			}
             updatePaymentOption();
 
-            this.vehicleTypes = vehicleTypes;
-            if(vehicleTypes == null){
+            if(Data.vehicleTypes.size() < 2){
                 vehicleTypeSelected = vehicleTypeDefault;
                 relativeLayoutVehicleType.setVisibility(View.GONE);
-                slidingBottomFragmentAdapter = null;
-                slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager(), false);
-                viewPager.setAdapter(slidingBottomFragmentAdapter);
+                slidingBottomFragmentAdapter.setShowVehicles(false);
                 tabs.setViewPager(viewPager);
-
             } else{
                 relativeLayoutVehicleType.setVisibility(View.VISIBLE);
                 updateVehicleTypeSelectedInTab();
-                slidingBottomFragmentAdapter = null;
-                slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager(), true);
-                viewPager.setAdapter(slidingBottomFragmentAdapter);
+                slidingBottomFragmentAdapter.setShowVehicles(true);
                 tabs.setViewPager(viewPager);
                 updateFragmentVehicleType();
             }
@@ -266,8 +254,8 @@ public class SlidingBottomPanel {
     public void updateVehicleTypeSelectedInTab() {
         try {
             if(vehicleTypeSelected != null) {
-                textViewVehicleType.setText(vehicleTypeSelected.getVehicleName());
-                if(vehicleTypeSelected.getVehicleId() == VehicleId.AUTO.getOrdinal()){
+                textViewVehicleType.setText(vehicleTypeSelected.getName());
+                if(vehicleTypeSelected.getId() == Vehicle.AUTO.getId()){
                     imageViewVehicleType.setImageResource(R.drawable.ic_auto_orange);
                 } else{
                     imageViewVehicleType.setImageResource(R.drawable.ic_bike_orange);
@@ -282,7 +270,7 @@ public class SlidingBottomPanel {
         Fragment fragV = activity.getSupportFragmentManager()
                 .findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + (0));
         if (fragV != null && fragV instanceof BottomVehiclesFragment) {
-            ((BottomVehiclesFragment) fragV).update(vehicleTypes);
+            ((BottomVehiclesFragment) fragV).update(Data.vehicleTypes);
         }
     }
 
@@ -312,7 +300,7 @@ public class SlidingBottomPanel {
     }
 
     public void setPaytmLoadingVisiblity(int visiblity) {
-        int increment = vehicleTypes == null ? 0 : 1;
+        int increment = Data.vehicleTypes.size() < 2 ? 0 : 1;
         Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + (0+increment));
         if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
             ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
@@ -320,7 +308,7 @@ public class SlidingBottomPanel {
     }
 
     public void updatePreferredPaymentOptionUI() {
-        int increment = vehicleTypes == null ? 0 : 1;
+        int increment = Data.vehicleTypes.size() < 2 ? 0 : 1;
         Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + (0+increment));
         if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
             ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
@@ -391,23 +379,48 @@ public class SlidingBottomPanel {
 
 
     public VehicleType getVehicleTypeSelected() {
+        if(vehicleTypeSelected == null){
+            vehicleTypeSelected = vehicleTypeDefault;
+        }
         return vehicleTypeSelected;
     }
     public void setVehicleTypeSelected(int position) {
-        if (position > -1 && position < vehicleTypes.size()) {
-            vehicleTypeSelected = vehicleTypes.get(position);
+        if (position > -1 && position < Data.vehicleTypes.size()) {
+            vehicleTypeSelected = Data.vehicleTypes.get(position);
         } else {
             vehicleTypeSelected = vehicleTypeDefault;
         }
         updateVehicleTypeSelectedInTab();
+        updateFareStructureUI();
     }
 
-    public ArrayList<VehicleType> getVehicleTypes(){
-        return vehicleTypes;
+    public VehicleType getVehicleTypeDefault() {
+        return vehicleTypeDefault;
     }
 
-    public void setVehicleTypes(ArrayList<VehicleType> vehicleTypes){
-        this.vehicleTypes = vehicleTypes;
+    private void updateFareStructureUI(){
+        for (int i = 0; i < Data.vehicleTypes.size(); i++) {
+            if (Data.vehicleTypes.get(i).getId().equals(vehicleTypeSelected.getId())) {
+                Data.fareStructure = Data.vehicleTypes.get(i).getFareStructure();
+                break;
+            }
+        }
+        updateFareFrag();
+
+    }
+
+    private void updateFareFrag(){
+        try {
+            int increment = Data.vehicleTypes == null ? 0 : 1;
+            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + (1+increment));
+            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
+				((SlidingBottomFareFragment) frag1).update();
+			}
+            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+					, Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

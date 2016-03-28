@@ -10,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.home.models.VehicleType;
+
 
 public class FindADriverResponse {
 
@@ -40,6 +42,10 @@ public class FindADriverResponse {
     @SerializedName("fare_structure")
     @Expose
     private List<FareStructure> fareStructure = new ArrayList<FareStructure>();
+    @SerializedName("vehicle_type")
+    @Expose
+    private List<VehicleType> vehicleTypes = new ArrayList<>();
+
 
 
     /**
@@ -175,7 +181,11 @@ public class FindADriverResponse {
     }
 
 
+    public List<VehicleType> getVehicleTypes() {
+        return vehicleTypes;
+    }
 
-
-
+    public void setVehicleTypes(List<VehicleType> vehicleTypes) {
+        this.vehicleTypes = vehicleTypes;
+    }
 }

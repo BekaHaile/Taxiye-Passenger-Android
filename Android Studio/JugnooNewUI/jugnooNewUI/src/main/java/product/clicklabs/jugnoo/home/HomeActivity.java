@@ -109,8 +109,8 @@ import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
+import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -136,7 +136,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.home.models.VehicleType;
+import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
@@ -3418,7 +3418,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private ApiFindADriver createApiFindADriver(){
         if(apiFindADriver == null) {
-            apiFindADriver = new ApiFindADriver(this, new ApiFindADriver.Callback() {
+            apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getVehicleTypeSelected(),
+                    new ApiFindADriver.Callback() {
                 @Override
                 public void onPre() {
                     try {
@@ -3492,10 +3493,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
             try {
-                Data.vehicleTypes = new ArrayList<>();
-                Data.vehicleTypes.add(new VehicleType(1, "Autos"));
-                Data.vehicleTypes.add(new VehicleType(2, "Bike"));
-                slidingBottomPanel.update(Data.promoCoupons, Data.vehicleTypes);
+                slidingBottomPanel.update(Data.promoCoupons);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -4894,9 +4892,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
+            int vehicleId = jObj.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
+
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
-                    fareFixed, preferredPaymentMode, scheduleT20);
+                    fareFixed, preferredPaymentMode, scheduleT20, vehicleId);
 
 
 
@@ -5327,6 +5327,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								}
 
 								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
+                                nameValuePairs.put(KEY_VEHICLE_ID, String.valueOf(slidingBottomPanel
+                                        .getVehicleTypeSelected().getId()));
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
@@ -6592,5 +6594,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+    public void setVehicleTypeSelected(int position) {
+        slidingBottomPanel.setVehicleTypeSelected(position);
+        if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())){
+            imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
+        } else if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())){
+            imageViewRideNow.setImageResource(R.drawable.ic_bike_request_normal);
+        }
+
+
+    }
 
 }

@@ -14,9 +14,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.VehicleId;
+import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -50,7 +51,7 @@ public class BottomVehiclesFragment extends Fragment {
         recyclerViewVehicles.setLayoutManager(new LinearLayoutLayoutManagerResizableRecyclerView(activity));
         recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
         recyclerViewVehicles.setHasFixedSize(false);
-        vehiclesAdapter = new VehiclesAdapter(activity.getSlidingBottomPanel().getVehicleTypes());
+        vehiclesAdapter = new VehiclesAdapter(Data.vehicleTypes);
         recyclerViewVehicles.setAdapter(vehiclesAdapter);
         activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewVehicles);
 
@@ -91,15 +92,15 @@ public class BottomVehiclesFragment extends Fragment {
         public void onBindViewHolder(VehiclesAdapter.ViewHolder holder, int position) {
             VehicleType vehicleType = vehicleTypes.get(position);
 
-            holder.textViewVehicleName.setText(vehicleType.getVehicleName());
+            holder.textViewVehicleName.setText(vehicleType.getName());
             if(activity.getSlidingBottomPanel().getVehicleTypeSelected() != null
                     && activity.getSlidingBottomPanel().getVehicleTypeSelected()
-                    .getVehicleId().equals(vehicleType.getVehicleId())){
+                    .getId().equals(vehicleType.getId())){
                 holder.imageViewRadio.setImageResource(R.drawable.radio_selected_icon);
             } else{
                 holder.imageViewRadio.setImageResource(R.drawable.radio_unselected_icon);
             }
-            if(vehicleType.getVehicleId() == VehicleId.AUTO.getOrdinal()){
+            if(vehicleType.getId() == Vehicle.AUTO.getId()){
                 holder.imageViewVehicleType.setImageResource(R.drawable.ic_auto_orange);
             } else{
                 holder.imageViewVehicleType.setImageResource(R.drawable.ic_bike_orange);
@@ -111,7 +112,7 @@ public class BottomVehiclesFragment extends Fragment {
                 public void onClick(View v) {
                     try {
                         int position = (int) v.getTag();
-                        activity.getSlidingBottomPanel().setVehicleTypeSelected(position);
+                        activity.setVehicleTypeSelected(position);
                         notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -28,9 +28,8 @@
 
         <ImageView
             android:id="@+id/imageViewVehicleType"
-            android:layout_width="83px"
-            android:layout_height="83px"
-            android:padding="15px"
+            android:layout_width="65px"
+            android:layout_height="65px"
             android:tag="mwar"
             android:src="@drawable/ic_auto_orange"/>
 
@@ -41,7 +40,7 @@
             android:text="cashback"
             android:layout_centerVertical="true"
             android:maxLines="2"
-            android:layout_marginLeft="5px"
+            android:layout_marginLeft="10px"
             android:layout_marginRight="10px"
             android:textSize="@dimen/text_size_40"
             android:textColor="@color/text_color"/>

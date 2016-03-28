@@ -3,36 +3,48 @@ package product.clicklabs.jugnoo.home.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import product.clicklabs.jugnoo.datastructure.FareStructure;
+
 /**
  * Created by shankar on 3/19/16.
  */
 public class VehicleType {
 
-	@SerializedName("vehicle_id")
+	@SerializedName("id")
 	@Expose
-	private Integer vehicleId;
-	@SerializedName("vehicle_name")
+	private Integer id;
+	@SerializedName("name")
 	@Expose
-	private String vehicleName;
+	private String name;
 
-	public VehicleType(Integer vehicleId, String vehicleName){
-		this.vehicleId = vehicleId;
-		this.vehicleName = vehicleName;
+	private FareStructure fareStructure;
+
+	public VehicleType(Integer id, String name){
+		this.id = id;
+		this.name = name;
 	}
 
-	public Integer getVehicleId() {
-		return vehicleId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setVehicleId(Integer vehicleId) {
-		this.vehicleId = vehicleId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getVehicleName() {
-		return vehicleName;
+	public String getName() {
+		return name;
 	}
 
-	public void setVehicleName(String vehicleName) {
-		this.vehicleName = vehicleName;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public FareStructure getFareStructure() {
+		return fareStructure;
+	}
+
+	public void setFareStructure(FareStructure fareStructure) {
+		this.fareStructure = fareStructure;
 	}
 }
