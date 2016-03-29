@@ -13,6 +13,7 @@ public interface Constants {
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
+	String KEY_USER_NAME = "user_name";
 	String KEY_USER_ID = "user_id";
 	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";

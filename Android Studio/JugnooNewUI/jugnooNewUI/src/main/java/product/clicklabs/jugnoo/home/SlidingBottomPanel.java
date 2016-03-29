@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -35,6 +37,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -179,6 +182,13 @@ public class SlidingBottomPanel {
 				if(selectedCoupon == null) {
 					if (promoCoupons.size() > 0) {
 						selectedCoupon = noSelectionCoupon;
+                        try {
+                            JSONObject map = new JSONObject();
+                            map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                            NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 					} else {
 						selectedCoupon = new CouponInfo(0, "");
 						textViewOffersValue.setText("");

@@ -66,6 +66,7 @@ import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
+import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -90,6 +91,7 @@ import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -1213,6 +1215,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		AppEventsLogger.activateApp(this);
 
+		NudgeClient.getGcmClient(this);
+
 	}
 
 
@@ -1382,7 +1386,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void accessTokenDataParseAsync(Activity activity, String response, LoginResponse loginResponse){
 		String resp;
 		try {
-			resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse);
+			resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS);
 			Log.e("AccessTokenDataParseAsync resp", "=" + resp);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1937,7 +1941,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr, loginResponse);
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.EMAIL);
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
 									loginDataFetched = true;
 								}
@@ -2043,7 +2048,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr, loginResponse);
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.FACEBOOK);
 									loginDataFetched = true;
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
@@ -2149,7 +2155,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr, loginResponse);
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.GOOGLE);
 									loginDataFetched = true;
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
@@ -2894,7 +2901,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								DialogPopup.alertPopup(activity, "", error);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, jsonString, loginResponse);
+									new JSONParser().parseAccessTokenLoginData(activity, jsonString,
+											loginResponse, LoginVia.EMAIL_OTP);
 									Database.getInstance(activity).insertEmail(email);
 									Database.getInstance(activity).close();
 									loginDataFetched = true;

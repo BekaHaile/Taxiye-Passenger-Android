@@ -13,6 +13,9 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
@@ -24,6 +27,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 
 
 public class ShareEarnFragment extends Fragment {
@@ -103,6 +107,13 @@ public class ShareEarnFragment extends Fragment {
 						} else{
 							FlurryEventLogger.event(FlurryEventNames.INVITE_GENERIC);
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					try {
+						JSONObject map = new JSONObject();
+						map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+						NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_INVITE_FRIENDS, map);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

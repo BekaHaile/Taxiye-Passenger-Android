@@ -247,5 +247,15 @@ public interface FlurryEventNames {
             CLICKS_ON_RIDE_HISTORY = "clicks_on_ride_history",
             CLICKS_ON_ACCOUNT = "clicks_on_account";
 
+    String SURGE_NOT_ACCEPTED = "surge_not_accepted";
+
+
+    String NUDGE_REQUEST_RIDE = "request_ride",
+            NUDGE_COUPON_AVAILABLE = "coupon_available",
+            NUDGE_INVITE_FRIENDS = "invite_friends",
+            NUDGE_DRIVER_NOT_ASSIGNED = "driver_not_assigned",
+            NUDGE_RIDE_COMPLETED = "ride_completed",
+            NUDGE_FEEDBACK = "feedback",
+            NUDGE_CANCEL_RIDE = "cancel_ride";
 
 }

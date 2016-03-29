@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
@@ -57,6 +58,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -226,7 +228,8 @@ public class JSONParser implements Constants {
     }
 
 
-    public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse) throws Exception {
+    public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
+                                            LoginVia loginVia) throws Exception {
 
         JSONObject jObj = new JSONObject(response);
 
@@ -271,6 +274,13 @@ public class JSONParser implements Constants {
 				intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
 				context.startService(intent);
 			}
+        }
+
+        try {
+            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
+                    Data.userData.userEmail, Data.userData.phoneNo);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 

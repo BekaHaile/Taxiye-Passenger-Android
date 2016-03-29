@@ -17,7 +17,9 @@
 	<string name="google_server_client_id">506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com</string>
 
 	<!-- i9Spmrdn1CLYJw2j7j1iOzIwzjs= -->
-    
+
+	<string name="nudgespot_javascript_api_key">43cbec12b85957e2244f91af04cf238a</string>
+	<string name="nudgespot_rest_api_key">90ea5fdd4d74c3e13b1059fdbebf15a1</string>
     
     
     
