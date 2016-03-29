@@ -137,6 +137,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.models.Vehicle;
+import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
@@ -2022,9 +2023,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Log.e("myLocation", "=" + myLocation);
 
                         if (Data.latitude != 0 && Data.longitude != 0) {
-                            showDriverMarkersAndPanMap(new LatLng(Data.latitude, Data.longitude));
+                            Data.pickupLatLng = new LatLng(Data.latitude, Data.longitude);
                         } else if (myLocation != null) {
-                            showDriverMarkersAndPanMap(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                            Data.pickupLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                         }
 
 
@@ -2163,7 +2164,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
 
-                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng));
+                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng, Data.assignedDriverInfo.getVehicleType()));
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -2220,7 +2221,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
 
-                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng));
+                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng, Data.assignedDriverInfo.getVehicleType()));
 
                             Log.i("marker added", "REQUEST_FINAL");
 
@@ -3470,7 +3471,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 HomeActivity.this.farAwayCity = Data.farAwayCity;
 
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                    showDriverMarkersAndPanMap(Data.pickupLatLng);
+                    showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -3564,13 +3565,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return markerOptions;
     }
 
-    public MarkerOptions getAssignedDriverCarMarkerOptions(LatLng latlng){
+    public MarkerOptions getAssignedDriverCarMarkerOptions(LatLng latlng, int vehicleId){
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
         markerOptions1.position(latlng);
-        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
         markerOptions1.anchor(0.5f, 0.5f);
+        if(vehicleId == Vehicle.AUTO.getId()){
+            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
+        } else if(vehicleId == Vehicle.BIKE.getId()){
+            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapBike(HomeActivity.this, assl)));
+        }
         return markerOptions1;
     }
 
@@ -3579,9 +3584,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.title("driver shown to customer");
         markerOptions.snippet("" + driverInfo.userId);
         markerOptions.position(driverInfo.latLng);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.rotation((float) driverInfo.getBearing());
+        if(driverInfo.getVehicleType() == Vehicle.AUTO.getId()) {
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
+        } else if(driverInfo.getVehicleType() == Vehicle.BIKE.getId()){
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapBike(HomeActivity.this, assl)));
+        }
         map.addMarker(markerOptions);
     }
 
@@ -3601,7 +3610,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-    public void showDriverMarkersAndPanMap(final LatLng userLatLng) {
+    public void showDriverMarkersAndPanMap(final LatLng userLatLng, VehicleType vehicleType) {
         try {
 			if("".equalsIgnoreCase(farAwayCity)) {
 				if (userMode == UserMode.PASSENGER &&
@@ -3611,7 +3620,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						map.clear();
 						setDropLocationMarker();
 						for (int i = 0; i < Data.driverInfos.size(); i++) {
-							addDriverMarkerForCustomer(Data.driverInfos.get(i));
+                            if(vehicleType.getId().equals(Data.driverInfos.get(i).getVehicleType())) {
+                                addDriverMarkerForCustomer(Data.driverInfos.get(i));
+                            }
 						}
 						if (!mapTouchedOnce) {
 							zoomToCurrentLocationWithOneDriver(userLatLng);
@@ -4892,11 +4903,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
-            int vehicleId = jObj.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
+            int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
-                    fareFixed, preferredPaymentMode, scheduleT20, vehicleId);
+                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType);
 
 
 
@@ -5327,7 +5338,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								}
 
 								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
-                                nameValuePairs.put(KEY_VEHICLE_ID, String.valueOf(slidingBottomPanel
+                                nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
                                         .getVehicleTypeSelected().getId()));
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
@@ -6602,8 +6613,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())){
             imageViewRideNow.setImageResource(R.drawable.ic_bike_request_normal);
         }
-
-
+        showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
     }
 
 }

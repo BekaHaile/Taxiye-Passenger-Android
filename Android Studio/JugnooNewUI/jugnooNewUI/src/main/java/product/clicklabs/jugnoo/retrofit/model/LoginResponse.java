@@ -350,7 +350,7 @@ public class LoginResponse {
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
-		@SerializedName("vehicle_type")
+		@SerializedName("vehicles")
 		@Expose
 		private List<VehicleType> vehicleTypes = new ArrayList<>();
 

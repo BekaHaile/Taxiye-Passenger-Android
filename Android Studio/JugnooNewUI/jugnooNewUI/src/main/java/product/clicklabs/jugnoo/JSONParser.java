@@ -451,10 +451,10 @@ public class JSONParser implements Constants {
 
             Data.pickupLatLng = new LatLng(0, 0);
 
-            int vehicleId = jDriverInfo.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
+            int vehicleType = jDriverInfo.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
-                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"), vehicleId);
+                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"), vehicleType);
 
             try {
                 if (jLastRideData.has("rate_app")) {
@@ -551,7 +551,7 @@ public class JSONParser implements Constants {
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
         String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
-        int vehicleId = jLastRideData.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
+        int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -565,7 +565,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber, tripTotal, vehicleId);
+                rideDate, phoneNumber, tripTotal, vehicleType);
 	}
 
 
@@ -614,7 +614,7 @@ public class JSONParser implements Constants {
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
             Schedule scheduleT20 = null;
-            int vehicleId = Vehicle.AUTO.getId();
+            int vehicleType = Vehicle.AUTO.getId();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -704,7 +704,7 @@ public class JSONParser implements Constants {
 
                             scheduleT20 = parseT20Schedule(jObject);
 
-                            vehicleId = jObject.optInt(KEY_VEHICLE_ID, Vehicle.AUTO.getId());
+                            vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -758,7 +758,7 @@ public class JSONParser implements Constants {
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20, vehicleId);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType);
 
                 Data.userData.fareFactor = fareFactor;
 

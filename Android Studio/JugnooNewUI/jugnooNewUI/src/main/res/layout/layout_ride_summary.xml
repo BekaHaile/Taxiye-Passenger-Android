@@ -86,11 +86,11 @@
 
                     <ImageView
                         android:id="@+id/imageViewEndRideAutoIcon"
-                        android:layout_width="52px"
-                        android:layout_height="41px"
+                        android:layout_width="65px"
+                        android:layout_height="65px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:src="@drawable/auto_icon_end_ride"
+                        android:layout_marginLeft="15px"
+                        android:src="@drawable/ic_auto_orange"
                         android:tag="mwar"/>
 
                     <TextView

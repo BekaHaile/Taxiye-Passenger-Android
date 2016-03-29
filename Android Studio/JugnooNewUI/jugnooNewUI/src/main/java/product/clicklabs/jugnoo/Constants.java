@@ -203,7 +203,6 @@ public interface Constants {
 	String KEY_USER_APP_MONITORING = "user_app_monitoring";
 	String KEY_USER_APP_MONITORING_DURATION = "user_app_monitoring_duration";
 
-	String KEY_VEHICLE_TYPE1 = "vehicle_type";
-	String KEY_VEHICLE_ID = "vehicle_id";
+	String KEY_VEHICLE_TYPE = "vehicle_type";
 
 }

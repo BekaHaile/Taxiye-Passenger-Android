@@ -394,10 +394,6 @@ public class SlidingBottomPanel {
         updateFareStructureUI();
     }
 
-    public VehicleType getVehicleTypeDefault() {
-        return vehicleTypeDefault;
-    }
-
     private void updateFareStructureUI(){
         for (int i = 0; i < Data.vehicleTypes.size(); i++) {
             if (Data.vehicleTypes.get(i).getId().equals(vehicleTypeSelected.getId())) {

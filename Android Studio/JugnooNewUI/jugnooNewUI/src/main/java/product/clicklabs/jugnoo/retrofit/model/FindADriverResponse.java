@@ -42,7 +42,7 @@ public class FindADriverResponse {
     @SerializedName("fare_structure")
     @Expose
     private List<FareStructure> fareStructure = new ArrayList<FareStructure>();
-    @SerializedName("vehicle_type")
+    @SerializedName("vehicles")
     @Expose
     private List<VehicleType> vehicleTypes = new ArrayList<>();
 
