@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -113,10 +112,6 @@ public class ApiFindADriver {
 							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType));
 				}
 			}
-			if(findADriverResponse.getEta() != null) {
-				DecimalFormat df = new DecimalFormat("#");
-				Data.etaMinutes = df.format(findADriverResponse.getEta());
-			}
 			Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 			if (findADriverResponse.getPriorityTipCategory() != null) {
 				Data.priorityTipCategory = findADriverResponse.getPriorityTipCategory();
@@ -148,6 +143,16 @@ public class ApiFindADriver {
 				}
 			}
 		} catch(Exception e){
+			e.printStackTrace();
+		}
+		try {
+			if(findADriverResponse.getEta() != null) {
+				for(int i=0; i<Data.vehicleTypes.size(); i++){
+					Data.vehicleTypes.get(i).setEta(findADriverResponse.getEta()
+							.get(String.valueOf(Data.vehicleTypes.get(i).getId())));
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

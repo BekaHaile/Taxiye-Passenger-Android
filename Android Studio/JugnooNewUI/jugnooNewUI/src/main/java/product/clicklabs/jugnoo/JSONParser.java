@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -283,10 +282,6 @@ public class JSONParser implements Constants {
             //current_user_status = 1 driver or 2 user
             parseDriversToShow(loginResponse.getDrivers());
 
-            if(loginResponse.getEta() != null) {
-                DecimalFormat df = new DecimalFormat("#");
-                Data.etaMinutes = df.format(loginResponse.getEta());
-            }
             Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
             if (loginResponse.getLogin().getPriorityTipCategory() != null) {
 				Data.priorityTipCategory = loginResponse.getLogin().getPriorityTipCategory();
@@ -318,6 +313,16 @@ public class JSONParser implements Constants {
                 }
             }
         } catch(Exception e){
+            e.printStackTrace();
+        }
+        try {
+            if(loginResponse.getEta() != null) {
+                for(int i=0; i<Data.vehicleTypes.size(); i++){
+                    Data.vehicleTypes.get(i).setEta(loginResponse.getEta()
+                            .get(String.valueOf(Data.vehicleTypes.get(i).getId())));
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try{

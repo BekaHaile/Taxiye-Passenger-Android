@@ -153,7 +153,7 @@
     <LinearLayout
         android:id="@+id/linearLayoutInRideDriverInfo"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/nl_sliding_bottom_with_tabs"
+        android:layout_height="408px"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="vertical">

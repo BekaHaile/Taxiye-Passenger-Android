@@ -6,6 +6,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class FindADriverResponse {
     private List<Driver> drivers = new ArrayList<Driver>();
     @SerializedName("eta")
     @Expose
-    private Double eta;
+    private LinkedTreeMap<String, String> eta;
     @SerializedName("fare_factor")
     @Expose
     private Double fareFactor;
@@ -79,14 +80,14 @@ public class FindADriverResponse {
     /**
      * @return The eta
      */
-    public Double getEta() {
+    public LinkedTreeMap<String, String> getEta() {
         return eta;
     }
 
     /**
      * @param eta The eta
      */
-    public void setEta(Double eta) {
+    public void setEta(LinkedTreeMap<String, String> eta) {
         this.eta = eta;
     }
 

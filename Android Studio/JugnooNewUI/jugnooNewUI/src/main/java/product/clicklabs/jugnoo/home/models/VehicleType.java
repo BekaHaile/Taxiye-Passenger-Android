@@ -18,6 +18,7 @@ public class VehicleType {
 	private String name;
 
 	private FareStructure fareStructure;
+	private String eta;
 
 	public VehicleType(Integer id, String name){
 		this.id = id;
@@ -46,5 +47,17 @@ public class VehicleType {
 
 	public void setFareStructure(FareStructure fareStructure) {
 		this.fareStructure = fareStructure;
+	}
+
+	public String getEta() {
+		if(eta == null){
+			return "-";
+		} else {
+			return eta;
+		}
+	}
+
+	public void setEta(String eta) {
+		this.eta = eta;
 	}
 }

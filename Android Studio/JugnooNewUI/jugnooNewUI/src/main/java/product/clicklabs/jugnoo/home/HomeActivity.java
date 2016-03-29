@@ -357,7 +357,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static PassengerScreenMode passengerScreenMode;
 
 
-	String etaMinutes = "5", farAwayCity = "";
+	String farAwayCity = "";
 
 
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker;
@@ -3428,7 +3428,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if (userMode == UserMode.PASSENGER) {
                             textViewInitialInstructions.setVisibility(View.GONE);
                             dontCallRefreshDriver = false;
-                            etaMinutes = "5";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -3444,6 +3443,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onFailure() {
                     try {
                         if (Data.driverInfos.size() == 0) {
+                            textViewInitialInstructions.setVisibility(View.VISIBLE);
                             textViewInitialInstructions.setText(getResources().getString(R.string.couldnt_find_drivers_nearby));
                             textViewCentrePinETA.setText("-");
                             noDriverNearbyToast(getResources().getString(R.string.couldnt_find_drivers_nearby));
@@ -3466,7 +3466,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void findADriverFinishing(){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                HomeActivity.this.etaMinutes = Data.etaMinutes;
                 HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
                 HomeActivity.this.farAwayCity = Data.farAwayCity;
 
@@ -3479,14 +3478,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             dontCallRefreshDriver = false;
                         }
                     }, 300);
-
-                    if (Data.driverInfos.size() == 0) {
-                        textViewCentrePinETA.setText("-");
-                    } else {
-                        textViewInitialInstructions.setVisibility(View.GONE);
-                        textViewCentrePinETA.setText(etaMinutes);
-                    }
-
                     setServiceAvailablityUI(farAwayCity);
                 }
                 setFareFactorToInitialState();
@@ -3525,6 +3516,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
+                textViewInitialInstructions.setVisibility(View.VISIBLE);
                 textViewInitialInstructions.setText(farAwayCity);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
@@ -3628,6 +3620,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							zoomToCurrentLocationWithOneDriver(userLatLng);
 							mapTouchedOnce = true;
 						}
+
+                        if (Data.driverInfos.size() == 0) {
+                            textViewCentrePinETA.setText("-");
+                        } else {
+                            textViewInitialInstructions.setVisibility(View.GONE);
+                            for(int i=0; i<Data.vehicleTypes.size(); i++){
+                                if(Data.vehicleTypes.get(i).getId().equals(vehicleType.getId())){
+                                    textViewCentrePinETA.setText(Data.vehicleTypes.get(i).getEta());
+                                    break;
+                                }
+                            }
+                        }
 					}
 				}
 			}

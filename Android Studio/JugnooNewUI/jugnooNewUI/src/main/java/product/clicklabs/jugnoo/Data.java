@@ -181,7 +181,7 @@ public class Data {
 	public static FareStructure fareStructure;
 	public static ArrayList<PromoCoupon> promoCoupons;
 	public static ArrayList<VehicleType> vehicleTypes;
-	public static String etaMinutes, farAwayCity;
+	public static String farAwayCity;
 	public static int priorityTipCategory;
 	
 	public static CancelOptionsList cancelOptionsList;
