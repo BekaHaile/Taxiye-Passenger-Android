@@ -775,4 +775,7 @@
 	<string name="notifications">Notifications</string>
 	<string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
 
+	<string name="auto">Auto</string>
+	<string name="bike">Bike</string>
+
 </resources>

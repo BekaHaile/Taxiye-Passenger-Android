@@ -184,26 +184,131 @@
             android:src="@drawable/shadow_down" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/initialMyLocationBtn"
-        android:layout_width="83px"
-        android:layout_height="83px"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="100px"
-        android:layout_marginRight="92px"
-        android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar" />
-
-    <ImageView
-        android:id="@+id/imageViewRideNow"
-        android:layout_width="187px"
-        android:layout_height="187px"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="40px"
-        android:src="@drawable/auto_icon_r_selector"
-        android:tag="mwar" />
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        
+        >
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/initialMyLocationBtn"
+                android:layout_width="83px"
+                android:layout_height="83px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="92px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar" />
+
+            <ImageView
+                android:id="@+id/imageViewRideNow"
+                android:layout_width="187px"
+                android:layout_height="187px"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/auto_icon_r_selector"
+                android:tag="mwar" />
+        </RelativeLayout>
+        
+        
+        <LinearLayout
+            android:id="@+id/linearLayoutVehicles"
+            android:layout_width="match_parent"
+            android:layout_height="110px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:orientation="horizontal"
+            android:layout_marginLeft="60px"
+            android:layout_marginRight="60px"
+            android:layout_marginTop="20px"
+            android:splitMotionEvents="false"
+            android:visibility="visible"
+            >
+
+            <LinearLayout
+                android:id="@+id/linearLayoutAutoSelect"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/bg_transparent_grey_light_lrb_selector"
+                android:layout_marginRight="-1px"
+                >
+
+
+                <ImageView
+                    android:layout_width="67px"
+                    android:layout_height="48px"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_auto_tab"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewAutoSelect"
+                    android:layout_width="80px"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auto"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_28"
+                    android:textColor="@color/text_color"
+                    android:layout_marginLeft="10px"
+                    />
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:src="@color/text_color_hint"
+                />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutBikeSelect"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/bg_transparent_grey_light_rrb_selector"
+                android:layout_marginLeft="-1px"
+                >
+
+                <ImageView
+                    android:layout_width="73px"
+                    android:layout_height="44px"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_bike_tab"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewBikeSelect"
+                    android:layout_width="80px"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bike"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_28"
+                    android:textColor="@color/text_color"
+                    android:layout_marginLeft="10px"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        
+        
+    </LinearLayout>
+    
+    
+    
 
 
 
