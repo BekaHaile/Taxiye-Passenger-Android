@@ -6601,7 +6601,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())){
             imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
         } else if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())){
-            imageViewRideNow.setImageResource(R.drawable.ic_bike_request_normal);
+            imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
         }
         showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
     }
