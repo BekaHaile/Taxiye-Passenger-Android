@@ -10,7 +10,6 @@ import com.nudgespot.resource.NudgespotSubscriber;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.R;
 
 /**
  * Created by shankar on 3/29/16.
@@ -20,14 +19,20 @@ public class NudgeClient {
 	private static GcmClient mGcmClient;
 
 	public static GcmClient getGcmClient(Context context){
-		if(mGcmClient == null){
-			mGcmClient = GcmClient.getClient(new NudgespotCredentials(
-					context.getResources().getString(R.string.nudgespot_javascript_api_key),
-					context.getResources().getString(R.string.nudgespot_rest_api_key)), context);
-		}
+//		if(mGcmClient == null){
+			mGcmClient = GcmClient.getClient(new NudgespotCredentials("43cbec12b85957e2244f91af04cf238a",
+					"90ea5fdd4d74c3e13b1059fdbebf15a1"), context);
+//		}
 		return mGcmClient;
 	}
 
+	public static void initialize(Context context, String userId){
+		try {
+			getGcmClient(context).initialize(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void initialize(Context context, String userId, String userName, String email, String phoneNo){
 		try {
