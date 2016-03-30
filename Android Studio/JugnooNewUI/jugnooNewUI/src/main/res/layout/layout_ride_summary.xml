@@ -90,7 +90,7 @@
                         android:layout_height="65px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15px"
-                        android:src="@drawable/ic_auto_orange"
+                        android:src="@drawable/ic_auto_invoice"
                         android:tag="mwar"/>
 
                     <TextView

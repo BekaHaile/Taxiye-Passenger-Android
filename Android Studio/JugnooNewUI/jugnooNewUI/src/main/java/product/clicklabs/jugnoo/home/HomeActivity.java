@@ -1704,7 +1704,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 	private float googleMapPadding = 0;
-	private void setGoogleMapPadding(float bottomPadding){
+	public void setGoogleMapPadding(float bottomPadding){
 		try {
 			if(map != null){
 				map.setPadding(0, 0, 0, (int)(ASSL.Yscale() * bottomPadding));
@@ -2728,7 +2728,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 		if(!promoOpened) {
-			checkForGoogleLogoVisibilityBeforeRide();
+
 		}
     }
 
@@ -3460,7 +3460,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private ApiFindADriver apiFindADriver = null;
     private void findDriversETACall(){
-        createApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo);
+        createApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo,
+                slidingBottomPanel.getVehicleTypeSelected());
     }
 
     private void findADriverFinishing(){
@@ -3493,21 +3494,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-
-	private void checkForGoogleLogoVisibilityBeforeRide(){
-		try{
-			float padding = 0;
-			if(textViewInitialInstructions.getVisibility() == View.VISIBLE){
-				padding = padding + 58;
-			}
-			if(relativeLayoutInitialFareFactor.getVisibility() == View.VISIBLE){
-				padding = padding + 62;
-			}
-			setGoogleMapPadding(20);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	//Our service is not available in this area
 	private void setServiceAvailablityUI(String farAwayCity){

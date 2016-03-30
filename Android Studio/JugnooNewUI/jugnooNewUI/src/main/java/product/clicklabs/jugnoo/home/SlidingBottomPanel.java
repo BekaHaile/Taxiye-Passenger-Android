@@ -246,6 +246,7 @@ public class SlidingBottomPanel {
                 }
                 updateVehicleTypeSelectedTab();
             }
+            checkForGoogleLogoVisibilityBeforeRide();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -416,7 +417,6 @@ public class SlidingBottomPanel {
             }
         }
         updateFareFrag();
-
     }
 
     private void updateFareFrag(){
@@ -428,6 +428,18 @@ public class SlidingBottomPanel {
             textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
 					, Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkForGoogleLogoVisibilityBeforeRide(){
+        try{
+            float padding = 20;
+            if(linearLayoutVehicles.getVisibility() == View.VISIBLE){
+                padding = padding + 110;
+            }
+            activity.setGoogleMapPadding(padding);
+        } catch(Exception e){
             e.printStackTrace();
         }
     }

@@ -47,7 +47,9 @@ public class ApiFindADriver {
 		this.callback = callback;
 	}
 
-	public void hit(String accessToken, LatLng latLng, final int showAllDrivers, int showDriverInfo){
+	public void hit(String accessToken, LatLng latLng, final int showAllDrivers, int showDriverInfo,
+					VehicleType vehicleTypeSelected){
+		this.vehicleTypeSelected = vehicleTypeSelected;
 		try {
 			if(callback != null) {
 				callback.onPre();

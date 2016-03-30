@@ -287,9 +287,9 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				relativeLayoutRideSummary.setVisibility(View.VISIBLE);
 
 				if(endRideData.getVehicleType() == Vehicle.AUTO.getId()){
-					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_auto_orange);
+					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_auto_invoice);
 				} else if(endRideData.getVehicleType() == Vehicle.BIKE.getId()){
-					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_bike_orange);
+					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_bike_invoice);
 				}
 
 				textViewEndRideDriverName.setText(endRideData.driverName);
