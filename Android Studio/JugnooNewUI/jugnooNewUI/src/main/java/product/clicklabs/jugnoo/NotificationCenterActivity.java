@@ -133,12 +133,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 		HashMap<String, String> params = new HashMap<>();
 		params.put("access_token", Data.userData.accessToken);
-		params.put("offset", "0");
+		params.put("offset", String.valueOf(notificationList.size()));
 
 		RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
 			@Override
 			public void success(NotificationInboxResponse notificationInboxResponse, Response response) {
-				notificationList.clear();
+				//notificationList.clear();
 				notificationList.addAll(notificationInboxResponse.getPushes());
 				Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
 				if(notificationList.size() > 0){

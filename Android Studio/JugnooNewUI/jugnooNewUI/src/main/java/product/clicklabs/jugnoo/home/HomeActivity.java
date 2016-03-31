@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -430,6 +431,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private T20Ops t20Ops = new T20Ops();
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -776,11 +778,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
+                startActivity(new Intent(HomeActivity.this, AccountActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_ACCOUNT);
-			}
-		});
+            }
+        });
 
         relativeLayoutGamePredict.setOnClickListener(new OnClickListener() {
             @Override
@@ -905,8 +907,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             }
         });
-
-
 
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
