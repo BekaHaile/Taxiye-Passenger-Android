@@ -5519,6 +5519,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     noDriverAvailablePopup(HomeActivity.this, false, logMessage);
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
+                    try {
+                        JSONObject map = new JSONObject();
+                        map.put(KEY_USER_ID, Data.userData.getUserId());
+                        map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
+                        map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
+                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
