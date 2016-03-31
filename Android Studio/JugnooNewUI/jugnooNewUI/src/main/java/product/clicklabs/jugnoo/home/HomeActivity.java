@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
@@ -1328,8 +1329,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
 					|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
-				farAwayCity = getResources().getString(R.string.service_not_available);
-				setServiceAvailablityUI(farAwayCity);
+                forceFarAwayCity();
                 Data.lastRefreshLatLng = new LatLng(22.971723, 78.754263);
             } else {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
@@ -1913,8 +1913,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void checkForFareAvailablity(){
         try{
             if(Data.fareStructure != null && !Data.fareStructure.getIsFromServer()){
-                farAwayCity = getResources().getString(R.string.service_not_available);
-                setServiceAvailablityUI(farAwayCity);
+                forceFarAwayCity();
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -6596,14 +6595,117 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    public void setVehicleTypeSelected(int position) {
-        slidingBottomPanel.setVehicleTypeSelected(position);
-        if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())){
-            imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
-        } else if(slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())){
-            imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
+    private Animation flip, flip2;
+    private Animation getFlip(){
+        if(flip == null){
+            flip = AnimationUtils.loadAnimation(this, R.anim.shrink_to_middle);
         }
-        showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
+        return flip;
+    }
+    private Animation getFlip2(){
+        if(flip2 == null){
+            flip2 = AnimationUtils.loadAnimation(this, R.anim.grow_from_middle);
+        }
+        return flip2;
+    }
+
+    public void setVehicleTypeSelected(int position) {
+        int oldId = slidingBottomPanel.getVehicleTypeSelected().getId();
+        slidingBottomPanel.setVehicleTypeSelected(position);
+        if(!slidingBottomPanel.getVehicleTypeSelected().getId().equals(oldId)) {
+            final int currId = slidingBottomPanel.getVehicleTypeSelected().getId();
+            if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())) {
+                getFlip().setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        imageViewRideNow.clearAnimation();
+                        imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
+                        imageViewRideNow.setTag(currId);
+                        imageViewRideNow.startAnimation(getFlip2());
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                getFlip2().setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        imageViewRideNow.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                imageViewRideNow.startAnimation(getFlip());
+            } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
+                getFlip().setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        imageViewRideNow.clearAnimation();
+                        imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
+                        imageViewRideNow.setTag(currId);
+                        imageViewRideNow.startAnimation(getFlip2());
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                getFlip2().setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        imageViewRideNow.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                imageViewRideNow.startAnimation(getFlip());
+            }
+            showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
+        } else if(Data.vehicleTypes.size() == 1) {
+            if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())) {
+                imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
+            } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
+                imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
+            }
+        }
+    }
+
+    public void forceFarAwayCity(){
+        try {
+            farAwayCity = getResources().getString(R.string.service_not_available);
+            setServiceAvailablityUI(farAwayCity);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

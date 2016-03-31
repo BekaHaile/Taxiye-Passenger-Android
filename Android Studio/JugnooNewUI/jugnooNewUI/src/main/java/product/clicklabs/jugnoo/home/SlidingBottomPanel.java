@@ -231,11 +231,7 @@ public class SlidingBottomPanel {
 			}
             updatePaymentOption();
 
-            if(Data.vehicleTypes.size() < 2){
-                vehicleTypeSelected = vehicleTypeDefault;
-                linearLayoutVehicles.setVisibility(View.GONE);
-                activity.setVehicleTypeSelected(0);
-            } else{
+            if(Data.vehicleTypes.size() > 1){
                 linearLayoutVehicles.setVisibility(View.VISIBLE);
                 for(int i=0; i<Data.vehicleTypes.size(); i++){
                     if(Data.vehicleTypes.get(i).getId().equals(Vehicle.AUTO.getId())){
@@ -245,6 +241,15 @@ public class SlidingBottomPanel {
                     }
                 }
                 updateVehicleTypeSelectedTab();
+
+            } else if(Data.vehicleTypes.size() > 0){
+                vehicleTypeDefault = Data.vehicleTypes.get(0);
+                activity.setVehicleTypeSelected(0);
+                vehicleTypeSelected = Data.vehicleTypes.get(0);
+                linearLayoutVehicles.setVisibility(View.GONE);
+
+            } else{
+                activity.forceFarAwayCity();
             }
             checkForGoogleLogoVisibilityBeforeRide();
         } catch (Exception e) {
@@ -257,10 +262,10 @@ public class SlidingBottomPanel {
         try {
             if(Data.userData.getPaytmError() == 1){
 				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-			}
+            }
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-				imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
-				textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
+                textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
 			} else {
 				imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
@@ -408,6 +413,11 @@ public class SlidingBottomPanel {
         updateVehicleTypeSelectedTab();
         updateFareStructureUI();
     }
+
+    public VehicleType getVehicleTypeDefault(){
+        return vehicleTypeDefault;
+    }
+
 
     private void updateFareStructureUI(){
         for (int i = 0; i < Data.vehicleTypes.size(); i++) {
