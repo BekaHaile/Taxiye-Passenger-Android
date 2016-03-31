@@ -1589,14 +1589,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
-        try {
-//            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
-//					Data.userData.userEmail, Data.userData.phoneNo);
-            NudgeClient.initialize(this, Data.userData.getUserId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void slideOnClick(View v){

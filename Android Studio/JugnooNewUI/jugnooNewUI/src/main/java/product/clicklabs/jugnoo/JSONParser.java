@@ -58,6 +58,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -273,6 +274,13 @@ public class JSONParser implements Constants {
 				intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
 				context.startService(intent);
 			}
+        }
+
+        try {
+            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
+                    Data.userData.userEmail, Data.userData.phoneNo);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return resp;
