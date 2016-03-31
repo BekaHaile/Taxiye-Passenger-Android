@@ -3502,7 +3502,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-                textViewInitialInstructions.setVisibility(View.VISIBLE);
+                textViewInitialInstructions.setVisibility(View.GONE);
                 textViewInitialInstructions.setText(farAwayCity);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
