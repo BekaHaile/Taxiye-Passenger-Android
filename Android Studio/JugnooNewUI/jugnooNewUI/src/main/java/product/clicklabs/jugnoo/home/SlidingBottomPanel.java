@@ -185,6 +185,15 @@ public class SlidingBottomPanel {
                         try {
                             JSONObject map = new JSONObject();
                             map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                            StringBuilder sb = new StringBuilder();
+                            for(PromoCoupon pc : promoCoupons){
+                                if(pc instanceof CouponInfo){
+                                    sb.append(((CouponInfo)pc).title).append(" ").append(((CouponInfo)pc).subtitle).append(",");
+                                } else if(pc instanceof PromotionInfo){
+                                    sb.append(((PromotionInfo) pc).title).append(",");
+                                }
+                            }
+                            map.put(Constants.KEY_COUPONS, sb.toString());
                             NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -199,9 +208,9 @@ public class SlidingBottomPanel {
 					textViewOffersValue.setVisibility(View.VISIBLE);
 				} else{
 					textViewOffersValue.setText("");
-				}
+                }
 
-			} else {
+            } else {
 				textViewOffersValue.setText("");
 			}
 

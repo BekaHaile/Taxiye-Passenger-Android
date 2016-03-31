@@ -6324,7 +6324,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 HashMap<String, String> params = new HashMap<>();
 
                 params.put("access_token", Data.userData.accessToken);
-                params.put("given_rating", "" + givenRating);
+                params.put(KEY_GIVEN_RATING, "" + givenRating);
                 params.put("engagement_id", engagementId);
                 params.put("driver_id", ratingReceiverId);
                 params.put("feedback", feedbackText);
@@ -6349,6 +6349,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         JSONObject map = new JSONObject();
                                         map.put(KEY_USER_ID, Data.userData.getUserId());
                                         map.put(KEY_ENGAGEMENT_ID, engagementId);
+                                        map.put(KEY_GIVEN_RATING, givenRating);
                                         NudgeClient.trackEvent(HomeActivity.this, NUDGE_FEEDBACK, map);
                                     } catch (Exception e) {
                                         e.printStackTrace();

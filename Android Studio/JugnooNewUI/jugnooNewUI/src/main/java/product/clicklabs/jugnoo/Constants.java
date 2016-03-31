@@ -210,4 +210,7 @@ public interface Constants {
 
 	int VEHICLE_AUTO = 1;
 
+	String KEY_GIVEN_RATING = "given_rating";
+	String KEY_COUPONS = "coupons";
+
 }
