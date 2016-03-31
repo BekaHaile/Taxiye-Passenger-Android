@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -185,15 +186,15 @@ public class SlidingBottomPanel {
                         try {
                             JSONObject map = new JSONObject();
                             map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
-                            StringBuilder sb = new StringBuilder();
+                            JSONArray coups = new JSONArray();
                             for(PromoCoupon pc : promoCoupons){
                                 if(pc instanceof CouponInfo){
-                                    sb.append(((CouponInfo)pc).title).append(" ").append(((CouponInfo)pc).subtitle).append(",");
+                                    coups.put(((CouponInfo) pc).title + " " + ((CouponInfo) pc).subtitle);
                                 } else if(pc instanceof PromotionInfo){
-                                    sb.append(((PromotionInfo) pc).title).append(",");
+                                    coups.put(((PromotionInfo) pc).title);
                                 }
                             }
-                            map.put(Constants.KEY_COUPONS, sb.toString());
+                            map.put(Constants.KEY_COUPONS, coups.toString());
                             NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
                         } catch (Exception e) {
                             e.printStackTrace();
