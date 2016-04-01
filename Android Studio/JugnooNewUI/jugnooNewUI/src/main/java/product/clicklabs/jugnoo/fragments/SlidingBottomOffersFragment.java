@@ -15,15 +15,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutLayoutManagerResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -54,7 +54,7 @@ public class SlidingBottomOffersFragment extends Fragment {
         ((TextView)rootView.findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenLight(activity));
 
         recyclerViewOffers = (RecyclerView) rootView.findViewById(R.id.offers_recycler);
-        recyclerViewOffers.setLayoutManager(new LinearLayoutLayoutManagerResizableRecyclerView(activity));
+        recyclerViewOffers.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 

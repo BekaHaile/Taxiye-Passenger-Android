@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
+import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -33,6 +37,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -60,6 +65,8 @@ public class SlidingBottomPanel {
     private LinearLayout linearLayoutVehicles, linearLayoutAutoSelect, linearLayoutBikeSelect;
     private TextView textViewAutoSelect, textViewBikeSelect;
 
+    private RecyclerView recyclerViewVehicles;
+    private VehiclesTabAdapter vehiclesTabAdapter;
 
     public SlidingBottomPanel(HomeActivity activity, View view) {
         this.activity = activity;
@@ -162,6 +169,14 @@ public class SlidingBottomPanel {
 
         linearLayoutVehicles.setVisibility(View.GONE);
 
+        recyclerViewVehicles = (RecyclerView) view.findViewById(R.id.recyclerViewVehicles);
+        recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+                LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewVehicles.setHasFixedSize(false);
+        vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.vehicleTypes);
+        recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
+
     }
 
     public void slideOnClick(View view) {
@@ -241,6 +256,7 @@ public class SlidingBottomPanel {
                     }
                 }
                 updateVehicleTypeSelectedTab();
+                vehiclesTabAdapter.notifyDataSetChanged();
 
             } else if(Data.vehicleTypes.size() > 0){
                 vehicleTypeDefault = Data.vehicleTypes.get(0);
