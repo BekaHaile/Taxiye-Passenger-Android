@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -390,13 +391,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                 +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
                                     }
                                     else{
-                                        if(Data.fareStructure != null && Data.fareStructure.convenienceCharge > 0){
-                                            textViewConvenienceCharge.setText("Convenience Charges "
-                                                    +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-                                        }
-                                        else{
-                                            textViewConvenienceCharge.setText("");
-                                        }
+                                        textViewConvenienceCharge.setText("");
                                     }
                                 } else {
                                     retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);

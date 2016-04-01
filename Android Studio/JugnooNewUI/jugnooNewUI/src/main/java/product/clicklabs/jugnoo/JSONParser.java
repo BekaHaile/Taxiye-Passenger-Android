@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -36,12 +37,11 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
-import product.clicklabs.jugnoo.utils.DateComparatorPromotion;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -108,7 +108,7 @@ public class JSONParser implements Constants {
         String phoneNo = userData.optString("phone_no", "");
         String userImage = userData.optString("user_image", "");
         String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
-        double jugnooBalance = userData.optDouble("jugnoo_balance", 0);
+        double jugnooBalance = userData.optDouble(KEY_JUGNOO_BALANCE, 0);
         String userEmail = userData.optString("user_email", "");
         int emailVerificationStatus = userData.optInt("email_verification_status", 1);
         String jugnooFbBanner = userData.optString("jugnoo_fb_banner", "");
@@ -200,6 +200,13 @@ public class JSONParser implements Constants {
         String t20WCInfoText = userData.optString(KEY_T20_WC_INFO_TEXT, "");
         String publicAccessToken = userData.optString(KEY_PUBLIC_ACCESS_TOKEN, "");
 
+        Prefs.with(context).save(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL, userData.optLong(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL,
+                DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL));
+
+        Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, userData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
+                LOCATION_UPDATE_INTERVAL));
+
+
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
@@ -212,6 +219,17 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if(Prefs.with(context).getInt(SP_FIRST_LOGIN_COMPLETE, 0) == 0){
+            long appOpenTime = Prefs.with(context).getLong(SP_FIRST_OPEN_TIME, System.currentTimeMillis());
+            long diff = System.currentTimeMillis() - appOpenTime;
+            long diffSeconds = diff / 1000;
+            HashMap<String, String> map = new HashMap<>();
+            map.put(KEY_TIME_DIFF_SEC, String.valueOf(diffSeconds));
+            FlurryEventLogger.event(context, FlurryEventNames.LOGIN_SINCE_FIRST_APP_OPEN_DIFF, map);
+            Prefs.with(context).save(SP_FIRST_LOGIN_COMPLETE, 1);
+        }
+
 
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
@@ -549,6 +567,10 @@ public class JSONParser implements Constants {
 
                     int flag = jObject1.getInt("flag");
 
+                    if(Data.userData != null) {
+                        Data.userData.setPaytmRechargeInfo(parsePaytmRechargeInfo(jObject1));
+                    }
+
                     if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
 
                         sessionId = jObject1.getString("session_id");
@@ -652,7 +674,6 @@ public class JSONParser implements Constants {
                 Data.cSessionId = sessionId;
                 clearSPData(context);
             } else {
-                SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 
                 Data.cSessionId = sessionId;
                 Data.cEngagementId = engagementId;
@@ -688,20 +709,7 @@ public class JSONParser implements Constants {
                 }
                 else if (Data.P_IN_RIDE.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-
-                    HomeActivity.totalDistance = Double.parseDouble(pref.getString(Data.SP_TOTAL_DISTANCE, "-1"));
-
-                    if (Utils.compareDouble(HomeActivity.totalDistance, -1.0) == 0) {
-                        Data.startRidePreviousLatLng = Data.pickupLatLng;
-                    } else {
-                        String lat1 = pref.getString(Data.SP_LAST_LATITUDE, "0");
-                        String lng1 = pref.getString(Data.SP_LAST_LONGITUDE, "0");
-                        Data.startRidePreviousLatLng = new LatLng(Double.parseDouble(lat1), Double.parseDouble(lng1));
-                    }
-                } else {
-
                 }
-
             }
         }
 
@@ -1040,7 +1048,7 @@ public class JSONParser implements Constants {
 
                         promotionInfoList.add(promotionInfo);
                     }
-                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
+//                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
                 }
             }
         } catch(Exception e){
@@ -1081,56 +1089,6 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
         return emergencyContactsList;
-    }
-
-
-    public static void parseCurrentFareStructure(JSONObject jObj){
-        try{
-
-//            {
-//                "fare_fixed": 20,
-//                "fare_per_km": 5,
-//                "fare_threshold_distance": 0,
-//                "fare_per_min": 1,
-//                "fare_threshold_time": 0,
-//                "fare_per_waiting_min": 0,
-//                "fare_threshold_waiting_time": 0,
-//                "start_time": "00:30:00",
-//                "end_time": "16:30:00"
-//            }
-
-            double fareFactor = jObj.getDouble("dynamic_factor");
-            JSONArray jFareStructures = jObj.getJSONArray("fare_structure");
-            for(int i=0; i<jFareStructures.length(); i++){
-                JSONObject jfs = jFareStructures.getJSONObject(i);
-
-                String startTime = jfs.getString("start_time");
-                String endTime = jfs.getString("end_time");
-
-                String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
-                String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
-
-                long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
-                long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
-
-				double convenienceCharges = jfs.optDouble("convenience_charge", 0);
-
-				if(diffStart >= 0 && diffEnd <= 0){
-                    Data.fareStructure = new FareStructure(jfs.getDouble("fare_fixed"),
-                        jfs.getDouble("fare_threshold_distance"),
-                        jfs.getDouble("fare_per_km"),
-                        jfs.getDouble("fare_per_min"),
-                        jfs.getDouble("fare_threshold_time"),
-                        jfs.getDouble("fare_per_waiting_min"),
-                        jfs.getDouble("fare_threshold_waiting_time"), convenienceCharges, true);
-                    Data.fareStructure.fareFactor = fareFactor;
-                    break;
-                }
-            }
-
-        } catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
 
@@ -1201,6 +1159,27 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
         return schedule;
+    }
+
+
+    public static PaytmRechargeInfo parsePaytmRechargeInfo(JSONObject jObj){
+        PaytmRechargeInfo paytmRechargeInfo = null;
+        try {
+            JSONObject jPRI;
+            if(jObj.has(KEY_PAYTM_TRANSFER_DATA)) {
+                jPRI = jObj.getJSONObject(KEY_PAYTM_TRANSFER_DATA);
+            } else{
+                jPRI = jObj;
+            }
+            paytmRechargeInfo = new PaytmRechargeInfo(jPRI.getString(KEY_TRANSFER_ID),
+                    jPRI.getString(KEY_TRANSFER_PHONE),
+                    jPRI.getString(KEY_TRANSFER_AMOUNT),
+                    jPRI.getString(KEY_TRANSFER_SENDER_NAME));
+        } catch (Exception e) {
+            e.printStackTrace();
+            paytmRechargeInfo = null;
+        }
+        return paytmRechargeInfo;
     }
 
 

@@ -35,7 +35,7 @@ public class TransactionUtils {
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commitAllowingStateLoss();
-				FlurryEventLogger.event(FlurryEventNames.SUPPORT_RIDE_HISTORY_OPENED);
+				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_HISTORY);
 			}
 		}
 		else if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()
@@ -78,7 +78,7 @@ public class TransactionUtils {
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commitAllowingStateLoss();
-				FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_OPENED);
+				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT_ISSUES);
 			}
 		}
 	}

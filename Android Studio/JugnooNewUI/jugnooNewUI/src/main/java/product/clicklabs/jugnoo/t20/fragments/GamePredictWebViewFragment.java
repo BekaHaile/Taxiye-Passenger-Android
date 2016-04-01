@@ -1,8 +1,10 @@
 package product.clicklabs.jugnoo.t20.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -22,7 +24,9 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 
@@ -92,11 +96,16 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 
 		webView.loadUrl(Data.userData.getGamePredictUrl());
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(Data.userData.getGamePredictUrl()).append("?")
-				.append(Constants.KEY_ACCESS_TOKEN).append("=").append(Data.userData.getPublicAccessToken());
-		Log.i(TAG, "link to hit="+sb.toString());
-		webView.loadUrl(sb.toString());
+		if(!HomeActivity.checkIfUserDataNull(activity)) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Data.userData.getGamePredictUrl()).append("?")
+					.append(Constants.KEY_ACCESS_TOKEN).append("=").append(Data.userData.getPublicAccessToken());
+			Log.i(TAG, "link to hit=" + sb.toString());
+			webView.loadUrl(sb.toString());
+
+			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_T20_WORLD_CUP_SCREEN);
+		}
+
 
 		return rootView;
 	}
@@ -121,6 +130,29 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
 			imageViewProgressBar.setVisibility(View.GONE);
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			Uri uri;
+			try {
+				uri = Uri.parse(url);
+			} catch (NullPointerException e) {
+				return true;
+			}
+
+			String host = uri.getHost(); //Host is null when user clicked on email, phone number, ...
+			if (host != null && host.equals("jugnoo.in")) {
+				// This is my web site, so do not override; let my WebView load the page
+				return false;
+			}
+			else {
+				Log.i(TAG, "url="+url);
+				// Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs or anything else (email, phone number, ...)
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				startActivity(intent);
+				return true;
+			}
 		}
 	}
     @Override

@@ -9,7 +9,11 @@ import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 
 /**
  * Rest client
@@ -56,6 +60,21 @@ public class RestClient {
                     .setEndpoint(Config.getServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
                     .setLog(fooLog)
+                    .setErrorHandler(new ErrorHandler() {
+                        @Override
+                        public Throwable handleError(RetrofitError cause) {
+                            if (cause != null) {
+                                if (cause.getKind() == RetrofitError.Kind.NETWORK) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_CONNECTION_TIMEOUT);
+                                } else if (cause.getKind() == RetrofitError.Kind.HTTP) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_SOCKET_TIMEOUT);
+                                } else if (cause.getKind() == RetrofitError.Kind.UNEXPECTED) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
+                                }
+                            }
+                            return cause;
+                        }
+                    })
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -114,4 +133,6 @@ public class RestClient {
     public static GoogleAPIServices getGoogleApiServices() {
         return GOOGLE_API_SERVICES;
     }
+
+
 }

@@ -252,6 +252,8 @@
 	<!-- Account Settings Strings -->
 	<string name="add_home">Add Home</string>
 	<string name="add_work">Add Work</string>
+	<string name="home">Home</string>
+	<string name="work">Work</string>
 
 
 	<!-- Search state strings -->
@@ -755,5 +757,20 @@
 
 	<string name="enter_your_destination">Enter your destination</string>
 
+
+	<string name="recharge">Recharge</string>
+	<string name="amount">Amount</string>
+	<string name="driver">Driver</string>
+	<string name="paytm_recharge_via_driver_info">is recharging\nyour Paytm account registered\non number</string>
+	<string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
+	<string name="type_amount_to_confirm_the_transaction">Type correct amount to confirm\nthe transaction</string>
+
+	<string name="coupons_available">Coupons Available</string>
+	<string name="ongoing_offers">Ongoing Offers</string>
+
+	<string name="uninstall_driver_app">You need to uninstall Jugnoo Drivers App first to use this app</string>
+	<string name="disable_mock_location">Disable mock location first</string>
+
+	<string name="notifications">Notifications</string>
 
 </resources>

@@ -30,7 +30,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 /**
  * Created by socomo20 on 6/19/15.
  */
-public class ReferralActions implements FlurryEventNames {
+public class ReferralActions {
 
     public static FacebookLoginHelper facebookLoginHelper;
     public static void shareToFacebook(final Activity activity, CallbackManager callbackManager){
@@ -241,7 +241,7 @@ public class ReferralActions implements FlurryEventNames {
                 ResolveInfo info = (ResolveInfo) adapter.getItem(which);
                 if (info.activityInfo.packageName.contains("com.facebook.katana")) {
                     shareToFacebookBasic(activity, callbackManager, link);
-					FlurryEventLogger.event(GENERIC_FACEBOOK);
+					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
                 }
 				else if(info.activityInfo.packageName.contains("com.google.android.gm")
 						|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
@@ -253,7 +253,7 @@ public class ReferralActions implements FlurryEventNames {
 					intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
-					FlurryEventLogger.event(GENERIC_EMAIL);
+					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
 				}
 				else if(info.activityInfo.packageName.contains("com.whatsapp")){
 					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -261,7 +261,7 @@ public class ReferralActions implements FlurryEventNames {
 					intent.setType("text/plain");
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
-					FlurryEventLogger.event(GENERIC_WHATSAPP);
+					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
 				}
 				else {
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -269,7 +269,13 @@ public class ReferralActions implements FlurryEventNames {
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_TEXT, body);
                     activity.startActivity(intent);
-					FlurryEventLogger.event(GENERIC_SMS_OTHER);
+                    if(info.activityInfo.packageName.contains("com.twitter.android")){
+                        FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
+                    } else if(info.activityInfo.packageName.contains("com.android.mms")){
+                        FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
+                    } else{
+                        FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
+                    }
                 }
             }
         });

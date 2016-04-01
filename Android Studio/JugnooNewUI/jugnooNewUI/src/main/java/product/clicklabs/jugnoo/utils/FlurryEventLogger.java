@@ -7,6 +7,7 @@ import com.flurry.android.FlurryAgent;
 import java.util.HashMap;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.config.Config;
 
@@ -22,13 +23,24 @@ public class FlurryEventLogger {
 		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
 	}
 
+	public static void event(Context context, String eventName){
+		HashMap<String, String> map = new HashMap<>();
+		map.put(Constants.KEY_USER_ID, Prefs.with(context).getString(Constants.SP_USER_ID, ""));
+		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
+		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+	}
+
+	public static void event(Context context, String eventName, Map<String, String> map){
+		map.put(Constants.KEY_USER_ID, Prefs.with(context).getString(Constants.SP_USER_ID, ""));
+		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
+		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+	}
 
 	public static void eventApiResponseTime(String apiName, long startTime){
 		long responseTime = System.currentTimeMillis() - startTime;
 		HashMap<String, String> map = new HashMap<>();
-		map.put("api_name", apiName);
 		map.put("response_time_millis", String.valueOf(responseTime));
-		event(FlurryEventNames.API_RESPONSE_TIME_LOG, map);
+		event(apiName, map);
 	}
 
 	public static void eventWithSessionOpenAndClose(Context context, String eventName){
@@ -40,11 +52,11 @@ public class FlurryEventLogger {
 		} catch(Exception e){e.printStackTrace();}
 	}
 
-	public static void eventWithSessionOpenAndClose(Context context, String eventName, Map<String, String> map){
+	public static void eventWithSessionOpenAndCloseMap(Context context, String eventName){
 		try{
 			FlurryAgent.init(context, Config.getFlurryKey());
 			FlurryAgent.onStartSession(context, Config.getFlurryKey());
-			event(eventName, map);
+			event(context, eventName);
 			FlurryAgent.onEndSession(context);
 		} catch(Exception e){e.printStackTrace();}
 	}

@@ -68,6 +68,7 @@ public class Database2 {                                                        
     private static final String TABLE_NOTIFICATION_CENTER = "table_notification_center";
     private static final String NOTIFICATION_ID = "notification_id";
     private static final String TIME_PUSH_ARRIVED = "time_push_arrived";
+    private static final String PUSH_TITLE = "push_title";
     private static final String MESSAGE = "message";
     private static final String DEEP_INDEX = "deep_index";
     private static final String TIME_TO_DISPLAY = "time_to_display";
@@ -142,7 +143,8 @@ public class Database2 {                                                        
                 + DEEP_INDEX + " TEXT, "
                 + TIME_TO_DISPLAY + " TEXT, "
                 + TIME_TILL_DISPLAY + " TEXT, "
-                + NOTIFICATION_IMAGE + " TEXT"
+                + NOTIFICATION_IMAGE + " TEXT, "
+                + PUSH_TITLE + " TEXT"
                 + ");");
 
 
@@ -165,31 +167,36 @@ public class Database2 {                                                        
 
     }
 
-    private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context){
-        if(Prefs.with(context).getInt(Constants.FIRST_TIME_DB, 1) == 1) {
-            ArrayList<NotificationData> notifications = getAllNotification();
-            database.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATION_CENTER);
-            database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
+    private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context) {
+        if(!Prefs.with(context).contains(Constants.SECOND_TIME_DB)) {
+            ArrayList<NotificationData> notifications = getAllNotificationOld();
+            database.execSQL("DROP TABLE " + TABLE_NOTIFICATION_CENTER);
+            database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
                     + NOTIFICATION_ID + " INTEGER, "
                     + TIME_PUSH_ARRIVED + " TEXT, "
                     + MESSAGE + " TEXT, "
                     + DEEP_INDEX + " TEXT, "
                     + TIME_TO_DISPLAY + " TEXT, "
                     + TIME_TILL_DISPLAY + " TEXT, "
-                    + NOTIFICATION_IMAGE + " TEXT"
+                    + NOTIFICATION_IMAGE + " TEXT, "
+                    + PUSH_TITLE + " TEXT"
                     + ");");
 
-            for(NotificationData data : notifications){
+            for (int i = notifications.size()-1; i >= 0; i--) {
+                NotificationData data = notifications.get(i);
                 insertNotification(context, data.getNotificationId(),
                         data.getTimePushArrived(),
+                        data.getTitle(),
                         data.getMessage(),
                         data.getDeepIndex(),
                         data.getTimeToDisplay(),
                         data.getTimeTillDisplay(),
                         data.getNotificationImage());
             }
-            Prefs.with(context).save(Constants.FIRST_TIME_DB, 0);
+            Prefs.with(context).save(Constants.SECOND_TIME_DB, 1);
         }
+
+
     }
 
 
@@ -361,7 +368,7 @@ public class Database2 {                                                        
     public ArrayList<NotificationData> getAllNotification() {
         ArrayList<NotificationData> allNotification = new ArrayList<NotificationData>();
         try {
-            String[] columns = new String[] { NOTIFICATION_ID, TIME_PUSH_ARRIVED, MESSAGE, DEEP_INDEX, TIME_TO_DISPLAY, TIME_TILL_DISPLAY, NOTIFICATION_IMAGE };
+            String[] columns = new String[] { NOTIFICATION_ID, TIME_PUSH_ARRIVED, MESSAGE, DEEP_INDEX, TIME_TO_DISPLAY, TIME_TILL_DISPLAY, NOTIFICATION_IMAGE, PUSH_TITLE };
             Cursor cursor = database.query(TABLE_NOTIFICATION_CENTER, columns, null, null, null, null, null);
             if (cursor.getCount() > 0) {
                 int in0 = cursor.getColumnIndex(NOTIFICATION_ID);
@@ -371,6 +378,7 @@ public class Database2 {                                                        
                 int in4 = cursor.getColumnIndex(TIME_TO_DISPLAY);
                 int in5 = cursor.getColumnIndex(TIME_TILL_DISPLAY);
                 int in6 = cursor.getColumnIndex(NOTIFICATION_IMAGE);
+                int in7 = cursor.getColumnIndex(PUSH_TITLE);
 
 				long currentTimeLong = DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC());
 
@@ -388,19 +396,22 @@ public class Database2 {                                                        
                         if((!"0".equalsIgnoreCase(cursor.getString(in4))) && (!"".equalsIgnoreCase(cursor.getString(in5)))) { //if both values
                             if ((currentTimeLong < pushArrAndTimeToDisVal) &&
 									(currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
-                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
+                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
+                                        cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
-                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
+                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
+                                        cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
                             if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
-                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in2),
+                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
+                                        cursor.getString(in2),
                                         cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
@@ -419,6 +430,74 @@ public class Database2 {                                                        
         return allNotification;
     }
 
+    private ArrayList<NotificationData> getAllNotificationOld() {
+        ArrayList<NotificationData> allNotification = new ArrayList<NotificationData>();
+        try {
+            String[] columns = new String[] { NOTIFICATION_ID, TIME_PUSH_ARRIVED, MESSAGE, DEEP_INDEX, TIME_TO_DISPLAY, TIME_TILL_DISPLAY, NOTIFICATION_IMAGE };
+            Cursor cursor = database.query(TABLE_NOTIFICATION_CENTER, columns, null, null, null, null, null);
+            if (cursor.getCount() > 0) {
+                int in0 = cursor.getColumnIndex(NOTIFICATION_ID);
+                int in1 = cursor.getColumnIndex(TIME_PUSH_ARRIVED);
+                int in2 = cursor.getColumnIndex(MESSAGE);
+                int in3 = cursor.getColumnIndex(DEEP_INDEX);
+                int in4 = cursor.getColumnIndex(TIME_TO_DISPLAY);
+                int in5 = cursor.getColumnIndex(TIME_TILL_DISPLAY);
+                int in6 = cursor.getColumnIndex(NOTIFICATION_IMAGE);
+
+                long currentTimeLong = DateOperations.getMilliseconds(DateOperations.getCurrentTimeInUTC());
+
+                for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
+                    try {
+                        long savedIn4 = 600000;
+                        try{
+                            savedIn4 = Long.parseLong(cursor.getString(in4));
+                        } catch(Exception e){
+                            e.printStackTrace();
+                        }
+                        long pushArrAndTimeToDisVal = (savedIn4 + DateOperations.getMilliseconds(cursor.getString(in1)));
+
+                        String titleMessage = cursor.getString(in2);
+                        Log.e(TAG, "titleMessage="+titleMessage);
+                        String[] arr = titleMessage.split("\\\n");
+                        String title = arr[0];
+                        String message = titleMessage.substring((title+"\n").length());
+
+                        boolean added = false;
+                        if((!"0".equalsIgnoreCase(cursor.getString(in4))) && (!"".equalsIgnoreCase(cursor.getString(in5)))) { //if both values
+                            if ((currentTimeLong < pushArrAndTimeToDisVal) &&
+                                    (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
+                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
+                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                added = true;
+                            }
+                        }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
+                            if ((currentTimeLong < pushArrAndTimeToDisVal)) {
+                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
+                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                added = true;
+                            }
+                        }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
+                            if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
+                                allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
+                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                added = true;
+                            }
+                        }
+                        if(!added){
+                            deleteNotification(cursor.getInt(in0));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return allNotification;
+    }
+
+
     public int getAllNotificationCount() {
         try {
             String[] columns = new String[] { NOTIFICATION_ID };
@@ -430,7 +509,7 @@ public class Database2 {                                                        
         return 0;
     }
 
-    public void insertNotification(Context context, int id, String timePushArrived, String message, String deepIndex, String timeToDisplay,
+    public void insertNotification(Context context, int id, String timePushArrived, String title, String message, String deepIndex, String timeToDisplay,
                                    String timeTillDisplay, String notificationImage) {
         try{
             ContentValues contentValues = new ContentValues();
@@ -441,13 +520,12 @@ public class Database2 {                                                        
             contentValues.put(TIME_TO_DISPLAY, timeToDisplay);
             contentValues.put(TIME_TILL_DISPLAY, timeTillDisplay);
             contentValues.put(NOTIFICATION_IMAGE, notificationImage);
+            contentValues.put(PUSH_TITLE, title);
             database.insert(TABLE_NOTIFICATION_CENTER, null, contentValues);
-            int rowCount = getAllNotificationCount();
-            Log.i(TAG, "insertNotification rowCount=" + rowCount);
-        } catch(Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             dropAndCreateNotificationTable(database, context);
-            insertNotification(context, id, timePushArrived, message, deepIndex, timeToDisplay, timeTillDisplay, notificationImage);
+            insertNotification(context, id, timePushArrived, title, message, deepIndex, timeToDisplay, timeTillDisplay, notificationImage);
         }
     }
 

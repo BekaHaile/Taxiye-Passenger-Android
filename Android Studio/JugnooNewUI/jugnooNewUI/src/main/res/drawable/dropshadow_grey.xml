@@ -48,7 +48,12 @@
     </item>
 
     <!-- content background -->
-    <item>
+    <item
+        android:left="-0.5dp"
+        android:right="-0.5dp"
+        android:top="-0.5dp"
+        android:bottom="-0.5dp"
+        >
         <shape>
             <solid android:color="@color/white" />
             <corners android:radius="@dimen/button_corner_radius"/>

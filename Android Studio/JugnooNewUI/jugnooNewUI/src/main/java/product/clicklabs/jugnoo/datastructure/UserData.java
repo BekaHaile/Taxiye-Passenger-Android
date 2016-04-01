@@ -33,6 +33,8 @@ public class UserData {
 	private int gamePredictEnable;
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
+	private PaytmRechargeInfo paytmRechargeInfo = null;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
 					String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
@@ -142,7 +144,7 @@ public class UserData {
 		return totalWalletBalance;
 	}
 
-	public void setTotalWalletBalance() {
+	private void setTotalWalletBalance() {
 		this.totalWalletBalance = this.jugnooBalance + this.paytmBalance;
 	}
 
@@ -300,6 +302,14 @@ public class UserData {
 
 	public void setT20WCInfoText(String t20WCInfoText) {
 		this.t20WCInfoText = t20WCInfoText;
+	}
+
+	public PaytmRechargeInfo getPaytmRechargeInfo() {
+		return paytmRechargeInfo;
+	}
+
+	public void setPaytmRechargeInfo(PaytmRechargeInfo paytmRechargeInfo) {
+		this.paytmRechargeInfo = paytmRechargeInfo;
 	}
 
 	public String getPublicAccessToken() {

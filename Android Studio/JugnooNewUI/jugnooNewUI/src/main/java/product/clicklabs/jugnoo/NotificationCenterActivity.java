@@ -1,9 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,7 +16,8 @@ import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -56,12 +55,11 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
-        recyclerViewNotification.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewNotification.setHasFixedSize(false);
 
 		notificationList = new ArrayList<>();
 		myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this,
-				R.layout.notification_list_item);
+				R.layout.list_item_notification);
 		recyclerViewNotification.setAdapter(myNotificationAdapter);
 
 
@@ -72,45 +70,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			}
 		});
 
-
 		loadListFromDB();
 
+		FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
     }
 
 
-
-	class GetNotificationsAsync extends AsyncTask<String, String, String>{
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			DialogPopup.showLoadingDialog(NotificationCenterActivity.this, "Loading...");
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			try {
-				notificationList.clear();
-				notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
-				Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "";
-		}
-
-		@Override
-		protected void onPostExecute(String s) {
-			super.onPostExecute(s);
-			DialogPopup.dismissLoadingDialog();
-			if(notificationList.size() > 0){
-				linearLayoutNoNotifications.setVisibility(View.GONE);
-			} else{
-				linearLayoutNoNotifications.setVisibility(View.VISIBLE);
-			}
-			myNotificationAdapter.notifyDataSetChanged();
-		}
-	}
 
 	private void loadListFromDB(){
 		notificationList.clear();

@@ -1,5 +1,25 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public enum PassengerScreenMode {
-	P_INITIAL, P_SEARCH, P_ASSIGNING, P_REQUEST_FINAL,P_DRIVER_ARRIVED,  P_IN_RIDE, P_RIDE_END
+	P_INITIAL(0),
+	P_SEARCH(1),
+	P_ASSIGNING(2),
+	P_REQUEST_FINAL(3),
+	P_DRIVER_ARRIVED(4),
+	P_IN_RIDE(5),
+	P_RIDE_END(6);
+
+	private int ordinal;
+
+	PassengerScreenMode(int ordinal){
+		this.ordinal = ordinal;
+	}
+
+	public int getOrdinal() {
+		return ordinal;
+	}
+
+	public void setOrdinal(int ordinal) {
+		this.ordinal = ordinal;
+	}
 }

@@ -5,7 +5,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.t20.fragments.GamePredictWebViewFragment;
 import product.clicklabs.jugnoo.utils.ASSL;

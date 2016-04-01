@@ -54,6 +54,7 @@ public interface Constants {
 
 	String KEY_USER_DEBT = "user_debt";
 	String KEY_CLIENT_ID = "client_id";
+	String KEY_IS_ACCESS_TOKEN_NEW = "is_access_token_new";
 	String KEY_IP_ADDRESS= "ip_addr";
 
 
@@ -92,6 +93,7 @@ public interface Constants {
 
 
 	String FIRST_TIME_DB= "first_time_db";
+	String SECOND_TIME_DB= "second_time_db";
 
 
 	String KEY_SHARE_ACTIVITY_FROM_DEEP_LINK = "share_activity_from_deep_link";
@@ -142,5 +144,59 @@ public interface Constants {
 	String KEY_GAME_PREDICT_URL = "game_predict_url";
 	String KEY_GAME_PREDICT_VIEW_DATA = "game_predict_view_data";
 	String VIEW_DATA_SPLITTER = ";;;";
+
+
+	String KEY_PAYTM_TRANSFER_DATA = "paytm_transfer_data";
+	String KEY_TRANSFER_ID = "transfer_id";
+	String KEY_TRANSFER_AMOUNT = "transfer_amount";
+	String KEY_TRANSFER_SENDER_NAME = "transfer_sender_name";
+	String KEY_TRANSFER_PHONE = "transfer_phone";
+	String KEY_USER_AMOUNT = "user_amount";
+
+	String KEY_CUSTOMER_FARE_FACTOR = "customer_fare_factor";
+
+	String SP_LAST_DEVICE_TOKEN_REFRESH_TIME = "last_device_token_refresh_time";
+	String KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL = "device_token_refresh_interval";
+
+	String KEY_START_TIME = "start_time";
+	String KEY_END_TIME = "end_time";
+
+	String KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL = "customer_location_update_interval";
+	String SP_CURRENT_STATE = "current_state";
+	String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
+	String KEY_ONE_SHOT = "one_shot";
+	String KEY_EMERGENCY_LOC = "emergency_loc";
+	String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
+
+	String KEY_URL = "url";
+	String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
+	String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
+	String KEY_PUSH_CLICKED = "push_clicked";
+
+
+
+	long SECOND_MILLIS = 1000;
+	long MINUTE_MILLIS = 60 * SECOND_MILLIS;
+	long HOUR_MILLIS = 60 * MINUTE_MILLIS;
+	long DAY_MILLIS = 24 * HOUR_MILLIS;
+
+	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = DAY_MILLIS;
+	long LOCATION_UPDATE_INTERVAL = MINUTE_MILLIS;
+
+
+	String SP_FIRST_OPEN_TIME = "sp_first_open_time";
+	String SP_FIRST_LOGIN_COMPLETE = "sp_first_login_complete";
+	String KEY_TIME_DIFF_SEC = "time_diff_sec";
+
+	String SP_APP_DOWNLOAD_SOURCE_SENT = "sp_app_download_source_sent";
+	String KEY_SOURCE = "source";
+
+	String KEY_PLAY_SOUND = "play_sound";
+
+	String KEY_JUGNOO_BALANCE = "jugnoo_balance";
+	String KEY_PAYTM_BALANCE = "paytm_balance";
+
+	String SP_INSTALL_REFERRER_CONTENT = "sp_install_referrer_content";
+	String KEY_REFERRER = "referrer";
 
 }

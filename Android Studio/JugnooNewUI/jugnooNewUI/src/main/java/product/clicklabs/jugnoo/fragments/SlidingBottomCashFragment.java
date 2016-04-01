@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -113,6 +115,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 break;
 
             case R.id.linearLayoutCash:
+                if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
+                    FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
+                }
                 Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
                 setSelectedPaymentOptionUI(Data.pickupPaymentOption);
                 break;

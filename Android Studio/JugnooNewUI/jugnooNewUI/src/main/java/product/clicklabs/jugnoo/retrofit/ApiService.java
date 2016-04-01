@@ -348,6 +348,11 @@ public interface ApiService {
     void uploadAnalytics(@FieldMap Map<String, String> params,
                          Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/analytics")
+    Response uploadAnalytics(@FieldMap Map<String, String> params);
+
+
     @Headers("Content-Encoding: gzip")
     @POST("/analytics")
     void uploadAnalytics(@Body TypedInput typedInput,
@@ -364,5 +369,20 @@ public interface ApiService {
     @POST("/insert_user_T20_prediction")
     void insertUserT20Prediction(@FieldMap Map<String, String> params,
                                  Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/complete_user_paytm_recharge")
+    void paytmAuthenticateRecharge(@FieldMap Map<String, String> params,
+                                 Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/update_customer_ride_location")
+    void updateCustomerRideLocation(@FieldMap Map<String, String> params,
+                                   Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/save_customer_emergency_location")
+    void saveCustomerEmergencyLocation(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
 
 }

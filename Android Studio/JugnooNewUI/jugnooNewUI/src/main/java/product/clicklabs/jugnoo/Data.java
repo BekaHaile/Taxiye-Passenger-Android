@@ -23,6 +23,8 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -286,7 +288,7 @@ public class Data {
 	public static Uri splashIntentUri;
 
 
-	public static void getDeepLinkIndexFromIntent(Intent newIntent) {
+	public static void getDeepLinkIndexFromIntent(Context context, Intent newIntent) {
 		Data.deepLinkIndex = -1;
 		Data.deepLinkPickup = -1;
 		Data.deepLinkReferralCode = "";
@@ -299,6 +301,10 @@ public class Data {
 
 			if(data.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
 				Data.deepLinkReferralCode = data.getQueryParameter(Constants.KEY_REFERRAL_CODE);
+			}
+
+			if(intent.hasExtra(Constants.KEY_PUSH_CLICKED)){
+				FlurryEventLogger.event(context, FlurryEventNames.WHO_CLICKED_THE_PUSH);
 			}
 
 			if(data.getQueryParameter("deepindex") != null){

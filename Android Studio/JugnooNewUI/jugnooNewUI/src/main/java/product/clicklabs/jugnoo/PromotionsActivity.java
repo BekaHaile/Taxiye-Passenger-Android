@@ -3,9 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,10 +28,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -66,14 +67,14 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 	Button buttonApplyPromo;
 
     RelativeLayout relativeLayoutListTitle;
-	TextView textViewCouponsAvailable;
-	GridView listViewCoupons;
+    NonScrollGridView listViewCoupons;
 	CouponsListAdapter couponsListAdapter;
-    LinearLayout linearLayoutNoCoupons;
 
-	TextView textViewOngoingOffers, textViewPromoInfo;
+    RelativeLayout relativeLayoutPromoListTitle;
     NonScrollListView listViewPromotions;
     PromotionListAdapter promotionListAdapter;
+
+    LinearLayout linearLayoutNoCoupons;
 
     RelativeLayout relativeLayoutInvite;
     TextView textViewInvite;
@@ -121,28 +122,20 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 		buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo); buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutListTitle = (RelativeLayout) findViewById(R.id.relativeLayoutListTitle);
-		textViewCouponsAvailable = (TextView) findViewById(R.id.textViewCouponsAvailable); textViewCouponsAvailable.setTypeface(Fonts.mavenLight(this));
-        relativeLayoutListTitle.setVisibility(View.GONE);
-
-		couponInfosList.clear();
-		
-		listViewCoupons = (GridView) findViewById(R.id.listViewCoupons);
+		((TextView) findViewById(R.id.textViewCouponsAvailable)).setTypeface(Fonts.mavenLight(this));
+		listViewCoupons = (NonScrollGridView) findViewById(R.id.listViewCoupons);
 		couponsListAdapter = new CouponsListAdapter(PromotionsActivity.this);
 		listViewCoupons.setAdapter(couponsListAdapter);
+
+        relativeLayoutPromoListTitle = (RelativeLayout) findViewById(R.id.relativeLayoutPromoListTitle);
+        ((TextView)findViewById(R.id.textViewPromoAvailable)).setTypeface(Fonts.mavenLight(this));
+        listViewPromotions = (NonScrollListView) findViewById(R.id.listViewPromotions);
+        promotionListAdapter = new PromotionListAdapter(this);
+        listViewPromotions.setAdapter(promotionListAdapter);
 
         linearLayoutNoCoupons = (LinearLayout) findViewById(R.id.linearLayoutNoCoupons);
         ((TextView)findViewById(R.id.textViewNoCoupons)).setTypeface(Fonts.mavenLight(this));
         linearLayoutNoCoupons.setVisibility(View.GONE);
-
-
-        textViewOngoingOffers = (TextView) findViewById(R.id.textViewOngoingOffers); textViewOngoingOffers.setTypeface(Fonts.latoRegular(this));
-        textViewOngoingOffers.setVisibility(View.GONE);
-        textViewPromoInfo = (TextView) findViewById(R.id.textViewPromoInfo); textViewPromoInfo.setTypeface(Fonts.latoRegular(this));
-        textViewPromoInfo.setVisibility(View.GONE);
-
-        listViewPromotions = (NonScrollListView) findViewById(R.id.listViewPromotions);
-        promotionListAdapter = new PromotionListAdapter(this);
-        listViewPromotions.setAdapter(promotionListAdapter);
 
         relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
         textViewInvite =(TextView)findViewById(R.id.textViewInvite); textViewInvite.setTypeface(Fonts.mavenLight(this));
@@ -163,10 +156,11 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			
 			@Override
 			public void onClick(View v) {
+                FlurryEventLogger.event(PromotionsActivity.this, ENTERED_PROMO_CODE);
 				String promoCode = editTextPromoCode.getText().toString().trim();
 				if(promoCode.length() > 0){
 					applyPromoCodeAPI(PromotionsActivity.this, promoCode);
-                    FlurryEventLogger.event(PROMO_CODE_ENTERED);
+                    FlurryEventLogger.event(PromotionsActivity.this, CLICKS_ON_APPLY);
 				}
 				else{
 					editTextPromoCode.requestFocus();
@@ -208,7 +202,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             public void onClick(View v) {
                 startActivity(new Intent(PromotionsActivity.this, ShareActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(INVITE_EARN_PROMOTIONS);
+                FlurryEventLogger.event(PromotionsActivity.this, CLICKS_ON_INVITE);
             }
         });
 
@@ -240,77 +234,55 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 	}
 	
 	
-	public void updateListData(String message, boolean errorOccurred){
-		if(errorOccurred){
+	public void updateListData() {
+        if (couponInfosList.size() == 0 && promotionInfoList.size() == 0) {
             linearLayoutNoCoupons.setVisibility(View.VISIBLE);
+
             relativeLayoutListTitle.setVisibility(View.GONE);
             listViewCoupons.setVisibility(View.GONE);
 
-            textViewOngoingOffers.setVisibility(View.GONE);
+            relativeLayoutPromoListTitle.setVisibility(View.GONE);
             listViewPromotions.setVisibility(View.GONE);
-            textViewPromoInfo.setVisibility(View.GONE);
-			
-			couponInfosList.clear();
-			couponsListAdapter.notifyDataSetChanged();
 
-            promotionInfoList.clear();
-            promotionListAdapter.notifyDataSetChanged();
-		}
-		else{
-			if(couponInfosList.size() == 0 && promotionInfoList.size() == 0){
-                relativeLayoutListTitle.setVisibility(View.GONE);
-				textViewCouponsAvailable.setGravity(Gravity.CENTER);
-                textViewCouponsAvailable.setText(message);
-                listViewCoupons.setVisibility(View.GONE);
-                linearLayoutNoCoupons.setVisibility(View.VISIBLE);
+        } else if (couponInfosList.size() > 0 && promotionInfoList.size() == 0) {
+            linearLayoutNoCoupons.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.GONE);
-                listViewPromotions.setVisibility(View.GONE);
-                textViewPromoInfo.setVisibility(View.GONE);
-			}
-            else if(couponInfosList.size() > 0 && promotionInfoList.size() == 0){
-                relativeLayoutListTitle.setVisibility(View.VISIBLE);
-				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
-                textViewCouponsAvailable.setText("COUPONS AVAILABLE");
-                listViewCoupons.setVisibility(View.VISIBLE);
-                linearLayoutNoCoupons.setVisibility(View.GONE);
+            relativeLayoutListTitle.setVisibility(View.VISIBLE);
+            listViewCoupons.setVisibility(View.VISIBLE);
 
-                textViewOngoingOffers.setVisibility(View.GONE);
-                listViewPromotions.setVisibility(View.GONE);
-                textViewPromoInfo.setVisibility(View.GONE);
-            }
-            else if(couponInfosList.size() == 0 && promotionInfoList.size() > 0){
-                relativeLayoutListTitle.setVisibility(View.GONE);
-                listViewCoupons.setVisibility(View.GONE);
-                linearLayoutNoCoupons.setVisibility(View.VISIBLE);
+            relativeLayoutPromoListTitle.setVisibility(View.GONE);
+            listViewPromotions.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.GONE);
-                listViewPromotions.setVisibility(View.VISIBLE);
-                textViewPromoInfo.setVisibility(View.GONE);
-            }
-			else{
-                relativeLayoutListTitle.setVisibility(View.VISIBLE);
-				textViewCouponsAvailable.setGravity(Gravity.CENTER_VERTICAL);
-                textViewCouponsAvailable.setText("COUPONS AVAILABLE");
-                listViewCoupons.setVisibility(View.VISIBLE);
-                linearLayoutNoCoupons.setVisibility(View.GONE);
+        } else if (couponInfosList.size() == 0 && promotionInfoList.size() > 0) {
+            linearLayoutNoCoupons.setVisibility(View.GONE);
 
-                textViewOngoingOffers.setVisibility(View.GONE);
-                listViewPromotions.setVisibility(View.VISIBLE);
-                textViewPromoInfo.setVisibility(View.GONE);
-			}
+            relativeLayoutListTitle.setVisibility(View.GONE);
+            listViewCoupons.setVisibility(View.GONE);
 
-            if(!"".equalsIgnoreCase(inviteMessage)) {
-                textViewInvite.setText(inviteMessage);
-            }
+            relativeLayoutPromoListTitle.setVisibility(View.VISIBLE);
+            listViewPromotions.setVisibility(View.VISIBLE);
 
-			couponsListAdapter.notifyDataSetChanged();
-            promotionListAdapter.notifyDataSetChanged();
-		}
-	}
-	
-	
-	class ViewHolderCoupon {
+        } else {
+            linearLayoutNoCoupons.setVisibility(View.GONE);
+
+            relativeLayoutListTitle.setVisibility(View.VISIBLE);
+            listViewCoupons.setVisibility(View.VISIBLE);
+
+            relativeLayoutPromoListTitle.setVisibility(View.VISIBLE);
+            listViewPromotions.setVisibility(View.VISIBLE);
+
+        }
+
+        if (!"".equalsIgnoreCase(inviteMessage)) {
+            textViewInvite.setText(inviteMessage);
+        }
+
+        couponsListAdapter.notifyDataSetChanged();
+        promotionListAdapter.notifyDataSetChanged();
+    }
+
+
+    class ViewHolderCoupon {
 		TextView textViewCouponTitle, textViewExpiryDate;
 		LinearLayout relative;
 		int id;
@@ -367,17 +339,18 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			CouponInfo couponInfo = couponInfosList.get(position);
 
 			holder.textViewCouponTitle.setText(couponInfo.title);
-			holder.textViewExpiryDate.setText("Valid until "+DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
-//            holder.textViewValidTime.setText(DateOperations.getUTCTimeInLocalTime(couponInfo.startTime)+" - "+DateOperations.getUTCTimeInLocalTime(couponInfo.endTime));
+			holder.textViewExpiryDate.setText("Valid until " + DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
+            holder.textViewExpiryDate.append("\n");
+            holder.textViewExpiryDate.append(DateOperations.getUTCTimeInLocalTime(couponInfo.startTime) + " - " + DateOperations.getUTCTimeInLocalTime(couponInfo.endTime));
 
 			holder.relative.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					holder = (ViewHolderCoupon) v.getTag();
-					CouponInfo couponInfo = couponInfosList.get(holder.id);
-					DialogPopup.alertPopupLeftOriented(PromotionsActivity.this, "", couponInfo.description);
-					FlurryEventLogger.couponInfoOpened(Data.userData.accessToken, couponInfo.couponType);
+
+                @Override
+                public void onClick(View v) {
+                    holder = (ViewHolderCoupon) v.getTag();
+                    CouponInfo couponInfo = couponInfosList.get(holder.id);
+                    DialogPopup.alertPopupLeftOriented(PromotionsActivity.this, "", couponInfo.description);
+                    FlurryEventLogger.event(PromotionsActivity.this, TNC_VIEWS);
 				}
 			});
 			
@@ -424,8 +397,10 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                 holder = new ViewHolderPromotion();
                 convertView = mInflater.inflate(R.layout.list_item_promotion, null);
 
-                holder.textViewPromotionTitle = (TextView) convertView.findViewById(R.id.textViewPromotionTitle); holder.textViewPromotionTitle.setTypeface(Fonts.latoRegular(context));
-                holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate); holder.textViewExpiryDate.setTypeface(Fonts.latoLight(context), Typeface.BOLD);
+                holder.textViewPromotionTitle = (TextView) convertView.findViewById(R.id.textViewPromotionTitle);
+                holder.textViewPromotionTitle.setTypeface(Fonts.mavenRegular(context));
+                holder.textViewExpiryDate = (TextView) convertView.findViewById(R.id.textViewExpiryDate);
+                holder.textViewExpiryDate.setTypeface(Fonts.mavenLight(context));
 
                 holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 
@@ -453,7 +428,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                     holder = (ViewHolderPromotion) v.getTag();
                     PromotionInfo promotionInfo = promotionInfoList.get(holder.id);
                     DialogPopup.alertPopupHtml(PromotionsActivity.this, "", promotionInfo.terms);
-                    FlurryEventLogger.event(ONGOING_OFFERS_CHECKED);
+                    FlurryEventLogger.event(PromotionsActivity.this, TNC_VIEWS_PROMO);
                 }
             });
 
@@ -470,9 +445,6 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
         if(!HomeActivity.checkIfUserDataNull(activity)) {
                 if (AppStatus.getInstance(activity).isOnline(activity)) {
                     DialogPopup.showLoadingDialog(activity, "Loading...");
-                    couponInfosList.clear();
-                    couponsListAdapter.notifyDataSetChanged();
-                    linearLayoutNoCoupons.setVisibility(View.GONE);
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("access_token", Data.userData.accessToken);
@@ -489,6 +461,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                     int flag = jObj.getInt("flag");
+                                    String message = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
                                         couponInfosList.clear();
                                         couponInfosList.addAll(JSONParser.parseCouponsArray(jObj));
@@ -501,23 +474,23 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                                             inviteMessage = jObj.getString("invite_message");
                                         }
 
-                                        promotionInfoList.clear();
-                                        updateListData(headMessage, false);
+                                        updateListData();
 
                                         if (Data.userData != null) {
                                             Data.userData.numCouponsAvaliable = couponInfosList.size();
                                         }
-
                                     } else {
-                                        updateListData("Some error occurred. Tap to retry", true);
+                                        updateListData();
+                                        retryDialog(DialogErrorType.OTHER, message);
                                     }
                                 } else {
-                                    updateListData("Some error occurred. Tap to retry", true);
+                                    updateListData();
                                 }
 
                             } catch (Exception exception) {
                                 exception.printStackTrace();
-                                updateListData("Some error occurred. Tap to retry", true);
+                                updateListData();
+                                retryDialog(DialogErrorType.SERVER_ERROR, "");
                             }
                             DialogPopup.dismissLoadingDialog();
                         }
@@ -526,29 +499,39 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                         public void failure(RetrofitError error) {
                             Log.e(TAG, "getCouponsAndPromotions error="+error.toString());
                             DialogPopup.dismissLoadingDialog();
-                            updateListData("Some error occurred. Tap to retry", true);
+                            updateListData();
+                            retryDialog(DialogErrorType.CONNECTION_LOST, "");
                         }
                     });
                 } else {
-                    //updateListData("No Internet connection. Tap to retry", true);
-                    DialogPopup.dialogNoInternet(PromotionsActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG
-                            , new Utils.AlertCallBackWithButtonsInterface() {
-                        @Override
-                        public void positiveClick(View v) {
-                            getAccountInfoAsync(PromotionsActivity.this);
-                        }
-
-                        @Override
-                        public void neutralClick(View v) {
-                        }
-
-                        @Override
-                        public void negativeClick(View v) {
-                        }
-                    });
+                    retryDialog(DialogErrorType.NO_NET, "");
                 }
         }
 	}
+
+    private void retryDialog(DialogErrorType dialogErrorType, String message){
+        if(dialogErrorType == DialogErrorType.OTHER){
+            DialogPopup.alertPopup(this, "", message);
+        } else{
+            DialogPopup.dialogNoInternet(this, dialogErrorType, new Utils.AlertCallBackWithButtonsInterface() {
+                @Override
+                public void positiveClick(View view) {
+                    getAccountInfoAsync(PromotionsActivity.this);
+                }
+
+                @Override
+                public void neutralClick(View view) {
+
+                }
+
+                @Override
+                public void negativeClick(View view) {
+
+                }
+            });
+        }
+    }
+
 
 	/**
 	 * API call for applying promo code to server
@@ -581,11 +564,42 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
                                 DialogPopup.dialogBanner(activity, message);
                                 getAccountInfoAsync(activity);
                                 FlurryEventLogger.event(PROMO_CODE_APPLIED);
+
+                                new ApiPaytmCheckBalance(activity, new ApiPaytmCheckBalance.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure() {
+
+                                    }
+
+                                    @Override
+                                    public void onRetry(View view) {
+
+                                    }
+
+                                    @Override
+                                    public void onNoRetry(View view) {
+
+                                    }
+                                }).getBalance(Data.userData.paytmEnabled, false);
+
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
-                            double jugnooBalance = jObj.optDouble("jugnoo_balance", Data.userData.getJugnooBalance());
-                            Data.userData.setJugnooBalance(jugnooBalance);
+
+                            Data.userData.setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE,
+                                    Data.userData.getJugnooBalance()));
+                            Data.userData.setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE,
+                                    Data.userData.getPaytmBalance()));
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -623,5 +637,8 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
             }
         }
 	}
+
+
+
 	
 }

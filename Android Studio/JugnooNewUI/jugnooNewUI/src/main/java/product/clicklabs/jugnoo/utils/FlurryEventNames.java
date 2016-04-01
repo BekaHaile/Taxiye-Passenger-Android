@@ -178,21 +178,74 @@ public interface FlurryEventNames {
 
             ;
 
-    String API_RESPONSE_TIME_LOG = "api_response_time_log";
-
-    String API_GET_ONGOING_RIDE_PATH = "/get_ongoing_ride_path",
-            API_GET_DRIVER_CURRENT_LOCATION = "/get_driver_current_location",
-            API_FIND_A_DRIVER = "/find_a_driver",
-            API_SHOW_AVAILABLE_PROMOTIONS = "/show_available_promotions",
-            API_LOGIN_USING_ACCESS_TOKEN = "/login_using_access_token",
-            API_GET_CURRENT_USER_STATUS = "/get_current_user_status",
-            API_REQUEST_RIDE = "/request_ride",
-            API_PAYTM_CHECK_BALANCE = "/paytm/check_balance"
+    String API_GET_ONGOING_RIDE_PATH = "api_get_ongoing_ride_path",
+            API_GET_DRIVER_CURRENT_LOCATION = "api_get_driver_current_location",
+            API_FIND_A_DRIVER = "api_find_a_driver",
+            API_SHOW_AVAILABLE_PROMOTIONS = "api_show_available_promotions",
+            API_LOGIN_USING_ACCESS_TOKEN = "api_login_using_access_token",
+            API_GET_CURRENT_USER_STATUS = "api_get_current_user_status",
+            API_REQUEST_RIDE = "api_request_ride",
+            API_PAYTM_CHECK_BALANCE = "api_paytm_check_balance"
 
                     ;
 
     String EMERGENCY_MODE_ENABLED = "emergency_mode_enabled"
 
             ;
+
+
+    String WHO_VISITED_FREE_RIDE_SCREEN = "who_visited_free_ride_screen",
+            WHO_CLICKED_ON_INVITE_FRIENDS = "who_clicked_on_invite_friends",
+            WHO_CLICKED_ON_LEADERBOARD = "who_clicked_on_leaderboard",
+            WHO_CLICKED_ON_ACTIVITY = "who_clicked_on_activity",
+            WHO_CLICKED_ON_WHATSAPP = "who_clicked_on_whatsapp",
+            WHO_CLICKED_ON_FACEBOOK = "who_clicked_on_facebook",
+            WHO_CLICKED_ON_TWITTER = "who_clicked_on_twitter",
+            WHO_CLICKED_ON_EMAIL = "who_clicked_on_email",
+            WHO_CLICKED_ON_SMS = "who_clicked_on_sms",
+            WHO_CLICKED_ON_OTHERS = "who_clicked_on_others",
+            TO_WHOM_A_PUSH_WAS_DELIVERED = "to_whom_a_push_was_delivered",
+            WHO_CLICKED_THE_PUSH = "who_clicked_the_push",
+            WHO_VISITED_THE_NOTIFICATION_SCREEN = "who_visited_the_notification_screen",
+            CLICKS_ON_GET_A_RIDE = "clicks_on_get_a_ride",
+            CLICKS_ON_OFFERS = "clicks_on_offers",
+            CLICKS_ON_MIN_FARE = "clicks_on_min_fare",
+            CLICKS_ON_GET_FARE_ESTIMATE = "clicks_on_get_fare_estimate",
+            CLICKS_ON_PAYTM = "clicks_on_paytm",
+            CHANGED_MODE_FROM_PAYTM_TO_CASH = "changed_mode_from_paytm_to_cash",
+            CLICKS_ON_WALLET = "clicks_on_wallet",
+            CLICKS_ON_PAYTM_WALLET = "clicks_on_paytm_wallet",
+            CLICKS_ON_REMOVE_WALLET = "clicks_on_remove_wallet",
+            WHO_VISITED_T20_WORLD_CUP_SCREEN = "who_visited_T20_World_Cup_screen";
+    
+
+    String ERROR_CONNECTION_TIMEOUT = "error_connection_timeout",
+            ERROR_SOCKET_TIMEOUT = "error_socket_timeout",
+            ERROR_NO_INTERNET = "error_no_internet"
+    ;
+
+
+    String CAMPAIGN_ = "campaign_",
+            LOGIN_SINCE_FIRST_APP_OPEN_DIFF = "login_since_first_app_open_diff",
+            APP_DOWNLOAD_SOURCE = "app_download_source";
+
+    String CLICKS_ON_PROMOTIONS_SCREEN = "clicks_on_promotions_screen",
+            ENTERED_PROMO_CODE = "entered_promo_code",
+            CLICKS_ON_APPLY = "clicks_on_apply",
+            CLICKS_ON_INVITE = "clicks_on_invite_on_promotions_screen",
+            TNC_VIEWS = "coupon_tnc_views",
+            TNC_VIEWS_PROMO = "promotion_tnc_views",
+            HOW_MANY_USERS_ADDED_ADD_HOME = "how_many_users_added_add_home",
+            HOW_MANY_USERS_ADDED_ADD_WORK = "how_many_users_added_add_work",
+            CLICKS_ON_LOGOUT = "clicks_on_logout",
+            CLICKS_ON_EMERGENCY_CONTACTS = "clicks_on_emergency_contacts",
+            CLICKS_ON_ADDED_EMERGENCY_CONTACTS = "clicks_on_added_emergency_contacts",
+            CLICKS_ON_RIDE_SUMMARY = "clicks_on_ride_summary",
+            CLICKS_ON_NEED_HELP = "clicks_on_need_help",
+            CLICKS_ON_SUPPORT_ISSUES = "clicks_on_support_issues",
+            CLICKS_ON_SUPPORT = "clicks_on_support",
+            CLICKS_ON_RIDE_HISTORY = "clicks_on_ride_history",
+            CLICKS_ON_ACCOUNT = "clicks_on_account";
+
 
 }

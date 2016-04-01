@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import android.app.IntentService;
 import android.content.ContentResolver;
@@ -19,6 +19,10 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -421,10 +425,6 @@ public class ContactsUploadService extends IntentService {
                 Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                 doneWithSync();
             }
-        }
-        else {
-            //Database2.getInstance(ContactsUploadService.this).insertPendingAPICall(ContactsUploadService.this, Config.getServerUrl()+"/refer_all_contacts", params);
-            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
     }
 

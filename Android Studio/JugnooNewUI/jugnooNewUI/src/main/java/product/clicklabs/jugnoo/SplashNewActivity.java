@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -67,6 +68,8 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.CheckForAppOpen;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -231,6 +234,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		FlurryAgent.init(this, Config.getFlurryKey());
 		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 		FlurryAgent.onEvent("Splash started");
+
+		firstTimeEvents();
 	}
 
 
@@ -288,13 +293,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Config.setConfigMode(configModeToSet);
 
 		RestClient.setupRestClient();
-		Log.e("link", "=" + link);
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
+
 			Fabric.with(this, new Crashlytics());
 
 			try {
@@ -310,7 +315,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Data.splashIntentUri = getIntent().getData();
 
-			Data.getDeepLinkIndexFromIntent(getIntent());
+			Data.getDeepLinkIndexFromIntent(this, getIntent());
 
 
 			try {
@@ -321,6 +326,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 
 			FacebookSdk.sdkInitialize(this);
 
@@ -361,6 +367,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			holdForBranch = false;
 			clickCount = 0;
 
+			if (Data.locationFetcher == null) {
+				Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+			} else{
+				Data.locationFetcher.connect();
+			}
 
 			linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 			textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -963,6 +974,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+
 	}
 
 	private void changeUIState(State state) {
@@ -1129,61 +1141,65 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	};
 
 	public void getDeviceToken() {
-		if (ConfigMode.LIVE == Config.getConfigMode() && Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
-			DialogPopup.alertPopupTwoButtonsWithListeners(SplashNewActivity.this, "", "You need to uninstall Jugnoo Drivers App first to use this app", "Uninstall", "Cancel",
+		boolean mockLocationEnabled = false;
+		if(Data.locationFetcher != null){
+			mockLocationEnabled = Utils.mockLocationEnabled(Data.locationFetcher.getLocationUnchecked());
+		}
+		if(mockLocationEnabled) {
+			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
+					getResources().getString(R.string.disable_mock_location),
 					new View.OnClickListener() {
+
 						@Override
 						public void onClick(View v) {
-							try {
-								Intent i = new Intent();
-								i.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-								i.addCategory(Intent.CATEGORY_DEFAULT);
-								i.setData(Uri.parse("package:" + Data.DRIVER_APP_PACKAGE));
-								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-								try {
-									startActivity(i);
-								} catch (Exception ex) {
-									ex.printStackTrace();
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
+							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+							finish();
+							if(Data.locationFetcher != null) {
+								Data.locationFetcher.destroy();
 							}
-						}
-					},
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							ActivityCompat.finishAffinity(SplashNewActivity.this);
-						}
-					}, false, false);
-
-		} else {
-			DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-			new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
-
-				@Override
-				public void deviceTokenReceived(final String regId) {
-					runOnUiThread(new Runnable() {
-
-						@Override
-						public void run() {
-							DialogPopup.dismissLoadingDialog();
-							Data.deviceToken = regId;
-							Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
-							accessTokenLogin(SplashNewActivity.this);
-							FlurryEventLogger.appStarted(regId);
+							Data.locationFetcher = null;
 						}
 					});
+		} else {
+			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())
+					&& Utils.isAppInstalled(SplashNewActivity.this, Data.DRIVER_APP_PACKAGE)) {
+				DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
+						getResources().getString(R.string.uninstall_driver_app),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								ActivityCompat.finishAffinity(SplashNewActivity.this);
+							}
+						});
 
-				}
-			});
+			} else {
+				DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
+				new DeviceTokenGenerator().generateDeviceToken(SplashNewActivity.this, new IDeviceTokenReceiver() {
+
+					@Override
+					public void deviceTokenReceived(final String regId) {
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								DialogPopup.dismissLoadingDialog();
+								Data.deviceToken = regId;
+								Log.e("deviceToken in IDeviceTokenReceiver", Data.deviceToken + "..");
+								accessTokenLogin(SplashNewActivity.this);
+								FlurryEventLogger.appStarted(regId);
+							}
+						});
+
+					}
+				});
+			}
 		}
 	}
 
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 
 		if (Data.locationFetcher == null) {
 			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
@@ -1191,9 +1207,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationFetcher.connect();
 		}
 
-
-		super.onResume();
-		DialogPopup.dismissAlertPopup();
 		retryAccessTokenLogin();
 		resumed = true;
 
@@ -1281,6 +1294,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				} else {
 					params.put("device_rooted", "0");
 				}
+
+				new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 				Log.e("params login_using_access_token", "=" + params);
 
@@ -1381,42 +1396,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		DialogPopup.dismissLoadingDialog();
 
 	}
-
-//	class AccessTokenDataParseAsync extends AsyncTask<String, Integer, String> {
-//
-//		Activity activity;
-//		String response;
-//
-//		public AccessTokenDataParseAsync(Activity activity, String response) {
-//			this.activity = activity;
-//			this.response = response;
-//		}
-//
-//		@Override
-//		protected String doInBackground(String... params) {
-//			try {
-//				String resp = new JSONParser().parseAccessTokenLoginData(activity, response);
-//				Log.e("AccessTokenDataParseAsync resp", "=" + resp);
-//				return resp;
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				return Constants.SERVER_TIMEOUT;
-//			}
-//		}
-//
-//		@Override
-//		protected void onPostExecute(String result) {
-//			super.onPostExecute(result);
-//			Log.e("AccessTokenDataParseAsync result", "=" + result);
-//			if (result.contains(Constants.SERVER_TIMEOUT)) {
-//				loginDataFetched = false;
-//				DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-//			} else {
-//				loginDataFetched = true;
-//			}
-//			DialogPopup.dismissLoadingDialog();
-//		}
-//	}
 
 
 	public static boolean checkIfUpdate(JSONObject jObj, Activity activity) throws Exception {
@@ -1918,6 +1897,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+
 			Log.i("params", "=" + params);
 
 			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<SettleUserDebt>() {
@@ -2025,6 +2006,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
@@ -2126,6 +2108,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
+			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
@@ -2523,7 +2506,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.i("register_using_email params", params.toString());
 
@@ -2639,7 +2622,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -2741,7 +2724,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-
+			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -3020,6 +3003,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				e.printStackTrace();
 			}
 			return link;
+		}
+	}
+
+
+
+
+	private void firstTimeEvents(){
+		if(!Prefs.with(this).contains(SP_FIRST_OPEN_TIME)){
+			Prefs.with(this).save(SP_FIRST_OPEN_TIME, System.currentTimeMillis());
+		}
+
+		if(!Prefs.with(this).contains(SP_APP_DOWNLOAD_SOURCE_SENT)){
+			HashMap<String, String> map = new HashMap<>();
+			map.put(KEY_SOURCE, Config.getDownloadSource());
+			FlurryEventLogger.event(FlurryEventNames.APP_DOWNLOAD_SOURCE, map);
+			Prefs.with(this).save(SP_APP_DOWNLOAD_SOURCE_SENT, 1);
 		}
 	}
 

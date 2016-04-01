@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -43,6 +43,8 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutLayoutManagerResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
@@ -190,6 +192,7 @@ public class EmergencyContactsFragment extends Fragment {
 					case R.id.buttonAddContact:
 						new FragTransUtils().openAddEmergencyContactsFragment(activity,
 								((EmergencyActivity)activity).getContainer());
+						FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_ADDED_EMERGENCY_CONTACTS);
 						break;
 
 				}

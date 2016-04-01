@@ -26,7 +26,7 @@ import java.text.DecimalFormat;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
@@ -212,7 +212,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					new TransactionUtils().openRideIssuesFragment(activity,
 							((RideTransactionsActivity)activity).getContainer(),
 							engagementId, endRideData, getRideSummaryResponse);
-					FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_NEED_HELP);
+					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
 				} else {
 					performBackPressed();
 				}

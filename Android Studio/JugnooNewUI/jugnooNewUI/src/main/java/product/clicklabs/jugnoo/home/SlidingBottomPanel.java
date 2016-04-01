@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.home;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -136,6 +139,7 @@ public class SlidingBottomPanel {
                 } else {
                     viewPager.setCurrentItem(0, true);
                 }
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 break;
 
             case R.id.linearLayoutFare:
@@ -145,6 +149,7 @@ public class SlidingBottomPanel {
                 } else {
                     viewPager.setCurrentItem(1, true);
                 }
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 break;
 
             case R.id.linearLayoutOffers:
@@ -154,6 +159,7 @@ public class SlidingBottomPanel {
                 } else {
                     viewPager.setCurrentItem(2, true);
                 }
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 break;
         }
     }
@@ -213,8 +219,8 @@ public class SlidingBottomPanel {
 			}
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
 				imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
-				textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-						, Data.userData.getPaytmBalanceStr()));
+				textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getPaytmBalanceStr()));
 			} else {
 				imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
 				textViewCashValue.setText(activity.getResources().getString(R.string.cash));
