@@ -6595,7 +6595,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private Animation flip, flip2;
+    private Animation flip, flip2, bounceScale;
     private Animation getFlip(){
         if(flip == null){
             flip = AnimationUtils.loadAnimation(this, R.anim.shrink_to_middle);
@@ -6607,6 +6607,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             flip2 = AnimationUtils.loadAnimation(this, R.anim.grow_from_middle);
         }
         return flip2;
+    }
+    private Animation getBounceScale(){
+        if(bounceScale == null){
+            bounceScale = AnimationUtils.loadAnimation(this, R.anim.bounce_scale);
+        }
+        return bounceScale;
     }
 
     public void setVehicleTypeSelected(int position) {
@@ -6650,7 +6656,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     }
                 });
-                imageViewRideNow.startAnimation(getFlip());
+//                imageViewRideNow.startAnimation(getFlip());
+                imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
+                imageViewRideNow.setTag(currId);
+                imageViewRideNow.startAnimation(getBounceScale());
             } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
                 getFlip().setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -6687,7 +6696,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     }
                 });
-                imageViewRideNow.startAnimation(getFlip());
+//                imageViewRideNow.startAnimation(getFlip());
+                imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
+                imageViewRideNow.setTag(currId);
+                imageViewRideNow.startAnimation(getBounceScale());
             }
             showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
         } else if(Data.vehicleTypes.size() == 1) {

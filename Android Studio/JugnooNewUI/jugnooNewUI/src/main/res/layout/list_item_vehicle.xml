@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/relative"
-                android:layout_width="180px"
+                android:layout_width="185px"
                 android:layout_height="110px"
     >
 
     <LinearLayout
-        android:layout_width="178px"
+        android:layout_width="183px"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
@@ -15,9 +15,9 @@
 
         <ImageView
             android:id="@+id/imageViewVehicle"
-            android:layout_width="67px"
-            android:layout_height="48px"
-            android:src="@drawable/ic_auto_tab"
+            android:layout_width="63px"
+            android:layout_height="41px"
+            android:src="@drawable/ic_auto_1"
             android:tag="mwar"
             />
 
@@ -28,7 +28,8 @@
             android:gravity="center"
             android:text="@string/auto"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
+            android:textSize="@dimen/text_size_22"
+            android:layout_marginTop="5px"
             />
 
 

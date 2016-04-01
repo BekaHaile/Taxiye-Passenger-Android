@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -61,9 +59,6 @@ public class SlidingBottomPanel {
 
     private VehicleType vehicleTypeSelected = null,
                         vehicleTypeDefault = new VehicleType(Vehicle.AUTO.getId(), Vehicle.AUTO.getName());
-
-    private LinearLayout linearLayoutVehicles, linearLayoutAutoSelect, linearLayoutBikeSelect;
-    private TextView textViewAutoSelect, textViewBikeSelect;
 
     private RecyclerView recyclerViewVehicles;
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -135,39 +130,6 @@ public class SlidingBottomPanel {
         update(null);
 
         vehicleTypeSelected = vehicleTypeDefault;
-
-        linearLayoutVehicles = (LinearLayout) view.findViewById(R.id.linearLayoutVehicles);
-        linearLayoutAutoSelect = (LinearLayout) view.findViewById(R.id.linearLayoutAutoSelect);
-        linearLayoutBikeSelect = (LinearLayout) view.findViewById(R.id.linearLayoutBikeSelect);
-        textViewAutoSelect = (TextView) view.findViewById(R.id.textViewAutoSelect);
-        textViewAutoSelect.setTypeface(Fonts.mavenLight(activity));
-        textViewBikeSelect = (TextView) view.findViewById(R.id.textViewBikeSelect);
-        textViewBikeSelect.setTypeface(Fonts.mavenLight(activity));
-
-        linearLayoutAutoSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    int position = (int) v.getTag();
-                    activity.setVehicleTypeSelected(position);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        linearLayoutBikeSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    int position = (int) v.getTag();
-                    activity.setVehicleTypeSelected(position);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        linearLayoutVehicles.setVisibility(View.GONE);
 
         recyclerViewVehicles = (RecyclerView) view.findViewById(R.id.recyclerViewVehicles);
         recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
@@ -247,22 +209,14 @@ public class SlidingBottomPanel {
             updatePaymentOption();
 
             if(Data.vehicleTypes.size() > 1){
-                linearLayoutVehicles.setVisibility(View.VISIBLE);
-                for(int i=0; i<Data.vehicleTypes.size(); i++){
-                    if(Data.vehicleTypes.get(i).getId().equals(Vehicle.AUTO.getId())){
-                        linearLayoutAutoSelect.setTag(i);
-                    } else if(Data.vehicleTypes.get(i).getId().equals(Vehicle.BIKE.getId())){
-                        linearLayoutBikeSelect.setTag(i);
-                    }
-                }
-                updateVehicleTypeSelectedTab();
                 vehiclesTabAdapter.notifyDataSetChanged();
+                recyclerViewVehicles.setVisibility(View.VISIBLE);
 
             } else if(Data.vehicleTypes.size() > 0){
                 vehicleTypeDefault = Data.vehicleTypes.get(0);
                 activity.setVehicleTypeSelected(0);
                 vehicleTypeSelected = Data.vehicleTypes.get(0);
-                linearLayoutVehicles.setVisibility(View.GONE);
+                recyclerViewVehicles.setVisibility(View.GONE);
 
             } else{
                 activity.forceFarAwayCity();
@@ -287,26 +241,6 @@ public class SlidingBottomPanel {
 				imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
 				textViewCashValue.setText(activity.getResources().getString(R.string.cash));
 			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateVehicleTypeSelectedTab() {
-        try {
-            if(vehicleTypeSelected != null) {
-                if(vehicleTypeSelected.getId() == Vehicle.AUTO.getId()){
-                    linearLayoutAutoSelect.setBackgroundResource(R.drawable.bg_grey_light_lrb);
-                    linearLayoutBikeSelect.setBackgroundResource(R.drawable.bg_transparent_grey_light_rrb_selector);
-                    textViewAutoSelect.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-                    textViewBikeSelect.setTypeface(Fonts.mavenLight(activity));
-                } else{
-                    linearLayoutAutoSelect.setBackgroundResource(R.drawable.bg_transparent_grey_light_lrb_selector);
-                    linearLayoutBikeSelect.setBackgroundResource(R.drawable.bg_grey_light_rrb);
-                    textViewAutoSelect.setTypeface(Fonts.mavenLight(activity));
-                    textViewBikeSelect.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -426,7 +360,7 @@ public class SlidingBottomPanel {
         } else {
             vehicleTypeSelected = vehicleTypeDefault;
         }
-        updateVehicleTypeSelectedTab();
+        vehiclesTabAdapter.notifyDataSetChanged();
         updateFareStructureUI();
     }
 
@@ -458,10 +392,10 @@ public class SlidingBottomPanel {
         }
     }
 
-    public void checkForGoogleLogoVisibilityBeforeRide(){
+    private void checkForGoogleLogoVisibilityBeforeRide(){
         try{
             float padding = 20;
-            if(linearLayoutVehicles.getVisibility() == View.VISIBLE){
+            if(recyclerViewVehicles.getVisibility() == View.VISIBLE){
                 padding = padding + 110;
             }
             activity.setGoogleMapPadding(padding);

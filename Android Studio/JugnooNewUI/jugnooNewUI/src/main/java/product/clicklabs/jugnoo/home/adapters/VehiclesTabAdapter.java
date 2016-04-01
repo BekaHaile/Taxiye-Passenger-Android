@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -35,7 +36,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(162, 110);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(185, 110);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);
@@ -49,22 +50,28 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.textViewVehicleName.setText(vehicleType.getName());
         holder.relative.setTag(position);
 
-        if(position == 0){
-            holder.relative.setBackgroundResource(R.drawable.bg_transparent_grey_light_lrb_selector);
+        boolean selected = vehicleType.getId().equals(activity.getSlidingBottomPanel().getVehicleTypeSelected().getId());
+        if(position == 0) {
+            holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_lrb : R.drawable.bg_transparent_grey_light_lrb_selector);
             holder.imageViewSep.setVisibility(View.VISIBLE);
         } else if(position == (getItemCount()-1)){
-            holder.relative.setBackgroundResource(R.drawable.bg_transparent_grey_light_rrb_selector);
+            holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_rrb : R.drawable.bg_transparent_grey_light_rrb_selector);
             holder.imageViewSep.setVisibility(View.GONE);
         } else{
-            holder.relative.setBackgroundResource(R.drawable.bg_transparent_grey_light_b_selector);
+            holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_b : R.drawable.bg_transparent_grey_light_b_selector);
             holder.imageViewSep.setVisibility(View.VISIBLE);
+        }
+        if(vehicleType.getId().equals(Vehicle.AUTO.getId())){
+            holder.imageViewVehicle.setImageResource(R.drawable.ic_auto_1);
+        } else if(vehicleType.getId().equals(Vehicle.BIKE.getId())){
+            holder.imageViewVehicle.setImageResource(R.drawable.ic_bike);
         }
 
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-
+                activity.setVehicleTypeSelected(position);
             }
         });
 
