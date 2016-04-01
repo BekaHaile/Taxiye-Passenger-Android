@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -43,6 +44,8 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
     private NotificationAdapter myNotificationAdapter;
     private ArrayList<NotificationData> notificationList;
 	private LinearLayout linearLayoutNoNotifications;
+	private int totalRides = 0;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView)findViewById(R.id.imageViewBack);
 
+		swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
+		swipeRefreshLayout.setColorSchemeResources(R.color.theme_color);
 		linearLayoutNoNotifications = (LinearLayout) findViewById(R.id.linearLayoutNoNotifications);
 		linearLayoutNoNotifications.setVisibility(View.GONE);
 		((TextView)findViewById(R.id.textViewNoNotifications)).setTypeface(Fonts.mavenLight(this));
@@ -67,7 +72,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 		notificationList = new ArrayList<>();
 		myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this,
-				R.layout.list_item_notification);
+				R.layout.list_item_notification, totalRides, new NotificationAdapter.Callback() {
+			@Override
+			public void onShowMoreClick() {
+				getNotificationInboxApi();
+			}
+		});
 		recyclerViewNotification.setAdapter(myNotificationAdapter);
 
 
@@ -83,6 +93,14 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 		getNotificationInboxApi();
 
 		FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
+
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				notificationList.clear();
+				getNotificationInboxApi();
+			}
+		});
     }
 
 
@@ -138,6 +156,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 		RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
 			@Override
 			public void success(NotificationInboxResponse notificationInboxResponse, Response response) {
+				swipeRefreshLayout.setRefreshing(false);
 				//notificationList.clear();
 				notificationList.addAll(notificationInboxResponse.getPushes());
 				Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
@@ -146,12 +165,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 				} else{
 					linearLayoutNoNotifications.setVisibility(View.VISIBLE);
 				}
-				myNotificationAdapter.notifyDataSetChanged();
+				myNotificationAdapter.notifyList(notificationInboxResponse.getTotal());
 			}
 
 			@Override
 			public void failure(RetrofitError error) {
-
+				swipeRefreshLayout.setRefreshing(false);
 			}
 		});
 	}
