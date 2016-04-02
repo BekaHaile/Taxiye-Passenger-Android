@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
@@ -145,7 +146,9 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				loadListFromDB();
+				swipeRefreshLayout.setRefreshing(true);
+				notificationList.clear();
+				getNotificationInboxApi();
 			}
 		});
 	}
@@ -153,22 +156,24 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 	private void getNotificationInboxApi(){
 
 		HashMap<String, String> params = new HashMap<>();
-		params.put("access_token", Data.userData.accessToken);
+		params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 		params.put("offset", String.valueOf(notificationList.size()));
 
 		RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
 			@Override
 			public void success(NotificationInboxResponse notificationInboxResponse, Response response) {
 				swipeRefreshLayout.setRefreshing(false);
-				//notificationList.clear();
-				notificationList.addAll(notificationInboxResponse.getPushes());
-				Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-				if(notificationList.size() > 0){
-					linearLayoutNoNotifications.setVisibility(View.GONE);
-				} else{
-					linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+				if(notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+					Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+					notificationList.addAll(notificationInboxResponse.getPushes());
+					Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+					if (notificationList.size() > 0) {
+						linearLayoutNoNotifications.setVisibility(View.GONE);
+					} else {
+						linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+					}
+					myNotificationAdapter.notifyList(notificationInboxResponse.getTotal());
 				}
-				myNotificationAdapter.notifyList(notificationInboxResponse.getTotal());
 			}
 
 			@Override
