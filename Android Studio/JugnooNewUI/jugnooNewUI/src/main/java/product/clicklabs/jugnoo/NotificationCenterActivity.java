@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -21,11 +22,13 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -171,6 +174,22 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 			@Override
 			public void failure(RetrofitError error) {
 				swipeRefreshLayout.setRefreshing(false);
+				DialogPopup.dialogNoInternet(NotificationCenterActivity.this, DialogErrorType.CONNECTION_LOST, new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+
+					}
+				});
 			}
 		});
 	}
