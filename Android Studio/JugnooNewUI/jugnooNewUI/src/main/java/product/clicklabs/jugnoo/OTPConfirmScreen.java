@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -658,6 +659,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+									nudgeSignupVerifiedEvent(emailRegisterData.phoneNo, emailRegisterData.emailId,
+											emailRegisterData.name);
+
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 												loginResponse, LoginVia.EMAIL_OTP);
@@ -762,6 +766,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+									nudgeSignupVerifiedEvent(facebookRegisterData.phoneNo, facebookRegisterData.fbUserEmail,
+											facebookRegisterData.fbName);
+
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 												loginResponse, LoginVia.FACEBOOK_OTP);
@@ -862,6 +869,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+									nudgeSignupVerifiedEvent(googleRegisterData.phoneNo, googleRegisterData.email,
+											googleRegisterData.name);
+
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 												loginResponse, LoginVia.GOOGLE_OTP);
@@ -1114,6 +1124,21 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 							}
 						});
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void nudgeSignupVerifiedEvent(String phoneNo, String email, String userName){
+		try {
+			NudgeClient.initialize(OTPConfirmScreen.this, phoneNo);
+			JSONObject map = new JSONObject();
+			map.put(KEY_PHONE_NO, phoneNo);
+			map.put(KEY_EMAIL, email);
+			map.put(KEY_USER_NAME, userName);
+			map.put(KEY_LATITUDE, Data.loginLatitude);
+			map.put(KEY_LONGITUDE, Data.loginLongitude);
+			NudgeClient.trackEvent(OTPConfirmScreen.this, NUDGE_SIGNUP_VERIFIED, map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

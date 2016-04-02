@@ -1584,6 +1584,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
+        try {
+            JSONObject map = new JSONObject();
+            map.put(KEY_USER_ID, Data.userData.getUserId());
+            map.put(KEY_LATITUDE, Data.latitude);
+            map.put(KEY_LONGITUDE, Data.longitude);
+            NudgeClient.trackEvent(HomeActivity.this, NUDGE_APP_OPEN, map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");

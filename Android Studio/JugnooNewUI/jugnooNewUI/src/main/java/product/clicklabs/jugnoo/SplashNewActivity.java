@@ -2543,6 +2543,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									SplashNewActivity.this.name = name;
 									SplashNewActivity.this.emailId = emailId;
 									parseOTPSignUpData(jObj, password, referralCode);
+									nudgeSignupEvent(phoneNo, emailId, name);
+
 								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 									SplashNewActivity.this.name = name;
 									SplashNewActivity.this.emailId = emailId;
@@ -2655,6 +2657,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 									parseOTPSignUpData(jObj, password, referralCode);
+									nudgeSignupEvent(phoneNo, Data.facebookUserData.userEmail,
+											Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+
 								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 									SplashNewActivity.this.phoneNo = phoneNo;
 									SplashNewActivity.this.password = password;
@@ -2681,7 +2686,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG, "registerUsingFacebook error="+error.toString());
+					Log.e(TAG, "registerUsingFacebook error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2756,6 +2761,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 									parseOTPSignUpData(jObj, password, referralCode);
+									nudgeSignupEvent(phoneNo, Data.googleSignInAccount.getEmail(),
+											Data.googleSignInAccount.getDisplayName());
+
 								} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
 									SplashNewActivity.this.phoneNo = phoneNo;
 									SplashNewActivity.this.password = password;
@@ -2782,7 +2790,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG, "registerUsingGoogle error="+error.toString());
+					Log.e(TAG, "registerUsingGoogle error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
@@ -2792,6 +2800,22 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
+
+	private void nudgeSignupEvent(String phoneNo, String email, String userName){
+		try {
+			NudgeClient.initialize(SplashNewActivity.this, phoneNo);
+			JSONObject map = new JSONObject();
+			map.put(KEY_PHONE_NO, phoneNo);
+			map.put(KEY_EMAIL, email);
+			map.put(KEY_USER_NAME, userName);
+			map.put(KEY_LATITUDE, Data.loginLatitude);
+			map.put(KEY_LONGITUDE, Data.loginLongitude);
+			NudgeClient.trackEvent(SplashNewActivity.this, NUDGE_SIGNUP, map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode) throws Exception{
 		SplashNewActivity.this.phoneNo = jObj.getString("phone_no");

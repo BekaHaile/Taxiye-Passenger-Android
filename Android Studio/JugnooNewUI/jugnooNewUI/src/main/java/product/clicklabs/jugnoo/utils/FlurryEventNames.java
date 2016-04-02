@@ -256,6 +256,9 @@ public interface FlurryEventNames {
             NUDGE_DRIVER_NOT_ASSIGNED = "driver_not_assigned",
             NUDGE_RIDE_COMPLETED = "ride_completed",
             NUDGE_FEEDBACK = "feedback",
-            NUDGE_CANCEL_RIDE = "cancel_ride";
+            NUDGE_CANCEL_RIDE = "cancel_ride",
+            NUDGE_APP_OPEN = "app_open",
+            NUDGE_SIGNUP = "signup",
+            NUDGE_SIGNUP_VERIFIED = "signup_verified";
 
 }
