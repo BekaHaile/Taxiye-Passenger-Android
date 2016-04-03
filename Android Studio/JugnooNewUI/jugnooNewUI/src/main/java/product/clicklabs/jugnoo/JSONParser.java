@@ -40,7 +40,8 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.Vehicle;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
@@ -307,9 +308,10 @@ public class JSONParser implements Constants {
                 Data.vehicleTypes.clear();
             }
             if(loginResponse.getLogin().getVehicleTypes() != null) {
+                HomeUtil homeUtil = new HomeUtil();
                 for (VehicleType vehicleType : loginResponse.getLogin().getVehicleTypes()) {
-                    Data.vehicleTypes.add(new VehicleType(vehicleType.getId(),
-                            vehicleType.getName()));
+                    vehicleType.setVehicleIconSet(homeUtil.getVehicleIconSet(vehicleType.getIconSet()));
+                    Data.vehicleTypes.add(vehicleType);
                 }
             }
         } catch(Exception e){
@@ -353,6 +355,7 @@ public class JSONParser implements Constants {
             }
 
             if(loginResponse.getLogin().getFareStructure() != null) {
+                Data.fareStructure = null;
                 for (FareStructure fareStructure : loginResponse.getLogin().getFareStructure()) {
                     String startTime = fareStructure.getStartTime();
                     String endTime = fareStructure.getEndTime();
@@ -377,19 +380,33 @@ public class JSONParser implements Constants {
                                 Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
                             }} catch (Exception e) {e.printStackTrace();}
                         }
-                        if(Vehicle.AUTO.getId() == fareStructure.getVehicleType()){
+                        if(Data.fareStructure == null){
                             Data.fareStructure = fareStructure1;
                         }
                     }
                 }
+                if(Data.fareStructure == null){
+                    Data.fareStructure = getDefaultFareStructure();
+                }
             }else{
-                Data.fareStructure = new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false);
+                Data.fareStructure = getDefaultFareStructure();
             }
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 
+    private product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false);
+    }
+
+    public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
+        if(Data.fareStructure == null) {
+            return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false);
+        } else{
+            return Data.fareStructure;
+        }
+    }
 
     public ReferralMessages parseReferralMessages(LoginResponse loginResponse) {
         String referralMessage = "Share your referral code " + Data.userData.referralCode +
@@ -456,10 +473,8 @@ public class JSONParser implements Constants {
 
             Data.pickupLatLng = new LatLng(0, 0);
 
-            int vehicleType = jDriverInfo.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
-
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
-                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"), vehicleType);
+                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
 
             try {
                 if (jLastRideData.has("rate_app")) {
@@ -556,7 +571,8 @@ public class JSONParser implements Constants {
         String phoneNumber = jLastRideData.optString(KEY_PHONE_NO, "");
         String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
-        int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
+        int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+        String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.AUTO.getName());
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -570,7 +586,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber, tripTotal, vehicleType);
+                rideDate, phoneNumber, tripTotal, vehicleType, iconSet);
 	}
 
 
@@ -619,7 +635,8 @@ public class JSONParser implements Constants {
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
             Schedule scheduleT20 = null;
-            int vehicleType = Vehicle.AUTO.getId();
+            int vehicleType = VEHICLE_AUTO;
+            String iconSet = VehicleIconSet.AUTO.getName();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -709,7 +726,8 @@ public class JSONParser implements Constants {
 
                             scheduleT20 = parseT20Schedule(jObject);
 
-                            vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
+                            vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+                            iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.AUTO.getName());
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -763,7 +781,7 @@ public class JSONParser implements Constants {
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet);
 
                 Data.userData.fareFactor = fareFactor;
 
@@ -853,7 +871,7 @@ public class JSONParser implements Constants {
                     String driverCarImage = "";
                     String carNumber = "";
                     double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
-                    int vehicleType = driver.getVehicleType() == null ? Vehicle.AUTO.getId() : driver.getVehicleType();
+                    int vehicleType = driver.getVehicleType() == null ? VEHICLE_AUTO : driver.getVehicleType();
                     Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
                             phoneNo, rating, carNumber, 0, bearing, vehicleType));
                 }

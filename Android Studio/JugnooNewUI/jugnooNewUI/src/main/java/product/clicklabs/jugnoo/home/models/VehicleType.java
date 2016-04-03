@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo.home.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 
 /**
@@ -16,14 +18,28 @@ public class VehicleType {
 	@SerializedName("name")
 	@Expose
 	private String name;
+	@SerializedName("region_id")
+	@Expose
+	private Integer regionId;
+	@SerializedName("icon_set")
+	@Expose
+	private String iconSet;
+
+	private VehicleIconSet vehicleIconSet;
 
 	private FareStructure fareStructure;
 	private String eta;
 
-	public VehicleType(Integer id, String name){
-		this.id = id;
-		this.name = name;
+	public VehicleType(){
+		this.id = Constants.VEHICLE_AUTO;
+		this.name = "Auto";
+		this.regionId = Constants.VEHICLE_AUTO;
+		this.iconSet = VehicleIconSet.AUTO.getName();
+		this.vehicleIconSet = VehicleIconSet.AUTO;
+		this.eta = "-";
+		this.fareStructure = JSONParser.getFareStructure();
 	}
+
 
 	public Integer getId() {
 		return id;
@@ -59,5 +75,29 @@ public class VehicleType {
 
 	public void setEta(String eta) {
 		this.eta = eta;
+	}
+
+	public String getIconSet() {
+		return iconSet;
+	}
+
+	public void setIconSet(String iconSet) {
+		this.iconSet = iconSet;
+	}
+
+	public VehicleIconSet getVehicleIconSet() {
+		return vehicleIconSet;
+	}
+
+	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
+		this.vehicleIconSet = vehicleIconSet;
+	}
+
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
 	}
 }

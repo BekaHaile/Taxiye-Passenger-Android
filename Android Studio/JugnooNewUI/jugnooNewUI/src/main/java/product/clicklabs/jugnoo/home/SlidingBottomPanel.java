@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
-import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -58,7 +57,7 @@ public class SlidingBottomPanel {
     private ArrayList<PromoCoupon> promoCoupons;
 
     private VehicleType vehicleTypeSelected = null,
-                        vehicleTypeDefault = new VehicleType(Vehicle.AUTO.getId(), Vehicle.AUTO.getName());
+                        vehicleTypeDefault = new VehicleType();
 
     private RecyclerView recyclerViewVehicles;
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -209,6 +208,7 @@ public class SlidingBottomPanel {
             updatePaymentOption();
 
             if(Data.vehicleTypes.size() > 1){
+                vehicleTypeDefault = Data.vehicleTypes.get(0);
                 vehiclesTabAdapter.notifyDataSetChanged();
                 recyclerViewVehicles.setVisibility(View.VISIBLE);
 
@@ -362,10 +362,6 @@ public class SlidingBottomPanel {
         }
         vehiclesTabAdapter.notifyDataSetChanged();
         updateFareStructureUI();
-    }
-
-    public VehicleType getVehicleTypeDefault(){
-        return vehicleTypeDefault;
     }
 
 

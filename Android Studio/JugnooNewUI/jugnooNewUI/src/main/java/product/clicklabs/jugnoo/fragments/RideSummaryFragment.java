@@ -34,7 +34,6 @@ import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -286,11 +285,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				relativeLayoutMap.setVisibility(View.VISIBLE);
 				relativeLayoutRideSummary.setVisibility(View.VISIBLE);
 
-				if(endRideData.getVehicleType() == Vehicle.AUTO.getId()){
-					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_auto_invoice);
-				} else if(endRideData.getVehicleType() == Vehicle.BIKE.getId()){
-					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_bike_invoice);
-				}
+				imageViewEndRideAutoIcon.setImageResource(endRideData.getVehicleIconSet().getIconInvoice());
 
 				textViewEndRideDriverName.setText(endRideData.driverName);
 				textViewEndRideDriverCarNumber.setText(endRideData.driverCarNumber);

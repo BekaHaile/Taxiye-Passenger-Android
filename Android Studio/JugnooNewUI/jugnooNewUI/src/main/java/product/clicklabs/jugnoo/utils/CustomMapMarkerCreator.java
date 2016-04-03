@@ -28,19 +28,19 @@ public class CustomMapMarkerCreator {
 		int height = (int)(54.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = activity.getResources().getDrawable(R.drawable.auto_top);
+		Drawable shape = activity.getResources().getDrawable(R.drawable.ic_auto_marker);
 		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
 		shape.draw(canvas);
 		return mDotMarkerBitmap;
 	}
 
-	public static Bitmap createMarkerBitmapBike(Activity activity, ASSL assl){
+	public static Bitmap createMarkerBitmapForResource(Activity activity, ASSL assl, int resourceId){
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(36.0f * scale);
-		int height = (int)(80.0f * scale);
+		int width = (int)(35.0f * scale);
+		int height = (int)(54.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = activity.getResources().getDrawable(R.drawable.ic_bike_top);
+		Drawable shape = activity.getResources().getDrawable(resourceId);
 		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
 		shape.draw(canvas);
 		return mDotMarkerBitmap;

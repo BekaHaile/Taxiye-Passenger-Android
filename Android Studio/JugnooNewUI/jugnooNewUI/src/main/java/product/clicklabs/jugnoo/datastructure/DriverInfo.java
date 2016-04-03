@@ -5,6 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -23,6 +25,7 @@ public class DriverInfo {
 	private Schedule scheduleT20;
 
 	private int vehicleType;
+	private VehicleIconSet vehicleIconSet;
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -49,7 +52,7 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude,
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
-					  int vehicleType){
+					  int vehicleType, String iconSet){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -69,10 +72,11 @@ public class DriverInfo {
 		this.preferredPaymentMode = preferredPaymentMode;
 		this.scheduleT20 = scheduleT20;
 		this.vehicleType = vehicleType;
+		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 	}
 
 	//for last ride data
-	public DriverInfo(String userId, String name, String image, String carImage, String carNumber, int vehicleType){
+	public DriverInfo(String userId, String name, String image, String carImage, String carNumber){
 		this.userId = userId;
 		this.latLng = new LatLng(0, 0);
 		this.name = name;
@@ -82,7 +86,6 @@ public class DriverInfo {
 		this.rating = "4";
 		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = 0;
-		this.vehicleType = vehicleType;
 	}
 
 	public void setEta(String eta){
@@ -147,5 +150,13 @@ public class DriverInfo {
 
 	public void setVehicleType(int vehicleType) {
 		this.vehicleType = vehicleType;
+	}
+
+	public VehicleIconSet getVehicleIconSet() {
+		return vehicleIconSet;
+	}
+
+	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
+		this.vehicleIconSet = vehicleIconSet;
 	}
 }

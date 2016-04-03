@@ -17,7 +17,7 @@
             android:id="@+id/imageViewVehicle"
             android:layout_width="63px"
             android:layout_height="41px"
-            android:src="@drawable/ic_auto_1"
+            android:src="@drawable/ic_auto_tab"
             android:tag="mwar"
             />
 

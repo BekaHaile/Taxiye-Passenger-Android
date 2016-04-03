@@ -137,7 +137,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.home.models.Vehicle;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -2163,7 +2163,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
 
-                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng, Data.assignedDriverInfo.getVehicleType()));
+                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -2220,7 +2220,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
 
-                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo.latLng, Data.assignedDriverInfo.getVehicleType()));
+                            driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
 
                             Log.i("marker added", "REQUEST_FINAL");
 
@@ -3542,32 +3542,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return markerOptions;
     }
 
-    public MarkerOptions getAssignedDriverCarMarkerOptions(LatLng latlng, int vehicleId){
+    public MarkerOptions getAssignedDriverCarMarkerOptions(DriverInfo driverInfo){
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
-        markerOptions1.position(latlng);
+        markerOptions1.position(driverInfo.latLng);
         markerOptions1.anchor(0.5f, 0.5f);
-        if(vehicleId == Vehicle.AUTO.getId()){
-            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
-        } else if(vehicleId == Vehicle.BIKE.getId()){
-            markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapBike(HomeActivity.this, assl)));
-        }
+        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
         return markerOptions1;
     }
 
-    public void addDriverMarkerForCustomer(DriverInfo driverInfo) {
+    public void addDriverMarkerForCustomer(DriverInfo driverInfo, int resourceId) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("driver shown to customer");
         markerOptions.snippet("" + driverInfo.userId);
         markerOptions.position(driverInfo.latLng);
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.rotation((float) driverInfo.getBearing());
-        if(driverInfo.getVehicleType() == Vehicle.AUTO.getId()) {
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createCarMarkerBitmap(HomeActivity.this, assl)));
-        } else if(driverInfo.getVehicleType() == Vehicle.BIKE.getId()){
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapBike(HomeActivity.this, assl)));
-        }
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                .createMarkerBitmapForResource(HomeActivity.this, assl, resourceId)));
         map.addMarker(markerOptions);
     }
 
@@ -3598,7 +3592,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setDropLocationMarker();
 						for (int i = 0; i < Data.driverInfos.size(); i++) {
                             if(vehicleType.getId().equals(Data.driverInfos.get(i).getVehicleType())) {
-                                addDriverMarkerForCustomer(Data.driverInfos.get(i));
+                                addDriverMarkerForCustomer(Data.driverInfos.get(i),
+                                        vehicleType.getVehicleIconSet().getIconMarker());
                             }
 						}
 						if (!mapTouchedOnce) {
@@ -4892,13 +4887,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
-            int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, Vehicle.AUTO.getId());
-
+            int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+            String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.AUTO.getName());
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
-                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType);
-
-
+                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet);
 
 			if(inRide){
 				initializeStartRideVariables();
@@ -6620,94 +6613,89 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         slidingBottomPanel.setVehicleTypeSelected(position);
         if(!slidingBottomPanel.getVehicleTypeSelected().getId().equals(oldId)) {
             final int currId = slidingBottomPanel.getVehicleTypeSelected().getId();
-            if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())) {
-                getFlip().setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        imageViewRideNow.clearAnimation();
-                        imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
-                        imageViewRideNow.setTag(currId);
-                        imageViewRideNow.startAnimation(getFlip2());
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                getFlip2().setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        imageViewRideNow.clearAnimation();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-//                imageViewRideNow.startAnimation(getFlip());
-                imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
-                imageViewRideNow.setTag(currId);
-                imageViewRideNow.startAnimation(getBounceScale());
-            } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
-                getFlip().setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        imageViewRideNow.clearAnimation();
-                        imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
-                        imageViewRideNow.setTag(currId);
-                        imageViewRideNow.startAnimation(getFlip2());
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                getFlip2().setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        imageViewRideNow.clearAnimation();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-//                imageViewRideNow.startAnimation(getFlip());
-                imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
-                imageViewRideNow.setTag(currId);
-                imageViewRideNow.startAnimation(getBounceScale());
-            }
+//            if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())) {
+//                getFlip().setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        imageViewRideNow.clearAnimation();
+//                        imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
+//                        imageViewRideNow.setTag(currId);
+//                        imageViewRideNow.startAnimation(getFlip2());
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+//                getFlip2().setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        imageViewRideNow.clearAnimation();
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+////                imageViewRideNow.startAnimation(getFlip());
+//            } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
+//                getFlip().setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        imageViewRideNow.clearAnimation();
+//                        imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
+//                        imageViewRideNow.setTag(currId);
+//                        imageViewRideNow.startAnimation(getFlip2());
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+//                getFlip2().setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        imageViewRideNow.clearAnimation();
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+////                imageViewRideNow.startAnimation(getFlip());
+//            }
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getVehicleTypeSelected()
+                    .getVehicleIconSet().getRequestSelector(this));
+            imageViewRideNow.setTag(currId);
+            imageViewRideNow.startAnimation(getBounceScale());
             showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
         } else if(Data.vehicleTypes.size() == 1) {
-            if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())) {
-                imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
-            } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
-                imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
-            }
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getVehicleTypeSelected()
+                    .getVehicleIconSet().getRequestSelector(this));
         }
     }
 

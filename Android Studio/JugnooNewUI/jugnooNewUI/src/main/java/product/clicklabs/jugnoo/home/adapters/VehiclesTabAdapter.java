@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.Vehicle;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -61,11 +60,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_b : R.drawable.bg_transparent_grey_light_b_selector);
             holder.imageViewSep.setVisibility(View.VISIBLE);
         }
-        if(vehicleType.getId().equals(Vehicle.AUTO.getId())){
-            holder.imageViewVehicle.setImageResource(R.drawable.ic_auto_1);
-        } else if(vehicleType.getId().equals(Vehicle.BIKE.getId())){
-            holder.imageViewVehicle.setImageResource(R.drawable.ic_bike);
-        }
+        holder.imageViewVehicle.setImageResource(vehicleType.getVehicleIconSet().getIconTab());
 
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
