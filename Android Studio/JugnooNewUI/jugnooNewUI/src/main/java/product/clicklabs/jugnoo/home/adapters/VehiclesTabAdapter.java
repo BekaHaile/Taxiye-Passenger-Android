@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.VehicleType;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -24,10 +24,10 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> {
 
     private HomeActivity activity;
-    private ArrayList<VehicleType> vehicleTypes = new ArrayList<>();
+    private ArrayList<Region> regions = new ArrayList<>();
 
-    public VehiclesTabAdapter(HomeActivity activity, ArrayList<VehicleType> vehicleTypes) {
-        this.vehicleTypes = vehicleTypes;
+    public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions) {
+        this.regions = regions;
         this.activity = activity;
     }
 
@@ -44,13 +44,13 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     @Override
     public void onBindViewHolder(VehiclesTabAdapter.ViewHolder holder, int position) {
-        VehicleType vehicleType = vehicleTypes.get(position);
+        Region region = regions.get(position);
 
-        holder.textViewVehicleName.setText(vehicleType.getRegionName());
+        holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
 
-        boolean selected = vehicleType.getVehicleType().equals(activity.getSlidingBottomPanel().getVehicleTypeSelected().getVehicleType())
-                && vehicleType.getRegionId().equals(activity.getSlidingBottomPanel().getVehicleTypeSelected().getRegionId());
+        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRegionSelected().getVehicleType())
+                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRegionSelected().getRegionId());
         if(position == 0) {
             holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_lrb : R.drawable.bg_transparent_grey_light_lrb_selector);
             holder.imageViewSep.setVisibility(View.VISIBLE);
@@ -61,7 +61,15 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_b : R.drawable.bg_transparent_grey_light_b_selector);
             holder.imageViewSep.setVisibility(View.VISIBLE);
         }
-        holder.imageViewVehicle.setImageResource(vehicleType.getVehicleIconSet().getIconTab());
+        if(!selected){
+            int pos = position + 1;
+            if(pos < regions.size()
+                    && regions.get(pos).getVehicleType().equals(activity.getSlidingBottomPanel().getRegionSelected().getVehicleType())
+                    && regions.get(pos).getRegionId().equals(activity.getSlidingBottomPanel().getRegionSelected().getRegionId())){
+                holder.imageViewSep.setVisibility(View.GONE);
+            }
+        }
+        holder.imageViewVehicle.setImageResource(region.getVehicleIconSet().getIconTab());
 
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +83,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     @Override
     public int getItemCount() {
-        return vehicleTypes == null ? 0 : vehicleTypes.size();
+        return regions == null ? 0 : regions.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -10,7 +10,7 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
 /**
  * Created by shankar on 3/19/16.
  */
-public class VehicleType {
+public class Region {
 
 	@SerializedName("vehicle_type")
 	@Expose
@@ -33,12 +33,12 @@ public class VehicleType {
 	@Expose
 	private String eta;
 
-	public VehicleType(){
+	public Region(){
 		this.vehicleType = Constants.VEHICLE_AUTO;
 		this.regionId = Constants.VEHICLE_AUTO;
 		this.regionName = "Auto";
-		this.iconSet = VehicleIconSet.AUTO.getName();
-		this.vehicleIconSet = VehicleIconSet.AUTO;
+		this.iconSet = VehicleIconSet.ORANGE_AUTO.getName();
+		this.vehicleIconSet = VehicleIconSet.ORANGE_AUTO;
 		this.eta = "-";
 		this.fareStructure = JSONParser.getFareStructure();
 	}

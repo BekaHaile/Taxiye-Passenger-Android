@@ -28,7 +28,7 @@ import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
-import product.clicklabs.jugnoo.home.models.VehicleType;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -56,8 +56,8 @@ public class SlidingBottomPanel {
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
     private ArrayList<PromoCoupon> promoCoupons;
 
-    private VehicleType vehicleTypeSelected = null,
-                        vehicleTypeDefault = new VehicleType();
+    private Region regionSelected = null,
+                        regionDefault = new Region();
 
     private RecyclerView recyclerViewVehicles;
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -128,14 +128,14 @@ public class SlidingBottomPanel {
 
         update(null);
 
-        vehicleTypeSelected = vehicleTypeDefault;
+        regionSelected = regionDefault;
 
         recyclerViewVehicles = (RecyclerView) view.findViewById(R.id.recyclerViewVehicles);
         recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
                 LinearLayoutManager.HORIZONTAL, false));
         recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
         recyclerViewVehicles.setHasFixedSize(false);
-        vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.vehicleTypes);
+        vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.regions);
         recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
 
     }
@@ -207,15 +207,15 @@ public class SlidingBottomPanel {
 			}
             updatePaymentOption();
 
-            if(Data.vehicleTypes.size() > 1){
-                vehicleTypeDefault = Data.vehicleTypes.get(0);
+            if(Data.regions.size() > 1){
+                regionDefault = Data.regions.get(0);
                 vehiclesTabAdapter.notifyDataSetChanged();
                 recyclerViewVehicles.setVisibility(View.VISIBLE);
 
-            } else if(Data.vehicleTypes.size() > 0){
-                vehicleTypeDefault = Data.vehicleTypes.get(0);
+            } else if(Data.regions.size() > 0){
+                regionDefault = Data.regions.get(0);
                 activity.setVehicleTypeSelected(0);
-                vehicleTypeSelected = Data.vehicleTypes.get(0);
+                regionSelected = Data.regions.get(0);
                 recyclerViewVehicles.setVisibility(View.GONE);
 
             } else{
@@ -348,17 +348,17 @@ public class SlidingBottomPanel {
     }
 
 
-    public VehicleType getVehicleTypeSelected() {
-        if(vehicleTypeSelected == null){
-            vehicleTypeSelected = vehicleTypeDefault;
+    public Region getRegionSelected() {
+        if(regionSelected == null){
+            regionSelected = regionDefault;
         }
-        return vehicleTypeSelected;
+        return regionSelected;
     }
-    public void setVehicleTypeSelected(int position) {
-        if (position > -1 && position < Data.vehicleTypes.size()) {
-            vehicleTypeSelected = Data.vehicleTypes.get(position);
+    public void setRegionSelected(int position) {
+        if (position > -1 && position < Data.regions.size()) {
+            regionSelected = Data.regions.get(position);
         } else {
-            vehicleTypeSelected = vehicleTypeDefault;
+            regionSelected = regionDefault;
         }
         vehiclesTabAdapter.notifyDataSetChanged();
         updateFareStructureUI();
@@ -366,9 +366,9 @@ public class SlidingBottomPanel {
 
 
     private void updateFareStructureUI(){
-        for (int i = 0; i < Data.vehicleTypes.size(); i++) {
-            if (Data.vehicleTypes.get(i).getVehicleType().equals(vehicleTypeSelected.getVehicleType())) {
-                Data.fareStructure = Data.vehicleTypes.get(i).getFareStructure();
+        for (int i = 0; i < Data.regions.size(); i++) {
+            if (Data.regions.get(i).getVehicleType().equals(regionSelected.getVehicleType())) {
+                Data.fareStructure = Data.regions.get(i).getFareStructure();
                 break;
             }
         }

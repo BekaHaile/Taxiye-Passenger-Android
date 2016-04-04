@@ -9,7 +9,7 @@ import product.clicklabs.jugnoo.R;
  * Created by shankar on 4/2/16.
  */
 public enum VehicleIconSet {
-	AUTO("auto", R.drawable.ic_auto_tab,
+	ORANGE_AUTO("ORANGE AUTO", R.drawable.ic_auto_tab_orange,
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_auto_request_normal,
 			R.drawable.ic_auto_request_pressed,
@@ -19,7 +19,19 @@ public enum VehicleIconSet {
 			R.drawable.ic_bike_marker,
 			R.drawable.ic_bike_request_normal,
 			R.drawable.ic_bike_request_pressed,
-			R.drawable.ic_bike_invoice)
+			R.drawable.ic_bike_invoice),
+
+	YELLOW_AUTO("YELLOW AUTO", R.drawable.ic_auto_tab_yellow,
+			R.drawable.ic_auto_marker,
+			R.drawable.ic_auto_request_normal,
+			R.drawable.ic_auto_request_pressed,
+			R.drawable.ic_auto_invoice),
+
+	RED_AUTO("RED AUTO", R.drawable.ic_auto_tab_red,
+			R.drawable.ic_auto_marker,
+			R.drawable.ic_auto_request_normal,
+			R.drawable.ic_auto_request_pressed,
+			R.drawable.ic_auto_invoice)
 	;
 
 

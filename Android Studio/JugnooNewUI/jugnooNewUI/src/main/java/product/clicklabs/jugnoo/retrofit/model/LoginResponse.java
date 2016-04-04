@@ -2,12 +2,11 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import product.clicklabs.jugnoo.home.models.VehicleType;
+import product.clicklabs.jugnoo.home.models.Region;
 
 /**
  * Created by shankar on 1/5/16.
@@ -78,9 +77,6 @@ public class LoginResponse {
 	@SerializedName("drivers")
 	@Expose
 	private List<Driver> drivers = new ArrayList<>();
-	@SerializedName("eta")
-	@Expose
-	private LinkedTreeMap<String, String> eta;
 	@SerializedName("cancellation")
 	@Expose
 	private Cancellation cancellation;
@@ -155,20 +151,6 @@ public class LoginResponse {
 	 */
 	public void setDrivers(List<Driver> drivers) {
 		this.drivers = drivers;
-	}
-
-	/**
-	 * @return The eta
-	 */
-	public LinkedTreeMap<String, String> getEta() {
-		return eta;
-	}
-
-	/**
-	 * @param eta The eta
-	 */
-	public void setEta(LinkedTreeMap<String, String> eta) {
-		this.eta = eta;
 	}
 
 	/**
@@ -351,9 +333,9 @@ public class LoginResponse {
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
-		@SerializedName("vehicles")
+		@SerializedName("regions")
 		@Expose
-		private List<VehicleType> vehicleTypes = new ArrayList<>();
+		private List<Region> regions = new ArrayList<>();
 
 
 		/**
@@ -450,12 +432,12 @@ public class LoginResponse {
 			this.fareFactor = fareFactor;
 		}
 
-		public List<VehicleType> getVehicleTypes() {
-			return vehicleTypes;
+		public List<Region> getRegions() {
+			return regions;
 		}
 
-		public void setVehicleTypes(List<VehicleType> vehicleTypes) {
-			this.vehicleTypes = vehicleTypes;
+		public void setRegions(List<Region> regions) {
+			this.regions = regions;
 		}
 	}
 }

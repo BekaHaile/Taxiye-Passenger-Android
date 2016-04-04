@@ -23,8 +23,14 @@ public class HomeUtil {
 	public VehicleIconSet getVehicleIconSet(String name){
 		if(VehicleIconSet.BIKE.getName().equalsIgnoreCase(name)){
 			return VehicleIconSet.BIKE;
+		} else if(VehicleIconSet.YELLOW_AUTO.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.YELLOW_AUTO;
+		}  else if(VehicleIconSet.RED_AUTO.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.RED_AUTO;
+		}  else if(VehicleIconSet.BIKE.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.BIKE;
 		} else{
-			return VehicleIconSet.AUTO;
+			return VehicleIconSet.ORANGE_AUTO;
 		}
 	}
 

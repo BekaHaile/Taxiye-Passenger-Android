@@ -42,7 +42,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
-import product.clicklabs.jugnoo.home.models.VehicleType;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
@@ -302,29 +302,19 @@ public class JSONParser implements Constants {
 
     private void parsePromoCoupons(LoginResponse loginResponse){
         try{
-            if(Data.vehicleTypes == null){
-                Data.vehicleTypes = new ArrayList<>();
+            if(Data.regions == null){
+                Data.regions = new ArrayList<>();
             } else{
-                Data.vehicleTypes.clear();
+                Data.regions.clear();
             }
-            if(loginResponse.getLogin().getVehicleTypes() != null) {
+            if(loginResponse.getLogin().getRegions() != null) {
                 HomeUtil homeUtil = new HomeUtil();
-                for (VehicleType vehicleType : loginResponse.getLogin().getVehicleTypes()) {
-                    vehicleType.setVehicleIconSet(homeUtil.getVehicleIconSet(vehicleType.getIconSet()));
-                    Data.vehicleTypes.add(vehicleType);
+                for (Region region : loginResponse.getLogin().getRegions()) {
+                    region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
+                    Data.regions.add(region);
                 }
             }
         } catch(Exception e){
-            e.printStackTrace();
-        }
-        try {
-            if(loginResponse.getEta() != null) {
-                for(int i=0; i<Data.vehicleTypes.size(); i++){
-                    Data.vehicleTypes.get(i).setEta(loginResponse.getEta()
-                            .get(String.valueOf(Data.vehicleTypes.get(i).getRegionId())));
-                }
-            }
-        } catch (Exception e) {
             e.printStackTrace();
         }
         try{
@@ -375,9 +365,9 @@ public class JSONParser implements Constants {
                                 fareStructure.getFareThresholdTime(),
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-                        for (int i = 0; i < Data.vehicleTypes.size(); i++) {
-                            try {if (Data.vehicleTypes.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
-                                Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
+                        for (int i = 0; i < Data.regions.size(); i++) {
+                            try {if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
+                                Data.regions.get(i).setFareStructure(fareStructure1);
                             }} catch (Exception e) {e.printStackTrace();}
                         }
                         if(Data.fareStructure == null){
@@ -572,7 +562,7 @@ public class JSONParser implements Constants {
         String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
-        String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.AUTO.getName());
+        String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -636,7 +626,7 @@ public class JSONParser implements Constants {
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
-            String iconSet = VehicleIconSet.AUTO.getName();
+            String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -727,7 +717,7 @@ public class JSONParser implements Constants {
                             scheduleT20 = parseT20Schedule(jObject);
 
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
-                            iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.AUTO.getName());
+                            iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);

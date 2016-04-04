@@ -14,7 +14,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.home.models.VehicleType;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
@@ -38,17 +38,17 @@ public class ApiFindADriver {
 
 	private Activity activity;
 	private Callback callback;
-	private VehicleType vehicleTypeSelected;
+	private Region regionSelected;
 
-	public ApiFindADriver(Activity activity, VehicleType vehicleTypeSelected, Callback callback){
+	public ApiFindADriver(Activity activity, Region regionSelected, Callback callback){
 		this.activity = activity;
-		this.vehicleTypeSelected = vehicleTypeSelected;
+		this.regionSelected = regionSelected;
 		this.callback = callback;
 	}
 
 	public void hit(String accessToken, LatLng latLng, final int showAllDrivers, int showDriverInfo,
-					VehicleType vehicleTypeSelected){
-		this.vehicleTypeSelected = vehicleTypeSelected;
+					Region regionSelected){
+		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
 				callback.onPre();
@@ -133,29 +133,19 @@ public class ApiFindADriver {
 		}
 
 		try{
-			if(Data.vehicleTypes == null){
-				Data.vehicleTypes = new ArrayList<>();
+			if(Data.regions == null){
+				Data.regions = new ArrayList<>();
 			} else{
-				Data.vehicleTypes.clear();
+				Data.regions.clear();
 			}
-			if(findADriverResponse.getVehicleTypes() != null) {
+			if(findADriverResponse.getRegions() != null) {
 				HomeUtil homeUtil = new HomeUtil();
-				for (VehicleType vehicleType : findADriverResponse.getVehicleTypes()) {
-					vehicleType.setVehicleIconSet(homeUtil.getVehicleIconSet(vehicleType.getIconSet()));
-					Data.vehicleTypes.add(vehicleType);
+				for (Region region : findADriverResponse.getRegions()) {
+					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
+					Data.regions.add(region);
 				}
 			}
 		} catch(Exception e){
-			e.printStackTrace();
-		}
-		try {
-			if(findADriverResponse.getEta() != null) {
-				for(int i=0; i<Data.vehicleTypes.size(); i++){
-					Data.vehicleTypes.get(i).setEta(findADriverResponse.getEta()
-							.get(String.valueOf(Data.vehicleTypes.get(i).getRegionId())));
-				}
-			}
-		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -206,12 +196,12 @@ public class ApiFindADriver {
 								fareStructure.getFareThresholdTime(),
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
-						for (int i = 0; i < Data.vehicleTypes.size(); i++) {
-							try {if (Data.vehicleTypes.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
-									Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
+						for (int i = 0; i < Data.regions.size(); i++) {
+							try {if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
+									Data.regions.get(i).setFareStructure(fareStructure1);
 								}} catch (Exception e) {e.printStackTrace();}
 						}
-						if(vehicleTypeSelected.getVehicleType().equals(fareStructure.getVehicleType())){
+						if(regionSelected.getVehicleType().equals(fareStructure.getVehicleType())){
 							Data.fareStructure = fareStructure1;
 						}
 					}
