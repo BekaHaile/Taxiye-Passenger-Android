@@ -46,10 +46,11 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     public void onBindViewHolder(VehiclesTabAdapter.ViewHolder holder, int position) {
         VehicleType vehicleType = vehicleTypes.get(position);
 
-        holder.textViewVehicleName.setText(vehicleType.getName());
+        holder.textViewVehicleName.setText(vehicleType.getRegionName());
         holder.relative.setTag(position);
 
-        boolean selected = vehicleType.getId().equals(activity.getSlidingBottomPanel().getVehicleTypeSelected().getId());
+        boolean selected = vehicleType.getVehicleType().equals(activity.getSlidingBottomPanel().getVehicleTypeSelected().getVehicleType())
+                && vehicleType.getRegionId().equals(activity.getSlidingBottomPanel().getVehicleTypeSelected().getRegionId());
         if(position == 0) {
             holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_lrb : R.drawable.bg_transparent_grey_light_lrb_selector);
             holder.imageViewSep.setVisibility(View.VISIBLE);

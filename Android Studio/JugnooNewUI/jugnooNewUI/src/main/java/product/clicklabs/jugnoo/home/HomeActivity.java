@@ -3591,7 +3591,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						map.clear();
 						setDropLocationMarker();
 						for (int i = 0; i < Data.driverInfos.size(); i++) {
-                            if(vehicleType.getId().equals(Data.driverInfos.get(i).getVehicleType())) {
+                            if(vehicleType.getVehicleType().equals(Data.driverInfos.get(i).getVehicleType())
+                                    && Data.driverInfos.get(i).getRegionIds().contains(vehicleType.getRegionId())) {
                                 addDriverMarkerForCustomer(Data.driverInfos.get(i),
                                         vehicleType.getVehicleIconSet().getIconMarker());
                             }
@@ -3606,7 +3607,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else {
                             textViewInitialInstructions.setVisibility(View.GONE);
                             for(int i=0; i<Data.vehicleTypes.size(); i++){
-                                if(Data.vehicleTypes.get(i).getId().equals(vehicleType.getId())){
+                                if(Data.vehicleTypes.get(i).getRegionId().equals(vehicleType.getRegionId())){
                                     textViewCentrePinETA.setText(Data.vehicleTypes.get(i).getEta());
                                     break;
                                 }
@@ -5321,7 +5322,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
-                                        .getVehicleTypeSelected().getId()));
+                                        .getVehicleTypeSelected().getVehicleType()));
+                                nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
+                                        .getVehicleTypeSelected().getRegionId()));
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
@@ -6588,19 +6591,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private Animation flip, flip2, bounceScale;
-    private Animation getFlip(){
-        if(flip == null){
-            flip = AnimationUtils.loadAnimation(this, R.anim.shrink_to_middle);
-        }
-        return flip;
-    }
-    private Animation getFlip2(){
-        if(flip2 == null){
-            flip2 = AnimationUtils.loadAnimation(this, R.anim.grow_from_middle);
-        }
-        return flip2;
-    }
+    private Animation bounceScale;
     private Animation getBounceScale(){
         if(bounceScale == null){
             bounceScale = AnimationUtils.loadAnimation(this, R.anim.bounce_scale);
@@ -6609,88 +6600,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void setVehicleTypeSelected(int position) {
-        int oldId = slidingBottomPanel.getVehicleTypeSelected().getId();
+        int oldVehicleType = slidingBottomPanel.getVehicleTypeSelected().getVehicleType();
+        int oldRegionId = slidingBottomPanel.getVehicleTypeSelected().getRegionId();
         slidingBottomPanel.setVehicleTypeSelected(position);
-        if(!slidingBottomPanel.getVehicleTypeSelected().getId().equals(oldId)) {
-            final int currId = slidingBottomPanel.getVehicleTypeSelected().getId();
-//            if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.AUTO.getId())) {
-//                getFlip().setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        imageViewRideNow.clearAnimation();
-//                        imageViewRideNow.setImageResource(R.drawable.auto_icon_r_selector);
-//                        imageViewRideNow.setTag(currId);
-//                        imageViewRideNow.startAnimation(getFlip2());
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//
-//                    }
-//                });
-//                getFlip2().setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        imageViewRideNow.clearAnimation();
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//
-//                    }
-//                });
-////                imageViewRideNow.startAnimation(getFlip());
-//            } else if (slidingBottomPanel.getVehicleTypeSelected().getId().equals(Vehicle.BIKE.getId())) {
-//                getFlip().setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        imageViewRideNow.clearAnimation();
-//                        imageViewRideNow.setImageResource(R.drawable.ic_bike_request_selector);
-//                        imageViewRideNow.setTag(currId);
-//                        imageViewRideNow.startAnimation(getFlip2());
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//
-//                    }
-//                });
-//                getFlip2().setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        imageViewRideNow.clearAnimation();
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//
-//                    }
-//                });
-////                imageViewRideNow.startAnimation(getFlip());
-//            }
+        if(!slidingBottomPanel.getVehicleTypeSelected().getVehicleType().equals(oldVehicleType)
+                && !slidingBottomPanel.getVehicleTypeSelected().getRegionId().equals(oldRegionId)) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getVehicleTypeSelected()
                     .getVehicleIconSet().getRequestSelector(this));
-            imageViewRideNow.setTag(currId);
             imageViewRideNow.startAnimation(getBounceScale());
             showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getVehicleTypeSelected());
         } else if(Data.vehicleTypes.size() == 1) {

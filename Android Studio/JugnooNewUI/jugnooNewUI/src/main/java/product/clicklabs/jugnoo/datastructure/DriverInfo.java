@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.datastructure;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
@@ -25,6 +26,7 @@ public class DriverInfo {
 	private Schedule scheduleT20;
 
 	private int vehicleType;
+	private ArrayList<Integer> regionIds = new ArrayList<>();
 	private VehicleIconSet vehicleIconSet;
 	
 	public DriverInfo(String userId){
@@ -34,7 +36,7 @@ public class DriverInfo {
 	//for drivers to show in free state
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, double bearing, int vehicleType){
+			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -46,6 +48,7 @@ public class DriverInfo {
 		this.freeRide = freeRide;
 		this.bearing = bearing;
 		this.vehicleType = vehicleType;
+		this.regionIds = regionIds;
 	}
 
 	//for engagement
@@ -158,5 +161,13 @@ public class DriverInfo {
 
 	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
 		this.vehicleIconSet = vehicleIconSet;
+	}
+
+	public ArrayList<Integer> getRegionIds() {
+		return regionIds;
+	}
+
+	public void setRegionIds(ArrayList<Integer> regionIds) {
+		this.regionIds = regionIds;
 	}
 }

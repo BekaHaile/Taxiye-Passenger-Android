@@ -3,6 +3,11 @@ package product.clicklabs.jugnoo.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import product.clicklabs.jugnoo.Constants;
+
 /**
  * Created by shankar on 3/19/16.
  */
@@ -26,6 +31,9 @@ public class Driver {
 	@SerializedName("vehicle_type")
 	@Expose
 	private Integer vehicleType;
+	@SerializedName("region_ids")
+	@Expose
+	private List<Integer> regionIds = new ArrayList<>();
 	@SerializedName("distance")
 	@Expose
 	private Double distance;
@@ -154,5 +162,17 @@ public class Driver {
 
 	public void setBearing(Double bearing) {
 		this.bearing = bearing;
+	}
+
+	public List<Integer> getRegionIds() {
+		if(regionIds == null){
+			regionIds = new ArrayList<>();
+			regionIds.add(Constants.VEHICLE_AUTO);
+		}
+		return regionIds;
+	}
+
+	public void setRegionIds(List<Integer> regionIds) {
+		this.regionIds = regionIds;
 	}
 }

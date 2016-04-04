@@ -68,8 +68,8 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.home.CheckForAppOpen;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -1296,7 +1296,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put("device_rooted", "0");
 				}
 
-				new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+				new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 				Log.e("params login_using_access_token", "=" + params);
 
@@ -1898,7 +1898,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "=" + params);
 
@@ -2007,7 +2007,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
@@ -2109,7 +2109,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 

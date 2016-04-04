@@ -15,11 +15,11 @@ public enum VehicleIconSet {
 			R.drawable.ic_auto_request_pressed,
 			R.drawable.ic_auto_invoice),
 
-	BIKE("bike", R.drawable.ic_auto_tab,
-			R.drawable.ic_auto_marker,
-			R.drawable.ic_auto_request_normal,
-			R.drawable.ic_auto_request_pressed,
-			R.drawable.ic_auto_invoice)
+	BIKE("bike", R.drawable.ic_bike_tab,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_bike_invoice)
 	;
 
 

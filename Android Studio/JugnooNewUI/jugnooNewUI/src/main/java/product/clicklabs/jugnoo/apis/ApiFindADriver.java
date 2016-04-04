@@ -13,7 +13,6 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.home.CheckForAppOpen;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -67,7 +66,7 @@ public class ApiFindADriver {
 				params.put("show_phone_no", "1");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(activity, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(activity, params);
 
 			Log.i("params in find_a_driver", "=" + params);
 			final long startTime = System.currentTimeMillis();
@@ -76,7 +75,8 @@ public class ApiFindADriver {
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_FIND_A_DRIVER, startTime);
-						Log.e(TAG, "findADriverCall response=" + new String(((TypedByteArray) response.getBody()).getBytes()));
+						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.e(TAG, "findADriverCall response=" + resp);
 						parseFindADriverResponse(findADriverResponse);
 						if(callback != null) {
 							callback.onComplete();
@@ -111,7 +111,7 @@ public class ApiFindADriver {
 					}
 					int vehicleType = driver.getVehicleType() == null ? Constants.VEHICLE_AUTO : driver.getVehicleType();
 					Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType));
+							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds()));
 				}
 			}
 			Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
@@ -152,7 +152,7 @@ public class ApiFindADriver {
 			if(findADriverResponse.getEta() != null) {
 				for(int i=0; i<Data.vehicleTypes.size(); i++){
 					Data.vehicleTypes.get(i).setEta(findADriverResponse.getEta()
-							.get(String.valueOf(Data.vehicleTypes.get(i).getId())));
+							.get(String.valueOf(Data.vehicleTypes.get(i).getRegionId())));
 				}
 			}
 		} catch (Exception e) {
@@ -207,11 +207,11 @@ public class ApiFindADriver {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
 						for (int i = 0; i < Data.vehicleTypes.size(); i++) {
-							try {if (Data.vehicleTypes.get(i).getId().equals(fareStructure.getVehicleType())) {
+							try {if (Data.vehicleTypes.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
 									Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
 								}} catch (Exception e) {e.printStackTrace();}
 						}
-						if(vehicleTypeSelected.getId().equals(fareStructure.getVehicleType())){
+						if(vehicleTypeSelected.getVehicleType().equals(fareStructure.getVehicleType())){
 							Data.fareStructure = fareStructure1;
 						}
 					}

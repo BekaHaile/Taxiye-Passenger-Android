@@ -321,7 +321,7 @@ public class JSONParser implements Constants {
             if(loginResponse.getEta() != null) {
                 for(int i=0; i<Data.vehicleTypes.size(); i++){
                     Data.vehicleTypes.get(i).setEta(loginResponse.getEta()
-                            .get(String.valueOf(Data.vehicleTypes.get(i).getId())));
+                            .get(String.valueOf(Data.vehicleTypes.get(i).getRegionId())));
                 }
             }
         } catch (Exception e) {
@@ -376,7 +376,7 @@ public class JSONParser implements Constants {
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
                         for (int i = 0; i < Data.vehicleTypes.size(); i++) {
-                            try {if (Data.vehicleTypes.get(i).getId().equals(fareStructure.getVehicleType())) {
+                            try {if (Data.vehicleTypes.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
                                 Data.vehicleTypes.get(i).setFareStructure(fareStructure1);
                             }} catch (Exception e) {e.printStackTrace();}
                         }
@@ -873,7 +873,7 @@ public class JSONParser implements Constants {
                     double bearing = driver.getBearing() == null ? 0 : driver.getBearing();
                     int vehicleType = driver.getVehicleType() == null ? VEHICLE_AUTO : driver.getVehicleType();
                     Data.driverInfos.add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
-                            phoneNo, rating, carNumber, 0, bearing, vehicleType));
+                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds()));
                 }
             }
         } catch (Exception e) {

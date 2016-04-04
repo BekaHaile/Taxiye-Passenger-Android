@@ -12,15 +12,15 @@ import product.clicklabs.jugnoo.datastructure.FareStructure;
  */
 public class VehicleType {
 
-	@SerializedName("id")
+	@SerializedName("vehicle_type")
 	@Expose
-	private Integer id;
-	@SerializedName("name")
-	@Expose
-	private String name;
+	private Integer vehicleType;
 	@SerializedName("region_id")
 	@Expose
 	private Integer regionId;
+	@SerializedName("region_name")
+	@Expose
+	private String regionName;
 	@SerializedName("icon_set")
 	@Expose
 	private String iconSet;
@@ -28,12 +28,15 @@ public class VehicleType {
 	private VehicleIconSet vehicleIconSet;
 
 	private FareStructure fareStructure;
+
+	@SerializedName("eta")
+	@Expose
 	private String eta;
 
 	public VehicleType(){
-		this.id = Constants.VEHICLE_AUTO;
-		this.name = "Auto";
+		this.vehicleType = Constants.VEHICLE_AUTO;
 		this.regionId = Constants.VEHICLE_AUTO;
+		this.regionName = "Auto";
 		this.iconSet = VehicleIconSet.AUTO.getName();
 		this.vehicleIconSet = VehicleIconSet.AUTO;
 		this.eta = "-";
@@ -41,20 +44,12 @@ public class VehicleType {
 	}
 
 
-	public Integer getId() {
-		return id;
+	public Integer getVehicleType() {
+		return vehicleType;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setVehicleType(Integer vehicleType) {
+		this.vehicleType = vehicleType;
 	}
 
 	public FareStructure getFareStructure() {
@@ -63,6 +58,14 @@ public class VehicleType {
 
 	public void setFareStructure(FareStructure fareStructure) {
 		this.fareStructure = fareStructure;
+	}
+
+	public String getRegionName() {
+		return regionName;
+	}
+
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
 	}
 
 	public String getEta() {
