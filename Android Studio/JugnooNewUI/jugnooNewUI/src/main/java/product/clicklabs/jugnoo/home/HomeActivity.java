@@ -3811,6 +3811,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         } else {
                             customerUIBackToInitialAfterCancel();
+                            try {
+                                JSONObject map = new JSONObject();
+                                map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_CANCEL_REQUEST, map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();

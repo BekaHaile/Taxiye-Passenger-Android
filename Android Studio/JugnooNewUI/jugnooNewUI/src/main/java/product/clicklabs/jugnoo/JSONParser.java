@@ -279,11 +279,35 @@ public class JSONParser implements Constants {
         try {
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
                     Data.userData.userEmail, Data.userData.phoneNo);
+            if(loginVia == LoginVia.EMAIL_OTP
+                    || loginVia == LoginVia.FACEBOOK_OTP
+                    || loginVia == LoginVia.GOOGLE_OTP) {
+                nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
+                        Data.userData.userEmail, Data.userData.userName);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
+
+
         return resp;
+    }
+
+    private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName){
+        try {
+            JSONObject map = new JSONObject();
+            map.put(KEY_USER_ID, userId);
+            map.put(KEY_PHONE_NO, phoneNo);
+            map.put(KEY_EMAIL, email);
+            map.put(KEY_USER_NAME, userName);
+            map.put(KEY_LATITUDE, Data.loginLatitude);
+            map.put(KEY_LONGITUDE, Data.loginLongitude);
+            NudgeClient.trackEvent(context, FlurryEventNames.NUDGE_SIGNUP_VERIFIED, map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -213,4 +213,13 @@ public interface Constants {
 	String KEY_GIVEN_RATING = "given_rating";
 	String KEY_COUPONS = "coupons";
 
+	String KEY_SIGNED_UP_AT = "signed_up_at";
+	String KEY_CONTACTS = "contacts";
+	String KEY_CONTACT_TYPE = "contact_type";
+	String KEY_CONTACT_VALUE = "contact_value";
+	String KEY_SUBSCRIPTION_STATUS = "subscription_status";
+	String KEY_ACTIVE = "active";
+	String KEY_PHONE = "phone";
+
+
 }

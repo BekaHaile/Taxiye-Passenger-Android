@@ -7,6 +7,7 @@ import com.nudgespot.api.auth.NudgespotCredentials;
 import com.nudgespot.resource.NudgespotActivity;
 import com.nudgespot.resource.NudgespotSubscriber;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
@@ -28,14 +29,6 @@ public class NudgeClient {
 		return mGcmClient;
 	}
 
-	public static void initialize(Context context, String userId){
-		try {
-			getGcmClient(context).initialize(userId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static void initialize(Context context, String userId, String userName, String email, String phoneNo){
 		try {
 			NudgespotSubscriber subscriber = new NudgespotSubscriber(userId);
@@ -43,6 +36,21 @@ public class NudgeClient {
 			props.put(Constants.KEY_USER_NAME, userName);
 			props.put(Constants.KEY_EMAIL, email);
 			props.put(Constants.KEY_PHONE_NO, phoneNo);
+			props.put(Constants.KEY_SIGNED_UP_AT, DateOperations.getCurrentTimeInUTC());
+
+			JSONArray jArray = new JSONArray();
+			JSONObject jContact = new JSONObject();
+			jContact.put(Constants.KEY_CONTACT_TYPE, Constants.KEY_EMAIL);
+			jContact.put(Constants.KEY_CONTACT_VALUE, email);
+			jContact.put(Constants.KEY_SUBSCRIPTION_STATUS, Constants.KEY_ACTIVE);
+			jArray.put(jContact);
+			JSONObject jContact1 = new JSONObject();
+			jContact1.put(Constants.KEY_CONTACT_TYPE, Constants.KEY_PHONE);
+			jContact1.put(Constants.KEY_CONTACT_VALUE, phoneNo);
+			jContact1.put(Constants.KEY_SUBSCRIPTION_STATUS, Constants.KEY_ACTIVE);
+			jArray.put(jContact1);
+			props.put(Constants.KEY_CONTACTS, jArray);
+
 			subscriber.setProperties(props);
 			getGcmClient(context).initialize(subscriber);
 		} catch (Exception e) {

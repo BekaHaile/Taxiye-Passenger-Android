@@ -251,11 +251,13 @@ public interface FlurryEventNames {
 
 
     String NUDGE_REQUEST_RIDE = "request_ride",
+            NUDGE_NO_COUPONS = "no_coupons",
             NUDGE_COUPON_AVAILABLE = "coupon_available",
             NUDGE_INVITE_FRIENDS = "invite_friends",
             NUDGE_DRIVER_NOT_ASSIGNED = "driver_not_assigned",
             NUDGE_RIDE_COMPLETED = "ride_completed",
             NUDGE_FEEDBACK = "feedback",
+            NUDGE_CANCEL_REQUEST = "cancel_request",
             NUDGE_CANCEL_RIDE = "cancel_ride",
             NUDGE_APP_OPEN = "app_open",
             NUDGE_SIGNUP = "signup",

@@ -202,6 +202,13 @@ public class SlidingBottomPanel {
 					} else {
 						selectedCoupon = new CouponInfo(0, "");
 						textViewOffersValue.setText("");
+                        try {
+                            JSONObject map = new JSONObject();
+                            map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                            NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_NO_COUPONS, map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 					}
 				}
 				if (promoCoupons.size() > 0) {
