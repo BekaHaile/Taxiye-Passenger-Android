@@ -23,6 +23,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -47,156 +48,187 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter myNotificationAdapter;
     private ArrayList<NotificationData> notificationList;
-	private LinearLayout linearLayoutNoNotifications;
-	private int totalRides = 0;
-	private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout linearLayoutNoNotifications;
+    private int totalRides = 0;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_center);
 
-		EventsHolder.displayPushHandler = this;
+        EventsHolder.displayPushHandler = this;
 
-        root = (LinearLayout)findViewById(R.id.root);
+        root = (LinearLayout) findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.mavenRegular(this));
-        imageViewBack = (ImageView)findViewById(R.id.imageViewBack);
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
-		swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
-		swipeRefreshLayout.setColorSchemeResources(R.color.theme_color);
-		linearLayoutNoNotifications = (LinearLayout) findViewById(R.id.linearLayoutNoNotifications);
-		linearLayoutNoNotifications.setVisibility(View.GONE);
-		((TextView)findViewById(R.id.textViewNoNotifications)).setTypeface(Fonts.mavenLight(this));
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.theme_color);
+        linearLayoutNoNotifications = (LinearLayout) findViewById(R.id.linearLayoutNoNotifications);
+        linearLayoutNoNotifications.setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.textViewNoNotifications)).setTypeface(Fonts.mavenLight(this));
 
         recyclerViewNotification = (RecyclerView) findViewById(R.id.my_request_recycler);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
-		recyclerViewNotification.setHasFixedSize(false);
+        recyclerViewNotification.setHasFixedSize(false);
 
-		notificationList = new ArrayList<>();
-		myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this,
-				R.layout.list_item_notification, totalRides, new NotificationAdapter.Callback() {
-			@Override
-			public void onShowMoreClick() {
-				getNotificationInboxApi();
-			}
-		});
-		recyclerViewNotification.setAdapter(myNotificationAdapter);
+        notificationList = new ArrayList<>();
+        myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this,
+                R.layout.list_item_notification, totalRides, new NotificationAdapter.Callback() {
+            @Override
+            public void onShowMoreClick() {
+                getNotificationInboxApi();
+            }
+        });
+        recyclerViewNotification.setAdapter(myNotificationAdapter);
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
 
-		//loadListFromDB();
+        //loadListFromDB();
 
-		getNotificationInboxApi();
+        getNotificationInboxApi();
 
-		FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
+        FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
 
-		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				notificationList.clear();
-				getNotificationInboxApi();
-			}
-		});
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                notificationList.clear();
+                getNotificationInboxApi();
+            }
+        });
     }
 
 
+    private void loadListFromDB() {
+        notificationList.clear();
+        notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
+        Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+        if (notificationList.size() > 0) {
+            linearLayoutNoNotifications.setVisibility(View.GONE);
+        } else {
+            linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+        }
+        myNotificationAdapter.notifyDataSetChanged();
+    }
 
-	private void loadListFromDB(){
-		notificationList.clear();
-		notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
-		Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-		if(notificationList.size() > 0){
-			linearLayoutNoNotifications.setVisibility(View.GONE);
-		} else{
-			linearLayoutNoNotifications.setVisibility(View.VISIBLE);
-		}
-		myNotificationAdapter.notifyDataSetChanged();
-	}
 
-
-    public void performBackPressed(){
-        Intent intent=new Intent();
+    public void performBackPressed() {
+        Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
-	@Override
-	public void onBackPressed() {
-		performBackPressed();
-	}
+    @Override
+    public void onBackPressed() {
+        performBackPressed();
+    }
 
-	@Override
-	protected void onDestroy() {
-		ASSL.closeActivity(root);
-		super.onDestroy();
-		System.gc();
-	}
+    @Override
+    protected void onDestroy() {
+        ASSL.closeActivity(root);
+        super.onDestroy();
+        System.gc();
+    }
 
-	@Override
-	public void onDisplayMessagePushReceived() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				swipeRefreshLayout.setRefreshing(true);
-				notificationList.clear();
-				getNotificationInboxApi();
-			}
-		});
-	}
+    @Override
+    public void onDisplayMessagePushReceived() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                notificationList.clear();
+                getNotificationInboxApi();
+            }
+        });
+    }
 
-	private void getNotificationInboxApi(){
+    private void getNotificationInboxApi() {
+        try {
+            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+                if(!swipeRefreshLayout.isRefreshing()) {
+                    DialogPopup.showLoadingDialog(NotificationCenterActivity.this, "Loading...");
+                }
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put("offset", String.valueOf(notificationList.size()));
 
-		HashMap<String, String> params = new HashMap<>();
-		params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-		params.put("offset", String.valueOf(notificationList.size()));
+                RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
+                    @Override
+                    public void success(NotificationInboxResponse notificationInboxResponse, Response response) {
+                        DialogPopup.dismissLoadingDialog();
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                            Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+                            notificationList.addAll(notificationInboxResponse.getPushes());
+                            Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+                            if (notificationList.size() > 0) {
+                                linearLayoutNoNotifications.setVisibility(View.GONE);
+                            } else {
+                                linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+                            }
+                            myNotificationAdapter.notifyList(notificationInboxResponse.getTotal());
+                        }
+                    }
 
-		RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
-			@Override
-			public void success(NotificationInboxResponse notificationInboxResponse, Response response) {
-				swipeRefreshLayout.setRefreshing(false);
-				if(notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-					Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-					notificationList.addAll(notificationInboxResponse.getPushes());
-					Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-					if (notificationList.size() > 0) {
-						linearLayoutNoNotifications.setVisibility(View.GONE);
-					} else {
-						linearLayoutNoNotifications.setVisibility(View.VISIBLE);
-					}
-					myNotificationAdapter.notifyList(notificationInboxResponse.getTotal());
-				}
-			}
+                    @Override
+                    public void failure(RetrofitError error) {
+                        DialogPopup.dismissLoadingDialog();
+                        swipeRefreshLayout.setRefreshing(false);
+                        DialogPopup.dialogNoInternet(NotificationCenterActivity.this, DialogErrorType.CONNECTION_LOST,
+                                new Utils.AlertCallBackWithButtonsInterface() {
+                                    @Override
+                                    public void positiveClick(View view) {
 
-			@Override
-			public void failure(RetrofitError error) {
-				swipeRefreshLayout.setRefreshing(false);
-				DialogPopup.dialogNoInternet(NotificationCenterActivity.this, DialogErrorType.CONNECTION_LOST, new Utils.AlertCallBackWithButtonsInterface() {
-					@Override
-					public void positiveClick(View view) {
+                                    }
 
-					}
+                                    @Override
+                                    public void neutralClick(View view) {
 
-					@Override
-					public void neutralClick(View view) {
+                                    }
 
-					}
+                                    @Override
+                                    public void negativeClick(View view) {
 
-					@Override
-					public void negativeClick(View view) {
+                                    }
+                                });
+                    }
+                });
+            } else {
+                DialogPopup.dialogNoInternet(NotificationCenterActivity.this,
+                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        new Utils.AlertCallBackWithButtonsInterface() {
+                            @Override
+                            public void positiveClick(View v) {
+                                getNotificationInboxApi();
+                            }
 
-					}
-				});
-			}
-		});
-	}
+                            @Override
+                            public void neutralClick(View v) {
+
+                            }
+
+                            @Override
+                            public void negativeClick(View v) {
+
+                            }
+                        });
+            }
+        } catch (Exception e) {
+            DialogPopup.dismissLoadingDialog();
+            e.printStackTrace();
+        }
+    }
 
 }
