@@ -36,8 +36,8 @@ public class CustomMapMarkerCreator {
 
 	public static Bitmap createMarkerBitmapForResource(Activity activity, ASSL assl, int resourceId){
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(35.0f * scale);
-		int height = (int)(54.0f * scale);
+		int width = (int)(49.0f * scale);
+		int height = (int)(62.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mDotMarkerBitmap);
 		Drawable shape = activity.getResources().getDrawable(resourceId);

@@ -21,15 +21,31 @@ public class HomeUtil {
 	}
 
 	public VehicleIconSet getVehicleIconSet(String name){
-		if(VehicleIconSet.BIKE.getName().equalsIgnoreCase(name)){
-			return VehicleIconSet.BIKE;
-		} else if(VehicleIconSet.YELLOW_AUTO.getName().equalsIgnoreCase(name)){
+		if(VehicleIconSet.YELLOW_AUTO.getName().equalsIgnoreCase(name)){
 			return VehicleIconSet.YELLOW_AUTO;
-		}  else if(VehicleIconSet.RED_AUTO.getName().equalsIgnoreCase(name)){
+		}
+		else if(VehicleIconSet.RED_AUTO.getName().equalsIgnoreCase(name)){
 			return VehicleIconSet.RED_AUTO;
-		}  else if(VehicleIconSet.BIKE.getName().equalsIgnoreCase(name)){
-			return VehicleIconSet.BIKE;
-		} else{
+		}
+		else if(VehicleIconSet.ORANGE_BIKE.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.ORANGE_BIKE;
+		}
+		else if(VehicleIconSet.YELLOW_BIKE.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.YELLOW_BIKE;
+		}
+		else if(VehicleIconSet.RED_BIKE.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.RED_BIKE;
+		}
+		else if(VehicleIconSet.ORANGE_CAR.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.ORANGE_CAR;
+		}
+		else if(VehicleIconSet.YELLOW_CAR.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.YELLOW_CAR;
+		}
+		else if(VehicleIconSet.RED_CAR.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.RED_CAR;
+		}
+		else{
 			return VehicleIconSet.ORANGE_AUTO;
 		}
 	}

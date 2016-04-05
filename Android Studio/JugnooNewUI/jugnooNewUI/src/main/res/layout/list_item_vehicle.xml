@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/imageViewVehicle"
-            android:layout_width="63px"
-            android:layout_height="41px"
+            android:layout_width="75px"
+            android:layout_height="56px"
             android:src="@drawable/ic_auto_tab_orange"
             android:tag="mwar"
             />
@@ -29,7 +29,6 @@
             android:text="@string/auto"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22"
-            android:layout_marginTop="5px"
             />
 
 

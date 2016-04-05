@@ -228,6 +228,10 @@ public class SlidingBottomPanel {
 
     }
 
+    public RecyclerView getRecyclerViewVehicles(){
+        return recyclerViewVehicles;
+    }
+
     public void updatePaymentOption() {
         try {
             if(Data.userData.getPaytmError() == 1){

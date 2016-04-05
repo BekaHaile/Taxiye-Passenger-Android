@@ -416,7 +416,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private int showAllDrivers = 0, showDriverInfo = 0, priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 
-    private boolean intentFired = false, dropLocationSearched = false, promoOpened = false;
+    private boolean intentFired = false, dropLocationSearched = false;
 
 //    GenieLayout genieLayout;
 
@@ -483,7 +483,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         activityResumed = false;
         rechargedOnce = false;
         dropLocationSearched = false;
-        promoOpened = false;
 
         loggedOut = false;
         zoomedToMyLocation = false;
@@ -1709,6 +1708,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(map != null){
 				map.setPadding(0, 0, 0, (int)(ASSL.Yscale() * bottomPadding));
 				googleMapPadding = bottomPadding;
+//                setCentrePinAccToGoogleMapPadding();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1897,9 +1897,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-			if(!promoOpened) {
-				updateInRideAddPaytmButtonText();
-			}
+            updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
 
             slidingBottomPanel.updatePreferredPaymentOptionUI();
@@ -1933,8 +1931,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchPassengerScreen(PassengerScreenMode mode) {
         try {
-			promoOpened = false;
-
             imageViewMenu.setVisibility(View.VISIBLE);
 
             if (userMode == UserMode.PASSENGER) {
@@ -2607,7 +2603,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private RideSummaryFragment getRideSummaryFragment(){
         Fragment frag = getSupportFragmentManager()
-                .findFragmentByTag(RideSummaryFragment.class.getSimpleName());
+                .findFragmentByTag(RideSummaryFragment.class.getName());
         return (RideSummaryFragment) frag;
     }
 
@@ -2726,9 +2722,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-		if(!promoOpened) {
-
-		}
     }
 
 	private void setBottomMarginOfView(View view, float bottomMargin){
@@ -2942,7 +2935,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 try {
                     if (activityResumed) {
-                        if (!feedbackSkipped && !promoOpened && !placeAdded
+                        if (!feedbackSkipped && !placeAdded
                             && PassengerScreenMode.P_RIDE_END != passengerScreenMode) {
                             mapTouched = false;
                             callAndHandleStateRestoreAPI(false);
@@ -3334,10 +3327,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
 				backFromSearchToInitial();
             }
-            else if (promoOpened && PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                switchPassengerScreen(passengerScreenMode);
-            }
             else if(dropLocationSearched && PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
                 stopDropLocationSearchUI(false);
                 FlurryEventLogger.event(DROP_LOCATION_OPENED_NOT_USED_FINDING_DRIVER);
@@ -3508,17 +3497,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
-//									genieLayout.setVisibility(View.GONE);
+                slidingBottomPanel.getRecyclerViewVehicles().setVisibility(View.GONE);
             } else {
-                if (!promoOpened) {
-                    imageViewRideNow.setVisibility(View.VISIBLE);
-                    initialMyLocationBtn.setVisibility(View.VISIBLE);
-                }
+                imageViewRideNow.setVisibility(View.VISIBLE);
+                initialMyLocationBtn.setVisibility(View.VISIBLE);
                 changeLocalityLayout.setVisibility(View.GONE);
-
-                if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !promoOpened) {
-//										genieLayout.setVisibility(View.VISIBLE);
-                }
             }
         }
 	}
@@ -5329,62 +5312,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 Log.e(TAG, "requestRide result=" + response);
 
-//                                {
-//                                    "flag": 105,
-//                                    "log": "Assigning driver",
-//                                    "session_id": 41082,
-//                                    "latitude": 30.718031,
-//                                    "longitude": 76.811286,
-//                                    "start_time": "2015-12-22 05:55:59"
-//                                }
-
-//                                {
-//                                    "engagement_id": 52949,
-//                                    "session_id": 41085,
-//                                    "driver_id": 1515,
-//                                    "pickup_latitude": 30.718031,
-//                                    "pickup_longitude": 76.811286,
-//                                    "status": 1,
-//                                    "free_ride": 0,
-//                                    "fare_factor": 1,
-//                                    "fare_details": {
-//                                    "id": 5,
-//                                        "fare_fixed": 15,
-//                                        "fare_per_km": 5,
-//                                        "fare_threshold_distance": 0,
-//                                        "fare_per_min": 1,
-//                                        "fare_threshold_time": 0,
-//                                        "night_fare_applicable": 0,
-//                                        "fare_per_waiting_min": 2,
-//                                        "fare_threshold_waiting_time": 0,
-//                                        "type": 0,
-//                                        "per_ride_driver_subsidy": 0,
-//                                        "accept_subsidy_per_km": 0,
-//                                        "accept_subsidy_threshold_distance": 0,
-//                                        "accept_subsidy_before_threshold": 0,
-//                                        "accept_subsidy_after_threshold": 0
-//                                },
-//                                    "coupon": "",
-//                                    "promotion": "",
-//                                    "user_name": "Driver 007",
-//                                    "phone_no": "+916000000040",
-//                                    "user_image": "http://tablabar.s3.amazonaws.com/brand_images/user.png",
-//                                    "driver_car_image": "",
-//                                    "driver_car_no": "DL 4C 1234",
-//                                    "current_location_latitude": 30.719034,
-//                                    "current_location_longitude": 76.810056,
-//                                    "total_rating_got_driver": 8,
-//                                    "total_rating_driver": 35,
-//                                    "rating": 4.375,
-//                                    "eta": 1,
-//                                    "flag": 107,
-//                                    "preferred_payment_mode": 1
-//                                }
-
-//                                {
-//                                    "flag": 106,
-//                                    "log": "Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later."
-//                                }
                                 if (responseRetro == null || response == null
                                         || response.contains(Constants.SERVER_TIMEOUT)) {
                                     Log.e("timeout", "=");
@@ -6018,7 +5945,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (showDialogs) {
                                         DialogPopup.dismissLoadingDialog();
                                     }
-									if(!promoOpened && !placeAdded) {
+									if(!placeAdded) {
 										startUIAfterGettingUserStatus();
 									}
                                 } catch (Exception e) {

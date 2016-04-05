@@ -15,12 +15,6 @@ public enum VehicleIconSet {
 			R.drawable.ic_auto_request_pressed,
 			R.drawable.ic_auto_invoice),
 
-	BIKE("bike", R.drawable.ic_bike_tab,
-			R.drawable.ic_bike_marker,
-			R.drawable.ic_bike_request_normal,
-			R.drawable.ic_bike_request_pressed,
-			R.drawable.ic_bike_invoice),
-
 	YELLOW_AUTO("YELLOW AUTO", R.drawable.ic_auto_tab_yellow,
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_auto_request_normal,
@@ -31,7 +25,48 @@ public enum VehicleIconSet {
 			R.drawable.ic_auto_marker,
 			R.drawable.ic_auto_request_normal,
 			R.drawable.ic_auto_request_pressed,
-			R.drawable.ic_auto_invoice)
+			R.drawable.ic_auto_invoice),
+
+
+
+	ORANGE_BIKE("ORANGE BIKE", R.drawable.ic_bike_tab_orange,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_bike_invoice),
+
+	YELLOW_BIKE("YELLOW BIKE", R.drawable.ic_bike_tab_yellow,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_bike_invoice),
+
+	RED_BIKE("RED BIKE", R.drawable.ic_bike_tab_red,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_bike_invoice),
+
+
+
+	ORANGE_CAR("ORANGE CAR", R.drawable.ic_car_tab_orange,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_car_invoice),
+
+	YELLOW_CAR("YELLOW CAR", R.drawable.ic_car_tab_yellow,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_car_invoice),
+
+	RED_CAR("RED CAR", R.drawable.ic_car_tab_red,
+			R.drawable.ic_bike_marker,
+			R.drawable.ic_bike_request_normal,
+			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_car_invoice),
+
 	;
 
 
