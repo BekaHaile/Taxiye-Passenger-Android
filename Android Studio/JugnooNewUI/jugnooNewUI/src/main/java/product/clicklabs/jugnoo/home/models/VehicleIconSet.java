@@ -51,20 +51,20 @@ public enum VehicleIconSet {
 
 	ORANGE_CAR("ORANGE CAR", R.drawable.ic_car_tab_orange,
 			R.drawable.ic_bike_marker,
-			R.drawable.ic_bike_request_normal,
-			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_car_request_normal,
+			R.drawable.ic_car_request_pressed,
 			R.drawable.ic_car_invoice),
 
 	YELLOW_CAR("YELLOW CAR", R.drawable.ic_car_tab_yellow,
 			R.drawable.ic_bike_marker,
-			R.drawable.ic_bike_request_normal,
-			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_car_request_normal,
+			R.drawable.ic_car_request_pressed,
 			R.drawable.ic_car_invoice),
 
 	RED_CAR("RED CAR", R.drawable.ic_car_tab_red,
 			R.drawable.ic_bike_marker,
-			R.drawable.ic_bike_request_normal,
-			R.drawable.ic_bike_request_pressed,
+			R.drawable.ic_car_request_normal,
+			R.drawable.ic_car_request_pressed,
 			R.drawable.ic_car_invoice),
 
 	;
