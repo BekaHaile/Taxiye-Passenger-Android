@@ -392,7 +392,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
+    public static final double MIN_DISTANCE_FOR_REFRESH = -1; // in meters
 
     public static final float MAX_ZOOM = 15;
 
@@ -1708,7 +1708,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			if(map != null){
 				map.setPadding(0, 0, 0, (int)(ASSL.Yscale() * bottomPadding));
 				googleMapPadding = bottomPadding;
-//                setCentrePinAccToGoogleMapPadding();
+                setCentrePinAccToGoogleMapPadding();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2065,7 +2065,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         checkForFareAvailablity();
 
-                        findADriverFinishing(0);
+                        findADriverFinishing();
 
                         break;
 
@@ -3423,8 +3423,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onComplete(int pos) {
-                    findADriverFinishing(pos);
+                public void onComplete() {
+                    findADriverFinishing();
                 }
 
                 @Override
@@ -3452,14 +3452,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 slidingBottomPanel.getRegionSelected());
     }
 
-    private void findADriverFinishing(int pos){
+    private void findADriverFinishing(){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            try {
+                slidingBottomPanel.update(Data.promoCoupons);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             try {
                 HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
                 HomeActivity.this.farAwayCity = Data.farAwayCity;
 
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                    setVehicleTypeSelected(pos);
                     showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
@@ -3471,11 +3475,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setServiceAvailablityUI(farAwayCity);
                 }
                 setFareFactorToInitialState();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                slidingBottomPanel.update(Data.promoCoupons);
             } catch (Exception e) {
                 e.printStackTrace();
             }

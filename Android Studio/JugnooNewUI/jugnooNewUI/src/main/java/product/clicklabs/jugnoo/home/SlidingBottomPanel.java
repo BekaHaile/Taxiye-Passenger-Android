@@ -56,8 +56,7 @@ public class SlidingBottomPanel {
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
     private ArrayList<PromoCoupon> promoCoupons;
 
-    private Region regionSelected = null,
-                        regionDefault = new Region();
+    private Region regionSelected = null;
 
     private RecyclerView recyclerViewVehicles;
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -128,8 +127,6 @@ public class SlidingBottomPanel {
 
         update(null);
 
-        regionSelected = regionDefault;
-
         recyclerViewVehicles = (RecyclerView) view.findViewById(R.id.recyclerViewVehicles);
         recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
                 LinearLayoutManager.HORIZONTAL, false));
@@ -198,8 +195,6 @@ public class SlidingBottomPanel {
 				textViewOffersValue.setText("");
 			}
 
-            updateFareFrag();
-
             Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
             if (frag != null && frag instanceof SlidingBottomOffersFragment) {
 				((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
@@ -208,12 +203,16 @@ public class SlidingBottomPanel {
             updatePaymentOption();
 
             if(Data.regions.size() > 1){
-                regionDefault = Data.regions.get(0);
+                for (int i=0; i<Data.regions.size(); i++) {
+                    if(Data.regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())
+                            && Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
+                        regionSelected = Data.regions.get(i);
+                    }
+                }
                 vehiclesTabAdapter.notifyDataSetChanged();
                 recyclerViewVehicles.setVisibility(View.VISIBLE);
 
             } else if(Data.regions.size() > 0){
-                regionDefault = Data.regions.get(0);
                 activity.setVehicleTypeSelected(0);
                 regionSelected = Data.regions.get(0);
                 recyclerViewVehicles.setVisibility(View.GONE);
@@ -221,6 +220,9 @@ public class SlidingBottomPanel {
             } else{
                 activity.forceFarAwayCity();
             }
+
+            updateFareStructureUI();
+
             checkForGoogleLogoVisibilityBeforeRide();
         } catch (Exception e) {
             e.printStackTrace();
@@ -354,15 +356,17 @@ public class SlidingBottomPanel {
 
     public Region getRegionSelected() {
         if(regionSelected == null){
-            regionSelected = regionDefault;
+            if(Data.regions.size() > 0){
+                regionSelected = Data.regions.get(0);
+            } else{
+                regionSelected = new Region();
+            }
         }
         return regionSelected;
     }
     public void setRegionSelected(int position) {
         if (position > -1 && position < Data.regions.size()) {
             regionSelected = Data.regions.get(position);
-        } else {
-            regionSelected = regionDefault;
         }
         vehiclesTabAdapter.notifyDataSetChanged();
         updateFareStructureUI();
@@ -371,7 +375,7 @@ public class SlidingBottomPanel {
 
     private void updateFareStructureUI(){
         for (int i = 0; i < Data.regions.size(); i++) {
-            if (Data.regions.get(i).getVehicleType().equals(regionSelected.getVehicleType())) {
+            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
                 Data.fareStructure = Data.regions.get(i).getFareStructure();
                 break;
             }

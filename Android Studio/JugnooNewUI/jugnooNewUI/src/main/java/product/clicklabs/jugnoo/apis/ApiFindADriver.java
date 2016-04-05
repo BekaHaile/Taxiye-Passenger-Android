@@ -47,7 +47,7 @@ public class ApiFindADriver {
 	}
 
 	public void hit(String accessToken, LatLng latLng, final int showAllDrivers, int showDriverInfo,
-					final Region regionSelected){
+					Region regionSelected){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
@@ -77,9 +77,9 @@ public class ApiFindADriver {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_FIND_A_DRIVER, startTime);
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.e(TAG, "findADriverCall response=" + resp);
-						int pos = parseFindADriverResponse(findADriverResponse);
+						parseFindADriverResponse(findADriverResponse);
 						if(callback != null) {
-							callback.onComplete(pos);
+							callback.onComplete();
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -100,8 +100,7 @@ public class ApiFindADriver {
 	}
 
 
-	public int parseFindADriverResponse(FindADriverResponse findADriverResponse){
-		int pos = 0;
+	public void parseFindADriverResponse(FindADriverResponse findADriverResponse){
 		try {
 			Data.driverInfos.clear();
 			if(findADriverResponse.getDrivers() != null) {
@@ -141,15 +140,9 @@ public class ApiFindADriver {
 			}
 			if(findADriverResponse.getRegions() != null) {
 				HomeUtil homeUtil = new HomeUtil();
-				for (int i=0; i<findADriverResponse.getRegions().size(); i++) {
-					Region region = findADriverResponse.getRegions().get(i);
+				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					Data.regions.add(region);
-					if(regionSelected.getVehicleType().equals(region.getVehicleType())
-						&& regionSelected.getRegionId().equals(region.getRegionId())){
-						regionSelected = region;
-						pos = i;
-					}
 				}
 			}
 		} catch(Exception e){
@@ -218,14 +211,13 @@ public class ApiFindADriver {
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
-		return pos;
 	}
 
 
 	public interface Callback{
 		void onPre();
 		void onFailure();
-		void onComplete(int pos);
+		void onComplete();
 	}
 
 }
