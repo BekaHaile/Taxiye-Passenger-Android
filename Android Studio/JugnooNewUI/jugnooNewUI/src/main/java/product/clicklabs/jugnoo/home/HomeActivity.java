@@ -2065,7 +2065,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         checkForFareAvailablity();
 
-                        findADriverFinishing();
+                        findADriverFinishing(0);
 
                         break;
 
@@ -3423,8 +3423,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onComplete() {
-                    findADriverFinishing();
+                public void onComplete(int pos) {
+                    findADriverFinishing(pos);
                 }
 
                 @Override
@@ -3452,13 +3452,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 slidingBottomPanel.getRegionSelected());
     }
 
-    private void findADriverFinishing(){
+    private void findADriverFinishing(int pos){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
                 HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
                 HomeActivity.this.farAwayCity = Data.farAwayCity;
 
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
+                    setVehicleTypeSelected(pos);
                     showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
