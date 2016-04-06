@@ -4545,15 +4545,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View view) {
                     if(AppStatus.getInstance(activity).isOnline(activity)) {
                         dialog.dismiss();
-                        int driversCount = 0;
-                        for(DriverInfo driverInfo : Data.driverInfos){
-                            if(slidingBottomPanel.getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
-                                    && driverInfo.getRegionIds() != null
-                                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRegionSelected().getVehicleType())){
-                                driversCount++;
-                            }
-                        }
-                        if (driversCount == 0) {
+                        if (getFilteredDrivers() == 0) {
                             noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                             //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
                         } else {
@@ -4647,7 +4639,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
                             dialog.show();
                         } else {
-                            if (Data.driverInfos.size() == 0) {
+                            if (getFilteredDrivers() == 0) {
                                 noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                             } else{
                                 initiateRequestRide(true);
@@ -4660,6 +4652,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getFilteredDrivers(){
+        int driversCount = 0;
+        for(DriverInfo driverInfo : Data.driverInfos){
+            if(slidingBottomPanel.getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
+                    && driverInfo.getRegionIds() != null
+                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRegionSelected().getRegionId())){
+                driversCount++;
+            }
+        }
+        return driversCount;
     }
 
     private void noDriverNearbyToast(String message){
