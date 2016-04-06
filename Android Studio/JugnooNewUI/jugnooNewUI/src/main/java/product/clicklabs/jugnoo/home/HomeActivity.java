@@ -1831,6 +1831,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     lastSearchLatLng = null;
 					setCentrePinAccToGoogleMapPadding();
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM));
+                    mapTouched = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4560,7 +4561,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View view) {
                     if(AppStatus.getInstance(activity).isOnline(activity)) {
                         dialog.dismiss();
-                        if (Data.driverInfos.size() == 0) {
+                        int driversCount = 0;
+                        for(DriverInfo driverInfo : Data.driverInfos){
+                            if(slidingBottomPanel.getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
+                                    && driverInfo.getRegionIds() != null
+                                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRegionSelected().getVehicleType())){
+                                driversCount++;
+                            }
+                        }
+                        if (driversCount == 0) {
                             noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                             //Toast.makeText(HomeActivity.this, getResources().getString(R.string.no_driver_nearby_try_again), Toast.LENGTH_LONG).show();
                         } else {
@@ -6414,6 +6423,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewInitialSearch.setText(searchResult.name);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 500, null);
                 lastSearchLatLng = searchResult.latLng;
+                mapTouched = true;
 
                 try {
                     Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
