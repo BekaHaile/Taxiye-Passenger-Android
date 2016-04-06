@@ -263,6 +263,11 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".fresh.FreshActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".wallet.PaytmRechargeWebViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">

@@ -139,6 +139,7 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -801,6 +802,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawer(menuLayout);
+                startActivity(new Intent(HomeActivity.this, FreshActivity.class));
+                overridePendingTransition(R.anim.shrink_to_middle, R.anim.grow_from_middle);
             }
         });
 
