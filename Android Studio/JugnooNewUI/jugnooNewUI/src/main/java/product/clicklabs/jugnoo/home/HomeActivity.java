@@ -3480,6 +3480,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
 
+                textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
                 slidingBottomPanel.getRecyclerViewVehicles().setVisibility(View.GONE);
