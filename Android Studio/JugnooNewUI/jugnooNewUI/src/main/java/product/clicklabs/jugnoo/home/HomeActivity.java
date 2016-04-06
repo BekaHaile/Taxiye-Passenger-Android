@@ -5525,7 +5525,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
 				rateAppPopup(HomeActivity.this);
-			} else {
 			}
             firstTimeZoom = false;
             pickupDropZoomed = false;
@@ -5533,6 +5532,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             slidingBottomPanel.setSelectedCoupon(null);
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
+            callMapTouchedRefreshDrivers();
 
             Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
             setUserData();
@@ -6249,8 +6249,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             params.put("access_token", Data.userData.accessToken);
             params.put("engagement_id", engagementId);
 
-            try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
-
             RestClient.getApiServices().skipRatingByCustomer(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -6265,6 +6263,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Database2.getInstance(activity).insertPendingAPICall(activity,
                     PendingCall.SKIP_RATING_BY_CUSTOMER.getPath(), params);
+
+            try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
 
             HomeActivity.feedbackSkipped = true;
             afterRideFeedbackSubmitted(0, true);
@@ -6304,12 +6304,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                    try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
                                     afterRideFeedbackSubmitted(givenRating, false);
-                                    try {
-                                        Data.driverInfos.clear();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
