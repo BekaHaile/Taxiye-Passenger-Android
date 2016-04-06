@@ -137,11 +137,10 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.sticky.JugnooJeanieTutorialActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -1495,42 +1494,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             startUIAfterGettingUserStatus();
 
 			if(Data.userData.getPromoSuccess() != 0) {
-				new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//						showPaytmTutorialPopup(HomeActivity.this);
-                    }
-                }, 1000);
-
-                // ****** Jugnoo Jeanie Tutorial Screen ****** //
-
-
-                //startActivity(new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class));
-
                 // ****** New Look Tutorial Screen ***** //
-
-                if((Prefs.with(HomeActivity.this).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
-                    if((Prefs.with(HomeActivity.this).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
-                            &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
-                        Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
-                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
-                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
-                        startActivity(intent);
-                    } else{
-                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
-                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
-                        startActivity(intent);
-                    }
-                    relativeLayoutLocationError.setVisibility(View.GONE);
-                    initialMyLocationBtn.setVisibility(View.VISIBLE);
-                    imageViewRideNow.setVisibility(View.VISIBLE);
-                    centreLocationRl.setVisibility(View.VISIBLE);
-                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-                    Prefs.with(HomeActivity.this).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
-                }
-
-
+//                if((Prefs.with(HomeActivity.this).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
+//                    if((Prefs.with(HomeActivity.this).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
+//                            &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
+//                        Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
+//                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
+//                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
+//                        startActivity(intent);
+//                    } else{
+//                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
+//                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
+//                        startActivity(intent);
+//                    }
+//                    relativeLayoutLocationError.setVisibility(View.GONE);
+//                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+//                    imageViewRideNow.setVisibility(View.VISIBLE);
+//                    centreLocationRl.setVisibility(View.VISIBLE);
+//                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+//
+//                    Prefs.with(HomeActivity.this).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
+//                }
 			}
 
             if(Data.userData.getGetGogu() == 1) {
