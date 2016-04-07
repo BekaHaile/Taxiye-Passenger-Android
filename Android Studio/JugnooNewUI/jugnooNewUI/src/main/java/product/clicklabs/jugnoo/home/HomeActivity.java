@@ -3753,21 +3753,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void setAddress(final String address, final TextView textView, final ProgressWheel progressBar){
 		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
+            @Override
+            public void run() {
                 progressBar.setVisibility(View.GONE);
-				if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-					textView.setHint(getResources().getString(R.string.set_pickup_location));
-					textView.setText(address);
-				} else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode
-                        ||PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                    textView.setHint(getResources().getString(R.string.set_pickup_location));
+                    textView.setText(address);
+                } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+                        || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                        || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                        || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                     textView.setHint(getResources().getString(R.string.enter_your_destination));
                     textView.setText(address);
                 }
-			}
-		});
+            }
+        });
 	}
 
     /**
@@ -3867,6 +3867,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             pickupLocationMarker.remove();
         }
 
+        dontCallRefreshDriver = false;
         callMapTouchedRefreshDrivers();
 
     }
@@ -5033,36 +5034,36 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			cont.runOnUiThread(new Runnable() {
 
-				@Override
-				public void run() {
+                @Override
+                public void run() {
 
-					FacebookLoginHelper.logoutFacebook();
+                    FacebookLoginHelper.logoutFacebook();
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(cont);
-					builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));
-					builder.setCancelable(false);
-					builder.setPositiveButton(cont.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							try {
-								dialog.dismiss();
-								Intent intent = new Intent(cont, SplashNewActivity.class);
-								intent.putExtra("no_anim", "yes");
-								cont.startActivity(intent);
-								cont.finish();
-								cont.overridePendingTransition(
-										R.anim.left_in,
-										R.anim.left_out);
-							} catch (Exception e) {
-								Log.i("excption logout",
-										e.toString());
-							}
-						}
-					});
+                    AlertDialog.Builder builder = new AlertDialog.Builder(cont);
+                    builder.setMessage(cont.getResources().getString(R.string.your_login_session_expired)).setTitle(cont.getResources().getString(R.string.alert));
+                    builder.setCancelable(false);
+                    builder.setPositiveButton(cont.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                dialog.dismiss();
+                                Intent intent = new Intent(cont, SplashNewActivity.class);
+                                intent.putExtra("no_anim", "yes");
+                                cont.startActivity(intent);
+                                cont.finish();
+                                cont.overridePendingTransition(
+                                        R.anim.left_in,
+                                        R.anim.left_out);
+                            } catch (Exception e) {
+                                Log.i("excption logout",
+                                        e.toString());
+                            }
+                        }
+                    });
 
-					AlertDialog alertDialog = builder.create();
-					alertDialog.show();
-				}
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
             });
 
 			Branch.getInstance(cont).logout();
@@ -5165,6 +5166,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
 				farAwayCity = "";
+                mapTouched = true;
 				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
 			}
 			zoomedToMyLocation = true;
@@ -5579,7 +5581,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             slidingBottomPanel.setSelectedCoupon(null);
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
-            callMapTouchedRefreshDrivers();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dontCallRefreshDriver = false;
+                    callMapTouchedRefreshDrivers();
+                }
+            }, 150);
 
             Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
             setUserData();
@@ -6354,6 +6362,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "rateTheDriver response = " + responseStr);
+                        DialogPopup.dismissLoadingDialog();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             int flag = jObj.getInt("flag");
@@ -6384,7 +6393,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             exception.printStackTrace();
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
-                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override
