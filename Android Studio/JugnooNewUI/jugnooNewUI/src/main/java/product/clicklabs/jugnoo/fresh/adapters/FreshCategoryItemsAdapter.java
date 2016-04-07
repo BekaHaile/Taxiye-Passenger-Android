@@ -69,8 +69,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
             public void onClick(View v) {
                 try {
                     int pos = (int) v.getTag();
-                    subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemTotalQuantity() > 0 ?
-                            subItems.get(pos).getSubItemTotalQuantity() - 1 : 0);
+                    subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+                            subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();

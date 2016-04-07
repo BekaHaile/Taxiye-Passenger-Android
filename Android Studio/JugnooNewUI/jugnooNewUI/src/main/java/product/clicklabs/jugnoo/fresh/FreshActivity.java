@@ -34,6 +34,19 @@ public class FreshActivity extends FragmentActivity {
 
 	}
 
+	private void performBackPressed(){
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		performBackPressed();
+	}
 
 	@Override
 	protected void onDestroy() {

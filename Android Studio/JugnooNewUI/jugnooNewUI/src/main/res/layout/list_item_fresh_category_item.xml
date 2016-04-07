@@ -11,10 +11,10 @@
 
     <ImageView
         android:id="@+id/imageViewItemImage"
-        android:layout_width="160px"
-        android:layout_height="160px"
+        android:layout_width="130px"
+        android:layout_height="130px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20px"
+        android:layout_marginLeft="30px"
         android:scaleType="centerCrop"
         android:tag="mwar"
         />
@@ -27,6 +27,7 @@
         android:orientation="vertical"
         android:layout_marginTop="20px"
         android:layout_marginBottom="20px"
+        android:layout_marginLeft="15px"
         >
 
         <TextView
@@ -121,7 +122,7 @@
         android:layout_marginRight="40px"
         android:tag="mwar"
         android:src="@drawable/ic_arrow_orange"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
     <ImageView

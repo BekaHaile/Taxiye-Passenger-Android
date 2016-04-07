@@ -802,8 +802,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawer(menuLayout);
-                startActivity(new Intent(HomeActivity.this, FreshActivity.class));
-                overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
             }
         });
 
@@ -1654,7 +1652,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.topRl:
-                    Log.e(TAG, "topBarMain.getVisibility()=>"+topBarMain.getVisibility());
                     break;
 
                 case R.id.imageViewMenu:
@@ -1668,6 +1665,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
 
                 case R.id.checkServerBtn:
+                    startActivity(new Intent(HomeActivity.this, FreshActivity.class));
+                    overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
                     break;
 
 
