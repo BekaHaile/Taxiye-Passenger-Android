@@ -392,7 +392,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final float WAIT_FOR_ACCURACY_UPPER_BOUND = 2000, WAIT_FOR_ACCURACY_LOWER_BOUND = 200;  //in meters
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_REFRESH = -1; // in meters
+    public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
 
     public static final float MAX_ZOOM = 15;
 
