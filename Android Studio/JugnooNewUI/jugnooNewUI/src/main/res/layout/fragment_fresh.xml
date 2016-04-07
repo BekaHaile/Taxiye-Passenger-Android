@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white_light_grey"
     >
 
     <product.clicklabs.jugnoo.fresh.widgets.PagerSlidingTabStrip
@@ -13,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="160px"
         android:visibility="visible"
-        android:background="@color/white"
         app:pstsIndicatorHeight="8px"
         app:pstsShouldExpand="true"
         app:pstsUnderlineColor="@color/grey_light"

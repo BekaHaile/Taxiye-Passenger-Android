@@ -803,7 +803,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 drawerLayout.closeDrawer(menuLayout);
                 startActivity(new Intent(HomeActivity.this, FreshActivity.class));
-                overridePendingTransition(R.anim.shrink_to_middle, R.anim.grow_from_middle);
+                overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
             }
         });
 

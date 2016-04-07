@@ -74,16 +74,17 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
-        android:layout_marginRight="30px"
-        android:layout_marginBottom="30px"
+        android:layout_marginRight="20px"
+        android:layout_marginBottom="20px"
         >
 
         <ImageView
             android:id="@+id/imageViewMinus"
-            android:layout_width="60px"
-            android:layout_height="60px"
+            android:layout_width="74px"
+            android:layout_height="74px"
             android:tag="mwar"
-            android:src="@drawable/ic_arrow_orange"
+            android:src="@drawable/ic_minus_selector"
+            android:padding="10px"
             />
 
         <TextView
@@ -99,10 +100,11 @@
 
         <ImageView
             android:id="@+id/imageViewPlus"
-            android:layout_width="60px"
-            android:layout_height="60px"
+            android:layout_width="74px"
+            android:layout_height="74px"
             android:tag="mwar"
-            android:src="@drawable/ic_arrow_orange"
+            android:src="@drawable/ic_plus_selector"
+            android:padding="10px"
             />
 
     </LinearLayout>
