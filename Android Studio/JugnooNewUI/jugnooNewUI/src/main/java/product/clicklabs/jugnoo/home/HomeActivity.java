@@ -5165,6 +5165,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
 				farAwayCity = "";
+                mapTouched = true;
 				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
 			}
 			zoomedToMyLocation = true;

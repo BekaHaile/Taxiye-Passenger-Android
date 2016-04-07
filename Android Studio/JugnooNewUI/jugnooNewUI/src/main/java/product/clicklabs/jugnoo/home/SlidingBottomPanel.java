@@ -230,11 +230,17 @@ public class SlidingBottomPanel {
             updatePaymentOption();
 
             if(Data.regions.size() > 1){
+                boolean matched = false;
                 for (int i=0; i<Data.regions.size(); i++) {
                     if(Data.regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())
                             && Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
                         regionSelected = Data.regions.get(i);
+                        matched = true;
+                        break;
                     }
+                }
+                if(!matched){
+                    regionSelected = Data.regions.get(0);
                 }
                 vehiclesTabAdapter.notifyDataSetChanged();
                 recyclerViewVehicles.setVisibility(View.VISIBLE);
@@ -396,6 +402,7 @@ public class SlidingBottomPanel {
             regionSelected = Data.regions.get(position);
         }
         vehiclesTabAdapter.notifyDataSetChanged();
+        recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
         updateFareStructureUI();
     }
 
