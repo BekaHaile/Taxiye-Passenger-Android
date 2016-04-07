@@ -68,9 +68,10 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.home.CheckForAppOpen;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -1295,18 +1296,18 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put("device_rooted", "0");
 				}
 
-				new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+				new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 				Log.e("params login_using_access_token", "=" + params);
 
 				final long startTime = System.currentTimeMillis();
-				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<LoginResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(LoginResponse loginResponse, Response response) {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 						Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
-						performLoginSuccess(activity, responseStr);
+						performLoginSuccess(activity, responseStr, loginResponse);
 					}
 
 					@Override
@@ -1330,7 +1331,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	public void performLoginSuccess(Activity activity, String response) {
+	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse) {
 		try {
 			JSONObject jObj = new JSONObject(response);
 
@@ -1347,7 +1348,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					DialogPopup.dismissLoadingDialog();
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-						accessTokenDataParseAsync(activity, response);
+						accessTokenDataParseAsync(activity, response, loginResponse);
 
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						Editor editor = pref1.edit();
@@ -1378,10 +1379,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		changeUIState(State.SPLASH_NO_NET);
 	}
 
-	public void accessTokenDataParseAsync(Activity activity, String response){
+	public void accessTokenDataParseAsync(Activity activity, String response, LoginResponse loginResponse){
 		String resp;
 		try {
-			resp = new JSONParser().parseAccessTokenLoginData(activity, response);
+			resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse);
 			Log.e("AccessTokenDataParseAsync resp", "=" + resp);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1897,13 +1898,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
 				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
+				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
 					try {
@@ -1936,7 +1937,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr, loginResponse);
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
 									loginDataFetched = true;
 								}
@@ -2006,13 +2007,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
-			RestClient.getApiServices().loginUsingFacebook(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
 				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
+				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
 
@@ -2042,7 +2043,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr, loginResponse);
 									loginDataFetched = true;
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
@@ -2108,14 +2109,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 
-			new CheckForAppOpen().checkAndFillParamsForIgnoringAppOpen(this, params);
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "" + params);
 
 
-			RestClient.getApiServices().loginUsingGoogle(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().loginUsingGoogle(params, new Callback<LoginResponse>() {
 				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
+				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingGoogle response = " + responseStr);
 
@@ -2148,7 +2149,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
-									new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr, loginResponse);
 									loginDataFetched = true;
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
@@ -2873,9 +2874,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Log.i("params", "" + params.toString());
 
-			RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+			RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
 				@Override
-				public void success(SettleUserDebt settleUserDebt, Response response) {
+				public void success(LoginResponse loginResponse, Response response) {
 
 					try {
 						String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2893,7 +2894,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								DialogPopup.alertPopup(activity, "", error);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									new JSONParser().parseAccessTokenLoginData(activity, jsonString);
+									new JSONParser().parseAccessTokenLoginData(activity, jsonString, loginResponse);
 									Database.getInstance(activity).insertEmail(email);
 									Database.getInstance(activity).close();
 									loginDataFetched = true;

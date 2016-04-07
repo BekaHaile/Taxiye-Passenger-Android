@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -26,13 +27,13 @@ import java.text.DecimalFormat;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -57,6 +58,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	RelativeLayout relativeLayoutRideSummary;
 	ScrollView scrollViewEndRide;
 
+	ImageView imageViewEndRideAutoIcon;
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
 			relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
@@ -146,6 +148,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
 
+		imageViewEndRideAutoIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideAutoIcon);
 		textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
 
@@ -281,6 +284,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 				relativeLayoutMap.setVisibility(View.VISIBLE);
 				relativeLayoutRideSummary.setVisibility(View.VISIBLE);
+
+				imageViewEndRideAutoIcon.setImageResource(endRideData.getVehicleIconSet().getIconInvoice());
 
 				textViewEndRideDriverName.setText(endRideData.driverName);
 				textViewEndRideDriverCarNumber.setText(endRideData.driverCarNumber);

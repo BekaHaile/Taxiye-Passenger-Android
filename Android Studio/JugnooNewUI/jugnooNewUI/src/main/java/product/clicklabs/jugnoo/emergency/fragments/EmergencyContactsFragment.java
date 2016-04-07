@@ -26,7 +26,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -38,6 +37,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -46,7 +46,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutLayoutManagerResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -123,7 +123,7 @@ public class EmergencyContactsFragment extends Fragment {
 		linearLayoutContactsList = (LinearLayout) rootView.findViewById(R.id.linearLayoutContactsList);
 		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenLight(activity));
 		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
-		recyclerViewContacts.setLayoutManager(new LinearLayoutLayoutManagerResizableRecyclerView(activity));
+		recyclerViewContacts.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewContacts.setHasFixedSize(false);
 

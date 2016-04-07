@@ -142,7 +142,7 @@
 
     <!-- NL dimensions-->
     <dimen name="button_stroke_width">1dp</dimen>
-    <dimen name="nl_sliding_bottom_with_tabs">408px</dimen>
+    <dimen name="nl_sliding_bottom_with_tabs">390px</dimen>
     <dimen name="nl_sliding_bottom_without_tabs">272px</dimen>
     <dimen name="nl_button_size">87px</dimen>
 

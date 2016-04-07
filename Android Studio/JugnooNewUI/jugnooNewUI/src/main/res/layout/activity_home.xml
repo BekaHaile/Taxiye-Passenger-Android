@@ -17,7 +17,7 @@
             android:gravity="bottom"
             sothree:umanoFadeColor="@color/transparent"
             sothree:umanoPanelHeight="110px"
-            sothree:umanoShadowHeight="10px">
+            sothree:umanoShadowHeight="6px">
 
             <RelativeLayout
                 android:layout_width="match_parent"

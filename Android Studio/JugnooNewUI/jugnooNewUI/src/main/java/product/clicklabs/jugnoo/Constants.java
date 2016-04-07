@@ -199,4 +199,14 @@ public interface Constants {
 	String SP_INSTALL_REFERRER_CONTENT = "sp_install_referrer_content";
 	String KEY_REFERRER = "referrer";
 
+	String KEY_STATUS = "status";
+	String KEY_USER_APP_MONITORING = "user_app_monitoring";
+	String KEY_USER_APP_MONITORING_DURATION = "user_app_monitoring_duration";
+
+	String KEY_VEHICLE_TYPE = "vehicle_type";
+	String KEY_REGION_ID = "region_id";
+	String KEY_ICON_SET = "icon_set";
+
+	int VEHICLE_AUTO = 1;
+
 }
