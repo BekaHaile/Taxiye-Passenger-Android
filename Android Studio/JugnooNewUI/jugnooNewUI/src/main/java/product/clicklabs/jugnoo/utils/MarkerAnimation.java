@@ -29,6 +29,7 @@ import retrofit.mime.TypedByteArray;
 public class MarkerAnimation {
 
     private static final String TAG = MarkerAnimation.class.getSimpleName();
+    public static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
 
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         final LatLng startPosition = marker.getPosition();
@@ -89,7 +90,10 @@ public class MarkerAnimation {
 				animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
 			}
 			else{
-				new GetDirectionsAsync(marker, finalPosition, latLngInterpolator).execute();
+                getDirectionsAsyncs.add(new GetDirectionsAsync(marker, finalPosition, latLngInterpolator));
+                if(getDirectionsAsyncs.size() == 1){
+                    getDirectionsAsyncs.get(0).execute();
+                }
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,6 +104,12 @@ public class MarkerAnimation {
             }
         }
 
+    }
+
+    private static void checkAndExecute(){
+        if(getDirectionsAsyncs.size() > 0){
+            getDirectionsAsyncs.get(0).execute();
+        }
     }
 
     static class GetDirectionsAsync extends AsyncTask<String, String, String>{
@@ -140,6 +150,9 @@ public class MarkerAnimation {
                 final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
                 animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
             }
+            getDirectionsAsyncs.remove(0);
+            checkAndExecute();
+
         }
     }
 
@@ -156,7 +169,7 @@ public class MarkerAnimation {
             };
             Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
             ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
-            animator.setDuration((long) (10.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
+            animator.setDuration((long) (40.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
