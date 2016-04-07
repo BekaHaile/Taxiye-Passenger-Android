@@ -1,72 +1,138 @@
 package product.clicklabs.jugnoo.fresh.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by shankar on 4/6/16.
  */
 public class SubItem {
 
-	private String name;
-	private String unit;
-	private double price;
-	private int totalQuantity;
-	private int quantitySelected;
-	private String image;
+	@SerializedName("subItemId")
+	@Expose
+	private Integer subItemId;
+	@SerializedName("subItemName")
+	@Expose
+	private String subItemName;
+	@SerializedName("subItemImage")
+	@Expose
+	private String subItemImage;
+	@SerializedName("price")
+	@Expose
+	private Double price;
+	@SerializedName("subItemUnit")
+	@Expose
+	private String subItemUnit;
+	@SerializedName("subItemTotalQuantity")
+	@Expose
+	private Integer subItemTotalQuantity;
+	private Integer subItemQuantitySelected;
 
-
-	public SubItem(String name, String unit, double price, int totalQuantity, String image) {
-		this.name = name;
-		this.unit = unit;
-		this.price = price;
-		this.totalQuantity = totalQuantity;
-		this.quantitySelected = 0;
-		this.image = image;
+	/**
+	 *
+	 * @return
+	 * The subItemId
+	 */
+	public Integer getSubItemId() {
+		return subItemId;
 	}
 
-	public String getName() {
-		return name;
+	/**
+	 *
+	 * @param subItemId
+	 * The subItemId
+	 */
+	public void setSubItemId(Integer subItemId) {
+		this.subItemId = subItemId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	/**
+	 *
+	 * @return
+	 * The subItemName
+	 */
+	public String getSubItemName() {
+		return subItemName;
 	}
 
-	public String getUnit() {
-		return unit;
+	/**
+	 *
+	 * @param subItemName
+	 * The subItemName
+	 */
+	public void setSubItemName(String subItemName) {
+		this.subItemName = subItemName;
 	}
 
-	public void setUnit(String unit) {
-		this.unit = unit;
+	/**
+	 *
+	 * @return
+	 * The subItemImage
+	 */
+	public String getSubItemImage() {
+		return subItemImage;
 	}
 
-	public double getPrice() {
+	/**
+	 *
+	 * @param subItemImage
+	 * The subItemImage
+	 */
+	public void setSubItemImage(String subItemImage) {
+		this.subItemImage = subItemImage;
+	}
+
+	/**
+	 *
+	 * @return
+	 * The price
+	 */
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	/**
+	 *
+	 * @param price
+	 * The price
+	 */
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public int getTotalQuantity() {
-		return totalQuantity;
+	public String getSubItemUnit() {
+		if(subItemUnit == null){
+			return "-";
+		} else {
+			return subItemUnit;
+		}
 	}
 
-	public void setTotalQuantity(int totalQuantity) {
-		this.totalQuantity = totalQuantity;
+	public void setSubItemUnit(String subItemUnit) {
+		this.subItemUnit = subItemUnit;
 	}
 
-	public int getQuantitySelected() {
-		return quantitySelected;
+	public Integer getSubItemTotalQuantity() {
+		if(subItemTotalQuantity == null){
+			return 20;
+		} else {
+			return subItemTotalQuantity;
+		}
 	}
 
-	public void setQuantitySelected(int quantitySelected) {
-		this.quantitySelected = quantitySelected;
+	public void setSubItemTotalQuantity(Integer subItemTotalQuantity) {
+		this.subItemTotalQuantity = subItemTotalQuantity;
 	}
 
-	public String getImage() {
-		return image;
+	public Integer getSubItemQuantitySelected() {
+		if(subItemQuantitySelected == null){
+			return 0;
+		} else {
+			return subItemQuantitySelected;
+		}
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setSubItemQuantitySelected(Integer subItemQuantitySelected) {
+		this.subItemQuantitySelected = subItemQuantitySelected;
 	}
 }

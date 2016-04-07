@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
@@ -25,7 +26,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategoryItemsAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<SubItem> subItems;
+    private List<SubItem> subItems;
 
     public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems) {
         this.context = context;
@@ -54,11 +55,11 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
     public void onBindViewHolder(FreshCategoryItemsAdapter.ViewHolder holder, int position) {
         SubItem subItem = subItems.get(position);
 
-        holder.textViewItemName.setText(subItem.getName());
-        holder.textViewItemUnit.setText(subItem.getUnit());
+        holder.textViewItemName.setText(subItem.getSubItemName());
+        holder.textViewItemUnit.setText(subItem.getSubItemUnit());
         holder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                 subItem.getPrice()));
-        holder.textViewQuantity.setText(String.valueOf(subItem.getQuantitySelected()));
+        holder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 
         holder.imageViewMinus.setTag(position);
         holder.imageViewPlus.setTag(position);
@@ -68,8 +69,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
             public void onClick(View v) {
                 try {
                     int pos = (int) v.getTag();
-                    subItems.get(pos).setQuantitySelected(subItems.get(pos).getQuantitySelected() > 0 ?
-                            subItems.get(pos).getQuantitySelected() - 1 : 0);
+                    subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemTotalQuantity() > 0 ?
+                            subItems.get(pos).getSubItemTotalQuantity() - 1 : 0);
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -81,8 +82,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
             public void onClick(View v) {
                 try {
                     int pos = (int) v.getTag();
-                    subItems.get(pos).setQuantitySelected(subItems.get(pos).getQuantitySelected() < subItems.get(pos).getTotalQuantity() ?
-                            subItems.get(pos).getQuantitySelected()+1 : subItems.get(pos).getTotalQuantity());
+                    subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getSubItemTotalQuantity() ?
+                            subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getSubItemTotalQuantity());
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -91,7 +92,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
         });
 
         try{
-            Picasso.with(context).load(subItem.getImage()).into(holder.imageViewItemImage);
+            Picasso.with(context).load(subItem.getSubItemImage()).into(holder.imageViewItemImage);
         } catch(Exception e){
             e.printStackTrace();
         }

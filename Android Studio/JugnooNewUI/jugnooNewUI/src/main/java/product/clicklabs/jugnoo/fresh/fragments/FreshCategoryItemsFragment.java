@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fresh.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,10 +19,13 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryItemsAdapter;
+import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 
+
+@SuppressLint("ValidFragment")
 public class FreshCategoryItemsFragment extends Fragment {
 
 	private LinearLayout linearLayoutRoot;
@@ -31,6 +35,12 @@ public class FreshCategoryItemsFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
+
+	private Category category;
+
+	public FreshCategoryItemsFragment(Category category){
+		this.category = category;
+	}
 
     @Override
     public void onStart() {
@@ -68,12 +78,8 @@ public class FreshCategoryItemsFragment extends Fragment {
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
 
-		ArrayList<SubItem> subItems = new ArrayList<>();
-		subItems.add(new SubItem("Orange", "500gms", 20, 20, "http://i67.tinypic.com/2vumvzl.png"));
-
-		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity, subItems);
+		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity, (ArrayList<SubItem>) category.getSubItems());
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
-
 
 
 		return rootView;

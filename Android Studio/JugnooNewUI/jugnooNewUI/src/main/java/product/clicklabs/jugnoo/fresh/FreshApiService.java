@@ -2,18 +2,20 @@ package product.clicklabs.jugnoo.fresh;
 
 import java.util.Map;
 
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.QueryMap;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by shankar on 4/7/16.
  */
 public interface FreshApiService {
 
-	@GET("/get_all_products")
-	void getAllProducts(@QueryMap Map<String, String> params,
-						Callback<SettleUserDebt> callback);
+	@FormUrlEncoded
+	@POST("/get_all_products")
+	void getAllProducts(@FieldMap Map<String, String> params,
+						Callback<ProductsResponse> callback);
 
 }

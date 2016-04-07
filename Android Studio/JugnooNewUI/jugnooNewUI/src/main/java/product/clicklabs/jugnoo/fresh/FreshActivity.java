@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
+import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
@@ -14,6 +15,8 @@ import product.clicklabs.jugnoo.utils.ASSL;
 public class FreshActivity extends FragmentActivity {
 
 	private RelativeLayout relativeLayoutContainer;
+
+	private ProductsResponse productsResponse;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +38,13 @@ public class FreshActivity extends FragmentActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+
+	public ProductsResponse getProductsResponse() {
+		return productsResponse;
+	}
+
+	public void setProductsResponse(ProductsResponse productsResponse) {
+		this.productsResponse = productsResponse;
 	}
 }

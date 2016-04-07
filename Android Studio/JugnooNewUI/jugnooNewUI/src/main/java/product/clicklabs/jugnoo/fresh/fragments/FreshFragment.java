@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.fresh.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +21,11 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryFragmentsAdapter;
+import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.fresh.widgets.PagerSlidingTabStrip;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -47,7 +47,7 @@ public class FreshFragment extends Fragment {
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
 
 	private View rootView;
-    private FragmentActivity activity;
+    private FreshActivity activity;
 
     @Override
     public void onStart() {
@@ -69,7 +69,7 @@ public class FreshFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_fresh, container, false);
 
 
-        activity = getActivity();
+        activity = (FreshActivity) getActivity();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
@@ -86,7 +86,6 @@ public class FreshFragment extends Fragment {
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
-		tabs.setViewPager(viewPager);
 
 		getAllProducts();
 
@@ -108,9 +107,9 @@ public class FreshFragment extends Fragment {
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
-				RestClient.getFreshApiService().getAllProducts(params, new Callback<SettleUserDebt>() {
+				RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
@@ -120,6 +119,9 @@ public class FreshFragment extends Fragment {
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt(Constants.KEY_FLAG);
 								DialogPopup.alertPopup(activity, "", message);
+								activity.setProductsResponse(productsResponse);
+								freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
+								tabs.setViewPager(viewPager);
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
