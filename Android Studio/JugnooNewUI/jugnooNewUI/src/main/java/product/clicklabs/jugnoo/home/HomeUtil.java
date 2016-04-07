@@ -45,6 +45,9 @@ public class HomeUtil {
 		else if(VehicleIconSet.RED_CAR.getName().equalsIgnoreCase(name)){
 			return VehicleIconSet.RED_CAR;
 		}
+		else if(VehicleIconSet.HELICOPTER.getName().equalsIgnoreCase(name)){
+			return VehicleIconSet.HELICOPTER;
+		}
 		else{
 			return VehicleIconSet.ORANGE_AUTO;
 		}
