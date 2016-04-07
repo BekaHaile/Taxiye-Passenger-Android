@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -35,6 +38,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -179,9 +183,32 @@ public class SlidingBottomPanel {
 				if(selectedCoupon == null) {
 					if (promoCoupons.size() > 0) {
 						selectedCoupon = noSelectionCoupon;
+                        try {
+                            JSONObject map = new JSONObject();
+                            map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                            JSONArray coups = new JSONArray();
+                            for(PromoCoupon pc : promoCoupons){
+                                if(pc instanceof CouponInfo){
+                                    coups.put(((CouponInfo) pc).title + " " + ((CouponInfo) pc).subtitle);
+                                } else if(pc instanceof PromotionInfo){
+                                    coups.put(((PromotionInfo) pc).title);
+                                }
+                            }
+                            map.put(Constants.KEY_COUPONS, coups.toString());
+                            NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 					} else {
 						selectedCoupon = new CouponInfo(0, "");
 						textViewOffersValue.setText("");
+                        try {
+                            JSONObject map = new JSONObject();
+                            map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                            NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_NO_COUPONS, map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 					}
 				}
 				if (promoCoupons.size() > 0) {
@@ -189,9 +216,9 @@ public class SlidingBottomPanel {
 					textViewOffersValue.setVisibility(View.VISIBLE);
 				} else{
 					textViewOffersValue.setText("");
-				}
+                }
 
-			} else {
+            } else {
 				textViewOffersValue.setText("");
 			}
 

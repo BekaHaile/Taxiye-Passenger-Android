@@ -168,6 +168,7 @@ import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
 import product.clicklabs.jugnoo.utils.NonScrollGridView;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
@@ -1583,6 +1584,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
+        try {
+            JSONObject map = new JSONObject();
+            map.put(KEY_USER_ID, Data.userData.getUserId());
+            map.put(KEY_LATITUDE, Data.latitude);
+            map.put(KEY_LONGITUDE, Data.longitude);
+            NudgeClient.trackEvent(HomeActivity.this, NUDGE_APP_OPEN, map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
@@ -1774,11 +1785,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
                                 Data.TRANSFER_FROM_JEANIE = 0;
                             }
+
+                            try {
+                                JSONObject map = new JSONObject();
+                                map.put(KEY_USER_ID, Data.userData.getUserId());
+                                map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
+                                map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
+                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
                         public void onCancelled() {
                             Log.v("Request of Ride", "Aborted");
+                            FlurryEventLogger.event(HomeActivity.this, SURGE_NOT_ACCEPTED);
                         }
                     }).showDialog();
         } else {
@@ -3789,6 +3811,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         } else {
                             customerUIBackToInitialAfterCancel();
+                            try {
+                                JSONObject map = new JSONObject();
+                                map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_CANCEL_REQUEST, map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
@@ -5391,6 +5420,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 															pickupDropZoomed = false;
 															HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                                             switchPassengerScreen(passengerScreenMode);
+                                                            try {
+                                                                JSONObject map = new JSONObject();
+                                                                map.put(KEY_USER_ID, Data.userData.getUserId());
+                                                                map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
+                                                                map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
+                                                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
                                                         }
                                                     }
                                                 });
@@ -5498,6 +5536,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     noDriverAvailablePopup(HomeActivity.this, false, logMessage);
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
+                    try {
+                        JSONObject map = new JSONObject();
+                        map.put(KEY_USER_ID, Data.userData.getUserId());
+                        map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
+                        map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
+                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -5549,6 +5596,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
             AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
                     GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+
+
+            try {
+                JSONObject map = new JSONObject();
+                map.put(KEY_USER_ID, Data.userData.getUserId());
+                NudgeClient.trackEvent(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -6285,7 +6341,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 HashMap<String, String> params = new HashMap<>();
 
                 params.put("access_token", Data.userData.accessToken);
-                params.put("given_rating", "" + givenRating);
+                params.put(KEY_GIVEN_RATING, "" + givenRating);
                 params.put("engagement_id", engagementId);
                 params.put("driver_id", ratingReceiverId);
                 params.put("feedback", feedbackText);
@@ -6306,6 +6362,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
                                     afterRideFeedbackSubmitted(givenRating, false);
+                                    try {
+                                        JSONObject map = new JSONObject();
+                                        map.put(KEY_USER_ID, Data.userData.getUserId());
+                                        map.put(KEY_ENGAGEMENT_ID, engagementId);
+                                        map.put(KEY_GIVEN_RATING, givenRating);
+                                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_FEEDBACK, map);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        Data.driverInfos.clear();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }

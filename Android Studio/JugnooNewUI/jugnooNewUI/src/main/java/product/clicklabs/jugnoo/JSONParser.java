@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
@@ -57,6 +58,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -226,7 +228,8 @@ public class JSONParser implements Constants {
     }
 
 
-    public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse) throws Exception {
+    public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
+                                            LoginVia loginVia) throws Exception {
 
         JSONObject jObj = new JSONObject(response);
 
@@ -273,8 +276,38 @@ public class JSONParser implements Constants {
 			}
         }
 
+        try {
+            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
+                    Data.userData.userEmail, Data.userData.phoneNo);
+            if(loginVia == LoginVia.EMAIL_OTP
+                    || loginVia == LoginVia.FACEBOOK_OTP
+                    || loginVia == LoginVia.GOOGLE_OTP) {
+                nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
+                        Data.userData.userEmail, Data.userData.userName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
 
         return resp;
+    }
+
+    private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName){
+        try {
+            JSONObject map = new JSONObject();
+            map.put(KEY_USER_ID, userId);
+            map.put(KEY_PHONE_NO, phoneNo);
+            map.put(KEY_EMAIL, email);
+            map.put(KEY_USER_NAME, userName);
+            map.put(KEY_LATITUDE, Data.loginLatitude);
+            map.put(KEY_LONGITUDE, Data.loginLongitude);
+            NudgeClient.trackEvent(context, FlurryEventNames.NUDGE_SIGNUP_VERIFIED, map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

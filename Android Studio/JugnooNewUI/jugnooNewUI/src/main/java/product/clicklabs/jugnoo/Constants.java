@@ -13,6 +13,7 @@ public interface Constants {
 	String KEY_ACCESS_TOKEN = "access_token";
 	String KEY_ENGAGEMENT_ID = "engagement_id";
 	String KEY_EMAIL = "email";
+	String KEY_USER_NAME = "user_name";
 	String KEY_USER_ID = "user_id";
 	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";
@@ -208,5 +209,17 @@ public interface Constants {
 	String KEY_ICON_SET = "icon_set";
 
 	int VEHICLE_AUTO = 1;
+
+	String KEY_GIVEN_RATING = "given_rating";
+	String KEY_COUPONS = "coupons";
+
+	String KEY_SIGNED_UP_AT = "signed_up_at";
+	String KEY_CONTACTS = "contacts";
+	String KEY_CONTACT_TYPE = "contact_type";
+	String KEY_CONTACT_VALUE = "contact_value";
+	String KEY_SUBSCRIPTION_STATUS = "subscription_status";
+	String KEY_ACTIVE = "active";
+	String KEY_PHONE = "phone";
+
 
 }
