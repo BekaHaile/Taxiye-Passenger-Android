@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fresh.fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
@@ -25,14 +23,11 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryFragmentsAdapter;
-import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
-import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -50,9 +45,6 @@ public class FreshFragment extends Fragment {
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
-
-	private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart;
-	private TextView textViewCartItemsCount, textViewTotalPrice;
 
 	private View rootView;
     private FreshActivity activity;
@@ -95,30 +87,7 @@ public class FreshFragment extends Fragment {
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
 
-		relativeLayoutCheckoutBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCheckoutBar);
-		relativeLayoutCart = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCart);
 
-		textViewCartItemsCount = (TextView) rootView.findViewById(R.id.textViewCartItemsCount);
-		textViewCartItemsCount.setTypeface(Fonts.mavenRegular(activity));
-		textViewTotalPrice = (TextView) rootView.findViewById(R.id.textViewTotalPrice);
-		textViewTotalPrice.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-		textViewCartItemsCount.setMinWidth((int)(45f * ASSL.Xscale()));
-
-		relativeLayoutCheckoutBar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-
-
-			}
-		});
-
-		relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 
 		getAllProducts();
 
@@ -126,26 +95,6 @@ public class FreshFragment extends Fragment {
 		return rootView;
 	}
 
-
-	public void updateCartValues(){
-		try {
-			double totalPrice = 0;
-			int totalQuantity = 0;
-			for(Category category : activity.getProductsResponse().getCategories()){
-				for(SubItem subItem : category.getSubItems()){
-					if(subItem.getSubItemQuantitySelected() > 0){
-						totalQuantity++;
-						totalPrice = totalPrice + (((double)subItem.getSubItemQuantitySelected()) * subItem.getPrice());
-					}
-				}
-			}
-			textViewTotalPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-					Utils.getMoneyDecimalFormat().format(totalPrice)));
-			textViewCartItemsCount.setText(String.valueOf(totalQuantity));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 	public void getAllProducts() {

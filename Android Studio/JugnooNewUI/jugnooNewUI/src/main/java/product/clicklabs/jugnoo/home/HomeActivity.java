@@ -86,9 +86,7 @@ import java.util.TimerTask;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
-import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
-import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -101,11 +99,9 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
-import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
 import product.clicklabs.jugnoo.RideCancellationActivity;
-import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
@@ -137,14 +133,13 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
-import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
-import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -193,41 +188,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     DrawerLayout drawerLayout;                                                                        // views declaration
 
 
-    //menu bar 
-    LinearLayout menuLayout;
-
-
-    LinearLayout linearLayoutProfile;
-    ImageView imageViewProfile;
-    TextView textViewUserName, textViewViewAccount;
-
-    RelativeLayout relativeLayoutGamePredict;
-    ImageView imageViewGamePredict;
-    TextView textViewGamePredict, textViewGamePredictNew;
-
-    RelativeLayout relativeLayoutGetRide;
-    TextView textViewGetRide;
-
-    RelativeLayout relativeLayoutInvite;
-    TextView textViewInvite;
-
-    RelativeLayout relativeLayoutWallet;
-    TextView textViewWallet, textViewWalletValue;
-	ProgressWheel progressBarMenuPaytmWalletLoading;
-
-    RelativeLayout relativeLayoutPromotions;
-    TextView textViewPromotions, textViewPromotionsValue;
-
-    RelativeLayout relativeLayoutTransactions;
-    TextView textViewTransactions;
-
-    RelativeLayout relativeLayoutSupport;
-    TextView textViewSupport;
-
-    RelativeLayout relativeLayoutAbout;
-    TextView textViewAbout;
-
-
+    MenuBar menuBar;
 
     //Top RL
     RelativeLayout topBarMain;
@@ -505,55 +466,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         //Swipe menu
-        menuLayout = (LinearLayout) findViewById(R.id.menuLayout);
-
-
-        linearLayoutProfile = (LinearLayout) findViewById(R.id.linearLayoutProfile);
-        imageViewProfile = (ImageView) findViewById(R.id.imageViewProfile);
-        textViewUserName = (TextView) findViewById(R.id.textViewUserName);
-        textViewUserName.setTypeface(Fonts.mavenRegular(this));
-        textViewViewAccount = (TextView) findViewById(R.id.textViewViewAccount);
-        textViewViewAccount.setTypeface(Fonts.latoRegular(this));
-
-        relativeLayoutGamePredict = (RelativeLayout) findViewById(R.id.relativeLayoutGamePredict);
-        imageViewGamePredict = (ImageView) findViewById(R.id.imageViewGamePredict);
-        textViewGamePredict = (TextView)findViewById(R.id.textViewGamePredict); textViewGamePredict.setTypeface(Fonts.mavenLight(this));
-        textViewGamePredictNew = (TextView)findViewById(R.id.textViewGamePredictNew); textViewGamePredictNew.setTypeface(Fonts.mavenLight(this));
-
-        relativeLayoutGetRide = (RelativeLayout) findViewById(R.id.relativeLayoutGetRide);
-        textViewGetRide = (TextView) findViewById(R.id.textViewGetRide);
-        textViewGetRide.setTypeface(Fonts.mavenLight(this));
-
-        relativeLayoutInvite = (RelativeLayout) findViewById(R.id.relativeLayoutInvite);
-        textViewInvite = (TextView) findViewById(R.id.textViewInvite);
-        textViewInvite.setTypeface(Fonts.mavenLight(this));
-
-        relativeLayoutWallet = (RelativeLayout) findViewById(R.id.relativeLayoutWallet);
-        textViewWallet = (TextView) findViewById(R.id.textViewWallet);
-        textViewWallet.setTypeface(Fonts.mavenLight(this));
-        textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
-        textViewWalletValue.setTypeface(Fonts.latoRegular(this));
-		progressBarMenuPaytmWalletLoading = (ProgressWheel) findViewById(R.id.progressBarMenuPaytmWalletLoading);
-		progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
-
-        relativeLayoutPromotions = (RelativeLayout) findViewById(R.id.relativeLayoutPromotions);
-        textViewPromotions = (TextView) findViewById(R.id.textViewPromotions);
-        textViewPromotions.setTypeface(Fonts.mavenLight(this));
-        textViewPromotionsValue = (TextView) findViewById(R.id.textViewPromotionsValue);
-        textViewPromotionsValue.setTypeface(Fonts.latoRegular(this));
-		textViewPromotionsValue.setVisibility(View.GONE);
-
-        relativeLayoutTransactions = (RelativeLayout) findViewById(R.id.relativeLayoutTransactions);
-        textViewTransactions = (TextView) findViewById(R.id.textViewTransactions);
-        textViewTransactions.setTypeface(Fonts.mavenLight(this));
-
-        relativeLayoutSupport = (RelativeLayout) findViewById(R.id.relativeLayoutSupport);
-        textViewSupport = (TextView) findViewById(R.id.textViewSupport);
-        textViewSupport.setTypeface(Fonts.mavenLight(this));
-
-        relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
-        textViewAbout = (TextView) findViewById(R.id.textViewAbout);
-        textViewAbout.setTypeface(Fonts.mavenLight(this));
+        menuBar = new MenuBar(this, drawerLayout);
 
         slidingBottomPanel = new SlidingBottomPanel(HomeActivity.this, drawerLayout);
 
@@ -770,133 +683,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onDrawerStateChanged(int newState) {
-
-            }
-        });
-
-        // menu events
-        linearLayoutProfile.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, AccountActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_ACCOUNT);
-			}
-		});
-
-        relativeLayoutGamePredict.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Data.userData.getGamePredictEnable() == 1) {
-                    Intent intent = new Intent(HomeActivity.this, T20Activity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(WORLD_CUP_MENU);
-                }
-            }
-        });
-
-        relativeLayoutGetRide.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawer(menuLayout);
-            }
-        });
-
-        relativeLayoutInvite.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                intentToShareActivity(false);
-            }
-        });
-
-        relativeLayoutWallet.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
-				startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(WALLET_MENU);
-                FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_WALLET);
-            }
-        });
-
-        relativeLayoutPromotions.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (map != null) {
-                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
-                        Data.latitude = map.getCameraPosition().target.latitude;
-                        Data.longitude = map.getCameraPosition().target.longitude;
-                        startActivity(new Intent(HomeActivity.this, PromotionsActivity.class));
-                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_PROMOTIONS_SCREEN);
-                    } else {
-                        DialogPopup.dialogNoInternet(HomeActivity.this,
-                                Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-                                new Utils.AlertCallBackWithButtonsInterface() {
-                            @Override
-                            public void positiveClick(View v) {
-                                relativeLayoutPromotions.performClick();
-                            }
-
-                            @Override
-                            public void neutralClick(View v) {
-
-                            }
-
-                            @Override
-                            public void negativeClick(View v) {
-
-                            }
-                        });
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Waiting for location...", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        relativeLayoutTransactions.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, RideTransactionsActivity.class);
-				startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(RIDE_HISTORY);
-            }
-        });
-
-        relativeLayoutSupport.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, SupportActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }
-        });
-
-        relativeLayoutAbout.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
-            }
-        });
-
-
-
-        menuLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
             }
         });
@@ -1523,31 +1309,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
 
-            if(Data.userData.getGamePredictEnable() == 1
-                    && !"".equalsIgnoreCase(Data.userData.getGamePredictName())){
-                relativeLayoutGamePredict.setVisibility(View.VISIBLE);
-                textViewGamePredict.setText(Data.userData.getGamePredictName());
-                if(!"".equalsIgnoreCase(Data.userData.getGamePredictNew())){
-                    textViewGamePredictNew.setText(Data.userData.getGamePredictNew());
-                } else{
-                    textViewGamePredictNew.setVisibility(View.GONE);
-                }
-                try {
-                    if(!"".equalsIgnoreCase(Data.userData.getGamePredictIconUrl())){
-						Picasso.with(HomeActivity.this)
-								.load(Data.userData.getGamePredictIconUrl())
-								.placeholder(R.drawable.ic_worldcup)
-								.error(R.drawable.ic_worldcup)
-								.into(imageViewGamePredict);
-					}
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else{
-                relativeLayoutGamePredict.setVisibility(View.GONE);
-            }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1576,7 +1337,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            relativeLayoutPromotions.performClick();
+                            menuBar.relativeLayoutPromotions.performClick();
                         }
                     });
 				Data.userData.setPromoSuccess(1);
@@ -1655,7 +1416,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
 
                 case R.id.imageViewMenu:
-                    drawerLayout.openDrawer(menuLayout);
+                    drawerLayout.openDrawer(menuBar.menuLayout);
                     FlurryEventLogger.event(MENU_LOOKUP);
                     break;
 
@@ -1665,6 +1426,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
 
                 case R.id.checkServerBtn:
+                    if(map != null) {
+                        Data.latitude = map.getCameraPosition().target.latitude;
+                        Data.longitude = map.getCameraPosition().target.longitude;
+                    }
                     startActivity(new Intent(HomeActivity.this, FreshActivity.class));
                     overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
                     break;
@@ -1873,15 +1638,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void setUserData() {
         try {
-            textViewUserName.setText(Data.userData.userName);
-
-			if(Data.userData.numCouponsAvaliable > 0) {
-				textViewPromotionsValue.setVisibility(View.VISIBLE);
-				textViewPromotionsValue.setText("" + Data.userData.numCouponsAvaliable);
-			}
-			else{
-				textViewPromotionsValue.setVisibility(View.GONE);
-			}
+            menuBar.setUserData();
 
 			int unreadNotificationsCount = Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
 			if(unreadNotificationsCount > 0){
@@ -1891,20 +1648,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			else{
 				textViewNotificationValue.setVisibility(View.GONE);
 			}
-
-            textViewWalletValue.setText(getResources().getString(R.string.rupee) + " " + Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance()));
-
-            Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
-            try {
-				if(activityResumed){
-					Picasso.with(HomeActivity.this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfile);
-				}
-				else{
-					Picasso.with(HomeActivity.this).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);
-				}
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
@@ -1930,8 +1673,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void switchUserScreen() {
 
         passengerMainLayout.setVisibility(View.VISIBLE);
-
-        relativeLayoutPromotions.setVisibility(View.VISIBLE);
 
         Database2.getInstance(HomeActivity.this).close();
 
@@ -2895,7 +2636,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
                         && dialogUploadContacts == null
                         && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
-                    drawerLayout.closeDrawer(menuLayout);
+                    drawerLayout.closeDrawer(menuBar.menuLayout);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
                             Data.userData.referAllTitle,
                             Data.userData.referAllText,
@@ -2966,7 +2707,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 try {
                     if (Data.supportFeedbackSubmitted) {
-                        drawerLayout.closeDrawer(menuLayout);
+                        drawerLayout.closeDrawer(menuBar.menuLayout);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -3161,28 +2902,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 intentToShareActivity(true);
 			}
 			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutWallet.performClick();
+				menuBar.relativeLayoutWallet.performClick();
 			}
 			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutPromotions.performClick();
+                menuBar.relativeLayoutPromotions.performClick();
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutTransactions.performClick();
+                menuBar.relativeLayoutTransactions.performClick();
 			}
 			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutSupport.performClick();
+                menuBar.relativeLayoutSupport.performClick();
 			}
 			else if(AppLinkIndex.ABOUT.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutAbout.performClick();
+				menuBar.relativeLayoutAbout.performClick();
 			}
 			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
-				linearLayoutProfile.performClick();
+                menuBar.linearLayoutProfile.performClick();
 			}
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
 				relativeLayoutNotification.performClick();
 			}
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
-                relativeLayoutGamePredict.performClick();
+                menuBar.relativeLayoutGamePredict.performClick();
             }
 
         } catch(Exception e){
@@ -6222,9 +5963,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         try {
                             JSONParser.setPaytmErrorCase();
                             setUserData();
-                            progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+                            menuBar.dismissPaytmLoading();
                             slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
-                            textViewWalletValue.setVisibility(View.VISIBLE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -6232,9 +5972,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void onFinish() {
-                        progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+                        menuBar.dismissPaytmLoading();
                         slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
-                        textViewWalletValue.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -6619,6 +6358,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public LatLng getCurrentPlaceLatLng(){
+        if(map != null){
+            return map.getCameraPosition().target;
+        }
+        return null;
     }
 
 }

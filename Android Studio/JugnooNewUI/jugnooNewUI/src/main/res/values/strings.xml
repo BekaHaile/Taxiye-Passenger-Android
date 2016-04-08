@@ -780,4 +780,6 @@
 	<string name="auto">Auto</string>
 	<string name="bike">Bike</string>
 
+	<string name="waiting_for_location">Waiting for location&#8230;</string>
+
 </resources>

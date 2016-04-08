@@ -82,12 +82,12 @@ public class FreshCategoryItemsFragment extends Fragment {
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked() {
-						activity.updateFreshFragment();
+						activity.updateCartValues();
 					}
 
 					@Override
 					public void onMinusClicked() {
-						activity.updateFreshFragment();
+						activity.updateCartValues();
 					}
 				});
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
