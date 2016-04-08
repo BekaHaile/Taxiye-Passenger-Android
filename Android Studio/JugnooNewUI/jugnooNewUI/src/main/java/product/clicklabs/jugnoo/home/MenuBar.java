@@ -83,7 +83,7 @@ public class MenuBar {
 	}
 
 
-	public void initComponents(){
+	private void initComponents(){
 		//Swipe menu
 		menuLayout = (LinearLayout) drawerLayout.findViewById(R.id.menuLayout);
 
@@ -202,6 +202,8 @@ public class MenuBar {
 					currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
 				}
 				if (currLatLng != null) {
+					Data.latitude = currLatLng.latitude;
+					Data.longitude = currLatLng.longitude;
 					if(AppStatus.getInstance(activity).isOnline(activity)) {
 						activity.startActivity(new Intent(activity, PromotionsActivity.class));
 						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

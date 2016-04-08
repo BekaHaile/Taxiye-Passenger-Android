@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.home.TopBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -35,6 +36,7 @@ public class FreshActivity extends FragmentActivity {
 	private TextView textViewCartItemsCount, textViewTotalPrice;
 
 	private MenuBar menuBar;
+	private TopBar topBar;
 
 	private ProductsResponse productsResponse;
 
@@ -59,6 +61,7 @@ public class FreshActivity extends FragmentActivity {
 		textViewCartItemsCount.setMinWidth((int) (45f * ASSL.Xscale()));
 
 		menuBar = new MenuBar(this, drawerLayout);
+		topBar = new TopBar(this, drawerLayout);
 
 
 		relativeLayoutCheckoutBar.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +94,7 @@ public class FreshActivity extends FragmentActivity {
 		if(!HomeActivity.checkIfUserDataNull(this)){
 			menuBar.setUserData();
 			menuBar.dismissPaytmLoading();
+			topBar.setUserData();
 		}
 
 	}
@@ -123,7 +127,7 @@ public class FreshActivity extends FragmentActivity {
 	private void performBackPressed(){
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+			overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 		} else {
 			super.onBackPressed();
 		}

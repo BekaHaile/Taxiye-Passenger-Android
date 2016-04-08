@@ -98,7 +98,6 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
 import product.clicklabs.jugnoo.RideCancellationActivity;
@@ -133,7 +132,6 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -190,15 +188,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     MenuBar menuBar;
 
-    //Top RL
-    RelativeLayout topBarMain;
-    RelativeLayout topRl;
-    ImageView imageViewMenu, imageViewSearchCancel;
-    TextView title;
-    Button checkServerBtn;
-    ImageView imageViewHelp;
-	RelativeLayout relativeLayoutNotification;
-	TextView textViewNotificationValue;
+    TopBar topBar;
 
 
     //Passenger main layout
@@ -473,8 +463,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         //Top RL
-        topBarMain = (RelativeLayout) findViewById(R.id.topBarMain);
-        setupTopBarWithState(PassengerScreenMode.P_INITIAL);
+        topBar = new TopBar(this, drawerLayout);
 
 
         //Map Layout
@@ -1367,101 +1356,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         slidingBottomPanel.slideOnClick(v);
     }
 
-    private void setupTopBarWithState(PassengerScreenMode passengerScreenMode){
-        RelativeLayout root = null;
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-            topBarMain.setVisibility(View.VISIBLE);
-            root = topBarMain;
-        }
-        else{
-            topBarMain.setVisibility(View.VISIBLE);
-            root = topBarMain;
-        }
-        topRl = (RelativeLayout) root.findViewById(R.id.topRl);
-        imageViewMenu = (ImageView) root.findViewById(R.id.imageViewMenu);
-        imageViewSearchCancel = (ImageView) root.findViewById(R.id.imageViewSearchCancel);
-        title = (TextView) root.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(this));
-        checkServerBtn = (Button) root.findViewById(R.id.checkServerBtn);
-        imageViewHelp = (ImageView) root.findViewById(R.id.imageViewHelp);
-        relativeLayoutNotification = (RelativeLayout) root.findViewById(R.id.relativeLayoutNotification);
-        textViewNotificationValue = (TextView) root.findViewById(R.id.textViewNotificationValue);
-        textViewNotificationValue.setTypeface(Fonts.latoRegular(this));
-        textViewNotificationValue.setVisibility(View.GONE);
-
-        //Top bar events
-        topRl.setOnClickListener(topBarOnClickListener);
-        imageViewMenu.setOnClickListener(topBarOnClickListener);
-        checkServerBtn.setOnClickListener(topBarOnClickListener);
-
-        checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(getApplicationContext(), "" + Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
-                FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
-                return false;
-            }
-        });
-
-        imageViewSearchCancel.setOnClickListener(topBarOnClickListener);
-        imageViewHelp.setOnClickListener(topBarOnClickListener);
-        relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
-
+    public void onClickSearchCancel(){
+        textViewInitialSearch.setText("");
+        Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
+        HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+        switchPassengerScreen(HomeActivity.this.passengerScreenMode);
+        FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
     }
-
-    private OnClickListener topBarOnClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch(v.getId()){
-                case R.id.topRl:
-                    break;
-
-                case R.id.imageViewMenu:
-                    drawerLayout.openDrawer(menuBar.menuLayout);
-                    FlurryEventLogger.event(MENU_LOOKUP);
-                    break;
-
-                case R.id.imageViewBack:
-                    HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(HomeActivity.this.passengerScreenMode);
-                    break;
-
-                case R.id.checkServerBtn:
-                    if(map != null) {
-                        Data.latitude = map.getCameraPosition().target.latitude;
-                        Data.longitude = map.getCameraPosition().target.longitude;
-                    }
-                    startActivity(new Intent(HomeActivity.this, FreshActivity.class));
-                    overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
-                    break;
-
-
-                case R.id.imageViewSearchCancel:
-                    textViewInitialSearch.setText("");
-                    Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
-                    HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(HomeActivity.this.passengerScreenMode);
-                    FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
-                    break;
-
-                case R.id.imageViewHelp:
-                    sosDialog(HomeActivity.this);
-                    FlurryEventLogger.event(SOS_ALERT_USED);
-                    break;
-
-                case R.id.relativeLayoutNotification:
-                    if(map != null){
-                        Data.latitude = map.getCameraPosition().target.latitude;
-                        Data.longitude = map.getCameraPosition().target.longitude;
-                    }
-                    startActivity(new Intent(HomeActivity.this, NotificationCenterActivity.class));
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(NOTIFICATION_ICON);
-                    break;
-
-            }
-        }
-    };
-
 
 
 	private float googleMapPadding = 0;
@@ -1639,15 +1540,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void setUserData() {
         try {
             menuBar.setUserData();
-
-			int unreadNotificationsCount = Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-			if(unreadNotificationsCount > 0){
-				textViewNotificationValue.setVisibility(View.VISIBLE);
-				textViewNotificationValue.setText("" + unreadNotificationsCount);
-			}
-			else{
-				textViewNotificationValue.setVisibility(View.GONE);
-			}
+            topBar.setUserData();
 
             updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
@@ -1681,8 +1574,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchPassengerScreen(PassengerScreenMode mode) {
         try {
-            imageViewMenu.setVisibility(View.VISIBLE);
-
             if (userMode == UserMode.PASSENGER) {
 
                 if (currentLocationMarker != null) {
@@ -1774,9 +1665,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-						relativeLayoutNotification.setVisibility(View.VISIBLE);
-                        imageViewHelp.setVisibility(View.GONE);
-                        imageViewSearchCancel.setVisibility(View.GONE);
+						topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
+                        topBar.imageViewHelp.setVisibility(View.GONE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 
 						if(!firstTimeZoom){
@@ -1829,9 +1720,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-						relativeLayoutNotification.setVisibility(View.GONE);
-                        imageViewHelp.setVisibility(View.GONE);
-                        imageViewSearchCancel.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                        topBar.imageViewHelp.setVisibility(View.GONE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1879,9 +1770,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setGoogleMapPadding(0);
 
 
-						relativeLayoutNotification.setVisibility(View.VISIBLE);
-                        imageViewHelp.setVisibility(View.GONE);
-                        imageViewSearchCancel.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
+                        topBar.imageViewHelp.setVisibility(View.GONE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1936,9 +1827,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-						relativeLayoutNotification.setVisibility(View.GONE);
-                        imageViewHelp.setVisibility(View.VISIBLE);
-                        imageViewSearchCancel.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                        topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2000,9 +1891,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-						relativeLayoutNotification.setVisibility(View.GONE);
-                        imageViewHelp.setVisibility(View.VISIBLE);
-                        imageViewSearchCancel.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                        topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2049,9 +1940,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-						relativeLayoutNotification.setVisibility(View.GONE);
-                        imageViewHelp.setVisibility(View.VISIBLE);
-                        imageViewSearchCancel.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                        topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2065,9 +1956,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        imageViewSearchCancel.setVisibility(View.GONE);
-						relativeLayoutNotification.setVisibility(View.GONE);
-                        imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                        topBar.imageViewHelp.setVisibility(View.VISIBLE);
 						setGoogleMapPadding(0);
 
                         linearLayoutRideSummaryContainerSetVisiblity(View.GONE);
@@ -2920,7 +2811,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 menuBar.linearLayoutProfile.performClick();
 			}
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-				relativeLayoutNotification.performClick();
+                topBar.relativeLayoutNotification.performClick();
 			}
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
                 menuBar.relativeLayoutGamePredict.performClick();
@@ -5456,58 +5347,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
 
-    private void sosDialog(final Activity activity) {
+    public void sosDialog(final Activity activity) {
         if (Data.emergencyContactsList != null) {
-            boolean sosContactVerified = false;
-            String primaryPhone = "", phoneString = "";
-
-            String separator = "; ";
-            if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
-                separator = ", ";
-            }
-
-//            if(Data.emergencyContactsList.size() > 1){
-//                if(1 == Data.emergencyContactsList.get(0).verificationStatus && 1 == Data.emergencyContactsList.get(1).verificationStatus){
-//                    sosContactVerified = true;
-//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-//                    phoneString = Data.emergencyContactsList.get(0).phoneNo + separator + Data.emergencyContactsList.get(1).phoneNo;
-//                }
-//                else if(1 == Data.emergencyContactsList.get(0).verificationStatus){
-//                    sosContactVerified = true;
-//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-//                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
-//                }
-//                else if(1 == Data.emergencyContactsList.get(1).verificationStatus){
-//                    sosContactVerified = true;
-//                    primaryPhone = Data.emergencyContactsList.get(1).phoneNo;
-//                    phoneString = Data.emergencyContactsList.get(1).phoneNo;
-//                }
-//                else{
-//                    sosContactVerified = false;
-//                }
-//            }
-//            else if(Data.emergencyContactsList.size() > 0){
-//                if(1 == Data.emergencyContactsList.get(0).verificationStatus){
-//                    sosContactVerified = true;
-//                    primaryPhone = Data.emergencyContactsList.get(0).phoneNo;
-//                    phoneString = Data.emergencyContactsList.get(0).phoneNo;
-//                }
-//                else{
-//                    sosContactVerified = false;
-//                }
-//            }
-//            else{
-//                sosContactVerified = false;
-//            }
-
-
-//            if(sosContactVerified){
-//                sosAlertDialog(activity, primaryPhone, phoneString);
-//            }
-//            else{
-//                call100Dialog(activity);
-//            }
-
             new EmergencyDialog(activity, Data.cEngagementId, new EmergencyDialog.CallBack() {
                 @Override
                 public void onEnableEmergencyModeClick(View view) {
@@ -5554,10 +5395,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 }
             }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
-
-        } else {
-//            call100Dialog(activity);
         }
+        FlurryEventLogger.event(SOS_ALERT_USED);
     }
 
     public static int localModeEnabled = -1;
@@ -5569,136 +5408,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     || PassengerScreenMode.P_RIDE_END == passengerScreenMode){
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if(modeEnabled == 1){
-                    topRl.setBackgroundResource(R.drawable.background_red_dark);
-                    title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                    topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
+                    topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
                                 getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
                     }
-                    topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
-                    title.setText(getResources().getString(R.string.app_name));
+                    topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                    topBar.title.setText(getResources().getString(R.string.app_name));
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
-                title.setText(getResources().getString(R.string.app_name));
+                topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                topBar.title.setText(getResources().getString(R.string.app_name));
                 localModeEnabled = 0;
             }
 
         } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-
-    private void sosAlertDialog(final Activity activity, final String primaryPhone, final String phoneString){
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL", "SMS",
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Utils.openCallIntent(activity, primaryPhone);
-                    raiseSOSAlertAPI(activity, CALL);
-                    FlurryEventLogger.event(SOS_CALL_TO_EMERGENCY_CONTACT);
-                }
-            },
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                            Emergency Alert! 'So and so' needs your help.
-//                                Their alert location _____________________.
-//                                Driver Details : Name
-//                            Phone Number
-//                            Auto Details:  XXXXXXXXX"
-
-                    //https://www.google.co.in/maps/preview?q=30.723848,76.852293
-
-                    String locationLink = "https://maps.google.co.in/maps/preview?q=";
-                    if (myLocation != null) {
-                        locationLink = locationLink + myLocation.getLatitude() + "," + myLocation.getLongitude();
-                    } else {
-                        locationLink = locationLink + LocationFetcher.getSavedLatFromSP(activity) + "," + LocationFetcher.getSavedLngFromSP(activity);
-                    }
-
-                    String message = "Emergency Alert! "+Data.userData.userName+" needs your help.\n"+
-                        "Their alert location "+locationLink+".\n" +
-                        "Driver Details : "+Data.assignedDriverInfo.name+"\n" +
-                        Data.assignedDriverInfo.phoneNumber+"\n" +
-                        "Auto Details: "+Data.assignedDriverInfo.carNumber;
-
-                    Utils.openSMSIntent(activity, phoneString, message);
-                    raiseSOSAlertAPI(activity, SMS);
-                    FlurryEventLogger.event(SOS_SMS_TO_EMERGENCY_CONTACT);
-                }
-            }, true, false, new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
-                }
-            });
-    }
-
-    private void call100Dialog(final Activity activity) {
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Send ALERT?", "CALL 100", "Add Contact",
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Utils.openCallIntent(activity, "100");
-                    raiseSOSAlertAPI(activity, CALL_100);
-                }
-            },
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-					activity.startActivity(new Intent(activity, EmergencyContactsActivity.class));
-					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
-                }
-            }, true, false, new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    FlurryEventLogger.event(SOS_ALERT_CANCELLED);
-                }
-            });
-    }
-
-
-    private void raiseSOSAlertAPI(final Activity activity, String alertType) {
-        try {
-            final HashMap<String, String> params = new HashMap<>();
-            params.put("access_token", Data.userData.accessToken);
-            params.put("driver_id", Data.assignedDriverInfo.userId);
-            params.put("engagement_id", Data.cEngagementId);
-            params.put("alert_type", alertType);
-
-            if (myLocation != null) {
-                params.put("latitude", "" + myLocation.getLatitude());
-                params.put("longitude", "" + myLocation.getLongitude());
-            } else {
-                params.put("latitude", "" + LocationFetcher.getSavedLatFromSP(activity));
-                params.put("longitude", "" + LocationFetcher.getSavedLngFromSP(activity));
-            }
-
-            RestClient.getApiServices().emergencyAlert(params, new Callback<SettleUserDebt>() {
-                @Override
-                public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i(TAG, "emergencyAlert response = " + responseStr);
-                    try {
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e(TAG, "emergencyAlert error"+error.toString());
-                    Database2.getInstance(activity).insertPendingAPICall(activity,
-                            PendingCall.EMERGENCY_ALERT.getPath(), params);
-                }
-            });
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
