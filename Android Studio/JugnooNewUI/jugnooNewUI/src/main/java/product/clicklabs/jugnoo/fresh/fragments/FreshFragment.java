@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import com.flurry.android.FlurryAgent;
 
@@ -40,7 +40,7 @@ import retrofit.mime.TypedByteArray;
 public class FreshFragment extends Fragment {
 
 	private final String TAG = FreshFragment.class.getSimpleName();
-	private RelativeLayout linearLayoutRoot;
+	private LinearLayout linearLayoutRoot;
 
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
@@ -70,8 +70,9 @@ public class FreshFragment extends Fragment {
 
 
         activity = (FreshActivity) getActivity();
+		activity.fragmentUISetup(this);
 
-		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRoot);
+		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
@@ -95,7 +96,14 @@ public class FreshFragment extends Fragment {
 		return rootView;
 	}
 
-
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			freshCategoryFragmentsAdapter.notifyDataSetChanged();
+			activity.fragmentUISetup(this);
+		}
+	}
 
 	public void getAllProducts() {
 		try {

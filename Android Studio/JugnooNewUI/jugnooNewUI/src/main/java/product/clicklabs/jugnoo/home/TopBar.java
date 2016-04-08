@@ -40,6 +40,7 @@ public class TopBar {
 	public ImageView imageViewHelp;
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
+	public ImageView imageViewBack, imageViewDelete;
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
 		this.activity = activity;
@@ -59,6 +60,9 @@ public class TopBar {
 		textViewNotificationValue.setTypeface(Fonts.latoRegular(activity));
 		textViewNotificationValue.setVisibility(View.GONE);
 
+		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
+		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
+
 		//Top bar events
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
@@ -76,6 +80,8 @@ public class TopBar {
 		imageViewSearchCancel.setOnClickListener(topBarOnClickListener);
 		imageViewHelp.setOnClickListener(topBarOnClickListener);
 		relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
+		imageViewBack.setOnClickListener(topBarOnClickListener);
+		imageViewDelete.setOnClickListener(topBarOnClickListener);
 
 		if(activity instanceof FreshActivity){
 			relativeLayoutNotification.setVisibility(View.VISIBLE);
@@ -143,6 +149,18 @@ public class TopBar {
 					activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
+					break;
+
+				case R.id.imageViewBack:
+					if(activity instanceof FreshActivity){
+						((FreshActivity)activity).performBackPressed();
+					}
+					break;
+
+				case R.id.imageViewDelete:
+					if(activity instanceof FreshActivity){
+						((FreshActivity)activity).deleteCart();
+					}
 					break;
 
 			}

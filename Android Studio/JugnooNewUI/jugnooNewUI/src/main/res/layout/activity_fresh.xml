@@ -13,15 +13,15 @@
         <!-- top bar layout -->
         <include
             android:id="@+id/topBarMain"
-            layout="@layout/layout_top_bar" />
+            layout="@layout/layout_top_bar"/>
 
         <RelativeLayout
             android:id="@+id/relativeLayoutContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/relativeLayoutCheckoutBar"
-            android:background="@color/white"
             android:layout_below="@+id/topBarMain"
+            android:background="@color/white"
             >
         </RelativeLayout>
 
@@ -71,7 +71,7 @@
                     android:gravity="center"
                     android:minWidth="45px"
                     android:padding="8px"
-                    android:text="9"
+                    android:text="0"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_24"
                     android:visibility="visible"
@@ -87,7 +87,7 @@
 
             <TextView
                 android:id="@+id/textViewTotalPrice"
-                android:layout_width="400px"
+                android:layout_width="280px"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="35px"
@@ -100,27 +100,49 @@
                 />
 
 
-            <View
-                android:layout_width="2px"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="20px"
-                android:layout_marginRight="35px"
-                android:layout_marginTop="20px"
-                android:layout_toLeftOf="@+id/imageViewCheckoutForward"
-                android:background="@color/text_color_hint"
-                />
-
-            <ImageView
-                android:id="@+id/imageViewCheckoutForward"
-                android:layout_width="21px"
-                android:layout_height="37px"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="35px"
-                android:src="@drawable/ic_arrow_orange"
-                android:tag="mwar"
-                />
+                android:gravity="center_vertical"
+                android:animateLayoutChanges="true"
+                >
+
+                <View
+                    android:layout_width="2px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="20px"
+                    android:background="@color/text_color_hint"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewCheckout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@string/checkout"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32"
+                    android:layout_marginRight="20px"
+                    android:visibility="visible"
+
+
+                    />
+
+
+                <ImageView
+                    android:id="@+id/imageViewCheckoutForward"
+                    android:layout_width="21px"
+                    android:layout_height="37px"
+                    android:src="@drawable/ic_arrow_orange"
+                    android:tag="mwar"
+                    />
+            </LinearLayout>
 
 
         </RelativeLayout>
@@ -128,6 +150,6 @@
     </RelativeLayout>
 
     <!-- menu layout -->
-    <include layout="@layout/layout_home_activity_menu" />
+    <include layout="@layout/layout_home_activity_menu"/>
 
 </android.support.v4.widget.DrawerLayout>

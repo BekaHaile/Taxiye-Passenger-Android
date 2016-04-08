@@ -28,11 +28,13 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
     private Context context;
     private List<SubItem> subItems;
     private Callback callback;
+    private OpenMode openMode;
 
-    public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Callback callback) {
+    public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, OpenMode openMode, Callback callback) {
         this.context = context;
         this.subItems = subItems;
         this.callback = callback;
+        this.openMode = openMode;
     }
 
     public void setResults(ArrayList<SubItem> subItems){
@@ -61,8 +63,15 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
                 subItem.getPrice()));
         holder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 
+        if(openMode == OpenMode.CART){
+            holder.imageViewDelete.setVisibility(View.VISIBLE);
+        } else{
+            holder.imageViewDelete.setVisibility(View.GONE);
+        }
+
         holder.imageViewMinus.setTag(position);
         holder.imageViewPlus.setTag(position);
+        holder.imageViewDelete.setTag(position);
 
         holder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +80,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
                     int pos = (int) v.getTag();
                     subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
                             subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+                    callback.onMinusClicked(pos, subItems.get(pos));
                     notifyDataSetChanged();
-                    callback.onMinusClicked();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -85,8 +94,21 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
                     int pos = (int) v.getTag();
                     subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getSubItemTotalQuantity() ?
                             subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getSubItemTotalQuantity());
+                    callback.onPlusClicked(pos, subItems.get(pos));
                     notifyDataSetChanged();
-                    callback.onPlusClicked();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    int pos = (int) v.getTag();
+                    subItems.get(pos).setSubItemQuantitySelected(0);
+                    callback.onDeleteClicked(pos, subItems.get(pos));
+                    notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -108,7 +130,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        private ImageView imageViewItemImage, imageViewMinus, imageViewPlus;
+        private ImageView imageViewItemImage, imageViewMinus, imageViewPlus, imageViewDelete;
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity;
         public ViewHolder(View itemView, Context context) {
             super(itemView);
@@ -116,6 +138,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
             imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
+            imageViewDelete = (ImageView) itemView.findViewById(R.id.imageViewDelete);
 
             textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenRegular(context));
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenLight(context));
@@ -125,8 +148,13 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
     }
 
     public interface Callback{
-        void onPlusClicked();
-        void onMinusClicked();
+        void onPlusClicked(int position, SubItem subItem);
+        void onMinusClicked(int position, SubItem subItem);
+        void onDeleteClicked(int position, SubItem subItem);
+    }
+
+    public enum OpenMode{
+        INVENTORY, CART;
     }
 
 }

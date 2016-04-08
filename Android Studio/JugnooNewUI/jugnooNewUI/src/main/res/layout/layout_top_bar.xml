@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
         android:background="@drawable/nl_background_theme_color"
-        android:splitMotionEvents="false">
+        android:splitMotionEvents="false"
+        >
 
         <ImageView
             android:id="@+id/imageViewMenu"
@@ -21,6 +22,17 @@
             android:padding="20px"
             android:src="@drawable/menu_icon_selector"
             android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"
+            android:visibility="gone"
+            />
 
         <Button
             android:id="@+id/checkServerBtn"
@@ -49,7 +61,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
 
             <RelativeLayout
@@ -107,6 +120,19 @@
             android:layout_marginRight="10px"
             android:src="@drawable/emergency_help_icon"
             android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/imageViewDelete"
+            android:layout_width="67px"
+            android:layout_height="73px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:src="@drawable/ic_delete_white"
+            android:padding="20px"
+            android:tag="mwar"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 

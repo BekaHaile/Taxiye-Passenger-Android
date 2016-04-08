@@ -18,14 +18,15 @@ import java.util.List;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCategoryItemsFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
-import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
  * Created by Ankit on 12/29/15.
  */
-public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.CustomTabProvider {
+public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
+		implements PagerSlidingTabStrip.CustomTabProvider {
 
 	private List<Category> categories;
 	private Context context;
@@ -45,6 +46,11 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter imp
 	@Override
 	public Fragment getItem(int position) {
 		return new FreshCategoryItemsFragment(categories.get(position));
+	}
+
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
 	}
 
 	@Override

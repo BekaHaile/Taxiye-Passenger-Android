@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.fresh;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
@@ -20,6 +22,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.TopBar;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -33,10 +36,11 @@ public class FreshActivity extends FragmentActivity {
 	private RelativeLayout relativeLayoutContainer;
 
 	private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart;
-	private TextView textViewCartItemsCount, textViewTotalPrice;
+	private TextView textViewCartItemsCount, textViewTotalPrice, textViewCheckout;
 
 	private MenuBar menuBar;
 	private TopBar topBar;
+	private TransactionUtils transactionUtils;
 
 	private ProductsResponse productsResponse;
 
@@ -59,6 +63,8 @@ public class FreshActivity extends FragmentActivity {
 		textViewTotalPrice = (TextView) findViewById(R.id.textViewTotalPrice);
 		textViewTotalPrice.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 		textViewCartItemsCount.setMinWidth((int) (45f * ASSL.Xscale()));
+		textViewCheckout = (TextView) findViewById(R.id.textViewCheckout);
+		textViewCheckout.setTypeface(Fonts.mavenRegular(this));
 
 		menuBar = new MenuBar(this, drawerLayout);
 		topBar = new TopBar(this, drawerLayout);
@@ -74,7 +80,7 @@ public class FreshActivity extends FragmentActivity {
 		relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
 			}
 		});
 
@@ -103,15 +109,19 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshFragment) getSupportFragmentManager().findFragmentByTag(FreshFragment.class.getName());
 	}
 
+	private FreshCheckoutItemsFragment getFreshCheckoutItemsFragment(){
+		return (FreshCheckoutItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutItemsFragment.class.getName());
+	}
+
 	public void updateCartValues(){
 		try {
 			double totalPrice = 0;
 			int totalQuantity = 0;
 			for(Category category : getProductsResponse().getCategories()){
 				for(SubItem subItem : category.getSubItems()){
-					if(subItem.getSubItemQuantitySelected() > 0){
+					if (subItem.getSubItemQuantitySelected() > 0) {
 						totalQuantity++;
-						totalPrice = totalPrice + (((double)subItem.getSubItemQuantitySelected()) * subItem.getPrice());
+						totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
 					}
 				}
 			}
@@ -123,8 +133,46 @@ public class FreshActivity extends FragmentActivity {
 		}
 	}
 
+	public void fragmentUISetup(Fragment fragment){
+		if(fragment instanceof FreshFragment){
+			topBar.imageViewMenu.setVisibility(View.VISIBLE);
+			topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
+			topBar.imageViewBack.setVisibility(View.GONE);
+			topBar.imageViewDelete.setVisibility(View.GONE);
+			textViewCheckout.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.jugnoo_fresh));
 
-	private void performBackPressed(){
+		} else if(fragment instanceof FreshCheckoutItemsFragment){
+			topBar.imageViewMenu.setVisibility(View.GONE);
+			topBar.relativeLayoutNotification.setVisibility(View.GONE);
+			topBar.imageViewBack.setVisibility(View.VISIBLE);
+			topBar.imageViewDelete.setVisibility(View.VISIBLE);
+			textViewCheckout.setVisibility(View.VISIBLE);
+			topBar.title.setText(getResources().getString(R.string.my_cart));
+
+		}
+	}
+
+	public void deleteCart(){
+		DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+				getResources().getString(R.string.delete_fresh_cart_message),
+				getResources().getString(R.string.delete),
+				getResources().getString(R.string.cancel),
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						getFreshCheckoutItemsFragment().deleteCart();
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				}, true, false);
+	}
+
+	public void performBackPressed(){
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
@@ -153,6 +201,13 @@ public class FreshActivity extends FragmentActivity {
 
 	public LatLng getCurrentPlaceLatLng(){
 		return new LatLng(Data.latitude, Data.longitude);
+	}
+
+	public TransactionUtils getTransactionUtils(){
+		if(transactionUtils == null){
+			transactionUtils = new TransactionUtils();
+		}
+		return transactionUtils;
 	}
 
 }

@@ -1,40 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/relativeLayoutRoot"
+<LinearLayout
+    android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@drawable/bg_fresh"
+    android:orientation="vertical"
     >
 
-    <LinearLayout
+    <product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:background="@color/white_light_grey"
+        android:visibility="visible"
+        app:pstsDividerColor="@color/text_color_hint"
+        app:pstsIndicatorHeight="10px"
+        app:pstsShouldExpand="true"
+        app:pstsUnderlineColor="@color/grey_light"
+        app:pstsUnderlineHeight="2px"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_fresh"
-        android:orientation="vertical"
         >
+    </android.support.v4.view.ViewPager>
 
-        <product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip
-            android:id="@+id/tabs"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="160px"
-            android:visibility="visible"
-            app:pstsDividerColor="@color/text_color_hint"
-            app:pstsIndicatorHeight="10px"
-            app:pstsShouldExpand="true"
-            app:pstsUnderlineColor="@color/grey_light"
-            app:pstsUnderlineHeight="2px"
-            android:background="@color/white_light_grey"
-            />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-        </android.support.v4.view.ViewPager>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

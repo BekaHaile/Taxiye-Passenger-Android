@@ -112,17 +112,16 @@
 
 
 
-
     <ImageView
-        android:id="@+id/imageViewForward"
-        android:layout_width="21px"
-        android:layout_height="37px"
+        android:id="@+id/imageViewDelete"
+        android:layout_width="75px"
+        android:layout_height="75px"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="40px"
-        android:layout_marginRight="40px"
+        android:layout_marginTop="20px"
+        android:layout_marginRight="20px"
+        android:padding="20px"
+        android:src="@drawable/ic_cross_circle_selector"
         android:tag="mwar"
-        android:src="@drawable/ic_arrow_orange"
-        android:visibility="gone"
         />
 
     <ImageView
