@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.fresh.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryItemsAdapter;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
@@ -34,7 +34,7 @@ public class FreshCategoryItemsFragment extends Fragment {
 	private FreshCategoryItemsAdapter freshCategoryItemsAdapter;
 
 	private View rootView;
-    private FragmentActivity activity;
+    private FreshActivity activity;
 
 	private Category category;
 
@@ -61,8 +61,7 @@ public class FreshCategoryItemsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
 
-
-        activity = getActivity();
+        activity = (FreshActivity) getActivity();
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
@@ -78,7 +77,19 @@ public class FreshCategoryItemsFragment extends Fragment {
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
 
-		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity, (ArrayList<SubItem>) category.getSubItems());
+		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
+				(ArrayList<SubItem>) category.getSubItems(),
+				new FreshCategoryItemsAdapter.Callback() {
+					@Override
+					public void onPlusClicked() {
+						activity.updateFreshFragment();
+					}
+
+					@Override
+					public void onMinusClicked() {
+						activity.updateFreshFragment();
+					}
+				});
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 

@@ -27,12 +27,12 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
 
     private Context context;
     private List<SubItem> subItems;
+    private Callback callback;
 
-    public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems) {
+    public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Callback callback) {
         this.context = context;
-        if(subItems != null){
-            this.subItems = subItems;
-        }
+        this.subItems = subItems;
+        this.callback = callback;
     }
 
     public void setResults(ArrayList<SubItem> subItems){
@@ -72,6 +72,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
                     subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
                             subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
                     notifyDataSetChanged();
+                    callback.onMinusClicked();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -85,6 +86,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
                     subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getSubItemTotalQuantity() ?
                             subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getSubItemTotalQuantity());
                     notifyDataSetChanged();
+                    callback.onPlusClicked();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -120,6 +122,11 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
             textViewItemPrice = (TextView)itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenRegular(context));
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenLight(context));
         }
+    }
+
+    public interface Callback{
+        void onPlusClicked();
+        void onMinusClicked();
     }
 
 }

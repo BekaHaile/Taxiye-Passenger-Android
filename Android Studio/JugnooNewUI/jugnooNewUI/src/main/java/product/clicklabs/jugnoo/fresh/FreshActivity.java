@@ -34,6 +34,19 @@ public class FreshActivity extends FragmentActivity {
 
 	}
 
+	private FreshFragment getFreshFragment(){
+		return (FreshFragment) getSupportFragmentManager().findFragmentByTag(FreshFragment.class.getName());
+	}
+
+	public void updateFreshFragment(){
+		try {
+			getFreshFragment().updateCartValues();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	private void performBackPressed(){
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();

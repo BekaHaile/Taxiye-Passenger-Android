@@ -25,15 +25,17 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryFragmentsAdapter;
+import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
-import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
+import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -106,6 +108,8 @@ public class FreshFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
+
+
 			}
 		});
 
@@ -122,6 +126,26 @@ public class FreshFragment extends Fragment {
 		return rootView;
 	}
 
+
+	public void updateCartValues(){
+		try {
+			double totalPrice = 0;
+			int totalQuantity = 0;
+			for(Category category : activity.getProductsResponse().getCategories()){
+				for(SubItem subItem : category.getSubItems()){
+					if(subItem.getSubItemQuantitySelected() > 0){
+						totalQuantity++;
+						totalPrice = totalPrice + (((double)subItem.getSubItemQuantitySelected()) * subItem.getPrice());
+					}
+				}
+			}
+			textViewTotalPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+					Utils.getMoneyDecimalFormat().format(totalPrice)));
+			textViewCartItemsCount.setText(String.valueOf(totalQuantity));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	public void getAllProducts() {
