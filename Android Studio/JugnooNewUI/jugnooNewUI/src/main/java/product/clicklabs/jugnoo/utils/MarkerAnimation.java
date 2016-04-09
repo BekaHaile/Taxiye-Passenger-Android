@@ -169,7 +169,7 @@ public class MarkerAnimation {
             };
             Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
             ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
-            animator.setDuration((long) (40.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
+            animator.setDuration((long) (20.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
