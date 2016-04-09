@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -473,6 +474,13 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 										}
 									});
 									FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
+									try {
+										JSONObject map = new JSONObject();
+										map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
+										NudgeClient.trackEvent(RideCancellationActivity.this, NUDGE_CANCEL_RIDE, map);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								}

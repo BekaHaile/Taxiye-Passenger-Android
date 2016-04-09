@@ -43,6 +43,6 @@
         android:layout_marginBottom="150px"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/auto_icon_r_normal"/>
+        android:src="@drawable/ic_auto_request_normal"/>
 
 </RelativeLayout>

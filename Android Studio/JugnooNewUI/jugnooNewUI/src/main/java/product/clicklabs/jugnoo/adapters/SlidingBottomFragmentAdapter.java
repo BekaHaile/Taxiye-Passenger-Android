@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
 import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
@@ -18,22 +19,17 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Fragment fragment = null;
 		switch(position){
 			case 0:
-				fragment = new SlidingBottomCashFragment();
-				break;
+				return new SlidingBottomCashFragment();
 
 			case 1:
-				fragment = new SlidingBottomFareFragment();
-				break;
+				return new SlidingBottomFareFragment();
 
 			case 2:
-				fragment = new SlidingBottomOffersFragment();
-				break;
+				return new SlidingBottomOffersFragment();
 		}
-
-		return fragment;
+		return null;
 	}
 
 	@Override
@@ -51,7 +47,6 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 			case 2:
 				return "Offers";
 		}
-
 		return null;
 	}
 

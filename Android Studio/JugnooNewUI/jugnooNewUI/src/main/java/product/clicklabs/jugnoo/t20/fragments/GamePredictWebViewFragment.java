@@ -73,7 +73,7 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 		}
 
 		webView = (WebView) rootView.findViewById(R.id.webView);
-		webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
 		imageViewProgressBar = (ImageView) rootView.findViewById(R.id.imageViewProgressBar);
 		imageViewProgressBar.setBackgroundResource(R.drawable.anim);

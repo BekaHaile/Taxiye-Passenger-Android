@@ -2,9 +2,12 @@ package product.clicklabs.jugnoo.datastructure;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -21,6 +24,10 @@ public class DriverInfo {
 	private double bearing;
 
 	private Schedule scheduleT20;
+
+	private int vehicleType;
+	private ArrayList<Integer> regionIds = new ArrayList<>();
+	private VehicleIconSet vehicleIconSet;
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -29,7 +36,7 @@ public class DriverInfo {
 	//for drivers to show in free state
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, double bearing){
+			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -40,12 +47,15 @@ public class DriverInfo {
 		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = freeRide;
 		this.bearing = bearing;
+		this.vehicleType = vehicleType;
+		this.regionIds = regionIds;
 	}
 
 	//for engagement
 	public DriverInfo(String userId, double latitude, double longitude,
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20){
+			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
+					  int vehicleType, String iconSet){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -64,6 +74,8 @@ public class DriverInfo {
 		this.fareFixed = fareFixed;
 		this.preferredPaymentMode = preferredPaymentMode;
 		this.scheduleT20 = scheduleT20;
+		this.vehicleType = vehicleType;
+		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 	}
 
 	//for last ride data
@@ -133,5 +145,29 @@ public class DriverInfo {
 
 	public void setScheduleT20(Schedule scheduleT20) {
 		this.scheduleT20 = scheduleT20;
+	}
+
+	public int getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(int vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
+	public VehicleIconSet getVehicleIconSet() {
+		return vehicleIconSet;
+	}
+
+	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
+		this.vehicleIconSet = vehicleIconSet;
+	}
+
+	public ArrayList<Integer> getRegionIds() {
+		return regionIds;
+	}
+
+	public void setRegionIds(ArrayList<Integer> regionIds) {
+		this.regionIds = regionIds;
 	}
 }

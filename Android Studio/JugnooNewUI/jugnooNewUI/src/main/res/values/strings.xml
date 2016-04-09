@@ -17,7 +17,9 @@
 	<string name="google_server_client_id">506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com</string>
 
 	<!-- i9Spmrdn1CLYJw2j7j1iOzIwzjs= -->
-    
+
+	<string name="nudgespot_javascript_api_key">43cbec12b85957e2244f91af04cf238a</string>
+	<string name="nudgespot_rest_api_key">90ea5fdd4d74c3e13b1059fdbebf15a1</string>
     
     
     
@@ -662,6 +664,7 @@
 	<string name="call_me">Call Me</string>
 	<string name="receive_otp_via_call">Receive the OTP via call</string>
 	<string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
+	<string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 
 	<string name="tnc_apply">T&amp;C Apply</string>
 	<string name="tnc">T&amp;C</string>
@@ -772,5 +775,9 @@
 	<string name="disable_mock_location">Disable mock location first</string>
 
 	<string name="notifications">Notifications</string>
+	<string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
+
+	<string name="auto">Auto</string>
+	<string name="bike">Bike</string>
 
 </resources>

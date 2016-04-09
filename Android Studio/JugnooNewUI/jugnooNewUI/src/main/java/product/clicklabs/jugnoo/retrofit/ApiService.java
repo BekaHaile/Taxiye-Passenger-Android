@@ -5,6 +5,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -41,7 +42,7 @@ public interface ApiService {
                                Callback<LeaderboardActivityResponse> callback);
 
     @FormUrlEncoded
-    @POST("/find_a_driver")
+    @POST("/v2/customer/find_a_driver")
     void findADriverCall(@FieldMap Map<String, String> params,
                                        Callback<FindADriverResponse> callback);
 
@@ -57,9 +58,9 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/verify_otp")
+    @POST("/v2/customer/verify_otp")
     void verifyOtp(@FieldMap Map<String, String> params,
-                        Callback<SettleUserDebt> callback);
+                        Callback<LoginResponse> callback);
 
     @FormUrlEncoded
     @POST("/show_panel")
@@ -77,24 +78,24 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/login_using_access_token")
+    @POST("/v2/customer/login_using_access_token")
     void loginUsingAccessToken(@FieldMap Map<String, String> params,
-                   Callback<SettleUserDebt> callback);
+                   Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/login_using_email_or_phone_no")
+    @POST("/v2/customer/login_using_email_or_phone_no")
     void loginUsingEmailOrPhoneNo(@FieldMap Map<String, String> params,
-                                  Callback<SettleUserDebt> callback);
+                                  Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/login_using_facebook")
+    @POST("/v2/customer/login_using_facebook")
     void loginUsingFacebook(@FieldMap Map<String, String> params,
-                                  Callback<SettleUserDebt> callback);
+                                  Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/login_using_google")
+    @POST("/v2/customer/login_using_google")
     void loginUsingGoogle(@FieldMap Map<String, String> params,
-                            Callback<SettleUserDebt> callback);
+                            Callback<LoginResponse> callback);
 
     @FormUrlEncoded
     @POST("/register_using_email")
@@ -339,7 +340,7 @@ public interface ApiService {
                                  Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/get_current_user_status")
+    @POST("/v2/customer/get_current_user_status")
     Response getCurrentUserStatus(@FieldMap Map<String, String> params);
 
 

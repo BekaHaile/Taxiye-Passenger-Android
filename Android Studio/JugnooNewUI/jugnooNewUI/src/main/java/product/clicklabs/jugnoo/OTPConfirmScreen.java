@@ -39,9 +39,11 @@ import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
+import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -637,9 +639,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 Log.i("params", "" + params.toString());
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "verifyOtp response = " + responseStr);
 
@@ -657,7 +659,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									DialogPopup.alertPopup(activity, "", error);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-										new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+												loginResponse, LoginVia.EMAIL_OTP);
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
 										Database.getInstance(OTPConfirmScreen.this).close();
 										loginDataFetched = true;
@@ -741,9 +744,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 Log.i("params", "" + params);
 
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.v(TAG, "verifyOtp response = " + responseStr);
 						try {
@@ -760,7 +763,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									DialogPopup.alertPopup(activity, "", error);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-										new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+												loginResponse, LoginVia.FACEBOOK_OTP);
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
 										Database.getInstance(OTPConfirmScreen.this).close();
@@ -839,9 +843,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 				Log.i("params", "" + params);
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.v(TAG, "verifyOtp response = " + responseStr);
 
@@ -859,7 +863,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									DialogPopup.alertPopup(activity, "", error);
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-										new JSONParser().parseAccessTokenLoginData(activity, responseStr);
+										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+												loginResponse, LoginVia.GOOGLE_OTP);
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
 										Database.getInstance(OTPConfirmScreen.this).close();

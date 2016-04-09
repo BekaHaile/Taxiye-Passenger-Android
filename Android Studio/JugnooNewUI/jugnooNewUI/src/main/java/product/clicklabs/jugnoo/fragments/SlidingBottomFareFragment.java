@@ -79,7 +79,9 @@ public class SlidingBottomFareFragment extends Fragment{
             if(Data.fareStructure.thresholdDistance > 1.0){
                 textViewThreshold.setVisibility(View.VISIBLE);
                 DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                textViewThreshold.setText("First "+decimalFormat.format(Data.fareStructure.thresholdDistance)+" Kms included in base fare");
+                textViewThreshold.setText(String.format(activity.getResources()
+                        .getString(R.string.fare_threshold_distance_message_format),
+                        decimalFormat.format(Data.fareStructure.thresholdDistance)));
             } else{
                 textViewThreshold.setVisibility(View.GONE);
             }

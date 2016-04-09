@@ -19,9 +19,11 @@ import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -177,6 +179,10 @@ public class Data {
 	
 	
 	public static FareStructure fareStructure;
+	public static ArrayList<PromoCoupon> promoCoupons;
+	public static ArrayList<Region> regions;
+	public static String farAwayCity;
+	public static int priorityTipCategory;
 	
 	public static CancelOptionsList cancelOptionsList;
     public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;

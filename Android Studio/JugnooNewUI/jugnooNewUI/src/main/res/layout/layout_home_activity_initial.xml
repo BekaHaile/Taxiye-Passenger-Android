@@ -184,26 +184,55 @@
             android:src="@drawable/shadow_down" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/initialMyLocationBtn"
-        android:layout_width="83px"
-        android:layout_height="83px"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="100px"
-        android:layout_marginRight="92px"
-        android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar" />
+        android:layout_marginBottom="30px"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        
+        >
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/initialMyLocationBtn"
+                android:layout_width="83px"
+                android:layout_height="83px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="92px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar" />
 
-    <ImageView
-        android:id="@+id/imageViewRideNow"
-        android:layout_width="187px"
-        android:layout_height="187px"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40px"
-        android:src="@drawable/auto_icon_r_selector"
-        android:tag="mwar" />
+            <ImageView
+                android:id="@+id/imageViewRideNow"
+                android:layout_width="187px"
+                android:layout_height="187px"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/auto_icon_r_selector"
+                android:tag="mwar" />
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewVehicles"
+            android:layout_width="wrap_content"
+            android:layout_height="110px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="20px"
+            android:splitMotionEvents="false"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/background_white_rounded_bordered"
+            />
+
+    </LinearLayout>
+    
+    
+    
 
 
 
