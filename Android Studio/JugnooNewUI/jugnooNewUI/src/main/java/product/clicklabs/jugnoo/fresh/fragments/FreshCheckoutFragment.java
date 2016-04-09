@@ -1,11 +1,16 @@
 package product.clicklabs.jugnoo.fresh.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
@@ -26,6 +31,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -38,6 +44,15 @@ public class FreshCheckoutFragment extends Fragment {
 
 	private final String TAG = FreshCheckoutFragment.class.getSimpleName();
 	private LinearLayout linearLayoutRoot;
+
+	private TextView textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue;
+	private RelativeLayout relativeLayoutAddress;
+	private TextView textViewAddAddress, textViewAddressValue;
+	private ImageView imageViewEditAddress;
+	private RelativeLayout relativeLayoutSlot;
+	private TextView textViewDay, textViewSlotValue;
+	private ImageView imageViewEditSlot;
+	private Button buttonProceedToPayment;
 
 	private View rootView;
     private FreshActivity activity;
@@ -71,6 +86,70 @@ public class FreshCheckoutFragment extends Fragment {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.latoRegular(activity));
+		textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.latoRegular(activity));
+		textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.latoRegular(activity));
+		((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.latoRegular(activity));
+		((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenRegular(activity));
+		relativeLayoutAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddress);
+		textViewAddAddress = (TextView) rootView.findViewById(R.id.textViewAddAddress); textViewAddAddress.setTypeface(Fonts.mavenRegular(activity));
+		textViewAddressValue = (TextView) rootView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenLight(activity));
+		imageViewEditAddress = (ImageView) rootView.findViewById(R.id.imageViewEditAddress);
+		((TextView)rootView.findViewById(R.id.textViewDeliveryDateTime)).setTypeface(Fonts.mavenRegular(activity));
+		relativeLayoutSlot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSlot);
+		textViewDay = (TextView) rootView.findViewById(R.id.textViewDay); textViewDay.setTypeface(Fonts.mavenRegular(activity));
+		textViewSlotValue = (TextView) rootView.findViewById(R.id.textViewSlotValue); textViewSlotValue.setTypeface(Fonts.mavenLight(activity));
+		imageViewEditSlot = (ImageView) rootView.findViewById(R.id.imageViewEditSlot);
+		buttonProceedToPayment = (Button) rootView.findViewById(R.id.buttonProceedToPayment); buttonProceedToPayment.setTypeface(Fonts.mavenRegular(activity));
+
+		relativeLayoutAddress.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+
+		relativeLayoutSlot.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+
+		buttonProceedToPayment.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+
+
+		try{
+			if(activity.getProductsResponse() != null){
+				double totalAmount = activity.updateCartValuesGetTotalPrice();
+				double amountPayable = totalAmount;
+				if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
+					textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+							Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges())));
+					amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+				} else{
+					textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), "0"));
+				}
+				textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(totalAmount)));
+				textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(amountPayable)));
+
+
+
+			}
+		} catch(Exception e){
 			e.printStackTrace();
 		}
 

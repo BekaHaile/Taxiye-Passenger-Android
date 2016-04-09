@@ -91,12 +91,12 @@ public class FreshCartItemsFragment extends Fragment {
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
-						activity.updateCartValues();
+						activity.updateCartValuesGetTotalPrice();
 					}
 
 					@Override
 					public void onMinusClicked(int position, SubItem subItem) {
-						activity.updateCartValues();
+						activity.updateCartValuesGetTotalPrice();
 						if(subItem.getSubItemQuantitySelected() == 0){
 							subItemsInCart.remove(position);
 							checkIfEmpty();
@@ -105,7 +105,7 @@ public class FreshCartItemsFragment extends Fragment {
 
 					@Override
 					public void onDeleteClicked(int position, SubItem subItem) {
-						activity.updateCartValues();
+						activity.updateCartValuesGetTotalPrice();
 						if(subItem.getSubItemQuantitySelected() == 0){
 							subItemsInCart.remove(position);
 							checkIfEmpty();
@@ -129,7 +129,7 @@ public class FreshCartItemsFragment extends Fragment {
 		for(SubItem subItem : subItemsInCart){
 			subItem.setSubItemQuantitySelected(0);
 		}
-		activity.updateCartValues();
+		activity.updateCartValuesGetTotalPrice();
 		subItemsInCart.clear();
 		freshCategoryItemsAdapter.notifyDataSetChanged();
 		checkIfEmpty();

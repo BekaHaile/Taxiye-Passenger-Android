@@ -88,43 +88,6 @@
                 />
 
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/relativeLayoutDiscount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20px"
-
-            >
-            <TextView
-                android:id="@+id/textViewDiscount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/discount"
-                android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_28"
-                android:visibility="visible"
-                android:layout_marginLeft="50px"
-
-
-                />
-
-            <TextView
-                android:id="@+id/textViewDiscountValue"
-                android:layout_width="300px"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/rupee_0"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28"
-                android:layout_marginRight="50px"
-                android:layout_alignParentRight="true"
-                android:visibility="visible"
-                android:gravity="right"
-
-                />
-
-        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -215,6 +178,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginLeft="20px"
+                android:gravity="center_vertical"
                 >
                 <ImageView
                     android:layout_width="33px"
@@ -302,6 +266,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginLeft="20px"
+                android:gravity="center_vertical"
                 >
                 <ImageView
                     android:layout_width="24px"

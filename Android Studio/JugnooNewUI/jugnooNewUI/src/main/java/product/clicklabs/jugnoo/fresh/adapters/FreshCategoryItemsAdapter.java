@@ -58,7 +58,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
         SubItem subItem = subItems.get(position);
 
         holder.textViewItemName.setText(subItem.getSubItemName());
-        holder.textViewItemUnit.setText(subItem.getSubItemUnit());
+        holder.textViewItemUnit.setText(subItem.getBaseUnit());
         holder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                 subItem.getPrice()));
         holder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));

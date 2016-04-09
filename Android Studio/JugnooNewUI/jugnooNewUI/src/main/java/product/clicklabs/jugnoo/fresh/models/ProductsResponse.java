@@ -20,6 +20,10 @@ public class ProductsResponse {
 	@SerializedName("categories")
 	@Expose
 	private List<Category> categories = new ArrayList<>();
+	@SerializedName("delivery_info")
+	@Expose
+	private DeliveryInfo deliveryInfo;
+
 
 	/**
 	 *
@@ -75,4 +79,11 @@ public class ProductsResponse {
 		this.categories = categories;
 	}
 
+	public DeliveryInfo getDeliveryInfo() {
+		return deliveryInfo;
+	}
+
+	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+		this.deliveryInfo = deliveryInfo;
+	}
 }

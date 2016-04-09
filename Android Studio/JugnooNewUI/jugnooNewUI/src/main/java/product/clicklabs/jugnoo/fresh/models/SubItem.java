@@ -8,21 +8,21 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SubItem {
 
-	@SerializedName("subItemId")
+	@SerializedName("sub_item_id")
 	@Expose
 	private Integer subItemId;
-	@SerializedName("subItemName")
+	@SerializedName("sub_item_name")
 	@Expose
 	private String subItemName;
-	@SerializedName("subItemImage")
+	@SerializedName("sub_item_image")
 	@Expose
 	private String subItemImage;
 	@SerializedName("price")
 	@Expose
 	private Double price;
-	@SerializedName("subItemUnit")
+	@SerializedName("base_unit")
 	@Expose
-	private String subItemUnit;
+	private String baseUnit;
 	@SerializedName("subItemTotalQuantity")
 	@Expose
 	private Integer subItemTotalQuantity;
@@ -100,16 +100,16 @@ public class SubItem {
 		this.price = price;
 	}
 
-	public String getSubItemUnit() {
-		if(subItemUnit == null){
+	public String getBaseUnit() {
+		if(baseUnit == null){
 			return "-";
 		} else {
-			return subItemUnit;
+			return baseUnit;
 		}
 	}
 
-	public void setSubItemUnit(String subItemUnit) {
-		this.subItemUnit = subItemUnit;
+	public void setBaseUnit(String baseUnit) {
+		this.baseUnit = baseUnit;
 	}
 
 	public Integer getSubItemTotalQuantity() {

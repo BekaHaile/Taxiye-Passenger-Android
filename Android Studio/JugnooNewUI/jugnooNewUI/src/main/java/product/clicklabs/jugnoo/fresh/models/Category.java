@@ -11,16 +11,16 @@ import java.util.List;
  */
 public class Category {
 
-	@SerializedName("categoryId")
+	@SerializedName("category_id")
 	@Expose
 	private Integer categoryId;
-	@SerializedName("categoryName")
+	@SerializedName("category_name")
 	@Expose
 	private String categoryName;
-	@SerializedName("categoryImage")
+	@SerializedName("category_image")
 	@Expose
 	private String categoryImage;
-	@SerializedName("subItems")
+	@SerializedName("sub_items")
 	@Expose
 	private List<SubItem> subItems = new ArrayList<SubItem>();
 

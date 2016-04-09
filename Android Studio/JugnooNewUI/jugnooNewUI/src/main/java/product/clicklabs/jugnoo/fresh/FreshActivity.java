@@ -117,9 +117,9 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshCartItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCartItemsFragment.class.getName());
 	}
 
-	public void updateCartValues(){
+	public double updateCartValuesGetTotalPrice(){
+		double totalPrice = 0;
 		try {
-			double totalPrice = 0;
 			int totalQuantity = 0;
 			for(Category category : getProductsResponse().getCategories()){
 				for(SubItem subItem : category.getSubItems()){
@@ -135,6 +135,7 @@ public class FreshActivity extends FragmentActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return totalPrice;
 	}
 
 	public void fragmentUISetup(Fragment fragment){

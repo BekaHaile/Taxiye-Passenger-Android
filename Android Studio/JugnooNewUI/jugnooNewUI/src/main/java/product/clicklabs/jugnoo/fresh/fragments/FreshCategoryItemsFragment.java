@@ -83,12 +83,12 @@ public class FreshCategoryItemsFragment extends Fragment {
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
-						activity.updateCartValues();
+						activity.updateCartValuesGetTotalPrice();
 					}
 
 					@Override
 					public void onMinusClicked(int position, SubItem subItem) {
-						activity.updateCartValues();
+						activity.updateCartValuesGetTotalPrice();
 					}
 
 					@Override
@@ -101,11 +101,6 @@ public class FreshCategoryItemsFragment extends Fragment {
 		return rootView;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		freshCategoryItemsAdapter.notifyDataSetChanged();
-	}
 
 	@Override
 	public void onDestroy() {
