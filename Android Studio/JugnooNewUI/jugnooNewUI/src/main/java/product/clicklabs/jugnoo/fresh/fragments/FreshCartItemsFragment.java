@@ -25,7 +25,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 
 
 @SuppressLint("ValidFragment")
-public class FreshCheckoutItemsFragment extends Fragment {
+public class FreshCartItemsFragment extends Fragment {
 
 	private LinearLayout linearLayoutRoot;
 
@@ -42,7 +42,7 @@ public class FreshCheckoutItemsFragment extends Fragment {
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(FreshCheckoutItemsFragment.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(FreshCartItemsFragment.class.getSimpleName() + " started");
     }
 
     @Override

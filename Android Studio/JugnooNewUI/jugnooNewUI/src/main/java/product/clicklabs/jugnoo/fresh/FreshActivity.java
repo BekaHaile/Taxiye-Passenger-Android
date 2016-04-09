@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutItemsFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
@@ -109,8 +109,8 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshFragment) getSupportFragmentManager().findFragmentByTag(FreshFragment.class.getName());
 	}
 
-	private FreshCheckoutItemsFragment getFreshCheckoutItemsFragment(){
-		return (FreshCheckoutItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutItemsFragment.class.getName());
+	private FreshCartItemsFragment getFreshCartItemsFragment(){
+		return (FreshCartItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCartItemsFragment.class.getName());
 	}
 
 	public void updateCartValues(){
@@ -142,7 +142,7 @@ public class FreshActivity extends FragmentActivity {
 			textViewCheckout.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.jugnoo_fresh));
 
-		} else if(fragment instanceof FreshCheckoutItemsFragment){
+		} else if(fragment instanceof FreshCartItemsFragment){
 			topBar.imageViewMenu.setVisibility(View.GONE);
 			topBar.relativeLayoutNotification.setVisibility(View.GONE);
 			topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -161,7 +161,7 @@ public class FreshActivity extends FragmentActivity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						getFreshCheckoutItemsFragment().deleteCart();
+						getFreshCartItemsFragment().deleteCart();
 					}
 				},
 				new View.OnClickListener() {

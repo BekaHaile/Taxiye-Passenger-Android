@@ -785,5 +785,6 @@
 	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
 	<string name="checkout">Checkout</string>
 	<string name="my_cart">My Cart</string>
+	<string name="total_amount">Total Amount</string>
 
 </resources>

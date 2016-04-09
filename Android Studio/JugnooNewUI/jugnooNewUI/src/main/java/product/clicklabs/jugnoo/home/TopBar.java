@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
  */
 public class TopBar {
 
+
 	Activity activity;
 	DrawerLayout drawerLayout;
 
