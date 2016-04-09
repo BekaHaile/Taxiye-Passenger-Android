@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -201,7 +202,7 @@ public class SlidingBottomPanel {
                         }
 					} else {
 						selectedCoupon = new CouponInfo(0, "");
-						textViewOffersValue.setText("");
+						textViewOffersValue.setText("-");
                         try {
                             JSONObject map = new JSONObject();
                             map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
@@ -212,14 +213,14 @@ public class SlidingBottomPanel {
 					}
 				}
 				if (promoCoupons.size() > 0) {
-					textViewOffersValue.setText("" + promoCoupons.size());
+					textViewOffersValue.setText(String.valueOf(promoCoupons.size()));
 					textViewOffersValue.setVisibility(View.VISIBLE);
 				} else{
-					textViewOffersValue.setText("");
+					textViewOffersValue.setText("-");
                 }
 
             } else {
-				textViewOffersValue.setText("");
+				textViewOffersValue.setText("-");
 			}
 
             Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
@@ -243,12 +244,12 @@ public class SlidingBottomPanel {
                     regionSelected = Data.regions.get(0);
                 }
                 vehiclesTabAdapter.notifyDataSetChanged();
-                recyclerViewVehicles.setVisibility(View.VISIBLE);
+                setRecyclerViewVehiclesVisiblity(View.VISIBLE);
 
             } else if(Data.regions.size() > 0){
                 activity.setVehicleTypeSelected(0);
                 regionSelected = Data.regions.get(0);
-                recyclerViewVehicles.setVisibility(View.GONE);
+                setRecyclerViewVehiclesVisiblity(View.GONE);
 
             } else{
                 activity.forceFarAwayCity();
@@ -263,8 +264,16 @@ public class SlidingBottomPanel {
 
     }
 
-    public RecyclerView getRecyclerViewVehicles(){
-        return recyclerViewVehicles;
+    public void setRecyclerViewVehiclesVisiblity(int visiblity){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewExtraForSliding.getLayoutParams();
+        if(visiblity == View.GONE){
+            recyclerViewVehicles.setVisibility(View.GONE);
+            params.setMargins(0, 0, 0, 0);
+        } else{
+            recyclerViewVehicles.setVisibility(View.VISIBLE);
+            params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
+        }
+        imageViewExtraForSliding.setLayoutParams(params);
     }
 
     public void updatePaymentOption() {

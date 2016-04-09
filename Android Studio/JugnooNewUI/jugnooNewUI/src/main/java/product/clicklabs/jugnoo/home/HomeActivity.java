@@ -3505,7 +3505,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
-                slidingBottomPanel.getRecyclerViewVehicles().setVisibility(View.GONE);
+                slidingBottomPanel.setRecyclerViewVehiclesVisiblity(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
