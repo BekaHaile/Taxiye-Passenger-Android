@@ -2,13 +2,15 @@
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_fresh"
+    >
 
     <RelativeLayout
         android:id="@+id/relativeLayoutRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        >
 
         <!-- top bar layout -->
         <include
@@ -21,7 +23,6 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/relativeLayoutCheckoutBar"
             android:layout_below="@+id/topBarMain"
-            android:background="@color/white"
             >
         </RelativeLayout>
 

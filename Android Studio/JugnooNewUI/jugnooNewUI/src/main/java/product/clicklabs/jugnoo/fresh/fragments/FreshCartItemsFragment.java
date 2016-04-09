@@ -117,6 +117,14 @@ public class FreshCartItemsFragment extends Fragment {
 		return rootView;
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			activity.fragmentUISetup(this);
+		}
+	}
+
 	public void deleteCart(){
 		for(SubItem subItem : subItemsInCart){
 			subItem.setSubItemQuantitySelected(0);

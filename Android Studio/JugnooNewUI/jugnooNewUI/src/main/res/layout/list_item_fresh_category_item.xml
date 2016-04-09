@@ -120,7 +120,7 @@
         android:layout_marginTop="20px"
         android:layout_marginRight="20px"
         android:padding="20px"
-        android:src="@drawable/ic_cross_circle_selector"
+        android:src="@drawable/ic_cross_grey"
         android:tag="mwar"
         />
 

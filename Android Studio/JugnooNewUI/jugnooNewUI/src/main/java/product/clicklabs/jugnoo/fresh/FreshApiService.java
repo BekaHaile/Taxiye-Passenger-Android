@@ -18,4 +18,9 @@ public interface FreshApiService {
 	void getAllProducts(@FieldMap Map<String, String> params,
 						Callback<ProductsResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/get_checkout_data")
+	void getCheckoutData(@FieldMap Map<String, String> params,
+						Callback<ProductsResponse> callback);
+
 }

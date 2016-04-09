@@ -786,5 +786,13 @@
 	<string name="checkout">Checkout</string>
 	<string name="my_cart">My Cart</string>
 	<string name="total_amount">Total Amount</string>
+	<string name="delivery_charges">Delivery Charges</string>
+	<string name="discount">Discount</string>
+	<string name="delivery_address">Delivery Address</string>
+	<string name="address">Address</string>
+	<string name="add_address">Add Address</string>
+	<string name="delivery_date_time">Delivery Date &amp; Time</string>
+	<string name="proceed_to_payment">Proceed To Payment</string>
+	<string name="amount_payable">Amount Payable</string>
 
 </resources>
