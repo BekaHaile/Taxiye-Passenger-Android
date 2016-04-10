@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
@@ -103,15 +104,15 @@ public class FreshCheckoutFragment extends Fragment {
 		textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView) rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddress);
-		textViewAddAddress = (TextView) rootView.findViewById(R.id.textViewAddAddress); textViewAddAddress.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		textViewAddAddress = (TextView) rootView.findViewById(R.id.textViewAddAddress); textViewAddAddress.setTypeface(Fonts.mavenRegular(activity));
 		textViewAddressValue = (TextView) rootView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenLight(activity));
 		imageViewEditAddress = (ImageView) rootView.findViewById(R.id.imageViewEditAddress);
 		((TextView)rootView.findViewById(R.id.textViewDeliveryDateTime)).setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutSlot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSlot);
-		textViewDay = (TextView) rootView.findViewById(R.id.textViewDay); textViewDay.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		textViewDay = (TextView) rootView.findViewById(R.id.textViewDay); textViewDay.setTypeface(Fonts.mavenRegular(activity));
 		textViewSlotValue = (TextView) rootView.findViewById(R.id.textViewSlotValue); textViewSlotValue.setTypeface(Fonts.mavenLight(activity));
 		imageViewEditSlot = (ImageView) rootView.findViewById(R.id.imageViewEditSlot);
 		buttonProceedToPayment = (Button) rootView.findViewById(R.id.buttonProceedToPayment); buttonProceedToPayment.setTypeface(Fonts.mavenRegular(activity));
@@ -134,14 +135,22 @@ public class FreshCheckoutFragment extends Fragment {
 		buttonProceedToPayment.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				if(activity.getSlotSelected() == null) {
+					Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot),
+							Toast.LENGTH_LONG).show();
+				} else if("".equalsIgnoreCase(activity.getSelectedAddress())){
+					Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_address),
+							Toast.LENGTH_LONG).show();
+				} else{
+					activity.getTransactionUtils().openPaymentFragment(activity, activity.getRelativeLayoutContainer());
+				}
 			}
 		});
 
 
 		try{
 			if(activity.getProductsResponse() != null){
-				double totalAmount = activity.updateCartValuesGetTotalPrice();
+				double totalAmount = activity.updateCartValuesGetTotalPrice().first;
 				double amountPayable = totalAmount;
 				if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
 					textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
@@ -180,6 +189,7 @@ public class FreshCheckoutFragment extends Fragment {
 				textViewAddressValue.setText(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
 				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
 				imageViewEditAddress.setVisibility(View.VISIBLE);
+				activity.setSelectedAddress(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
 			} else{
 				textViewAddressValue.setVisibility(View.VISIBLE);
 				textViewAddressValue.setText(activity.getSelectedAddress());

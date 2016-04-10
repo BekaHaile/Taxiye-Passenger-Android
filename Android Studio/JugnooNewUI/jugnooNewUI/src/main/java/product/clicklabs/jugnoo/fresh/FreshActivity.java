@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Pair;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,10 +15,12 @@ import com.google.android.gms.maps.model.LatLng;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.fragments.FreshAddressFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshPaymentFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.fresh.models.Slot;
@@ -53,6 +56,7 @@ public class FreshActivity extends FragmentActivity {
 
 	private String selectedAddress = "";
 	private Slot slotSelected, slotToSelect;
+	private PaymentOption paymentOption;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +88,18 @@ public class FreshActivity extends FragmentActivity {
 		relativeLayoutCheckoutBar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+				if(updateCartValuesGetTotalPrice().second > 0) {
+					getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+				}
 			}
 		});
 
 		relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+				if(updateCartValuesGetTotalPrice().second > 0) {
+					getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+				}
 			}
 		});
 
@@ -132,10 +140,11 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshAddressFragment) getSupportFragmentManager().findFragmentByTag(FreshAddressFragment.class.getName());
 	}
 
-	public double updateCartValuesGetTotalPrice(){
+	public Pair<Double, Integer> updateCartValuesGetTotalPrice(){
+		Pair<Double, Integer> pair;
 		double totalPrice = 0;
+		int totalQuantity = 0;
 		try {
-			int totalQuantity = 0;
 			for(Category category : getProductsResponse().getCategories()){
 				for(SubItem subItem : category.getSubItems()){
 					if (subItem.getSubItemQuantitySelected() > 0) {
@@ -146,11 +155,17 @@ public class FreshActivity extends FragmentActivity {
 			}
 			textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
 					Utils.getMoneyDecimalFormat().format(totalPrice)));
-			textViewCartItemsCount.setText(String.valueOf(totalQuantity));
+			if(totalQuantity > 0) {
+				textViewCartItemsCount.setVisibility(View.VISIBLE);
+				textViewCartItemsCount.setText(String.valueOf(totalQuantity));
+			} else{
+				textViewCartItemsCount.setVisibility(View.GONE);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return totalPrice;
+		pair = new Pair<>(totalPrice, totalQuantity);
+		return pair;
 	}
 
 	public void fragmentUISetup(Fragment fragment){
@@ -194,6 +209,16 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.VISIBLE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.address));
+			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+		} else if(fragment instanceof FreshPaymentFragment){
+			topBar.imageViewMenu.setVisibility(View.GONE);
+			topBar.relativeLayoutNotification.setVisibility(View.GONE);
+			topBar.imageViewBack.setVisibility(View.VISIBLE);
+			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.GONE);
+			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.payment));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		}
@@ -301,5 +326,13 @@ public class FreshActivity extends FragmentActivity {
 
 	public void setSlotToSelect(Slot slotToSelect) {
 		this.slotToSelect = slotToSelect;
+	}
+
+	public PaymentOption getPaymentOption() {
+		return paymentOption;
+	}
+
+	public void setPaymentOption(PaymentOption paymentOption) {
+		this.paymentOption = paymentOption;
 	}
 }

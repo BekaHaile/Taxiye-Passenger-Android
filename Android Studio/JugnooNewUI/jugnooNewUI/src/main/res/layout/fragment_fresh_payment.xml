@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sliding_bottom_bg_color"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/textViewPayForItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pay_for_your_items_using"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="30px"
+            android:gravity="center"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutCash"
+        android:layout_width="match_parent"
+        android:layout_height="140px"
+        android:gravity="center_vertical"
+        android:visibility="visible"
+        android:background="@drawable/background_white_grey_light_selector"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageViewCashRadio"
+            android:layout_width="33px"
+            android:layout_height="33px"
+            android:tag="mwar"
+            android:layout_marginLeft="35px"
+            android:src="@drawable/radio_unselected_icon"/>
+
+        <ImageView
+            android:layout_width="76px"
+            android:layout_height="24px"
+            android:tag="mwar"
+            android:layout_marginLeft="16px"
+            android:src="@drawable/cash_home_icon"/>
+
+        <TextView
+            android:id="@+id/textViewCash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cash"
+            android:layout_marginLeft="16px"
+            android:textSize="@dimen/text_size_34"
+            android:textColor="@color/text_color"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/text_color_hint"
+        />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutPaytm"
+        android:layout_width="match_parent"
+        android:layout_height="140px"
+        android:visibility="visible"
+        android:background="@drawable/background_white_grey_light_selector"
+
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageViewPaytmRadio"
+                android:layout_width="33px"
+                android:layout_height="33px"
+                android:tag="mwar"
+                android:layout_marginLeft="35px"
+                android:src="@drawable/radio_unselected_icon"/>
+
+            <ImageView
+                android:layout_width="68px"
+                android:layout_height="22px"
+                android:tag="mwar"
+                android:layout_marginLeft="20px"
+                android:src="@drawable/paytm_home_icon"/>
+
+            <TextView
+                android:id="@+id/textViewPaytm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nl_paytm_wallet"
+                android:layout_marginLeft="20px"
+                android:textSize="@dimen/text_size_34"
+                android:textColor="@color/text_color"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewPaytmValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/theme_green_color"
+            android:layout_marginRight="40px"
+            android:text="200"/>
+
+        <product.clicklabs.jugnoo.utils.ProgressWheel
+            xmlns:wheel="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/progressBarPaytm"
+            android:layout_width="70px"
+            android:layout_height="70px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40px"
+            android:tag="mwar"
+            wheel:matProg_barColor="@color/theme_color"
+            wheel:matProg_barWidth="3dp"
+            wheel:matProg_fillRadius="true"
+            wheel:matProg_progressIndeterminate="true" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/text_color_hint"
+        />
+
+
+</LinearLayout>

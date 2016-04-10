@@ -79,7 +79,7 @@ public class FreshAddressFragment extends Fragment {
 		textViewHome = (TextView) rootView.findViewById(R.id.textViewHome); textViewHome.setTypeface(Fonts.mavenRegular(activity));
 		textViewWork = (TextView) rootView.findViewById(R.id.textViewWork); textViewWork.setTypeface(Fonts.mavenRegular(activity));
 		textViewOther = (TextView) rootView.findViewById(R.id.textViewOther); textViewOther.setTypeface(Fonts.mavenRegular(activity));
-		editTextAddress = (EditText) rootView.findViewById(R.id.editTextAddress); editTextAddress.setTypeface(Fonts.mavenLight(activity));
+		editTextAddress = (EditText) rootView.findViewById(R.id.editTextAddress); editTextAddress.setTypeface(Fonts.mavenRegular(activity));
 
 		relativeLayoutHome.setOnClickListener(new View.OnClickListener() {
 			@Override
