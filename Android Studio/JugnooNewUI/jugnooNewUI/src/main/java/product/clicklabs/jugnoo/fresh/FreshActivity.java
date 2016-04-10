@@ -14,12 +14,14 @@ import com.google.android.gms.maps.model.LatLng;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.fresh.fragments.FreshAddressFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
+import product.clicklabs.jugnoo.fresh.models.UserCheckoutResponse;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.TopBar;
@@ -46,6 +48,9 @@ public class FreshActivity extends FragmentActivity {
 	private TransactionUtils transactionUtils;
 
 	private ProductsResponse productsResponse;
+	private UserCheckoutResponse userCheckoutResponse;
+
+	private String selectedAddress = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +122,14 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshCartItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCartItemsFragment.class.getName());
 	}
 
+	private FreshCheckoutFragment getFreshCheckoutFragment(){
+		return (FreshCheckoutFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutFragment.class.getName());
+	}
+
+	private FreshAddressFragment getFreshAddressFragment(){
+		return (FreshAddressFragment) getSupportFragmentManager().findFragmentByTag(FreshAddressFragment.class.getName());
+	}
+
 	public double updateCartValuesGetTotalPrice(){
 		double totalPrice = 0;
 		try {
@@ -144,6 +157,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
 			topBar.imageViewBack.setVisibility(View.GONE);
 			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.GONE);
 			textViewCheckout.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 			topBar.title.setText(getResources().getString(R.string.jugnoo_fresh));
@@ -154,6 +168,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.relativeLayoutNotification.setVisibility(View.GONE);
 			topBar.imageViewBack.setVisibility(View.VISIBLE);
 			topBar.imageViewDelete.setVisibility(View.VISIBLE);
+			topBar.textViewAdd.setVisibility(View.GONE);
 			textViewCheckout.setVisibility(View.VISIBLE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 			topBar.title.setText(getResources().getString(R.string.my_cart));
@@ -164,8 +179,19 @@ public class FreshActivity extends FragmentActivity {
 			topBar.relativeLayoutNotification.setVisibility(View.GONE);
 			topBar.imageViewBack.setVisibility(View.VISIBLE);
 			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.my_cart));
+			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+		} else if(fragment instanceof FreshAddressFragment){
+			topBar.imageViewMenu.setVisibility(View.GONE);
+			topBar.relativeLayoutNotification.setVisibility(View.GONE);
+			topBar.imageViewBack.setVisibility(View.VISIBLE);
+			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.VISIBLE);
+			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.address));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		}
@@ -179,7 +205,10 @@ public class FreshActivity extends FragmentActivity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						getFreshCartItemsFragment().deleteCart();
+						FreshCartItemsFragment frag = getFreshCartItemsFragment();
+						if(frag != null) {
+							frag.deleteCart();
+						}
 					}
 				},
 				new View.OnClickListener() {
@@ -190,7 +219,15 @@ public class FreshActivity extends FragmentActivity {
 				}, true, false);
 	}
 
+	public void addAddress(){
+		FreshAddressFragment frag = getFreshAddressFragment();
+		if(frag != null){
+			frag.addAddressPress();
+		}
+	}
+
 	public void performBackPressed(){
+		Utils.hideSoftKeyboard(this, textViewCartItemsCount);
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
@@ -228,4 +265,23 @@ public class FreshActivity extends FragmentActivity {
 		return transactionUtils;
 	}
 
+	public UserCheckoutResponse getUserCheckoutResponse() {
+		return userCheckoutResponse;
+	}
+
+	public void setUserCheckoutResponse(UserCheckoutResponse userCheckoutResponse) {
+		this.userCheckoutResponse = userCheckoutResponse;
+	}
+
+	public RelativeLayout getRelativeLayoutContainer() {
+		return relativeLayoutContainer;
+	}
+
+	public String getSelectedAddress() {
+		return selectedAddress;
+	}
+
+	public void setSelectedAddress(String selectedAddress) {
+		this.selectedAddress = selectedAddress;
+	}
 }

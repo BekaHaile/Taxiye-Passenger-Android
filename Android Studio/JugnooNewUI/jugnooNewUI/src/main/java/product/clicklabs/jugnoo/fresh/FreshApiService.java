@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.fresh;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
+import product.clicklabs.jugnoo.fresh.models.UserCheckoutResponse;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -19,8 +20,8 @@ public interface FreshApiService {
 						Callback<ProductsResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/get_checkout_data")
-	void getCheckoutData(@FieldMap Map<String, String> params,
-						Callback<ProductsResponse> callback);
+	@POST("/user_checkout_data")
+	void userCheckoutData(@FieldMap Map<String, String> params,
+						Callback<UserCheckoutResponse> callback);
 
 }

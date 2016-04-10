@@ -26,7 +26,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
-import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
+import product.clicklabs.jugnoo.fresh.models.UserCheckoutResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -90,12 +90,12 @@ public class FreshCheckoutFragment extends Fragment {
 		}
 
 
-		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.latoRegular(activity));
-		textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.latoRegular(activity));
-		textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.latoRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		((TextView) rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddress);
 		textViewAddAddress = (TextView) rootView.findViewById(R.id.textViewAddAddress); textViewAddAddress.setTypeface(Fonts.mavenRegular(activity));
@@ -111,7 +111,7 @@ public class FreshCheckoutFragment extends Fragment {
 		relativeLayoutAddress.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				activity.getTransactionUtils().openAddressFragment(activity, activity.getRelativeLayoutContainer());
 			}
 		});
 
@@ -153,8 +153,32 @@ public class FreshCheckoutFragment extends Fragment {
 			e.printStackTrace();
 		}
 
+		getCheckoutData();
+
 
 		return rootView;
+	}
+
+	private void setAddressAndTimeSlot(){
+		try {
+			if((activity.getUserCheckoutResponse().getCheckoutData().getLastAddress() == null
+					|| activity.getUserCheckoutResponse().getCheckoutData().getLastAddress().equalsIgnoreCase(""))
+					&& activity.getSelectedAddress().equalsIgnoreCase("")){
+				textViewAddressValue.setVisibility(View.GONE);
+				textViewAddAddress.setText(activity.getResources().getString(R.string.add_address));
+
+			} else if(activity.getSelectedAddress().equalsIgnoreCase("")) {
+				textViewAddressValue.setVisibility(View.VISIBLE);
+				textViewAddressValue.setText(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
+				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
+			} else{
+				textViewAddressValue.setVisibility(View.VISIBLE);
+				textViewAddressValue.setText(activity.getSelectedAddress());
+				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -162,6 +186,7 @@ public class FreshCheckoutFragment extends Fragment {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			activity.fragmentUISetup(this);
+			setAddressAndTimeSlot();
 		}
 	}
 
@@ -177,9 +202,9 @@ public class FreshCheckoutFragment extends Fragment {
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
-				RestClient.getFreshApiService().getCheckoutData(params, new Callback<ProductsResponse>() {
+				RestClient.getFreshApiService().userCheckoutData(params, new Callback<UserCheckoutResponse>() {
 					@Override
-					public void success(ProductsResponse productsResponse, Response response) {
+					public void success(UserCheckoutResponse userCheckoutResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
@@ -188,6 +213,8 @@ public class FreshCheckoutFragment extends Fragment {
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt(Constants.KEY_FLAG);
+								activity.setUserCheckoutResponse(userCheckoutResponse);
+								setAddressAndTimeSlot();
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();

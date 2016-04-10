@@ -42,6 +42,7 @@ public class TopBar {
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
 	public ImageView imageViewBack, imageViewDelete;
+	public TextView textViewAdd;
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
 		this.activity = activity;
@@ -63,6 +64,7 @@ public class TopBar {
 
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
+		textViewAdd = (TextView) drawerLayout.findViewById(R.id.textViewAdd); textViewAdd.setTypeface(Fonts.mavenRegular(activity));
 
 		//Top bar events
 		topRl.setOnClickListener(topBarOnClickListener);
@@ -83,6 +85,7 @@ public class TopBar {
 		relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 		imageViewDelete.setOnClickListener(topBarOnClickListener);
+		textViewAdd.setOnClickListener(topBarOnClickListener);
 
 		if(activity instanceof FreshActivity){
 			relativeLayoutNotification.setVisibility(View.VISIBLE);
@@ -161,6 +164,12 @@ public class TopBar {
 				case R.id.imageViewDelete:
 					if(activity instanceof FreshActivity){
 						((FreshActivity)activity).deleteCart();
+					}
+					break;
+
+				case R.id.textViewAdd:
+					if(activity instanceof FreshActivity){
+						((FreshActivity)activity).addAddress();
 					}
 					break;
 

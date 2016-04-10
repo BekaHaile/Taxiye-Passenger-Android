@@ -153,8 +153,6 @@
         android:visibility="visible"
         android:layout_marginTop="66px"
         android:layout_gravity="center_horizontal"
-
-
         />
 
     <RelativeLayout

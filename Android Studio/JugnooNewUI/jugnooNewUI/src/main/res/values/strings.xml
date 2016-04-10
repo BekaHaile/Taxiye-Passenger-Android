@@ -794,5 +794,8 @@
 	<string name="delivery_date_time">Delivery Date &amp; Time</string>
 	<string name="proceed_to_payment">Proceed To Payment</string>
 	<string name="amount_payable">Amount Payable</string>
+	<string name="other">Other</string>
+	<string name="add_your_address">Add your address</string>
+	<string name="please_fill_your_address">Please fill your address</string>
 
 </resources>
