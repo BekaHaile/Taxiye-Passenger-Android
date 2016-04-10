@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
+import product.clicklabs.jugnoo.fresh.models.Slot;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.fresh.models.UserCheckoutResponse;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -51,6 +52,7 @@ public class FreshActivity extends FragmentActivity {
 	private UserCheckoutResponse userCheckoutResponse;
 
 	private String selectedAddress = "";
+	private Slot slotSelected, slotToSelect;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -283,5 +285,21 @@ public class FreshActivity extends FragmentActivity {
 
 	public void setSelectedAddress(String selectedAddress) {
 		this.selectedAddress = selectedAddress;
+	}
+
+	public Slot getSlotSelected() {
+		return slotSelected;
+	}
+
+	public void setSlotSelected(Slot slotSelected) {
+		this.slotSelected = slotSelected;
+	}
+
+	public Slot getSlotToSelect() {
+		return slotToSelect;
+	}
+
+	public void setSlotToSelect(Slot slotToSelect) {
+		this.slotToSelect = slotToSelect;
 	}
 }

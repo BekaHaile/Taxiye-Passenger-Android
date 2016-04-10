@@ -797,5 +797,6 @@
 	<string name="other">Other</string>
 	<string name="add_your_address">Add your address</string>
 	<string name="please_fill_your_address">Please fill your address</string>
+	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
 
 </resources>

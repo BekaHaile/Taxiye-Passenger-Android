@@ -207,7 +207,7 @@
                 android:text="@string/add_address"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_28"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_marginLeft="20px"
                 />
 
@@ -223,7 +223,9 @@
             android:layout_marginRight="20px"
             android:padding="15px"
             android:src="@drawable/edit_icon_selector"
-            android:tag="mwar" />
+            android:tag="mwar"
+            android:visibility="gone"
+            />
 
 
     </RelativeLayout>
@@ -278,7 +280,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="Today"
+                    android:text="@string/please_select_a_delivery_slot"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"
                     android:visibility="visible"
@@ -295,7 +297,7 @@
                 android:text="04 Apr 2016, 03:00-04:00 PM"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_28"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_marginLeft="20px"
                 />
 
@@ -311,7 +313,9 @@
             android:layout_marginRight="20px"
             android:padding="15px"
             android:src="@drawable/edit_icon_selector"
-            android:tag="mwar" />
+            android:tag="mwar"
+            android:visibility="gone"
+            />
 
 
     </RelativeLayout>

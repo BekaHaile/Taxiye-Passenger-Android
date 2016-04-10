@@ -3,6 +3,9 @@ package product.clicklabs.jugnoo.fresh.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import product.clicklabs.jugnoo.fresh.adapters.FreshDeliverySlotsAdapter;
+import product.clicklabs.jugnoo.utils.DateOperations;
+
 /**
  * Created by shankar on 4/9/16.
  */
@@ -26,6 +29,10 @@ public class Slot {
 	@SerializedName("end_time")
 	@Expose
 	private String endTime;
+
+	private FreshDeliverySlotsAdapter.SlotViewType slotViewType;
+	private String dayName;
+	private boolean enabled = true;
 
 	/**
 	 *
@@ -108,6 +115,10 @@ public class Slot {
 		return startTime;
 	}
 
+	public long getThresholdTimeSeconds() {
+		return DateOperations.getDayTimeSeconds(getThresholdTime());
+	}
+
 	/**
 	 *
 	 * @param startTime
@@ -135,4 +146,27 @@ public class Slot {
 		this.endTime = endTime;
 	}
 
+	public FreshDeliverySlotsAdapter.SlotViewType getSlotViewType() {
+		return slotViewType;
+	}
+
+	public void setSlotViewType(FreshDeliverySlotsAdapter.SlotViewType slotViewType) {
+		this.slotViewType = slotViewType;
+	}
+
+	public String getDayName() {
+		return dayName;
+	}
+
+	public void setDayName(String dayName) {
+		this.dayName = dayName;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 }

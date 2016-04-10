@@ -23,7 +23,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutHome"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/top_bar_height"
+                android:layout_height="110px"
                 >
 
                 <TextView
@@ -64,7 +64,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutWork"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/top_bar_height"
+                android:layout_height="110px"
                 >
 
 

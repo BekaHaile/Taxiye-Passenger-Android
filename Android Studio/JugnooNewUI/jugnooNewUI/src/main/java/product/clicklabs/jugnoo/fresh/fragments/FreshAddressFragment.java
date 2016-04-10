@@ -135,6 +135,11 @@ public class FreshAddressFragment extends Fragment {
 			relativeLayoutWork.setVisibility(View.GONE);
 			workAddress = "";
 		}
+		if("".equalsIgnoreCase(homeAddress) && "".equalsIgnoreCase(workAddress)){
+			textViewOther.setText(activity.getResources().getString(R.string.add_address));
+		} else{
+			textViewOther.setText(activity.getResources().getString(R.string.other));
+		}
 
 		try{
 			if(activity.getSelectedAddress().equalsIgnoreCase("")

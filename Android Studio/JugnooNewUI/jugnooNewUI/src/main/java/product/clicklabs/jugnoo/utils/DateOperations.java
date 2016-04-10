@@ -426,4 +426,45 @@ public class DateOperations {
 		return formatter.format(date);
 	}
 
+	public static long getDayTimeSeconds(String hrTime) {
+		try{
+			String[] arr = hrTime.split(":");
+			if(arr.length >= 3){
+				long hrSec = Long.parseLong(arr[0]) * 60l * 60l;
+				long minSec = Long.parseLong(arr[1]) * 60;
+				long sec = Long.parseLong(arr[2]);
+				return hrSec + minSec + sec;
+			} else{
+				throw new Exception();
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			return 24l * 60l * 60l;
+		}
+	}
+
+	public static String convertDayTimeAPViaFormat(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return dateTime;
+		}
+	}
+
+	public static int getCurrentDayInt(){
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.DAY_OF_WEEK)-1;
+	}
+
+	public static long getCurrentDayTimeSeconds(){
+		Calendar calendar = Calendar.getInstance();
+		long hrSec = ((long)calendar.get(Calendar.HOUR_OF_DAY)) * 60l * 60l;
+		long minSec = ((long)calendar.get(Calendar.MINUTE)) * 60l;
+		return hrSec + minSec + ((long)calendar.get(Calendar.SECOND));
+	}
+
 }
