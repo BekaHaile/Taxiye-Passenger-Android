@@ -3,10 +3,13 @@ package product.clicklabs.jugnoo.fresh.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by shankar on 4/9/16.
+ * Created by shankar on 4/11/16.
  */
-public class UserCheckoutResponse{
+public class OrderHistoryResponse{
 
 	@SerializedName("flag")
 	@Expose
@@ -14,9 +17,9 @@ public class UserCheckoutResponse{
 	@SerializedName("message")
 	@Expose
 	private String message;
-	@SerializedName("checkout_data")
+	@SerializedName("order_history")
 	@Expose
-	private CheckoutData checkoutData;
+	private List<OrderHistory> orderHistory = new ArrayList<OrderHistory>();
 
 	/**
 	 *
@@ -57,19 +60,19 @@ public class UserCheckoutResponse{
 	/**
 	 *
 	 * @return
-	 * The checkoutData
+	 * The orderHistory
 	 */
-	public CheckoutData getCheckoutData() {
-		return checkoutData;
+	public List<OrderHistory> getOrderHistory() {
+		return orderHistory;
 	}
 
 	/**
 	 *
-	 * @param checkoutData
-	 * The checkoutData
+	 * @param orderHistory
+	 * The order_history
 	 */
-	public void setCheckoutData(CheckoutData checkoutData) {
-		this.checkoutData = checkoutData;
+	public void setOrderHistory(List<OrderHistory> orderHistory) {
+		this.orderHistory = orderHistory;
 	}
 
 }

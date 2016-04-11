@@ -2,16 +2,19 @@ package product.clicklabs.jugnoo.fresh.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -22,39 +25,45 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
-import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryFragmentsAdapter;
-import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
+import product.clicklabs.jugnoo.fresh.adapters.FreshOrderHistoryAdapter;
+import product.clicklabs.jugnoo.fresh.models.OrderHistory;
+import product.clicklabs.jugnoo.fresh.models.OrderHistoryResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FreshFragment extends Fragment {
+public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNames, Constants {
 
-	private final String TAG = FreshFragment.class.getSimpleName();
-	private LinearLayout linearLayoutRoot;
+	private final String TAG = FreshOrderHistoryFragment.class.getSimpleName();
 
-	private PagerSlidingTabStrip tabs;
-	private ViewPager viewPager;
-	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
+	private RelativeLayout relativeLayoutRoot;
+	private RecyclerView recyclerViewRideOrderHistory;
+	private FreshOrderHistoryAdapter freshOrderHistoryAdapter;
+
+	private OrderHistoryResponse orderHistoryResponse;
 
 	private View rootView;
     private FreshActivity activity;
+
+	public FreshOrderHistoryFragment(){
+	}
+
 
     @Override
     public void onStart() {
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(FreshFragment.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(FreshOrderHistoryFragment.class.getSimpleName() + " started");
     }
 
     @Override
@@ -66,60 +75,76 @@ public class FreshFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_fresh, container, false);
-
+        rootView = inflater.inflate(R.layout.fragment_fresh_order_history, container, false);
 
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		relativeLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(relativeLayoutRoot != null) {
+				new ASSL(activity, relativeLayoutRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
-		viewPager.setAdapter(freshCategoryFragmentsAdapter);
+		recyclerViewRideOrderHistory = (RecyclerView) rootView.findViewById(R.id.recyclerViewRideOrderHistory);
+		recyclerViewRideOrderHistory.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewRideOrderHistory.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewRideOrderHistory.setHasFixedSize(false);
 
-		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
-		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
+		freshOrderHistoryAdapter = new FreshOrderHistoryAdapter(activity, null,
+				new FreshOrderHistoryAdapter.Callback() {
+					@Override
+					public void onClick(int position, OrderHistory rideInfo) {
 
+					}
 
+					@Override
+					public void onShowMoreClick() {
+						getOrderHistory();
+					}
+				}, getOrdersTotalCount());
+		recyclerViewRideOrderHistory.setAdapter(freshOrderHistoryAdapter);
 
-		getAllProducts();
-
+		getOrderHistory();
 
 		return rootView;
 	}
+
+
+    @Override
+	public void onDestroy() {
+		super.onDestroy();
+        ASSL.closeActivity(relativeLayoutRoot);
+		System.gc();
+	}
+
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
-			freshCategoryFragmentsAdapter.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
 		}
 	}
 
-	public void getAllProducts() {
+	private int getOrdersTotalCount(){
+		return orderHistoryResponse == null ? 0 : orderHistoryResponse.getOrderHistory() == null ? 0 : orderHistoryResponse.getOrderHistory().size();
+	}
+
+	public void getOrderHistory() {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
-
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
-				Log.i(TAG, "getAllProducts params=" + params.toString());
 
-				RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
+				RestClient.getFreshApiService().orderHistory(params, new Callback<OrderHistoryResponse>() {
 					@Override
-					public void success(ProductsResponse productsResponse, Response response) {
+					public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
@@ -128,12 +153,9 @@ public class FreshFragment extends Fragment {
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt(Constants.KEY_FLAG);
-								activity.setProductsResponse(productsResponse);
-								if(activity.getProductsResponse() != null
-										&& activity.getProductsResponse().getCategories() != null) {
-									freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
-									tabs.setViewPager(viewPager);
-								}
+								FreshOrderHistoryFragment.this.orderHistoryResponse = orderHistoryResponse;
+								freshOrderHistoryAdapter.notifyList(getOrdersTotalCount(),
+										(ArrayList<OrderHistory>) orderHistoryResponse.getOrderHistory());
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
@@ -156,7 +178,6 @@ public class FreshFragment extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){
@@ -165,7 +186,7 @@ public class FreshFragment extends Fragment {
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						getAllProducts();
+						getOrderHistory();
 					}
 
 					@Override
@@ -178,14 +199,5 @@ public class FreshFragment extends Fragment {
 					}
 				});
 	}
-
-
-    @Override
-	public void onDestroy() {
-		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
-        System.gc();
-	}
-
 
 }

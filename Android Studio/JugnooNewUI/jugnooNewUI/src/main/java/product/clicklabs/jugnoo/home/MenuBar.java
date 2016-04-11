@@ -55,6 +55,7 @@ public class MenuBar {
 	public TextView textViewGamePredict, textViewGamePredictNew;
 
 	public RelativeLayout relativeLayoutGetRide;
+	public ImageView imageViewGetRide;
 	public TextView textViewGetRide;
 
 	public RelativeLayout relativeLayoutInvite;
@@ -69,13 +70,14 @@ public class MenuBar {
 
 	public RelativeLayout relativeLayoutTransactions;
 	public TextView textViewTransactions;
+	public ImageView imageViewTransactions;
 
 	public RelativeLayout relativeLayoutSupport;
 	public TextView textViewSupport;
 
 	public RelativeLayout relativeLayoutAbout;
 	public TextView textViewAbout;
-	
+
 	public MenuBar(Activity activity, DrawerLayout rootView){
 		this.activity = activity;
 		this.drawerLayout = rootView;
@@ -103,6 +105,7 @@ public class MenuBar {
 		relativeLayoutGetRide = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutGetRide);
 		textViewGetRide = (TextView) drawerLayout.findViewById(R.id.textViewGetRide);
 		textViewGetRide.setTypeface(Fonts.mavenLight(activity));
+		imageViewGetRide = (ImageView) drawerLayout.findViewById(R.id.imageViewGetRide);
 
 		relativeLayoutInvite = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutInvite);
 		textViewInvite = (TextView) drawerLayout.findViewById(R.id.textViewInvite);
@@ -126,6 +129,7 @@ public class MenuBar {
 		relativeLayoutTransactions = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutTransactions);
 		textViewTransactions = (TextView) drawerLayout.findViewById(R.id.textViewTransactions);
 		textViewTransactions.setTypeface(Fonts.mavenLight(activity));
+		imageViewTransactions = (ImageView) drawerLayout.findViewById(R.id.imageViewTransactions);
 
 		relativeLayoutSupport = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutSupport);
 		textViewSupport = (TextView) drawerLayout.findViewById(R.id.textViewSupport);
@@ -163,7 +167,18 @@ public class MenuBar {
 
 			@Override
 			public void onClick(View v) {
-				drawerLayout.closeDrawer(menuLayout);
+				if(activity instanceof HomeActivity) {
+					if (((HomeActivity)activity).map != null) {
+						Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
+						Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
+					}
+					activity.startActivity(new Intent(activity, FreshActivity.class));
+					activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+
+				} else if(activity instanceof FreshActivity){
+					activity.finish();
+					activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+				}
 			}
 		});
 
@@ -238,10 +253,16 @@ public class MenuBar {
 		relativeLayoutTransactions.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(activity, RideTransactionsActivity.class);
-				activity.startActivity(intent);
-				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
+				if(activity instanceof HomeActivity) {
+					Intent intent = new Intent(activity, RideTransactionsActivity.class);
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
+
+				} else if(activity instanceof FreshActivity){
+					((FreshActivity)activity).openOrderHistory();
+					drawerLayout.closeDrawer(menuLayout);
+				}
 			}
 		});
 
@@ -300,6 +321,22 @@ public class MenuBar {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		if(activity instanceof HomeActivity){
+			textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
+			relativeLayoutInvite.setVisibility(View.VISIBLE);
+			relativeLayoutPromotions.setVisibility(View.VISIBLE);
+			relativeLayoutAbout.setVisibility(View.VISIBLE);
+			textViewTransactions.setText(activity.getResources().getString(R.string.ride_history));
+
+		} else if(activity instanceof FreshActivity){
+			textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
+			relativeLayoutInvite.setVisibility(View.GONE);
+			relativeLayoutPromotions.setVisibility(View.GONE);
+			relativeLayoutAbout.setVisibility(View.GONE);
+			textViewTransactions.setText(activity.getResources().getString(R.string.order_history));
+
 		}
 
 	}

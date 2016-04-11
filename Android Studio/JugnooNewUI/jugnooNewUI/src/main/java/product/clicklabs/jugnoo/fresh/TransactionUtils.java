@@ -7,6 +7,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.fresh.fragments.FreshAddressFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshOrderHistoryFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshPaymentFragment;
 
 /**
@@ -66,6 +67,18 @@ public class TransactionUtils {
 		}
 	}
 
+	public void openOrderHistoryFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, FreshOrderHistoryFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(container.getId(), new FreshOrderHistoryFragment(),
+							FreshOrderHistoryFragment.class.getName())
+					.addToBackStack(FreshOrderHistoryFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
 
 	public boolean checkIfFragmentAdded(FragmentActivity activity, String tag){
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);

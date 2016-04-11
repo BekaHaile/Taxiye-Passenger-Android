@@ -49,6 +49,7 @@ public interface Constants {
 	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
 	String KEY_BACK_FROM_OTP = "back_from_otp";
 	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+	String KEY_PAYMENT_RECHARGE_VALUE = "payment_recharge_value";
 
 	String POST_DATA = "post_data";
 
@@ -227,6 +228,8 @@ public interface Constants {
 	String KEY_CART = "cart";
 	String KEY_SUB_ITEM_ID = "sub_item_id";
 	String KEY_QUANTITY = "quantity";
+	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
+
 
 
 }

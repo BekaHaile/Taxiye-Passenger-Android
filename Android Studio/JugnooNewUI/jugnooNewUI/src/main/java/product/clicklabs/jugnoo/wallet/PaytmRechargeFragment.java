@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,7 +52,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-
+@SuppressLint("ValidFragment")
 public class PaytmRechargeFragment extends Fragment {
 
 	private final String TAG = PaytmRechargeFragment.class.getSimpleName();
@@ -77,6 +78,11 @@ public class PaytmRechargeFragment extends Fragment {
 	boolean scrolled = false;
 
 	String amount1 = "500", amount2 = "1000", amount3 = "2000";
+	String amountToPreFill = "";
+
+	public PaytmRechargeFragment(String amountToPreFill){
+		this.amountToPreFill = amountToPreFill;
+	}
 
 
 	@Override
@@ -124,6 +130,7 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewAddCash = (TextView) rootView.findViewById(R.id.textViewAddCash); textViewAddCash.setTypeface(Fonts.mavenLight(paymentActivity));
 
 		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount);	editTextAmount.setTypeface(Fonts.mavenLight(paymentActivity));
+		editTextAmount.setText(amountToPreFill);
 
 		buttonAmount1 = (Button) rootView.findViewById(R.id.buttonAmount1);	buttonAmount1.setTypeface(Fonts.mavenLight(paymentActivity));
 		buttonAmount2 = (Button) rootView.findViewById(R.id.buttonAmount2);	buttonAmount2.setTypeface(Fonts.mavenLight(paymentActivity));

@@ -143,6 +143,8 @@ public class FreshAddressFragment extends Fragment {
 
 		try{
 			if(activity.getSelectedAddress().equalsIgnoreCase("")
+					&& activity.getUserCheckoutResponse() != null
+					&& activity.getUserCheckoutResponse().getCheckoutData() != null
 					&& activity.getUserCheckoutResponse().getCheckoutData().getLastAddress() != null
 					&& !activity.getUserCheckoutResponse().getCheckoutData().getLastAddress().equalsIgnoreCase("")){
 				editTextAddress.setText(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());

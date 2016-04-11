@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.fresh.fragments.FreshAddressFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshOrderHistoryFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshPaymentFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
@@ -139,21 +140,24 @@ public class FreshActivity extends FragmentActivity {
 		double totalPrice = 0;
 		int totalQuantity = 0;
 		try {
-			for(Category category : getProductsResponse().getCategories()){
-				for(SubItem subItem : category.getSubItems()){
-					if (subItem.getSubItemQuantitySelected() > 0) {
-						totalQuantity++;
-						totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
+			if(getProductsResponse() != null
+					&& getProductsResponse().getCategories() != null) {
+				for (Category category : getProductsResponse().getCategories()) {
+					for (SubItem subItem : category.getSubItems()) {
+						if (subItem.getSubItemQuantitySelected() > 0) {
+							totalQuantity++;
+							totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
+						}
 					}
 				}
-			}
-			textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
-					Utils.getMoneyDecimalFormat().format(totalPrice)));
-			if(totalQuantity > 0) {
-				textViewCartItemsCount.setVisibility(View.VISIBLE);
-				textViewCartItemsCount.setText(String.valueOf(totalQuantity));
-			} else{
-				textViewCartItemsCount.setVisibility(View.GONE);
+				textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(totalPrice)));
+				if (totalQuantity > 0) {
+					textViewCartItemsCount.setVisibility(View.VISIBLE);
+					textViewCartItemsCount.setText(String.valueOf(totalQuantity));
+				} else {
+					textViewCartItemsCount.setVisibility(View.GONE);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -230,6 +234,19 @@ public class FreshActivity extends FragmentActivity {
 			topBar.title.setText(getResources().getString(R.string.payment));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
+		} else if(fragment instanceof FreshOrderHistoryFragment){
+			topBar.imageViewMenu.setVisibility(View.GONE);
+			topBar.relativeLayoutNotification.setVisibility(View.GONE);
+			topBar.imageViewBack.setVisibility(View.VISIBLE);
+			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.GONE);
+			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.order_history));
+			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
 		}
 	}
 
@@ -294,6 +311,10 @@ public class FreshActivity extends FragmentActivity {
 						FreshFragment.class.getName())
 				.addToBackStack(FreshFragment.class.getName())
 				.commitAllowingStateLoss();
+	}
+
+	public void openOrderHistory(){
+		getTransactionUtils().openOrderHistoryFragment(FreshActivity.this, relativeLayoutContainer);
 	}
 
 	public void performBackPressed(){

@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.fresh;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.fresh.models.OrderHistoryResponse;
 import product.clicklabs.jugnoo.fresh.models.PlaceOrderResponse;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.fresh.models.UserCheckoutResponse;
@@ -29,5 +30,10 @@ public interface FreshApiService {
 	@POST("/place_order")
 	void placeOrder(@FieldMap Map<String, String> params,
 						  Callback<PlaceOrderResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/order_history")
+	void orderHistory(@FieldMap Map<String, String> params,
+					Callback<OrderHistoryResponse> callback);
 
 }

@@ -247,19 +247,32 @@ public class FreshPaymentFragment extends Fragment {
 	}
 
 	private void placeOrder(){
-		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Place order?", "OK", "Cancel",
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						placeOrderApi();
-					}
-				},
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
+		boolean goAhead = true;
+		if(activity.getPaymentOption().getOrdinal() == PaymentOption.PAYTM.getOrdinal()) {
+			if(Data.userData.getPaytmBalance() < activity.updateCartValuesGetTotalPrice().first) {
+				if (Data.userData.getPaytmError() == 1) {
+					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+				} else {
+					showPaytmBalanceLowDialog();
+				}
+				goAhead = false;
+			}
+		}
+		if(goAhead) {
+			DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Place order?", "OK", "Cancel",
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							placeOrderApi();
+						}
+					},
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-					}
-				}, false, false);
+						}
+					}, false, false);
+		}
 	}
 
 
@@ -278,16 +291,19 @@ public class FreshPaymentFragment extends Fragment {
 				params.put(Constants.KEY_DELIVERY_ADDRESS, String.valueOf(activity.getSelectedAddress()));
 
 				JSONArray jCart = new JSONArray();
-				for(Category category : activity.getProductsResponse().getCategories()){
-					for(SubItem subItem : category.getSubItems()){
-						if(subItem.getSubItemQuantitySelected() > 0){
-							try {
-								JSONObject jItem = new JSONObject();
-								jItem.put(Constants.KEY_SUB_ITEM_ID, subItem.getSubItemId());
-								jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
-								jCart.put(jItem);
-							} catch (Exception e) {
-								e.printStackTrace();
+				if(activity.getProductsResponse() != null
+						&& activity.getProductsResponse().getCategories() != null) {
+					for (Category category : activity.getProductsResponse().getCategories()) {
+						for (SubItem subItem : category.getSubItems()) {
+							if (subItem.getSubItemQuantitySelected() > 0) {
+								try {
+									JSONObject jItem = new JSONObject();
+									jItem.put(Constants.KEY_SUB_ITEM_ID, subItem.getSubItemId());
+									jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
+									jCart.put(jItem);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -369,6 +385,9 @@ public class FreshPaymentFragment extends Fragment {
 					if (Data.userData.paytmEnabled == 1
 							&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 						intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+						intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
+								Utils.getMoneyDecimalFormat().format(activity.updateCartValuesGetTotalPrice().first
+										- Data.userData.getPaytmBalance()));
 					} else {
 						intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
 					}

@@ -168,48 +168,51 @@
         <LinearLayout
             android:layout_width="600px"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             >
+            <ImageView
+                android:layout_width="33px"
+                android:layout_height="27px"
+                android:src="@drawable/ic_checkout_address"
+                android:tag="mwar"
+                android:layout_marginLeft="30px"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="20px"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginLeft="10px"
                 >
-                <ImageView
-                    android:layout_width="33px"
-                    android:layout_height="27px"
-                    android:src="@drawable/ic_checkout_address"
-                    android:tag="mwar"
-                    />
+
 
                 <TextView
                     android:id="@+id/textViewAddAddress"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="@string/add_address"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"
                     android:visibility="visible"
-                    android:layout_marginLeft="10px"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewAddressValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@string/add_address"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_28"
+                    android:visibility="visible"
                     />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewAddressValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/add_address"
-                android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_28"
-                android:visibility="gone"
-                android:layout_marginLeft="20px"
-                />
+
 
         </LinearLayout>
 
@@ -258,48 +261,51 @@
         <LinearLayout
             android:layout_width="600px"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             >
+            <ImageView
+                android:layout_width="24px"
+                android:layout_height="26px"
+                android:src="@drawable/ic_checkout_calender"
+                android:tag="mwar"
+                android:layout_marginLeft="30px"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="20px"
+                android:orientation="vertical"
+                android:layout_marginLeft="10px"
                 android:gravity="center_vertical"
                 >
-                <ImageView
-                    android:layout_width="24px"
-                    android:layout_height="26px"
-                    android:src="@drawable/ic_checkout_calender"
-                    android:tag="mwar"
-                    />
+
 
                 <TextView
                     android:id="@+id/textViewDay"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="@string/please_select_a_delivery_slot"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"
                     android:visibility="visible"
-                    android:layout_marginLeft="10px"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewSlotValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="04 Apr 2016, 03:00-04:00 PM"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_28"
+                    android:visibility="visible"
                     />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewSlotValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="04 Apr 2016, 03:00-04:00 PM"
-                android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_28"
-                android:visibility="gone"
-                android:layout_marginLeft="20px"
-                />
+
 
         </LinearLayout>
 

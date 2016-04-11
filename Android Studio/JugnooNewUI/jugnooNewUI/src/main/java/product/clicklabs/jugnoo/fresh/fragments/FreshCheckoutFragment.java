@@ -149,7 +149,8 @@ public class FreshCheckoutFragment extends Fragment {
 
 
 		try{
-			if(activity.getProductsResponse() != null){
+			if(activity.getProductsResponse() != null
+					&& activity.getProductsResponse().getDeliveryInfo() != null){
 				double totalAmount = activity.updateCartValuesGetTotalPrice().first;
 				double amountPayable = totalAmount;
 				if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
@@ -177,7 +178,9 @@ public class FreshCheckoutFragment extends Fragment {
 	private void setAddressAndTimeSlot(){
 		try {
 			generateSlots();
-			if((activity.getUserCheckoutResponse().getCheckoutData().getLastAddress() == null
+			if((activity.getUserCheckoutResponse() == null
+					|| activity.getUserCheckoutResponse().getCheckoutData() == null
+					|| activity.getUserCheckoutResponse().getCheckoutData().getLastAddress() == null
 					|| activity.getUserCheckoutResponse().getCheckoutData().getLastAddress().equalsIgnoreCase(""))
 					&& activity.getSelectedAddress().equalsIgnoreCase("")){
 				textViewAddressValue.setVisibility(View.GONE);
@@ -309,7 +312,9 @@ public class FreshCheckoutFragment extends Fragment {
 	}
 
 	private void generateSlots(){
-		if(activity.getUserCheckoutResponse() != null) {
+		if(activity.getUserCheckoutResponse() != null
+				&& activity.getUserCheckoutResponse().getCheckoutData() != null
+				&& activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots() != null) {
 			slots.clear();
 //			DeliverySlot ds = new DeliverySlot();
 //			ds.setDayName("Today");
@@ -340,6 +345,7 @@ public class FreshCheckoutFragment extends Fragment {
 					activity.setSlotSelected(null);
 				}
 			}
+
 
 			for (DeliverySlot deliverySlot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()) {
 				Slot slotDay = new Slot();

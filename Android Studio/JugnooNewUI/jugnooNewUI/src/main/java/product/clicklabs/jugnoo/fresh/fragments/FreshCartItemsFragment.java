@@ -76,10 +76,13 @@ public class FreshCartItemsFragment extends Fragment {
 		if(subItemsInCart == null) {
 			subItemsInCart = new ArrayList<>();
 		}
-		for(Category category : activity.getProductsResponse().getCategories()){
-			for(SubItem subItem : category.getSubItems()){
-				if(subItem.getSubItemQuantitySelected() > 0){
-					subItemsInCart.add(subItem);
+		if(activity.getProductsResponse() != null
+				&& activity.getProductsResponse().getCategories() != null) {
+			for (Category category : activity.getProductsResponse().getCategories()) {
+				for (SubItem subItem : category.getSubItems()) {
+					if (subItem.getSubItemQuantitySelected() > 0) {
+						subItemsInCart.add(subItem);
+					}
 				}
 			}
 		}

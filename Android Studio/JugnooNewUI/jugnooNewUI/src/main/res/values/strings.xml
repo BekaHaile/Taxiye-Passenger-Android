@@ -781,7 +781,9 @@
 	<string name="bike">Bike</string>
 
 	<string name="waiting_for_location">Waiting for location&#8230;</string>
+	<string name="get_a_ride">Get A Ride</string>
 	<string name="jugnoo_fresh">Jugnoo Fresh</string>
+	<string name="order_history">Order History</string>
 	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
 	<string name="checkout">Checkout</string>
 	<string name="my_cart">My Cart</string>
@@ -805,6 +807,10 @@
 	<string name="recharge_now">Recharge Now</string>
 	<string name="pay_via_cash">Pay via Cash</string>
 	<string name="balance_running_low">Balance is running low!</string>
-	<string name="dont_have_enough_paytm_balance">You don&apos;t have enough money for\ntransaction in your Paytm wallet.</string>
+	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
+	<string name="get_the_freshness">Get the Freshness</string>
+	<string name="delivered_now">Delivered Now</string>
+	<string name="finest_fruits_vegetables">The finest of Fruits &amp; Vegetables\nare just few clicks away.</string>
+	<string name="continue_text">Continue</string>
 
 </resources>

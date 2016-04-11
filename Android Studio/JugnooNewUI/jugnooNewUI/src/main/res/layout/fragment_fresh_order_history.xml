@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relativeLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_light_grey"
+    android:splitMotionEvents="false">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewRideOrderHistory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false">
+    </android.support.v7.widget.RecyclerView>
+
+
+</RelativeLayout>

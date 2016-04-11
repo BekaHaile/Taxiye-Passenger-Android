@@ -132,6 +132,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -1297,6 +1298,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
+
+            new FreshIntroDialog(this, new FreshIntroDialog.Callback() {
+                @Override
+                public void onContinueClicked() {
+                    menuBar.relativeLayoutGetRide.performClick();
+                }
+            }).show();
 
         } catch (Exception e) {
             e.printStackTrace();
