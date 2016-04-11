@@ -4,7 +4,7 @@
         android:interpolator="@android:anim/linear_interpolator"
         android:fromXScale="0.0"
         android:toXScale="1.0"
-        android:fromYScale="0.95"
+        android:fromYScale="0.97"
         android:toYScale="1.0"
         android:pivotY="50%"
         android:pivotX="50%"

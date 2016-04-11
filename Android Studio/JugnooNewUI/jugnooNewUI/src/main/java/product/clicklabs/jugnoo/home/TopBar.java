@@ -2,11 +2,13 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,12 +39,15 @@ public class TopBar {
 	public RelativeLayout topRl;
 	public ImageView imageViewMenu, imageViewSearchCancel;
 	public TextView title;
-	public Button checkServerBtn;
+	public Button buttonCheckServer;
 	public ImageView imageViewHelp;
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
 	public ImageView imageViewBack, imageViewDelete;
 	public TextView textViewAdd;
+
+	public LinearLayout linearLayoutFreshSwapper;
+	public ImageView imageViewAutoSwapper, imageViewFreshSwapper;
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
 		this.activity = activity;
@@ -55,7 +60,7 @@ public class TopBar {
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewSearchCancel = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCancel);
 		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
-		checkServerBtn = (Button) drawerLayout.findViewById(R.id.checkServerBtn);
+		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 		relativeLayoutNotification = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutNotification);
 		textViewNotificationValue = (TextView) drawerLayout.findViewById(R.id.textViewNotificationValue);
@@ -65,13 +70,17 @@ public class TopBar {
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 		textViewAdd = (TextView) drawerLayout.findViewById(R.id.textViewAdd); textViewAdd.setTypeface(Fonts.mavenRegular(activity));
+		linearLayoutFreshSwapper = (LinearLayout) drawerLayout.findViewById(R.id.linearLayoutFreshSwapper);
+		imageViewAutoSwapper = (ImageView) drawerLayout.findViewById(R.id.imageViewAutoSwapper);
+		imageViewFreshSwapper = (ImageView) drawerLayout.findViewById(R.id.imageViewFreshSwapper);
+
 
 		//Top bar events
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
-		checkServerBtn.setOnClickListener(topBarOnClickListener);
+		buttonCheckServer.setOnClickListener(topBarOnClickListener);
 
-		checkServerBtn.setOnLongClickListener(new View.OnLongClickListener() {
+		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				Toast.makeText(activity, Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
@@ -86,6 +95,8 @@ public class TopBar {
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 		imageViewDelete.setOnClickListener(topBarOnClickListener);
 		textViewAdd.setOnClickListener(topBarOnClickListener);
+		imageViewAutoSwapper.setOnClickListener(topBarOnClickListener);
+		imageViewFreshSwapper.setOnClickListener(topBarOnClickListener);
 
 		if(activity instanceof FreshActivity){
 			relativeLayoutNotification.setVisibility(View.VISIBLE);
@@ -93,8 +104,19 @@ public class TopBar {
 			imageViewSearchCancel.setVisibility(View.GONE);
 			title.setText(activity.getResources().getString(R.string.jugnoo_fresh));
 
-		} else if(activity instanceof HomeActivity){
+			title.setVisibility(View.GONE);
+			linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
+			imageViewAutoSwapper.setImageDrawable(getStateListDrawable(R.drawable.ic_swap_auto_alpha, R.drawable.ic_swap_auto));
+			imageViewFreshSwapper.setImageResource(R.drawable.ic_swap_fresh);
+
+		} else if(activity instanceof HomeActivity) {
 			title.setText(activity.getResources().getString(R.string.app_name));
+
+			title.setVisibility(View.GONE);
+			linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
+			imageViewAutoSwapper.setImageResource(R.drawable.ic_swap_auto);
+			imageViewFreshSwapper.setImageDrawable(getStateListDrawable(R.drawable.ic_swap_fresh_alpha, R.drawable.ic_swap_fresh));
+
 		}
 
 	}
@@ -111,7 +133,7 @@ public class TopBar {
 					FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
 					break;
 
-				case R.id.checkServerBtn:
+				case R.id.buttonCheckServer:
 					if(activity instanceof HomeActivity) {
 						if (((HomeActivity)activity).map != null) {
 							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
@@ -173,6 +195,25 @@ public class TopBar {
 					}
 					break;
 
+				case R.id.imageViewAutoSwapper:
+					if(activity instanceof FreshActivity){
+						activity.finish();
+						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+					}
+					break;
+
+				case R.id.imageViewFreshSwapper:
+					if(activity instanceof HomeActivity) {
+						if (((HomeActivity)activity).map != null) {
+							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
+							Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
+						}
+						activity.startActivity(new Intent(activity, FreshActivity.class));
+						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+
+					}
+					break;
+
 			}
 		}
 	};
@@ -194,5 +235,14 @@ public class TopBar {
 		}
 	}
 
+
+	private StateListDrawable getStateListDrawable(int resourceNormal, int resourcePressed){
+		StateListDrawable stateListDrawable = new StateListDrawable();
+		stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
+				activity.getResources().getDrawable(resourcePressed));
+		stateListDrawable.addState(new int[]{},
+				activity.getResources().getDrawable(resourceNormal));
+		return stateListDrawable;
+	}
 
 }

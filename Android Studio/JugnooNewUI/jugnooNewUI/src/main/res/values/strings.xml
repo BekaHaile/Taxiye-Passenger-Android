@@ -801,5 +801,10 @@
 	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>
 	<string name="pay_for_your_items_using">Pay for your Items using:</string>
 	<string name="payment">Payment</string>
+	<string name="place_order">Place Order</string>
+	<string name="recharge_now">Recharge Now</string>
+	<string name="pay_via_cash">Pay via Cash</string>
+	<string name="balance_running_low">Balance is running low!</string>
+	<string name="dont_have_enough_paytm_balance">You don&apos;t have enough money for\ntransaction in your Paytm wallet.</string>
 
 </resources>

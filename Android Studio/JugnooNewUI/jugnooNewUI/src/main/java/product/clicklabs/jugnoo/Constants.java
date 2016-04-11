@@ -221,5 +221,12 @@ public interface Constants {
 	String KEY_ACTIVE = "active";
 	String KEY_PHONE = "phone";
 
+	String KEY_PAYMENT_MODE = "payment_mode";
+	String KEY_DELIVERY_SLOT_ID = "delivery_slot_id";
+	String KEY_DELIVERY_ADDRESS = "delivery_address";
+	String KEY_CART = "cart";
+	String KEY_SUB_ITEM_ID = "sub_item_id";
+	String KEY_QUANTITY = "quantity";
+
 
 }

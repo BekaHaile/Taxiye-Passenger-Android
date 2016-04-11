@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Pair;
@@ -32,7 +33,6 @@ import product.clicklabs.jugnoo.home.TopBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -65,8 +65,6 @@ public class FreshActivity extends FragmentActivity {
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		new ASSL(this, drawerLayout, 1134, 720, false);
-
-		Log.e("", "");
 
 		relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -104,11 +102,7 @@ public class FreshActivity extends FragmentActivity {
 		});
 
 
-		getSupportFragmentManager().beginTransaction()
-				.add(relativeLayoutContainer.getId(), new FreshFragment(),
-						FreshFragment.class.getName())
-				.addToBackStack(FreshFragment.class.getName())
-				.commitAllowingStateLoss();
+		addFreshFragment();
 
 	}
 
@@ -177,6 +171,9 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			textViewCheckout.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+			topBar.title.setVisibility(View.GONE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
 			topBar.title.setText(getResources().getString(R.string.jugnoo_fresh));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
@@ -188,6 +185,9 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			textViewCheckout.setVisibility(View.VISIBLE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.my_cart));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
@@ -198,7 +198,10 @@ public class FreshActivity extends FragmentActivity {
 			topBar.imageViewDelete.setVisibility(View.GONE);
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
-			topBar.title.setText(getResources().getString(R.string.my_cart));
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.checkout));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshAddressFragment){
@@ -208,6 +211,9 @@ public class FreshActivity extends FragmentActivity {
 			topBar.imageViewDelete.setVisibility(View.GONE);
 			topBar.textViewAdd.setVisibility(View.VISIBLE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.address));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
@@ -218,6 +224,9 @@ public class FreshActivity extends FragmentActivity {
 			topBar.imageViewDelete.setVisibility(View.GONE);
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.payment));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
@@ -251,6 +260,40 @@ public class FreshActivity extends FragmentActivity {
 		if(frag != null){
 			frag.addAddressPress();
 		}
+	}
+
+
+	public void orderComplete(){
+		for(Category category : productsResponse.getCategories()){
+			for(SubItem subItem : category.getSubItems()){
+				subItem.setSubItemQuantitySelected(0);
+			}
+		}
+		selectedAddress = "";
+		slotSelected = null;
+		slotToSelect = null;
+		paymentOption = null;
+
+		FragmentManager fm = getSupportFragmentManager();
+		for(int i = 0; i < fm.getBackStackEntryCount()-1; i++) {
+			fm.popBackStack();
+		}
+
+		updateCartValuesGetTotalPrice();
+
+		FreshFragment frag = getFreshFragment();
+		if(frag != null){
+			frag.getAllProducts();
+		}
+
+	}
+
+	private void addFreshFragment(){
+		getSupportFragmentManager().beginTransaction()
+				.add(relativeLayoutContainer.getId(), new FreshFragment(),
+						FreshFragment.class.getName())
+				.addToBackStack(FreshFragment.class.getName())
+				.commitAllowingStateLoss();
 	}
 
 	public void performBackPressed(){

@@ -5410,6 +5410,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                    topBar.title.setVisibility(View.VISIBLE);
+                    topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
@@ -5417,12 +5419,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
                     topBar.title.setText(getResources().getString(R.string.app_name));
+                    topBar.title.setVisibility(View.GONE);
+                    topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
                 topBar.title.setText(getResources().getString(R.string.app_name));
+                topBar.title.setVisibility(View.GONE);
+                topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
+
                 localModeEnabled = 0;
             }
 

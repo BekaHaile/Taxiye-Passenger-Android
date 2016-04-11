@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,19 +15,40 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
+import product.clicklabs.jugnoo.fresh.FreshPaytmBalanceLowDialog;
+import product.clicklabs.jugnoo.fresh.models.Category;
+import product.clicklabs.jugnoo.fresh.models.PlaceOrderResponse;
+import product.clicklabs.jugnoo.fresh.models.SubItem;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FreshPaymentFragment extends Fragment {
@@ -41,6 +63,7 @@ public class FreshPaymentFragment extends Fragment {
 	private ImageView imageViewPaytmRadio;
 	private TextView textViewPaytm, textViewPaytmValue;
 	private ProgressWheel progressBarPaytm;
+	private Button buttonPlaceOrder;
 
 	private View rootView;
     private FreshActivity activity;
@@ -89,6 +112,7 @@ public class FreshPaymentFragment extends Fragment {
 		textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue); textViewPaytmValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		progressBarPaytm = (ProgressWheel) rootView.findViewById(R.id.progressBarPaytm);
 		progressBarPaytm.setVisibility(View.GONE);
+		buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder); buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
 		linearLayoutCash.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -110,26 +134,18 @@ public class FreshPaymentFragment extends Fragment {
 						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
 
 					} else {
-						DialogPopup.alertPopupWithListener(activity, "",
-								activity.getResources().getString(R.string.paytm_no_cash),
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Intent intent = new Intent(activity, PaymentActivity.class);
-										if (Data.userData.paytmEnabled == 1
-												&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-											intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-										} else {
-											intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-										}
-										activity.startActivity(intent);
-										activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									}
-								});
+						showPaytmBalanceLowDialog();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+		});
+
+		buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				placeOrder();
 			}
 		});
 
@@ -229,6 +245,147 @@ public class FreshPaymentFragment extends Fragment {
 			e.printStackTrace();
 		}
 	}
+
+	private void placeOrder(){
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Place order?", "OK", "Cancel",
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						placeOrderApi();
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				}, false, false);
+	}
+
+
+	public void placeOrderApi() {
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+
+				params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(activity.getPaymentOption().getOrdinal()));
+				params.put(Constants.KEY_DELIVERY_SLOT_ID, String.valueOf(activity.getSlotSelected().getDeliverySlotId()));
+				params.put(Constants.KEY_DELIVERY_ADDRESS, String.valueOf(activity.getSelectedAddress()));
+
+				JSONArray jCart = new JSONArray();
+				for(Category category : activity.getProductsResponse().getCategories()){
+					for(SubItem subItem : category.getSubItems()){
+						if(subItem.getSubItemQuantitySelected() > 0){
+							try {
+								JSONObject jItem = new JSONObject();
+								jItem.put(Constants.KEY_SUB_ITEM_ID, subItem.getSubItemId());
+								jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
+								jCart.put(jItem);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				params.put(Constants.KEY_CART, jCart.toString());
+
+
+
+				Log.i(TAG, "getAllProducts params=" + params.toString());
+
+				RestClient.getFreshApiService().placeOrder(params, new Callback<PlaceOrderResponse>() {
+					@Override
+					public void success(PlaceOrderResponse placeOrderResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "getAllProducts response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+								int flag = jObj.getInt(Constants.KEY_FLAG);
+								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+									activity.orderComplete();
+								}
+								DialogPopup.alertPopup(activity, "", message);
+							}
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							retryDialog(DialogErrorType.SERVER_ERROR);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						retryDialog(DialogErrorType.CONNECTION_LOST);
+					}
+				});
+			}
+			else {
+				retryDialog(DialogErrorType.NO_NET);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType){
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						placeOrderApi();
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+					}
+				});
+	}
+
+
+	private void showPaytmBalanceLowDialog(){
+		String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - activity.updateCartValuesGetTotalPrice().first);
+		new FreshPaytmBalanceLowDialog(activity, amount, new FreshPaytmBalanceLowDialog.Callback() {
+			@Override
+			public void onRechargeNowClicked() {
+				try {
+					Intent intent = new Intent(activity, PaymentActivity.class);
+					if (Data.userData.paytmEnabled == 1
+							&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+						intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+					} else {
+						intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+					}
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onPayByCashClicked() {
+				linearLayoutCash.performClick();
+			}
+		}).show();
+	}
+
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
