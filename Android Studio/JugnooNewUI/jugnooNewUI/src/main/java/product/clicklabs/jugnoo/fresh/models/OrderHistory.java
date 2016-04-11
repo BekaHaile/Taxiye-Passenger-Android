@@ -16,13 +16,13 @@ public class OrderHistory{
 	private Integer orderId;
 	@SerializedName("order_amount")
 	@Expose
-	private Integer orderAmount;
+	private Double orderAmount;
 	@SerializedName("delivery_address")
 	@Expose
 	private String deliveryAddress;
 	@SerializedName("order_refund_amount")
 	@Expose
-	private Integer orderRefundAmount;
+	private Double orderRefundAmount;
 	@SerializedName("payment_mode")
 	@Expose
 	private Integer paymentMode;
@@ -62,7 +62,7 @@ public class OrderHistory{
 	 * @return
 	 * The orderAmount
 	 */
-	public Integer getOrderAmount() {
+	public Double getOrderAmount() {
 		return orderAmount;
 	}
 
@@ -71,7 +71,7 @@ public class OrderHistory{
 	 * @param orderAmount
 	 * The order_amount
 	 */
-	public void setOrderAmount(Integer orderAmount) {
+	public void setOrderAmount(Double orderAmount) {
 		this.orderAmount = orderAmount;
 	}
 
@@ -98,7 +98,7 @@ public class OrderHistory{
 	 * @return
 	 * The orderRefundAmount
 	 */
-	public Integer getOrderRefundAmount() {
+	public Double getOrderRefundAmount() {
 		return orderRefundAmount;
 	}
 
@@ -107,7 +107,7 @@ public class OrderHistory{
 	 * @param orderRefundAmount
 	 * The order_refund_amount
 	 */
-	public void setOrderRefundAmount(Integer orderRefundAmount) {
+	public void setOrderRefundAmount(Double orderRefundAmount) {
 		this.orderRefundAmount = orderRefundAmount;
 	}
 

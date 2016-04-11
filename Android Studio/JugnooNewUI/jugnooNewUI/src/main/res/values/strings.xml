@@ -812,5 +812,15 @@
 	<string name="delivered_now">Delivered Now</string>
 	<string name="finest_fruits_vegetables">The finest of Fruits &amp; Vegetables\nare just few clicks away.</string>
 	<string name="continue_text">Continue</string>
+	<string name="order_status">Order Status:</string>
+	<string name="id">ID:</string>
+	<string name="order_date">Order Date:</string>
+	<string name="delivery_address_colon">Delivery Address:</string>
+	<string name="order_id">Order ID:</string>
+	<string name="delivery_date">Delivery Date</string>
+	<string name="delivery_slot">Delivery Slot</string>
+	<string name="order_receipt">Order Receipt</string>
+	<string name="payment_by">Payment By</string>
+	<string name="x_format">%1$s X %2$s</string>
 
 </resources>

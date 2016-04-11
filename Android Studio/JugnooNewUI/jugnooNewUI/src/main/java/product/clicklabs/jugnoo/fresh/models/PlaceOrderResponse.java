@@ -16,7 +16,7 @@ public class PlaceOrderResponse {
 	private String paymentMode;
 	@SerializedName("amount")
 	@Expose
-	private Integer amount;
+	private Double amount;
 	@SerializedName("status")
 	@Expose
 	private Integer status;
@@ -68,7 +68,7 @@ public class PlaceOrderResponse {
 	 * @return
 	 * The amount
 	 */
-	public Integer getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
@@ -77,7 +77,7 @@ public class PlaceOrderResponse {
 	 * @param amount
 	 * The amount
 	 */
-	public void setAmount(Integer amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

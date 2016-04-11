@@ -13,10 +13,10 @@ public class OrderItem {
 	private Integer subItemId;
 	@SerializedName("item_amount")
 	@Expose
-	private Integer itemAmount;
+	private Double itemAmount;
 	@SerializedName("item_refund_amount")
 	@Expose
-	private Integer itemRefundAmount;
+	private Double itemRefundAmount;
 	@SerializedName("item_status")
 	@Expose
 	private Integer itemStatus;
@@ -50,7 +50,7 @@ public class OrderItem {
 	 * @return
 	 * The itemAmount
 	 */
-	public Integer getItemAmount() {
+	public Double getItemAmount() {
 		return itemAmount;
 	}
 
@@ -59,7 +59,7 @@ public class OrderItem {
 	 * @param itemAmount
 	 * The item_amount
 	 */
-	public void setItemAmount(Integer itemAmount) {
+	public void setItemAmount(Double itemAmount) {
 		this.itemAmount = itemAmount;
 	}
 
@@ -68,7 +68,7 @@ public class OrderItem {
 	 * @return
 	 * The itemRefundAmount
 	 */
-	public Integer getItemRefundAmount() {
+	public Double getItemRefundAmount() {
 		return itemRefundAmount;
 	}
 
@@ -77,7 +77,7 @@ public class OrderItem {
 	 * @param itemRefundAmount
 	 * The item_refund_amount
 	 */
-	public void setItemRefundAmount(Integer itemRefundAmount) {
+	public void setItemRefundAmount(Double itemRefundAmount) {
 		this.itemRefundAmount = itemRefundAmount;
 	}
 

@@ -74,8 +74,8 @@ public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
 				holder.relative.setTag(position);
 
 				holder.textViewIdValue.setText(String.valueOf(orderHistory.getOrderId()));
-				holder.textViewToValue.setText(orderHistory.getDeliveryAddress());
-				holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations
+				holder.textViewDeliveryAddressValue.setText(orderHistory.getDeliveryAddress());
+				holder.textViewOrderDateValue.setText(DateOperations.convertDateViaFormat(DateOperations
                         .utcToLocalTZ(orderHistory.getOrderTime())));
                 holder.textViewOrderStatusValue.setText(orderHistory.getOrderStatus());
                 try{
@@ -149,20 +149,20 @@ public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewIdValue, textViewToValue, textViewDetailsValue, textViewOrderStatusValue, textViewAmount;
+        public TextView textViewIdValue, textViewDeliveryAddressValue, textViewOrderDateValue, textViewOrderStatusValue, textViewAmount;
         public RelativeLayout relative;
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
-            textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); textViewIdValue.setTypeface(Fonts.mavenLight(context));
-            textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); textViewToValue.setTypeface(Fonts.mavenLight(context));
-            textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); textViewDetailsValue.setTypeface(Fonts.mavenLight(context));
-            textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
-            textViewOrderStatusValue = (TextView) convertView.findViewById(R.id.textViewOrderStatusValue); textViewOrderStatusValue.setTypeface(Fonts.mavenLight(context));
+            textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); textViewIdValue.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            textViewDeliveryAddressValue = (TextView) convertView.findViewById(R.id.textViewDeliveryAddressValue); textViewDeliveryAddressValue.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            textViewOrderDateValue = (TextView) convertView.findViewById(R.id.textViewOrderDateValue); textViewOrderDateValue.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+            textViewOrderStatusValue = (TextView) convertView.findViewById(R.id.textViewOrderStatusValue); textViewOrderStatusValue.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
 
-            ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenLight(context));
-            ((TextView)convertView.findViewById(R.id.textViewTo)).setTypeface(Fonts.mavenLight(context));
-            ((TextView)convertView.findViewById(R.id.textViewDetails)).setTypeface(Fonts.mavenLight(context));
-            ((TextView)convertView.findViewById(R.id.textViewOrderStatus)).setTypeface(Fonts.mavenLight(context));
+            ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            ((TextView)convertView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            ((TextView)convertView.findViewById(R.id.textViewOrderDate)).setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            ((TextView)convertView.findViewById(R.id.textViewOrderStatus)).setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
 
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
         }
