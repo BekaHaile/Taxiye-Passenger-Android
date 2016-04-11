@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.fresh;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -22,8 +23,11 @@ import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshOrderHistoryFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshOrderSummaryFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshPaymentFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshSupportFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
+import product.clicklabs.jugnoo.fresh.models.OrderHistory;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.fresh.models.Slot;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
@@ -58,6 +62,8 @@ public class FreshActivity extends FragmentActivity {
 	private String selectedAddress = "";
 	private Slot slotSelected, slotToSelect;
 	private PaymentOption paymentOption;
+
+	private OrderHistory orderHistoryOpened;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -247,6 +253,32 @@ public class FreshActivity extends FragmentActivity {
 			topBar.title.setText(getResources().getString(R.string.order_history));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
+		} else if(fragment instanceof FreshOrderSummaryFragment){
+			topBar.imageViewMenu.setVisibility(View.GONE);
+			topBar.relativeLayoutNotification.setVisibility(View.GONE);
+			topBar.imageViewBack.setVisibility(View.VISIBLE);
+			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.GONE);
+			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.order_summary));
+			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+		} else if(fragment instanceof FreshSupportFragment){
+			topBar.imageViewMenu.setVisibility(View.GONE);
+			topBar.relativeLayoutNotification.setVisibility(View.GONE);
+			topBar.imageViewBack.setVisibility(View.VISIBLE);
+			topBar.imageViewDelete.setVisibility(View.GONE);
+			topBar.textViewAdd.setVisibility(View.GONE);
+			relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+			topBar.title.setVisibility(View.VISIBLE);
+			topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
+			topBar.title.setText(getResources().getString(R.string.support));
+			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
 		}
 	}
 
@@ -298,11 +330,15 @@ public class FreshActivity extends FragmentActivity {
 
 		updateCartValuesGetTotalPrice();
 
-		FreshFragment frag = getFreshFragment();
-		if(frag != null){
-			frag.getAllProducts();
-		}
-
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				FreshFragment frag = getFreshFragment();
+				if(frag != null){
+					frag.getAllProducts();
+				}
+			}
+		}, 1000);
 	}
 
 	private void addFreshFragment(){
@@ -315,6 +351,10 @@ public class FreshActivity extends FragmentActivity {
 
 	public void openOrderHistory(){
 		getTransactionUtils().openOrderHistoryFragment(FreshActivity.this, relativeLayoutContainer);
+	}
+
+	public void openSupport(){
+		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
 	}
 
 	public void performBackPressed(){
@@ -398,5 +438,13 @@ public class FreshActivity extends FragmentActivity {
 
 	public void setPaymentOption(PaymentOption paymentOption) {
 		this.paymentOption = paymentOption;
+	}
+
+	public OrderHistory getOrderHistoryOpened() {
+		return orderHistoryOpened;
+	}
+
+	public void setOrderHistoryOpened(OrderHistory orderHistoryOpened) {
+		this.orderHistoryOpened = orderHistoryOpened;
 	}
 }

@@ -8,7 +8,9 @@ import product.clicklabs.jugnoo.fresh.fragments.FreshAddressFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCartItemsFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshOrderHistoryFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshOrderSummaryFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshPaymentFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshSupportFragment;
 
 /**
  * Created by shankar on 1/27/16.
@@ -74,6 +76,32 @@ public class TransactionUtils {
 					.add(container.getId(), new FreshOrderHistoryFragment(),
 							FreshOrderHistoryFragment.class.getName())
 					.addToBackStack(FreshOrderHistoryFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openOrderSummaryFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, FreshOrderSummaryFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(container.getId(), new FreshOrderSummaryFragment(),
+							FreshOrderSummaryFragment.class.getName())
+					.addToBackStack(FreshOrderSummaryFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openSupportFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, FreshSupportFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(container.getId(), new FreshSupportFragment(),
+							FreshSupportFragment.class.getName())
+					.addToBackStack(FreshSupportFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

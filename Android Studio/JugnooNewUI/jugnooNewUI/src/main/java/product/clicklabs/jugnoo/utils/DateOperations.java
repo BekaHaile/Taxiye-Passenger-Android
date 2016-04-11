@@ -172,6 +172,18 @@ public class DateOperations {
 			return convertDate(dateTime);
 		}
 	}
+
+	public static String convertDateOnlyViaFormat(String dateTime) {
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy");
+		try {
+			Date myDate = sdfFrom.parse(dateTime);
+			return sdfTo.format(myDate);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return convertDate(dateTime);
+		}
+	}
 	
 	public static String getTimeAMPM(String dateTime){
 		try{

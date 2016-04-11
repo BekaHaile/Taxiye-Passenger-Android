@@ -822,5 +822,9 @@
 	<string name="order_receipt">Order Receipt</string>
 	<string name="payment_by">Payment By</string>
 	<string name="x_format">%1$s X %2$s</string>
+	<string name="order_summary">Order Summary</string>
+	<string name="in_case_you_are_facing_problem">In case you are facing any problem</string>
+	<string name="just_contact_the_helpline">Just contact the helpline :)</string>
+	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
 
 </resources>

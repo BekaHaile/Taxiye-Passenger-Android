@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.fresh.adapters;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +25,6 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<FreshOrderItemAd
     public FreshOrderItemAdapter(Activity activity, ArrayList<OrderItem> orderItems) {
         this.orderItems = orderItems;
         this.activity = activity;
-    }
-
-    public void notifyList(ArrayList<OrderItem> orderItems){
-        this.orderItems = orderItems;
-        this.notifyDataSetChanged();
     }
 
     @Override
@@ -73,8 +67,8 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<FreshOrderItemAd
         public RelativeLayout relative;
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
-            textViewOrderItemName = (TextView) convertView.findViewById(R.id.textViewOrderItemName); textViewOrderItemName.setTypeface(Fonts.mavenLight(context));
-            textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textViewOrderItemPrice); textViewOrderItemPrice.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            textViewOrderItemName = (TextView) convertView.findViewById(R.id.textViewOrderItemName); textViewOrderItemName.setTypeface(Fonts.mavenRegular(context));
+            textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textViewOrderItemPrice); textViewOrderItemPrice.setTypeface(Fonts.mavenRegular(context));
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
         }
     }

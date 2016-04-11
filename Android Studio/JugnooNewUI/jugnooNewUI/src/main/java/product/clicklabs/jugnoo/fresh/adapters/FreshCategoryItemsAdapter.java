@@ -116,7 +116,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
         });
 
         try{
-            Picasso.with(context).load(subItem.getSubItemImage()).into(holder.imageViewItemImage);
+            Picasso.with(context).load(subItem.getSubItemImage())
+                    .placeholder(R.drawable.ic_fresh_item_placeholder)
+                    .error(R.drawable.ic_fresh_item_placeholder)
+                    .into(holder.imageViewItemImage);
         } catch(Exception e){
             e.printStackTrace();
         }

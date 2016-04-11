@@ -270,8 +270,13 @@ public class MenuBar {
 
 			@Override
 			public void onClick(View v) {
-				activity.startActivity(new Intent(activity, SupportActivity.class));
-				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				if(activity instanceof HomeActivity) {
+					activity.startActivity(new Intent(activity, SupportActivity.class));
+					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				} else if(activity instanceof FreshActivity){
+					((FreshActivity)activity).openSupport();
+					drawerLayout.closeDrawer(menuLayout);
+				}
 			}
 		});
 

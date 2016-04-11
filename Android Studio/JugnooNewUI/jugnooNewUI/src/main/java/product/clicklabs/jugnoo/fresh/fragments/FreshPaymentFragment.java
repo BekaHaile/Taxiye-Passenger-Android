@@ -259,7 +259,10 @@ public class FreshPaymentFragment extends Fragment {
 			}
 		}
 		if(goAhead) {
-			DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Place order?", "OK", "Cancel",
+			DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+					activity.getResources().getString(R.string.place_order_confirmation),
+					activity.getResources().getString(R.string.ok),
+					activity.getResources().getString(R.string.cancel),
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -327,8 +330,10 @@ public class FreshPaymentFragment extends Fragment {
 								int flag = jObj.getInt(Constants.KEY_FLAG);
 								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 									activity.orderComplete();
+									DialogPopup.alertPopup(activity, "", message);
+								} else{
+									DialogPopup.alertPopup(activity, "", message);
 								}
-								DialogPopup.alertPopup(activity, "", message);
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
