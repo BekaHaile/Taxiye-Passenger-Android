@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
+import product.clicklabs.jugnoo.fresh.FreshNoDeliveriesDialog;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryFragmentsAdapter;
 import product.clicklabs.jugnoo.fresh.models.ProductsResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -135,6 +136,16 @@ public class FreshFragment extends Fragment {
 									activity.updateCartValuesGetTotalPrice();
 									freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
 									tabs.setViewPager(viewPager);
+
+									if(productsResponse.getShowMessage() != null
+											&& productsResponse.getShowMessage().equals(1)) {
+										new FreshNoDeliveriesDialog(activity, new FreshNoDeliveriesDialog.Callback() {
+											@Override
+											public void onDismiss() {
+
+											}
+										}).show(message);
+									}
 								}
 							}
 						} catch (Exception exception) {

@@ -72,7 +72,6 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		textView.setText(categories.get(position).getCategoryName());
 		try{
 			Picasso.with(context).load(categories.get(position).getCategoryImage())
-					.placeholder(R.drawable.ic_fruits_tab).error(R.drawable.ic_fruits_tab)
 					.into(imageView);
 		} catch(Exception e){
 			e.printStackTrace();

@@ -23,6 +23,9 @@ public class ProductsResponse {
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
+	@SerializedName("show_message")
+	@Expose
+	private Integer showMessage;
 
 
 	/**
@@ -85,5 +88,13 @@ public class ProductsResponse {
 
 	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
 		this.deliveryInfo = deliveryInfo;
+	}
+
+	public Integer getShowMessage() {
+		return showMessage;
+	}
+
+	public void setShowMessage(Integer showMessage) {
+		this.showMessage = showMessage;
 	}
 }

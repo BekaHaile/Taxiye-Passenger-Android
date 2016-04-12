@@ -108,29 +108,34 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		recyclerViewOrderItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewOrderItems.setHasFixedSize(false);
 
-		if(activity.getOrderHistoryOpened() != null) {
-			OrderHistory orderHistory = activity.getOrderHistoryOpened();
-			freshOrderItemAdapter = new FreshOrderItemAdapter(activity,
-					(ArrayList<OrderItem>) orderHistory.getOrderItems());
-			recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
+		try {
+			if(activity.getOrderHistoryOpened() != null) {
+				OrderHistory orderHistory = activity.getOrderHistoryOpened();
+				freshOrderItemAdapter = new FreshOrderItemAdapter(activity,
+						(ArrayList<OrderItem>) orderHistory.getOrderItems());
+				recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
 
-			textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
-			textViewOrderDeliveryDateValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations
-					.utcToLocalTZ(orderHistory.getOrderTime())));
-			textViewOrderDeliverySlotValue.setText("");
-			textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-					Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-			textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-					Utils.getMoneyDecimalFormat().format(0)));
-			textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-					Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-			if(orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())){
-				textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
-			} else{
-				textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
+				textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
+				textViewOrderDeliveryDateValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations
+						.utcToLocalTZ(orderHistory.getOrderTime())));
+				textViewOrderDeliverySlotValue.setText("");
+				textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount()
+								- orderHistory.getDeliveryCharges())));
+				textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
+				textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+				if(orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())){
+					textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
+				} else{
+					textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
+				}
+				textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
 			}
-			textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-					Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		buttonOk.setOnClickListener(new View.OnClickListener() {

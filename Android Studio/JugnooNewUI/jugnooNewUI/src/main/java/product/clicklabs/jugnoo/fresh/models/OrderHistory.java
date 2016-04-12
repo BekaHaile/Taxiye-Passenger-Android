@@ -38,6 +38,9 @@ public class OrderHistory{
 	@SerializedName("order_items")
 	@Expose
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
+	@SerializedName("delivery_charges")
+	@Expose
+	private Double deliveryCharges;
 
 	/**
 	 *
@@ -201,4 +204,11 @@ public class OrderHistory{
 		this.orderItems = orderItems;
 	}
 
+	public Double getDeliveryCharges() {
+		return deliveryCharges;
+	}
+
+	public void setDeliveryCharges(Double deliveryCharges) {
+		this.deliveryCharges = deliveryCharges;
+	}
 }

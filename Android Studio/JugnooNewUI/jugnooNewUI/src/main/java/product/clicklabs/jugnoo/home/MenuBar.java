@@ -55,7 +55,7 @@ public class MenuBar {
 	public TextView textViewGamePredict, textViewGamePredictNew;
 
 	public RelativeLayout relativeLayoutGetRide;
-	public ImageView imageViewGetRide;
+	public ImageView imageViewGetRide, imageViewFresh;
 	public TextView textViewGetRide;
 
 	public RelativeLayout relativeLayoutInvite;
@@ -106,6 +106,7 @@ public class MenuBar {
 		textViewGetRide = (TextView) drawerLayout.findViewById(R.id.textViewGetRide);
 		textViewGetRide.setTypeface(Fonts.mavenLight(activity));
 		imageViewGetRide = (ImageView) drawerLayout.findViewById(R.id.imageViewGetRide);
+		imageViewFresh = (ImageView) drawerLayout.findViewById(R.id.imageViewFresh);
 
 		relativeLayoutInvite = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutInvite);
 		textViewInvite = (TextView) drawerLayout.findViewById(R.id.textViewInvite);
@@ -330,6 +331,8 @@ public class MenuBar {
 
 		if(activity instanceof HomeActivity){
 			textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
+			imageViewGetRide.setVisibility(View.GONE);
+			imageViewFresh.setVisibility(View.VISIBLE);
 			relativeLayoutInvite.setVisibility(View.VISIBLE);
 			relativeLayoutPromotions.setVisibility(View.VISIBLE);
 			relativeLayoutAbout.setVisibility(View.VISIBLE);
@@ -337,6 +340,8 @@ public class MenuBar {
 
 		} else if(activity instanceof FreshActivity){
 			textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
+			imageViewGetRide.setVisibility(View.VISIBLE);
+			imageViewFresh.setVisibility(View.GONE);
 			relativeLayoutInvite.setVisibility(View.GONE);
 			relativeLayoutPromotions.setVisibility(View.GONE);
 			relativeLayoutAbout.setVisibility(View.GONE);
