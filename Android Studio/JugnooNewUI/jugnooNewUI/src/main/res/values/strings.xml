@@ -826,5 +826,8 @@
 	<string name="in_case_you_are_facing_problem">In case you are facing any problem</string>
 	<string name="just_contact_the_helpline">Just contact the helpline :)</string>
 	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
+	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
+	<string name="your_order_id">Your Order ID:</string>
+	<string name="will_be_delivered_by">will be delivered by</string>
 
 </resources>

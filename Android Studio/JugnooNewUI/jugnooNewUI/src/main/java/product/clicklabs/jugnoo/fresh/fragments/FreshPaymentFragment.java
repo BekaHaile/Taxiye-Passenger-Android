@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
+import product.clicklabs.jugnoo.fresh.FreshOrderCompleteDialog;
 import product.clicklabs.jugnoo.fresh.FreshPaytmBalanceLowDialog;
 import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.PlaceOrderResponse;
@@ -39,6 +40,7 @@ import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -329,8 +331,15 @@ public class FreshPaymentFragment extends Fragment {
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt(Constants.KEY_FLAG);
 								if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-									activity.orderComplete();
-									DialogPopup.alertPopup(activity, "", message);
+									new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+										@Override
+										public void onDismiss() {
+											activity.orderComplete();
+										}
+									}).show(String.valueOf(placeOrderResponse.getOrderId()),
+											DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
+													+ " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()));
+
 								} else{
 									DialogPopup.alertPopup(activity, "", message);
 								}
