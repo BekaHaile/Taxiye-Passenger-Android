@@ -338,7 +338,8 @@ public class FreshPaymentFragment extends Fragment {
 										}
 									}).show(String.valueOf(placeOrderResponse.getOrderId()),
 											DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
-													+ " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()));
+													+ " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()),
+											activity.getSlotSelected().getDayName());
 
 								} else{
 									DialogPopup.alertPopup(activity, "", message);

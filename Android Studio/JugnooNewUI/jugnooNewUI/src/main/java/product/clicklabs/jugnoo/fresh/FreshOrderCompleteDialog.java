@@ -32,7 +32,7 @@ public class FreshOrderCompleteDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show(String orderId, String deliverySlot) {
+	public Dialog show(String orderId, String deliverySlot, String deliveryDay) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -55,6 +55,8 @@ public class FreshOrderCompleteDialog {
 			TextView textViewOrderDeliverySlot = (TextView) dialog.findViewById(R.id.textViewOrderDeliverySlot);
 			textViewOrderDeliverySlot.setTypeface(Fonts.mavenRegular(activity));
 			textViewOrderDeliverySlot.setText(deliverySlot);
+			textViewOrderDeliverySlot.append("\n");
+			textViewOrderDeliverySlot.append(deliveryDay);
 
 			textViewOrderId.setText(activity.getResources().getString(R.string.your_order_id));
 

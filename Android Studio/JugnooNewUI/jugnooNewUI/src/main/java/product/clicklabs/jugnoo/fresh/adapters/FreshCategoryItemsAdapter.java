@@ -64,7 +64,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
         holder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 
         if(openMode == OpenMode.CART){
-            holder.imageViewDelete.setVisibility(View.VISIBLE);
+            holder.imageViewDelete.setVisibility(View.GONE);
         } else{
             holder.imageViewDelete.setVisibility(View.GONE);
         }

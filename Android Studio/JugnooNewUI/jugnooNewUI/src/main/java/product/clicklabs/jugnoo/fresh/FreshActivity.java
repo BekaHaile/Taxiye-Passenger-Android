@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -38,6 +41,8 @@ import product.clicklabs.jugnoo.home.TopBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -45,11 +50,12 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class FreshActivity extends FragmentActivity {
 
+	private final String TAG = FreshActivity.class.getSimpleName();
 	private DrawerLayout drawerLayout;
 
 	private RelativeLayout relativeLayoutContainer;
 
-	private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart;
+	private RelativeLayout relativeLayoutCheckoutBar;
 	private TextView textViewCartItemsCount, textViewTotalPrice, textViewCheckout;
 
 	private MenuBar menuBar;
@@ -76,7 +82,6 @@ public class FreshActivity extends FragmentActivity {
 		relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
 		relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
-		relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
 
 		textViewCartItemsCount = (TextView) findViewById(R.id.textViewCartItemsCount);
 		textViewCartItemsCount.setTypeface(Fonts.mavenRegular(this));
@@ -94,16 +99,11 @@ public class FreshActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				if(updateCartValuesGetTotalPrice().second > 0) {
-					getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
-				}
-			}
-		});
-
-		relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(updateCartValuesGetTotalPrice().second > 0) {
-					getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+					if (getTransactionUtils().checkIfFragmentAdded(FreshActivity.this, FreshCartItemsFragment.class.getName())) {
+						getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+					} else {
+						getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+					}
 				}
 			}
 		});
@@ -294,6 +294,7 @@ public class FreshActivity extends FragmentActivity {
 						if(frag != null) {
 							frag.deleteCart();
 						}
+						clearCart();
 					}
 				},
 				new View.OnClickListener() {
@@ -313,6 +314,7 @@ public class FreshActivity extends FragmentActivity {
 
 
 	public void orderComplete(){
+		clearCart();
 		for(Category category : productsResponse.getCategories()){
 			for(SubItem subItem : category.getSubItems()){
 				subItem.setSubItemQuantitySelected(0);
@@ -447,4 +449,61 @@ public class FreshActivity extends FragmentActivity {
 	public void setOrderHistoryOpened(OrderHistory orderHistoryOpened) {
 		this.orderHistoryOpened = orderHistoryOpened;
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		saveCartToSP();
+		Log.e(TAG, "cart saved="+Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+
+	}
+
+	private void saveCartToSP(){
+		try{
+			JSONObject jCart = new JSONObject();
+			if(getProductsResponse() != null
+					&& getProductsResponse().getCategories() != null) {
+				for (Category category : getProductsResponse().getCategories()) {
+					for (SubItem subItem : category.getSubItems()) {
+						if (subItem.getSubItemQuantitySelected() > 0) {
+							try {
+								jCart.put(String.valueOf(subItem.getSubItemId()), (int)subItem.getSubItemQuantitySelected());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+			Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void updateCartFromSP(){
+		try{
+			JSONObject jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+			if(getProductsResponse() != null
+					&& getProductsResponse().getCategories() != null) {
+				for (Category category : getProductsResponse().getCategories()) {
+					for (SubItem subItem : category.getSubItems()) {
+						try {
+							subItem.setSubItemQuantitySelected(jCart.optInt(String.valueOf(subItem.getSubItemId()),
+									(int)subItem.getSubItemQuantitySelected()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void clearCart(){
+		Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
+	}
+
 }

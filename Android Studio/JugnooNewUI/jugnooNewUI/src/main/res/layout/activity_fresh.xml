@@ -39,7 +39,6 @@
                 android:id="@+id/relativeLayoutCart"
                 android:layout_width="156px"
                 android:layout_height="match_parent"
-                android:background="@drawable/background_white_grey_light_selector"
                 >
 
                 <View

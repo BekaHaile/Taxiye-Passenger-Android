@@ -229,6 +229,8 @@ public interface Constants {
 	String KEY_SUB_ITEM_ID = "sub_item_id";
 	String KEY_QUANTITY = "quantity";
 	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
+	String SP_FRESH_CART= "fresh_cart";
+	String EMPTY_JSON_OBJECT = "{}";
 
 
 

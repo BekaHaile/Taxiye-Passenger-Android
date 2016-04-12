@@ -131,6 +131,8 @@ public class FreshFragment extends Fragment {
 								activity.setProductsResponse(productsResponse);
 								if(activity.getProductsResponse() != null
 										&& activity.getProductsResponse().getCategories() != null) {
+									activity.updateCartFromSP();
+									activity.updateCartValuesGetTotalPrice();
 									freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
 									tabs.setViewPager(viewPager);
 								}
