@@ -128,6 +128,12 @@ public class ApiFindADriver {
 			} else {
 				Data.farAwayCity = findADriverResponse.getFarAwayCity();
 			}
+
+			if (findADriverResponse.getFreshAvailable() == null) {
+				Data.freshAvailable = 0;
+			} else {
+				Data.freshAvailable = findADriverResponse.getFreshAvailable();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

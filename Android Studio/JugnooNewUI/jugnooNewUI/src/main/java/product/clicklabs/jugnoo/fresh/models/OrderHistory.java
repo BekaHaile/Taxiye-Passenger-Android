@@ -41,6 +41,15 @@ public class OrderHistory{
 	@SerializedName("delivery_charges")
 	@Expose
 	private Double deliveryCharges;
+	@SerializedName("start_time")
+	@Expose
+	private String startTime;
+	@SerializedName("end_time")
+	@Expose
+	private String endTime;
+	@SerializedName("expected_delivery_date")
+	@Expose
+	private String expectedDeliveryDate;
 
 	/**
 	 *
@@ -210,5 +219,29 @@ public class OrderHistory{
 
 	public void setDeliveryCharges(Double deliveryCharges) {
 		this.deliveryCharges = deliveryCharges;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getExpectedDeliveryDate() {
+		return expectedDeliveryDate;
+	}
+
+	public void setExpectedDeliveryDate(String expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
 	}
 }

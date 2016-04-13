@@ -119,6 +119,8 @@ public class TopBar {
 
 		}
 
+		setupFreshUI();
+
 	}
 
 	private View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
@@ -134,20 +136,7 @@ public class TopBar {
 					break;
 
 				case R.id.buttonCheckServer:
-					if(activity instanceof HomeActivity) {
-						if (((HomeActivity)activity).map != null) {
-							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
-							Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
-						}
-						activity.startActivity(new Intent(activity, FreshActivity.class));
-						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
-
-					} else if(activity instanceof FreshActivity){
-						activity.finish();
-						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
-					}
 					break;
-
 
 				case R.id.imageViewSearchCancel:
 					if(activity instanceof HomeActivity){
@@ -243,6 +232,25 @@ public class TopBar {
 		stateListDrawable.addState(new int[]{},
 				activity.getResources().getDrawable(resourceNormal));
 		return stateListDrawable;
+	}
+
+	public void setupFreshUI(){
+		try {
+			if(1 == Data.freshAvailable){
+				title.setVisibility(View.GONE);
+				linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
+			} else{
+				title.setVisibility(View.VISIBLE);
+				linearLayoutFreshSwapper.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void closeFreshUI(){
+		title.setVisibility(View.VISIBLE);
+		linearLayoutFreshSwapper.setVisibility(View.GONE);
 	}
 
 }

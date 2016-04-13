@@ -17,6 +17,7 @@
         android:layout_marginLeft="30px"
         android:scaleType="centerCrop"
         android:tag="mwar"
+        android:src="@drawable/ic_fresh_item_placeholder"
         />
 
     <LinearLayout

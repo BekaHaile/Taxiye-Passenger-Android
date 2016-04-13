@@ -121,7 +121,6 @@ import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
-import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.RidePath;
@@ -311,9 +310,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static PassengerScreenMode passengerScreenMode;
 
 
-	String farAwayCity = "";
-
-
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker;
     Polyline pathToDropLocationPolyline;
     PolylineOptions pathToDropLocationPolylineOptions;
@@ -367,12 +363,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public ASSL assl;
 
 
-    private int showAllDrivers = 0, showDriverInfo = 0, priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
+    private int showAllDrivers = 0, showDriverInfo = 0;
 
     private boolean intentFired = false, dropLocationSearched = false;
-
-//    GenieLayout genieLayout;
-
 
 	private GoogleApiClient mGoogleApiClient;
 
@@ -815,7 +808,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
                 locationGotNow();
-                setServiceAvailablityUI(farAwayCity);
+                setServiceAvailablityUI(Data.farAwayCity);
                 callMapTouchedRefreshDrivers();
 //				genieLayout.setVisibility(View.VISIBLE);
 			}
@@ -1299,13 +1292,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
 
-            new FreshIntroDialog(this, new FreshIntroDialog.Callback() {
-                @Override
-                public void onContinueClicked() {
-                    menuBar.relativeLayoutGetRide.performClick();
-                }
-            }).show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1439,7 +1425,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
-            new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, priorityTipCategory,
+            new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, Data.priorityTipCategory,
                     new PriorityTipDialog.Callback() {
                         @Override
                         public void onConfirmed() {
@@ -3085,7 +3071,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             textViewCentrePinETA.setText("-");
                             noDriverNearbyToast(getResources().getString(R.string.couldnt_find_drivers_nearby));
                         }
-                        setServiceAvailablityUI(farAwayCity);
+                        setServiceAvailablityUI(Data.farAwayCity);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -3109,9 +3095,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
             try {
-                HomeActivity.this.priorityTipCategory = Data.priorityTipCategory;
-                HomeActivity.this.farAwayCity = Data.farAwayCity;
-
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
                     showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
                     dontCallRefreshDriver = true;
@@ -3121,7 +3104,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             dontCallRefreshDriver = false;
                         }
                     }, 300);
-                    setServiceAvailablityUI(farAwayCity);
+                    setServiceAvailablityUI(Data.farAwayCity);
+                    setupFreshUI();
                 }
                 setFareFactorToInitialState();
             } catch (Exception e) {
@@ -3130,6 +3114,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+    private void setupFreshUI(){
+        try{
+            if(1 == Data.freshAvailable){
+                new FreshIntroDialog(this, new FreshIntroDialog.Callback() {
+                    @Override
+                    public void onContinueClicked() {
+                    }
+                }).show();
+            }
+            menuBar.setupFreshUI();
+            topBar.setupFreshUI();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 	//Our service is not available in this area
@@ -3216,7 +3216,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void showDriverMarkersAndPanMap(final LatLng userLatLng, Region region) {
         try {
-			if("".equalsIgnoreCase(farAwayCity)) {
+			if("".equalsIgnoreCase(Data.farAwayCity)) {
 				if (userMode == UserMode.PASSENGER &&
 						((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
 								|| PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
@@ -3342,7 +3342,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-								if("".equalsIgnoreCase(farAwayCity)) {
+								if("".equalsIgnoreCase(Data.farAwayCity)) {
 									map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
 								}
                             } catch (Exception e) {
@@ -4807,7 +4807,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 
 			if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
-				farAwayCity = "";
+				Data.farAwayCity = "";
                 mapTouched = true;
 				zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
 			}
@@ -5419,7 +5419,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
                     topBar.title.setVisibility(View.VISIBLE);
-                    topBar.linearLayoutFreshSwapper.setVisibility(View.GONE);
+                    topBar.closeFreshUI();
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
@@ -5427,16 +5427,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
                     topBar.title.setText(getResources().getString(R.string.app_name));
-                    topBar.title.setVisibility(View.GONE);
-                    topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
+                    topBar.setupFreshUI();
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
                 topBar.title.setText(getResources().getString(R.string.app_name));
-                topBar.title.setVisibility(View.GONE);
-                topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
+                topBar.setupFreshUI();
 
                 localModeEnabled = 0;
             }
@@ -6096,8 +6094,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void forceFarAwayCity(){
         try {
-            farAwayCity = getResources().getString(R.string.service_not_available);
-            setServiceAvailablityUI(farAwayCity);
+            Data.farAwayCity = getResources().getString(R.string.service_not_available);
+            setServiceAvailablityUI(Data.farAwayCity);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }

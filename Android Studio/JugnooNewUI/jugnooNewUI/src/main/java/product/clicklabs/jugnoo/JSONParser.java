@@ -328,6 +328,12 @@ public class JSONParser implements Constants {
 			} else {
 				Data.farAwayCity = loginResponse.getLogin().getFarAwayCity();
 			}
+
+            if (loginResponse.getLogin().getFreshAvailable() == null) {
+                Data.freshAvailable = 0;
+            } else {
+                Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -116,9 +116,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 				recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
 
 				textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
-				textViewOrderDeliveryDateValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations
-						.utcToLocalTZ(orderHistory.getOrderTime())));
-				textViewOrderDeliverySlotValue.setText("");
+
 				textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
 						Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount()
 								- orderHistory.getDeliveryCharges())));
@@ -133,6 +131,19 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 				}
 				textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
 						Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+
+				if(orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
+					textViewOrderDeliverySlotValue.setText(DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime())
+							+ " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+				} else {
+					textViewOrderDeliverySlotValue.setText("");
+				}
+				if(orderHistory.getExpectedDeliveryDate() != null){
+					textViewOrderDeliveryDateValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations
+							.utcToLocalTZ(orderHistory.getExpectedDeliveryDate())));
+				} else {
+					textViewOrderDeliveryDateValue.setText("");
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

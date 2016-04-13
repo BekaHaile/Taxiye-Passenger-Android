@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ImageView;
@@ -169,12 +170,16 @@ public class MenuBar {
 			@Override
 			public void onClick(View v) {
 				if(activity instanceof HomeActivity) {
-					if (((HomeActivity)activity).map != null) {
-						Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
-						Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
+					if(1 == Data.freshAvailable) {
+						if (((HomeActivity) activity).map != null) {
+							Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
+							Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
+						}
+						activity.startActivity(new Intent(activity, FreshActivity.class));
+						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+					} else{
+						drawerLayout.closeDrawer(GravityCompat.START);
 					}
-					activity.startActivity(new Intent(activity, FreshActivity.class));
-					activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 
 				} else if(activity instanceof FreshActivity){
 					activity.finish();
@@ -349,6 +354,8 @@ public class MenuBar {
 
 		}
 
+		setupFreshUI();
+
 	}
 
 	public void setUserData(){
@@ -391,6 +398,22 @@ public class MenuBar {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
+	public void setupFreshUI(){
+		try {
+			if(1 == Data.freshAvailable){
+				textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
+				imageViewGetRide.setVisibility(View.GONE);
+				imageViewFresh.setVisibility(View.VISIBLE);
+			} else{
+				textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
+				imageViewGetRide.setVisibility(View.VISIBLE);
+				imageViewFresh.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

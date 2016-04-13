@@ -116,10 +116,14 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
         });
 
         try{
-            Picasso.with(context).load(subItem.getSubItemImage())
-                    .placeholder(R.drawable.ic_fresh_item_placeholder)
-                    .error(R.drawable.ic_fresh_item_placeholder)
-                    .into(holder.imageViewItemImage);
+            if(subItem.getSubItemImage() != null && !"".equalsIgnoreCase(subItem.getSubItemImage())) {
+                Picasso.with(context).load(subItem.getSubItemImage())
+                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .error(R.drawable.ic_fresh_item_placeholder)
+                        .into(holder.imageViewItemImage);
+            } else{
+                holder.imageViewItemImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+            }
         } catch(Exception e){
             e.printStackTrace();
         }

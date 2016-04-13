@@ -391,33 +391,47 @@ public class FreshPaymentFragment extends Fragment {
 
 
 	private void showPaytmBalanceLowDialog(){
-		String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - activity.updateCartValuesGetTotalPrice().first);
-		new FreshPaytmBalanceLowDialog(activity, amount, new FreshPaytmBalanceLowDialog.Callback() {
-			@Override
-			public void onRechargeNowClicked() {
-				try {
-					Intent intent = new Intent(activity, PaymentActivity.class);
-					if (Data.userData.paytmEnabled == 1
-							&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-						intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-						intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-								Utils.getMoneyDecimalFormat().format(activity.updateCartValuesGetTotalPrice().first
-										- Data.userData.getPaytmBalance()));
-					} else {
-						intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+		try {
+			if(Data.userData.paytmEnabled == 1
+					&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+				String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - activity.updateCartValuesGetTotalPrice().first);
+				new FreshPaytmBalanceLowDialog(activity, amount, new FreshPaytmBalanceLowDialog.Callback() {
+					@Override
+					public void onRechargeNowClicked() {
+						intentToPaytm();
 					}
-					activity.startActivity(intent);
-					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
 
-			@Override
-			public void onPayByCashClicked() {
-				linearLayoutCash.performClick();
+					@Override
+					public void onPayByCashClicked() {
+						linearLayoutCash.performClick();
+					}
+				}).show();
+			} else{
+				intentToPaytm();
 			}
-		}).show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	private void intentToPaytm(){
+		try {
+			Intent intent = new Intent(activity, PaymentActivity.class);
+			if (Data.userData.paytmEnabled == 1
+					&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+				intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+				intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
+						Utils.getMoneyDecimalFormat().format(activity.updateCartValuesGetTotalPrice().first
+								- Data.userData.getPaytmBalance()));
+			} else {
+				intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+			}
+			activity.startActivity(intent);
+			activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
