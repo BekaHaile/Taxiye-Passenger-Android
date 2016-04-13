@@ -3066,7 +3066,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onFailure() {
                     try {
                         if (Data.driverInfos.size() == 0) {
-                            textViewInitialInstructions.setVisibility(View.VISIBLE);
+                            textViewInitialInstructions.setVisibility(View.GONE);
                             textViewInitialInstructions.setText(getResources().getString(R.string.couldnt_find_drivers_nearby));
                             textViewCentrePinETA.setText("-");
                             noDriverNearbyToast(getResources().getString(R.string.couldnt_find_drivers_nearby));

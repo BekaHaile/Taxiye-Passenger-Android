@@ -39,6 +39,7 @@
                 android:id="@+id/relativeLayoutCart"
                 android:layout_width="156px"
                 android:layout_height="match_parent"
+                android:background="@drawable/background_white_grey_light_selector"
                 >
 
                 <View
@@ -79,12 +80,6 @@
 
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/text_color_hint"
-                />
-
             <TextView
                 android:id="@+id/textViewTotalPrice"
                 android:layout_width="280px"
@@ -101,21 +96,22 @@
 
 
             <LinearLayout
+                android:id="@+id/linearLayoutCheckout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="35px"
                 android:gravity="center_vertical"
                 android:animateLayoutChanges="true"
+                android:background="@drawable/background_white_grey_light_selector"
                 >
 
                 <View
                     android:layout_width="2px"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="20px"
-                    android:layout_marginRight="30px"
+                    android:layout_marginRight="40px"
                     android:layout_marginTop="20px"
                     android:background="@color/text_color_hint"
                     />
@@ -128,8 +124,8 @@
                     android:text="@string/checkout"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_32"
-                    android:layout_marginRight="20px"
-                    android:visibility="visible"
+                    android:layout_marginRight="30px"
+                    android:visibility="gone"
 
 
                     />
@@ -141,9 +137,15 @@
                     android:layout_height="37px"
                     android:src="@drawable/ic_arrow_orange"
                     android:tag="mwar"
+                    android:layout_marginRight="35px"
                     />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/text_color_hint"
+                />
 
         </RelativeLayout>
 

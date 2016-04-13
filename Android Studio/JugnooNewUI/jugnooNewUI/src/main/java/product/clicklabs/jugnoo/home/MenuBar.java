@@ -402,14 +402,16 @@ public class MenuBar {
 
 	public void setupFreshUI(){
 		try {
-			if(1 == Data.freshAvailable){
-				textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
-				imageViewGetRide.setVisibility(View.GONE);
-				imageViewFresh.setVisibility(View.VISIBLE);
-			} else{
-				textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
-				imageViewGetRide.setVisibility(View.VISIBLE);
-				imageViewFresh.setVisibility(View.GONE);
+			if(activity instanceof HomeActivity) {
+				if (1 == Data.freshAvailable) {
+					textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
+					imageViewGetRide.setVisibility(View.GONE);
+					imageViewFresh.setVisibility(View.VISIBLE);
+				} else {
+					textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
+					imageViewGetRide.setVisibility(View.VISIBLE);
+					imageViewFresh.setVisibility(View.GONE);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

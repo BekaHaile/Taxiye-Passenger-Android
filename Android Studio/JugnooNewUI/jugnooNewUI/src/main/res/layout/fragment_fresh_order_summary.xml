@@ -219,6 +219,8 @@
                     android:splitMotionEvents="false"
                     android:layout_marginTop="10px"
                     android:layout_marginBottom="10px"
+                    android:scrollbars="vertical"
+                    android:fadeScrollbars="true"
                     />
 
                 <View

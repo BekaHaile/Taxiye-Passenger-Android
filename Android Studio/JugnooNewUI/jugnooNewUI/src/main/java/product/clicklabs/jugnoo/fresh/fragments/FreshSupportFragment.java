@@ -70,7 +70,13 @@ public class FreshSupportFragment extends Fragment {
 		relativeLayoutCallSupport.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Utils.openCallIntent(activity, Config.getSupportNumber(activity));
+				if(activity.getProductsResponse() != null
+						&& activity.getProductsResponse().getSupportContact() != null){
+					Utils.openCallIntent(activity, activity.getProductsResponse().getSupportContact());
+				} else{
+					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
+				}
+
 			}
 		});
 

@@ -128,7 +128,7 @@ public class FreshPaymentFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				try {
-					if(Data.userData.getPaytmBalance() >= activity.updateCartValuesGetTotalPrice().first) {
+					if(Data.userData.getPaytmBalance() >= getTotalPriceWithDeliveryCharges()) {
 						activity.setPaymentOption(PaymentOption.PAYTM);
 						setPaymentOptionUI();
 
@@ -151,10 +151,15 @@ public class FreshPaymentFragment extends Fragment {
 			}
 		});
 
-		setPaymentOptionUI();
 		getBalance();
 
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		setPaymentOptionUI();
 	}
 
 	private ApiPaytmCheckBalance apiPaytmCheckBalance;
@@ -251,7 +256,7 @@ public class FreshPaymentFragment extends Fragment {
 	private void placeOrder(){
 		boolean goAhead = true;
 		if(activity.getPaymentOption().getOrdinal() == PaymentOption.PAYTM.getOrdinal()) {
-			if(Data.userData.getPaytmBalance() < activity.updateCartValuesGetTotalPrice().first) {
+			if(Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
 				if (Data.userData.getPaytmError() == 1) {
 					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
 				} else {
@@ -394,7 +399,7 @@ public class FreshPaymentFragment extends Fragment {
 		try {
 			if(Data.userData.paytmEnabled == 1
 					&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-				String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - activity.updateCartValuesGetTotalPrice().first);
+				String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges());
 				new FreshPaytmBalanceLowDialog(activity, amount, new FreshPaytmBalanceLowDialog.Callback() {
 					@Override
 					public void onRechargeNowClicked() {
@@ -422,7 +427,7 @@ public class FreshPaymentFragment extends Fragment {
 					&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 				intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
 				intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-						Utils.getMoneyDecimalFormat().format(activity.updateCartValuesGetTotalPrice().first
+						Utils.getMoneyDecimalFormat().format(getTotalPriceWithDeliveryCharges()
 								- Data.userData.getPaytmBalance()));
 			} else {
 				intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
@@ -432,6 +437,10 @@ public class FreshPaymentFragment extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private double getTotalPriceWithDeliveryCharges(){
+		return activity.updateCartValuesGetTotalPrice().first + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
 	}
 
 

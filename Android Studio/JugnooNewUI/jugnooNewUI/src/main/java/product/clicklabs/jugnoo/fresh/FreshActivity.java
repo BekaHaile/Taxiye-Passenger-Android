@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Pair;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,7 +56,8 @@ public class FreshActivity extends FragmentActivity {
 
 	private RelativeLayout relativeLayoutContainer;
 
-	private RelativeLayout relativeLayoutCheckoutBar;
+	private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart;
+	private LinearLayout linearLayoutCheckout;
 	private TextView textViewCartItemsCount, textViewTotalPrice, textViewCheckout;
 
 	private MenuBar menuBar;
@@ -82,6 +84,8 @@ public class FreshActivity extends FragmentActivity {
 		relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
 		relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
+		relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
+		linearLayoutCheckout = (LinearLayout) findViewById(R.id.linearLayoutCheckout);
 
 		textViewCartItemsCount = (TextView) findViewById(R.id.textViewCartItemsCount);
 		textViewCartItemsCount.setTypeface(Fonts.mavenRegular(this));
@@ -95,7 +99,7 @@ public class FreshActivity extends FragmentActivity {
 		topBar = new TopBar(this, drawerLayout);
 
 
-		relativeLayoutCheckoutBar.setOnClickListener(new View.OnClickListener() {
+		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(updateCartValuesGetTotalPrice().second > 0) {
@@ -106,8 +110,19 @@ public class FreshActivity extends FragmentActivity {
 					}
 				}
 			}
-		});
+		};
 
+		relativeLayoutCheckoutBar.setOnClickListener(onClickListener);
+		linearLayoutCheckout.setOnClickListener(onClickListener);
+
+		relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(updateCartValuesGetTotalPrice().second > 0) {
+					getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+				}
+			}
+		});
 
 		addFreshFragment();
 

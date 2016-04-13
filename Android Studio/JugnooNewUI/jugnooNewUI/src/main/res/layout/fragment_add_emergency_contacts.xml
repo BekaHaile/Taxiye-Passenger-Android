@@ -128,6 +128,8 @@
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:layout_marginLeft="40px"
             android:layout_marginRight="40px"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
             />
 
 

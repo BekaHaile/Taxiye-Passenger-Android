@@ -26,7 +26,9 @@ public class ProductsResponse {
 	@SerializedName("show_message")
 	@Expose
 	private Integer showMessage;
-
+	@SerializedName("support_contact")
+	@Expose
+	private String supportContact;
 
 	/**
 	 *
@@ -96,5 +98,13 @@ public class ProductsResponse {
 
 	public void setShowMessage(Integer showMessage) {
 		this.showMessage = showMessage;
+	}
+
+	public String getSupportContact() {
+		return supportContact;
+	}
+
+	public void setSupportContact(String supportContact) {
+		this.supportContact = supportContact;
 	}
 }

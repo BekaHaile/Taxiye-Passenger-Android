@@ -76,7 +76,7 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		convertView.setLayoutParams(new LinearLayout.LayoutParams(240, LinearLayout.LayoutParams.MATCH_PARENT));
+		convertView.setLayoutParams(new LinearLayout.LayoutParams(220, LinearLayout.LayoutParams.MATCH_PARENT));
 		ASSL.DoMagic(convertView);
 		return convertView;
 	}

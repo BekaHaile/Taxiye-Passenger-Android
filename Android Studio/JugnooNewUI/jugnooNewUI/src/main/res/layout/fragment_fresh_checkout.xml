@@ -204,10 +204,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="@string/add_address"
+                    android:text=""
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     />
 
             </LinearLayout>
@@ -297,10 +297,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="04 Apr 2016, 03:00-04:00 PM"
+                    android:text=""
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     />
 
             </LinearLayout>
