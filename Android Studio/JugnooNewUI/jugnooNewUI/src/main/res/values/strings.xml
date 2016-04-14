@@ -829,5 +829,6 @@
 	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
+	<string name="your_cart_is_empty">Your cart is empty</string>
 
 </resources>

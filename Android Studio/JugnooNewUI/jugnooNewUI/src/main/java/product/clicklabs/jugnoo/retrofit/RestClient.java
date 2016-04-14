@@ -91,6 +91,7 @@ public class RestClient {
 
     public static void clearRestClient(){
         API_SERVICES = null;
+        FRESH_API_SERVICE = null;
     }
 
 
@@ -150,6 +151,21 @@ public class RestClient {
                     .setEndpoint(Config.getFreshServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
                     .setLog(fooLog)
+                    .setErrorHandler(new ErrorHandler() {
+                        @Override
+                        public Throwable handleError(RetrofitError cause) {
+                            if (cause != null) {
+                                if (cause.getKind() == RetrofitError.Kind.NETWORK) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_CONNECTION_TIMEOUT);
+                                } else if (cause.getKind() == RetrofitError.Kind.HTTP) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_SOCKET_TIMEOUT);
+                                } else if (cause.getKind() == RetrofitError.Kind.UNEXPECTED) {
+                                    FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
+                                }
+                            }
+                            return cause;
+                        }
+                    })
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();

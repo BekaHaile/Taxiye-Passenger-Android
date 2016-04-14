@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -108,6 +109,8 @@ public class FreshActivity extends FragmentActivity {
 					} else {
 						getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
 					}
+				} else {
+					Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
 				}
 			}
 		};
@@ -120,6 +123,8 @@ public class FreshActivity extends FragmentActivity {
 			public void onClick(View v) {
 				if(updateCartValuesGetTotalPrice().second > 0) {
 					getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+				} else {
+					Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
