@@ -389,6 +389,10 @@ public class FreshActivity extends FragmentActivity {
 		}
 	}
 
+	public void setTopBarAddVisibility(int visibility){
+		topBar.textViewAdd.setVisibility(visibility);
+	}
+
 	@Override
 	public void onBackPressed() {
 		performBackPressed();

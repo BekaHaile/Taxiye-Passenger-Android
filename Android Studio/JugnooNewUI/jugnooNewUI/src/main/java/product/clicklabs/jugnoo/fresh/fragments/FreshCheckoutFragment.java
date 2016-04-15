@@ -26,7 +26,9 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.FreshDeliverySlotsDialog;
 import product.clicklabs.jugnoo.fresh.adapters.FreshDeliverySlotsAdapter;
@@ -39,7 +41,9 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -192,18 +196,45 @@ public class FreshCheckoutFragment extends Fragment {
 			} else if(activity.getSelectedAddress().equalsIgnoreCase("")) {
 				textViewAddressValue.setVisibility(View.VISIBLE);
 				textViewAddressValue.setText(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
-				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
 				imageViewEditAddress.setVisibility(View.VISIBLE);
 				activity.setSelectedAddress(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
+				checkForHomeWorkAddress(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
 			} else{
 				textViewAddressValue.setVisibility(View.VISIBLE);
 				textViewAddressValue.setText(activity.getSelectedAddress());
-				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
 				imageViewEditAddress.setVisibility(View.VISIBLE);
+				checkForHomeWorkAddress(activity.getSelectedAddress());
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void checkForHomeWorkAddress(String address){
+		if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+			AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+			if(address.equalsIgnoreCase(searchResult.address)){
+				textViewAddAddress.setText(activity.getResources().getString(R.string.home));
+				return;
+			} else{
+				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
+			}
+		} else{
+			textViewAddAddress.setText(activity.getResources().getString(R.string.address));
+		}
+
+		if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+			AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+			if(address.equalsIgnoreCase(searchResult.address)){
+				textViewAddAddress.setText(activity.getResources().getString(R.string.work));
+			} else{
+				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
+			}
+		} else{
+			textViewAddAddress.setText(activity.getResources().getString(R.string.address));
 		}
 	}
 

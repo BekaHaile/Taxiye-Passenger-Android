@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.flurry.android.FlurryAgent;
@@ -48,6 +49,7 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 	private RelativeLayout relativeLayoutRoot;
 	private RecyclerView recyclerViewRideOrderHistory;
 	private FreshOrderHistoryAdapter freshOrderHistoryAdapter;
+	private ImageView imageViewNoItems;
 
 	private OrderHistoryResponse orderHistoryResponse;
 
@@ -110,6 +112,9 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 				}, getOrdersTotalCount());
 		recyclerViewRideOrderHistory.setAdapter(freshOrderHistoryAdapter);
 
+		imageViewNoItems = (ImageView) rootView.findViewById(R.id.imageViewNoItems);
+		imageViewNoItems.setVisibility(View.GONE);
+
 		getOrderHistory();
 
 		return rootView;
@@ -158,6 +163,12 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 								FreshOrderHistoryFragment.this.orderHistoryResponse = orderHistoryResponse;
 								freshOrderHistoryAdapter.notifyList(getOrdersTotalCount(),
 										(ArrayList<OrderHistory>) orderHistoryResponse.getOrderHistory());
+								if(orderHistoryResponse.getOrderHistory() != null
+									&& orderHistoryResponse.getOrderHistory().size() == 0){
+									imageViewNoItems.setVisibility(View.VISIBLE);
+								} else{
+									imageViewNoItems.setVisibility(View.GONE);
+								}
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();

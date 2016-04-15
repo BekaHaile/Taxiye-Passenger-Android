@@ -2810,6 +2810,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
                 menuBar.relativeLayoutGamePredict.performClick();
             }
+            else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
+                menuBar.relativeLayoutGetRide.performClick();
+            }
 
         } catch(Exception e){
 			e.printStackTrace();

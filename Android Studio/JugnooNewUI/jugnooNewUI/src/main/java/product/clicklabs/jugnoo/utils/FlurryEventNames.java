@@ -263,4 +263,8 @@ public interface FlurryEventNames {
             NUDGE_SIGNUP = "signup",
             NUDGE_SIGNUP_VERIFIED = "signup_verified";
 
+    String FRESH_OPENED_MAIN = "jugnoo_fresh_opened_main";
+    String FRESH_CART = "jugnoo_fresh_cart";
+    String FRESH_PLACING_THE_ORDER = "jugnoo_fresh_placing_the_order";
+
 }

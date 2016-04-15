@@ -29,6 +29,8 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -90,10 +92,9 @@ public class FreshFragment extends Fragment {
 		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
 
-
-
 		getAllProducts();
 
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_OPENED_MAIN);
 
 		return rootView;
 	}

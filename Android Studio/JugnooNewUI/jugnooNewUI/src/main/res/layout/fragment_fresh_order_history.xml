@@ -4,8 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
     android:splitMotionEvents="false">
+
+    <ImageView
+        android:id="@+id/imageViewNoItems"
+        android:layout_width="416px"
+        android:layout_height="304px"
+        android:tag="mwar"
+        android:src="@drawable/ic_no_orders"
+        android:layout_centerInParent="true"
+        />
 
 
     <android.support.v7.widget.RecyclerView
@@ -17,6 +25,8 @@
         android:fadeScrollbars="true"
         >
     </android.support.v7.widget.RecyclerView>
+
+
 
 
 </RelativeLayout>
