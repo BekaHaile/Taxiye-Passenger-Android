@@ -412,8 +412,17 @@ public class FreshCheckoutFragment extends Fragment {
 
 	private void verifySlotTiming(Slot slot){
 		if(slot != null) {
-			slot.setEnabled(!(slot.getDayId() == DateOperations.getCurrentDayInt()
-					&& slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()));
+			if(slot.getDayId() == DateOperations.getCurrentDayInt()){
+				if(slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()){
+					slot.setEnabled(false);
+				} else{
+					slot.setEnabled(true);
+				}
+			} else{
+				slot.setEnabled(true);
+			}
+//			slot.setEnabled(!(slot.getDayId() == DateOperations.getCurrentDayInt()
+//					&& slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()));
 		}
 	}
 
