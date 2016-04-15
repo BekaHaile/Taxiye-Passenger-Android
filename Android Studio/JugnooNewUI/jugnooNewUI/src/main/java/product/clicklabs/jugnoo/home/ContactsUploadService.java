@@ -81,11 +81,6 @@ public class ContactsUploadService extends IntentService {
     }
 
 
-    /**
-     * Method that hashes contacts and syncs them to server
-     *
-     * @param contactsCursor The cursor for contacts
-     */
     private void queueUpSyncs(final Cursor contactsCursor) {
 
         ContactSyncEntry syncEntry = null;
@@ -260,9 +255,6 @@ public class ContactsUploadService extends IntentService {
         syncQueue();
     }
 
-    /**
-     * Checks if all the pending syncs were successful
-     */
     private void checkIfAllSynced() {
 
         boolean completedSync = true;
@@ -281,9 +273,6 @@ public class ContactsUploadService extends IntentService {
         stopSelf();
     }
 
-    /**
-     * Syncs the queued up syncs with the server
-     */
     private void syncQueue() {
         Log.d(TAG, "Pending Syncs: %d " + (mSyncQueue != null ? mSyncQueue.size() : 0));
         if (mSyncQueue != null && !mSyncQueue.isEmpty()) {
@@ -475,9 +464,6 @@ public class ContactsUploadService extends IntentService {
         return contactList;
     }
 
-    /**
-     * Class that holds a single contact upload operation
-     */
     private static class ContactSyncEntry {
 
         public final List<String> numbersToSync;

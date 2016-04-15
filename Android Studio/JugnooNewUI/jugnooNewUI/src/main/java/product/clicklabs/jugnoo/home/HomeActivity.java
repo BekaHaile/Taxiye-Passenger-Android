@@ -2036,7 +2036,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void dismissReferAllDialog(PassengerScreenMode mode){
         try {
-            if(PassengerScreenMode.P_IN_RIDE != mode){
+            if(PassengerScreenMode.P_IN_RIDE != mode
+                    && PassengerScreenMode.P_INITIAL != mode){
                 if(dialogUploadContacts != null){
                     if(dialogUploadContacts.isShowing()) {
                         dialogUploadContacts.dismiss();
@@ -2544,7 +2545,39 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onClick(View view) {
                                     Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
-                                    uploadContactsApi();
+                                    uploadContactsApi(false);
+                                }
+                            });
+                }
+            } else if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                if (Data.userData.getReferAllStatusLogin() == 0
+                        && dialogUploadContacts == null) {
+                    drawerLayout.closeDrawer(menuBar.menuLayout);
+                    dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
+                            Data.userData.getReferAllTitleLogin(),
+                            Data.userData.getReferAllTextLogin(),
+                            getResources().getString(R.string.upload_contact_yes),
+                            getResources().getString(R.string.upload_contact_no_thanks),
+                            false,
+                            new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                    Data.userData.contactSaved = 1;
+                                    Data.userData.setReferAllStatusLogin(1);
+                                    Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                    syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                    syncContactsIntent.putExtra("session_id", "");
+                                    syncContactsIntent.putExtra("engagement_id", "");
+                                    startService(syncContactsIntent);
+                                    registerDialogDismissReceiver();
+                                }
+                            }, new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Data.userData.contactSaved = 0;
+                                    Data.userData.setReferAllStatusLogin(-1);
+                                    uploadContactsApi(true);
                                 }
                             });
                 }
@@ -5745,15 +5778,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    private void uploadContactsApi(){
+    private void uploadContactsApi(final boolean fromLogin){
         HashMap<String, String> params = new HashMap<>();
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialog(this, "Loading...");
-            params.put("access_token", Data.userData.accessToken);
-            //params.put("session_id", Data.cSessionId);
-            params.put("engagement_id", Data.cEngagementId);
-            params.put("user_response", "-1");
+            params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            if(fromLogin){
+                params.put(KEY_ENGAGEMENT_ID, "");
+                params.put(KEY_USER_RESPONSE, "-2");
+            } else{
+                params.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                params.put(KEY_USER_RESPONSE, "-1");
+            }
             Log.i("access_token and session_id", Data.userData.accessToken + ", " + Data.cSessionId + ", " + Data.cEngagementId);
 
             Log.i("params request_dup_registration", "=" + params);
@@ -5770,7 +5807,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         String message = JSONParser.getServerMessage(jObj);
                         Log.e("message=", "=" + message);
                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                            Data.userData.contactSaved = -1;
+                            if (!fromLogin) {
+                                Data.userData.contactSaved = -1;
+                            }
                         } else {
                             //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                         }

@@ -14,8 +14,11 @@ public class UserData {
 	public double fareFactor;
 	public int showJugnooJeanie;
 	private String paytmStatus;
-	public int paytmEnabled, paytmError, contactSaved;
+	public int paytmEnabled, paytmError;
+	public int contactSaved;
     public String referAllText, referAllTitle;
+	private int referAllStatusLogin;
+	private String referAllTextLogin, referAllTitleLogin;
 	private int promoSuccess;
 	private String promoMessage;
 
@@ -45,7 +48,8 @@ public class UserData {
 					String jugnooCashTNC, String inAppSupportPanelVersion, int getGogu,
 					String userId, String inviteEarnScreenImage,
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
-					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew){
+					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
+					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -103,6 +107,10 @@ public class UserData {
 		this.gamePredictIconUrl = gamePredictIconUrl;
 		this.gamePredictName = gamePredictName;
 		this.gamePredictNew = gamePredictNew;
+
+		this.referAllStatusLogin = referAllStatusLogin;
+		this.referAllTextLogin = referAllTextLogin;
+		this.referAllTitleLogin = referAllTitleLogin;
 
 	}
 
@@ -358,5 +366,29 @@ public class UserData {
 
 	public void setGamePredictEnable(int gamePredictEnable) {
 		this.gamePredictEnable = gamePredictEnable;
+	}
+
+	public String getReferAllTextLogin() {
+		return referAllTextLogin;
+	}
+
+	public void setReferAllTextLogin(String referAllTextLogin) {
+		this.referAllTextLogin = referAllTextLogin;
+	}
+
+	public int getReferAllStatusLogin() {
+		return referAllStatusLogin;
+	}
+
+	public void setReferAllStatusLogin(int referAllStatusLogin) {
+		this.referAllStatusLogin = referAllStatusLogin;
+	}
+
+	public String getReferAllTitleLogin() {
+		return referAllTitleLogin;
+	}
+
+	public void setReferAllTitleLogin(String referAllTitleLogin) {
+		this.referAllTitleLogin = referAllTitleLogin;
 	}
 }
