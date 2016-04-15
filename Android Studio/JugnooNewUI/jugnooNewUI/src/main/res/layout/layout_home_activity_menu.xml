@@ -138,7 +138,19 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="46px"
                     android:src="@drawable/auto_icon_normal"
-                    android:tag="mwar" />
+                    android:tag="mwar"
+                    />
+
+                <ImageView
+                    android:id="@+id/imageViewFresh"
+                    android:layout_width="51px"
+                    android:layout_height="28px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="41px"
+                    android:src="@drawable/ic_fresh_menu"
+                    android:tag="mwar"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:id="@+id/textViewGetRide"

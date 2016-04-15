@@ -49,6 +49,7 @@ public interface Constants {
 	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
 	String KEY_BACK_FROM_OTP = "back_from_otp";
 	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+	String KEY_PAYMENT_RECHARGE_VALUE = "payment_recharge_value";
 
 	String POST_DATA = "post_data";
 
@@ -220,6 +221,23 @@ public interface Constants {
 	String KEY_SUBSCRIPTION_STATUS = "subscription_status";
 	String KEY_ACTIVE = "active";
 	String KEY_PHONE = "phone";
+
+	String KEY_PAYMENT_MODE = "payment_mode";
+	String KEY_DELIVERY_SLOT_ID = "delivery_slot_id";
+	String KEY_DELIVERY_ADDRESS = "delivery_address";
+	String KEY_CART = "cart";
+	String KEY_SUB_ITEM_ID = "sub_item_id";
+	String KEY_QUANTITY = "quantity";
+	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
+	String SP_FRESH_CART= "fresh_cart";
+	String EMPTY_JSON_OBJECT = "{}";
+
+	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
+	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";
+	String KEY_REFER_ALL_TITLE_LOGIN = "refer_all_title_login";
+	String KEY_USER_RESPONSE = "user_response";
+	String KEY_IS_LOGIN_POPUP = "is_login_popup";
+
 
 
 }

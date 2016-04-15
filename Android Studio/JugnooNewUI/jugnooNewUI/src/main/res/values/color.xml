@@ -150,6 +150,7 @@
  <color name="theme_color">#FE8C5C</color>
  <color name="theme_color_pressed">#99fd8e59</color>
  <color name="jeanie_color">#FD9244</color>
+    <color name="text_color_dark">#494958</color>
  <color name="text_color">#595968</color>
     <color name="theme_green_color">#83CF49</color>
     <color name="theme_red_color">#F54646</color>

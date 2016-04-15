@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -87,6 +88,7 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 		});
 		imageViewProgressBar.setVisibility(View.GONE);
 
+		webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setDomStorageEnabled(true);
 		webView.getSettings().setDatabaseEnabled(true);
@@ -129,7 +131,9 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
+			Log.e(TAG, "onReceivedError description="+description);
 			imageViewProgressBar.setVisibility(View.GONE);
+			DialogPopup.alertPopup(activity, "", description);
 		}
 
 		@Override

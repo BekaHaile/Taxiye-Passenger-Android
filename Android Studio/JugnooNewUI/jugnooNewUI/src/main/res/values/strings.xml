@@ -238,8 +238,8 @@
 	<!-- Upload contacts dialog Strings -->
 	<string name="upload_contact_title">Do you want to make this ride free?</string>
 	<string name="upload_contact_message">By tapping \'YES\' you will automatically \n invite all your contacts.</string>
-	<string name="upload_contact_yes">YES</string>
-	<string name="upload_contact_no_thanks">NO</string>
+	<string name="upload_contact_yes">Yes</string>
+	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
 
 
@@ -779,5 +779,59 @@
 
 	<string name="auto">Auto</string>
 	<string name="bike">Bike</string>
+
+	<string name="waiting_for_location">Waiting for location&#8230;</string>
+	<string name="get_a_ride">Get A Ride</string>
+	<string name="jugnoo_fresh">Jugnoo Fresh</string>
+	<string name="order_history">Order History</string>
+	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
+	<string name="checkout">Checkout</string>
+	<string name="my_cart">My Cart</string>
+	<string name="total_amount">Total Amount</string>
+	<string name="delivery_charges">Delivery Charges</string>
+	<string name="discount">Discount</string>
+	<string name="delivery_address">Delivery Address</string>
+	<string name="address">Address</string>
+	<string name="add_address">Add Address</string>
+	<string name="delivery_date_time">Delivery Date &amp; Time</string>
+	<string name="proceed_to_payment">Proceed To Payment</string>
+	<string name="amount_payable">Amount Payable</string>
+	<string name="other">Other</string>
+	<string name="add_your_address">Add your address</string>
+	<string name="please_fill_your_address">Please fill your address</string>
+	<string name="limit_address">Address must be within 200 characters</string>
+	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
+	<string name="no_slots_currently">No Delivery Slots currently</string>
+	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>
+	<string name="pay_rupees_using_format">Pay \u20B9 %s using:</string>
+	<string name="payment">Payment</string>
+	<string name="place_order">Place Order</string>
+	<string name="recharge_now">Recharge Now</string>
+	<string name="pay_via_cash">Pay via Cash</string>
+	<string name="balance_running_low">Balance is running low!</string>
+	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
+	<string name="get_the_freshness">Get the Freshness</string>
+	<string name="delivered_now">Delivered Now</string>
+	<string name="finest_fruits_vegetables">The finest of Fruits &amp; Vegetables\nare just few clicks away.</string>
+	<string name="continue_text">Continue</string>
+	<string name="order_status">Order Status:</string>
+	<string name="id">ID:</string>
+	<string name="order_date">Order Date:</string>
+	<string name="delivery_address_colon">Delivery Address:</string>
+	<string name="order_id">Order ID:</string>
+	<string name="delivery_date">Delivery Date</string>
+	<string name="delivery_slot">Delivery Slot</string>
+	<string name="order_receipt">Order Receipt</string>
+	<string name="payment_by">Payment By</string>
+	<string name="item_name_unit_price_format">%1$s (%2$s) X %3$s</string>
+	<string name="x_format">%1$s X %2$s</string>
+	<string name="order_summary">Order Summary</string>
+	<string name="got_any_queries">Got any queries/concerns/feedback?</string>
+	<string name="please_contact_the_helpline">Please contact the helpline</string>
+	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
+	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
+	<string name="your_order_id">Your Order ID:</string>
+	<string name="will_be_delivered_by">will be delivered by</string>
+	<string name="your_cart_is_empty">Your cart is empty</string>
 
 </resources>

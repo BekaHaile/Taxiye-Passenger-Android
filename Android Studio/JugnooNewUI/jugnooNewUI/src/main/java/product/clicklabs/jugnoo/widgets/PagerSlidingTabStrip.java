@@ -44,11 +44,14 @@ import java.util.Locale;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 
-
-public class  PagerSlidingTabStrip extends HorizontalScrollView {
+public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public interface IconTabProvider {
 		public int getPageIconResId(int position);
+	}
+
+	public interface CustomTabProvider {
+		public View getCustomTabView(int position);
 	}
 
 	// @formatter:off
@@ -204,13 +207,13 @@ public class  PagerSlidingTabStrip extends HorizontalScrollView {
 		tabCount = pager.getAdapter().getCount();
 
 		for (int i = 0; i < tabCount; i++) {
-
 			if (pager.getAdapter() instanceof IconTabProvider) {
 				addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+			} else if(pager.getAdapter() instanceof CustomTabProvider){
+				addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i));
 			} else {
 				addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
 			}
-
 		}
 
 		updateTabStyles(0);

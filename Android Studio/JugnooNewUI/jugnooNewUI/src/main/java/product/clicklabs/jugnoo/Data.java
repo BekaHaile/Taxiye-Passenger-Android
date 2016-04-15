@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -181,8 +182,9 @@ public class Data {
 	public static FareStructure fareStructure;
 	public static ArrayList<PromoCoupon> promoCoupons;
 	public static ArrayList<Region> regions;
-	public static String farAwayCity;
-	public static int priorityTipCategory;
+	public static String farAwayCity = "";
+	public static int priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
+	public static int freshAvailable = 0;
 	
 	public static CancelOptionsList cancelOptionsList;
     public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;

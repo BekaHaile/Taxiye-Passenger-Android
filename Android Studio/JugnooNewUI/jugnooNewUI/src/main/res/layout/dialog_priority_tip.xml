@@ -74,7 +74,7 @@
                         android:layout_marginBottom="50px"
                         android:layout_marginTop="50px"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <Button
                             android:id="@+id/btnOk"
@@ -93,7 +93,7 @@
                         android:layout_marginBottom="50px"
                         android:layout_marginTop="30px"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="match_parent"

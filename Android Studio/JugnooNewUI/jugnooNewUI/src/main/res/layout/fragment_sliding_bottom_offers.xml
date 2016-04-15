@@ -12,7 +12,10 @@
         android:id="@+id/offers_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="true"
+        />
 
 
     <LinearLayout

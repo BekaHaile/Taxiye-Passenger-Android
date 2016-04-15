@@ -44,6 +44,7 @@ public class ContactsUploadService extends IntentService {
     private static int UPLOAD_BATCH_SIZE = 100;
     private ArrayDeque<ContactSyncEntry> mSyncQueue;
     private String accessToken = "", sessionId = "", engagementId = "";
+    private String isLoginPopup = "0";
 
     public ContactsUploadService() {
         this("Contact Upload Service");
@@ -62,6 +63,7 @@ public class ContactsUploadService extends IntentService {
             accessToken = intent.getExtras().get("access_token").toString();
             sessionId = intent.getExtras().get("session_id").toString();
             engagementId = intent.getExtras().get("engagement_id").toString();
+            isLoginPopup = intent.getStringExtra(Constants.KEY_IS_LOGIN_POPUP);
         }
 
         Log.v("intent values are ","--> "+accessToken+", "+sessionId+", "+engagementId);
@@ -81,11 +83,6 @@ public class ContactsUploadService extends IntentService {
     }
 
 
-    /**
-     * Method that hashes contacts and syncs them to server
-     *
-     * @param contactsCursor The cursor for contacts
-     */
     private void queueUpSyncs(final Cursor contactsCursor) {
 
         ContactSyncEntry syncEntry = null;
@@ -260,9 +257,6 @@ public class ContactsUploadService extends IntentService {
         syncQueue();
     }
 
-    /**
-     * Checks if all the pending syncs were successful
-     */
     private void checkIfAllSynced() {
 
         boolean completedSync = true;
@@ -281,9 +275,6 @@ public class ContactsUploadService extends IntentService {
         stopSelf();
     }
 
-    /**
-     * Syncs the queued up syncs with the server
-     */
     private void syncQueue() {
         Log.d(TAG, "Pending Syncs: %d " + (mSyncQueue != null ? mSyncQueue.size() : 0));
         if (mSyncQueue != null && !mSyncQueue.isEmpty()) {
@@ -380,6 +371,9 @@ public class ContactsUploadService extends IntentService {
             params.put("access_token", accessToken);
             params.put("session_id", sessionId);
             params.put("engagement_id", engagementId);
+            if("1".equalsIgnoreCase(isLoginPopup)){
+                params.put(Constants.KEY_IS_LOGIN_POPUP, "1");
+            }
             Log.i("access_token and session_id", accessToken+", "+sessionId+", "+engagementId);
 
             try {
@@ -475,9 +469,6 @@ public class ContactsUploadService extends IntentService {
         return contactList;
     }
 
-    /**
-     * Class that holds a single contact upload operation
-     */
     private static class ContactSyncEntry {
 
         public final List<String> numbersToSync;
