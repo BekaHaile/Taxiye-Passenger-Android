@@ -18,6 +18,7 @@ import com.flurry.android.FlurryAgent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -434,10 +435,11 @@ public class FreshPaymentFragment extends Fragment {
 			Intent intent = new Intent(activity, PaymentActivity.class);
 			if (Data.userData.paytmEnabled == 1
 					&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+				DecimalFormat df = new DecimalFormat("#");
 				intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
 				intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-						Utils.getMoneyDecimalFormat().format(getTotalPriceWithDeliveryCharges()
-								- Data.userData.getPaytmBalance()));
+						df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
+								- Data.userData.getPaytmBalance())));
 			} else {
 				intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
 			}
@@ -449,7 +451,12 @@ public class FreshPaymentFragment extends Fragment {
 	}
 
 	private double getTotalPriceWithDeliveryCharges(){
-		return activity.updateCartValuesGetTotalPrice().first + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+		double totalAmount = activity.updateCartValuesGetTotalPrice().first;
+		double amountPayable = totalAmount;
+		if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
+			amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+		}
+		return amountPayable;
 	}
 
 
