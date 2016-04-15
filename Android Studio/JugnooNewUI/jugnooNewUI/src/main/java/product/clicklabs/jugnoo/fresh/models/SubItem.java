@@ -23,9 +23,9 @@ public class SubItem {
 	@SerializedName("base_unit")
 	@Expose
 	private String baseUnit;
-	@SerializedName("subItemTotalQuantity")
+	@SerializedName("stock")
 	@Expose
-	private Integer subItemTotalQuantity;
+	private Integer stock;
 	private Integer subItemQuantitySelected;
 
 	/**
@@ -112,16 +112,16 @@ public class SubItem {
 		this.baseUnit = baseUnit;
 	}
 
-	public Integer getSubItemTotalQuantity() {
-		if(subItemTotalQuantity == null){
-			return 20;
+	public Integer getStock() {
+		if(stock == null){
+			return 50;
 		} else {
-			return subItemTotalQuantity;
+			return stock;
 		}
 	}
 
-	public void setSubItemTotalQuantity(Integer subItemTotalQuantity) {
-		this.subItemTotalQuantity = subItemTotalQuantity;
+	public void setStock(Integer stock) {
+		this.stock = stock;
 	}
 
 	public Integer getSubItemQuantitySelected() {

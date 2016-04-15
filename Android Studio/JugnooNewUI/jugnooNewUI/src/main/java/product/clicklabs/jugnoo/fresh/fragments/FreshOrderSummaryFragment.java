@@ -93,7 +93,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		((TextView)rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewPaymentBy)).setTypeface(Fonts.mavenRegular(activity));
 
-		textViewOrderIdValue = (TextView) rootView.findViewById(R.id.textViewOrderIdValue); textViewOrderIdValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewOrderIdValue = (TextView) rootView.findViewById(R.id.textViewOrderIdValue); textViewOrderIdValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		textViewOrderDeliveryDateValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliveryDateValue); textViewOrderDeliveryDateValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue); textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));

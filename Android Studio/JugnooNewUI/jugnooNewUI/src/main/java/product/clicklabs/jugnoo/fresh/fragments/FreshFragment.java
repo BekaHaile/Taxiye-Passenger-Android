@@ -88,6 +88,7 @@ public class FreshFragment extends Fragment {
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
+		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
 
 
 
@@ -136,6 +137,7 @@ public class FreshFragment extends Fragment {
 									activity.updateCartValuesGetTotalPrice();
 									freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
 									tabs.setViewPager(viewPager);
+									tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
 
 									if(productsResponse.getShowMessage() != null
 											&& productsResponse.getShowMessage().equals(1)) {

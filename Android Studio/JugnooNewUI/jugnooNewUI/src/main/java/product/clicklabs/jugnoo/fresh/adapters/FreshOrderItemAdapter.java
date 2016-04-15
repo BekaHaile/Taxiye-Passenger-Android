@@ -43,8 +43,15 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<FreshOrderItemAd
     public void onBindViewHolder(FreshOrderItemAdapter.ViewHolder holder, int position) {
         try {
             OrderItem orderItem = orderItems.get(position);
-            holder.textViewOrderItemName.setText(String.format(activity.getResources().getString(R.string.x_format),
-                    orderItem.getItemName(), String.valueOf(orderItem.getItemQuantity())));
+
+            if(orderItem.getUnit() == null || "".equalsIgnoreCase(orderItem.getUnit())){
+                holder.textViewOrderItemName.setText(String.format(activity.getResources().getString(R.string.x_format),
+                        orderItem.getItemName(), String.valueOf(orderItem.getItemQuantity())));
+            } else{
+                holder.textViewOrderItemName.setText(String.format(activity.getResources().getString(R.string.item_name_unit_price_format),
+                        orderItem.getItemName(), orderItem.getUnit(), String.valueOf(orderItem.getItemQuantity())));
+            }
+
             holder.textViewOrderItemPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(orderItem.getItemAmount())));
         } catch (Exception e) {

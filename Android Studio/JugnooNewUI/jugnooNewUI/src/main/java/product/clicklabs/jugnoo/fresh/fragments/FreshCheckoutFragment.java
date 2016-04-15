@@ -127,8 +127,10 @@ public class FreshCheckoutFragment extends Fragment {
 		relativeLayoutSlot.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.setSlotToSelect(activity.getSlotSelected());
-				getFreshDeliverySlotsDialog().show();
+				if(slots != null && slots.size() > 0) {
+					activity.setSlotToSelect(activity.getSlotSelected());
+					getFreshDeliverySlotsDialog().show();
+				}
 			}
 		});
 

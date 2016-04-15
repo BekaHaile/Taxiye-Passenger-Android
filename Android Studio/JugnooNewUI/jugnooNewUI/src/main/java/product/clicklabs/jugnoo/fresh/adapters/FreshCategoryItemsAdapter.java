@@ -46,7 +46,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_fresh_category_item, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 200);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 194);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);
@@ -92,8 +92,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
             public void onClick(View v) {
                 try {
                     int pos = (int) v.getTag();
-                    subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getSubItemTotalQuantity() ?
-                            subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getSubItemTotalQuantity());
+                    subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock() ?
+                            subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getStock());
                     callback.onPlusClicked(pos, subItems.get(pos));
                     notifyDataSetChanged();
                 } catch (Exception e) {

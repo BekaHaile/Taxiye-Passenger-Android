@@ -26,6 +26,9 @@ public class OrderItem {
 	@SerializedName("item_name")
 	@Expose
 	private String itemName;
+	@SerializedName("unit")
+	@Expose
+	private String unit;
 
 	/**
 	 *
@@ -135,4 +138,11 @@ public class OrderItem {
 		this.itemName = itemName;
 	}
 
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 }

@@ -800,6 +800,7 @@
 	<string name="add_your_address">Add your address</string>
 	<string name="please_fill_your_address">Please fill your address</string>
 	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
+	<string name="no_slots_currently">No Delivery Slots currently</string>
 	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>
 	<string name="pay_for_your_items_using">Pay for your Items using:</string>
 	<string name="payment">Payment</string>
@@ -821,6 +822,7 @@
 	<string name="delivery_slot">Delivery Slot</string>
 	<string name="order_receipt">Order Receipt</string>
 	<string name="payment_by">Payment By</string>
+	<string name="item_name_unit_price_format">%1$s (%2$s) X %3$s</string>
 	<string name="x_format">%1$s X %2$s</string>
 	<string name="order_summary">Order Summary</string>
 	<string name="in_case_you_are_facing_problem">In case you are facing any problem</string>
