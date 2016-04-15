@@ -155,6 +155,8 @@ public class FreshPaymentFragment extends Fragment {
 
 		getBalance();
 
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_PAYMENT);
+
 		return rootView;
 	}
 
@@ -275,7 +277,7 @@ public class FreshPaymentFragment extends Fragment {
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							FlurryEventLogger.event(activity, FlurryEventNames.FRESH_PLACING_THE_ORDER);
+							FlurryEventLogger.event(activity, FlurryEventNames.FRESH_ORDER_PLACED);
 							placeOrderApi();
 						}
 					},

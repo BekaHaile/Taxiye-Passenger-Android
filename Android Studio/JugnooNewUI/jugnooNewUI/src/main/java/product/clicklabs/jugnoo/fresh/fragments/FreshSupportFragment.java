@@ -16,6 +16,8 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -79,6 +81,8 @@ public class FreshSupportFragment extends Fragment {
 
 			}
 		});
+
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_SUPPORT);
 
 		return rootView;
 	}

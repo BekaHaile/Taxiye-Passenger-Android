@@ -2538,6 +2538,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
                                     syncContactsIntent.putExtra("session_id", Data.cSessionId);
                                     syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                    syncContactsIntent.putExtra(KEY_IS_LOGIN_POPUP, "0");
                                     startService(syncContactsIntent);
                                     registerDialogDismissReceiver();
                                 }
@@ -2569,6 +2570,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
                                     syncContactsIntent.putExtra("session_id", "");
                                     syncContactsIntent.putExtra("engagement_id", "");
+                                    syncContactsIntent.putExtra(KEY_IS_LOGIN_POPUP, "1");
                                     startService(syncContactsIntent);
                                     registerDialogDismissReceiver();
                                 }
@@ -5787,6 +5789,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(fromLogin){
                 params.put(KEY_ENGAGEMENT_ID, "");
                 params.put(KEY_USER_RESPONSE, "-2");
+                params.put(KEY_IS_LOGIN_POPUP, "1");
             } else{
                 params.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
                 params.put(KEY_USER_RESPONSE, "-1");

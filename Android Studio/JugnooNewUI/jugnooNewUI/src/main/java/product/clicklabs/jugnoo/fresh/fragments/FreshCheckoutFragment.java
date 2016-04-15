@@ -40,6 +40,8 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
@@ -177,6 +179,7 @@ public class FreshCheckoutFragment extends Fragment {
 
 		getCheckoutData();
 
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_CHECKOUT);
 
 		return rootView;
 	}

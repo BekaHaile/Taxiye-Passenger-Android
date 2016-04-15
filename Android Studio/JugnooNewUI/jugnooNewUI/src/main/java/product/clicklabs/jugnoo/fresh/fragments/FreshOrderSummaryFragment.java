@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.fresh.models.OrderHistory;
 import product.clicklabs.jugnoo.fresh.models.OrderItem;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -155,6 +156,8 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 				activity.performBackPressed();
 			}
 		});
+
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_ORDER_SUMMARY);
 
 		return rootView;
 	}

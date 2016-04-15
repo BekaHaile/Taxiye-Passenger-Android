@@ -44,6 +44,7 @@ public class ContactsUploadService extends IntentService {
     private static int UPLOAD_BATCH_SIZE = 100;
     private ArrayDeque<ContactSyncEntry> mSyncQueue;
     private String accessToken = "", sessionId = "", engagementId = "";
+    private String isLoginPopup = "0";
 
     public ContactsUploadService() {
         this("Contact Upload Service");
@@ -62,6 +63,7 @@ public class ContactsUploadService extends IntentService {
             accessToken = intent.getExtras().get("access_token").toString();
             sessionId = intent.getExtras().get("session_id").toString();
             engagementId = intent.getExtras().get("engagement_id").toString();
+            isLoginPopup = intent.getStringExtra(Constants.KEY_IS_LOGIN_POPUP);
         }
 
         Log.v("intent values are ","--> "+accessToken+", "+sessionId+", "+engagementId);
@@ -369,6 +371,9 @@ public class ContactsUploadService extends IntentService {
             params.put("access_token", accessToken);
             params.put("session_id", sessionId);
             params.put("engagement_id", engagementId);
+            if("1".equalsIgnoreCase(isLoginPopup)){
+                params.put(Constants.KEY_IS_LOGIN_POPUP, "1");
+            }
             Log.i("access_token and session_id", accessToken+", "+sessionId+", "+engagementId);
 
             try {
