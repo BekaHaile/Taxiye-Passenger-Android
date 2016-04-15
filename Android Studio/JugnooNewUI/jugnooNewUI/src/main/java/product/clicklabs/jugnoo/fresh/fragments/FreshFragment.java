@@ -94,7 +94,7 @@ public class FreshFragment extends Fragment {
 
 		getAllProducts();
 
-		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_OPENED_MAIN);
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_MAIN);
 
 		return rootView;
 	}

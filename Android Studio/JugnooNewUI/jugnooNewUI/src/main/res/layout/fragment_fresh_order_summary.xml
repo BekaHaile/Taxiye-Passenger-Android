@@ -183,6 +183,91 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewOrderTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_22"
+                        android:text="@string/order_date"
+                        android:layout_marginLeft="15px"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewOrderTimeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"
+                        android:text="TEMP"
+                        android:layout_marginRight="15px"
+                        android:layout_marginLeft="190px"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="5px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewOrderStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_22"
+                        android:text="@string/order_status"
+                        android:layout_marginLeft="15px"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewOrderStatusValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"
+                        android:text="TEMP"
+                        android:layout_marginLeft="190px"
+                        android:layout_marginRight="15px"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewOrderAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_22"
+                        android:text="@string/delivery_address_colon"
+                        android:layout_marginLeft="15px"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewOrderAddressValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"
+                        android:text="TEMP"
+                        android:maxLines="2"
+                        android:layout_marginLeft="190px"
+                        android:layout_marginRight="15px"
+                        />
+                </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2px"

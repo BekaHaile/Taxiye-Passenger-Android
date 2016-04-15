@@ -3,7 +3,6 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="@dimen/screen_width"
                 android:layout_height="wrap_content"
-                android:background="@color/sliding_bottom_bg_color"
                 android:splitMotionEvents="false">
 
     <LinearLayout

@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -116,6 +117,8 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 		imageViewNoItems.setVisibility(View.GONE);
 
 		getOrderHistory();
+
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_ORDER_HISTORY);
 
 		return rootView;
 	}

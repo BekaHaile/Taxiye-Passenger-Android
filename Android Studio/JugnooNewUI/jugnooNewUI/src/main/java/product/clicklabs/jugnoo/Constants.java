@@ -232,6 +232,12 @@ public interface Constants {
 	String SP_FRESH_CART= "fresh_cart";
 	String EMPTY_JSON_OBJECT = "{}";
 
+	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
+	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";
+	String KEY_REFER_ALL_TITLE_LOGIN = "refer_all_title_login";
+	String KEY_USER_RESPONSE = "user_response";
+	String KEY_IS_LOGIN_POPUP = "is_login_popup";
+
 
 
 }

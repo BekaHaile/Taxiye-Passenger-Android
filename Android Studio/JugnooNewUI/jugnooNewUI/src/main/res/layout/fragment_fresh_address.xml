@@ -135,6 +135,7 @@
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
             android:textSize="@dimen/text_size_28"
+            android:maxLength="200"
             />
 
         <TextView

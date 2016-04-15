@@ -59,6 +59,7 @@ public class FreshPaymentFragment extends Fragment {
 
 	private final String TAG = FreshPaymentFragment.class.getSimpleName();
 	private LinearLayout linearLayoutRoot;
+	private TextView textViewPayForItems;
 
 	private LinearLayout linearLayoutCash;
 	private ImageView imageViewCashRadio;
@@ -104,7 +105,7 @@ public class FreshPaymentFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		((TextView)rootView.findViewById(R.id.textViewPayForItems)).setTypeface(Fonts.mavenRegular(activity));
+		textViewPayForItems = (TextView)rootView.findViewById(R.id.textViewPayForItems); textViewPayForItems.setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
 
 		linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
@@ -153,7 +154,12 @@ public class FreshPaymentFragment extends Fragment {
 			}
 		});
 
+		textViewPayForItems.setText(String.format(activity.getResources().getString(R.string.pay_rupees_using_format),
+				Utils.getMoneyDecimalFormat().format(getTotalPriceWithDeliveryCharges())));
+
 		getBalance();
+
+		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_PAYMENT);
 
 		return rootView;
 	}
@@ -275,7 +281,7 @@ public class FreshPaymentFragment extends Fragment {
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							FlurryEventLogger.event(activity, FlurryEventNames.FRESH_PLACING_THE_ORDER);
+							FlurryEventLogger.event(activity, FlurryEventNames.FRESH_ORDER_PLACED);
 							placeOrderApi();
 						}
 					},

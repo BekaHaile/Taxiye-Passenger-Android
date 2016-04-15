@@ -20,7 +20,7 @@
             android:id="@+id/textViewPayForItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pay_for_your_items_using"
+            android:text="@string/pay_rupees_using_format"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_34"
             android:layout_marginBottom="30px"

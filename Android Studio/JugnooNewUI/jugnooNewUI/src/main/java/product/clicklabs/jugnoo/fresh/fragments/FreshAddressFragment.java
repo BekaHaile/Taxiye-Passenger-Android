@@ -179,8 +179,10 @@ public class FreshAddressFragment extends Fragment {
 		}
 		if("".equalsIgnoreCase(homeAddress) && "".equalsIgnoreCase(workAddress)){
 			textViewOther.setText(activity.getResources().getString(R.string.add_address));
+			editTextAddress.setHint("");
 		} else{
 			textViewOther.setText(activity.getResources().getString(R.string.other));
+			editTextAddress.setHint(activity.getResources().getString(R.string.add_your_address));
 		}
 
 		try{
@@ -190,7 +192,6 @@ public class FreshAddressFragment extends Fragment {
 					&& activity.getUserCheckoutResponse().getCheckoutData().getLastAddress() != null
 					&& !activity.getUserCheckoutResponse().getCheckoutData().getLastAddress().equalsIgnoreCase("")){
 				editTextAddress.setText(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
-
 			} else if(!activity.getSelectedAddress().equalsIgnoreCase("")){
 				editTextAddress.setText(activity.getSelectedAddress());
 			}
@@ -201,7 +202,10 @@ public class FreshAddressFragment extends Fragment {
 
 	public void addAddressPress(){
 		String address = editTextAddress.getText().toString().trim();
-		if(address.length() > 0){
+		if(address.length() > 200){
+			editTextAddress.requestFocus();
+			editTextAddress.setError(activity.getResources().getString(R.string.limit_address));
+		} else if(address.length() > 0){
 			activity.setSelectedAddress(address);
 			activity.performBackPressed();
 		} else{

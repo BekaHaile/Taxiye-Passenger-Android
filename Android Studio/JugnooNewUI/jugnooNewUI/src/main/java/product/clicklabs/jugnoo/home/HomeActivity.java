@@ -113,6 +113,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -1972,17 +1973,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 openPaytmRechargeDialog();
 
-                t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
-                    @Override
-                    public void onDismiss() {
-                        showReferAllDialog();
-                    }
-
-                    @Override
-                    public void notShown() {
-                        showReferAllDialog();
-                    }
-                });
+                if(PassengerScreenMode.P_INITIAL != mode) {
+                    callT20AndReferAllDialog(mode);
+                }
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
 
@@ -1991,6 +1984,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
+        @Override
+        public void onContinueClicked() {
+            callT20AndReferAllDialog(passengerScreenMode);
+        }
+
+        @Override
+        public void notShown() {
+            callT20AndReferAllDialog(passengerScreenMode);
+        }
+    };
+
+
+    private void callT20AndReferAllDialog(PassengerScreenMode mode){
+        t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
+            @Override
+            public void onDismiss() {
+                showReferAllDialog();
+            }
+
+            @Override
+            public void notShown() {
+                showReferAllDialog();
+            }
+        });
     }
 
 
@@ -2036,16 +2056,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void dismissReferAllDialog(PassengerScreenMode mode){
         try {
-            if(PassengerScreenMode.P_IN_RIDE != mode){
-                if(dialogUploadContacts != null){
-                    if(dialogUploadContacts.isShowing()) {
-                        dialogUploadContacts.dismiss();
-                    }
-					dialogUploadContacts = null;
-                }
+            if(PassengerScreenMode.P_IN_RIDE != mode
+                    && PassengerScreenMode.P_INITIAL != mode){
+                dismissReferAllDialog();
+                dialogUploadContacts = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void dismissReferAllDialog(){
+        if(dialogUploadContacts != null && dialogUploadContacts.isShowing()) {
+            dialogUploadContacts.dismiss();
         }
     }
 
@@ -2531,20 +2554,138 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-                                    Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
-                                    Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
-                                    syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
-                                    syncContactsIntent.putExtra("session_id", Data.cSessionId);
-                                    syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
-                                    startService(syncContactsIntent);
-                                    registerDialogDismissReceiver();
+                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                        DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                        Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
+                                        Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                        syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                        syncContactsIntent.putExtra("session_id", Data.cSessionId);
+                                        syncContactsIntent.putExtra("engagement_id", Data.cEngagementId);
+                                        syncContactsIntent.putExtra(KEY_IS_LOGIN_POPUP, "0");
+                                        startService(syncContactsIntent);
+                                        registerDialogDismissReceiver();
+                                        dismissReferAllDialog();
+                                    } else{
+                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
+                                                new Utils.AlertCallBackWithButtonsInterface() {
+                                                    @Override
+                                                    public void positiveClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void neutralClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void negativeClick(View view) {
+
+                                                    }
+                                                });
+                                    }
                                 }
                             }, new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
-                                    uploadContactsApi();
+                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                        Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
+                                        uploadContactsApi(false);
+                                        dismissReferAllDialog();
+                                    } else{
+                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
+                                                new Utils.AlertCallBackWithButtonsInterface() {
+                                                    @Override
+                                                    public void positiveClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void neutralClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void negativeClick(View view) {
+
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+                }
+            } else if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                if (Data.userData.getReferAllStatusLogin() == 0
+                        && dialogUploadContacts == null) {
+                    drawerLayout.closeDrawer(menuBar.menuLayout);
+                    dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
+                            Data.userData.getReferAllTitleLogin(),
+                            Data.userData.getReferAllTextLogin(),
+                            getResources().getString(R.string.upload_contact_yes),
+                            getResources().getString(R.string.upload_contact_no_thanks),
+                            false,
+                            new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                        DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                        Data.userData.contactSaved = 1;
+                                        Data.userData.setReferAllStatusLogin(1);
+                                        Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
+                                        syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
+                                        syncContactsIntent.putExtra("session_id", "");
+                                        syncContactsIntent.putExtra("engagement_id", "");
+                                        syncContactsIntent.putExtra(KEY_IS_LOGIN_POPUP, "1");
+                                        startService(syncContactsIntent);
+                                        registerDialogDismissReceiver();
+                                        dismissReferAllDialog();
+                                    } else{
+                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
+                                                new Utils.AlertCallBackWithButtonsInterface() {
+                                                    @Override
+                                                    public void positiveClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void neutralClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void negativeClick(View view) {
+
+                                                    }
+                                                });
+                                    }
+                                }
+                            }, new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                        Data.userData.contactSaved = 0;
+                                        Data.userData.setReferAllStatusLogin(-1);
+                                        uploadContactsApi(true);
+                                        dismissReferAllDialog();
+                                    } else{
+                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
+                                                new Utils.AlertCallBackWithButtonsInterface() {
+                                                    @Override
+                                                    public void positiveClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void neutralClick(View view) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void negativeClick(View view) {
+
+                                                    }
+                                                });
+                                    }
                                 }
                             });
                 }
@@ -3121,11 +3262,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setupFreshUI(){
         try{
             if(1 == Data.freshAvailable){
-                new FreshIntroDialog(this, new FreshIntroDialog.Callback() {
-                    @Override
-                    public void onContinueClicked() {
-                    }
-                }).show();
+                new FreshIntroDialog(this, freshIntroCallback).show();
             }
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
@@ -5745,15 +5882,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    private void uploadContactsApi(){
+    private void uploadContactsApi(final boolean fromLogin){
         HashMap<String, String> params = new HashMap<>();
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
             DialogPopup.showLoadingDialog(this, "Loading...");
-            params.put("access_token", Data.userData.accessToken);
-            //params.put("session_id", Data.cSessionId);
-            params.put("engagement_id", Data.cEngagementId);
-            params.put("user_response", "-1");
+            params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            if(fromLogin){
+                params.put(KEY_ENGAGEMENT_ID, "");
+                params.put(KEY_USER_RESPONSE, "-2");
+                params.put(KEY_IS_LOGIN_POPUP, "1");
+            } else{
+                params.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                params.put(KEY_USER_RESPONSE, "-1");
+            }
             Log.i("access_token and session_id", Data.userData.accessToken + ", " + Data.cSessionId + ", " + Data.cEngagementId);
 
             Log.i("params request_dup_registration", "=" + params);
@@ -5770,7 +5912,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         String message = JSONParser.getServerMessage(jObj);
                         Log.e("message=", "=" + message);
                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                            Data.userData.contactSaved = -1;
+                            if (!fromLogin) {
+                                Data.userData.contactSaved = -1;
+                            }
                         } else {
                             //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                         }

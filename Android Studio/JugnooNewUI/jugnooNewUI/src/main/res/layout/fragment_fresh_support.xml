@@ -16,7 +16,7 @@
         android:textSize="@dimen/text_size_34"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40px"
-        android:text="@string/in_case_you_are_facing_problem"
+        android:text="@string/got_any_queries"
 
         />
 
@@ -28,7 +28,7 @@
         android:textSize="@dimen/text_size_34"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10px"
-        android:text="@string/just_contact_the_helpline"
+        android:text="@string/please_contact_the_helpline"
 
         />
 
