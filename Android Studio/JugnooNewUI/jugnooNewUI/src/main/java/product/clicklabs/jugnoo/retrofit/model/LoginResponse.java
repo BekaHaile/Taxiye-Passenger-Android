@@ -336,7 +336,9 @@ public class LoginResponse {
 		@SerializedName("regions")
 		@Expose
 		private List<Region> regions = new ArrayList<>();
-
+		@SerializedName("fresh_available")
+		@Expose
+		private Integer freshAvailable;
 
 		/**
 		 * @return The currentUserStatus
@@ -438,6 +440,14 @@ public class LoginResponse {
 
 		public void setRegions(List<Region> regions) {
 			this.regions = regions;
+		}
+
+		public Integer getFreshAvailable() {
+			return freshAvailable;
+		}
+
+		public void setFreshAvailable(Integer freshAvailable) {
+			this.freshAvailable = freshAvailable;
 		}
 	}
 }

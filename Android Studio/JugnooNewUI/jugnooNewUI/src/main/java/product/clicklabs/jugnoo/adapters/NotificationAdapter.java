@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
+import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -177,6 +178,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     intent.setClass(activity, T20Activity.class);
                     activity.startActivity(intent);
                 }
+            } else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == deepInt){
+                activity.startActivity(new Intent(activity, FreshActivity.class));
+                activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
             }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){

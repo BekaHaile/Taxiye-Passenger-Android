@@ -43,8 +43,12 @@ public class PaymentActivity extends BaseFragmentActivity{
 					.commitAllowingStateLoss();
 		}
 		else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
+			String amountToPreFill = "";
+			if(getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)){
+				amountToPreFill = getIntent().getStringExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE);
+			}
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
+					.add(R.id.fragLayout, new PaytmRechargeFragment(amountToPreFill), PaytmRechargeFragment.class.getName())
 					.addToBackStack(PaytmRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}

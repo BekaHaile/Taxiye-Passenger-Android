@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="644px"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        >
+
+        <ImageView
+            android:id="@+id/imageViewPaytmIcon"
+            android:layout_width="111px"
+            android:layout_height="35px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="40px"
+            android:src="@drawable/ic_paytm_logo_big"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/textViewBalanceRunningLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10px"
+            android:gravity="center"
+            android:text="@string/balance_running_low"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_40"
+            />
+
+        <TextView
+            android:id="@+id/textViewLessAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="10px"
+            android:gravity="center"
+            android:text="@string/dont_have_enough_paytm_balance"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30"
+            />
+
+
+        <TextView
+            android:id="@+id/textViewLessAmountValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30px"
+            android:gravity="center"
+            android:text="-200"
+            android:textColor="@color/red_dark"
+            android:textSize="@dimen/text_size_68"
+            />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:background="@color/text_color_hint"
+            />
+
+        <Button
+            android:id="@+id/buttonRechargeNow"
+            style="@style/ButtonTheme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:text="@string/recharge_now"/>
+
+        <Button
+            android:id="@+id/buttonPayViaCash"
+            style="@style/ButtonThemeAlternate"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="40px"
+            android:layout_marginTop="30px"
+            android:text="@string/pay_via_cash"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_30"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -214,6 +214,9 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(SP_FIRST_LOGIN_COMPLETE, 1);
         }
 
+        int referAllStatusLogin = userData.optInt(KEY_REFER_ALL_STATUS_LOGIN, 1);
+        String referAllTextLogin = userData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
+        String referAllTitleLogin = userData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
@@ -223,7 +226,8 @@ public class JSONParser implements Constants {
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
-                gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew);
+                gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
+                referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
 
     }
 
@@ -328,6 +332,12 @@ public class JSONParser implements Constants {
 			} else {
 				Data.farAwayCity = loginResponse.getLogin().getFarAwayCity();
 			}
+
+            if (loginResponse.getLogin().getFreshAvailable() == null) {
+                Data.freshAvailable = 0;
+            } else {
+                Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -119,6 +119,8 @@
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
                 android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="true"
                 />
 
         </LinearLayout>

@@ -42,6 +42,9 @@ public class FindADriverResponse {
     @SerializedName("regions")
     @Expose
     private List<Region> regions = new ArrayList<>();
+    @SerializedName("fresh_available")
+    @Expose
+    private Integer freshAvailable;
 
 
 
@@ -170,5 +173,13 @@ public class FindADriverResponse {
 
     public void setRegions(List<Region> regions) {
         this.regions = regions;
+    }
+
+    public Integer getFreshAvailable() {
+        return freshAvailable;
+    }
+
+    public void setFreshAvailable(Integer freshAvailable) {
+        this.freshAvailable = freshAvailable;
     }
 }

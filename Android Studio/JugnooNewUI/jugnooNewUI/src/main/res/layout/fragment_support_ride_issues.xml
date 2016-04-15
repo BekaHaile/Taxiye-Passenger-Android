@@ -255,6 +255,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30px"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="true"
         />
 
 
