@@ -59,6 +59,7 @@ public class FreshPaymentFragment extends Fragment {
 
 	private final String TAG = FreshPaymentFragment.class.getSimpleName();
 	private LinearLayout linearLayoutRoot;
+	private TextView textViewPayForItems;
 
 	private LinearLayout linearLayoutCash;
 	private ImageView imageViewCashRadio;
@@ -104,7 +105,7 @@ public class FreshPaymentFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		((TextView)rootView.findViewById(R.id.textViewPayForItems)).setTypeface(Fonts.mavenRegular(activity));
+		textViewPayForItems = (TextView)rootView.findViewById(R.id.textViewPayForItems); textViewPayForItems.setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
 
 		linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
@@ -152,6 +153,9 @@ public class FreshPaymentFragment extends Fragment {
 				placeOrder();
 			}
 		});
+
+		textViewPayForItems.setText(String.format(activity.getResources().getString(R.string.pay_rupees_using_format),
+				Utils.getMoneyDecimalFormat().format(getTotalPriceWithDeliveryCharges())));
 
 		getBalance();
 

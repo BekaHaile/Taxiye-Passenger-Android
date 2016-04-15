@@ -179,8 +179,10 @@ public class FreshAddressFragment extends Fragment {
 		}
 		if("".equalsIgnoreCase(homeAddress) && "".equalsIgnoreCase(workAddress)){
 			textViewOther.setText(activity.getResources().getString(R.string.add_address));
+			editTextAddress.setHint("");
 		} else{
 			textViewOther.setText(activity.getResources().getString(R.string.other));
+			editTextAddress.setHint(activity.getResources().getString(R.string.add_your_address));
 		}
 
 		try{
@@ -190,7 +192,6 @@ public class FreshAddressFragment extends Fragment {
 					&& activity.getUserCheckoutResponse().getCheckoutData().getLastAddress() != null
 					&& !activity.getUserCheckoutResponse().getCheckoutData().getLastAddress().equalsIgnoreCase("")){
 				editTextAddress.setText(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
-
 			} else if(!activity.getSelectedAddress().equalsIgnoreCase("")){
 				editTextAddress.setText(activity.getSelectedAddress());
 			}

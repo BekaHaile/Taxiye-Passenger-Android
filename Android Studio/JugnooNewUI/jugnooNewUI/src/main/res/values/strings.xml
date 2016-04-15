@@ -238,8 +238,8 @@
 	<!-- Upload contacts dialog Strings -->
 	<string name="upload_contact_title">Do you want to make this ride free?</string>
 	<string name="upload_contact_message">By tapping \'YES\' you will automatically \n invite all your contacts.</string>
-	<string name="upload_contact_yes">YES</string>
-	<string name="upload_contact_no_thanks">NO</string>
+	<string name="upload_contact_yes">Yes</string>
+	<string name="upload_contact_no_thanks">No, thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
 
 
@@ -802,7 +802,7 @@
 	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
 	<string name="no_slots_currently">No Delivery Slots currently</string>
 	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>
-	<string name="pay_for_your_items_using">Pay for your Items using:</string>
+	<string name="pay_rupees_using_format">Pay \u20B9 %s using:</string>
 	<string name="payment">Payment</string>
 	<string name="place_order">Place Order</string>
 	<string name="recharge_now">Recharge Now</string>
@@ -825,8 +825,8 @@
 	<string name="item_name_unit_price_format">%1$s (%2$s) X %3$s</string>
 	<string name="x_format">%1$s X %2$s</string>
 	<string name="order_summary">Order Summary</string>
-	<string name="in_case_you_are_facing_problem">In case you are facing any problem</string>
-	<string name="just_contact_the_helpline">Just contact the helpline :)</string>
+	<string name="got_any_queries">Got any queries/concerns/feedback?</string>
+	<string name="please_contact_the_helpline">Please contact the helpline</string>
 	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
 	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
 	<string name="your_order_id">Your Order ID:</string>

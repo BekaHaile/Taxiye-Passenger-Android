@@ -1972,17 +1972,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 openPaytmRechargeDialog();
 
-                t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
-                    @Override
-                    public void onDismiss() {
-                        showReferAllDialog();
-                    }
-
-                    @Override
-                    public void notShown() {
-                        showReferAllDialog();
-                    }
-                });
+                if(PassengerScreenMode.P_INITIAL != mode) {
+                    callT20AndReferAllDialog(mode);
+                }
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
 
@@ -1991,6 +1983,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
+        @Override
+        public void onContinueClicked() {
+            callT20AndReferAllDialog(passengerScreenMode);
+        }
+
+        @Override
+        public void notShown() {
+            callT20AndReferAllDialog(passengerScreenMode);
+        }
+    };
+
+
+    private void callT20AndReferAllDialog(PassengerScreenMode mode){
+        t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
+            @Override
+            public void onDismiss() {
+                showReferAllDialog();
+            }
+
+            @Override
+            public void notShown() {
+                showReferAllDialog();
+            }
+        });
     }
 
 
@@ -3156,11 +3175,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setupFreshUI(){
         try{
             if(1 == Data.freshAvailable){
-                new FreshIntroDialog(this, new FreshIntroDialog.Callback() {
-                    @Override
-                    public void onContinueClicked() {
-                    }
-                }).show();
+                new FreshIntroDialog(this, freshIntroCallback).show();
             }
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
