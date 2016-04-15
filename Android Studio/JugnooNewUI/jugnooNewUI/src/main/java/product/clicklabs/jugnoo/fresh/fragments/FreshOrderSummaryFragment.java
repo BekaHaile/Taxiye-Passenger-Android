@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.fresh.fragments;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 	private FreshOrderItemAdapter freshOrderItemAdapter;
 
 	private TextView textViewOrderIdValue, textViewOrderDeliveryDateValue, textViewOrderDeliverySlotValue,
+			textViewOrderTimeValue, textViewOrderStatusValue, textViewOrderAddressValue,
 			textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue,
 			textViewPaymentMode, textViewPaymentModeValue;
 	private Button buttonOk;
@@ -88,6 +90,9 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		((TextView)rootView.findViewById(R.id.textViewOrderId)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderDeliveryDate)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderDeliverySlot)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewOrderTime)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewOrderStatus)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewOrderAddress)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderReceipt)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
@@ -97,6 +102,11 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		textViewOrderIdValue = (TextView) rootView.findViewById(R.id.textViewOrderIdValue); textViewOrderIdValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		textViewOrderDeliveryDateValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliveryDateValue); textViewOrderDeliveryDateValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue); textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
+
+		textViewOrderTimeValue = (TextView) rootView.findViewById(R.id.textViewOrderTimeValue); textViewOrderTimeValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewOrderStatusValue = (TextView) rootView.findViewById(R.id.textViewOrderStatusValue); textViewOrderStatusValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewOrderAddressValue = (TextView) rootView.findViewById(R.id.textViewOrderAddressValue); textViewOrderAddressValue.setTypeface(Fonts.mavenRegular(activity));
+
 		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
@@ -145,6 +155,15 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 				} else {
 					textViewOrderDeliveryDateValue.setText("");
 				}
+
+
+				textViewOrderTimeValue.setText(DateOperations.convertDateViaFormat(DateOperations
+						.utcToLocalTZ(orderHistory.getOrderTime())));
+				textViewOrderStatusValue.setText(orderHistory.getOrderStatus());
+				try{
+					textViewOrderStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
+				} catch(Exception e){}
+				textViewOrderAddressValue.setText(orderHistory.getDeliveryAddress());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -239,7 +239,7 @@
 	<string name="upload_contact_title">Do you want to make this ride free?</string>
 	<string name="upload_contact_message">By tapping \'YES\' you will automatically \n invite all your contacts.</string>
 	<string name="upload_contact_yes">Yes</string>
-	<string name="upload_contact_no_thanks">No, thanks</string>
+	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
 
 
@@ -799,6 +799,7 @@
 	<string name="other">Other</string>
 	<string name="add_your_address">Add your address</string>
 	<string name="please_fill_your_address">Please fill your address</string>
+	<string name="limit_address">Address must be within 200 characters</string>
 	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
 	<string name="no_slots_currently">No Delivery Slots currently</string>
 	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>

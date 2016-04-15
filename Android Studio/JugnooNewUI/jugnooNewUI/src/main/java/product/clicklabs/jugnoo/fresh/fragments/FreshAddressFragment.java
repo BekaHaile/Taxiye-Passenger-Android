@@ -202,7 +202,10 @@ public class FreshAddressFragment extends Fragment {
 
 	public void addAddressPress(){
 		String address = editTextAddress.getText().toString().trim();
-		if(address.length() > 0){
+		if(address.length() > 200){
+			editTextAddress.requestFocus();
+			editTextAddress.setError(activity.getResources().getString(R.string.limit_address));
+		} else if(address.length() > 0){
 			activity.setSelectedAddress(address);
 			activity.performBackPressed();
 		} else{
