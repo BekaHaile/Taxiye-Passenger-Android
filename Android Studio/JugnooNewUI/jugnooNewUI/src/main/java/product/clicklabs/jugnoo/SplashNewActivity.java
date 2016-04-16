@@ -978,7 +978,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+		logSome();
 
+	}
+
+	private void logSome(){
+		Log.i("Splash", "temp");
 	}
 
 	private void changeUIState(State state) {
