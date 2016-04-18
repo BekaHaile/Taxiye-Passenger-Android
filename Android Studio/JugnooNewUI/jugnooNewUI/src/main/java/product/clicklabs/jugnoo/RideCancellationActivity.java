@@ -474,13 +474,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 										}
 									});
 									FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
-									try {
-										JSONObject map = new JSONObject();
-										map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
-										NudgeClient.trackEvent(RideCancellationActivity.this, NUDGE_CANCEL_RIDE, map);
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
+									NudgeClient.trackEventUserId(RideCancellationActivity.this, NUDGE_CANCEL_RIDE, null);
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								}

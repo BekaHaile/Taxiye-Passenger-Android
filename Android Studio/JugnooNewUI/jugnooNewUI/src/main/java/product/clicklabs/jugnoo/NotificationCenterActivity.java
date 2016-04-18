@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
@@ -73,6 +74,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 		loadListFromDB();
 
 		FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
+		NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_NOTIFICATION_CHECKED, null);
     }
 
 

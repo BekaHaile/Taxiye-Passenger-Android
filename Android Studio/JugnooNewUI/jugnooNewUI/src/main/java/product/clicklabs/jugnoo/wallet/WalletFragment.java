@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -151,6 +152,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.commit();
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
+					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYMENT_WALLET_CLICKED, null);
 				}
 			}
 		});

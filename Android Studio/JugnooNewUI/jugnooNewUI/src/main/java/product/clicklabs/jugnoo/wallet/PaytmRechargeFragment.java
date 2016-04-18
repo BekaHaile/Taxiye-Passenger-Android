@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -201,6 +202,7 @@ public class PaytmRechargeFragment extends Fragment {
 						} else {
 							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
+								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
 							}
 						}
 					}
@@ -218,6 +220,7 @@ public class PaytmRechargeFragment extends Fragment {
 				buttonRemoveWallet.setVisibility(View.VISIBLE);
 				textViewTitleEdit.setVisibility(View.GONE);
 				textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.white_light_grey));
+				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
 			}
 		});
 
@@ -502,6 +505,7 @@ public class PaytmRechargeFragment extends Fragment {
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");
+								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_REMOVED, null);
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							}

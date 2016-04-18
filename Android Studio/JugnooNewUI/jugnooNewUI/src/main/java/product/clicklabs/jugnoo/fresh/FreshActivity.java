@@ -42,8 +42,10 @@ import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.TopBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -356,11 +358,14 @@ public class FreshActivity extends FragmentActivity {
 			@Override
 			public void run() {
 				FreshFragment frag = getFreshFragment();
-				if(frag != null){
+				if (frag != null) {
 					frag.getAllProducts();
 				}
 			}
 		}, 1000);
+
+		NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_JUGNOO_FRESH_ORDER_PLACED, null);
+
 	}
 
 	private void addFreshFragment(){

@@ -223,6 +223,7 @@ public class DateOperations {
 	 */
 	public static String getDate(String dateTime){
 		try{
+			dateTime = dateTime.replace("T", " ");
 		String date = dateTime.split(" ")[0];
 		
 		String year = date.split("-")[0];
@@ -357,7 +358,7 @@ public class DateOperations {
 			Date date1 = format.parse(time1);
 			long millis = date1.getTime();
 			return millis;
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			try {
 				time1 = time1.replace("T", " ");
 				time1 = time1.split("\\.")[0];

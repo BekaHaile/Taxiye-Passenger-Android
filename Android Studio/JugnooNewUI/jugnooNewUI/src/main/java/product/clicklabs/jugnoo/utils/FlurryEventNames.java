@@ -272,4 +272,35 @@ public interface FlurryEventNames {
     String FRESH_SUPPORT = "jugnoo_fresh_support";
     String FRESH_ORDER_SUMMARY = "jugnoo_fresh_order_summary";
 
+
+    String NUDGE_PAYTM_COUPON_AVAILABLE = "paytm_coupon_available",
+            NUDGE_PAYTM_WALLET_REMOVED = "paytm_wallet_removed",
+            NUDGE_INVITE_VIA_FACEBOOK = "invite_via_facebook",
+            NUDGE_INVITE_VIA_WHATSAPP = "invite_via_whatsapp",
+            NUDGE_INVITE_VIA_TWITTER = "invite_via_twitter",
+            NUDGE_INVITE_VIA_EMAIL = "invite_via_email",
+            NUDGE_INVITE_VIA_SMS = "invite_via_sms",
+            NUDGE_INVITE_VIA_OTHER = "invite_via_other",
+            NUDGE_OFFERS_TAB_CLICKED = "offers_tab_clicked",
+            NUDGE_OFFER_SELECTED = "offer_selected",
+            NUDGE_NOTIFICATION_CHECKED = "notification_checked",
+            NUDGE_RIDE_ACCEPTED = "ride_accepted",
+    NUDGE_CALL_DRIVER = "call_driver",
+    NUDGE_RIDE_START = "ride_start",
+    NUDGE_FARE_TAB_CLICKED = "fare_tab_clicked",
+    NUDGE_FARE_ESTIMATE_CLICKED = "fare_estimate_clicked",
+    NUDGE_PAYMENT_TAB_CLICKED = "payment_tab_clicked",
+    NUDGE_PAYTM_METHOD_SELECTED = "paytm_method_selected",
+    NUDGE_CASH_METHOD_SELECTED = "cash_method_selected",
+    NUDGE_JUGNOO_FRESH_CLICKED = "jugnoo_fresh_clicked",
+    NUDGE_JUGNOO_FRESH_ORDER_PLACED = "jugnoo_fresh_order_placed",
+    NUDGE_MENU_CLICKED = "menu_clicked",
+    NUDGE_GAME_CLICKED = "game_clicked",
+    NUDGE_FREE_RIDES_CLICKED = "free_rides_clicked",
+    NUDGE_WALLET_CLICKED = "wallet_clicked",
+    NUDGE_PAYMENT_WALLET_CLICKED = "payment_wallet_clicked",
+    NUDGE_ADD_MONEY_CLICKED = "add_money_clicked",
+    NUDGE_EDIT_PAYTM_CLICKED = "edit_paytm_clicked"
+            ;
+
 }

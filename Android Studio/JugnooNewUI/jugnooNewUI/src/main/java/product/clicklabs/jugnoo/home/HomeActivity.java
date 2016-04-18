@@ -914,7 +914,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
 						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
 					}
-				} catch (Exception e) {
+                    try {
+                        JSONObject map = new JSONObject();
+                        map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                        NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_CALL_DRIVER, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -1332,10 +1339,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         try {
             JSONObject map = new JSONObject();
-            map.put(KEY_USER_ID, Data.userData.getUserId());
             map.put(KEY_LATITUDE, Data.latitude);
             map.put(KEY_LONGITUDE, Data.longitude);
-            NudgeClient.trackEvent(HomeActivity.this, NUDGE_APP_OPEN, map);
+            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1451,10 +1457,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             try {
                                 JSONObject map = new JSONObject();
-                                map.put(KEY_USER_ID, Data.userData.getUserId());
                                 map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                                 map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
+                                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -3607,13 +3612,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         } else {
                             customerUIBackToInitialAfterCancel();
-                            try {
-                                JSONObject map = new JSONObject();
-                                map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
-                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_CANCEL_REQUEST, map);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_CANCEL_REQUEST, null);
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
@@ -4566,6 +4565,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             initializeStartRideVariables();
                             passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                             switchPassengerScreen(passengerScreenMode);
+                            try {
+                                JSONObject map = new JSONObject();
+                                map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                                NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_RIDE_START, map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 } else {
@@ -4709,17 +4715,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			else{
 				passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
 				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
-						Log.e("myLocation", "=" + myLocation);
-						if (myLocation != null) {
-							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-							switchPassengerScreen(passengerScreenMode);
-						}
-					}
-				});
-			}
+                    @Override
+                    public void run() {
+                        Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
+                        Log.e("myLocation", "=" + myLocation);
+                        if (myLocation != null) {
+                            passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+                            switchPassengerScreen(passengerScreenMode);
+                        }
+                    }
+                });
+
+                try {
+                    JSONObject map = new JSONObject();
+                    map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                    NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_ACCEPTED, map);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -5135,6 +5149,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
+                                try{
+                                    JSONObject map = new JSONObject();
+                                    map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
+                                    NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
+
                                 Log.e(TAG, "requestRide result=" + response);
 
                                 if (responseRetro == null || response == null
@@ -5220,10 +5242,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                             switchPassengerScreen(passengerScreenMode);
                                                             try {
                                                                 JSONObject map = new JSONObject();
-                                                                map.put(KEY_USER_ID, Data.userData.getUserId());
                                                                 map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                                                                 map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                                                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                                                                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }
@@ -5336,10 +5357,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     switchPassengerScreen(passengerScreenMode);
                     try {
                         JSONObject map = new JSONObject();
-                        map.put(KEY_USER_ID, Data.userData.getUserId());
                         map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                         map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -5402,13 +5422,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
 
 
-            try {
-                JSONObject map = new JSONObject();
-                map.put(KEY_USER_ID, Data.userData.getUserId());
-                NudgeClient.trackEvent(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -6016,10 +6030,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     afterRideFeedbackSubmitted(givenRating, false);
                                     try {
                                         JSONObject map = new JSONObject();
-                                        map.put(KEY_USER_ID, Data.userData.getUserId());
                                         map.put(KEY_ENGAGEMENT_ID, engagementId);
                                         map.put(KEY_GIVEN_RATING, givenRating);
-                                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_FEEDBACK, map);
+                                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_FEEDBACK, map);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }

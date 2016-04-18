@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -161,6 +162,7 @@ public class MenuBar {
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
 				}
 			}
 		});
@@ -177,6 +179,8 @@ public class MenuBar {
 						}
 						activity.startActivity(new Intent(activity, FreshActivity.class));
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
+
 					} else{
 						drawerLayout.closeDrawer(GravityCompat.START);
 					}
@@ -196,6 +200,7 @@ public class MenuBar {
 				intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
 			}
 		});
 
@@ -209,6 +214,7 @@ public class MenuBar {
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
 			}
 		});
 

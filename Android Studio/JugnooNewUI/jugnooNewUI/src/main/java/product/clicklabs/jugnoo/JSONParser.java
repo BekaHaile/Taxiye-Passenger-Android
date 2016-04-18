@@ -286,8 +286,11 @@ public class JSONParser implements Constants {
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
+                String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
+                Prefs.with(context).save(SP_REFERRAL_CODE, "");
                 nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
-                        Data.userData.userEmail, Data.userData.userName);
+                        Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,16 +302,18 @@ public class JSONParser implements Constants {
         return resp;
     }
 
-    private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName){
+    private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName,
+                                          String referralCode, String referralCodeEntered){
         try {
             JSONObject map = new JSONObject();
-            map.put(KEY_USER_ID, userId);
             map.put(KEY_PHONE_NO, phoneNo);
             map.put(KEY_EMAIL, email);
             map.put(KEY_USER_NAME, userName);
             map.put(KEY_LATITUDE, Data.loginLatitude);
             map.put(KEY_LONGITUDE, Data.loginLongitude);
-            NudgeClient.trackEvent(context, FlurryEventNames.NUDGE_SIGNUP_VERIFIED, map);
+            map.put(KEY_REFERRAL_CODE, referralCode);
+            map.put(KEY_REFERRAL_CODE_ENTERED, referralCodeEntered);
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_SIGNUP_VERIFIED, map);
         } catch (Exception e) {
             e.printStackTrace();
         }

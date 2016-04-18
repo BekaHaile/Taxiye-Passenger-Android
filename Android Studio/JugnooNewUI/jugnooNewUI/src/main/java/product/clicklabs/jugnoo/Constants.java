@@ -65,6 +65,7 @@ public interface Constants {
 	String KEY_BRANCH_REFERRING_USER_IDENTIFIER = "referring_user_identifier";
 	String KEY_DEEPINDEX = "deepindex";
 	String KEY_REFERRAL_CODE = "referral_code";
+	String KEY_REFERRAL_CODE_ENTERED = "referral_code_entered";
 	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
 	String FB_LINK_SHARE_NAME = "Jugnoo";
 //	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
@@ -192,6 +193,7 @@ public interface Constants {
 
 	String SP_APP_DOWNLOAD_SOURCE_SENT = "sp_app_download_source_sent";
 	String KEY_SOURCE = "source";
+	String KEY_DOWNLOAD_SOURCE = "download_source";
 
 	String KEY_PLAY_SOUND = "play_sound";
 
@@ -239,5 +241,7 @@ public interface Constants {
 	String KEY_IS_LOGIN_POPUP = "is_login_popup";
 
 
+	String SP_REFERRAL_CODE = "sp_referral_code";
+	String KEY_COUPON_SELECTED = "coupon_selected";
 
 }
