@@ -3275,6 +3275,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try{
             if(1 == Data.freshAvailable){
                 new FreshIntroDialog(this, freshIntroCallback).show();
+            } else {
+                freshIntroCallback.notShown();
             }
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
