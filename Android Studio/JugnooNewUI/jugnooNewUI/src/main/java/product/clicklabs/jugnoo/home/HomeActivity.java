@@ -2280,32 +2280,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private void setDropLocationAssigningUI(){
-        if(Data.dropLatLng == null){
-            if ("".equalsIgnoreCase(Data.cSessionId)) {
-                linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-            }
-            else{
-                if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-                    linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                    Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                    linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-                }
-                textViewAssigningDropLocationClick.setText("");
-                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-                progressBarAssigningDropLocation.setVisibility(View.GONE);
-            }
-        }
-        else{
-            if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-                linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-            }
-            setDropLocationMarker();
-            imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-            if(textViewAssigningDropLocationClick.getText().length() == 0){
-                getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
-            }
+        try {
+            if(Data.dropLatLng == null){
+				if ("".equalsIgnoreCase(Data.cSessionId)) {
+					linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
+				}
+				else{
+					if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+						linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+						try {
+							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+							linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					textViewAssigningDropLocationClick.setText("");
+					imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
+					progressBarAssigningDropLocation.setVisibility(View.GONE);
+				}
+			}
+			else{
+				if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+					linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+					try {
+						Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+						linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				setDropLocationMarker();
+				imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
+				if(textViewAssigningDropLocationClick.getText().length() == 0){
+					getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

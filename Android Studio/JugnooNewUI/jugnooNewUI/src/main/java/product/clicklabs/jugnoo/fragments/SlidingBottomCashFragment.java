@@ -76,8 +76,12 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     }
 
     private void paymentSelection(ImageView selected, ImageView unSelected){
-        selected.setImageResource(R.drawable.radio_selected_icon);
-        unSelected.setImageResource(R.drawable.radio_unselected_icon);
+        try {
+            selected.setImageResource(R.drawable.radio_selected_icon);
+            unSelected.setImageResource(R.drawable.radio_unselected_icon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
