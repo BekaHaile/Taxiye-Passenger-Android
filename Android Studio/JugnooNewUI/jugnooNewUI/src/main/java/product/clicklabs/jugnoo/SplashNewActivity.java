@@ -275,7 +275,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
 		ConfigMode configModeToSet;
-		if (link.equalsIgnoreCase(Config.getLiveServerUrl())) {
+		if (link.equalsIgnoreCase(Config.getLiveServerUrl())
+				|| link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
 			configModeToSet = ConfigMode.LIVE;
 		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
 			configModeToSet = ConfigMode.DEV;
@@ -294,6 +295,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			RestClient.clearRestClient();
 		}
 		Config.setConfigMode(configModeToSet);
+
+		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 
 		RestClient.setupRestClient();
 		RestClient.setupFreshApiRestClient();
