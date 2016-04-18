@@ -145,6 +145,10 @@ public abstract class MapStateListener {
         }
     }
 
+    public boolean isMapSettled(){
+        return mMapSettled;
+    }
+
     public abstract void onMapTouched();
     public abstract void onMapReleased();
     public abstract void onMapUnsettled();

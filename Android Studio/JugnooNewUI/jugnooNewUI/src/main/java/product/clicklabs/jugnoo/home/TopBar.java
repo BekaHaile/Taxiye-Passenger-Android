@@ -193,7 +193,9 @@ public class TopBar {
 
 				case R.id.imageViewFreshSwapper:
 					if(activity instanceof HomeActivity) {
-						if (((HomeActivity)activity).map != null) {
+						if (((HomeActivity)activity).map != null
+								&& ((HomeActivity)activity).mapStateListener != null
+								&& ((HomeActivity)activity).mapStateListener.isMapSettled()) {
 							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
 							Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
 						}
