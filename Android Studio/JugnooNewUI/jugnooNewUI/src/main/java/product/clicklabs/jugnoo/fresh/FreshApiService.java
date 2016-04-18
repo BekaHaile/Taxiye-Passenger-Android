@@ -36,4 +36,9 @@ public interface FreshApiService {
 	void orderHistory(@FieldMap Map<String, String> params,
 					Callback<OrderHistoryResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/cancel_order")
+	void cancelOrder(@FieldMap Map<String, String> params,
+					  Callback<OrderHistoryResponse> callback);
+
 }

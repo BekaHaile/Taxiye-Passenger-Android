@@ -26,6 +26,7 @@ public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int TYPE_ITEM = 1;
     private Activity activity;
     private ArrayList<OrderHistory> orderHistories;
+
     private int totalOrders;
     private Callback callback;
 
@@ -145,6 +146,11 @@ public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
             return null;
         }
         return orderHistories.get(position);
+    }
+
+
+    public void setTotalOrders(int totalOrders) {
+        this.totalOrders = totalOrders;
     }
 
 

@@ -223,6 +223,7 @@ public class DateOperations {
 	 */
 	public static String getDate(String dateTime){
 		try{
+			dateTime = dateTime.replace("T", " ");
 		String date = dateTime.split(" ")[0];
 		
 		String year = date.split("-")[0];

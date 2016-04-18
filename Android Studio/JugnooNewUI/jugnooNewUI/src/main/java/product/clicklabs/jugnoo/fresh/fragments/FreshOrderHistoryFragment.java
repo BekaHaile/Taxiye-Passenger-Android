@@ -101,7 +101,7 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 				new FreshOrderHistoryAdapter.Callback() {
 					@Override
 					public void onClick(int position, OrderHistory orderHistory) {
-						activity.setOrderHistoryOpened(orderHistory);
+						activity.setOrderHistoryOpened(position, orderHistory);
 						activity.getTransactionUtils().openOrderSummaryFragment(activity,
 								activity.getRelativeLayoutContainer());
 					}
@@ -137,6 +137,8 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			activity.fragmentUISetup(this);
+			freshOrderHistoryAdapter.setTotalOrders(getOrdersTotalCount());
+			freshOrderHistoryAdapter.notifyItemRemoved(activity.getOrderHistoryOpenedPosition());
 		}
 	}
 
@@ -216,4 +218,11 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 				});
 	}
 
+	public OrderHistoryResponse getOrderHistoryResponse() {
+		return orderHistoryResponse;
+	}
+
+	public void setOrderHistoryResponse(OrderHistoryResponse orderHistoryResponse) {
+		this.orderHistoryResponse = orderHistoryResponse;
+	}
 }

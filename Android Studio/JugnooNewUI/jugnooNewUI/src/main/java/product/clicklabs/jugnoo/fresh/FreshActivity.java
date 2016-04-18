@@ -73,6 +73,7 @@ public class FreshActivity extends FragmentActivity {
 	private PaymentOption paymentOption;
 
 	private OrderHistory orderHistoryOpened;
+	private int orderHistoryOpenedPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +160,15 @@ public class FreshActivity extends FragmentActivity {
 
 	private FreshAddressFragment getFreshAddressFragment(){
 		return (FreshAddressFragment) getSupportFragmentManager().findFragmentByTag(FreshAddressFragment.class.getName());
+	}
+
+
+	public FreshOrderHistoryFragment getFreshOrderHistoryFragment(){
+		return (FreshOrderHistoryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderHistoryFragment.class.getName());
+	}
+
+	private FreshOrderSummaryFragment getFreshOrderSummaryFragment(){
+		return (FreshOrderSummaryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderSummaryFragment.class.getName());
 	}
 
 	public Pair<Double, Integer> updateCartValuesGetTotalPrice(){
@@ -301,6 +311,8 @@ public class FreshActivity extends FragmentActivity {
 
 		}
 	}
+
+
 
 	public void deleteCart(){
 		DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
@@ -470,7 +482,8 @@ public class FreshActivity extends FragmentActivity {
 		return orderHistoryOpened;
 	}
 
-	public void setOrderHistoryOpened(OrderHistory orderHistoryOpened) {
+	public void setOrderHistoryOpened(int position, OrderHistory orderHistoryOpened) {
+		this.orderHistoryOpenedPosition = position;
 		this.orderHistoryOpened = orderHistoryOpened;
 	}
 
@@ -530,4 +543,11 @@ public class FreshActivity extends FragmentActivity {
 		Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
 	}
 
+	public int getOrderHistoryOpenedPosition() {
+		return orderHistoryOpenedPosition;
+	}
+
+	public void setOrderHistoryOpenedPosition(int orderHistoryOpenedPosition) {
+		this.orderHistoryOpenedPosition = orderHistoryOpenedPosition;
+	}
 }
