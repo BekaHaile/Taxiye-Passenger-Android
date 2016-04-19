@@ -5150,9 +5150,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
                                 try{
-                                    JSONObject map = new JSONObject();
-                                    map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
-                                    NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);
+                                    if(promoCouponSelectedForRide.id != 0) {
+                                        JSONObject map = new JSONObject();
+                                        map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
+                                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);
+                                    }
                                 } catch(Exception e){
                                     e.printStackTrace();
                                 }
