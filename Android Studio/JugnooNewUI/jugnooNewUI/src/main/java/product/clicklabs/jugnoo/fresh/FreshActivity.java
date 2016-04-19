@@ -59,7 +59,7 @@ public class FreshActivity extends FragmentActivity {
 
 	private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart;
 	private LinearLayout linearLayoutCheckout;
-	private TextView textViewCartItemsCount, textViewTotalPrice, textViewCheckout;
+	private TextView textViewCartItemsCount, textViewTotalPrice, textViewCheckout, textViewMinOrder;
 
 	private MenuBar menuBar;
 	private TopBar topBar;
@@ -96,6 +96,8 @@ public class FreshActivity extends FragmentActivity {
 		textViewCartItemsCount.setMinWidth((int) (45f * ASSL.Xscale()));
 		textViewCheckout = (TextView) findViewById(R.id.textViewCheckout);
 		textViewCheckout.setTypeface(Fonts.mavenRegular(this));
+		textViewMinOrder = (TextView)findViewById(R.id.textViewMinOrder);
+		textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
 
 		menuBar = new MenuBar(this, drawerLayout);
 		topBar = new TopBar(this, drawerLayout);
@@ -171,9 +173,10 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshOrderSummaryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderSummaryFragment.class.getName());
 	}
 
+
 	public Pair<Double, Integer> updateCartValuesGetTotalPrice(){
 		Pair<Double, Integer> pair;
-		double totalPrice = 0;
+		double totalPrice = 0; // Done by Ankit
 		int totalQuantity = 0;
 		try {
 			if(getProductsResponse() != null
@@ -194,6 +197,13 @@ public class FreshActivity extends FragmentActivity {
 				} else {
 					textViewCartItemsCount.setVisibility(View.GONE);
 				}
+				if (getFreshCartItemsFragment() != null){
+					if (this.getFreshCartItemsFragment().isVisible() && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+						textViewMinOrder.setVisibility(View.VISIBLE);
+					} else {
+						textViewMinOrder.setVisibility(View.GONE);
+					}
+			}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -203,6 +213,7 @@ public class FreshActivity extends FragmentActivity {
 	}
 
 	public void fragmentUISetup(Fragment fragment){
+		textViewMinOrder.setVisibility(View.GONE);
 		if(fragment instanceof FreshFragment){
 			topBar.imageViewMenu.setVisibility(View.VISIBLE);
 			topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
@@ -218,6 +229,14 @@ public class FreshActivity extends FragmentActivity {
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshCartItemsFragment){
+			textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
+			String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
+			String split_one=splited[1];
+			if(Double.parseDouble(split_one) < getProductsResponse().getDeliveryInfo().getMinAmount()){
+				textViewMinOrder.setVisibility(View.VISIBLE);
+			}else {
+				textViewMinOrder.setVisibility(View.GONE);
+			}
 			topBar.imageViewMenu.setVisibility(View.GONE);
 			topBar.relativeLayoutNotification.setVisibility(View.GONE);
 			topBar.imageViewBack.setVisibility(View.VISIBLE);

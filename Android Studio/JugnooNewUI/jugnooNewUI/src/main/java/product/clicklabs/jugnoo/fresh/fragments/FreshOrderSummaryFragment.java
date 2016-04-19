@@ -250,7 +250,6 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 						DialogPopup.dismissLoadingDialog();
 						try {
 							if(orderHistoryResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-								Toast.makeText(activity, "Cancel Order Click "+activity.getOrderHistoryOpened().getOrderId(), Toast.LENGTH_SHORT).show();
 								activity.performBackPressed();
 								//activity.getFreshOrderHistoryFragment().getOrderHistoryResponse().getOrderHistory().remove(activity.getOrderHistoryOpenedPosition());
 								activity.getFreshOrderHistoryFragment().getOrderHistory();

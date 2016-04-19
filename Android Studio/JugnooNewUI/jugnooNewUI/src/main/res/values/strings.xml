@@ -395,6 +395,9 @@
 
 	<string name="debug">Debug</string>
 
+	<!-- Jugnoo Fresh -->
+	<string name="fresh_min_order_value">Free Delivery on Orders above %s</string>
+
 
 	<string name="no_results_found">No results found</string>
 	<string name="i_want_to_cancel_my_ride_because">I WANT TO CANCEL MY RIDE BECAUSE</string>
