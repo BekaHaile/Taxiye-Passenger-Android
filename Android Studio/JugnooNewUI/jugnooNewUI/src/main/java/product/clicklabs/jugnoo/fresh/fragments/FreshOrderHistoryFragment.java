@@ -138,7 +138,7 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 		if(!hidden){
 			activity.fragmentUISetup(this);
 			freshOrderHistoryAdapter.setTotalOrders(getOrdersTotalCount());
-			freshOrderHistoryAdapter.notifyItemRemoved(activity.getOrderHistoryOpenedPosition());
+			//freshOrderHistoryAdapter.notifyItemRemoved(activity.getOrderHistoryOpenedPosition());
 		}
 	}
 

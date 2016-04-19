@@ -17,24 +17,40 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshOrderItemAdapter;
 import product.clicklabs.jugnoo.fresh.models.OrderHistory;
+import product.clicklabs.jugnoo.fresh.models.OrderHistoryResponse;
 import product.clicklabs.jugnoo.fresh.models.OrderItem;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNames, Constants {
@@ -46,7 +62,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 	private FreshOrderItemAdapter freshOrderItemAdapter;
 
 	private TextView textViewOrderIdValue, textViewOrderDeliveryDateValue, textViewOrderDeliverySlotValue,
-			textViewOrderTimeValue, textViewOrderStatusValue, textViewOrderAddressValue,
+			textViewOrderTimeValue, textViewOrderAddressValue,
 			textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue,
 			textViewPaymentMode, textViewPaymentModeValue;
 	private Button buttonCancelOrder;
@@ -93,9 +109,6 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		((TextView)rootView.findViewById(R.id.textViewOrderId)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderDeliveryDate)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderDeliverySlot)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOrderTime)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOrderStatus)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOrderAddress)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderReceipt)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
@@ -107,7 +120,6 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue); textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewOrderTimeValue = (TextView) rootView.findViewById(R.id.textViewOrderTimeValue); textViewOrderTimeValue.setTypeface(Fonts.mavenRegular(activity));
-		textViewOrderStatusValue = (TextView) rootView.findViewById(R.id.textViewOrderStatusValue); textViewOrderStatusValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewOrderAddressValue = (TextView) rootView.findViewById(R.id.textViewOrderAddressValue); textViewOrderAddressValue.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
@@ -118,7 +130,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder); buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
 
 		recyclerViewOrderItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewOrderItems);
-		recyclerViewOrderItems.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
+		recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewOrderItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewOrderItems.setHasFixedSize(false);
 
@@ -159,12 +171,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 				}
 
 
-				textViewOrderTimeValue.setText(DateOperations.convertDateViaFormat(DateOperations
-						.utcToLocalTZ(orderHistory.getOrderTime())));
-				textViewOrderStatusValue.setText(orderHistory.getOrderStatus());
-				try{
-					textViewOrderStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
-				} catch(Exception e){}
+				textViewOrderTimeValue.setText(DateOperations.getDate(DateOperations.utcToLocalTZ(orderHistory.getOrderTime())));
 				textViewOrderAddressValue.setText(orderHistory.getDeliveryAddress());
 
 				if(orderHistory.getCancellable() == 1){
@@ -183,13 +190,11 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 			public void onClick(View v) {
 				if(activity.getOrderHistoryOpened().getCancellable() == 1){
 
-					DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure? you want to cancel this order", getResources().getString(R.string.ok),
+					DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
 							getResources().getString(R.string.cancel), new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Toast.makeText(activity, "Cancel Order Click "+activity.getOrderHistoryOpened().getOrderId(), Toast.LENGTH_SHORT).show();
-							activity.performBackPressed();
-							activity.getFreshOrderHistoryFragment().getOrderHistoryResponse().getOrderHistory().remove(activity.getOrderHistoryOpenedPosition());
+							cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
 						}
 					}, new View.OnClickListener() {
 						@Override
@@ -225,6 +230,81 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		if(!hidden){
 			activity.fragmentUISetup(this);
 		}
+	}
+
+	private void cancelOrderApiCall(int orderId){
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_FRESH_ORDER_ID, String.valueOf(orderId));
+
+
+				RestClient.getFreshApiService().cancelOrder(params, new Callback<OrderHistoryResponse>() {
+					@Override
+					public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "Fresh order cancel response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							if(orderHistoryResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+								Toast.makeText(activity, "Cancel Order Click "+activity.getOrderHistoryOpened().getOrderId(), Toast.LENGTH_SHORT).show();
+								activity.performBackPressed();
+								//activity.getFreshOrderHistoryFragment().getOrderHistoryResponse().getOrderHistory().remove(activity.getOrderHistoryOpenedPosition());
+								activity.getFreshOrderHistoryFragment().getOrderHistory();
+							}
+							else{
+								DialogPopup.alertPopupWithListener(activity, "", orderHistoryResponse.getMessage(), new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+
+									}
+								});
+							}
+
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							retryDialog(DialogErrorType.SERVER_ERROR);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "Fresh Cancel Order error" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						retryDialog(DialogErrorType.CONNECTION_LOST);
+					}
+				});
+			}
+			else {
+				retryDialog(DialogErrorType.NO_NET);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType){
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+					}
+				});
 	}
 
 }

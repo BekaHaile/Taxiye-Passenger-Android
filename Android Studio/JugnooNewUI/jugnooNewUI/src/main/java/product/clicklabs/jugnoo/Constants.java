@@ -238,6 +238,8 @@ public interface Constants {
 	String KEY_USER_RESPONSE = "user_response";
 	String KEY_IS_LOGIN_POPUP = "is_login_popup";
 
+	String KEY_FRESH_ORDER_ID = "order_id";
+
 
 
 }

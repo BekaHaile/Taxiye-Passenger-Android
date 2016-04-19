@@ -81,7 +81,9 @@ public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
                 holder.textViewOrderStatusValue.setText(orderHistory.getOrderStatus());
                 try{
                     holder.textViewOrderStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
-                } catch(Exception e){}
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
 
                 holder.textViewAmount.setText(String.format(activity.getResources()
                                 .getString(R.string.rupees_value_format_without_space),
