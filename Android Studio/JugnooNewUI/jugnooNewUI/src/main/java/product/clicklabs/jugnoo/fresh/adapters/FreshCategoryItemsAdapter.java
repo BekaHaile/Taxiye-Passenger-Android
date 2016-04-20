@@ -37,7 +37,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<FreshCategor
         this.openMode = openMode;
     }
 
-    public void setResults(ArrayList<SubItem> subItems){
+    public synchronized void setResults(ArrayList<SubItem> subItems){
         this.subItems = subItems;
         notifyDataSetChanged();
     }

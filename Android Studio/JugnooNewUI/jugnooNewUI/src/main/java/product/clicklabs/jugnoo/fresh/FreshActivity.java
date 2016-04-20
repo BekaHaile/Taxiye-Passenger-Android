@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class FreshActivity extends FragmentActivity {
 
 	private RelativeLayout relativeLayoutContainer;
 
+	private ImageView imageViewSearch;
 	private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart;
 	private LinearLayout linearLayoutCheckout;
 	private TextView textViewCartItemsCount, textViewTotalPrice, textViewCheckout, textViewMinOrder;
@@ -85,6 +87,7 @@ public class FreshActivity extends FragmentActivity {
 
 		relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
+		imageViewSearch = (ImageView) findViewById(R.id.imageViewSearch);
 		relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
 		relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
 		linearLayoutCheckout = (LinearLayout) findViewById(R.id.linearLayoutCheckout);
@@ -131,6 +134,14 @@ public class FreshActivity extends FragmentActivity {
 				}
 			}
 		});
+
+		imageViewSearch.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
+			}
+		});
+
 
 		addFreshFragment();
 
@@ -214,6 +225,7 @@ public class FreshActivity extends FragmentActivity {
 
 	public void fragmentUISetup(Fragment fragment){
 		textViewMinOrder.setVisibility(View.GONE);
+		imageViewSearch.setVisibility(View.GONE);
 		if(fragment instanceof FreshFragment){
 			topBar.imageViewMenu.setVisibility(View.VISIBLE);
 			topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
@@ -222,6 +234,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			textViewCheckout.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+			imageViewSearch.setVisibility(View.VISIBLE);
 
 			topBar.title.setVisibility(View.GONE);
 			topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
@@ -230,12 +243,14 @@ public class FreshActivity extends FragmentActivity {
 
 		} else if(fragment instanceof FreshCartItemsFragment){
 			textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
-			String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
-			String split_one=splited[1];
-			if(Double.parseDouble(split_one) < getProductsResponse().getDeliveryInfo().getMinAmount()){
-				textViewMinOrder.setVisibility(View.VISIBLE);
-			}else {
-				textViewMinOrder.setVisibility(View.GONE);
+			try {
+				String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
+				String split_one=splited[1];
+				if(Double.parseDouble(split_one) < getProductsResponse().getDeliveryInfo().getMinAmount()){
+					textViewMinOrder.setVisibility(View.VISIBLE);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			topBar.imageViewMenu.setVisibility(View.GONE);
 			topBar.relativeLayoutNotification.setVisibility(View.GONE);

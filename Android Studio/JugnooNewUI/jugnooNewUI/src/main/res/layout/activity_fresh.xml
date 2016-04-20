@@ -8,7 +8,8 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutRoot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <!-- top bar layout -->
         <include
@@ -150,6 +151,19 @@
             </RelativeLayout>
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/imageViewSearch"
+            android:layout_width="104px"
+            android:layout_height="104px"
+            android:tag="mwar"
+            android:src="@drawable/circle_yellow"
+            android:layout_above="@+id/linearLayoutCheckoutContainer"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40px"
+            android:layout_marginBottom="100px"
+
+            />
+        
     </RelativeLayout>
 
     <!-- menu layout -->
