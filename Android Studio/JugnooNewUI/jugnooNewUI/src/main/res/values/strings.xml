@@ -397,6 +397,7 @@
 
 	<!-- Jugnoo Fresh -->
 	<string name="fresh_min_order_value">Free Delivery on Orders above %s</string>
+	<string name="fresh_may_be_later">MAYBE LATER</string>
 
 
 	<string name="no_results_found">No results found</string>
@@ -814,9 +815,9 @@
 	<string name="pay_via_cash">Pay via Cash</string>
 	<string name="balance_running_low">Balance is running low!</string>
 	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
-	<string name="get_the_freshness">Get the Freshness</string>
-	<string name="delivered_now">Delivered Now</string>
-	<string name="finest_fruits_vegetables">The finest of Fruits &amp; Vegetables\nare just few clicks away.</string>
+	<string name="get_fresh">Get Fresh</string>
+	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
+	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
 	<string name="continue_text">Continue</string>
 	<string name="order_status">Order Status:</string>
 	<string name="id">ID:</string>
