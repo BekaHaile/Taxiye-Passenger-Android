@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.fresh;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
@@ -54,9 +55,20 @@ public class FreshIntroDialog {
 				((TextView) dialog.findViewById(R.id.textViewFinestFruits)).setTypeface(Fonts.mavenRegular(activity));
 
 				Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
+				Button buttonLater = (Button) dialog.findViewById(R.id.buttonLater);
+				buttonLater.setTypeface(Fonts.mavenRegular(activity));
 				buttonContinue.setTypeface(Fonts.mavenRegular(activity));
 
 				buttonContinue.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+						activity.startActivity(new Intent(activity, FreshActivity.class));
+						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+					}
+				});
+
+				buttonLater.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
