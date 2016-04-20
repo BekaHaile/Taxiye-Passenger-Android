@@ -386,4 +386,8 @@ public interface ApiService {
     void saveCustomerEmergencyLocation(@FieldMap Map<String, String> params,
                                 Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/refer_a_driver")
+    void referDriver(@FieldMap Map<String, String> params,
+                     Callback<SettleUserDebt> callback);
 }

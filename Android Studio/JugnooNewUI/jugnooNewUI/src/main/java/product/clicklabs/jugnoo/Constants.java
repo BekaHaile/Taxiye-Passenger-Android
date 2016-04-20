@@ -238,6 +238,8 @@ public interface Constants {
 	String KEY_USER_RESPONSE = "user_response";
 	String KEY_IS_LOGIN_POPUP = "is_login_popup";
 
+	String KEY_REFER_DRIVER_NAME = "driver_name";
+	String KEY_REFER_DRIVER_PHONE_NO = "driver_phone_no";
 
 
 }

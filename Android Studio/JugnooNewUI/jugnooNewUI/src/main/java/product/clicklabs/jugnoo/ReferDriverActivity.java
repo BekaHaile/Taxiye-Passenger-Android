@@ -12,12 +12,30 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.fresh.models.UserCheckoutResponse;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class ReferDriverActivity extends BaseActivity implements FlurryEventNames {
@@ -66,12 +84,19 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         buttonRefer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if((editTextName.getText().toString().length() > 0) && (editTextPhone.getText().toString().length() > 0)){
+                    if(editTextPhone.getText().toString().length() == 10){
+                        referDriver();
+                    }else {
+                        Toast.makeText(ReferDriverActivity.this, "Phone number minimum 10 digits", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(ReferDriverActivity.this, "All fields are required.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         imageViewBack.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 performBackPressed();
@@ -112,6 +137,73 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         ASSL.closeActivity(relative);
         System.gc();
         super.onDestroy();
+    }
+
+    private void referDriver(){
+        try {
+            if(AppStatus.getInstance(ReferDriverActivity.this).isOnline(ReferDriverActivity.this)) {
+                DialogPopup.showLoadingDialog(ReferDriverActivity.this, getResources().getString(R.string.loading));
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_REFER_DRIVER_NAME, editTextName.getText().toString());
+                params.put(Constants.KEY_REFER_DRIVER_PHONE_NO, editTextPhone.getText().toString());
+                Log.i("Refer Driver params=", "" + params.toString());
+
+                RestClient.getApiServices().referDriver(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        DialogPopup.dismissLoadingDialog();
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i("Refer Driver Response", "" + responseStr);
+                        if(settleUserDebt.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                            Toast.makeText(ReferDriverActivity.this, settleUserDebt.getMessage(), Toast.LENGTH_SHORT).show();
+                            performBackPressed();
+                        }else {
+                            DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            });
+                        }
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("Refer Driver error", ""+ error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        retryDialog(DialogErrorType.CONNECTION_LOST);
+                    }
+                });
+            }
+            else {
+                retryDialog(DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialog(DialogErrorType dialogErrorType){
+        DialogPopup.dialogNoInternet(ReferDriverActivity.this,
+                dialogErrorType,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        referDriver();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
     }
 
 }
