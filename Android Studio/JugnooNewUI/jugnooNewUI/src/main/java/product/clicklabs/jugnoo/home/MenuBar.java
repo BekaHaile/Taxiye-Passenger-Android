@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
@@ -72,6 +73,9 @@ public class MenuBar {
 	public RelativeLayout relativeLayoutTransactions;
 	public TextView textViewTransactions;
 	public ImageView imageViewTransactions;
+
+	public RelativeLayout relativeLayoutReferDriver;
+	public TextView textViewReferDriver, textViewReferDriverNew;
 
 	public RelativeLayout relativeLayoutSupport;
 	public TextView textViewSupport;
@@ -132,6 +136,12 @@ public class MenuBar {
 		textViewTransactions = (TextView) drawerLayout.findViewById(R.id.textViewTransactions);
 		textViewTransactions.setTypeface(Fonts.mavenLight(activity));
 		imageViewTransactions = (ImageView) drawerLayout.findViewById(R.id.imageViewTransactions);
+
+		relativeLayoutReferDriver = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutReferDriver);
+		textViewReferDriver = (TextView) drawerLayout.findViewById(R.id.textViewReferDriver);
+		textViewReferDriver.setTypeface(Fonts.mavenLight(activity));
+		textViewReferDriverNew = (TextView) drawerLayout.findViewById(R.id.textViewReferDriverNew);
+		textViewReferDriverNew.setTypeface(Fonts.mavenLight(activity));
 
 		relativeLayoutSupport = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutSupport);
 		textViewSupport = (TextView) drawerLayout.findViewById(R.id.textViewSupport);
@@ -269,6 +279,14 @@ public class MenuBar {
 					((FreshActivity)activity).openOrderHistory();
 					drawerLayout.closeDrawer(menuLayout);
 				}
+			}
+		});
+
+		relativeLayoutReferDriver.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.startActivity(new Intent(activity, ReferDriverActivity.class));
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 
