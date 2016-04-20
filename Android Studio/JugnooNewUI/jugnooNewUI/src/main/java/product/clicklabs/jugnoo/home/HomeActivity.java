@@ -200,6 +200,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout mapLayout;
     GoogleMap map;
     TouchableMapFragment mapFragment;
+    MapStateListener mapStateListener;
     boolean mapTouched = false;
 
 
@@ -1185,7 +1186,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
 
 
-            new MapStateListener(map, mapFragment, this) {
+            mapStateListener = new MapStateListener(map, mapFragment, this) {
                 @Override
                 public void onMapTouched() {
                     // Map touched

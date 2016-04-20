@@ -240,6 +240,8 @@ public interface Constants {
 	String KEY_USER_RESPONSE = "user_response";
 	String KEY_IS_LOGIN_POPUP = "is_login_popup";
 
+	String KEY_FRESH_ORDER_ID = "order_id";
+
 
 	String SP_REFERRAL_CODE = "sp_referral_code";
 	String KEY_COUPON_SELECTED = "coupon_selected";

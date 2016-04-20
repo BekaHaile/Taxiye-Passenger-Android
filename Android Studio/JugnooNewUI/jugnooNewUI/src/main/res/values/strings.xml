@@ -153,6 +153,7 @@
 	<string name="cancel_request">Cancel Request</string>
 	
 	<string name="cancel_ride">Cancel Ride</string>
+	<string name="cancel_order">CANCEL ORDER</string>
 	
 	
 	<string name="rating"> Rating</string>
@@ -393,6 +394,9 @@
 
 
 	<string name="debug">Debug</string>
+
+	<!-- Jugnoo Fresh -->
+	<string name="fresh_min_order_value">Free Delivery on Orders above %s</string>
 
 
 	<string name="no_results_found">No results found</string>
@@ -833,5 +837,6 @@
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>
+	<string name="search_items">Search Items</string>
 
 </resources>
