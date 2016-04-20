@@ -234,7 +234,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			textViewCheckout.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-			imageViewSearch.setVisibility(View.VISIBLE);
+			//imageViewSearch.setVisibility(View.VISIBLE);
 
 			topBar.title.setVisibility(View.GONE);
 			topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);

@@ -156,6 +156,7 @@
             android:layout_width="122px"
             android:layout_height="122px"
             android:tag="mwar"
+            android:visibility="gone"
             android:src="@drawable/fresh_search"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             android:layout_alignParentRight="true"
