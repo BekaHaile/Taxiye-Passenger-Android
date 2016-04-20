@@ -153,14 +153,14 @@
 
         <ImageView
             android:id="@+id/imageViewSearch"
-            android:layout_width="104px"
-            android:layout_height="104px"
+            android:layout_width="122px"
+            android:layout_height="122px"
             android:tag="mwar"
-            android:src="@drawable/circle_yellow"
+            android:src="@drawable/fresh_search"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             android:layout_alignParentRight="true"
             android:layout_marginRight="40px"
-            android:layout_marginBottom="100px"
+            android:layout_marginBottom="80px"
 
             />
         
