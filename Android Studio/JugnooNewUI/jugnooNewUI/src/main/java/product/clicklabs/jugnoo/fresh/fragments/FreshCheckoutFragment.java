@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -127,6 +128,7 @@ public class FreshCheckoutFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				activity.getTransactionUtils().openAddressFragment(activity, activity.getRelativeLayoutContainer());
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ADDRESS_CLICKED, null);
 			}
 		});
 
@@ -136,6 +138,7 @@ public class FreshCheckoutFragment extends Fragment {
 				if(slots != null && slots.size() > 0) {
 					activity.setSlotToSelect(activity.getSlotSelected());
 					getFreshDeliverySlotsDialog().show();
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_DATE_TIME_CLICKED, null);
 				}
 			}
 		});
@@ -151,6 +154,7 @@ public class FreshCheckoutFragment extends Fragment {
 							Toast.LENGTH_LONG).show();
 				} else{
 					activity.getTransactionUtils().openPaymentFragment(activity, activity.getRelativeLayoutContainer());
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PROCEED_TO_PAYMENT_CLICKED, null);
 				}
 			}
 		});
@@ -180,6 +184,7 @@ public class FreshCheckoutFragment extends Fragment {
 		getCheckoutData();
 
 		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_CHECKOUT);
+		NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CHECKOUT_CLICKED, null);
 
 		return rootView;
 	}

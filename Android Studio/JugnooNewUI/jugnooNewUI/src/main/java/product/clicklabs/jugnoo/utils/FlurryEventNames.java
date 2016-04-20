@@ -300,7 +300,22 @@ public interface FlurryEventNames {
     NUDGE_WALLET_CLICKED = "wallet_clicked",
     NUDGE_PAYMENT_WALLET_CLICKED = "payment_wallet_clicked",
     NUDGE_ADD_MONEY_CLICKED = "add_money_clicked",
-    NUDGE_EDIT_PAYTM_CLICKED = "edit_paytm_clicked"
+    NUDGE_EDIT_PAYTM_CLICKED = "edit_paytm_clicked",
+            NUDGE_FRESH_CATEGORY_CLICKED_FORMAT = "fresh_category_%s_clicked",
+            NUDGE_FRESH_CART_CLICKED = "fresh_cart_clicked",
+            NUDGE_FRESH_ITEMS_IN_CART = "fresh_items_in_cart",
+            NUDGE_FRESH_CHECKOUT_CLICKED = "fresh_checkout_clicked",
+            NUDGE_FRESH_CART_DELETE_CLICKED = "fresh_cart_delete_clicked",
+            NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED = "fresh_cart_delete_cancel_clicked",
+            NUDGE_FRESH_ADDRESS_CLICKED = "fresh_address_clicked",
+            NUDGE_FRESH_DATE_TIME_CLICKED = "fresh_date_time_clicked",
+            NUDGE_FRESH_PROCEED_TO_PAYMENT_CLICKED = "fresh_proceed_to_payment_clicked",
+            NUDGE_FRESH_PAYTM_CLICKED = "fresh_paytm_clicked",
+            NUDGE_FRESH_CASH_CLICKED = "fresh_cash_clicked",
+            NUDGE_FRESH_BACK_ON_PAYMENT_CLICKED = "fresh_back_on_payment_clicked",
+            NUDGE_FRESH_PLACE_ORDER_CLICKED = "fresh_place_order_clicked",
+            NUDGE_FRESH_ORDER_PLACED = "fresh_order_placed",
+            NUDGE_FRESH_BACK_TO_JUGNOO = "fresh_back_to_jugnoo"
             ;
 
 }

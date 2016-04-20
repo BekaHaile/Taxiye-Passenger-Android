@@ -47,6 +47,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -125,6 +126,7 @@ public class FreshPaymentFragment extends Fragment {
 			public void onClick(View v) {
 				activity.setPaymentOption(PaymentOption.CASH);
 				setPaymentOptionUI();
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CASH_CLICKED, null);
 			}
 		});
 
@@ -135,6 +137,7 @@ public class FreshPaymentFragment extends Fragment {
 					if(Data.userData.getPaytmBalance() >= getTotalPriceWithDeliveryCharges()) {
 						activity.setPaymentOption(PaymentOption.PAYTM);
 						setPaymentOptionUI();
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PAYTM_CLICKED, null);
 
 					} else if(Data.userData.getPaytmError() == 1){
 						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
@@ -151,6 +154,7 @@ public class FreshPaymentFragment extends Fragment {
 		buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PLACE_ORDER_CLICKED, null);
 				placeOrder();
 			}
 		});
@@ -356,6 +360,7 @@ public class FreshPaymentFragment extends Fragment {
 													+ " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()),
 											activity.getSlotSelected().getDayName());
 
+									NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ORDER_PLACED, null);
 								} else{
 									DialogPopup.alertPopup(activity, "", message);
 								}

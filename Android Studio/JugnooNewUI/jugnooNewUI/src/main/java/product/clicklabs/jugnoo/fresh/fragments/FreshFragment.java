@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import retrofit.Callback;
@@ -91,6 +92,32 @@ public class FreshFragment extends Fragment {
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
+
+		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				try {
+					if(activity.getProductsResponse() != null
+							&& activity.getProductsResponse().getCategories() != null){
+						NudgeClient.trackEventUserId(activity,
+								String.format(FlurryEventNames.NUDGE_FRESH_CATEGORY_CLICKED_FORMAT,
+								activity.getProductsResponse().getCategories().get(position).getCategoryName()), null);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 
 		getAllProducts();
 

@@ -186,6 +186,10 @@ public class FreshActivity extends FragmentActivity {
 		return (FreshOrderSummaryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderSummaryFragment.class.getName());
 	}
 
+	private FreshPaymentFragment getFreshPaymentFragment(){
+		return (FreshPaymentFragment) getSupportFragmentManager().findFragmentByTag(FreshPaymentFragment.class.getName());
+	}
+
 
 	public Pair<Double, Integer> updateCartValuesGetTotalPrice(){
 		Pair<Double, Integer> pair;
@@ -220,6 +224,9 @@ public class FreshActivity extends FragmentActivity {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		if(totalQuantity > 0){
+			NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_ITEMS_IN_CART, null);
 		}
 		pair = new Pair<>(totalPrice, totalQuantity);
 		return pair;
@@ -351,6 +358,7 @@ public class FreshActivity extends FragmentActivity {
 
 
 	public void deleteCart(){
+		NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_CART_DELETE_CLICKED, null);
 		DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
 				getResources().getString(R.string.delete_fresh_cart_message),
 				getResources().getString(R.string.delete),
@@ -368,7 +376,8 @@ public class FreshActivity extends FragmentActivity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-
+						NudgeClient.trackEventUserId(FreshActivity.this,
+								FlurryEventNames.NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED, null);
 					}
 				}, true, false);
 	}
@@ -436,6 +445,9 @@ public class FreshActivity extends FragmentActivity {
 			finish();
 			overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 		} else {
+			if(getFreshPaymentFragment() != null){
+				NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_BACK_ON_PAYMENT_CLICKED, null);
+			}
 			super.onBackPressed();
 		}
 	}

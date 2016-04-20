@@ -190,6 +190,7 @@ public class TopBar {
 					if(activity instanceof FreshActivity){
 						activity.finish();
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_BACK_TO_JUGNOO, null);
 					}
 					break;
 
