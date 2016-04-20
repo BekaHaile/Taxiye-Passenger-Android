@@ -84,14 +84,21 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         buttonRefer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((editTextName.getText().toString().length() > 0) && (editTextPhone.getText().toString().length() > 0)){
-                    if(editTextPhone.getText().toString().length() == 10){
+                if((editTextName.getText().toString().length() > 0) || (editTextPhone.getText().toString().length() > 0)){
+                    if(editTextName.getText().toString().isEmpty()){
+                        editTextName.setError("Name is required");
+                        editTextPhone.setError(null);
+                    }
+                    if((editTextPhone.getText().toString().length() == 10)){
                         referDriver();
                     }else {
-                        Toast.makeText(ReferDriverActivity.this, "Phone number minimum 10 digits", Toast.LENGTH_SHORT).show();
+                        editTextPhone.requestFocus();
+                        editTextPhone.setError("Invalid number");
+                        editTextName.setError(null);
                     }
                 }else{
-                    Toast.makeText(ReferDriverActivity.this, "All fields are required.", Toast.LENGTH_SHORT).show();
+                    editTextName.setError("Name is required");
+                    editTextPhone.setError(null);
                 }
             }
         });

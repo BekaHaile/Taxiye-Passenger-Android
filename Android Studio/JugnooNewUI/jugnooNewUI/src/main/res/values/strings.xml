@@ -396,7 +396,7 @@
 	<string name="debug">Debug</string>
 
 	<!-- Jugnoo Fresh -->
-	<string name="fresh_min_order_value">Free Delivery on Orders above %s</string>
+	<string name="fresh_min_order_value">Free Delivery on Orders above \u20B9%s</string>
 	<string name="fresh_may_be_later">MAYBE LATER</string>
 
 

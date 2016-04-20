@@ -35,7 +35,7 @@ public class FreshIntroDialog {
 
 	public Dialog show() {
 		try {
-			if(Prefs.with(activity).getInt(Constants.SP_FRESH_INTRO_SHOWN, 0) == 1) {
+			if(Prefs.with(activity).getInt(Constants.SP_FRESH_INTRO_SHOWN, 0) == 0) {
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_fresh_intro);
