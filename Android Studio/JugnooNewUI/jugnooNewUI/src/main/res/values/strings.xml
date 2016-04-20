@@ -839,4 +839,12 @@
 	<string name="your_cart_is_empty">Your cart is empty</string>
 	<string name="search_items">Search Items</string>
 
+	<string name="refer_a_driver">Refer A Driver</string>
+	<string name="came_across_auto_driver">Came across able auto rickshaw drivers\nwho aren\'t aware of Jugnoo yet?</string>
+	<string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
+	<string name="if_they_are_interested">If they are interested, do share their\ndetails with us.</string>
+	<string name="name_of_driver">Name of Driver</string>
+	<string name="contact_number">Contact Number</string>
+	<string name="refer">Refer</string>
+
 </resources>

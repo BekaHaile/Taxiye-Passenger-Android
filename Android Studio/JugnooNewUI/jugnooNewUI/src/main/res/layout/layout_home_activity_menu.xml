@@ -409,6 +409,62 @@
                     android:background="@color/text_color_hint" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/relativeLayoutReferDriver"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewReferDriver"
+                    android:layout_width="33px"
+                    android:layout_height="37px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_refer_driver_menu"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewReferDriver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
+                    android:text="@string/refer_a_driver"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <TextView
+                    android:id="@+id/textViewReferDriverNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/str_new"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size_36"
+                    android:layout_marginRight="30px"/>
+
+                <ImageView
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutSupport"

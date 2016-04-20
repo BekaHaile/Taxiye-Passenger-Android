@@ -21,9 +21,11 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -73,6 +75,9 @@ public class MenuBar {
 	public RelativeLayout relativeLayoutTransactions;
 	public TextView textViewTransactions;
 	public ImageView imageViewTransactions;
+
+	public RelativeLayout relativeLayoutReferDriver;
+	public TextView textViewReferDriver, textViewReferDriverNew;
 
 	public RelativeLayout relativeLayoutSupport;
 	public TextView textViewSupport;
@@ -134,6 +139,12 @@ public class MenuBar {
 		textViewTransactions.setTypeface(Fonts.mavenLight(activity));
 		imageViewTransactions = (ImageView) drawerLayout.findViewById(R.id.imageViewTransactions);
 
+		relativeLayoutReferDriver = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutReferDriver);
+		textViewReferDriver = (TextView) drawerLayout.findViewById(R.id.textViewReferDriver);
+		textViewReferDriver.setTypeface(Fonts.mavenLight(activity));
+		textViewReferDriverNew = (TextView) drawerLayout.findViewById(R.id.textViewReferDriverNew);
+		textViewReferDriverNew.setTypeface(Fonts.mavenLight(activity));
+
 		relativeLayoutSupport = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutSupport);
 		textViewSupport = (TextView) drawerLayout.findViewById(R.id.textViewSupport);
 		textViewSupport.setTypeface(Fonts.mavenLight(activity));
@@ -141,6 +152,12 @@ public class MenuBar {
 		relativeLayoutAbout = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutAbout);
 		textViewAbout = (TextView) drawerLayout.findViewById(R.id.textViewAbout);
 		textViewAbout.setTypeface(Fonts.mavenLight(activity));
+
+		if(Data.userData.getcToDReferralEnabled() == 1){
+			relativeLayoutReferDriver.setVisibility(View.VISIBLE);
+		}else {
+			relativeLayoutReferDriver.setVisibility(View.GONE);
+		}
 
 
 		// menu events
@@ -277,6 +294,14 @@ public class MenuBar {
 					((FreshActivity)activity).openOrderHistory();
 					drawerLayout.closeDrawer(menuLayout);
 				}
+			}
+		});
+
+		relativeLayoutReferDriver.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.startActivity(new Intent(activity, ReferDriverActivity.class));
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 

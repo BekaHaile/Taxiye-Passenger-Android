@@ -122,6 +122,7 @@ public class JSONParser implements Constants {
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
+        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled");
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
 
         if(userData.has("user_saved_addresses")){
@@ -227,7 +228,7 @@ public class JSONParser implements Constants {
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
-                referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
+                referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled);
 
     }
 

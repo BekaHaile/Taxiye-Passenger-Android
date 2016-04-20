@@ -242,6 +242,9 @@ public interface Constants {
 
 	String KEY_FRESH_ORDER_ID = "order_id";
 
+	String KEY_REFER_DRIVER_NAME = "driver_name";
+	String KEY_REFER_DRIVER_PHONE_NO = "driver_phone_no";
+
 
 	String SP_REFERRAL_CODE = "sp_referral_code";
 	String KEY_COUPON_SELECTED = "coupon_selected";
