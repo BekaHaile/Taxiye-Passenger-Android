@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.FreshOrderCompleteDialog;
@@ -365,14 +364,21 @@ public class FreshPaymentFragment extends Fragment {
 											activity.getSlotSelected().getDayName());
 
 									NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ORDER_PLACED, null);
-								} else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag){
+
+								} else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
 									final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
 									final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
 									Log.e("USER_IN_DEBT message", "=" + message1);
 									activity.runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-											new UserDebtDialog(activity, Data.userData).showUserDebtDialog(userDebt, message1);
+											new UserDebtDialog(activity, Data.userData,
+													new UserDebtDialog.Callback() {
+														@Override
+														public void successFullyDeducted(double userDebt) {
+															setPaymentOptionUI();
+														}
+													}).showUserDebtDialog(userDebt, message1);
 										}
 									});
 								}else{

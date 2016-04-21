@@ -25,7 +25,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -39,12 +38,17 @@ public class UserDebtDialog {
 
 	private Activity activity;
 	private UserData userData;
-	public UserDebtDialog(Activity activity, UserData userData){
+	private double userDebt;
+	private Callback callback;
+
+	public UserDebtDialog(Activity activity, UserData userData, Callback callback){
 		this.activity = activity;
 		this.userData = userData;
+		this.callback = callback;
 	}
 
-	public void showUserDebtDialog(final double userDebt, String message) {
+	public void showUserDebtDialog(double userDebt, String message) {
+		this.userDebt = userDebt;
 		if(message.length() == 0){
 			message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
 		}
@@ -54,7 +58,7 @@ public class UserDebtDialog {
 					@Override
 					public void onClick(View v) {
 						if(userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
-							if(userData.getPaytmBalance() >= userDebt){
+							if(userData.getPaytmBalance() >= UserDebtDialog.this.userDebt){
 								settleUserDebt(activity);
 							}
 							else{
@@ -88,12 +92,12 @@ public class UserDebtDialog {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
-				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_ACCESS_TOKEN, userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
 				params.put(Constants.KEY_IP_ADDRESS, Utils.getLocalIpAddress());
 				Log.i("params", "=" + params);
 
-				RestClient.getApiServices().adjustUserDebt(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().adjustUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						Log.i(TAG, "adjustUserDebt response = " + response);
@@ -105,6 +109,8 @@ public class UserDebtDialog {
 								String message = JSONParser.getServerMessage(jObj);
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 									DialogPopup.alertPopup(activity, "", message);
+									userData.setPaytmBalance(userData.getPaytmBalance() - userDebt);
+									callback.successFullyDeducted(userDebt);
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
 								}
@@ -129,6 +135,11 @@ public class UserDebtDialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	public interface Callback{
+		void successFullyDeducted(double userDebt);
 	}
 
 }
