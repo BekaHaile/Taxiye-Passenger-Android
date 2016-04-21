@@ -164,8 +164,12 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Refer Driver Response", "" + responseStr);
                         if(settleUserDebt.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                            Toast.makeText(ReferDriverActivity.this, settleUserDebt.getMessage(), Toast.LENGTH_SHORT).show();
-                            performBackPressed();
+                            DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    performBackPressed();
+                                }
+                            });
                         }else {
                             DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
                                 @Override
