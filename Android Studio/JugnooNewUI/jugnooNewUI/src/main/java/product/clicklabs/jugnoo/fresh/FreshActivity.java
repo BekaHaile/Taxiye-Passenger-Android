@@ -389,6 +389,10 @@ public class FreshActivity extends FragmentActivity {
 		}
 	}
 
+	public void updateMenu(){
+		menuBar.setUserData();
+	}
+
 
 	public void orderComplete(){
 		clearCart();

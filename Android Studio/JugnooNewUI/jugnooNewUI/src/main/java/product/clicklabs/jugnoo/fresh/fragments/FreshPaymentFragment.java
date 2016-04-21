@@ -377,7 +377,9 @@ public class FreshPaymentFragment extends Fragment {
 														@Override
 														public void successFullyDeducted(double userDebt) {
 															setPaymentOptionUI();
+															activity.updateMenu();
 														}
+
 													}).showUserDebtDialog(userDebt, message1);
 										}
 									});
