@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -27,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
+import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -41,88 +43,145 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 /**
  * Created by Ankit on 7/17/15.
  */
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int TYPE_FOOTER = 2;
+    private static final int TYPE_ITEM = 1;
     private Activity activity;
     private int rowLayout;
-    private ArrayList<NotificationData> notificationList = new ArrayList<>();
+    private ArrayList<NotificationData> notificationList;
+    private int totalRides;
+    private Callback callback;
 
-    public NotificationAdapter(ArrayList<NotificationData> notificationList, Activity activity, int rowLayout) {
+    public NotificationAdapter(ArrayList<NotificationData> notificationList, Activity activity, int rowLayout, int totalRides, Callback callback) {
         this.notificationList = notificationList;
         this.activity = activity;
         this.rowLayout = rowLayout;
+        this.totalRides = totalRides;
+        this.callback = callback;
+    }
+
+    public void notifyList(int totalRides){
+        this.totalRides = totalRides;
+        this.notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_FOOTER) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_show_more, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT);
-        v.setLayoutParams(layoutParams);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, RecyclerView.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
 
-        ASSL.DoMagic(v);
-        return new ViewHolder(v, activity);
+            ASSL.DoMagic(v);
+            return new ViewFooterHolder(v, activity);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
+
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
+
+            ASSL.DoMagic(v);
+            return new ViewHolder(v, activity);
+        }
     }
 
     @Override
-    public void onBindViewHolder(NotificationAdapter.ViewHolder holder, int position) {
-        NotificationData notification = notificationList.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
+        if(viewholder instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder) viewholder;
+            NotificationData notification = notificationList.get(position);
 
-        holder.textViewTitle.setText(notification.getTitle());
-        holder.textViewDescription.setText(notification.getMessage());
-        holder.textViewTime.setText(DateOperations
-                .convertDateViaFormat(DateOperations.utcToLocal(notification.getTimePushArrived())));
-        holder.linearRoot.setTag(position);
-        holder.linearLayoutText.setTag(position);
+            holder.textViewTitle.setText(notification.getTitle());
+            holder.textViewDescription.setText(notification.getMessage());
+            holder.textViewTime.setText(DateOperations
+                    .convertDateViaFormat(DateOperations.utcToLocalTZ(notification.getTimePushArrived())));
+            holder.linearRoot.setTag(position);
+            holder.linearLayoutText.setTag(position);
 
-		try {
-			if(notification.getNotificationImage().equalsIgnoreCase("")){
-				holder.linearLayoutNotificationImage.setVisibility(View.GONE);
-                if(notification.isExpanded()){
-                    holder.textViewTitle.setSingleLine(false);
-                    holder.textViewDescription.setSingleLine(false);
-                } else{
-                    holder.textViewTitle.setSingleLine(true);
-                    holder.textViewDescription.setSingleLine(true);
-                }
-			}
-			else{
-                if(notification.isExpanded()){
-                    holder.linearLayoutNotificationImage.setVisibility(View.VISIBLE);
-                    holder.textViewTitle.setSingleLine(false);
-                    holder.textViewDescription.setSingleLine(false);
-                } else{
+            try {
+                if (notification.getNotificationImage().equalsIgnoreCase("")) {
                     holder.linearLayoutNotificationImage.setVisibility(View.GONE);
-                    holder.textViewTitle.setSingleLine(true);
-                    holder.textViewDescription.setSingleLine(true);
-                }
+                    if (notification.isExpanded()) {
+                        holder.textViewTitle.setSingleLine(false);
+                        holder.textViewDescription.setSingleLine(false);
+                    } else {
+                        holder.textViewTitle.setSingleLine(true);
+                        holder.textViewDescription.setSingleLine(true);
+                    }
+                } else {
+                    if (notification.isExpanded()) {
+                        holder.linearLayoutNotificationImage.setVisibility(View.VISIBLE);
+                        holder.textViewTitle.setSingleLine(false);
+                        holder.textViewDescription.setSingleLine(false);
+                    } else {
+                        holder.linearLayoutNotificationImage.setVisibility(View.GONE);
+                        holder.textViewTitle.setSingleLine(true);
+                        holder.textViewDescription.setSingleLine(true);
+                    }
 
-				//Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
-                //Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
-                Picasso.with(activity).load(notification.getNotificationImage())
-                        .placeholder(R.drawable.ic_notification_placeholder)
-                        .error(R.drawable.ic_notification_placeholder)
+                    //Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
+                    //Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
+                    Picasso.with(activity).load(notification.getNotificationImage())
+                            .placeholder(R.drawable.ic_notification_placeholder)
+                            .error(R.drawable.ic_notification_placeholder)
 //                        .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
-                        .into(holder.imageViewNotification);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-        holder.linearRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    int position = (int) v.getTag();
-                    notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
-                    notifyItemChanged(position);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                            .into(holder.imageViewNotification);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+
+            holder.linearRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int position = (int) v.getTag();
+                        notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
+                        notifyItemChanged(position);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }else if(viewholder instanceof ViewFooterHolder){
+            ViewFooterHolder holder = (ViewFooterHolder) viewholder;
+            holder.relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onShowMoreClick();
+                }
+            });
+        }
 
 	}
+
+    @Override
+    public int getItemCount() {
+        if(notificationList == null || notificationList.size() == 0){
+            return 0;
+        }
+        else{
+            if(totalRides > notificationList.size()){
+                return notificationList.size() + 1;
+            } else{
+                return notificationList.size();
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionFooter(position)) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ITEM;
+    }
+
+    private boolean isPositionFooter(int position) {
+        return position == notificationList.size();
+    }
 
     private void openDeepLink(String deepLink){
         try{
@@ -188,10 +247,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return notificationList == null ? 0 : notificationList.size();
-    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout linearRoot, linearLayoutText, linearLayoutNotificationImage;
@@ -212,5 +267,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             textViewDescription.setTypeface(Fonts.mavenLight(activity));
             textViewDescription.setSingleLine(true);
         }
+    }
+
+    public class ViewFooterHolder extends RecyclerView.ViewHolder {
+        public RelativeLayout relativeLayoutShowMore;
+        public TextView textViewShowMore;
+        public ViewFooterHolder(View convertView, Activity context) {
+            super(convertView);
+            relativeLayoutShowMore = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutShowMore);
+            textViewShowMore = (TextView) convertView.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.mavenLight(context));
+            textViewShowMore.setText(context.getResources().getString(R.string.show_more));
+        }
+    }
+
+    public interface Callback{
+        void onShowMoreClick();
     }
 }

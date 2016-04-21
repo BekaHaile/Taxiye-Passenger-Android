@@ -6,6 +6,7 @@ import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -390,4 +391,10 @@ public interface ApiService {
     @POST("/refer_a_driver")
     void referDriver(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_pushes_for_user")
+    void notificationInbox(@FieldMap Map<String, String> params,
+                           Callback<NotificationInboxResponse> callback);
+
 }
