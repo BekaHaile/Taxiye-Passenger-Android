@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.FreshOrderCompleteDialog;
@@ -51,6 +52,7 @@ import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -363,7 +365,17 @@ public class FreshPaymentFragment extends Fragment {
 											activity.getSlotSelected().getDayName());
 
 									NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ORDER_PLACED, null);
-								} else{
+								} else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag){
+									final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
+									final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
+									Log.e("USER_IN_DEBT message", "=" + message1);
+									activity.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											new UserDebtDialog(activity, Data.userData).showUserDebtDialog(userDebt, message1);
+										}
+									});
+								}else{
 									DialogPopup.alertPopup(activity, "", message);
 								}
 							}
@@ -376,7 +388,7 @@ public class FreshPaymentFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+						Log.e(TAG, "paytmAuthenticateRecharge error " + error.toString());
 						DialogPopup.dismissLoadingDialog();
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 					}

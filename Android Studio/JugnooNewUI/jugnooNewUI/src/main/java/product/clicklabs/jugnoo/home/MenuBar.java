@@ -153,11 +153,7 @@ public class MenuBar {
 		textViewAbout = (TextView) drawerLayout.findViewById(R.id.textViewAbout);
 		textViewAbout.setTypeface(Fonts.mavenLight(activity));
 
-		if(Data.userData.getcToDReferralEnabled() == 1){
-			relativeLayoutReferDriver.setVisibility(View.VISIBLE);
-		}else {
-			relativeLayoutReferDriver.setVisibility(View.GONE);
-		}
+
 
 
 		// menu events
@@ -375,6 +371,12 @@ public class MenuBar {
 			relativeLayoutPromotions.setVisibility(View.VISIBLE);
 			relativeLayoutAbout.setVisibility(View.VISIBLE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.ride_history));
+			if(Data.userData.getcToDReferralEnabled() == 1){
+				relativeLayoutReferDriver.setVisibility(View.VISIBLE);
+			}else {
+				relativeLayoutReferDriver.setVisibility(View.GONE);
+			}
+
 
 		} else if(activity instanceof FreshActivity){
 			textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
@@ -384,7 +386,7 @@ public class MenuBar {
 			relativeLayoutPromotions.setVisibility(View.GONE);
 			relativeLayoutAbout.setVisibility(View.GONE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.order_history));
-
+			relativeLayoutReferDriver.setVisibility(View.GONE);
 		}
 
 		setupFreshUI();

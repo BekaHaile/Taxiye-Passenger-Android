@@ -2156,7 +2156,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(frag == null || frag.isRemoving()) {
                 PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
-                bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewInitialSearch.getText().toString());
+                bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
