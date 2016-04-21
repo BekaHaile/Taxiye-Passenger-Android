@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.fresh.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.fresh.fragments.FreshCategoryItemsFragment;
 import product.clicklabs.jugnoo.fresh.models.Category;
@@ -45,7 +47,11 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 
 	@Override
 	public Fragment getItem(int position) {
-		return new FreshCategoryItemsFragment(categories.get(position));
+		FreshCategoryItemsFragment frag = new FreshCategoryItemsFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
+		frag.setArguments(bundle);
+		return frag;
 	}
 
 	@Override

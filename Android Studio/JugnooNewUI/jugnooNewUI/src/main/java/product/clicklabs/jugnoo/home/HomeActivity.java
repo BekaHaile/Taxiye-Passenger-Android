@@ -2724,6 +2724,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
+        try {
             if (!checkIfUserDataNull(HomeActivity.this)) {
                 setUserData();
 
@@ -2812,15 +2813,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
 
-        Utils.hideSoftKeyboard(this, editTextRSFeedback);
+            Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
-        try {
-            AdWordsConversionReporter.registerReferrer(this.getApplicationContext(), this.getIntent().getData());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(this, GOOGLE_ADWORD_CONVERSION_ID);
+            try {
+				AdWordsConversionReporter.registerReferrer(this.getApplicationContext(), this.getIntent().getData());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+            try {
+				AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(this, GOOGLE_ADWORD_CONVERSION_ID);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3181,7 +3185,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-        super.onDestroy();
+        try {
+            super.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

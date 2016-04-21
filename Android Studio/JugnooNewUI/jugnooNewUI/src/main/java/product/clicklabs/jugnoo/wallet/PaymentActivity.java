@@ -25,8 +25,10 @@ public class PaymentActivity extends BaseFragmentActivity{
 	private final String TAG = PaymentActivity.class.getSimpleName();
 
 	public int addPaymentPathInt = AddPaymentPath.WALLET.getOrdinal();
+	public String amountToPreFill = "";
 
-    @Override
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
@@ -43,12 +45,11 @@ public class PaymentActivity extends BaseFragmentActivity{
 					.commitAllowingStateLoss();
 		}
 		else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
-			String amountToPreFill = "";
 			if(getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)){
 				amountToPreFill = getIntent().getStringExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE);
 			}
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new PaytmRechargeFragment(amountToPreFill), PaytmRechargeFragment.class.getName())
+					.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
 					.addToBackStack(PaytmRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}

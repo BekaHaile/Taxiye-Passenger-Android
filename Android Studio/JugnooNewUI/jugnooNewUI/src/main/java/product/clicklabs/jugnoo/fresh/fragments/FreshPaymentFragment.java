@@ -75,6 +75,8 @@ public class FreshPaymentFragment extends Fragment {
 	private View rootView;
     private FreshActivity activity;
 
+	public FreshPaymentFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

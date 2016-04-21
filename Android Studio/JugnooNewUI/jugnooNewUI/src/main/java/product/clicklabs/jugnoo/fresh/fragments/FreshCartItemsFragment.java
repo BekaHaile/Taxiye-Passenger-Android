@@ -40,6 +40,8 @@ public class FreshCartItemsFragment extends Fragment {
 
 	private ArrayList<SubItem> subItemsInCart;
 
+	public FreshCartItemsFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

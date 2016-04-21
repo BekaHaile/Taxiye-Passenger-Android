@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fresh.fragments;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,20 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -44,7 +38,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -188,23 +181,27 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		buttonCancelOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(activity.getOrderHistoryOpened().getCancellable() == 1){
+				try {
+					if(activity.getOrderHistoryOpened().getCancellable() == 1){
 
-					DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
-							getResources().getString(R.string.cancel), new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
-						}
-					}, new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
+						DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
+								getResources().getString(R.string.cancel), new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
+							}
+						}, new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
 
-						}
-					}, false, false);
-				}
-				else {
-					activity.performBackPressed();
+							}
+						}, false, false);
+					}
+					else {
+						activity.performBackPressed();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 
 			}

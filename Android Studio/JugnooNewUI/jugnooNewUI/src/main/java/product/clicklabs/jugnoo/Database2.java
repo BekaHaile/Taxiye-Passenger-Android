@@ -168,35 +168,37 @@ public class Database2 {                                                        
     }
 
     private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context) {
-        if(!Prefs.with(context).contains(Constants.SECOND_TIME_DB)) {
-            ArrayList<NotificationData> notifications = getAllNotificationOld();
-            database.execSQL("DROP TABLE " + TABLE_NOTIFICATION_CENTER);
-            database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                    + NOTIFICATION_ID + " INTEGER, "
-                    + TIME_PUSH_ARRIVED + " TEXT, "
-                    + MESSAGE + " TEXT, "
-                    + DEEP_INDEX + " TEXT, "
-                    + TIME_TO_DISPLAY + " TEXT, "
-                    + TIME_TILL_DISPLAY + " TEXT, "
-                    + NOTIFICATION_IMAGE + " TEXT, "
-                    + PUSH_TITLE + " TEXT"
-                    + ");");
+        try {
+            if(!Prefs.with(context).contains(Constants.SECOND_TIME_DB)) {
+				ArrayList<NotificationData> notifications = getAllNotificationOld();
+				database.execSQL("DROP TABLE " + TABLE_NOTIFICATION_CENTER);
+				database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
+						+ NOTIFICATION_ID + " INTEGER, "
+						+ TIME_PUSH_ARRIVED + " TEXT, "
+						+ MESSAGE + " TEXT, "
+						+ DEEP_INDEX + " TEXT, "
+						+ TIME_TO_DISPLAY + " TEXT, "
+						+ TIME_TILL_DISPLAY + " TEXT, "
+						+ NOTIFICATION_IMAGE + " TEXT, "
+						+ PUSH_TITLE + " TEXT"
+						+ ");");
 
-            for (int i = notifications.size()-1; i >= 0; i--) {
-                NotificationData data = notifications.get(i);
-                insertNotification(context, data.getNotificationId(),
-                        data.getTimePushArrived(),
-                        data.getTitle(),
-                        data.getMessage(),
-                        data.getDeepIndex(),
-                        data.getTimeToDisplay(),
-                        data.getTimeTillDisplay(),
-                        data.getNotificationImage());
-            }
-            Prefs.with(context).save(Constants.SECOND_TIME_DB, 1);
+				for (int i = notifications.size()-1; i >= 0; i--) {
+					NotificationData data = notifications.get(i);
+					insertNotification(context, data.getNotificationId(),
+							data.getTimePushArrived(),
+							data.getTitle(),
+							data.getMessage(),
+							data.getDeepIndex(),
+							data.getTimeToDisplay(),
+							data.getTimeTillDisplay(),
+							data.getNotificationImage());
+				}
+				Prefs.with(context).save(Constants.SECOND_TIME_DB, 1);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
     }
 
 

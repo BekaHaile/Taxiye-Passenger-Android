@@ -53,6 +53,8 @@ public class FreshFragment extends Fragment {
 	private View rootView;
     private FreshActivity activity;
 
+	public FreshFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

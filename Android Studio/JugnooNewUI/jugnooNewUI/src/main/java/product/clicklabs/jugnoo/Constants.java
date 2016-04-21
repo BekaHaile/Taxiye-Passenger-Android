@@ -233,6 +233,7 @@ public interface Constants {
 	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
 	String SP_FRESH_CART= "fresh_cart";
 	String EMPTY_JSON_OBJECT = "{}";
+	String KEY_CATEGORY_POSITION = "category_position";
 
 	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
 	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";

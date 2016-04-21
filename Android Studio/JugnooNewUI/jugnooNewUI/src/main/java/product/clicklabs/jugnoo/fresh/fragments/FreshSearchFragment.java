@@ -49,6 +49,8 @@ public class FreshSearchFragment extends Fragment {
 
 	private ArrayList<SubItem> subItemsInSearch;
 
+	public FreshSearchFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

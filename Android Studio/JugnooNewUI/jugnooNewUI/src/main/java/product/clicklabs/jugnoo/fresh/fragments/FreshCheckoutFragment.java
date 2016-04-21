@@ -73,6 +73,8 @@ public class FreshCheckoutFragment extends Fragment {
 	private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
 	private ArrayList<Slot> slots = new ArrayList<>();
 
+	public FreshCheckoutFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

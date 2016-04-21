@@ -184,19 +184,27 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     }
 
     public void setPaytmLoadingVisiblity(int visiblity){
-        progressBarPaytm.setVisibility(visiblity);
-        if(visiblity == View.VISIBLE) {
-            textViewPaytmValue.setVisibility(View.GONE);
+        try {
+            progressBarPaytm.setVisibility(visiblity);
+            if(visiblity == View.VISIBLE) {
+				textViewPaytmValue.setVisibility(View.GONE);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void setSelectedPaymentOptionUI(int pickupPaymentOption){
-        if(PaymentOption.PAYTM.getOrdinal() == pickupPaymentOption){
-            paymentSelection(radioBtnPaytm, radioBtnCash);
-        } else{
-            paymentSelection(radioBtnCash, radioBtnPaytm);
+        try {
+            if(PaymentOption.PAYTM.getOrdinal() == pickupPaymentOption){
+				paymentSelection(radioBtnPaytm, radioBtnCash);
+			} else{
+				paymentSelection(radioBtnCash, radioBtnPaytm);
+			}
+            activity.getSlidingBottomPanel().updatePaymentOption();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        activity.getSlidingBottomPanel().updatePaymentOption();
     }
 
 
