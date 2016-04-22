@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
-import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -50,20 +49,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Activity activity;
     private int rowLayout;
     private ArrayList<NotificationData> notificationList;
-    private int totalRides;
+    private int totalNotifications;
     private Callback callback;
 
-    public NotificationAdapter(ArrayList<NotificationData> notificationList, Activity activity, int rowLayout, int totalRides, Callback callback) {
-        this.notificationList = notificationList;
+    public NotificationAdapter(Activity activity, int rowLayout, int totalNotifications, Callback callback) {
+        this.notificationList = new ArrayList<>();
         this.activity = activity;
         this.rowLayout = rowLayout;
-        this.totalRides = totalRides;
+        this.totalNotifications = totalNotifications;
         this.callback = callback;
     }
 
-    public void notifyList(int totalRides){
-        this.totalRides = totalRides;
+    public void notifyList(int totalNotifications, ArrayList<NotificationData> notificationList, boolean refresh){
+        this.totalNotifications = totalNotifications;
+        if(refresh){
+            this.notificationList.clear();
+        }
+        this.notificationList.addAll(notificationList);
         this.notifyDataSetChanged();
+    }
+
+    public int getListSize(){
+        return notificationList.size();
     }
 
     @Override
@@ -163,7 +170,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return 0;
         }
         else{
-            if(totalRides > notificationList.size()){
+            if(totalNotifications > notificationList.size()){
                 return notificationList.size() + 1;
             } else{
                 return notificationList.size();

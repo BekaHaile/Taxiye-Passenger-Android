@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -30,7 +28,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -46,12 +43,10 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
     private LinearLayout root;
     private TextView textViewTitle;
-    private ImageView imageViewBack, imageViewLock;
+    private ImageView imageViewBack;
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter myNotificationAdapter;
-    private ArrayList<NotificationData> notificationList;
     private LinearLayout linearLayoutNoNotifications;
-    private int totalRides = 0;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -67,7 +62,6 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-        imageViewLock = (ImageView) findViewById(R.id.imageViewLock);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.theme_color);
@@ -79,12 +73,11 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(NotificationCenterActivity.this));
         recyclerViewNotification.setHasFixedSize(false);
 
-        notificationList = new ArrayList<>();
-        myNotificationAdapter = new NotificationAdapter(notificationList, NotificationCenterActivity.this,
-                R.layout.list_item_notification, totalRides, new NotificationAdapter.Callback() {
+        myNotificationAdapter = new NotificationAdapter(NotificationCenterActivity.this,
+                R.layout.list_item_notification, 0, new NotificationAdapter.Callback() {
             @Override
             public void onShowMoreClick() {
-                getNotificationInboxApi();
+                getNotificationInboxApi(false);
             }
         });
         recyclerViewNotification.setAdapter(myNotificationAdapter);
@@ -99,7 +92,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
         //loadListFromDB();
 
-        getNotificationInboxApi();
+        getNotificationInboxApi(true);
 
         FlurryEventLogger.event(this, FlurryEventNames.WHO_VISITED_THE_NOTIFICATION_SCREEN);
         NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_NOTIFICATION_CHECKED, null);
@@ -107,19 +100,10 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                notificationList.clear();
-                imageViewLock.setVisibility(View.VISIBLE);
-                swipeRefreshLayout.setEnabled(false);
-                getNotificationInboxApi();
+                getNotificationInboxApi(true);
             }
         });
 
-        imageViewLock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
 
@@ -128,15 +112,14 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 
     private void loadListFromDB() {
-        notificationList.clear();
-        notificationList.addAll(Database2.getInstance(NotificationCenterActivity.this).getAllNotification());
+        ArrayList<NotificationData> notificationDatas = Database2.getInstance(NotificationCenterActivity.this).getAllNotification();
         Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-        if (notificationList.size() > 0) {
+        if (notificationDatas.size() > 0) {
             linearLayoutNoNotifications.setVisibility(View.GONE);
         } else {
             linearLayoutNoNotifications.setVisibility(View.VISIBLE);
         }
-        myNotificationAdapter.notifyDataSetChanged();
+        myNotificationAdapter.notifyList(notificationDatas.size(), notificationDatas, true);
     }
 
 
@@ -164,15 +147,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                notificationList.clear();
-                imageViewLock.setVisibility(View.VISIBLE);
-                getNotificationInboxApi();
+                getNotificationInboxApi(true);
             }
         });
     }
 
-    private void getNotificationInboxApi() {
+    private void getNotificationInboxApi(final boolean refresh) {
         try {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
                 if(!swipeRefreshLayout.isRefreshing()) {
@@ -180,7 +160,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                 }
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put("offset", String.valueOf(notificationList.size()));
+                params.put("offset", String.valueOf(myNotificationAdapter.getListSize()));
 
                 RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
                     @Override
@@ -188,24 +168,17 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                         DialogPopup.dismissLoadingDialog();
 
                         try {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    imageViewLock.setVisibility(View.GONE);
-                                    swipeRefreshLayout.setEnabled(true);
-                                }
-                            }, 800);
                             swipeRefreshLayout.setRefreshing(false);
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-                                notificationList.addAll(notificationInboxResponse.getPushes());
+                                myNotificationAdapter.notifyList(notificationInboxResponse.getTotal(),
+                                        (ArrayList<NotificationData>) notificationInboxResponse.getPushes(), refresh);
                                 Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-                                if (notificationList.size() > 0) {
+                                if (myNotificationAdapter.getListSize() > 0) {
                                     linearLayoutNoNotifications.setVisibility(View.GONE);
                                 } else {
                                     linearLayoutNoNotifications.setVisibility(View.VISIBLE);
                                 }
-                                myNotificationAdapter.notifyList(notificationInboxResponse.getTotal());
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -215,14 +188,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        imageViewLock.setVisibility(View.GONE);
                         swipeRefreshLayout.setRefreshing(false);
-                        swipeRefreshLayout.setEnabled(true);
                         DialogPopup.dialogNoInternet(NotificationCenterActivity.this, DialogErrorType.CONNECTION_LOST,
                                 new Utils.AlertCallBackWithButtonsInterface() {
                                     @Override
                                     public void positiveClick(View view) {
-
+                                        getNotificationInboxApi(refresh);
                                     }
 
                                     @Override
@@ -243,7 +214,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                         new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
-                                getNotificationInboxApi();
+                                getNotificationInboxApi(refresh);
                             }
 
                             @Override
