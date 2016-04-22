@@ -171,8 +171,10 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                             swipeRefreshLayout.setRefreshing(false);
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-                                myNotificationAdapter.notifyList(notificationInboxResponse.getTotal(),
-                                        (ArrayList<NotificationData>) notificationInboxResponse.getPushes(), refresh);
+                                if(notificationInboxResponse.getPushes().size() > 0) {
+                                    myNotificationAdapter.notifyList(notificationInboxResponse.getTotal(),
+                                            (ArrayList<NotificationData>) notificationInboxResponse.getPushes(), refresh);
+                                }
                                 Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
                                 if (myNotificationAdapter.getListSize() > 0) {
                                     linearLayoutNoNotifications.setVisibility(View.GONE);
