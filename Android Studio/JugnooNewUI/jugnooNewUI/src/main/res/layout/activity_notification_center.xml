@@ -50,6 +50,13 @@
             android:fadeScrollbars="true"
             />
 
+        <ImageView
+            android:id="@+id/imageViewLock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:src="@color/transparent"/>
+
         <LinearLayout
             android:id="@+id/linearLayoutNoNotifications"
             android:layout_width="wrap_content"

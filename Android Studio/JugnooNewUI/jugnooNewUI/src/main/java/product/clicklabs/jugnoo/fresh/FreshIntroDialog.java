@@ -45,8 +45,8 @@ public class FreshIntroDialog {
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
 
 				LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 				((TextView) dialog.findViewById(R.id.textViewGetFreshness)).setTypeface(Fonts.mavenRegular(activity));
@@ -83,7 +83,7 @@ public class FreshIntroDialog {
 				relative.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						dialog.dismiss();
+						//dialog.dismiss();
 					}
 				});
 
