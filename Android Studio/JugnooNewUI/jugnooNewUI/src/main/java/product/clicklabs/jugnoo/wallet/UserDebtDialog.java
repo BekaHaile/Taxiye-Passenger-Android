@@ -53,7 +53,7 @@ public class UserDebtDialog {
 			if(fromFresh){
 				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
 			}else{
-				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
+				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
 			}
 		}
 		DialogPopup.alertPopupWithListener(activity, "", message,

@@ -478,12 +478,17 @@ public class FreshPaymentFragment extends Fragment {
 	}
 
 	private double getTotalPriceWithDeliveryCharges(){
-		double totalAmount = activity.updateCartValuesGetTotalPrice().first;
-		double amountPayable = totalAmount;
-		if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
-			amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+		try {
+			double totalAmount = activity.updateCartValuesGetTotalPrice().first;
+			double amountPayable = totalAmount;
+			if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
+				amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+			}
+			return amountPayable;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
 		}
-		return amountPayable;
 	}
 
 

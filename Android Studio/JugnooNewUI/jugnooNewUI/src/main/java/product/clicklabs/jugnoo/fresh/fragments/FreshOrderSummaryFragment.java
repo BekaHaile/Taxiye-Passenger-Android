@@ -15,11 +15,14 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -246,13 +249,20 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 						Log.i(TAG, "Fresh order cancel response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
 							if(orderHistoryResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-								activity.performBackPressed();
-								//activity.getFreshOrderHistoryFragment().getOrderHistoryResponse().getOrderHistory().remove(activity.getOrderHistoryOpenedPosition());
-								activity.getFreshOrderHistoryFragment().getOrderHistory();
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										activity.performBackPressed();
+										//activity.getFreshOrderHistoryFragment().getOrderHistoryResponse().getOrderHistory().remove(activity.getOrderHistoryOpenedPosition());
+										activity.getFreshOrderHistoryFragment().getOrderHistory();
+									}
+								});
 							}
 							else{
-								DialogPopup.alertPopupWithListener(activity, "", orderHistoryResponse.getMessage(), new View.OnClickListener() {
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
 
