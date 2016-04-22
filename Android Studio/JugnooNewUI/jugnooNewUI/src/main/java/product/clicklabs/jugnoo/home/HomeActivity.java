@@ -1273,30 +1273,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             startUIAfterGettingUserStatus();
 
-			if(Data.userData.getPromoSuccess() != 0) {
-                // ****** New Look Tutorial Screen ***** //
-//                if((Prefs.with(HomeActivity.this).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
-//                    if((Prefs.with(HomeActivity.this).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
-//                            &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
-//                        Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
-//                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
-//                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
-//                        startActivity(intent);
-//                    } else{
-//                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
-//                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
-//                        startActivity(intent);
-//                    }
-//                    relativeLayoutLocationError.setVisibility(View.GONE);
-//                    initialMyLocationBtn.setVisibility(View.VISIBLE);
-//                    imageViewRideNow.setVisibility(View.VISIBLE);
-//                    centreLocationRl.setVisibility(View.VISIBLE);
-//                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-//
-//                    Prefs.with(HomeActivity.this).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
-//                }
-			}
-
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
@@ -1318,22 +1294,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		try{
 			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
             FlurryAgent.setUserId(Data.userData.getUserId());
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
-		try{
-			if(Data.userData.getPromoSuccess() == 0){
-                DialogPopup.alertPopupWithListener(HomeActivity.this, "",
-                    Data.userData.getPromoMessage(),
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            menuBar.relativeLayoutPromotions.performClick();
-                        }
-                    });
-				Data.userData.setPromoSuccess(1);
-			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -1992,25 +1952,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
-        @Override
-        public void onContinueClicked() {
-            callT20AndReferAllDialog(passengerScreenMode);
-            freshIntroDialog = null;
-        }
-
-        @Override
-        public void notShown() {
-            if(1 == Data.freshAvailable){
-                if(freshIntroDialog == null){
-                    callT20AndReferAllDialog(passengerScreenMode);
-                }
-            } else {
-                callT20AndReferAllDialog(passengerScreenMode);
-            }
-        }
-    };
-
 
     private void callT20AndReferAllDialog(PassengerScreenMode mode){
         t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
@@ -2024,6 +1965,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 showReferAllDialog();
             }
         });
+    }
+
+    private void showPromoFailedAtSignupDialog(){
+        try{
+            if(Data.userData.getPromoSuccess() == 0
+                    && PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                        Data.userData.getPromoMessage(),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                menuBar.relativeLayoutPromotions.performClick();
+                            }
+                        });
+                Data.userData.setPromoSuccess(1);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -2579,7 +2539,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -2590,7 +2550,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         startService(syncContactsIntent);
                                         registerDialogDismissReceiver();
                                         dismissReferAllDialog();
-                                    } else{
+                                    } else {
                                         DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
                                                 new Utils.AlertCallBackWithButtonsInterface() {
                                                     @Override
@@ -2613,11 +2573,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
                                         uploadContactsApi(false);
                                         dismissReferAllDialog();
-                                    } else{
+                                    } else {
                                         DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
                                                 new Utils.AlertCallBackWithButtonsInterface() {
                                                     @Override
@@ -2636,6 +2596,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     }
                                                 });
                                     }
+                                }
+                            }, new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
                                 }
                             });
                 }
@@ -2712,7 +2676,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 });
                                     }
                                 }
+                            }, new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    showPromoFailedAtSignupDialog();
+                                }
                             });
+                } else{
+                    showPromoFailedAtSignupDialog();
                 }
             }
         } catch (Exception e) {
@@ -3308,6 +3279,36 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
+
+        @Override
+        public void onContinueClicked() {
+            topBar.imageViewFreshSwapper.performClick();
+        }
+
+        @Override
+        public void onMayBeLaterClicked() {
+            callT20AndReferAllDialog(passengerScreenMode);
+        }
+
+        @Override
+        public void notShown() {
+            if(1 == Data.freshAvailable){
+                if(freshIntroDialog == null){
+                    callT20AndReferAllDialog(passengerScreenMode);
+                }
+            } else {
+                callT20AndReferAllDialog(passengerScreenMode);
+            }
+        }
+
+        @Override
+        public void onDialogDismiss() {
+            freshIntroDialog = null;
+        }
+    };
 
 
 	//Our service is not available in this area

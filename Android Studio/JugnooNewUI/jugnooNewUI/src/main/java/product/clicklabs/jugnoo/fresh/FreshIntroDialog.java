@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.fresh;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,7 +25,7 @@ public class FreshIntroDialog {
 	private final String TAG = FreshIntroDialog.class.getSimpleName();
 	private Activity activity;
 	private Callback callback;
-	private Dialog dialog;
+	private Dialog dialog = null;
 
 	public FreshIntroDialog(Activity activity, Callback callback) {
 		this.activity = activity;
@@ -63,8 +62,7 @@ public class FreshIntroDialog {
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
-						activity.startActivity(new Intent(activity, FreshActivity.class));
-						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						callback.onContinueClicked();
 					}
 				});
 
@@ -72,6 +70,7 @@ public class FreshIntroDialog {
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
+						callback.onMayBeLaterClicked();
 					}
 				});
 
@@ -91,7 +90,7 @@ public class FreshIntroDialog {
 				dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
-						callback.onContinueClicked();
+						callback.onDialogDismiss();
 					}
 				});
 
@@ -110,6 +109,8 @@ public class FreshIntroDialog {
 
 	public interface Callback{
 		void onContinueClicked();
+		void onMayBeLaterClicked();
+		void onDialogDismiss();
 		void notShown();
 	}
 
