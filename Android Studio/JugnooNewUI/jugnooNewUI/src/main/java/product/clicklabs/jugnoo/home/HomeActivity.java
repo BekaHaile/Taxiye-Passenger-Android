@@ -324,7 +324,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -441,6 +441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		zoomedForSearch = false;
 		firstTimeZoom = false;
 		zoomingForDeepLink = false;
+        freshIntroDialog = null;
 
 
 
@@ -1995,11 +1996,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         @Override
         public void onContinueClicked() {
             callT20AndReferAllDialog(passengerScreenMode);
+            freshIntroDialog = null;
         }
 
         @Override
         public void notShown() {
-            callT20AndReferAllDialog(passengerScreenMode);
+            if(1 == Data.freshAvailable){
+                if(freshIntroDialog == null){
+                    callT20AndReferAllDialog(passengerScreenMode);
+                }
+            } else {
+                callT20AndReferAllDialog(passengerScreenMode);
+            }
         }
     };
 
@@ -3287,7 +3295,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setupFreshUI(){
         try{
             if(1 == Data.freshAvailable){
-                new FreshIntroDialog(this, freshIntroCallback).show();
+                Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
+                if(locD != null){
+                    freshIntroDialog = locD;
+                }
             } else {
                 freshIntroCallback.notShown();
             }
