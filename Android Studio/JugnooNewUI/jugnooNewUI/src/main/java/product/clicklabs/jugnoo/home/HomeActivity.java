@@ -5278,7 +5278,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                                         public void successFullyDeducted(double userDebt) {
                                                                             setUserData();
                                                                         }
-                                                                    }).showUserDebtDialog(userDebt, message);
+                                                                    }).showUserDebtDialog(userDebt, message, false);
                                                         }
                                                     }
                                                 });

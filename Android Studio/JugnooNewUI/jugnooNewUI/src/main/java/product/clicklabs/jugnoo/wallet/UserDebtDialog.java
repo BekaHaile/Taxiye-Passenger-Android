@@ -47,10 +47,14 @@ public class UserDebtDialog {
 		this.callback = callback;
 	}
 
-	public void showUserDebtDialog(double userDebt, String message) {
+	public void showUserDebtDialog(double userDebt, String message, boolean fromFresh) {
 		this.userDebt = userDebt;
 		if(message.length() == 0){
-			message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
+			if(fromFresh){
+				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
+			}else{
+				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
+			}
 		}
 		DialogPopup.alertPopupWithListener(activity, "", message,
 				activity.getResources().getString(R.string.user_debt_pay_via_paytm),

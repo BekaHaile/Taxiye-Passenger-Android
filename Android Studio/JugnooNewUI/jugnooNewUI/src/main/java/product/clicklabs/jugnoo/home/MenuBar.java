@@ -288,7 +288,7 @@ public class MenuBar {
 
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openOrderHistory();
-					drawerLayout.closeDrawer(menuLayout);
+					//drawerLayout.closeDrawer(menuLayout);
 				}
 			}
 		});
@@ -310,7 +310,7 @@ public class MenuBar {
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openSupport();
-					drawerLayout.closeDrawer(menuLayout);
+					//drawerLayout.closeDrawer(menuLayout);
 				}
 			}
 		});

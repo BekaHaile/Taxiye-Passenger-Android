@@ -380,7 +380,7 @@ public class FreshPaymentFragment extends Fragment {
 															activity.updateMenu();
 														}
 
-													}).showUserDebtDialog(userDebt, message1);
+													}).showUserDebtDialog(userDebt, message1, true);
 										}
 									});
 								}else{
