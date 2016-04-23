@@ -25,7 +25,7 @@ public class FreshIntroDialog {
 	private final String TAG = FreshIntroDialog.class.getSimpleName();
 	private Activity activity;
 	private Callback callback;
-	private Dialog dialog;
+	private Dialog dialog = null;
 
 	public FreshIntroDialog(Activity activity, Callback callback) {
 		this.activity = activity;
@@ -45,21 +45,32 @@ public class FreshIntroDialog {
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 				layoutParams.dimAmount = 0.6f;
 				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
 
 				LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-				((TextView) dialog.findViewById(R.id.textViewGetFreshness)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-				((TextView) dialog.findViewById(R.id.textViewDeliveredNow)).setTypeface(Fonts.mavenRegular(activity));
+				((TextView) dialog.findViewById(R.id.textViewGetFreshness)).setTypeface(Fonts.mavenRegular(activity));
+				((TextView) dialog.findViewById(R.id.textViewDeliveredNow)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 				((TextView) dialog.findViewById(R.id.textViewFinestFruits)).setTypeface(Fonts.mavenRegular(activity));
 
 				Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
+				Button buttonLater = (Button) dialog.findViewById(R.id.buttonLater);
+				buttonLater.setTypeface(Fonts.mavenRegular(activity));
 				buttonContinue.setTypeface(Fonts.mavenRegular(activity));
 
 				buttonContinue.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
+						callback.onContinueClicked();
+					}
+				});
+
+				buttonLater.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+						callback.onMayBeLaterClicked();
 					}
 				});
 
@@ -72,14 +83,14 @@ public class FreshIntroDialog {
 				relative.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						dialog.dismiss();
+						//dialog.dismiss();
 					}
 				});
 
 				dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
-						callback.onContinueClicked();
+						callback.onDialogDismiss();
 					}
 				});
 
@@ -98,6 +109,8 @@ public class FreshIntroDialog {
 
 	public interface Callback{
 		void onContinueClicked();
+		void onMayBeLaterClicked();
+		void onDialogDismiss();
 		void notShown();
 	}
 

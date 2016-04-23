@@ -200,6 +200,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout mapLayout;
     GoogleMap map;
     TouchableMapFragment mapFragment;
+    MapStateListener mapStateListener;
     boolean mapTouched = false;
 
 
@@ -323,7 +324,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -377,6 +378,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private SlidingBottomPanel slidingBottomPanel;
 
     private T20Ops t20Ops = new T20Ops();
+
 
 
     @Override
@@ -439,6 +441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		zoomedForSearch = false;
 		firstTimeZoom = false;
 		zoomingForDeepLink = false;
+        freshIntroDialog = null;
 
 
 
@@ -679,8 +682,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-
-
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
 
@@ -914,7 +915,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
 						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
 					}
-				} catch (Exception e) {
+                    try {
+                        JSONObject map = new JSONObject();
+                        map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                        NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_CALL_DRIVER, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -1178,7 +1186,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
 
 
-            new MapStateListener(map, mapFragment, this) {
+            mapStateListener = new MapStateListener(map, mapFragment, this) {
                 @Override
                 public void onMapTouched() {
                     // Map touched
@@ -1265,30 +1273,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             startUIAfterGettingUserStatus();
 
-			if(Data.userData.getPromoSuccess() != 0) {
-                // ****** New Look Tutorial Screen ***** //
-//                if((Prefs.with(HomeActivity.this).getInt(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 0) == 0)) {
-//                    if((Prefs.with(HomeActivity.this).getInt(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 0) == 0)
-//                            &&((Prefs.with(this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1))){
-//                        Prefs.with(HomeActivity.this).save(SPLabels.JUGNOO_JEANIE_TUTORIAL_SHOWN, 1);
-//                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
-//                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 3);
-//                        startActivity(intent);
-//                    } else{
-//                        Intent intent = new Intent(HomeActivity.this, JugnooJeanieTutorialActivity.class);
-//                        intent.putExtra(KEY_TUTORIAL_NO_OF_PAGES, 1);
-//                        startActivity(intent);
-//                    }
-//                    relativeLayoutLocationError.setVisibility(View.GONE);
-//                    initialMyLocationBtn.setVisibility(View.VISIBLE);
-//                    imageViewRideNow.setVisibility(View.VISIBLE);
-//                    centreLocationRl.setVisibility(View.VISIBLE);
-//                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-//
-//                    Prefs.with(HomeActivity.this).save(SPLabels.NEW_LOOK_TUTORIAL_SHOWN, 1);
-//                }
-			}
-
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
@@ -1314,28 +1298,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			e.printStackTrace();
 		}
 
-		try{
-			if(Data.userData.getPromoSuccess() == 0){
-                DialogPopup.alertPopupWithListener(HomeActivity.this, "",
-                    Data.userData.getPromoMessage(),
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            menuBar.relativeLayoutPromotions.performClick();
-                        }
-                    });
-				Data.userData.setPromoSuccess(1);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
         try {
             JSONObject map = new JSONObject();
-            map.put(KEY_USER_ID, Data.userData.getUserId());
             map.put(KEY_LATITUDE, Data.latitude);
             map.put(KEY_LONGITUDE, Data.longitude);
-            NudgeClient.trackEvent(HomeActivity.this, NUDGE_APP_OPEN, map);
+            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1451,10 +1418,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             try {
                                 JSONObject map = new JSONObject();
-                                map.put(KEY_USER_ID, Data.userData.getUserId());
                                 map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                                 map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
+                                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1986,18 +1952,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
-        @Override
-        public void onContinueClicked() {
-            callT20AndReferAllDialog(passengerScreenMode);
-        }
-
-        @Override
-        public void notShown() {
-            callT20AndReferAllDialog(passengerScreenMode);
-        }
-    };
-
 
     private void callT20AndReferAllDialog(PassengerScreenMode mode){
         t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
@@ -2011,6 +1965,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 showReferAllDialog();
             }
         });
+    }
+
+    private void showPromoFailedAtSignupDialog(){
+        try{
+            if(Data.userData.getPromoSuccess() == 0
+                    && PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                        Data.userData.getPromoMessage(),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                menuBar.relativeLayoutPromotions.performClick();
+                            }
+                        });
+                Data.userData.setPromoSuccess(1);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -2150,7 +2123,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(frag == null || frag.isRemoving()) {
                 PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
-                bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewInitialSearch.getText().toString());
+                bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
@@ -2280,32 +2253,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private void setDropLocationAssigningUI(){
-        if(Data.dropLatLng == null){
-            if ("".equalsIgnoreCase(Data.cSessionId)) {
-                linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-            }
-            else{
-                if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-                    linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                    Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                    linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-                }
-                textViewAssigningDropLocationClick.setText("");
-                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-                progressBarAssigningDropLocation.setVisibility(View.GONE);
-            }
-        }
-        else{
-            if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-                linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-            }
-            setDropLocationMarker();
-            imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-            if(textViewAssigningDropLocationClick.getText().length() == 0){
-                getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
-            }
+        try {
+            if(Data.dropLatLng == null){
+				if ("".equalsIgnoreCase(Data.cSessionId)) {
+					linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
+				}
+				else{
+					if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+						linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+						try {
+							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+							linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					textViewAssigningDropLocationClick.setText("");
+					imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
+					progressBarAssigningDropLocation.setVisibility(View.GONE);
+				}
+			}
+			else{
+				if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+					linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+					try {
+						Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+						linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				setDropLocationMarker();
+				imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
+				if(textViewAssigningDropLocationClick.getText().length() == 0){
+					getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -2554,7 +2539,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -2565,7 +2550,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         startService(syncContactsIntent);
                                         registerDialogDismissReceiver();
                                         dismissReferAllDialog();
-                                    } else{
+                                    } else {
                                         DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
                                                 new Utils.AlertCallBackWithButtonsInterface() {
                                                     @Override
@@ -2588,11 +2573,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
                                         uploadContactsApi(false);
                                         dismissReferAllDialog();
-                                    } else{
+                                    } else {
                                         DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
                                                 new Utils.AlertCallBackWithButtonsInterface() {
                                                     @Override
@@ -2611,6 +2596,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     }
                                                 });
                                     }
+                                }
+                            }, new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
                                 }
                             });
                 }
@@ -2687,7 +2676,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 });
                                     }
                                 }
+                            }, new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    showPromoFailedAtSignupDialog();
+                                }
                             });
+                } else{
+                    showPromoFailedAtSignupDialog();
                 }
             }
         } catch (Exception e) {
@@ -2706,6 +2702,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
+        try {
             if (!checkIfUserDataNull(HomeActivity.this)) {
                 setUserData();
 
@@ -2794,15 +2791,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
 
-        Utils.hideSoftKeyboard(this, editTextRSFeedback);
+            Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
-        try {
-            AdWordsConversionReporter.registerReferrer(this.getApplicationContext(), this.getIntent().getData());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(this, GOOGLE_ADWORD_CONVERSION_ID);
+            try {
+				AdWordsConversionReporter.registerReferrer(this.getApplicationContext(), this.getIntent().getData());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+            try {
+				AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(this, GOOGLE_ADWORD_CONVERSION_ID);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3163,7 +3163,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-        super.onDestroy();
+        try {
+            super.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -3262,7 +3266,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setupFreshUI(){
         try{
             if(1 == Data.freshAvailable){
-                new FreshIntroDialog(this, freshIntroCallback).show();
+                Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
+                if(locD != null){
+                    freshIntroDialog = locD;
+                }
+            } else {
+                freshIntroCallback.notShown();
             }
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
@@ -3270,6 +3279,36 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
+
+        @Override
+        public void onContinueClicked() {
+            topBar.imageViewFreshSwapper.performClick();
+        }
+
+        @Override
+        public void onMayBeLaterClicked() {
+            callT20AndReferAllDialog(passengerScreenMode);
+        }
+
+        @Override
+        public void notShown() {
+            if(1 == Data.freshAvailable){
+                if(freshIntroDialog == null){
+                    callT20AndReferAllDialog(passengerScreenMode);
+                }
+            } else {
+                callT20AndReferAllDialog(passengerScreenMode);
+            }
+        }
+
+        @Override
+        public void onDialogDismiss() {
+            freshIntroDialog = null;
+        }
+    };
 
 
 	//Our service is not available in this area
@@ -3593,13 +3632,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         } else {
                             customerUIBackToInitialAfterCancel();
-                            try {
-                                JSONObject map = new JSONObject();
-                                map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
-                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_CANCEL_REQUEST, map);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_CANCEL_REQUEST, null);
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
@@ -4552,6 +4585,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             initializeStartRideVariables();
                             passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                             switchPassengerScreen(passengerScreenMode);
+                            try {
+                                JSONObject map = new JSONObject();
+                                map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                                NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_RIDE_START, map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 } else {
@@ -4695,17 +4735,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			else{
 				passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
 				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
-						Log.e("myLocation", "=" + myLocation);
-						if (myLocation != null) {
-							passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-							switchPassengerScreen(passengerScreenMode);
-						}
-					}
-				});
-			}
+                    @Override
+                    public void run() {
+                        Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
+                        Log.e("myLocation", "=" + myLocation);
+                        if (myLocation != null) {
+                            passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+                            switchPassengerScreen(passengerScreenMode);
+                        }
+                    }
+                });
+
+                try {
+                    JSONObject map = new JSONObject();
+                    map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
+                    NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_ACCEPTED, map);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -5121,6 +5169,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
+                                try{
+                                    if(promoCouponSelectedForRide.id != 0) {
+                                        JSONObject map = new JSONObject();
+                                        map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
+                                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);
+                                    }
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
+
                                 Log.e(TAG, "requestRide result=" + response);
 
                                 if (responseRetro == null || response == null
@@ -5206,10 +5264,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                             switchPassengerScreen(passengerScreenMode);
                                                             try {
                                                                 JSONObject map = new JSONObject();
-                                                                map.put(KEY_USER_ID, Data.userData.getUserId());
                                                                 map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                                                                 map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                                                                NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                                                                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }
@@ -5227,7 +5284,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                             HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
                                                             switchPassengerScreen(passengerScreenMode);
-                                                            new UserDebtDialog(HomeActivity.this, Data.userData).showUserDebtDialog(userDebt, message);
+                                                            new UserDebtDialog(HomeActivity.this, Data.userData,
+                                                                    new UserDebtDialog.Callback() {
+                                                                        @Override
+                                                                        public void successFullyDeducted(double userDebt) {
+                                                                            setUserData();
+                                                                        }
+                                                                    }).showUserDebtDialog(userDebt, message, false);
                                                         }
                                                     }
                                                 });
@@ -5322,10 +5385,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     switchPassengerScreen(passengerScreenMode);
                     try {
                         JSONObject map = new JSONObject();
-                        map.put(KEY_USER_ID, Data.userData.getUserId());
                         map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                         map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -5388,13 +5450,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
 
 
-            try {
-                JSONObject map = new JSONObject();
-                map.put(KEY_USER_ID, Data.userData.getUserId());
-                NudgeClient.trackEvent(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -6002,10 +6058,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     afterRideFeedbackSubmitted(givenRating, false);
                                     try {
                                         JSONObject map = new JSONObject();
-                                        map.put(KEY_USER_ID, Data.userData.getUserId());
                                         map.put(KEY_ENGAGEMENT_ID, engagementId);
                                         map.put(KEY_GIVEN_RATING, givenRating);
-                                        NudgeClient.trackEvent(HomeActivity.this, NUDGE_FEEDBACK, map);
+                                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_FEEDBACK, map);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }

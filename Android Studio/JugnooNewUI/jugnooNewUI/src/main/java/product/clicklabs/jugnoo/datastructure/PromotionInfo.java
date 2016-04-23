@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.datastructure;
 
 public class PromotionInfo extends PromoCoupon{
 	
-	public String title;
+	private String title;
 	public String terms;
     public String expiryDate;
 	
@@ -19,7 +19,12 @@ public class PromotionInfo extends PromoCoupon{
         this.terms = terms;
         this.expiryDate = "";
     }
-	
+
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		try{

@@ -275,7 +275,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
 		ConfigMode configModeToSet;
-		if (link.equalsIgnoreCase(Config.getLiveServerUrl())) {
+		if (link.equalsIgnoreCase(Config.getLiveServerUrl())
+				|| link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
 			configModeToSet = ConfigMode.LIVE;
 		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
 			configModeToSet = ConfigMode.DEV;
@@ -294,6 +295,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			RestClient.clearRestClient();
 		}
 		Config.setConfigMode(configModeToSet);
+
+		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 
 		RestClient.setupRestClient();
 		RestClient.setupFreshApiRestClient();
@@ -852,7 +855,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									} else {
 										if (Utils.isEmailValid(emailId)) {
 											if (password.length() >= 6) {
-
+												Prefs.with(SplashNewActivity.this).save(SP_REFERRAL_CODE, referralCode);
 												if (RegisterationType.FACEBOOK == registerationType) {
 													if (noFbEmail) {
 														emailId = "";
@@ -1907,6 +1910,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
+			params.put(KEY_SOURCE, getAppSource());
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2017,6 +2021,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
+			params.put(KEY_SOURCE, getAppSource());
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2120,6 +2125,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
+			params.put(KEY_SOURCE, getAppSource());
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2520,7 +2526,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
+			params.put(KEY_SOURCE, getAppSource());
 
 			Log.i("register_using_email params", params.toString());
 
@@ -2638,7 +2644,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
+			params.put(KEY_SOURCE, getAppSource());
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -2743,7 +2749,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
+			params.put(KEY_SOURCE, getAppSource());
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -2816,7 +2822,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			map.put(KEY_USER_NAME, userName);
 			map.put(KEY_LATITUDE, Data.loginLatitude);
 			map.put(KEY_LONGITUDE, Data.loginLongitude);
-			NudgeClient.trackEvent(SplashNewActivity.this, NUDGE_SIGNUP, map);
+			NudgeClient.trackEventUserId(SplashNewActivity.this, NUDGE_SIGNUP, map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3061,6 +3067,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
+
+	private String getAppSource(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
+		if(sb.length() > 0){
+			sb.append("&");
+		}
+		sb.append(KEY_DOWNLOAD_SOURCE).append("=").append(Config.getDownloadSource());
+		return sb.toString();
+	}
 
 
 }

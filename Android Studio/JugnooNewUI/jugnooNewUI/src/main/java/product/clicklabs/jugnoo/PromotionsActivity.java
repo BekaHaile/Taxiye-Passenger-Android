@@ -338,7 +338,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 			
 			CouponInfo couponInfo = couponInfosList.get(position);
 
-			holder.textViewCouponTitle.setText(couponInfo.title);
+			holder.textViewCouponTitle.setText(couponInfo.getTitle());
 			holder.textViewExpiryDate.setText("Valid until " + DateOperations.getDate(DateOperations.utcToLocal(couponInfo.expiryDate)));
             holder.textViewExpiryDate.append("\n");
             holder.textViewExpiryDate.append(DateOperations.getUTCTimeInLocalTime(couponInfo.startTime) + " - " + DateOperations.getUTCTimeInLocalTime(couponInfo.endTime));
@@ -418,7 +418,7 @@ public class PromotionsActivity extends BaseActivity implements FlurryEventNames
 
             PromotionInfo promotionInfo = promotionInfoList.get(position);
 
-            holder.textViewPromotionTitle.setText(promotionInfo.title);
+            holder.textViewPromotionTitle.setText(promotionInfo.getTitle());
             holder.textViewExpiryDate.setText(promotionInfo.expiryDate);
 
             holder.relative.setOnClickListener(new View.OnClickListener() {

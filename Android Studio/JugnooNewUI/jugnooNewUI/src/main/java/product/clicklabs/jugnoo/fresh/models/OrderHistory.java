@@ -23,6 +23,9 @@ public class OrderHistory{
 	@SerializedName("order_refund_amount")
 	@Expose
 	private Double orderRefundAmount;
+	@SerializedName("cancellable")
+	@Expose
+	private Integer cancellable;
 	@SerializedName("payment_mode")
 	@Expose
 	private Integer paymentMode;
@@ -105,6 +108,14 @@ public class OrderHistory{
 		this.deliveryAddress = deliveryAddress;
 	}
 
+	public Integer getCancellable() {
+		return cancellable;
+	}
+
+	public void setCancellable(Integer cancellable) {
+		this.cancellable = cancellable;
+	}
+
 	/**
 	 *
 	 * @return
@@ -122,6 +133,7 @@ public class OrderHistory{
 	public void setOrderRefundAmount(Double orderRefundAmount) {
 		this.orderRefundAmount = orderRefundAmount;
 	}
+
 
 	/**
 	 *

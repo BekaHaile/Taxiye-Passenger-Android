@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.fresh.fragments;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,22 +15,38 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshOrderItemAdapter;
 import product.clicklabs.jugnoo.fresh.models.OrderHistory;
+import product.clicklabs.jugnoo.fresh.models.OrderHistoryResponse;
 import product.clicklabs.jugnoo.fresh.models.OrderItem;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNames, Constants {
@@ -43,10 +58,10 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 	private FreshOrderItemAdapter freshOrderItemAdapter;
 
 	private TextView textViewOrderIdValue, textViewOrderDeliveryDateValue, textViewOrderDeliverySlotValue,
-			textViewOrderTimeValue, textViewOrderStatusValue, textViewOrderAddressValue,
+			textViewOrderTimeValue, textViewOrderAddressValue,
 			textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue,
 			textViewPaymentMode, textViewPaymentModeValue;
-	private Button buttonOk;
+	private Button buttonCancelOrder;
 
 
 	private View rootView;
@@ -90,9 +105,6 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		((TextView)rootView.findViewById(R.id.textViewOrderId)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderDeliveryDate)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderDeliverySlot)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOrderTime)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOrderStatus)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView)rootView.findViewById(R.id.textViewOrderAddress)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOrderReceipt)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
@@ -104,7 +116,6 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue); textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewOrderTimeValue = (TextView) rootView.findViewById(R.id.textViewOrderTimeValue); textViewOrderTimeValue.setTypeface(Fonts.mavenRegular(activity));
-		textViewOrderStatusValue = (TextView) rootView.findViewById(R.id.textViewOrderStatusValue); textViewOrderStatusValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewOrderAddressValue = (TextView) rootView.findViewById(R.id.textViewOrderAddressValue); textViewOrderAddressValue.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
@@ -112,7 +123,7 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		textViewPaymentMode = (TextView) rootView.findViewById(R.id.textViewPaymentMode); textViewPaymentMode.setTypeface(Fonts.mavenRegular(activity));
 		textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue); textViewPaymentModeValue.setTypeface(Fonts.mavenRegular(activity));
-		buttonOk = (Button) rootView.findViewById(R.id.buttonOk); buttonOk.setTypeface(Fonts.mavenRegular(activity));
+		buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder); buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
 
 		recyclerViewOrderItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewOrderItems);
 		recyclerViewOrderItems.setLayoutManager(new LinearLayoutManager(activity));
@@ -150,29 +161,52 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 					textViewOrderDeliverySlotValue.setText("");
 				}
 				if(orderHistory.getExpectedDeliveryDate() != null){
-					textViewOrderDeliveryDateValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations
-							.utcToLocalTZ(orderHistory.getExpectedDeliveryDate())));
+					textViewOrderDeliveryDateValue.setText(DateOperations.getDate(orderHistory.getExpectedDeliveryDate()));
 				} else {
 					textViewOrderDeliveryDateValue.setText("");
 				}
 
 
-				textViewOrderTimeValue.setText(DateOperations.convertDateViaFormat(DateOperations
-						.utcToLocalTZ(orderHistory.getOrderTime())));
-				textViewOrderStatusValue.setText(orderHistory.getOrderStatus());
-				try{
-					textViewOrderStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
-				} catch(Exception e){}
+				textViewOrderTimeValue.setText(DateOperations.getDate(DateOperations.utcToLocalTZ(orderHistory.getOrderTime())));
 				textViewOrderAddressValue.setText(orderHistory.getDeliveryAddress());
+
+				if(orderHistory.getCancellable() == 1){
+					buttonCancelOrder.setText(R.string.cancel_order);
+				}
+				else {
+					buttonCancelOrder.setText(R.string.ok);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		buttonOk.setOnClickListener(new View.OnClickListener() {
+		buttonCancelOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.performBackPressed();
+				try {
+					if(activity.getOrderHistoryOpened().getCancellable() == 1){
+
+						DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
+								getResources().getString(R.string.cancel), new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
+							}
+						}, new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+							}
+						}, false, false);
+					}
+					else {
+						activity.performBackPressed();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			}
 		});
 
@@ -196,6 +230,87 @@ public class FreshOrderSummaryFragment extends Fragment implements FlurryEventNa
 		if(!hidden){
 			activity.fragmentUISetup(this);
 		}
+	}
+
+	private void cancelOrderApiCall(int orderId){
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_FRESH_ORDER_ID, String.valueOf(orderId));
+
+
+				RestClient.getFreshApiService().cancelOrder(params, new Callback<OrderHistoryResponse>() {
+					@Override
+					public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "Fresh order cancel response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							if(orderHistoryResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										activity.performBackPressed();
+										//activity.getFreshOrderHistoryFragment().getOrderHistoryResponse().getOrderHistory().remove(activity.getOrderHistoryOpenedPosition());
+										activity.getFreshOrderHistoryFragment().getOrderHistory();
+									}
+								});
+							}
+							else{
+								DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+
+									}
+								});
+							}
+
+						} catch (Exception exception) {
+							exception.printStackTrace();
+							retryDialog(DialogErrorType.SERVER_ERROR);
+						}
+						DialogPopup.dismissLoadingDialog();
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "Fresh Cancel Order error" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						retryDialog(DialogErrorType.CONNECTION_LOST);
+					}
+				});
+			}
+			else {
+				retryDialog(DialogErrorType.NO_NET);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType){
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+					}
+				});
 	}
 
 }

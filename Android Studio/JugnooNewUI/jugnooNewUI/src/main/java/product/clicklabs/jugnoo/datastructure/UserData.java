@@ -33,7 +33,7 @@ public class UserData {
 	private String t20WCScheduleVersion, t20WCInfoText;
 	private String publicAccessToken;
 
-	private int gamePredictEnable;
+	private int gamePredictEnable, cToDReferralEnabled;
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	private PaytmRechargeInfo paytmRechargeInfo = null;
@@ -49,7 +49,7 @@ public class UserData {
 					String userId, String inviteEarnScreenImage,
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
-					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin){
+					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -111,7 +111,7 @@ public class UserData {
 		this.referAllStatusLogin = referAllStatusLogin;
 		this.referAllTextLogin = referAllTextLogin;
 		this.referAllTitleLogin = referAllTitleLogin;
-
+		this.cToDReferralEnabled = cToDReferralEnabled;
 	}
 
 	public double getJugnooBalance() {
@@ -391,4 +391,13 @@ public class UserData {
 	public void setReferAllTitleLogin(String referAllTitleLogin) {
 		this.referAllTitleLogin = referAllTitleLogin;
 	}
+
+	public int getcToDReferralEnabled() {
+		return cToDReferralEnabled;
+	}
+
+	public void setcToDReferralEnabled(int cToDReferralEnabled) {
+		this.cToDReferralEnabled = cToDReferralEnabled;
+	}
+
 }

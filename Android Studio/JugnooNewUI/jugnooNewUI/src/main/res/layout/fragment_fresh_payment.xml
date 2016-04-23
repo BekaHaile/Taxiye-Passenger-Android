@@ -127,7 +127,7 @@
             android:textSize="@dimen/text_size_36"
             android:textColor="@color/theme_green_color"
             android:layout_marginRight="40px"
-            android:text="200"/>
+            android:text="0"/>
 
         <product.clicklabs.jugnoo.utils.ProgressWheel
             xmlns:wheel="http://schemas.android.com/apk/res-auto"

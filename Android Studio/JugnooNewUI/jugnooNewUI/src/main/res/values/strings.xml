@@ -153,6 +153,7 @@
 	<string name="cancel_request">Cancel Request</string>
 	
 	<string name="cancel_ride">Cancel Ride</string>
+	<string name="cancel_order">CANCEL ORDER</string>
 	
 	
 	<string name="rating"> Rating</string>
@@ -376,6 +377,7 @@
 	<!-- User Debt-->
 	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
 	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
+	<string name="user_debt_settle_balance_message_fresh">Before you order again, please settle \u20B9 %s balance from the last order</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
 
@@ -393,6 +395,10 @@
 
 
 	<string name="debug">Debug</string>
+
+	<!-- Jugnoo Fresh -->
+	<string name="fresh_min_order_value">Free Delivery on Orders above \u20B9%s</string>
+	<string name="fresh_may_be_later">MAYBE LATER</string>
 
 
 	<string name="no_results_found">No results found</string>
@@ -810,9 +816,9 @@
 	<string name="pay_via_cash">Pay via Cash</string>
 	<string name="balance_running_low">Balance is running low!</string>
 	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
-	<string name="get_the_freshness">Get the Freshness</string>
-	<string name="delivered_now">Delivered Now</string>
-	<string name="finest_fruits_vegetables">The finest of Fruits &amp; Vegetables\nare just few clicks away.</string>
+	<string name="get_fresh">Get Fresh</string>
+	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
+	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
 	<string name="continue_text">Continue</string>
 	<string name="order_status">Order Status:</string>
 	<string name="id">ID:</string>
@@ -833,5 +839,14 @@
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>
+	<string name="search_items">Search Items</string>
+
+	<string name="refer_a_driver">Refer A Driver</string>
+	<string name="came_across_auto_driver">Riding with a driver\nnot aware of Jugnoo yet?</string>
+	<string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
+	<string name="if_they_are_interested">Please help us improve Jugnoo\nand increase driver income.\nWin! Win!</string>
+	<string name="name_of_driver">Name of Driver</string>
+	<string name="contact_number">Contact Number</string>
+	<string name="refer">Refer</string>
 
 </resources>

@@ -4,7 +4,7 @@ public class CouponInfo extends PromoCoupon{
 	
 	public int couponType;
 	public int status;
-	public String title;
+	private String title;
 	public String subtitle;
 	public String description;
 	public String image;
@@ -41,7 +41,12 @@ public class CouponInfo extends PromoCoupon{
         this.startTime = "";
         this.endTime = "";
 	}
-	
+
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		try{

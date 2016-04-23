@@ -58,8 +58,13 @@ public class NudgeClient {
 		}
 	}
 
-	public static void trackEvent(Context context, String eventName, JSONObject map){
+
+	public static void trackEventUserId(Context context, String eventName, JSONObject map){
 		try {
+			if(map == null){
+				map = new JSONObject();
+			}
+			map.put(Constants.KEY_USER_ID, Prefs.with(context).getString(Constants.SP_USER_ID, ""));
 			NudgespotActivity activity = new NudgespotActivity(eventName);
 			activity.setProperties(map);
 			getGcmClient(context).track(activity);

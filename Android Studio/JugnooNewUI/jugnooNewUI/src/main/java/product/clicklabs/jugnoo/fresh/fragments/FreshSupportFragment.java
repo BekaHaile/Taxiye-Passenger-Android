@@ -31,6 +31,8 @@ public class FreshSupportFragment extends Fragment {
 	private View rootView;
     private FreshActivity activity;
 
+	public FreshSupportFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

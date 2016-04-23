@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -168,35 +169,37 @@ public class Database2 {                                                        
     }
 
     private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context) {
-        if(!Prefs.with(context).contains(Constants.SECOND_TIME_DB)) {
-            ArrayList<NotificationData> notifications = getAllNotificationOld();
-            database.execSQL("DROP TABLE " + TABLE_NOTIFICATION_CENTER);
-            database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
-                    + NOTIFICATION_ID + " INTEGER, "
-                    + TIME_PUSH_ARRIVED + " TEXT, "
-                    + MESSAGE + " TEXT, "
-                    + DEEP_INDEX + " TEXT, "
-                    + TIME_TO_DISPLAY + " TEXT, "
-                    + TIME_TILL_DISPLAY + " TEXT, "
-                    + NOTIFICATION_IMAGE + " TEXT, "
-                    + PUSH_TITLE + " TEXT"
-                    + ");");
+        try {
+            if(!Prefs.with(context).contains(Constants.SECOND_TIME_DB)) {
+				ArrayList<NotificationData> notifications = getAllNotificationOld();
+				database.execSQL("DROP TABLE " + TABLE_NOTIFICATION_CENTER);
+				database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATION_CENTER + " ("
+						+ NOTIFICATION_ID + " INTEGER, "
+						+ TIME_PUSH_ARRIVED + " TEXT, "
+						+ MESSAGE + " TEXT, "
+						+ DEEP_INDEX + " TEXT, "
+						+ TIME_TO_DISPLAY + " TEXT, "
+						+ TIME_TILL_DISPLAY + " TEXT, "
+						+ NOTIFICATION_IMAGE + " TEXT, "
+						+ PUSH_TITLE + " TEXT"
+						+ ");");
 
-            for (int i = notifications.size()-1; i >= 0; i--) {
-                NotificationData data = notifications.get(i);
-                insertNotification(context, data.getNotificationId(),
-                        data.getTimePushArrived(),
-                        data.getTitle(),
-                        data.getMessage(),
-                        data.getDeepIndex(),
-                        data.getTimeToDisplay(),
-                        data.getTimeTillDisplay(),
-                        data.getNotificationImage());
-            }
-            Prefs.with(context).save(Constants.SECOND_TIME_DB, 1);
+				for (int i = notifications.size()-1; i >= 0; i--) {
+					NotificationData data = notifications.get(i);
+					insertNotification(context, data.getNotificationId(),
+							data.getTimePushArrived(),
+							data.getTitle(),
+							data.getMessage(),
+							String.valueOf(data.getDeepIndex()),
+							data.getTimeToDisplay(),
+							data.getTimeTillDisplay(),
+							data.getNotificationImage());
+				}
+				Prefs.with(context).save(Constants.SECOND_TIME_DB, 1);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
     }
 
 
@@ -398,21 +401,21 @@ public class Database2 {                                                        
 									(currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
                                         cursor.getString(in2),
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
                                         cursor.getString(in2),
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
                             if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), cursor.getString(in7),
                                         cursor.getString(in2),
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
 								added = true;
                             }
                         }
@@ -467,19 +470,19 @@ public class Database2 {                                                        
                             if ((currentTimeLong < pushArrAndTimeToDisVal) &&
                                     (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
                                 added = true;
                             }
                         }else if((!"0".equalsIgnoreCase(cursor.getString(in4))) && ("".equalsIgnoreCase(cursor.getString(in5)))){ // only timeToDisplay
                             if ((currentTimeLong < pushArrAndTimeToDisVal)) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
                                 added = true;
                             }
                         }else if((!"".equalsIgnoreCase(cursor.getString(in5))) && ("0".equalsIgnoreCase(cursor.getString(in4)))){ //only timeTillDisplay
                             if (   (currentTimeLong < DateOperations.getMilliseconds(cursor.getString(in5)))) {
                                 allNotification.add(new NotificationData(cursor.getInt(in0), cursor.getString(in1), title, message,
-                                        cursor.getString(in3), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
+                                        Integer.parseInt(cursor.getString(in3)), cursor.getString(in4), cursor.getString(in5), cursor.getString(in6)));
                                 added = true;
                             }
                         }

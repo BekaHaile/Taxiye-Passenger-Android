@@ -65,6 +65,7 @@ public interface Constants {
 	String KEY_BRANCH_REFERRING_USER_IDENTIFIER = "referring_user_identifier";
 	String KEY_DEEPINDEX = "deepindex";
 	String KEY_REFERRAL_CODE = "referral_code";
+	String KEY_REFERRAL_CODE_ENTERED = "referral_code_entered";
 	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
 	String FB_LINK_SHARE_NAME = "Jugnoo";
 //	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
@@ -192,6 +193,7 @@ public interface Constants {
 
 	String SP_APP_DOWNLOAD_SOURCE_SENT = "sp_app_download_source_sent";
 	String KEY_SOURCE = "source";
+	String KEY_DOWNLOAD_SOURCE = "download_source";
 
 	String KEY_PLAY_SOUND = "play_sound";
 
@@ -231,6 +233,7 @@ public interface Constants {
 	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
 	String SP_FRESH_CART= "fresh_cart";
 	String EMPTY_JSON_OBJECT = "{}";
+	String KEY_CATEGORY_POSITION = "category_position";
 
 	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
 	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";
@@ -238,6 +241,13 @@ public interface Constants {
 	String KEY_USER_RESPONSE = "user_response";
 	String KEY_IS_LOGIN_POPUP = "is_login_popup";
 
+	String KEY_FRESH_ORDER_ID = "order_id";
 
+	String KEY_REFER_DRIVER_NAME = "driver_name";
+	String KEY_REFER_DRIVER_PHONE_NO = "driver_phone_no";
+
+
+	String SP_REFERRAL_CODE = "sp_referral_code";
+	String KEY_COUPON_SELECTED = "coupon_selected";
 
 }

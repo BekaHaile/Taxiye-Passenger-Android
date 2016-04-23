@@ -15,11 +15,11 @@ import com.flurry.android.FlurryAgent;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.adapters.FreshCategoryItemsAdapter;
-import product.clicklabs.jugnoo.fresh.models.Category;
 import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.utils.ASSL;
 
@@ -36,10 +36,7 @@ public class FreshCategoryItemsFragment extends Fragment {
 	private View rootView;
     private FreshActivity activity;
 
-	private Category category;
-
-	public FreshCategoryItemsFragment(Category category){
-		this.category = category;
+	public FreshCategoryItemsFragment(){
 	}
 
     @Override
@@ -61,41 +58,50 @@ public class FreshCategoryItemsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
 
-        activity = (FreshActivity) getActivity();
-
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			Bundle bundle = getArguments();
+			if(bundle.containsKey(Constants.KEY_CATEGORY_POSITION)) {
+				int position = bundle.getInt(Constants.KEY_CATEGORY_POSITION);
+
+				activity = (FreshActivity) getActivity();
+
+				linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+				try {
+					if (linearLayoutRoot != null) {
+						new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
+				recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
+				recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
+				recyclerViewCategoryItems.setHasFixedSize(false);
+
+				freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
+						(ArrayList<SubItem>) activity.getProductsResponse().getCategories().get(position).getSubItems(),
+						FreshCategoryItemsAdapter.OpenMode.INVENTORY,
+						new FreshCategoryItemsAdapter.Callback() {
+							@Override
+							public void onPlusClicked(int position, SubItem subItem) {
+								activity.updateCartValuesGetTotalPrice();
+							}
+
+							@Override
+							public void onMinusClicked(int position, SubItem subItem) {
+								activity.updateCartValuesGetTotalPrice();
+							}
+
+							@Override
+							public void onDeleteClicked(int position, SubItem subItem) {
+							}
+						});
+				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
-		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
-		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
-		recyclerViewCategoryItems.setHasFixedSize(false);
-
-		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
-				(ArrayList<SubItem>) category.getSubItems(),
-				FreshCategoryItemsAdapter.OpenMode.INVENTORY,
-				new FreshCategoryItemsAdapter.Callback() {
-					@Override
-					public void onPlusClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
-					}
-
-					@Override
-					public void onMinusClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
-					}
-
-					@Override
-					public void onDeleteClicked(int position, SubItem subItem) {
-					}
-				});
-		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
 		return rootView;

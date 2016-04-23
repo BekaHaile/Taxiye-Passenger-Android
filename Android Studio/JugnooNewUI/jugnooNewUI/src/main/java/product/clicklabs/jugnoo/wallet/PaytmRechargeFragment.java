@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -78,10 +79,8 @@ public class PaytmRechargeFragment extends Fragment {
 	boolean scrolled = false;
 
 	String amount1 = "500", amount2 = "1000", amount3 = "2000";
-	String amountToPreFill = "";
 
-	public PaytmRechargeFragment(String amountToPreFill){
-		this.amountToPreFill = amountToPreFill;
+	public PaytmRechargeFragment(){
 	}
 
 
@@ -130,7 +129,11 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewAddCash = (TextView) rootView.findViewById(R.id.textViewAddCash); textViewAddCash.setTypeface(Fonts.mavenLight(paymentActivity));
 
 		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount);	editTextAmount.setTypeface(Fonts.mavenLight(paymentActivity));
-		editTextAmount.setText(amountToPreFill);
+		try {
+			editTextAmount.setText(paymentActivity.amountToPreFill);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		buttonAmount1 = (Button) rootView.findViewById(R.id.buttonAmount1);	buttonAmount1.setTypeface(Fonts.mavenLight(paymentActivity));
 		buttonAmount2 = (Button) rootView.findViewById(R.id.buttonAmount2);	buttonAmount2.setTypeface(Fonts.mavenLight(paymentActivity));
@@ -201,6 +204,7 @@ public class PaytmRechargeFragment extends Fragment {
 						} else {
 							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
+								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
 							}
 						}
 					}
@@ -218,6 +222,7 @@ public class PaytmRechargeFragment extends Fragment {
 				buttonRemoveWallet.setVisibility(View.VISIBLE);
 				textViewTitleEdit.setVisibility(View.GONE);
 				textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.white_light_grey));
+				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
 			}
 		});
 
@@ -502,6 +507,7 @@ public class PaytmRechargeFragment extends Fragment {
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");
+								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_REMOVED, null);
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							}
