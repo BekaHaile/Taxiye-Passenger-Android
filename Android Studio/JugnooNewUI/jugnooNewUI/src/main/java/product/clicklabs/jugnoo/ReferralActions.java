@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
@@ -242,6 +243,7 @@ public class ReferralActions {
                 if (info.activityInfo.packageName.contains("com.facebook.katana")) {
                     shareToFacebookBasic(activity, callbackManager, link);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_FACEBOOK, null);
                 }
 				else if(info.activityInfo.packageName.contains("com.google.android.gm")
 						|| info.activityInfo.packageName.contains("com.yahoo.mobile.client.android.mail")
@@ -254,6 +256,7 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_EMAIL, null);
 				}
 				else if(info.activityInfo.packageName.contains("com.whatsapp")){
 					Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -262,6 +265,7 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_WHATSAPP, null);
 				}
 				else {
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -271,10 +275,13 @@ public class ReferralActions {
                     activity.startActivity(intent);
                     if(info.activityInfo.packageName.contains("com.twitter.android")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_TWITTER, null);
                     } else if(info.activityInfo.packageName.contains("com.android.mms")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_SMS, null);
                     } else{
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_OTHER, null);
                     }
                 }
             }

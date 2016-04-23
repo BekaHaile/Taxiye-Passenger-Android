@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo.datastructure;
 
-public class PromoCoupon {
+public abstract class PromoCoupon {
 	public int id;
+
+	public abstract String getTitle();
+
 }

@@ -1,21 +1,40 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by socomo on 10/15/15.
  */
 public class NotificationData {
 
+    @SerializedName("notification_id")
+    @Expose
     private int notificationId;
+    @SerializedName("timePushArrived")
+    @Expose
     private String timePushArrived;
+    @SerializedName("title")
+    @Expose
     private String title;
+    @SerializedName("message")
+    @Expose
     private String message;
-    private String deepIndex;
+    @SerializedName("deepindex")
+    @Expose
+    private int deepIndex;
+    @SerializedName("timeToDisplay")
+    @Expose
     private String timeToDisplay;
+    @SerializedName("timeTillDisplay")
+    @Expose
     private String timeTillDisplay;
+    @SerializedName("image")
+    @Expose
     private String notificationImage;
     private boolean expanded;
 
-    public NotificationData(int notificationId, String timePushArrived, String title, String message, String deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
+    public NotificationData(int notificationId, String timePushArrived, String title, String message, int deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
         this.notificationId = notificationId;
         this.timePushArrived = timePushArrived;
         this.title = title;
@@ -43,11 +62,11 @@ public class NotificationData {
         this.message = message;
     }
 
-    public String getDeepIndex() {
+    public int getDeepIndex() {
         return deepIndex;
     }
 
-    public void setDeepIndex(String deepIndex) {
+    public void setDeepIndex(int deepIndex) {
         this.deepIndex = deepIndex;
     }
 

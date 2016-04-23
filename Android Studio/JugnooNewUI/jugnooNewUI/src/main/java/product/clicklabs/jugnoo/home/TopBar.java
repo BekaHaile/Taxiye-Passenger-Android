@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -133,6 +134,7 @@ public class TopBar {
 				case R.id.imageViewMenu:
 					drawerLayout.openDrawer(GravityCompat.START);
 					FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
 					break;
 
 				case R.id.buttonCheckServer:
@@ -188,17 +190,21 @@ public class TopBar {
 					if(activity instanceof FreshActivity){
 						activity.finish();
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_BACK_TO_JUGNOO, null);
 					}
 					break;
 
 				case R.id.imageViewFreshSwapper:
 					if(activity instanceof HomeActivity) {
-						if (((HomeActivity)activity).map != null) {
+						if (((HomeActivity)activity).map != null
+								&& ((HomeActivity)activity).mapStateListener != null
+								&& ((HomeActivity)activity).mapStateListener.isMapSettled()) {
 							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
 							Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
 						}
 						activity.startActivity(new Intent(activity, FreshActivity.class));
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
 
 					}
 					break;

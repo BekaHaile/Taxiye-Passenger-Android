@@ -10,6 +10,7 @@ import product.clicklabs.jugnoo.fresh.fragments.FreshCheckoutFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshOrderHistoryFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshOrderSummaryFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshPaymentFragment;
+import product.clicklabs.jugnoo.fresh.fragments.FreshSearchFragment;
 import product.clicklabs.jugnoo.fresh.fragments.FreshSupportFragment;
 
 /**
@@ -102,6 +103,19 @@ public class TransactionUtils {
 					.add(container.getId(), new FreshSupportFragment(),
 							FreshSupportFragment.class.getName())
 					.addToBackStack(FreshSupportFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openSearchFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, FreshSearchFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(container.getId(), new FreshSearchFragment(),
+							FreshSearchFragment.class.getName())
+					.addToBackStack(FreshSearchFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

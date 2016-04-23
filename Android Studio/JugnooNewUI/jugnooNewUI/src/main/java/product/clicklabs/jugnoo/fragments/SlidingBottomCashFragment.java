@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
@@ -91,6 +92,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 if(Data.userData.getPaytmBalance() > 0) {
                     Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
                     setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
+
                 } else if(Data.userData.getPaytmError() == 1){
                     DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                 } else{
@@ -124,6 +127,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 }
                 Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
                 setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
                 break;
         }
     }
@@ -180,19 +184,27 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     }
 
     public void setPaytmLoadingVisiblity(int visiblity){
-        progressBarPaytm.setVisibility(visiblity);
-        if(visiblity == View.VISIBLE) {
-            textViewPaytmValue.setVisibility(View.GONE);
+        try {
+            progressBarPaytm.setVisibility(visiblity);
+            if(visiblity == View.VISIBLE) {
+				textViewPaytmValue.setVisibility(View.GONE);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void setSelectedPaymentOptionUI(int pickupPaymentOption){
-        if(PaymentOption.PAYTM.getOrdinal() == pickupPaymentOption){
-            paymentSelection(radioBtnPaytm, radioBtnCash);
-        } else{
-            paymentSelection(radioBtnCash, radioBtnPaytm);
+        try {
+            if(PaymentOption.PAYTM.getOrdinal() == pickupPaymentOption){
+				paymentSelection(radioBtnPaytm, radioBtnCash);
+			} else{
+				paymentSelection(radioBtnCash, radioBtnPaytm);
+			}
+            activity.getSlidingBottomPanel().updatePaymentOption();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        activity.getSlidingBottomPanel().updatePaymentOption();
     }
 
 

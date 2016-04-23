@@ -21,9 +21,11 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -32,6 +34,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -72,6 +75,9 @@ public class MenuBar {
 	public RelativeLayout relativeLayoutTransactions;
 	public TextView textViewTransactions;
 	public ImageView imageViewTransactions;
+
+	public RelativeLayout relativeLayoutReferDriver;
+	public TextView textViewReferDriver, textViewReferDriverNew;
 
 	public RelativeLayout relativeLayoutSupport;
 	public TextView textViewSupport;
@@ -133,6 +139,12 @@ public class MenuBar {
 		textViewTransactions.setTypeface(Fonts.mavenLight(activity));
 		imageViewTransactions = (ImageView) drawerLayout.findViewById(R.id.imageViewTransactions);
 
+		relativeLayoutReferDriver = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutReferDriver);
+		textViewReferDriver = (TextView) drawerLayout.findViewById(R.id.textViewReferDriver);
+		textViewReferDriver.setTypeface(Fonts.mavenLight(activity));
+		textViewReferDriverNew = (TextView) drawerLayout.findViewById(R.id.textViewReferDriverNew);
+		textViewReferDriverNew.setTypeface(Fonts.mavenLight(activity));
+
 		relativeLayoutSupport = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutSupport);
 		textViewSupport = (TextView) drawerLayout.findViewById(R.id.textViewSupport);
 		textViewSupport.setTypeface(Fonts.mavenLight(activity));
@@ -140,6 +152,8 @@ public class MenuBar {
 		relativeLayoutAbout = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutAbout);
 		textViewAbout = (TextView) drawerLayout.findViewById(R.id.textViewAbout);
 		textViewAbout.setTypeface(Fonts.mavenLight(activity));
+
+
 
 
 		// menu events
@@ -161,6 +175,7 @@ public class MenuBar {
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
 				}
 			}
 		});
@@ -171,12 +186,16 @@ public class MenuBar {
 			public void onClick(View v) {
 				if(activity instanceof HomeActivity) {
 					if(1 == Data.freshAvailable) {
-						if (((HomeActivity) activity).map != null) {
+						if (((HomeActivity) activity).map != null
+								&& ((HomeActivity)activity).mapStateListener != null
+								&& ((HomeActivity)activity).mapStateListener.isMapSettled()) {
 							Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
 							Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
 						}
 						activity.startActivity(new Intent(activity, FreshActivity.class));
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
+
 					} else{
 						drawerLayout.closeDrawer(GravityCompat.START);
 					}
@@ -196,6 +215,7 @@ public class MenuBar {
 				intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
 			}
 		});
 
@@ -209,6 +229,7 @@ public class MenuBar {
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
 			}
 		});
 
@@ -267,8 +288,16 @@ public class MenuBar {
 
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openOrderHistory();
-					drawerLayout.closeDrawer(menuLayout);
+					//drawerLayout.closeDrawer(menuLayout);
 				}
+			}
+		});
+
+		relativeLayoutReferDriver.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.startActivity(new Intent(activity, ReferDriverActivity.class));
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 
@@ -281,7 +310,7 @@ public class MenuBar {
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openSupport();
-					drawerLayout.closeDrawer(menuLayout);
+					//drawerLayout.closeDrawer(menuLayout);
 				}
 			}
 		});
@@ -342,6 +371,12 @@ public class MenuBar {
 			relativeLayoutPromotions.setVisibility(View.VISIBLE);
 			relativeLayoutAbout.setVisibility(View.VISIBLE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.ride_history));
+			if(Data.userData.getcToDReferralEnabled() == 1){
+				relativeLayoutReferDriver.setVisibility(View.VISIBLE);
+			}else {
+				relativeLayoutReferDriver.setVisibility(View.GONE);
+			}
+
 
 		} else if(activity instanceof FreshActivity){
 			textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
@@ -351,7 +386,7 @@ public class MenuBar {
 			relativeLayoutPromotions.setVisibility(View.GONE);
 			relativeLayoutAbout.setVisibility(View.GONE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.order_history));
-
+			relativeLayoutReferDriver.setVisibility(View.GONE);
 		}
 
 		setupFreshUI();

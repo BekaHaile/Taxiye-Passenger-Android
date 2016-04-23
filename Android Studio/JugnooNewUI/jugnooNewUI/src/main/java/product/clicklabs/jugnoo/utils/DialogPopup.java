@@ -596,7 +596,8 @@ public class DialogPopup {
     }
 
 	public static Dialog uploadContactsTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
-								final boolean cancelable, final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative) {
+								final boolean cancelable, final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative,
+															   final DialogInterface.OnDismissListener onDismissListener) {
 		try {
 			dismissAlertPopup();
 			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -672,6 +673,8 @@ public class DialogPopup {
                     }
                 }
             });
+
+			dialog.setOnDismissListener(onDismissListener);
 
 			dialog.show();
             return dialog;

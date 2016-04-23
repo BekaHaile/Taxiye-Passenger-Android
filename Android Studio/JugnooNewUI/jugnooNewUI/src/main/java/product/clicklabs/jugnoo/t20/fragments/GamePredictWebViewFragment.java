@@ -62,50 +62,54 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_game_predict_webview, container, false);
 
-        activity = getActivity();
-
-		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		try {
-			if(relative != null) {
-				new ASSL(activity, relative, 1134, 720, false);
+			activity = getActivity();
+
+			relative = (RelativeLayout) rootView.findViewById(R.id.relative);
+			try {
+				if(relative != null) {
+					new ASSL(activity, relative, 1134, 720, false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			webView = (WebView) rootView.findViewById(R.id.webView);
+			webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+
+			imageViewProgressBar = (ImageView) rootView.findViewById(R.id.imageViewProgressBar);
+			imageViewProgressBar.setBackgroundResource(R.drawable.anim);
+			imageViewProgressBar.post(new Runnable() {
+				@Override
+				public void run() {
+					AnimationDrawable frameAnimation =
+							(AnimationDrawable) imageViewProgressBar.getBackground();
+					frameAnimation.start();
+				}
+			});
+			imageViewProgressBar.setVisibility(View.GONE);
+
+			webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+			webView.getSettings().setJavaScriptEnabled(true);
+			webView.getSettings().setDomStorageEnabled(true);
+			webView.getSettings().setDatabaseEnabled(true);
+			webView.setWebChromeClient(new WebChromeClient() {
+			});
+			webView.setWebViewClient(new MyAppWebViewClient());
+
+//			webView.loadUrl(Data.userData.getGamePredictUrl());
+
+			if(!HomeActivity.checkIfUserDataNull(activity)) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(Data.userData.getGamePredictUrl()).append("?")
+						.append(Constants.KEY_ACCESS_TOKEN).append("=").append(Data.userData.getPublicAccessToken());
+				Log.i(TAG, "link to hit=" + sb.toString());
+				webView.loadUrl(sb.toString());
+
+				FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_T20_WORLD_CUP_SCREEN);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		webView = (WebView) rootView.findViewById(R.id.webView);
-		webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-
-		imageViewProgressBar = (ImageView) rootView.findViewById(R.id.imageViewProgressBar);
-		imageViewProgressBar.setBackgroundResource(R.drawable.anim);
-		imageViewProgressBar.post(new Runnable() {
-			@Override
-			public void run() {
-				AnimationDrawable frameAnimation =
-						(AnimationDrawable) imageViewProgressBar.getBackground();
-				frameAnimation.start();
-			}
-		});
-		imageViewProgressBar.setVisibility(View.GONE);
-
-		webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setDomStorageEnabled(true);
-		webView.getSettings().setDatabaseEnabled(true);
-		webView.setWebChromeClient(new WebChromeClient() {
-		});
-		webView.setWebViewClient(new MyAppWebViewClient());
-
-		webView.loadUrl(Data.userData.getGamePredictUrl());
-
-		if(!HomeActivity.checkIfUserDataNull(activity)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(Data.userData.getGamePredictUrl()).append("?")
-					.append(Constants.KEY_ACCESS_TOKEN).append("=").append(Data.userData.getPublicAccessToken());
-			Log.i(TAG, "link to hit=" + sb.toString());
-			webView.loadUrl(sb.toString());
-
-			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_T20_WORLD_CUP_SCREEN);
 		}
 
 

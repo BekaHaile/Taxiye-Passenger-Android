@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.fresh.models.SubItem;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 
 
 @SuppressLint("ValidFragment")
@@ -38,6 +39,8 @@ public class FreshCartItemsFragment extends Fragment {
     private FreshActivity activity;
 
 	private ArrayList<SubItem> subItemsInCart;
+
+	public FreshCartItemsFragment(){}
 
     @Override
     public void onStart() {
@@ -120,6 +123,7 @@ public class FreshCartItemsFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 		FlurryEventLogger.event(activity, FlurryEventNames.FRESH_CART);
+		NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CART_CLICKED, null);
 
 		return rootView;
 	}

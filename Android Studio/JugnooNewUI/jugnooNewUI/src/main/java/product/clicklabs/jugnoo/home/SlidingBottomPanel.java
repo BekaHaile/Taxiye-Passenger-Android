@@ -27,13 +27,11 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.models.Region;
-import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -43,6 +41,7 @@ import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerVie
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
  * Created by Ankit on 1/7/16.
@@ -154,6 +153,7 @@ public class SlidingBottomPanel {
                     viewPager.setCurrentItem(0, true);
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
                 break;
 
             case R.id.linearLayoutFare:
@@ -163,6 +163,7 @@ public class SlidingBottomPanel {
                     viewPager.setCurrentItem(1, true);
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
                 break;
 
             case R.id.linearLayoutOffers:
@@ -172,6 +173,7 @@ public class SlidingBottomPanel {
                     viewPager.setCurrentItem(2, true);
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
                 break;
         }
     }
@@ -186,30 +188,27 @@ public class SlidingBottomPanel {
 						selectedCoupon = noSelectionCoupon;
                         try {
                             JSONObject map = new JSONObject();
-                            map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
                             JSONArray coups = new JSONArray();
+                            JSONArray coupsP = new JSONArray();
                             for(PromoCoupon pc : promoCoupons){
-                                if(pc instanceof CouponInfo){
-                                    coups.put(((CouponInfo) pc).title + " " + ((CouponInfo) pc).subtitle);
-                                } else if(pc instanceof PromotionInfo){
-                                    coups.put(((PromotionInfo) pc).title);
+                                if(isPaytmCoupon(pc)){
+                                    coupsP.put(pc.getTitle());
+                                } else{
+                                    coups.put(pc.getTitle());
                                 }
                             }
                             map.put(Constants.KEY_COUPONS, coups.toString());
-                            NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+                            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+
+                            map.put(Constants.KEY_COUPONS, coupsP.toString());
+                            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 					} else {
 						selectedCoupon = new CouponInfo(0, "");
 						textViewOffersValue.setText("-");
-                        try {
-                            JSONObject map = new JSONObject();
-                            map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
-                            NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_NO_COUPONS, map);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
 					}
 				}
 				if (promoCoupons.size() > 0) {
@@ -339,18 +338,7 @@ public class SlidingBottomPanel {
 
     private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
         try {
-            boolean paytmCouponSelected = false;
-            if (promoCoupon instanceof CouponInfo) {
-                if (((CouponInfo) promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(activity.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
-                    paytmCouponSelected = true;
-                }
-            } else if (promoCoupon instanceof PromotionInfo) {
-                if (((PromotionInfo) promoCoupon).title.toLowerCase(Locale.ENGLISH).contains(activity.getResources().getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
-                    paytmCouponSelected = true;
-                }
-            }
-
-            if (paytmCouponSelected) {
+            if (isPaytmCoupon(promoCoupon)) {
                 if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
                     View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
                         @Override
@@ -449,6 +437,14 @@ public class SlidingBottomPanel {
         } catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    private boolean isPaytmCoupon(PromoCoupon pc){
+        if(pc.getTitle().toLowerCase(Locale.ENGLISH)
+                .contains(activity.getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
+            return true;
+        }
+        return false;
     }
 
 }

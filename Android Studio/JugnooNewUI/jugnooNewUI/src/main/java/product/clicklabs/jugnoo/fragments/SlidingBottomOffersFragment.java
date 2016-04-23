@@ -110,11 +110,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     private void setPromoCouponText(TextView textView, PromoCoupon promoCoupon){
         textView.setTag(promoCoupon.id);
-        if(promoCoupon instanceof CouponInfo) {
-            textView.setText(((CouponInfo)promoCoupon).title);
-        } else if(promoCoupon instanceof PromotionInfo){
-            textView.setText(((PromotionInfo)promoCoupon).title);
-        }
+        textView.setText(promoCoupon.getTitle());
     }
 
 

@@ -47,9 +47,11 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -73,6 +75,8 @@ public class FreshPaymentFragment extends Fragment {
 
 	private View rootView;
     private FreshActivity activity;
+
+	public FreshPaymentFragment(){}
 
     @Override
     public void onStart() {
@@ -125,6 +129,7 @@ public class FreshPaymentFragment extends Fragment {
 			public void onClick(View v) {
 				activity.setPaymentOption(PaymentOption.CASH);
 				setPaymentOptionUI();
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CASH_CLICKED, null);
 			}
 		});
 
@@ -135,6 +140,7 @@ public class FreshPaymentFragment extends Fragment {
 					if(Data.userData.getPaytmBalance() >= getTotalPriceWithDeliveryCharges()) {
 						activity.setPaymentOption(PaymentOption.PAYTM);
 						setPaymentOptionUI();
+						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PAYTM_CLICKED, null);
 
 					} else if(Data.userData.getPaytmError() == 1){
 						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
@@ -151,6 +157,7 @@ public class FreshPaymentFragment extends Fragment {
 		buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PLACE_ORDER_CLICKED, null);
 				placeOrder();
 			}
 		});
@@ -356,7 +363,27 @@ public class FreshPaymentFragment extends Fragment {
 													+ " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()),
 											activity.getSlotSelected().getDayName());
 
-								} else{
+									NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ORDER_PLACED, null);
+
+								} else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
+									final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
+									final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
+									Log.e("USER_IN_DEBT message", "=" + message1);
+									activity.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											new UserDebtDialog(activity, Data.userData,
+													new UserDebtDialog.Callback() {
+														@Override
+														public void successFullyDeducted(double userDebt) {
+															setPaymentOptionUI();
+															activity.updateMenu();
+														}
+
+													}).showUserDebtDialog(userDebt, message1, true);
+										}
+									});
+								}else{
 									DialogPopup.alertPopup(activity, "", message);
 								}
 							}
@@ -369,7 +396,7 @@ public class FreshPaymentFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+						Log.e(TAG, "paytmAuthenticateRecharge error " + error.toString());
 						DialogPopup.dismissLoadingDialog();
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 					}
@@ -451,12 +478,17 @@ public class FreshPaymentFragment extends Fragment {
 	}
 
 	private double getTotalPriceWithDeliveryCharges(){
-		double totalAmount = activity.updateCartValuesGetTotalPrice().first;
-		double amountPayable = totalAmount;
-		if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
-			amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+		try {
+			double totalAmount = activity.updateCartValuesGetTotalPrice().first;
+			double amountPayable = totalAmount;
+			if(activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount){
+				amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+			}
+			return amountPayable;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
 		}
-		return amountPayable;
 	}
 
 

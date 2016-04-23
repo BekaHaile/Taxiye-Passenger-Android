@@ -42,10 +42,9 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40px"
             android:gravity="center"
-            android:text="@string/get_the_freshness"
+            android:text="@string/get_fresh"
             android:textColor="@color/text_color_dark"
-            android:textSize="@dimen/text_size_44"
-            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_36"
             />
 
         <TextView
@@ -55,31 +54,23 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10px"
             android:gravity="center"
-            android:text="@string/delivered_now"
+            android:text="@string/fruits_and_vegetables"
             android:textColor="@color/text_color_dark"
-            android:textSize="@dimen/text_size_34"
+            android:textSize="@dimen/text_size_38"
             android:textAllCaps="true"
             />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_marginLeft="80px"
-            android:layout_marginRight="80px"
-            android:layout_marginTop="30px"
-            android:background="@color/text_color_hint"
-            />
 
         <TextView
             android:id="@+id/textViewFinestFruits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30px"
+            android:layout_marginTop="10px"
             android:gravity="center"
-            android:text="@string/finest_fruits_vegetables"
+            android:text="@string/delivered_at_your_doorstep"
             android:textColor="@color/text_color_dark"
-            android:textSize="@dimen/text_size_30"
+            android:textSize="@dimen/text_size_36"
             />
 
 
@@ -88,8 +79,15 @@
             style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40px"
-            android:layout_marginBottom="40px"
             android:text="@string/continue_text"/>
+
+        <Button
+            android:id="@+id/buttonLater"
+            style="@style/ButtonThemeAlternate"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="40px"
+            android:text="@string/fresh_may_be_later"/>
 
 
     </LinearLayout>

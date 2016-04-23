@@ -13,9 +13,6 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
@@ -110,13 +107,7 @@ public class ShareEarnFragment extends Fragment {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					try {
-						JSONObject map = new JSONObject();
-						map.put(Constants.KEY_USER_ID, Data.userData.getUserId());
-						NudgeClient.trackEvent(activity, FlurryEventNames.NUDGE_INVITE_FRIENDS, map);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_FRIENDS, null);
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 				}

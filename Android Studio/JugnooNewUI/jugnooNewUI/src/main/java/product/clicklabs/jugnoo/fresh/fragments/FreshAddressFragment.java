@@ -45,6 +45,8 @@ public class FreshAddressFragment extends Fragment {
 
 	private String homeAddress = "", workAddress = "";
 
+	public FreshAddressFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();
