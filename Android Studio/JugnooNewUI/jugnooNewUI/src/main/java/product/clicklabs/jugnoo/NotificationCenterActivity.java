@@ -160,7 +160,12 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                 }
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put("offset", String.valueOf(myNotificationAdapter.getListSize()));
+                if(refresh){
+                    params.put("offset", "0");
+                } else{
+                    params.put("offset", String.valueOf(myNotificationAdapter.getListSize()));
+                }
+
 
                 RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
                     @Override
