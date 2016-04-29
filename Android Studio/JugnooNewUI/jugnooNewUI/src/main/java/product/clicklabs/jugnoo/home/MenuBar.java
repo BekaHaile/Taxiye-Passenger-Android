@@ -25,7 +25,6 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
-import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -371,10 +370,14 @@ public class MenuBar {
 			relativeLayoutPromotions.setVisibility(View.VISIBLE);
 			relativeLayoutAbout.setVisibility(View.VISIBLE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.ride_history));
-			if(Data.userData.getcToDReferralEnabled() == 1){
-				relativeLayoutReferDriver.setVisibility(View.VISIBLE);
-			}else {
-				relativeLayoutReferDriver.setVisibility(View.GONE);
+			try {
+				if(Data.userData.getcToDReferralEnabled() == 1){
+					relativeLayoutReferDriver.setVisibility(View.VISIBLE);
+				}else {
+					relativeLayoutReferDriver.setVisibility(View.GONE);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 
