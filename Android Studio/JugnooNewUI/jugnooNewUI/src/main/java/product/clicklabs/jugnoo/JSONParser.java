@@ -256,6 +256,8 @@ public class JSONParser implements Constants {
 
         parseFindDriverResp(loginResponse);
         parsePromoCoupons(loginResponse);
+        Data.menuInfoList = new ArrayList<>();
+        Data.menuInfoList.addAll(loginResponse.getLogin().getMenuInfoList());
 
 		if(loginResponse.getLogin().getSupportNumber() != null){
 			Config.saveSupportNumber(context, loginResponse.getLogin().getSupportNumber());

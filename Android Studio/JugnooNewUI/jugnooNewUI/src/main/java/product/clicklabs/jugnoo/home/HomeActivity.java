@@ -187,7 +187,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private final String TAG = HomeActivity.class.getSimpleName();
 
-    DrawerLayout drawerLayout;                                                                        // views declaration
+    public DrawerLayout drawerLayout;                                                                        // views declaration
 
 
     MenuBar menuBar;
@@ -201,9 +201,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //Map layout
     RelativeLayout mapLayout;
-    GoogleMap map;
+    public GoogleMap map;
     TouchableMapFragment mapFragment;
-    MapStateListener mapStateListener;
+    public MapStateListener mapStateListener;
     boolean mapTouched = false;
 
 

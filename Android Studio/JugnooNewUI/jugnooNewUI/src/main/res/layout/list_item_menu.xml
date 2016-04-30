@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="90px"
+        android:splitMotionEvents="false">
+
+        <ImageView
+            android:id="@+id/imageViewSelection"
+            android:layout_width="10px"
+            android:layout_height="match_parent"
+            android:src="@drawable/background_white_theme_selector"/>
+
+        <ImageView
+            android:id="@+id/imageViewMenuIcon"
+            android:layout_width="100px"
+            android:layout_height="90px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17px"
+            android:src="@drawable/ic_play_normal"
+            android:tag="mwar" />
+
+        <TextView
+            android:id="@+id/textViewMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/menu_text_margin_left"
+            android:text="@string/t20_world_cup_2016"
+            android:textColor="@color/text_color_white_theme_selector"
+            android:textSize="@dimen/text_size_38" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutNewContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/textViewGameNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            android:text="@string/str_new"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_36"
+            android:layout_marginRight="30px"/>
+
+        <TextView
+            android:id="@+id/textViewWalletValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/background_yellow_rounded"
+            android:gravity="center_vertical|right"
+            android:padding="10px"
+            android:text="@string/rupee_0"
+            android:textColor="@color/white"
+            android:textSize="30px"
+            android:visibility="visible" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

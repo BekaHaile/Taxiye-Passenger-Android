@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,6 +17,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
@@ -28,6 +33,8 @@ import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -88,6 +95,9 @@ public class MenuBar {
 
 	public RelativeLayout relativeLayoutAbout;
 	public TextView textViewAbout;
+
+	private RecyclerView recyclerViewMenu;
+	private MenuAdapter menuAdapter;
 
 	public MenuBar(Activity activity, DrawerLayout rootView){
 		this.activity = activity;
@@ -164,6 +174,13 @@ public class MenuBar {
 		textViewAbout.setTypeface(Fonts.mavenLight(activity));
 
 
+		recyclerViewMenu = (RecyclerView) drawerLayout.findViewById(R.id.recyclerViewMenu);
+		recyclerViewMenu.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewMenu.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewMenu.setHasFixedSize(false);
+
+		menuAdapter = new MenuAdapter(Data.menuInfoList, activity, R.layout.list_item_menu);
+		recyclerViewMenu.setAdapter(menuAdapter);
 
 
 		// menu events
@@ -383,8 +400,8 @@ public class MenuBar {
 					if(!"".equalsIgnoreCase(Data.userData.getGamePredictIconUrl())){
 						Picasso.with(activity)
 								.load(Data.userData.getGamePredictIconUrl())
-								.placeholder(R.drawable.ic_worldcup)
-								.error(R.drawable.ic_worldcup)
+								.placeholder(R.drawable.ic_play_normal)
+								.error(R.drawable.ic_play_normal)
 								.into(imageViewGamePredict);
 					}
 				} catch (Exception e) {

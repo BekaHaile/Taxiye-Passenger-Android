@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -183,6 +184,7 @@ public class Data {
 	public static FareStructure fareStructure;
 	public static ArrayList<PromoCoupon> promoCoupons;
 	public static ArrayList<Region> regions;
+	public static ArrayList<MenuInfo> menuInfoList;
 	public static String farAwayCity = "";
 	public static int priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 	public static int freshAvailable = 0;

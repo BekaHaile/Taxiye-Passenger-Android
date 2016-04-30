@@ -9,6 +9,16 @@
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:splitMotionEvents="false"
+        android:visibility="visible"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="true"
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -128,7 +138,7 @@
                     android:layout_height="90px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="17px"
-                    android:src="@drawable/ic_worldcup"
+                    android:src="@drawable/ic_play_normal"
                     android:tag="mwar" />
 
                 <TextView
@@ -174,7 +184,7 @@
                     android:layout_height="34px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="46px"
-                    android:src="@drawable/auto_icon_normal"
+                    android:src="@drawable/ic_get_a_ride_normal"
                     android:tag="mwar"
                     />
 
@@ -245,7 +255,7 @@
                     android:layout_height="28px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50px"
-                    android:src="@drawable/ic_wallet"
+                    android:src="@drawable/ic_wallet_normal"
                     android:tag="mwar" />
 
                 <TextView
@@ -359,7 +369,7 @@
                     android:layout_height="36px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50px"
-                    android:src="@drawable/promotion_icon_normal"
+                    android:src="@drawable/ic_promocode_normal"
                     android:tag="mwar" />
 
                 <TextView
@@ -410,7 +420,7 @@
                     android:layout_height="34px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50px"
-                    android:src="@drawable/transactions_icon_normal"
+                    android:src="@drawable/ic_history_normal"
                     android:tag="mwar" />
 
                 <TextView
@@ -445,7 +455,7 @@
                     android:layout_height="37px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50px"
-                    android:src="@drawable/ic_refer_driver_menu"
+                    android:src="@drawable/ic_refer_a_driver_normal"
                     android:tag="mwar" />
 
                 <TextView
@@ -492,7 +502,7 @@
                     android:layout_height="35px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50px"
-                    android:src="@drawable/support_icon_normal"
+                    android:src="@drawable/ic_support_normal"
                     android:tag="mwar" />
 
                 <TextView

@@ -13,7 +13,7 @@
         android:layout_height="40px"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12px"
-        android:src="@drawable/promotion_icon_normal"
+        android:src="@drawable/ic_promocode_normal"
         android:tag="mwar"
         />
 

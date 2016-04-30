@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 
 /**
@@ -339,6 +340,11 @@ public class LoginResponse {
 		@SerializedName("fresh_available")
 		@Expose
 		private Integer freshAvailable;
+		@SerializedName("menu")
+		@Expose
+		private List<MenuInfo> menuInfoList;
+
+
 
 		@SerializedName("campaigns")
 		@Expose
@@ -470,6 +476,14 @@ public class LoginResponse {
 
 		public void setFreshAvailable(Integer freshAvailable) {
 			this.freshAvailable = freshAvailable;
+		}
+
+		public List<MenuInfo> getMenuInfoList() {
+			return menuInfoList;
+		}
+
+		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
+			this.menuInfoList = menuInfoList;
 		}
 	}
 }
