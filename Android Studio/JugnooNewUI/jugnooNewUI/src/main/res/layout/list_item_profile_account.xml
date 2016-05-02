@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="244px"
+    android:layout_height="264px"
     android:background="@color/rank_1"
     android:orientation="vertical">
 
@@ -50,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20px"
         android:src="@color/view_account_stroke_color"/>
 
 </RelativeLayout>

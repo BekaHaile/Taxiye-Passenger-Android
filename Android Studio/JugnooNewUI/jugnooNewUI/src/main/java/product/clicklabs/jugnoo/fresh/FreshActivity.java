@@ -56,7 +56,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class FreshActivity extends FragmentActivity {
 
 	private final String TAG = FreshActivity.class.getSimpleName();
-	private DrawerLayout drawerLayout;
+	public DrawerLayout drawerLayout;
 
 	private RelativeLayout relativeLayoutContainer;
 

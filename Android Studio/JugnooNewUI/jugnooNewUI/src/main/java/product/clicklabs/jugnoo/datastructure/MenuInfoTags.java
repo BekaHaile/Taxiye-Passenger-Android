@@ -8,6 +8,7 @@ public enum MenuInfoTags {
     GET_A_RIDE("get_a_ride"),
     FREE_RIDES("free_rides"),
     WALLET("wallet"),
+    INBOX("inbox"),
     JUGNOO_FRESH("jugnoo_fresh"),
     PROMOTIONS("promotions"),
     HISTORY("history"),

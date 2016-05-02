@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
@@ -78,7 +79,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else{
             View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 100);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 90);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
@@ -122,6 +123,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_share_selector);
                 } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
+                } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_inbox_selector);
                 } else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_promotion_selector);
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -209,7 +212,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
                 }
-            } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag)) || MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
+            } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))){
+                if(activity instanceof HomeActivity) {
+                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                } else if(activity instanceof FreshActivity){
+                    activity.finish();
+                    activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+                }
+            } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
                     if(1 == Data.freshAvailable) {
                         if (((HomeActivity) activity).map != null
@@ -221,14 +231,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         activity.startActivity(new Intent(activity, FreshActivity.class));
                         activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
-
-                    } else{
-                        ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
                     }
-
                 } else if(activity instanceof FreshActivity){
-                    activity.finish();
-                    activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+                    ((FreshActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
                 }
             } else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, ShareActivity.class);
@@ -244,7 +249,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
-            } else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(tag)){
+            } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
+            }else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
                 if(activity instanceof HomeActivity){
                     currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
