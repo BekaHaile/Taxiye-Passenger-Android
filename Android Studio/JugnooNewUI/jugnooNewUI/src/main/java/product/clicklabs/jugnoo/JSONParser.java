@@ -645,9 +645,12 @@ public class JSONParser implements Constants {
                 JSONObject jObject1 = new JSONObject(responseStr);
                 String resp = parseCurrentUserStatus(context, currentUserStatus, jObject1);
 
-                Gson gson = new Gson();
-                FindADriverResponse findADriverResponse = gson.fromJson(responseStr, FindADriverResponse.class);
-                apiFindADriver.parseFindADriverResponse(findADriverResponse);
+                if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+                        || PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode) {
+                    Gson gson = new Gson();
+                    FindADriverResponse findADriverResponse = gson.fromJson(responseStr, FindADriverResponse.class);
+                    apiFindADriver.parseFindADriverResponse(findADriverResponse);
+                }
 
                 return resp;
             }
