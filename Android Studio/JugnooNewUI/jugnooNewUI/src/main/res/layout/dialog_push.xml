@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="612px"
+            android:layout_height="306px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8px"
+            android:layout_marginLeft="8px"
+            android:layout_marginRight="8px"
+            android:src="@drawable/bg_fresh_intro"
+            android:tag="mwar"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="36px"
+            android:gravity="center"
+            android:text="Order fruits &amp; veggies\nwhile you ride"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_34"
+            android:textAllCaps="true"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="74px"
+            android:layout_marginRight="74px"
+            android:layout_marginTop="30px"
+            android:layout_marginBottom="30px"
+            android:background="@color/text_color_light"
+            />
+
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Jugnoo Fresh will get them\ndelivered to "
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_26"
+            />
+
+        <Button
+            android:id="@+id/button"
+            style="@style/ButtonTheme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:layout_marginBottom="40px"
+            android:text="Order Now"/>
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="74px"
+        android:layout_height="74px"
+        android:layout_alignRight="@+id/linearLayoutInner"
+        android:layout_alignTop="@+id/linearLayoutInner"
+        android:layout_marginRight="-25px"
+        android:layout_marginTop="-25px"
+        android:paddingBottom="20px"
+        android:paddingLeft="20px"
+        android:src="@drawable/close_icon_selector"
+        android:tag="mwar"
+        />
+
+
+</RelativeLayout>

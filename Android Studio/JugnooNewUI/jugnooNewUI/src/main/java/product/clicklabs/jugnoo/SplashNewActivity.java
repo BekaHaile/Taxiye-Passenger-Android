@@ -204,7 +204,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
 							} else {
 								if (Data.deepLinkIndex == -1) {
-									Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
+									Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
 									Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
 									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
 									if ("".equalsIgnoreCase(pair.first)

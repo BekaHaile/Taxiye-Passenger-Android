@@ -315,8 +315,8 @@ public class Data {
 				FlurryEventLogger.event(context, FlurryEventNames.WHO_CLICKED_THE_PUSH);
 			}
 
-			if(data.getQueryParameter("deepindex") != null){
-				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
+				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
 			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -346,8 +346,8 @@ public class Data {
 					Data.deepLinkReferralCode = dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 				}
 
-				if(dataTarget.getQueryParameter("deepindex") != null){
-					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
+				if(dataTarget.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
+					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter(Constants.KEY_DEEPINDEX));
 				}
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
 					Data.deepLinkPickup = 1;

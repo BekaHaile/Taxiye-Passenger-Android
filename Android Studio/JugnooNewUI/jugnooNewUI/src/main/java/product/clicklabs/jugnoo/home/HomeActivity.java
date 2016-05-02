@@ -324,7 +324,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog, dialogPush;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -1276,6 +1276,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
+
+            openPushDialog();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -5876,6 +5878,38 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 	}
+
+    @Override
+    public void onShowDialogPush() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                openPushDialog();
+            }
+        });
+    }
+
+    private void openPushDialog(){
+        if(dialogPush != null){
+            dialogPush.dismiss();
+            dialogPush = null;
+        }
+        Dialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
+            @Override
+            public void onButtonClicked(int deepIndex) {
+                Data.deepLinkIndex = deepIndex;
+                openDeepLink();
+            }
+
+            @Override
+            public void onDialogDismiss() {
+
+            }
+        }).show();
+        if(dialog != null){
+            dialogPush = dialog;
+        }
+    }
 
 
 
