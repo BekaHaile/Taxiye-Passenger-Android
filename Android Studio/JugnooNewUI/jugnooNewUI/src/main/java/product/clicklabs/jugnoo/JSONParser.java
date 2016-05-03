@@ -354,6 +354,16 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
+
+            if (loginResponse.getLogin().getInAppCampaignAvailable() == null) {
+                Data.inAppCampaignAvailable = 0;
+                Data.inAppCampaignButtonImages = null;
+                Data.inAppCampaignLoadingText = "";
+            } else {
+                Data.inAppCampaignAvailable = loginResponse.getLogin().getInAppCampaignAvailable();
+                Data.inAppCampaignButtonImages = (ArrayList<String>) loginResponse.getLogin().getInAppCampaignButtonImages();
+                Data.inAppCampaignLoadingText = loginResponse.getLogin().getInAppCampaignLoadingText();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

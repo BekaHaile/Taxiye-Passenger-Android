@@ -340,6 +340,16 @@ public class LoginResponse {
 		@Expose
 		private Integer freshAvailable;
 
+		@SerializedName("in_app_campaign_available")
+		@Expose
+		private Integer inAppCampaignAvailable;
+		@SerializedName("in_app_campaign_button_images")
+		@Expose
+		private List<String> inAppCampaignButtonImages = new ArrayList<>();
+		@SerializedName("in_app_campaign_loading_text")
+		@Expose
+		private String inAppCampaignLoadingText;
+
 		/**
 		 * @return The currentUserStatus
 		 */
@@ -448,6 +458,30 @@ public class LoginResponse {
 
 		public void setFreshAvailable(Integer freshAvailable) {
 			this.freshAvailable = freshAvailable;
+		}
+
+		public Integer getInAppCampaignAvailable() {
+			return inAppCampaignAvailable;
+		}
+
+		public void setInAppCampaignAvailable(Integer inAppCampaignAvailable) {
+			this.inAppCampaignAvailable = inAppCampaignAvailable;
+		}
+
+		public List<String> getInAppCampaignButtonImages() {
+			return inAppCampaignButtonImages;
+		}
+
+		public void setInAppCampaignButtonImages(List<String> inAppCampaignButtonImages) {
+			this.inAppCampaignButtonImages = inAppCampaignButtonImages;
+		}
+
+		public String getInAppCampaignLoadingText() {
+			return inAppCampaignLoadingText;
+		}
+
+		public void setInAppCampaignLoadingText(String inAppCampaignLoadingText) {
+			this.inAppCampaignLoadingText = inAppCampaignLoadingText;
 		}
 	}
 }

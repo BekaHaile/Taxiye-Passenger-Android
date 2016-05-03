@@ -11,9 +11,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -72,6 +74,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,7 +87,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
@@ -105,6 +107,8 @@ import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
+import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
@@ -153,6 +157,7 @@ import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.LocalGson;
@@ -208,11 +213,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewInitialInstructions;
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
-	ImageView imageViewRideNow;
+	ImageView imageViewRideNow, imageViewInAppCampaign;
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
+    LinearLayout linearLayoutRequest;
+    RelativeLayout relativeLayoutInAppCampaignRequest;
+    TextView textViewInAppCampaignRequest;
+    Button buttonCancelInAppCampaignRequest;
 
 	RelativeLayout relativeLayoutGoogleAttr;
 	ImageView imageViewGoogleAttrCross;
@@ -229,7 +238,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Assigining layout
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
-	SmoothProgressBar progressBarFindingDriver;
     Button assigningMyLocationBtn, initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent;
     LinearLayout linearLayoutAssigningDropLocationClick;
@@ -495,6 +503,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
 
+        imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
+        imageViewInAppCampaign.setVisibility(View.GONE);
+        linearLayoutRequest = (LinearLayout) findViewById(R.id.linearLayoutRequest);
+        linearLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
+        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+        textViewInAppCampaignRequest = (TextView) findViewById(R.id.textViewInAppCampaignRequest);
+        textViewInAppCampaignRequest.setTypeface(Fonts.mavenLight(this));
+        buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
+        buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
+
 
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -505,7 +524,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
 		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
 		textViewGoogleAttrText = (TextView) findViewById(R.id.textViewGoogleAttrText);
-		textViewGoogleAttrText.setTypeface(Fonts.latoRegular(this));
+        textViewGoogleAttrText.setTypeface(Fonts.latoRegular(this));
 		relativeLayoutGoogleAttr.setVisibility(View.GONE);
 
 
@@ -527,7 +546,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
-		progressBarFindingDriver = (SmoothProgressBar) findViewById(R.id.progressBarFindingDriver);
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
@@ -772,6 +790,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
+
+
+        imageViewInAppCampaign.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callCampaignAvailRequest();
+            }
+        });
+
+        buttonCancelInAppCampaignRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callApiCampaignRequestCancel();
+            }
+        });
 
 
 
@@ -3237,6 +3270,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }, 300);
                     setServiceAvailablityUI(Data.farAwayCity);
                     setupFreshUI();
+                    setupInAppCampaignUI();
                 }
                 setFareFactorToInitialState();
             } catch (Exception e) {
@@ -3259,6 +3293,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
         } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void setupInAppCampaignUI(){
+        try{
+            if(1 == Data.inAppCampaignAvailable){
+                imageViewInAppCampaign.clearAnimation();
+                imageViewInAppCampaign.setVisibility(View.VISIBLE);
+                new FrameAnimDrawable(this, Data.inAppCampaignButtonImages, imageViewInAppCampaign);
+            } else{
+                imageViewInAppCampaign.clearAnimation();
+                imageViewInAppCampaign.setVisibility(View.GONE);
+            }
+        } catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -6309,5 +6358,120 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         return null;
     }
+
+
+
+    private ApiCampaignAvailRequest apiCampaignAvailRequest;
+    private ApiCampaignAvailRequest getApiCampaignAvailRequest(){
+        if(apiCampaignAvailRequest == null){
+            apiCampaignAvailRequest = new ApiCampaignAvailRequest(this, new ApiCampaignAvailRequest.Callback() {
+                @Override
+                public void onPre() {
+                    linearLayoutRequest.setVisibility(View.GONE);
+                    relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
+                    textViewInAppCampaignRequest.setText(Data.inAppCampaignLoadingText);
+                }
+
+                @Override
+                public void onSuccess(final String message, String image, int width, int height) {
+                    try {
+                        if("".equalsIgnoreCase(image) || campaignApiCancelled){
+							linearLayoutRequest.setVisibility(View.VISIBLE);
+							relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+						} else {
+							float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+							Picasso.with(HomeActivity.this).load(image)
+									.resize((int) (minRatio * 0.9f * (float) width), (int) (minRatio * 0.9f * (float) height))
+									.centerCrop()
+									.into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                                            linearLayoutRequest.setVisibility(View.VISIBLE);
+                                            relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                                            new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
+                                                @Override
+                                                public void onDialogDismiss() {
+
+                                                }
+                                            }).show(message, bitmap);
+                                        }
+
+                                        @Override
+                                        public void onBitmapFailed(Drawable drawable) {
+                                            linearLayoutRequest.setVisibility(View.VISIBLE);
+                                            relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                                        }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable drawable) {
+
+                                        }
+                                    });
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        linearLayoutRequest.setVisibility(View.VISIBLE);
+                        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+                    linearLayoutRequest.setVisibility(View.VISIBLE);
+                    relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    callCampaignAvailRequest();
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        return apiCampaignAvailRequest;
+    }
+
+    private void callCampaignAvailRequest(){
+        campaignApiCancelled = false;
+        getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target);
+    }
+
+
+    private boolean campaignApiCancelled = false;
+    private ApiCampaignRequestCancel apiCampaignRequestCancel;
+    private ApiCampaignRequestCancel getApiCampaignRequestCancel(){
+        if(apiCampaignRequestCancel == null){
+            apiCampaignRequestCancel = new ApiCampaignRequestCancel(this, new ApiCampaignRequestCancel.Callback() {
+                @Override
+                public void onSuccess() {
+                    campaignApiCancelled = true;
+                }
+
+                @Override
+                public void onFailure() {
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    callApiCampaignRequestCancel();
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        return apiCampaignRequestCancel;
+    }
+
+    private void callApiCampaignRequestCancel(){
+        getApiCampaignRequestCancel().cancelCampaignRequest();
+    }
+
 
 }

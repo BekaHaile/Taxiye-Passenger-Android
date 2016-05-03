@@ -185,6 +185,9 @@ public class Data {
 	public static String farAwayCity = "";
 	public static int priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 	public static int freshAvailable = 0;
+	public static int inAppCampaignAvailable = 0;
+	public static ArrayList<String> inAppCampaignButtonImages;
+	public static String inAppCampaignLoadingText;
 	
 	public static CancelOptionsList cancelOptionsList;
     public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;

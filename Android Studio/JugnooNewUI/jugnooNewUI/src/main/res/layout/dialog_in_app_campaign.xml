@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:layout_margin="40px"
+        >
+
+        <ImageView
+            android:id="@+id/imageViewBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:tag="mwar"
+            android:src="@drawable/ic_notification_placeholder"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="40px"
+            android:gravity="center"
+            android:text="Your treat to beat heat\nis on the way."
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_30"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
