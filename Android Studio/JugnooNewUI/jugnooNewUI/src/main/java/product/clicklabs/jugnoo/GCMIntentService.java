@@ -434,7 +434,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
 							String url = jObj.optString(KEY_URL, "");
-							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 1);
+							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
 							}
