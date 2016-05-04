@@ -250,4 +250,11 @@ public interface Constants {
 	String SP_REFERRAL_CODE = "sp_referral_code";
 	String KEY_COUPON_SELECTED = "coupon_selected";
 
+	String SP_PUSH_DIALOG_CONTENT = "push_dialog_content";
+	String KEY_SHOW_DIALOG = "show_dialog";
+	String KEY_PICTURE = "picture";
+	String KEY_IMAGE = "image";
+	String KEY_BUTTON_TEXT = "button_text";
+	String KEY_SHOW_PUSH = "show_push";
+
 }

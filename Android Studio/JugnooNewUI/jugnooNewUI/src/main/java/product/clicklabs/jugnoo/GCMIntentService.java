@@ -18,7 +18,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -27,11 +26,12 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
-
-import java.net.URL;
-import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -41,7 +41,6 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.utils.CallActivity;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -119,7 +118,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 String url, int playSound) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush) {
 
         try {
             long when = System.currentTimeMillis();
@@ -129,9 +128,15 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             Intent notificationIntent = new Intent();
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			if("".equalsIgnoreCase(url)){
+				notificationIntent.setClass(context, SplashNewActivity.class);
+
+				deepindex = showDialog == 1 ? -1 : deepindex;
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
-				notificationIntent.setClass(context, SplashNewActivity.class);
+
+				if(HomeActivity.appInterruptHandler != null && showDialog == 1){
+					HomeActivity.appInterruptHandler.onShowDialogPush();
+				}
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -142,14 +147,18 @@ public class GCMIntentService extends GcmListenerService implements Constants {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
             builder.setContentTitle(title);
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
+			if(bitmap == null){
+				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+			} else{
+				builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+						.setBigContentTitle(title).setSummaryText(message));
+			}
+
             builder.setContentText(message);
             builder.setTicker(message);
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
-
-//			Drawable drawable = context.getResources().getDrawable(R.drawable.circle_yellow_size);
-//			builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, "99", 18));
 
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
 
@@ -159,12 +168,16 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
 
-			Notification notification = builder.build();
-            notificationManager.notify(notificationId, notification);
+			if(showDialog == 1 && showPush == 0){
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
+			} else{
+				Notification notification = builder.build();
+				notificationManager.notify(notificationId, notification);
+
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+				wl.acquire(15000);
+			}
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -285,62 +298,6 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     }
 
-	@SuppressWarnings("deprecation")
-	private void notificationManagerCustomIDWithBitmap(Context context, String title, String message, int notificationId,
-													   int deepindex, Bitmap bitmap, String url, int playSound) {
-
-		try {
-			long when = System.currentTimeMillis();
-
-			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-			Intent notificationIntent = new Intent();
-			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
-			if("".equalsIgnoreCase(url)){
-				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
-				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
-				notificationIntent.setClass(context, SplashNewActivity.class);
-			} else{
-				notificationIntent.setData(Uri.parse(url));
-			}
-
-			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-
-
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-			builder.setAutoCancel(true);
-			builder.setContentTitle(title);
-			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-			setPlaySound(builder, playSound);
-			builder.setWhen(when);
-			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-			builder.setSmallIcon(R.drawable.notification_icon);
-			builder.setContentIntent(intent);
-			builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setBigContentTitle(title).setSummaryText(message));
-			builder.setContentText(message);
-			builder.setTicker(message);
-			if(Build.VERSION.SDK_INT >= 16){
-				builder.setPriority(Notification.PRIORITY_HIGH);
-			}
-
-			Notification notification = builder.build();
-			notificationManager.notify(notificationId, notification);
-
-			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-			wl.acquire(15000);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-
-
-
 
     public static void clearNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -364,7 +321,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					int flag = jObj.getInt(KEY_FLAG);
 					String title = jObj.optString(KEY_TITLE, getResources().getString(R.string.app_name));
 
-					int deepindex = jObj.optInt("deepindex", -1);
+					int deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 					String message1 = jObj.optString(KEY_MESSAGE, "");
 					int playSound = jObj.optInt(KEY_PLAY_SOUND, 1);
 
@@ -476,20 +433,27 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 						}
 						else {
-							String picture = jObj.optString("picture", "");
+							String picture = jObj.optString(KEY_PICTURE, "");
 							if("".equalsIgnoreCase(picture)){
-								picture = jObj.optString("image", "");
+								picture = jObj.optString(KEY_IMAGE, "");
 							}
 							String url = jObj.optString(KEY_URL, "");
+							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
+							int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
+							if(showDialog == 1) {
+								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
+							}
+
 							if(!"".equalsIgnoreCase(picture)){
-								deepindex = jObj.optInt("deepindex", AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								new BigImageNotifAsync(title, message1, deepindex, picture, url, playSound).execute();
+								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
+								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush);
 							}
 							else{
-								deepindex = jObj.optInt("deepindex", -1);
+								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										url, playSound);
+										null, url, playSound, showDialog, showPush);
 							}
+
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
 						}
 
@@ -526,7 +490,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1,
-								"", playSound);
+								null, "", playSound, 0, 1);
 
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
@@ -586,7 +550,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						}
 					}
 
-					savePush(jObj, flag, title, message1, deepindex);
+					incrementPushCounter(jObj, flag);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -599,65 +563,22 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		}
     }
 
-	private ArrayList<Integer> dontSavePushes = null;
-	private ArrayList<Integer> getDontSavePushesArray(){
-		if(dontSavePushes == null){
-			dontSavePushes = new ArrayList<>();
-//			dontSavePushes.add(PushFlags.WAITING_STARTED.getOrdinal());
-//			dontSavePushes.add(PushFlags.WAITING_ENDED.getOrdinal());
-//			dontSavePushes.add(PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal());
-//			dontSavePushes.add(PushFlags.CHANGE_STATE.getOrdinal());
-//			dontSavePushes.add(PushFlags.PAYMENT_RECEIVED.getOrdinal());
-//			dontSavePushes.add(PushFlags.CLEAR_ALL_MESSAGE.getOrdinal());
-//			dontSavePushes.add(PushFlags.DELETE_NOTIFICATION_ID.getOrdinal());
-//			dontSavePushes.add(PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal());
-//			dontSavePushes.add(PushFlags.DRIVER_ETA.getOrdinal());
-		}
-		return dontSavePushes;
-	}
-
-	private void savePush(JSONObject jObj, int flag, String title, String message1, int deepindex){
+	private void incrementPushCounter(JSONObject jObj, int flag){
 		try {
 			boolean tryToSave = false;
 			if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag){
 				tryToSave = true;
-			} else if(!getDontSavePushesArray().contains(flag)){
-				int saveNotification = jObj.optInt(KEY_SAVE_NOTIFICATION, 0);
-				if(1 == saveNotification){
-					tryToSave = true;
-				}
+			} else if(1 == jObj.optInt(KEY_SAVE_NOTIFICATION, 0)){
+				tryToSave = true;
 			}
 
-			if(tryToSave && !"".equalsIgnoreCase(message1)) {
-				String picture = jObj.optString("image", "");
-				if ("".equalsIgnoreCase(picture)) {
-					picture = jObj.optString("picture", "");
-				}
-//				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() != flag) {
-//					message1 = title + "\n" + message1;
-//				}
-
+			if(tryToSave) {
 				int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, flag);
-
 				if(PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag && notificationId != flag){
 					FlurryEventLogger.event(this, FlurryEventNames.CAMPAIGN_+notificationId);
 				}
 
-				// store push in database for notificaion center screen...
-				String pushArrived = DateOperations.getCurrentTimeInUTC();
-				if (jObj.has("timeToDisplay") && jObj.has("timeTillDisplay")) {
-					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, title, message1, "" + deepindex,
-							jObj.getString("timeToDisplay"), jObj.getString("timeTillDisplay"), picture);
-					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-				} else if (jObj.has("timeToDisplay")) {
-					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, title, message1, "" + deepindex,
-							jObj.getString("timeToDisplay"), "", picture);
-					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-				} else if (jObj.has("timeTillDisplay")) {
-					Database2.getInstance(this).insertNotification(this, notificationId, pushArrived, title, message1, "" + deepindex,
-							"0", jObj.getString("timeTillDisplay"), picture);
-					Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-				}
+				Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
 				if (EventsHolder.displayPushHandler != null) {
 					EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
 				}
@@ -667,60 +588,43 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		}
 	}
 
+	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
+								   final String picture, final String url, final int playSound,
+								   final int showDialog, final int showPush){
+		try {
+			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
+			Target target = new Target() {
+				@Override
+				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+					try {
+						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
+								deepindex, bitmap, url, playSound, showDialog, showPush);
+					} catch (Exception e) {
+						e.printStackTrace();
+						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
+								null, url, playSound, showDialog, showPush);
+					}
+				}
 
-    private class BigImageNotifAsync extends AsyncTask<String, String, Bitmap> {
+				@Override
+				public void onBitmapFailed(Drawable drawable) {
 
-        private Bitmap bitmap = null;
-        private String title, message, picture, url;
-        private int deepindex, playSound;
+				}
 
-        public BigImageNotifAsync(String title, String message, int deepindex, String picture, String url, int playSound){
-            this.deepindex = deepindex;
-            this.picture = picture;
-			this.title = title;
-            this.message = message;
-			this.url = url;
-			this.playSound = playSound;
-        }
+				@Override
+				public void onPrepareLoad(Drawable drawable) {
 
-		@Override
-		protected void onPreExecute() {
-			// Things to be done before execution of long running operation. For
-			// example showing ProgessDialog
+				}
+			};
+			PicassoTools.into(requestCreator, target);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            try {
-                URL url = new URL(picture);
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            // execution of result of Long time consuming operation
-            try {
-                notificationManagerCustomIDWithBitmap(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-						deepindex, result, url, playSound);
-				if(EventsHolder.displayPushHandler != null){ EventsHolder.displayPushHandler.onDisplayMessagePushReceived(); }
-            }catch (Exception e){
-                e.printStackTrace();
-                notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-						url, playSound);
-            }
-        }
-
-    }
-
+	}
 
 
 	public static Bitmap drawableToBitmapPlusText(Context context, Drawable drawable, String text, float fontSize) {
-		Bitmap bitmap = null;
+		Bitmap bitmap;
 
 		if (drawable instanceof BitmapDrawable) {
 			BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
