@@ -118,7 +118,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush) {
 
         try {
             long when = System.currentTimeMillis();
@@ -168,12 +168,16 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
 
-			Notification notification = builder.build();
-            notificationManager.notify(notificationId, notification);
+			if(showDialog == 1 && showPush == 0){
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
+			} else{
+				Notification notification = builder.build();
+				notificationManager.notify(notificationId, notification);
+
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+				wl.acquire(15000);
+			}
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -435,18 +439,19 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 							String url = jObj.optString(KEY_URL, "");
 							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
+							int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
 							}
 
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog);
+								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush);
 							}
 							else{
 								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog);
+										null, url, playSound, showDialog, showPush);
 							}
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
@@ -485,7 +490,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1,
-								null, "", playSound, 0);
+								null, "", playSound, 0, 1);
 
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
@@ -584,7 +589,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 	}
 
 	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
-								   final String picture, final String url, final int playSound, final int showDialog){
+								   final String picture, final String url, final int playSound,
+								   final int showDialog, final int showPush){
 		try {
 			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
 			Target target = new Target() {
@@ -592,11 +598,11 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
 					try {
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-								deepindex, bitmap, url, playSound, showDialog);
+								deepindex, bitmap, url, playSound, showDialog, showPush);
 					} catch (Exception e) {
 						e.printStackTrace();
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog);
+								null, url, playSound, showDialog, showPush);
 					}
 				}
 

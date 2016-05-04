@@ -255,5 +255,6 @@ public interface Constants {
 	String KEY_PICTURE = "picture";
 	String KEY_IMAGE = "image";
 	String KEY_BUTTON_TEXT = "button_text";
+	String KEY_SHOW_PUSH = "show_push";
 
 }

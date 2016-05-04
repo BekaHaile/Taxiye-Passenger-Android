@@ -14,6 +14,7 @@
         android:orientation="vertical"
         android:splitMotionEvents="false"
         android:layout_centerInParent="true"
+        android:layout_margin="40px"
         >
 
         <ImageView
@@ -35,6 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="36px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
             android:gravity="center"
             android:text="Order fruits &amp; veggies\nwhile you ride"
             android:textColor="@color/text_color_dark"
@@ -62,6 +65,8 @@
             android:text="Jugnoo Fresh will get them\ndelivered to "
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_26"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
             />
 
         <Button
