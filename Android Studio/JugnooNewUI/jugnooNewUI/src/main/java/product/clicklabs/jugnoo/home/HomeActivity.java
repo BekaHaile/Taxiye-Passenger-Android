@@ -2529,7 +2529,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
                         && dialogUploadContacts == null
                         && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
-                    drawerLayout.closeDrawer(menuBar.menuLayout);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
                             Data.userData.referAllTitle,
                             Data.userData.referAllText,
@@ -2606,7 +2606,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
                 if (Data.userData.getReferAllStatusLogin() == 0
                         && dialogUploadContacts == null) {
-                    drawerLayout.closeDrawer(menuBar.menuLayout);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
                             Data.userData.getReferAllTitleLogin(),
                             Data.userData.getReferAllTextLogin(),
@@ -2730,7 +2730,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 try {
                     if (Data.supportFeedbackSubmitted) {
-                        drawerLayout.closeDrawer(menuBar.menuLayout);
+                        drawerLayout.closeDrawer(GravityCompat.START);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

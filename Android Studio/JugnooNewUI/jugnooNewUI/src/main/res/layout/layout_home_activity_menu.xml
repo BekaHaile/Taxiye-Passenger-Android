@@ -141,6 +141,43 @@
                     android:tag="mwar"
                     />
 
+                <TextView
+                    android:id="@+id/textViewGetRide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/menu_text_margin_left"
+                    android:text="@string/get_a_ride"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
+
+                <ImageView
+                    android:id="@+id/imageViewGetRideArrow"
+                    android:layout_width="13px"
+                    android:layout_height="26px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    android:src="@drawable/arrow_icon_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="120px"
+                    android:background="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutFresh"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-4px"
+                android:background="@drawable/background_menu_item_selector"
+                android:splitMotionEvents="false">
+
                 <ImageView
                     android:id="@+id/imageViewFresh"
                     android:layout_width="51px"
@@ -149,21 +186,20 @@
                     android:layout_marginLeft="41px"
                     android:src="@drawable/ic_fresh_menu"
                     android:tag="mwar"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
 
                 <TextView
-                    android:id="@+id/textViewGetRide"
+                    android:id="@+id/textViewFresh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/menu_text_margin_left"
-                    android:text="Get a Ride"
+                    android:text="@string/fresh"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_36" />
 
                 <ImageView
-                    android:id="@+id/imageViewGetRideArrow"
                     android:layout_width="13px"
                     android:layout_height="26px"
                     android:layout_alignParentRight="true"

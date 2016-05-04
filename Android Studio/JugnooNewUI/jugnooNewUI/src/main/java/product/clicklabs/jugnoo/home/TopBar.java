@@ -103,7 +103,7 @@ public class TopBar {
 			relativeLayoutNotification.setVisibility(View.VISIBLE);
 			imageViewHelp.setVisibility(View.GONE);
 			imageViewSearchCancel.setVisibility(View.GONE);
-			title.setText(activity.getResources().getString(R.string.jugnoo_fresh));
+			title.setText(activity.getResources().getString(R.string.fresh));
 
 			title.setVisibility(View.GONE);
 			linearLayoutFreshSwapper.setVisibility(View.VISIBLE);

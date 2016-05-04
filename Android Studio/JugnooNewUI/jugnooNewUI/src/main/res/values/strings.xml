@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -787,8 +787,8 @@
 	<string name="bike">Bike</string>
 
 	<string name="waiting_for_location">Waiting for location&#8230;</string>
-	<string name="get_a_ride">Get A Ride</string>
-	<string name="jugnoo_fresh">Jugnoo Fresh</string>
+	<string name="get_a_ride">Get a Ride</string>
+	<string name="fresh">Fresh</string>
 	<string name="order_history">Order History</string>
 	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
 	<string name="checkout">Checkout</string>

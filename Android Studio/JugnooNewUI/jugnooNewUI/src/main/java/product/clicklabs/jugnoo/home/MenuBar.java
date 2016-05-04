@@ -58,8 +58,7 @@ public class MenuBar {
 	public TextView textViewGamePredict, textViewGamePredictNew;
 
 	public RelativeLayout relativeLayoutGetRide;
-	public ImageView imageViewGetRide, imageViewFresh;
-	public TextView textViewGetRide;
+	public RelativeLayout relativeLayoutFresh;
 
 	public RelativeLayout relativeLayoutInvite;
 	public TextView textViewInvite;
@@ -109,10 +108,10 @@ public class MenuBar {
 		textViewGamePredictNew = (TextView)drawerLayout.findViewById(R.id.textViewGamePredictNew); textViewGamePredictNew.setTypeface(Fonts.mavenLight(activity));
 
 		relativeLayoutGetRide = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutGetRide);
-		textViewGetRide = (TextView) drawerLayout.findViewById(R.id.textViewGetRide);
-		textViewGetRide.setTypeface(Fonts.mavenLight(activity));
-		imageViewGetRide = (ImageView) drawerLayout.findViewById(R.id.imageViewGetRide);
-		imageViewFresh = (ImageView) drawerLayout.findViewById(R.id.imageViewFresh);
+		((TextView) drawerLayout.findViewById(R.id.textViewGetRide)).setTypeface(Fonts.mavenLight(activity));
+
+		relativeLayoutFresh = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutFresh);
+		((TextView) drawerLayout.findViewById(R.id.textViewFresh)).setTypeface(Fonts.mavenLight(activity));
 
 		relativeLayoutInvite = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutInvite);
 		textViewInvite = (TextView) drawerLayout.findViewById(R.id.textViewInvite);
@@ -184,6 +183,18 @@ public class MenuBar {
 			@Override
 			public void onClick(View v) {
 				if(activity instanceof HomeActivity) {
+					drawerLayout.closeDrawer(GravityCompat.START);
+				} else if(activity instanceof FreshActivity){
+					activity.finish();
+					activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+				}
+			}
+		});
+
+		relativeLayoutFresh.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(activity instanceof HomeActivity) {
 					if(1 == Data.freshAvailable) {
 						if (((HomeActivity) activity).map != null
 								&& ((HomeActivity)activity).mapStateListener != null
@@ -194,14 +205,9 @@ public class MenuBar {
 						activity.startActivity(new Intent(activity, FreshActivity.class));
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
-
-					} else{
-						drawerLayout.closeDrawer(GravityCompat.START);
 					}
-
 				} else if(activity instanceof FreshActivity){
-					activity.finish();
-					activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+					drawerLayout.closeDrawer(GravityCompat.START);
 				}
 			}
 		});
@@ -287,7 +293,6 @@ public class MenuBar {
 
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openOrderHistory();
-					//drawerLayout.closeDrawer(menuLayout);
 				}
 			}
 		});
@@ -309,7 +314,6 @@ public class MenuBar {
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openSupport();
-					//drawerLayout.closeDrawer(menuLayout);
 				}
 			}
 		});
@@ -361,35 +365,20 @@ public class MenuBar {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		try {
+			if(Data.userData.getcToDReferralEnabled() == 1){
+				relativeLayoutReferDriver.setVisibility(View.VISIBLE);
+			}else {
+				relativeLayoutReferDriver.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if(activity instanceof HomeActivity){
-			textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
-			imageViewGetRide.setVisibility(View.GONE);
-			imageViewFresh.setVisibility(View.VISIBLE);
-			relativeLayoutInvite.setVisibility(View.VISIBLE);
-			relativeLayoutPromotions.setVisibility(View.VISIBLE);
-			relativeLayoutAbout.setVisibility(View.VISIBLE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.ride_history));
-			try {
-				if(Data.userData.getcToDReferralEnabled() == 1){
-					relativeLayoutReferDriver.setVisibility(View.VISIBLE);
-				}else {
-					relativeLayoutReferDriver.setVisibility(View.GONE);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-
 		} else if(activity instanceof FreshActivity){
-			textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
-			imageViewGetRide.setVisibility(View.VISIBLE);
-			imageViewFresh.setVisibility(View.GONE);
-			relativeLayoutInvite.setVisibility(View.GONE);
-			relativeLayoutPromotions.setVisibility(View.GONE);
-			relativeLayoutAbout.setVisibility(View.GONE);
 			textViewTransactions.setText(activity.getResources().getString(R.string.order_history));
-			relativeLayoutReferDriver.setVisibility(View.GONE);
 		}
 
 		setupFreshUI();
@@ -442,13 +431,9 @@ public class MenuBar {
 		try {
 			if(activity instanceof HomeActivity) {
 				if (1 == Data.freshAvailable) {
-					textViewGetRide.setText(activity.getResources().getString(R.string.jugnoo_fresh));
-					imageViewGetRide.setVisibility(View.GONE);
-					imageViewFresh.setVisibility(View.VISIBLE);
+					relativeLayoutFresh.setVisibility(View.VISIBLE);
 				} else {
-					textViewGetRide.setText(activity.getResources().getString(R.string.get_a_ride));
-					imageViewGetRide.setVisibility(View.VISIBLE);
-					imageViewFresh.setVisibility(View.GONE);
+					relativeLayoutFresh.setVisibility(View.GONE);
 				}
 			}
 		} catch (Exception e) {
