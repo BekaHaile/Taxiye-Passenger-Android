@@ -19,12 +19,14 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -34,6 +36,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -66,6 +69,9 @@ public class MenuBar {
 	public RelativeLayout relativeLayoutWallet;
 	public TextView textViewWallet, textViewWalletValue;
 	public ProgressWheel progressBarMenuPaytmWalletLoading;
+
+	public RelativeLayout relativeLayoutInbox;
+	public TextView textViewInboxValue;
 
 	public RelativeLayout relativeLayoutPromotions;
 	public TextView textViewPromotions, textViewPromotionsValue;
@@ -124,6 +130,12 @@ public class MenuBar {
 		textViewWalletValue.setTypeface(Fonts.latoRegular(activity));
 		progressBarMenuPaytmWalletLoading = (ProgressWheel) drawerLayout.findViewById(R.id.progressBarMenuPaytmWalletLoading);
 		progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+
+		relativeLayoutInbox = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutInbox);
+		((TextView) drawerLayout.findViewById(R.id.textViewInbox)).setTypeface(Fonts.mavenLight(activity));
+		textViewInboxValue = (TextView) drawerLayout.findViewById(R.id.textViewInboxValue);
+		textViewInboxValue.setTypeface(Fonts.mavenLight(activity));
+		textViewInboxValue.setVisibility(View.GONE);
 
 		relativeLayoutPromotions = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutPromotions);
 		textViewPromotions = (TextView) drawerLayout.findViewById(R.id.textViewPromotions);
@@ -235,6 +247,25 @@ public class MenuBar {
 				FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
 				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
+			}
+		});
+
+		relativeLayoutInbox.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LatLng currLatLng = null;
+				if(activity instanceof HomeActivity){
+					currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+				} else if(activity instanceof FreshActivity){
+					currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+				}
+				if(currLatLng != null){
+					Data.latitude = currLatLng.latitude;
+					Data.longitude = currLatLng.longitude;
+				}
+				activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
 			}
 		});
 
@@ -410,6 +441,15 @@ public class MenuBar {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+
+			int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+			if(unreadNotificationsCount > 0){
+				textViewInboxValue.setVisibility(View.VISIBLE);
+				textViewInboxValue.setText(String.valueOf(unreadNotificationsCount));
+			}
+			else{
+				textViewInboxValue.setVisibility(View.GONE);
 			}
 
 		} catch (Exception e) {

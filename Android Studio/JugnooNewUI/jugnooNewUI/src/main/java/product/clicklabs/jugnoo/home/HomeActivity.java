@@ -1628,9 +1628,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-						topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 
 						if(!firstTimeZoom){
@@ -1683,9 +1681,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1733,9 +1729,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setGoogleMapPadding(0);
 
 
-                        topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1790,9 +1784,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1854,9 +1846,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1903,9 +1893,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1919,8 +1907,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
 						setGoogleMapPadding(0);
 
@@ -2948,13 +2934,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 menuBar.linearLayoutProfile.performClick();
 			}
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-                topBar.relativeLayoutNotification.performClick();
+                menuBar.relativeLayoutInbox.performClick();
 			}
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
                 menuBar.relativeLayoutGamePredict.performClick();
             }
             else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutGetRide.performClick();
+                menuBar.relativeLayoutFresh.performClick();
             }
 
         } catch(Exception e){
@@ -3287,7 +3273,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         @Override
         public void onContinueClicked() {
-            topBar.imageViewFreshSwapper.performClick();
+            menuBar.relativeLayoutFresh.performClick();
         }
 
         @Override
@@ -5616,8 +5602,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
-                    topBar.title.setVisibility(View.VISIBLE);
-                    topBar.closeFreshUI();
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
