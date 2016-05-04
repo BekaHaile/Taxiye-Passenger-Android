@@ -247,7 +247,7 @@ public class FreshActivity extends FragmentActivity {
 
 			topBar.title.setVisibility(View.GONE);
 			topBar.linearLayoutFreshSwapper.setVisibility(View.VISIBLE);
-			topBar.title.setText(getResources().getString(R.string.jugnoo_fresh));
+			topBar.title.setText(getResources().getString(R.string.fresh));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshCartItemsFragment){
