@@ -4573,13 +4573,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             initializeStartRideVariables();
                             passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                             switchPassengerScreen(passengerScreenMode);
-                            try {
-                                JSONObject map = new JSONObject();
-                                map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
-                                NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_RIDE_START, map);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                         }
                     });
                 } else {
@@ -4733,14 +4726,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }
                 });
-
-                try {
-                    JSONObject map = new JSONObject();
-                    map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
-                    NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_ACCEPTED, map);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
 
         } catch (Exception e) {
@@ -5141,7 +5126,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 String links = Database2.getInstance(HomeActivity.this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 								if(links != null){
                                     if(!"[]".equalsIgnoreCase(links)) {
-                                        nameValuePairs.put("branch_referring_links", links);
+                                        nameValuePairs.put(KEY_BRANCH_REFERRING_LINKS, links);
                                     }
 								}
 
@@ -5158,7 +5143,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
                                 try{
-                                    if(promoCouponSelectedForRide.id != 0) {
+                                    if(promoCouponSelectedForRide.id > 0) {
                                         JSONObject map = new JSONObject();
                                         map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
                                         NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);

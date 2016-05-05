@@ -152,7 +152,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.commit();
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
-					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYMENT_WALLET_CLICKED, null);
+					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
 				}
 			}
 		});

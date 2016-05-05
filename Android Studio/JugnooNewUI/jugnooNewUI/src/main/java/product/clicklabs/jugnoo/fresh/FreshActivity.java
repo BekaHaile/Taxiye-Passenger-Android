@@ -235,6 +235,8 @@ public class FreshActivity extends FragmentActivity {
 	public void fragmentUISetup(Fragment fragment){
 		textViewMinOrder.setVisibility(View.GONE);
 		imageViewSearch.setVisibility(View.GONE);
+		topBar.imageViewAppToggle.setVisibility(View.GONE);
+
 		if(fragment instanceof FreshFragment){
 			topBar.imageViewMenu.setVisibility(View.VISIBLE);
 			topBar.imageViewBack.setVisibility(View.GONE);
@@ -244,6 +246,7 @@ public class FreshActivity extends FragmentActivity {
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 			//imageViewSearch.setVisibility(View.VISIBLE);
 
+			topBar.imageViewAppToggle.setVisibility(View.VISIBLE);
 			topBar.title.setText(getResources().getString(R.string.fresh));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 

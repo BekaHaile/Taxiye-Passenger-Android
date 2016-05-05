@@ -318,6 +318,11 @@ public class Data {
 			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
 			}
+			else if(intent.hasExtra(Constants.KEY_MESSAGE)
+					&& intent.hasExtra(Constants.KEY_VIA_FUGU)
+					&& intent.getIntExtra(Constants.KEY_VIA_FUGU, 0) == 1){
+				new GCMIntentService().onMessageReceived("app", intent.getExtras());
+			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
 				Data.deepLinkPickupLatitude = Double.parseDouble(data.getQueryParameter("pickup_lat"));

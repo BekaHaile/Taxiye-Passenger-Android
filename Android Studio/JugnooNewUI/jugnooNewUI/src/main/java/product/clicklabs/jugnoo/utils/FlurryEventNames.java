@@ -298,7 +298,7 @@ public interface FlurryEventNames {
     NUDGE_GAME_CLICKED = "game_clicked",
     NUDGE_FREE_RIDES_CLICKED = "free_rides_clicked",
     NUDGE_WALLET_CLICKED = "wallet_clicked",
-    NUDGE_PAYMENT_WALLET_CLICKED = "payment_wallet_clicked",
+    NUDGE_PAYTM_WALLET_CLICKED = "paytm_wallet_clicked",
     NUDGE_ADD_MONEY_CLICKED = "add_money_clicked",
     NUDGE_EDIT_PAYTM_CLICKED = "edit_paytm_clicked",
             NUDGE_FRESH_CATEGORY_CLICKED_FORMAT = "fresh_category_%s_clicked",
@@ -315,7 +315,8 @@ public interface FlurryEventNames {
             NUDGE_FRESH_BACK_ON_PAYMENT_CLICKED = "fresh_back_on_payment_clicked",
             NUDGE_FRESH_PLACE_ORDER_CLICKED = "fresh_place_order_clicked",
             NUDGE_FRESH_ORDER_PLACED = "fresh_order_placed",
-            NUDGE_FRESH_BACK_TO_JUGNOO = "fresh_back_to_jugnoo"
+            NUDGE_FRESH_BACK_TO_JUGNOO = "fresh_back_to_jugnoo",
+    NUDGE_LOGIN_APP_SOURCE = "login_app_source"
             ;
 
 }
