@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,7 +35,7 @@ public class PushDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show() {
+	public PushDialog show() {
 		try {
 			String pushDialogContent = Prefs.with(activity).getString(Constants.SP_PUSH_DIALOG_CONTENT,
 					Constants.EMPTY_JSON_OBJECT);
@@ -91,6 +90,8 @@ public class PushDialog {
 				button.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
+								Constants.EMPTY_JSON_OBJECT);
 						callback.onButtonClicked(deepindex);
 						dialog.dismiss();
 					}
@@ -99,31 +100,34 @@ public class PushDialog {
 				imageViewClose.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
+								Constants.EMPTY_JSON_OBJECT);
 						dialog.dismiss();
 					}
 				});
 
-				dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						callback.onDialogDismiss();
-					}
-				});
-
 				dialog.show();
-				Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
-						Constants.EMPTY_JSON_OBJECT);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return dialog;
+		return this;
+	}
+
+	public void dismiss(boolean clearDialogContent){
+		if(clearDialogContent){
+			Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
+					Constants.EMPTY_JSON_OBJECT);
+		}
+		if(dialog != null) {
+			dialog.dismiss();
+			dialog = null;
+		}
 	}
 
 
 	public interface Callback{
 		void onButtonClicked(int deepIndex);
-		void onDialogDismiss();
 	}
 
 }

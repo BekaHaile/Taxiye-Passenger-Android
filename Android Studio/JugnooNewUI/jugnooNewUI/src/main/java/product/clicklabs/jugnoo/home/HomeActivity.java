@@ -114,7 +114,6 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
@@ -168,7 +167,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import retrofit.Callback;
@@ -178,7 +176,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler,
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants {
 
 
@@ -324,7 +322,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog, dialogPush;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
+    PushDialog pushDialog;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -403,8 +402,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 //		Data.getDeepLinkIndexFromIntent(getIntent());
-
-		EventsHolder.displayPushHandler = this;
 
 		Data.latitude = Data.loginLatitude;
 		Data.longitude = Data.loginLongitude;
@@ -1916,6 +1913,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						Data.pickupLatLng = null;
 
+                        dismissPushDialog(true);
+
                         break;
 
                 }
@@ -2734,10 +2733,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 openDeepLink();
                 performDeepLinkRequest();
-
-                EventsHolder.displayPushHandler = this;
-
-                startNotifsUpdater();
 
                 getPaytmBalance(this);
 
@@ -5859,24 +5854,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void openPushDialog(){
-        if(dialogPush != null){
-            dialogPush.dismiss();
-            dialogPush = null;
-        }
-        Dialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
+        dismissPushDialog(false);
+        PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
             @Override
             public void onButtonClicked(int deepIndex) {
                 Data.deepLinkIndex = deepIndex;
                 openDeepLink();
             }
-
-            @Override
-            public void onDialogDismiss() {
-
-            }
         }).show();
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
         if(dialog != null){
-            dialogPush = dialog;
+            pushDialog = dialog;
+        }
+    }
+
+    private void dismissPushDialog(boolean clearDialogContent){
+        if(pushDialog != null){
+            pushDialog.dismiss(clearDialogContent);
+            pushDialog = null;
         }
     }
 

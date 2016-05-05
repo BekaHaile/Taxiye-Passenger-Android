@@ -509,18 +509,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
-						if (EventsHolder.displayPushHandler != null) {
-							EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-						}
+						notifyActivityOnPush();
 					}
 					else if (PushFlags.DELETE_NOTIFICATION_ID.getOrdinal() == flag) {
 						if(jObj.has(KEY_NOTIFICATION_ID)) {
 							int id = jObj.optInt(KEY_NOTIFICATION_ID, -1);
 							if(id != -1) {
 								Database2.getInstance(this).deleteNotification(id);
-								if (EventsHolder.displayPushHandler != null) {
-									EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-								}
+								notifyActivityOnPush();
 							}
 						}
 					}
@@ -593,12 +589,18 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				}
 
 				Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-				if (EventsHolder.displayPushHandler != null) {
-					EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-				}
+				notifyActivityOnPush();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void notifyActivityOnPush(){
+		if (EventsHolder.displayPushHandler != null) {
+			EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
+		} else if(HomeActivity.appInterruptHandler != null){
+			HomeActivity.appInterruptHandler.onDisplayMessagePushReceived();
 		}
 	}
 

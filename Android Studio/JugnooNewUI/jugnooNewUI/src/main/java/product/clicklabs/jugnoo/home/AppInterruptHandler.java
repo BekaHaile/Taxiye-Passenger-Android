@@ -34,4 +34,5 @@ public interface AppInterruptHandler {
 
 	void onShowDialogPush();
 
+	void onDisplayMessagePushReceived();
 }

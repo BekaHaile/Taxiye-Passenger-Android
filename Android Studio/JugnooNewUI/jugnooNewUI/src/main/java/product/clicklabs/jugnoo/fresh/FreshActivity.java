@@ -140,7 +140,7 @@ public class FreshActivity extends FragmentActivity {
 		imageViewSearch.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
+//				getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
 			}
 		});
 
@@ -236,6 +236,7 @@ public class FreshActivity extends FragmentActivity {
 		textViewMinOrder.setVisibility(View.GONE);
 		imageViewSearch.setVisibility(View.GONE);
 		topBar.imageViewAppToggle.setVisibility(View.GONE);
+		topBar.imageViewSearchIcon.setVisibility(View.GONE);
 
 		if(fragment instanceof FreshFragment){
 			topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -247,6 +248,7 @@ public class FreshActivity extends FragmentActivity {
 			//imageViewSearch.setVisibility(View.VISIBLE);
 
 			topBar.imageViewAppToggle.setVisibility(View.VISIBLE);
+			topBar.imageViewSearchIcon.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.fresh));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
@@ -346,7 +348,7 @@ public class FreshActivity extends FragmentActivity {
 					@Override
 					public void onClick(View v) {
 						FreshCartItemsFragment frag = getFreshCartItemsFragment();
-						if(frag != null) {
+						if (frag != null) {
 							frag.deleteCart();
 						}
 						clearCart();
@@ -571,6 +573,10 @@ public class FreshActivity extends FragmentActivity {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	public void openSearch(){
+		getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
 	}
 
 	private void clearCart(){

@@ -65,6 +65,16 @@
             >
 
             <ImageView
+                android:id="@+id/imageViewSearchIcon"
+                android:layout_width="63px"
+                android:layout_height="63px"
+                android:padding="15px"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/search_icon"
+                android:tag="mwar"
+                android:visibility="gone"/>
+
+            <ImageView
                 android:id="@+id/imageViewAppToggle"
                 android:layout_width="78px"
                 android:layout_height="68px"

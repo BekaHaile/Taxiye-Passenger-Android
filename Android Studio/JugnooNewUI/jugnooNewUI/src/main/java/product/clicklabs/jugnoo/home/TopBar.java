@@ -34,7 +34,7 @@ public class TopBar {
 
 	//Top RL
 	public RelativeLayout topRl;
-	public ImageView imageViewMenu, imageViewAppToggle;
+	public ImageView imageViewMenu, imageViewAppToggle, imageViewSearchIcon;
 	public TextView title;
 	public Button buttonCheckServer;
 	public ImageView imageViewHelp;
@@ -51,6 +51,7 @@ public class TopBar {
 		topRl = (RelativeLayout) drawerLayout.findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewAppToggle = (ImageView) drawerLayout.findViewById(R.id.imageViewAppToggle);
+		imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
 		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
@@ -75,6 +76,7 @@ public class TopBar {
 		});
 
 		imageViewAppToggle.setOnClickListener(topBarOnClickListener);
+		imageViewSearchIcon.setOnClickListener(topBarOnClickListener);
 		imageViewHelp.setOnClickListener(topBarOnClickListener);
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 		imageViewDelete.setOnClickListener(topBarOnClickListener);
@@ -88,6 +90,7 @@ public class TopBar {
 			paramsAppToggle.width = (int)(minRatio * 78f);
 			paramsAppToggle.height = (int)(minRatio * 68f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
+			imageViewSearchIcon.setVisibility(View.GONE);
 
 			title.setText(activity.getResources().getString(R.string.fresh));
 
@@ -96,6 +99,7 @@ public class TopBar {
 			paramsAppToggle.width = (int)(minRatio * 92f);
 			paramsAppToggle.height = (int)(minRatio * 66f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
+			imageViewSearchIcon.setVisibility(View.GONE);
 
 			title.setText(activity.getResources().getString(R.string.app_name));
 		}
@@ -161,6 +165,12 @@ public class TopBar {
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
 
+					}
+					break;
+
+				case R.id.imageViewSearchIcon:
+					if(activity instanceof FreshActivity){
+						((FreshActivity)activity).openSearch();
 					}
 					break;
 
