@@ -312,6 +312,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 		try {
 
+			try {
+				Prefs.with(this).save(KEY_SP_FUGU_CAMPAIGN_NAME, data.getString(KEY_SP_FUGU_CAMPAIGN_NAME, ""));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			if (!"".equalsIgnoreCase(data.getString(KEY_MESSAGE, ""))) {
 
 				String message = data.getString(KEY_MESSAGE);

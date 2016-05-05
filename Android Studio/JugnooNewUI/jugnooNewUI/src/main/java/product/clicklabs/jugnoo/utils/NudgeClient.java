@@ -68,6 +68,14 @@ public class NudgeClient {
 			NudgespotActivity activity = new NudgespotActivity(eventName);
 			activity.setProperties(map);
 			getGcmClient(context).track(activity);
+
+			String campaignName = Prefs.with(context).getString(Constants.KEY_SP_FUGU_CAMPAIGN_NAME, "");
+			if(!"".equalsIgnoreCase(campaignName)) {
+				NudgespotActivity campaignActivity = new NudgespotActivity(eventName + "_" + campaignName);
+				campaignActivity.setProperties(map);
+				getGcmClient(context).track(campaignActivity);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

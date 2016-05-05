@@ -1302,6 +1302,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.put(KEY_LATITUDE, Data.latitude);
             map.put(KEY_LONGITUDE, Data.longitude);
             NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN, map);
+
+            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN+"35", map);
         } catch (Exception e) {
             e.printStackTrace();
         }
