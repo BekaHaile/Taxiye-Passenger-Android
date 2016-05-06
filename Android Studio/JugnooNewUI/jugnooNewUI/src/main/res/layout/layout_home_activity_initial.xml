@@ -15,23 +15,84 @@
         android:id="@+id/linearLayoutInitialSearchBarMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/transparent"
         android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSearchContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="200px"
+            android:layout_marginTop="30px">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutDestSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="73px"
+                android:background="@drawable/dropshadow_rank2"
+                android:layout_gravity="center_horizontal"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewDestSearchGPSIcon"
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30px"
+                    android:src="@drawable/circle_red"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewDestSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:padding="5px"
+                    android:layout_toRightOf="@+id/imageViewDestSearchGPSIcon"
+                    android:layout_toLeftOf="@+id/progressBarDestSearch"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/assigning_state_edit_text_hint"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+                <product.clicklabs.jugnoo.utils.ProgressWheel
+                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/progressBarDestSearch"
+                    android:layout_width="70px"
+                    android:layout_height="70px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20px"
+                    android:tag="mwar"
+                    wheel:matProg_barColor="@color/theme_color"
+                    wheel:matProg_barWidth="3dp"
+                    wheel:matProg_fillRadius="true"
+                    wheel:matProg_progressIndeterminate="true" />
+            </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayoutInitialSearchBar"
             android:layout_width="match_parent"
             android:layout_height="100px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_marginTop="28px"
+            android:background="@drawable/dropshadow_grey"
             android:layout_gravity="center_horizontal"
             android:splitMotionEvents="false">
 
             <ImageView
                 android:id="@+id/imageViewInitialSearchGPSIcon"
-                android:layout_width="33px"
-                android:layout_height="33px"
+                android:layout_width="20px"
+                android:layout_height="20px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30px"
-                android:src="@drawable/search_icon"
+                android:src="@drawable/circle_green"
                 android:tag="mwar" />
 
             <TextView
@@ -63,6 +124,9 @@
                 wheel:matProg_barWidth="3dp"
                 wheel:matProg_fillRadius="true"
                 wheel:matProg_progressIndeterminate="true" />
+        </RelativeLayout>
+
+
         </RelativeLayout>
 
         <RelativeLayout

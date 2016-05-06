@@ -55,7 +55,7 @@
         android:bottom="-0.5dp"
         >
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/rank_2" />
             <corners android:radius="@dimen/wallet_button_corner_radius"/>
         </shape>
     </item>

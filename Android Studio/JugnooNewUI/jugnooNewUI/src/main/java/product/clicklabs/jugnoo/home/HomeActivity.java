@@ -37,9 +37,11 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -214,7 +216,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
 	ImageView imageViewRideNow, imageViewInAppCampaign;
-	RelativeLayout relativeLayoutInitialSearchBar;
+	RelativeLayout relativeLayoutInitialSearchBar, relativeLayoutDestSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
@@ -268,7 +270,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Search Layout
-    RelativeLayout relativeLayoutSearch;
+    RelativeLayout relativeLayoutSearchContainer, relativeLayoutSearch;
 
 
 
@@ -309,7 +311,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
-
+    private final int SEARCH_FLIP_ANIMATION_TIME = 300;
 
     public static Location myLocation;
 
@@ -515,8 +517,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
 
 
-
+        relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
+        relativeLayoutDestSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutDestSearchBar);
         textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
         progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
@@ -697,6 +700,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        relativeLayoutDestSearchBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                Log.v("index value of Initial search", "--> " + index);
+                if(index == 1) {
+                    //viewGroup.bringChildToFront(viewGroup.getChildAt(0));
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false);
+                }else{
+                    setServiceAvailablityUI("");
+                    passengerScreenMode = PassengerScreenMode.P_SEARCH;
+                    switchPassengerScreen(passengerScreenMode);
+                }
+                Log.i("index value of Initial search", "--> "+viewGroup.indexOfChild(relativeLayoutInitialSearchBar));
+            }
+        });
+
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
 
@@ -816,12 +838,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                setServiceAvailablityUI("");
-                passengerScreenMode = PassengerScreenMode.P_SEARCH;
-                switchPassengerScreen(passengerScreenMode);
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
+                Log.v("index value of Dest search", "--> " + index);
+                if(index == 1) {
+                    //viewGroup.bringChildToFront(viewGroup.getChildAt(0));
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true);
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false);
+                }else{
+                    setServiceAvailablityUI("");
+                    passengerScreenMode = PassengerScreenMode.P_SEARCH;
+                    switchPassengerScreen(passengerScreenMode);
+                }
+                Log.i("index value of Dest search", "--> "+viewGroup.indexOfChild(relativeLayoutDestSearchBar));
+
             }
         });
 
@@ -1351,6 +1383,132 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+    }
+
+    private void translateViewBottom(final ViewGroup viewGroup, final View mView, final boolean viewExchange) {
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, 25f);
+        animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
+        animation.setFillAfter(false);
+        mView.clearAnimation();
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(viewExchange) {
+                    viewGroup.bringChildToFront(viewGroup.getChildAt(0));
+                }
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
+                params.topMargin = params.topMargin + 25;
+                mView.setLayoutParams(params);
+                translateViewBottomTop(mView, viewExchange);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mView.startAnimation(animation);
+
+    }
+
+    private void translateViewBottomTop(final View mView, final boolean viewExchange){
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, -25f);
+        animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
+        animation.setFillAfter(false);
+        mView.clearAnimation();
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(viewExchange) {
+                    mView.setBackgroundResource(R.drawable.dropshadow_grey);
+                }else{
+                    mView.setBackgroundResource(R.drawable.dropshadow_rank2);
+                }
+                mView.clearAnimation();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
+                params.topMargin = params.topMargin - 25;
+                mView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mView.startAnimation(animation);
+    }
+
+
+    private void translateViewTop(final ViewGroup viewGroup, final View mView, final boolean viewExchange) {
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, -25f);
+        animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
+        animation.setFillAfter(false);
+        mView.clearAnimation();
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(viewExchange) {
+                    viewGroup.bringChildToFront(viewGroup.getChildAt(0));
+                }
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
+                params.topMargin = params.topMargin - 25;
+                mView.setLayoutParams(params);
+                translateViewTopBottom(mView, viewExchange);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mView.startAnimation(animation);
+    }
+
+    private void translateViewTopBottom(final View mView, final boolean viewExchange){
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, 25f);
+        animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
+        animation.setFillAfter(false);
+        mView.clearAnimation();
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(viewExchange) {
+                    mView.setBackgroundResource(R.drawable.dropshadow_grey);
+                }else{
+                    mView.setBackgroundResource(R.drawable.dropshadow_rank2);
+                }
+                mView.clearAnimation();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
+                params.topMargin = params.topMargin + 25;
+                mView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mView.startAnimation(animation);
     }
 
     public void slideOnClick(View v){
