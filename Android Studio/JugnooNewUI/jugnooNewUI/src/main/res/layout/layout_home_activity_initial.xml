@@ -21,8 +21,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutSearchContainer"
             android:layout_width="wrap_content"
-            android:layout_height="200px"
-            android:layout_marginTop="30px">
+            android:layout_height="200px">
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBar"
@@ -52,7 +51,6 @@
                     android:layout_marginLeft="20px"
                     android:padding="5px"
                     android:layout_toRightOf="@+id/imageViewDestSearchGPSIcon"
-                    android:layout_toLeftOf="@+id/progressBarDestSearch"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/assigning_state_edit_text_hint"
@@ -60,19 +58,6 @@
                     android:textColor="@color/text_color"
                     android:textSize="30px" />
 
-                <product.clicklabs.jugnoo.utils.ProgressWheel
-                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/progressBarDestSearch"
-                    android:layout_width="70px"
-                    android:layout_height="70px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
-                    android:tag="mwar"
-                    wheel:matProg_barColor="@color/theme_color"
-                    wheel:matProg_barWidth="3dp"
-                    wheel:matProg_fillRadius="true"
-                    wheel:matProg_progressIndeterminate="true" />
             </RelativeLayout>
 
         <RelativeLayout

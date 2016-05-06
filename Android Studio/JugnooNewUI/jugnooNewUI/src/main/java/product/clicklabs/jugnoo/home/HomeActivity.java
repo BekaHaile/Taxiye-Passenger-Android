@@ -1386,7 +1386,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void translateViewBottom(final ViewGroup viewGroup, final View mView, final boolean viewExchange) {
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, 25f);
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale()*25f));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -1402,7 +1402,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                 }
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = params.topMargin + 25;
+                params.topMargin = params.topMargin + (int)(ASSL.Yscale()*25);
                 mView.setLayoutParams(params);
                 translateViewBottomTop(mView, viewExchange);
             }
@@ -1417,7 +1417,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void translateViewBottomTop(final View mView, final boolean viewExchange){
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, -25f);
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * (-25f)));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -1436,7 +1436,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin - 25;
+                params.topMargin = params.topMargin - (int)(ASSL.Yscale()*25);
                 mView.setLayoutParams(params);
             }
 
@@ -1450,7 +1450,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private void translateViewTop(final ViewGroup viewGroup, final View mView, final boolean viewExchange) {
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, -25f);
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * (-25f)));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -1466,7 +1466,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                 }
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = params.topMargin - 25;
+                params.topMargin = params.topMargin - (int)(ASSL.Yscale() * 25f);
                 mView.setLayoutParams(params);
                 translateViewTopBottom(mView, viewExchange);
             }
@@ -1480,7 +1480,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void translateViewTopBottom(final View mView, final boolean viewExchange){
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, 25f);
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * 25f));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -1499,7 +1499,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin + 25;
+                params.topMargin = params.topMargin + (int)(ASSL.Yscale() * 25f);
                 mView.setLayoutParams(params);
             }
 
