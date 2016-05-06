@@ -18,8 +18,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -34,7 +32,6 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
-import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.AppStatus;

@@ -2,7 +2,8 @@ package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.content.Context;
+import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
@@ -33,7 +33,6 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.RideInfo;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -114,7 +113,24 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.relativeLayoutContainer.setTag(position);
 
                 if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(menuInfo.getTag())){
-                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_play_selector);
+                    holder.imageViewMenuIcon.setImageDrawable(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal));
+                    try {
+                        String icon = "";
+                        if(menuInfo.getIcon() != null && !"".equalsIgnoreCase(menuInfo.getIcon())){
+                            icon = menuInfo.getIcon();
+                        } else if(!"".equalsIgnoreCase(Data.userData.getGamePredictIconUrl())){
+                            icon = Data.userData.getGamePredictIconUrl();
+                        }
+                        if(!"".equalsIgnoreCase(icon)){
+                            Picasso.with(activity)
+                                    .load(icon)
+                                    .placeholder(R.drawable.ic_play_normal)
+                                    .error(R.drawable.ic_play_normal)
+                                    .into(holder.imageViewMenuIcon);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else if(MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_get_a_ride_selector);
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
@@ -358,6 +374,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.latoRegular(context));
             textViewViewAccount = (TextView) convertView.findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Fonts.latoRegular(context));
         }
+    }
+
+    public StateListDrawable getSelector(Context context, int pressed, int normal){
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
+                context.getResources().getDrawable(pressed));
+        stateListDrawable.addState(new int[]{},
+                context.getResources().getDrawable(normal));
+        return stateListDrawable;
     }
 
 }

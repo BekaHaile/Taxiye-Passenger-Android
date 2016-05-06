@@ -176,7 +176,7 @@
                     android:id="@+id/imageViewIRPaymentOptionPaytm"
                     android:layout_width="72px"
                     android:layout_height="23px"
-                    android:src="@drawable/ic_paytm_logo"
+                    android:src="@drawable/ic_paytm_small"
                     android:tag="mwar"
                     android:visibility="visible" />
 

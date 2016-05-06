@@ -319,7 +319,7 @@
 	<string name="nl_min_fare">MIN FARE</string>
 	<string name="nl_offers">OFFERS</string>
 	<string name="nl_change_locality">CHANGE LOCALITY</string>
-	<string name="nl_get_fare_estimate">Get fare estimate</string>
+	<string name="get_fare_estimate">Get Fare Estimate</string>
 	<string name="nl_per_km">Per Km</string>
 	<string name="nl_per_min">Per Min</string>
 	<string name="service_not_available">Our service is not available in this area</string>
@@ -851,5 +851,7 @@
 
 	<string name="inbox">Inbox</string>
 	<string name="no_campaign_currently">No campaign currently</string>
+	<string name="fare_ln_estimate">Fare\nEstimate</string>
+	<string name="min_fare_rupee_format">Min Fare: \u20B9 %s</string>
 
 </resources>

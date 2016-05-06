@@ -105,7 +105,7 @@
                 android:layout_height="22px"
                 android:tag="mwar"
                 android:layout_marginLeft="20px"
-                android:src="@drawable/paytm_home_icon"/>
+                android:src="@drawable/ic_paytm_small"/>
 
             <TextView
                 android:id="@+id/textViewPaytm"

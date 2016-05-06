@@ -24,7 +24,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30px"
             android:layout_marginTop="40px"
-            android:src="@drawable/ic_paytm_logo_big"
+            android:src="@drawable/ic_paytm_big"
             android:tag="mwar"/>
 
         <TextView

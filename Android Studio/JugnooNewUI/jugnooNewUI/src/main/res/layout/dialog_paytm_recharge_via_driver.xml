@@ -35,7 +35,7 @@
                     android:id="@+id/imageViewPaytmIcon"
                     android:layout_width="111px"
                     android:layout_height="35px"
-                    android:src="@drawable/ic_paytm_logo_big"
+                    android:src="@drawable/ic_paytm_big"
                     android:tag="mwar"/>
 
                 <TextView

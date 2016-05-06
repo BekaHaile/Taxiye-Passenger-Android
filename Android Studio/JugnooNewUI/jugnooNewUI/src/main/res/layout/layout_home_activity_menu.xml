@@ -102,7 +102,7 @@
                     android:layout_height="28px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="41px"
-                    android:src="@drawable/ic_fresh_menu"
+                    android:src="@drawable/ic_fresh_normal"
                     android:tag="mwar"
                     android:visibility="visible"
                     />

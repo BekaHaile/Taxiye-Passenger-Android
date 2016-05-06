@@ -147,7 +147,7 @@
                     android:layout_height="23px"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
-                    android:src="@drawable/ic_paytm_logo"
+                    android:src="@drawable/ic_paytm_small"
                     android:tag="mwar" />
 
                 <TextView

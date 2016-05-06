@@ -310,7 +310,7 @@ android:visibility="visible">
             android:layout_width="82px"
             android:layout_height="27px"
             android:layout_marginLeft="20px"
-            android:src="@drawable/paytm_home_icon"/>
+            android:src="@drawable/ic_paytm_small"/>
     </LinearLayout>
 
 <Button

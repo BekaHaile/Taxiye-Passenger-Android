@@ -283,7 +283,7 @@ public class SlidingBottomPanel {
 				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
             }
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
+                imageViewPaymentOp.setImageResource(R.drawable.ic_paytm_small);
                 textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
 			} else {
