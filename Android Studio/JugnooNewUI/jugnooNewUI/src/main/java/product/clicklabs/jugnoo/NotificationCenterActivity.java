@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,8 +52,6 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_center);
-
-        EventsHolder.displayPushHandler = this;
 
         root = (LinearLayout) findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
@@ -124,10 +121,20 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 
     public void performBackPressed() {
-        Intent intent = new Intent();
-        setResult(RESULT_CANCELED, intent);
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventsHolder.displayPushHandler = this;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventsHolder.displayPushHandler = null;
     }
 
     @Override
@@ -175,7 +182,6 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
                         try {
                             swipeRefreshLayout.setRefreshing(false);
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
                                 if(notificationInboxResponse.getPushes().size() > 0) {
                                     myNotificationAdapter.notifyList(notificationInboxResponse.getTotal(),
                                             (ArrayList<NotificationData>) notificationInboxResponse.getPushes(), refresh);

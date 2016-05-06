@@ -257,4 +257,8 @@ public interface Constants {
 	String KEY_BUTTON_TEXT = "button_text";
 	String KEY_SHOW_PUSH = "show_push";
 
+	String KEY_BRANCH_REFERRING_LINKS = "branch_referring_links";
+	String KEY_VIA_FUGU = "via_fugu";
+	String KEY_SP_FUGU_CAMPAIGN_NAME = "fugu_campaign_name";
+
 }

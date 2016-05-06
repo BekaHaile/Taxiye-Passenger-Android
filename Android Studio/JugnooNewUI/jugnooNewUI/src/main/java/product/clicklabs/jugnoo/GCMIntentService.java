@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -311,6 +312,12 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 		try {
 
+			try {
+				Prefs.with(this).save(KEY_SP_FUGU_CAMPAIGN_NAME, data.getString(KEY_SP_FUGU_CAMPAIGN_NAME, ""));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			if (!"".equalsIgnoreCase(data.getString(KEY_MESSAGE, ""))) {
 
 				String message = data.getString(KEY_MESSAGE);
@@ -329,9 +336,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
-						} else{
-							Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
 						}
+						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
 
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
@@ -340,6 +346,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound);
 						} else{
 							notificationManager(this, title, message1, playSound);
+						}
+						try {
+							JSONObject map = new JSONObject();
+							map.put(KEY_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
+							NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_ACCEPTED, map);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
@@ -379,6 +392,13 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							}
 						}
 						notificationManager(this, title, message1, playSound);
+						try {
+							JSONObject map = new JSONObject();
+							map.put(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""));
+							NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_START, map);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
@@ -495,18 +515,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
 						Database2.getInstance(this).deleteNotificationTable();
-						if (EventsHolder.displayPushHandler != null) {
-							EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-						}
+						notifyActivityOnPush();
 					}
 					else if (PushFlags.DELETE_NOTIFICATION_ID.getOrdinal() == flag) {
 						if(jObj.has(KEY_NOTIFICATION_ID)) {
 							int id = jObj.optInt(KEY_NOTIFICATION_ID, -1);
 							if(id != -1) {
 								Database2.getInstance(this).deleteNotification(id);
-								if (EventsHolder.displayPushHandler != null) {
-									EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-								}
+								notifyActivityOnPush();
 							}
 						}
 					}
@@ -579,12 +595,18 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 				}
 
 				Prefs.with(this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, (Prefs.with(this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) + 1));
-				if (EventsHolder.displayPushHandler != null) {
-					EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
-				}
+				notifyActivityOnPush();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void notifyActivityOnPush(){
+		if (EventsHolder.displayPushHandler != null) {
+			EventsHolder.displayPushHandler.onDisplayMessagePushReceived();
+		} else if(HomeActivity.appInterruptHandler != null){
+			HomeActivity.appInterruptHandler.onDisplayMessagePushReceived();
 		}
 	}
 

@@ -293,14 +293,24 @@ public class JSONParser implements Constants {
                         Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
 
             }
+            JSONObject map = new JSONObject();
+            map.put(KEY_SOURCE, getAppSource(context));
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-
-
         return resp;
+    }
+
+    public static String getAppSource(Context context){
+        StringBuilder sb = new StringBuilder();
+        sb.append(Prefs.with(context).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
+        if(sb.length() > 0){
+            sb.append("&");
+        }
+        sb.append(KEY_DOWNLOAD_SOURCE).append("=").append(Config.getDownloadSource());
+        return sb.toString();
     }
 
     private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName,

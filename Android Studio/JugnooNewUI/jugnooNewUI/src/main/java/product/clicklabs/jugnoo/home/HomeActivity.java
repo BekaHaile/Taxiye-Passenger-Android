@@ -114,7 +114,6 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
@@ -168,7 +167,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.EventsHolder;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import retrofit.Callback;
@@ -178,7 +176,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DisplayPushHandler,
+		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants {
 
 
@@ -324,7 +322,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
 
 
-    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog, dialogPush;
+    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
+    PushDialog pushDialog;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
 
@@ -403,8 +402,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 //		Data.getDeepLinkIndexFromIntent(getIntent());
-
-		EventsHolder.displayPushHandler = this;
 
 		Data.latitude = Data.loginLatitude;
 		Data.longitude = Data.loginLongitude;
@@ -1628,9 +1625,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-						topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 
 						if(!firstTimeZoom){
@@ -1683,9 +1678,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1733,9 +1726,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setGoogleMapPadding(0);
 
 
-                        topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1790,9 +1781,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1854,9 +1843,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1903,9 +1890,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -1919,8 +1904,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        topBar.imageViewSearchCancel.setVisibility(View.GONE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
 						setGoogleMapPadding(0);
 
@@ -1929,6 +1912,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
 
 						Data.pickupLatLng = null;
+
+                        dismissPushDialog(true);
 
                         break;
 
@@ -2749,10 +2734,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 openDeepLink();
                 performDeepLinkRequest();
 
-                EventsHolder.displayPushHandler = this;
-
-                startNotifsUpdater();
-
                 getPaytmBalance(this);
 
 
@@ -2948,13 +2929,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 menuBar.linearLayoutProfile.performClick();
 			}
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-                topBar.relativeLayoutNotification.performClick();
+                menuBar.relativeLayoutInbox.performClick();
 			}
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
                 menuBar.relativeLayoutGamePredict.performClick();
             }
             else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutGetRide.performClick();
+                menuBar.relativeLayoutFresh.performClick();
             }
 
         } catch(Exception e){
@@ -3287,7 +3268,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         @Override
         public void onContinueClicked() {
-            topBar.imageViewFreshSwapper.performClick();
+            menuBar.relativeLayoutFresh.performClick();
         }
 
         @Override
@@ -4587,13 +4568,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             initializeStartRideVariables();
                             passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                             switchPassengerScreen(passengerScreenMode);
-                            try {
-                                JSONObject map = new JSONObject();
-                                map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
-                                NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_RIDE_START, map);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                         }
                     });
                 } else {
@@ -4747,14 +4721,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }
                 });
-
-                try {
-                    JSONObject map = new JSONObject();
-                    map.put(KEY_ENGAGEMENT_ID, Data.cEngagementId);
-                    NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_ACCEPTED, map);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
 
         } catch (Exception e) {
@@ -5155,7 +5121,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 String links = Database2.getInstance(HomeActivity.this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 								if(links != null){
                                     if(!"[]".equalsIgnoreCase(links)) {
-                                        nameValuePairs.put("branch_referring_links", links);
+                                        nameValuePairs.put(KEY_BRANCH_REFERRING_LINKS, links);
                                     }
 								}
 
@@ -5172,7 +5138,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
                                 try{
-                                    if(promoCouponSelectedForRide.id != 0) {
+                                    if(promoCouponSelectedForRide.id > 0) {
                                         JSONObject map = new JSONObject();
                                         map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
                                         NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);
@@ -5616,8 +5582,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
-                    topBar.title.setVisibility(View.VISIBLE);
-                    topBar.closeFreshUI();
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
@@ -5890,24 +5854,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void openPushDialog(){
-        if(dialogPush != null){
-            dialogPush.dismiss();
-            dialogPush = null;
-        }
-        Dialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
+        dismissPushDialog(false);
+        PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
             @Override
             public void onButtonClicked(int deepIndex) {
                 Data.deepLinkIndex = deepIndex;
                 openDeepLink();
             }
-
-            @Override
-            public void onDialogDismiss() {
-
-            }
         }).show();
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
         if(dialog != null){
-            dialogPush = dialog;
+            pushDialog = dialog;
+        }
+    }
+
+    private void dismissPushDialog(boolean clearDialogContent){
+        if(pushDialog != null){
+            pushDialog.dismiss(clearDialogContent);
+            pushDialog = null;
         }
     }
 
