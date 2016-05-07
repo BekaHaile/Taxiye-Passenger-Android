@@ -51,8 +51,7 @@ public class ApiCampaignAvailRequest {
 				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
 				params.put(Constants.KEY_CAMPAIGN_ID, String.valueOf(campaignId));
-				params.put(Constants.KEY_DATA, "1");
-				params.put(Constants.KEY_SHOW_TOGGLE, "0");
+				params.put(Constants.KEY_DATA, Constants.VALUE_CAMPAIGN_DATA_REQUEST);
 
 				Log.i(TAG, "availCampaign params=" + params.toString());
 
