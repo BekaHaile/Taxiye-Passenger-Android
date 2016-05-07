@@ -42,7 +42,7 @@ public class ApiCampaignAvailRequest {
 		this.callback = callback;
 	}
 
-	public void availCampaign(LatLng latLng) {
+	public void availCampaign(LatLng latLng, int campaignId) {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
 				callback.onPre();
@@ -50,6 +50,10 @@ public class ApiCampaignAvailRequest {
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
+				params.put(Constants.KEY_CAMPAIGN_ID, String.valueOf(campaignId));
+				params.put(Constants.KEY_DATA, "1");
+				params.put(Constants.KEY_SHOW_TOGGLE, "0");
+
 				Log.i(TAG, "availCampaign params=" + params.toString());
 
 				RestClient.getApiServices().availCampaign(params, new retrofit.Callback<SettleUserDebt>() {
@@ -66,7 +70,7 @@ public class ApiCampaignAvailRequest {
 								if((ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag
 										|| ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag)
 										&& jImage != null){
-									String image = jImage.optString(Constants.KEY_IMAGE_URL, "");
+									String image = jImage.optString(Constants.KEY_URL, "");
 									int width = jImage.optInt(Constants.KEY_WIDTH, 748);
 									int height = jImage.optInt(Constants.KEY_HEIGHT, 374);
 									callback.onSuccess(message, image, width, height);

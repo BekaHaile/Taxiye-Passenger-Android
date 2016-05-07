@@ -259,8 +259,10 @@ public interface Constants {
 
 	String KEY_BRANCH_REFERRING_LINKS = "branch_referring_links";
 	String KEY_SP_FUGU_CAMPAIGN_NAME = "fugu_campaign_name";
-	String KEY_IMAGE_URL = "image_url";
 	String KEY_WIDTH = "width";
 	String KEY_HEIGHT = "height";
+	String KEY_CAMPAIGN_ID = "campaign_id";
+	String KEY_DATA = "data";
+	String KEY_SHOW_TOGGLE = "show_toggle";
 
 }

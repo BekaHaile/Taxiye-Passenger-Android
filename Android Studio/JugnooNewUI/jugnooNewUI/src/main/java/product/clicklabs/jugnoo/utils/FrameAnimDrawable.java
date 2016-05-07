@@ -48,13 +48,17 @@ public class FrameAnimDrawable {
 					animation.addFrame(frame, duration);
 				}
 			}
-			imageView.setImageDrawable(animation);
-			imageView.post(new Runnable() {
-				@Override
-				public void run() {
-					animation.start();
-				}
-			});
+			if(bitmaps.length > 1) {
+				imageView.setImageDrawable(animation);
+				imageView.post(new Runnable() {
+					@Override
+					public void run() {
+						animation.start();
+					}
+				});
+			} else if(bitmaps.length == 1 && bitmaps[0] != null){
+				imageView.setImageBitmap(bitmaps[0]);
+			}
 		}
 	}
 

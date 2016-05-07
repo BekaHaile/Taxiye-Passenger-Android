@@ -298,6 +298,13 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutInAppCampaignRequest"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:splitMotionEvents="false"
+            android:layout_marginTop="@dimen/top_bar_height"
+            >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="224px"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
@@ -356,6 +363,7 @@
 
         </RelativeLayout>
 
+        </RelativeLayout>
 
     </RelativeLayout>
 

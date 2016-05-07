@@ -74,6 +74,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
+import com.squareup.picasso.RoundedCornersTransformation;
 import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
@@ -803,6 +804,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 callApiCampaignRequestCancel();
+            }
+        });
+
+        relativeLayoutInAppCampaignRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -3299,10 +3307,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setupInAppCampaignUI(){
         try{
-            if(1 == Data.inAppCampaignAvailable){
+            if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null){
                 imageViewInAppCampaign.clearAnimation();
                 imageViewInAppCampaign.setVisibility(View.VISIBLE);
-                new FrameAnimDrawable(this, Data.inAppCampaignButtonImages, imageViewInAppCampaign);
+                new FrameAnimDrawable(this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
+                        imageViewInAppCampaign);
             } else{
                 imageViewInAppCampaign.clearAnimation();
                 imageViewInAppCampaign.setVisibility(View.GONE);
@@ -6369,25 +6378,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onPre() {
                     linearLayoutRequest.setVisibility(View.GONE);
                     relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
-                    textViewInAppCampaignRequest.setText(Data.inAppCampaignLoadingText);
+                    if(Data.campaigns.getMapLeftButton() != null){
+                        textViewInAppCampaignRequest.setText(Data.campaigns.getMapLeftButton().getText());
+                    }
                 }
 
                 @Override
                 public void onSuccess(final String message, String image, int width, int height) {
                     try {
                         if("".equalsIgnoreCase(image) || campaignApiCancelled){
-							linearLayoutRequest.setVisibility(View.VISIBLE);
-							relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                            backFromCampaignAvailLoading();
 						} else {
 							float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 							Picasso.with(HomeActivity.this).load(image)
 									.resize((int) (minRatio * 0.9f * (float) width), (int) (minRatio * 0.9f * (float) height))
 									.centerCrop()
-									.into(new Target() {
+                                    .transform(new RoundedCornersTransformation((int) (6 * minRatio), 0))
+                                    .into(new Target() {
                                         @Override
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                                            linearLayoutRequest.setVisibility(View.VISIBLE);
-                                            relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                                            backFromCampaignAvailLoading();
                                             new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
                                                 @Override
                                                 public void onDialogDismiss() {
@@ -6398,8 +6408,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                         @Override
                                         public void onBitmapFailed(Drawable drawable) {
-                                            linearLayoutRequest.setVisibility(View.VISIBLE);
-                                            relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                                            backFromCampaignAvailLoading();
                                         }
 
                                         @Override
@@ -6410,15 +6419,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
                     } catch (Exception e) {
                         e.printStackTrace();
-                        linearLayoutRequest.setVisibility(View.VISIBLE);
-                        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                        backFromCampaignAvailLoading();
                     }
                 }
 
                 @Override
                 public void onFailure() {
-                    linearLayoutRequest.setVisibility(View.VISIBLE);
-                    relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+                    backFromCampaignAvailLoading();
                 }
 
                 @Override
@@ -6428,7 +6435,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onNoRetry(View view) {
-
+                    backFromCampaignAvailLoading();
                 }
             });
         }
@@ -6436,8 +6443,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void callCampaignAvailRequest(){
-        campaignApiCancelled = false;
-        getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target);
+        if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
+            campaignApiCancelled = false;
+            getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target,
+                    Data.campaigns.getMapLeftButton().getCampaignId());
+        } else{
+            Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -6449,10 +6461,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSuccess() {
                     campaignApiCancelled = true;
+                    backFromCampaignAvailLoading();
                 }
 
                 @Override
                 public void onFailure() {
+                    backFromCampaignAvailLoading();
                 }
 
                 @Override
@@ -6462,7 +6476,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onNoRetry(View view) {
-
+                    backFromCampaignAvailLoading();
                 }
             });
         }
@@ -6470,7 +6484,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void callApiCampaignRequestCancel(){
-        getApiCampaignRequestCancel().cancelCampaignRequest();
+        if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
+            getApiCampaignRequestCancel().cancelCampaignRequest(Data.campaigns.getMapLeftButton().getCampaignId());
+        } else{
+            Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+            backFromCampaignAvailLoading();
+        }
+    }
+
+    private void backFromCampaignAvailLoading(){
+        linearLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
     }
 
 

@@ -46,16 +46,27 @@ public class FindADriverResponse {
     @Expose
     private Integer freshAvailable;
 
-    @SerializedName("in_app_campaign_available")
+    @SerializedName("campaigns")
     @Expose
-    private Integer inAppCampaignAvailable;
-    @SerializedName("in_app_campaign_button_images")
-    @Expose
-    private List<String> inAppCampaignButtonImages = new ArrayList<>();
-    @SerializedName("in_app_campaign_loading_text")
-    @Expose
-    private String inAppCampaignLoadingText;
+    private Campaigns campaigns;
 
+    /**
+     *
+     * @return
+     * The campaigns
+     */
+    public Campaigns getCampaigns() {
+        return campaigns;
+    }
+
+    /**
+     *
+     * @param campaigns
+     * The campaigns
+     */
+    public void setCampaigns(Campaigns campaigns) {
+        this.campaigns = campaigns;
+    }
 
     /**
      * @return The flag
@@ -192,27 +203,4 @@ public class FindADriverResponse {
         this.freshAvailable = freshAvailable;
     }
 
-    public Integer getInAppCampaignAvailable() {
-        return inAppCampaignAvailable;
-    }
-
-    public void setInAppCampaignAvailable(Integer inAppCampaignAvailable) {
-        this.inAppCampaignAvailable = inAppCampaignAvailable;
-    }
-
-    public List<String> getInAppCampaignButtonImages() {
-        return inAppCampaignButtonImages;
-    }
-
-    public void setInAppCampaignButtonImages(List<String> inAppCampaignButtonImages) {
-        this.inAppCampaignButtonImages = inAppCampaignButtonImages;
-    }
-
-    public String getInAppCampaignLoadingText() {
-        return inAppCampaignLoadingText;
-    }
-
-    public void setInAppCampaignLoadingText(String inAppCampaignLoadingText) {
-        this.inAppCampaignLoadingText = inAppCampaignLoadingText;
-    }
 }

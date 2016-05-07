@@ -398,12 +398,12 @@ public interface ApiService {
                            Callback<NotificationInboxResponse> callback);
 
     @FormUrlEncoded
-    @POST("/avail_campaign")
+    @POST("/customer/avail_campaign")
     void availCampaign(@FieldMap Map<String, String> params,
                                    Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/cancel_campaign")
+    @POST("/customer/cancel_campaign")
     void cancelCampaign(@FieldMap Map<String, String> params,
                        Callback<SettleUserDebt> callback);
 

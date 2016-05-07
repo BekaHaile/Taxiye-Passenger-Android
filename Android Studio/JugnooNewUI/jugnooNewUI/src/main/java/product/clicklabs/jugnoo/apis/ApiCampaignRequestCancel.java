@@ -41,12 +41,13 @@ public class ApiCampaignRequestCancel {
 		this.callback = callback;
 	}
 
-	public void cancelCampaignRequest() {
+	public void cancelCampaignRequest(int campaignId) {
 		try {
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CAMPAIGN_ID, String.valueOf(campaignId));
 				Log.i(TAG, "cancelCampaignRequest params=" + params.toString());
 
 				RestClient.getApiServices().cancelCampaign(params, new retrofit.Callback<SettleUserDebt>() {

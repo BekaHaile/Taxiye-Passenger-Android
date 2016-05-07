@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -185,10 +186,8 @@ public class Data {
 	public static String farAwayCity = "";
 	public static int priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 	public static int freshAvailable = 0;
-	public static int inAppCampaignAvailable = 0;
-	public static ArrayList<String> inAppCampaignButtonImages;
-	public static String inAppCampaignLoadingText;
-	
+	public static Campaigns campaigns;
+
 	public static CancelOptionsList cancelOptionsList;
     public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
 

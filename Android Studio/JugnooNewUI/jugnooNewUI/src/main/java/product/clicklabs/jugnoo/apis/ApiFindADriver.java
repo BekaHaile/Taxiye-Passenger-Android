@@ -135,14 +135,10 @@ public class ApiFindADriver {
 				Data.freshAvailable = findADriverResponse.getFreshAvailable();
 			}
 
-			if (findADriverResponse.getInAppCampaignAvailable() == null) {
-				Data.inAppCampaignAvailable = 0;
-				Data.inAppCampaignButtonImages = null;
-				Data.inAppCampaignLoadingText = "";
+			if (findADriverResponse.getCampaigns() == null) {
+				Data.campaigns = null;
 			} else {
-				Data.inAppCampaignAvailable = findADriverResponse.getInAppCampaignAvailable();
-				Data.inAppCampaignButtonImages = (ArrayList<String>) findADriverResponse.getInAppCampaignButtonImages();
-				Data.inAppCampaignLoadingText = findADriverResponse.getInAppCampaignLoadingText();
+				Data.campaigns = findADriverResponse.getCampaigns();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

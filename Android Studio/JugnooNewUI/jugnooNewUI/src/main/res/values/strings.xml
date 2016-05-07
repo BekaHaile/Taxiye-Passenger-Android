@@ -850,5 +850,6 @@
 	<string name="refer">Refer</string>
 
 	<string name="inbox">Inbox</string>
+	<string name="no_campaign_currently">No campaign currently</string>
 
 </resources>
