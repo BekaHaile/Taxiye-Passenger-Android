@@ -50,14 +50,6 @@
                     android:textSize="@dimen/text_size_26"/>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageViewPaymentTick"
-                android:layout_width="27px"
-                android:layout_height="27px"
-                android:layout_marginLeft="15px"
-                android:src="@drawable/ic_payment_selected"
-                android:tag="mwar"
-                />
 
 
         </LinearLayout>
@@ -174,14 +166,6 @@
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"/>
 
-                <ImageView
-                    android:id="@+id/imageViewPaymentTickMS"
-                    android:layout_width="27px"
-                    android:layout_height="27px"
-                    android:layout_marginLeft="15px"
-                    android:src="@drawable/ic_payment_selected"
-                    android:tag="mwar"
-                    />
 
             </LinearLayout>
 

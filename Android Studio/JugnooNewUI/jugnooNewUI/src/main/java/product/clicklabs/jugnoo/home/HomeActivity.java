@@ -217,7 +217,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewCurrentFareFactor;
 	ImageView imageViewRideNow, imageViewInAppCampaign;
 	RelativeLayout relativeLayoutInitialSearchBar, relativeLayoutDestSearchBar;
-	TextView textViewInitialSearch;
+	TextView textViewInitialSearch, textViewDestSearch;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
     LinearLayout linearLayoutRequest;
@@ -520,7 +520,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
         relativeLayoutDestSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutDestSearchBar);
-        textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.latoRegular(this));
+        textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.mavenRegular(this));
+        textViewDestSearch = (TextView) findViewById(R.id.textViewDestSearch); textViewDestSearch.setTypeface(Fonts.mavenRegular(this));
         progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
 
@@ -585,21 +586,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		linearLayoutInRideDriverInfo = (LinearLayout) findViewById(R.id.linearLayoutInRideDriverInfo);
         imageViewInRideDriver = (ImageView) findViewById(R.id.imageViewInRideDriver);
         textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName);
-        textViewInRideDriverName.setTypeface(Fonts.mavenLight(this));
+        textViewInRideDriverName.setTypeface(Fonts.mavenRegular(this));
         textViewInRideDriverCarNumber = (TextView) findViewById(R.id.textViewInRideDriverCarNumber);
-        textViewInRideDriverCarNumber.setTypeface(Fonts.mavenLight(this));
+        textViewInRideDriverCarNumber.setTypeface(Fonts.mavenRegular(this));
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
-        textViewInRideState.setTypeface(Fonts.mavenLight(this));
+        textViewInRideState.setTypeface(Fonts.mavenRegular(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
         textViewDriverRating.setTypeface(Fonts.mavenLight(this));
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
-        buttonCancelRide.setTypeface(Fonts.mavenLight(this));
+        buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
 		buttonAddPaytmCash = (Button) findViewById(R.id.buttonAddPaytmCash);
-		buttonAddPaytmCash.setTypeface(Fonts.mavenLight(this));
+		buttonAddPaytmCash.setTypeface(Fonts.mavenRegular(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
-        buttonCallDriver.setTypeface(Fonts.mavenLight(this));
+        buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
 
@@ -2524,7 +2525,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void checkForGoogleLogoVisibilityInRide(){
 		try{
-			setGoogleMapPadding(285f);
+			setGoogleMapPadding(315f);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -5300,7 +5301,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             });
                         } else {
                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-
                                 updateCancelButtonUI();
 
                                 long apiStartTime = System.currentTimeMillis();

@@ -45,7 +45,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	private EditText editTextSearch;
 	private ProgressWheel progressBarSearch;
-	private ImageView imageViewSearchCross;
+	private ImageView imageViewSearchCross, imageViewSearchGPSIcon;
 
 	private LinearLayout linearLayoutAddFav;
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
@@ -115,7 +115,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome);
 		textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
 		imageViewSep = (ImageView) rootView.findViewById(R.id.imageViewSep);
-
+		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {
 
@@ -223,7 +223,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		Bundle bundle = getArguments();
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
-		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
+		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
+		if(hint.equalsIgnoreCase(activity.getResources().getString(R.string.set_pickup_location))){
+			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
+		} else{
+			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
+		}
 		editTextSearch.setText(text);
 		editTextSearch.setHint(hint);
 		new Handler().post(new Runnable() {

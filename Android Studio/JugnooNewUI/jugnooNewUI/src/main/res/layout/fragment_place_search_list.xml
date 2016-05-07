@@ -10,18 +10,21 @@
         android:id="@+id/relativeLayoutSearchBar"
         android:layout_width="match_parent"
         android:layout_height="100px"
+        android:layout_marginTop="30px"
+        android:layout_marginRight="20px"
+        android:layout_marginLeft="20px"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15px"
-        android:background="@color/white"
+        android:background="@drawable/background_wallet_border"
         android:splitMotionEvents="false">
 
         <ImageView
             android:id="@+id/imageViewSearchGPSIcon"
-            android:layout_width="33px"
-            android:layout_height="33px"
+            android:layout_width="20px"
+            android:layout_height="20px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30px"
-            android:src="@drawable/search_icon"
+            android:src="@drawable/circle_red"
             android:tag="mwar" />
 
         <EditText
@@ -64,12 +67,6 @@
             android:src="@drawable/ic_cross_et"
             android:tag="mwar" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_alignParentBottom="true"
-            android:rotation="180"
-            android:src="@drawable/shadow_down" />
 
     </RelativeLayout>
 
