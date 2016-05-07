@@ -22,19 +22,23 @@ public class FrameAnimDrawable {
 	private int duration = 1000;
 	private ImageView imageView;
 	private AnimationDrawable animation;
+	private ArrayList<CustomTarget> customTargets;
 
 	public FrameAnimDrawable(Context context, ArrayList<String> images, ImageView imageView){
 		bitmaps = new Bitmap[images.size()];
+		customTargets = new ArrayList<>();
 		loadedCount = 0;
 		this.imageView = imageView;
 		animation = new AnimationDrawable();
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		int size = (int) (111f * minRatio);
 		for(int i=0; i<images.size(); i++){
+			CustomTarget customTarget = new CustomTarget(i);
+			customTargets.add(customTarget);
 			Picasso.with(context).load(images.get(i))
 					.resize(size, size)
 					.centerCrop()
-					.into(new CustomTarget(i));
+					.into(customTargets.get(i));
 		}
 
 	}

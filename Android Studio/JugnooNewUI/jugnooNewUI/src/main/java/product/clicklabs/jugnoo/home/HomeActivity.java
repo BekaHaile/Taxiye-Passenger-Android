@@ -74,7 +74,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
-import com.squareup.picasso.RoundedCornersTransformation;
 import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
@@ -6384,7 +6383,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onSuccess(final String message, String image, int width, int height) {
+                public void onSuccess(String message, String image, int width, int height) {
                     try {
                         if("".equalsIgnoreCase(image) || campaignApiCancelled){
                             backFromCampaignAvailLoading();
@@ -6393,29 +6392,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							Picasso.with(HomeActivity.this).load(image)
 									.resize((int) (minRatio * 0.9f * (float) width), (int) (minRatio * 0.9f * (float) height))
 									.centerCrop()
-                                    .transform(new RoundedCornersTransformation((int) (6 * minRatio), 0))
-                                    .into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                                            backFromCampaignAvailLoading();
-                                            new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
-                                                @Override
-                                                public void onDialogDismiss() {
-
-                                                }
-                                            }).show(message, bitmap);
-                                        }
-
-                                        @Override
-                                        public void onBitmapFailed(Drawable drawable) {
-                                            backFromCampaignAvailLoading();
-                                        }
-
-                                        @Override
-                                        public void onPrepareLoad(Drawable drawable) {
-
-                                        }
-                                    });
+                                    .into(getTargetAvailCampaign(message));
 						}
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -6440,6 +6417,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
         }
         return apiCampaignAvailRequest;
+    }
+
+    private Target targetAvailCampaign;
+    private String messageAvailCampaign;
+    private Target getTargetAvailCampaign(String messageAvailCampaign){
+        this.messageAvailCampaign = messageAvailCampaign;
+        if(targetAvailCampaign == null){
+            targetAvailCampaign = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                    backFromCampaignAvailLoading();
+                    new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
+                        @Override
+                        public void onDialogDismiss() {
+
+                        }
+                    }).show(HomeActivity.this.messageAvailCampaign, bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable drawable) {
+                    backFromCampaignAvailLoading();
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable drawable) {
+
+                }
+            };
+        }
+        return targetAvailCampaign;
     }
 
     private void callCampaignAvailRequest(){

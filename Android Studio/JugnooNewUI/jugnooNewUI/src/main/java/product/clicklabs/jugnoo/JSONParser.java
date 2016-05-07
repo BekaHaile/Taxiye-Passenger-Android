@@ -355,11 +355,7 @@ public class JSONParser implements Constants {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
 
-            if (loginResponse.getLogin().getCampaigns() == null) {
-                Data.campaigns = null;
-            } else {
-                Data.campaigns = loginResponse.getLogin().getCampaigns();
-            }
+            Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
         }

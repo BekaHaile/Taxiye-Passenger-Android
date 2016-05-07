@@ -135,11 +135,7 @@ public class ApiFindADriver {
 				Data.freshAvailable = findADriverResponse.getFreshAvailable();
 			}
 
-			if (findADriverResponse.getCampaigns() == null) {
-				Data.campaigns = null;
-			} else {
-				Data.campaigns = findADriverResponse.getCampaigns();
-			}
+			Data.campaigns = findADriverResponse.getCampaigns();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -263,6 +263,6 @@ public interface Constants {
 	String KEY_HEIGHT = "height";
 	String KEY_CAMPAIGN_ID = "campaign_id";
 	String KEY_DATA = "data";
-	String VALUE_CAMPAIGN_DATA_REQUEST = "0";
+	String VALUE_CAMPAIGN_DATA_REQUEST = "1";
 	String VALUE_CAMPAIGN_DATA_CANCEL = "-1";
 }
