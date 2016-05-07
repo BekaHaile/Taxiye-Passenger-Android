@@ -5418,7 +5418,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
 
 
-            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, null);
+            try {
+                JSONObject map = new JSONObject();
+                map.put(KEY_FARE_VALUE, ""+Data.endRideData.fare);
+                map.put(KEY_FARE_TO_PAY, ""+Data.endRideData.toPay);
+                map.put(KEY_PAID_RIDE, ""+(Data.endRideData.toPay >= (0.5d * Data.endRideData.fare) ? 1 : 0));
+                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
