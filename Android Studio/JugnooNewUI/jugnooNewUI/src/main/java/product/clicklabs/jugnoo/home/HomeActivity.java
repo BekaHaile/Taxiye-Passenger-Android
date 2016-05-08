@@ -2742,7 +2742,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                                 if (map != null && myLocation != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+                                    initialMyLocationBtn.performClick();
                                 }
                             }
                         }
