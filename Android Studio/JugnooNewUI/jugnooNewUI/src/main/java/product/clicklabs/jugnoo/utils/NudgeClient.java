@@ -29,7 +29,8 @@ public class NudgeClient {
 		return mGcmClient;
 	}
 
-	public static void initialize(Context context, String userId, String userName, String email, String phoneNo){
+	public static void initialize(Context context, String userId, String userName, String email, String phoneNo,
+								  String city, String cityReg){
 		try {
 			NudgespotSubscriber subscriber = new NudgespotSubscriber(userId);
 			JSONObject props = new JSONObject();
@@ -37,6 +38,8 @@ public class NudgeClient {
 			props.put(Constants.KEY_EMAIL, email);
 			props.put(Constants.KEY_PHONE_NO, phoneNo);
 			props.put(Constants.KEY_SIGNED_UP_AT, DateOperations.getCurrentTimeInUTC());
+			props.put(Constants.KEY_CITY, city);
+			props.put(Constants.KEY_CITY_REG, cityReg);
 
 			JSONArray jArray = new JSONArray();
 			JSONObject jContact = new JSONObject();
@@ -53,6 +56,7 @@ public class NudgeClient {
 
 			subscriber.setProperties(props);
 			getGcmClient(context).initialize(subscriber);
+			getGcmClient(context).update(subscriber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

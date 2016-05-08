@@ -37,6 +37,7 @@ public class UserData {
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	private PaytmRechargeInfo paytmRechargeInfo = null;
+	private String city, cityReg;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -49,7 +50,8 @@ public class UserData {
 					String userId, String inviteEarnScreenImage,
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
-					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled){
+					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
+					String city, String cityReg){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -112,6 +114,9 @@ public class UserData {
 		this.referAllTextLogin = referAllTextLogin;
 		this.referAllTitleLogin = referAllTitleLogin;
 		this.cToDReferralEnabled = cToDReferralEnabled;
+
+		this.city = city;
+		this.cityReg = cityReg;
 	}
 
 	public double getJugnooBalance() {
@@ -400,4 +405,19 @@ public class UserData {
 		this.cToDReferralEnabled = cToDReferralEnabled;
 	}
 
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCityReg() {
+		return cityReg;
+	}
+
+	public void setCityReg(String cityReg) {
+		this.cityReg = cityReg;
+	}
 }
