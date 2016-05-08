@@ -1580,6 +1580,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     currentLocationMarker.remove();
                 }
 
+                try {pickupLocationMarker.remove();} catch (Exception e) {}
+                try {driverLocationMarker.remove();} catch (Exception e) {}
+
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
 //                        genieLayout.setVisibility(View.GONE);
@@ -1628,14 +1631,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						try{ map.clear(); } catch(Exception e){ e.printStackTrace(); }
 
-                        try {
-                            pickupLocationMarker.remove();
-                        } catch (Exception e) {
-                        }
-                        try {
-                            driverLocationMarker.remove();
-                        } catch (Exception e) {
-                        }
+
 
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
@@ -5639,6 +5635,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                    topBar.imageViewAppToggle.setVisibility(View.GONE);
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
