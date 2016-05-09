@@ -3308,8 +3308,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        new FrameAnimDrawable(HomeActivity.this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
-                                imageViewInAppCampaign);
+                        try {
+                            new FrameAnimDrawable(HomeActivity.this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
+									imageViewInAppCampaign);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, 1000);
             } else{
