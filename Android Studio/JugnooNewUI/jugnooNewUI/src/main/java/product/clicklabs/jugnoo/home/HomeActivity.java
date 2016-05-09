@@ -6493,7 +6493,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSuccess() {
                     campaignApiCancelled = true;
-                    setCampaignAvailed();
                     backFromCampaignAvailLoading();
                 }
 
