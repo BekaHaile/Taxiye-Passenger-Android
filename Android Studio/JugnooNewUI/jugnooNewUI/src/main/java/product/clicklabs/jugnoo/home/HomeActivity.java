@@ -6395,7 +6395,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSuccess(String message, String image, int width, int height) {
                     try {
-                        if("".equalsIgnoreCase(image) || campaignApiCancelled){
+                        if(campaignApiCancelled || "".equalsIgnoreCase(image)){
                             backFromCampaignAvailLoading();
 						} else {
 							float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
@@ -6438,13 +6438,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     backFromCampaignAvailLoading();
-                    setCampaignAvailed();
-                    new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
-                        @Override
-                        public void onDialogDismiss() {
+                    if(!campaignApiCancelled){
+                        setCampaignAvailed();
+                        new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
+                            @Override
+                            public void onDialogDismiss() {
 
-                        }
-                    }).show(HomeActivity.this.messageAvailCampaign, bitmap);
+                            }
+                        }).show(HomeActivity.this.messageAvailCampaign, bitmap);
+                    }
                 }
 
                 @Override
@@ -6491,6 +6493,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSuccess() {
                     campaignApiCancelled = true;
+                    setCampaignAvailed();
                     backFromCampaignAvailLoading();
                 }
 
