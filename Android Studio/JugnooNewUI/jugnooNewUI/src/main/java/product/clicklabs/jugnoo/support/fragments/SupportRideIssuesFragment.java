@@ -59,6 +59,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	private EndRideData endRideData;
 	private GetRideSummaryResponse getRideSummaryResponse;
 
+	public SupportRideIssuesFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();

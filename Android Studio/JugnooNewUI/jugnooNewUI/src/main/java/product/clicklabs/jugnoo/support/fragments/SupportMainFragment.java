@@ -74,6 +74,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	private EndRideData endRideData;
 	private GetRideSummaryResponse getRideSummaryResponse;
 
+	public SupportMainFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();
