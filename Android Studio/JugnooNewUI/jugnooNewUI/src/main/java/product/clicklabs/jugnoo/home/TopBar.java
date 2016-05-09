@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -52,7 +53,7 @@ public class TopBar {
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewAppToggle = (ImageView) drawerLayout.findViewById(R.id.imageViewAppToggle);
 		imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
-		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
+		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 

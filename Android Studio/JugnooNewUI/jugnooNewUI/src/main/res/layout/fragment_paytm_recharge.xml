@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -51,7 +51,8 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -288,5 +289,10 @@
 
     </ScrollView>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down" />
 
-</LinearLayout>
+</RelativeLayout>

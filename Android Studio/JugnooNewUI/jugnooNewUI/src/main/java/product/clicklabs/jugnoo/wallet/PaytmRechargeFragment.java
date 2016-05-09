@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -58,7 +60,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 	private final String TAG = PaytmRechargeFragment.class.getSimpleName();
 
-	LinearLayout relative;
+	RelativeLayout relative;
 
 	ImageView imageViewBack;
 	TextView textViewTitle, textViewTitleEdit;
@@ -110,7 +112,7 @@ public class PaytmRechargeFragment extends Fragment {
 		paymentActivity = (PaymentActivity) getActivity();
 
 
-		relative = (LinearLayout) rootView.findViewById(R.id.relative);
+		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		linearLayoutInner = (LinearLayout) rootView.findViewById(R.id.linearLayoutInner);
 
 		new ASSL(paymentActivity, relative, 1134, 720, false);
@@ -118,7 +120,7 @@ public class PaytmRechargeFragment extends Fragment {
 //		setupUI(rootView.findViewById(R.id.relative));
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.mavenLight(paymentActivity));
@@ -147,6 +149,9 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 

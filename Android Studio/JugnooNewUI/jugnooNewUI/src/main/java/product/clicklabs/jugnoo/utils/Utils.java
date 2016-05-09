@@ -14,6 +14,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -673,6 +676,15 @@ public class Utils {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public static Shader textColorGradient(int mWidth){
+		Shader shader;
+		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
+		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0, Color.parseColor("#FE8162"), Color.parseColor("#F8B642"), tile_mode);
+		shader = lin_grad;
+
+		return shader;
 	}
 
 }

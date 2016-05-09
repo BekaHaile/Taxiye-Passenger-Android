@@ -2,6 +2,10 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Point;
+import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -46,6 +50,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GradientManager;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -77,6 +82,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     public ASSL assl;
 
 	private GoogleApiClient mGoogleApiClient;
+    private GradientManager mGradientManager;
+    private Shader shader;
 
     @Override
     protected void onResume() {
@@ -101,7 +108,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         assl = new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
@@ -153,6 +160,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         ((TextView)findViewById(R.id.textViewEstimateDistanceText)).setTypeface(Fonts.mavenLight(this));
         ((TextView)findViewById(R.id.textViewEstimateRideTimeText)).setTypeface(Fonts.mavenLight(this));
 
+        // Get the TextView width and height in pixels
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
         imageViewBack.setOnClickListener(new OnClickListener() {
 

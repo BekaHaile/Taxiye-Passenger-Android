@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,7 +58,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         new ASSL(this, root, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -79,6 +80,9 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         });
         recyclerViewNotification.setAdapter(myNotificationAdapter);
 
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -105,7 +106,7 @@ public class AddPaytmFragment extends Fragment {
 
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 
 		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenLight(paymentActivity));
@@ -121,6 +122,10 @@ public class AddPaytmFragment extends Fragment {
 		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 

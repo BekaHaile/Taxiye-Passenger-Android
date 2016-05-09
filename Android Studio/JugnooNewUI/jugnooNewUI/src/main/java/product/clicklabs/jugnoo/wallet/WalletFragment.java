@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
@@ -78,7 +79,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 		
 		textViewPromotion = (TextView) rootView.findViewById(R.id.textViewPromotion); textViewPromotion.setTypeface(Fonts.latoRegular(paymentActivity));
 
@@ -99,6 +100,10 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 
 		textViewPromotion.setVisibility(View.GONE);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {

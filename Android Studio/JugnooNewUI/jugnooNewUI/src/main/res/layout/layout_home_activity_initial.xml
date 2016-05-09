@@ -173,7 +173,7 @@
             android:layout_height="55px"
             android:layout_gravity="center_horizontal"
             android:background="@color/sliding_bottom_bg_color"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -229,6 +229,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="6px"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:src="@drawable/shadow_down" />
     </LinearLayout>

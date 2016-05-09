@@ -370,6 +370,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public boolean activityResumed = false;
     public static boolean rechargedOnce = false, feedbackSkipped = false;
+    private ImageView imageViewRotate;
 
     public ASSL assl;
 
@@ -504,6 +505,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         changeLocalityLayout.setVisibility(View.GONE);
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
+        imageViewRotate = (ImageView) findViewById(R.id.imageViewRotate);
 
         imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
         imageViewInAppCampaign.setVisibility(View.GONE);
@@ -670,12 +672,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
 
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        imageViewRotate.startAnimation(animation);
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
 
             }
+
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -2537,7 +2542,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                 if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
-                    relativeLayoutInitialFareFactor.setVisibility(View.VISIBLE);
+                    relativeLayoutInitialFareFactor.setVisibility(View.GONE);
                     textViewCurrentFareFactor.setText(decimalFormat.format(Data.userData.fareFactor) + "x");
                 } else {
                     relativeLayoutInitialFareFactor.setVisibility(View.GONE);
@@ -5822,19 +5827,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
                                 getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
                     }
-                    topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                    topBar.topRl.setBackgroundResource(R.color.white);
                     topBar.title.setText(getResources().getString(R.string.app_name));
                     topBar.setupFreshUI();
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topBar.topRl.setBackgroundResource(R.drawable.nl_background_theme_color);
+                topBar.topRl.setBackgroundResource(R.color.white);
                 topBar.title.setText(getResources().getString(R.string.app_name));
                 topBar.setupFreshUI();
 
                 localModeEnabled = 0;
             }
+
+            topBar.title.measure(0, 0);
+            int mWidth = topBar.title.getMeasuredWidth();
+            topBar.title.getPaint().setShader(Utils.textColorGradient(mWidth));
 
         } catch(Exception e){
             e.printStackTrace();

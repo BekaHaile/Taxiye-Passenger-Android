@@ -11,13 +11,13 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color"
+        android:background="@color/white"
         android:animateLayoutChanges="true"
         >
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="560px"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"

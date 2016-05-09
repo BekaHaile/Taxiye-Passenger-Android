@@ -56,7 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:splitMotionEvents="false"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -73,16 +73,25 @@
 
                                 <ImageView
                                     android:id="@+id/centreLocationPin"
-                                    android:layout_width="77px"
-                                    android:layout_height="130px"
+                                    android:layout_width="86px"
+                                    android:layout_height="150px"
                                     android:background="@drawable/ic_centre_pin_big"
                                     android:tag="mwar" />
+                                
+                                <ImageView
+                                    android:id="@+id/imageViewRotate"
+                                    android:layout_width="77px"
+                                    android:layout_height="77px"
+                                    android:src="@drawable/ic_pin_loader"
+                                    android:layout_marginTop="5px"
+                                    android:layout_marginLeft="5px"
+                                    android:tag="mwar"/>
 
                                 <TextView
                                     android:id="@+id/textViewCentrePinETA"
-                                    android:layout_width="77px"
+                                    android:layout_width="86px"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="8px"
+                                    android:layout_marginTop="12px"
                                     android:gravity="center"
                                     android:text="-"
                                     android:textColor="@color/white"
@@ -90,7 +99,7 @@
 
                                 <TextView
                                     android:id="@+id/textViewCentrePinETAMin"
-                                    android:layout_width="77px"
+                                    android:layout_width="86px"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/textViewCentrePinETA"
                                     android:layout_marginTop="-6px"
@@ -252,7 +261,7 @@
             android:layout_width="match_parent"
             android:layout_height="350px"
             android:layout_alignParentBottom="true"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/buttonChangeLocalityMyLocation"

@@ -103,7 +103,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 
 		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
 
@@ -120,6 +120,10 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
 		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 

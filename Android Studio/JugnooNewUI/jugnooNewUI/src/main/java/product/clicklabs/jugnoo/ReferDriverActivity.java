@@ -66,7 +66,7 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -80,6 +80,10 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         editTextName = (EditText) findViewById(R.id.editTextName); editTextName.setTypeface(Fonts.mavenLight(this));
         editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenLight(this));
         buttonRefer = (Button) findViewById(R.id.buttonRefer); buttonRefer.setTypeface(Fonts.mavenRegular(this));
+
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
         buttonRefer.setOnClickListener(new OnClickListener() {
             @Override

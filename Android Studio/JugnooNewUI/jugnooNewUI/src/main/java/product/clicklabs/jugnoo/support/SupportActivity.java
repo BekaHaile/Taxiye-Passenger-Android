@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,10 +47,13 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		imageViewInvoice = (ImageView) findViewById(R.id.imageViewInvoice);
 
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		imageViewBack.setOnClickListener(new OnClickListener() {
 

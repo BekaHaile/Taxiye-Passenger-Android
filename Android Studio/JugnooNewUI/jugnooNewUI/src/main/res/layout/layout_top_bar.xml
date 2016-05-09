@@ -8,8 +8,8 @@
     <RelativeLayout
         android:id="@+id/topRl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height"
-        android:background="@drawable/nl_background_theme_color"
+        android:layout_height="100px"
+        android:background="@color/white"
         android:splitMotionEvents="false"
         >
 
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="540px"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
@@ -117,7 +117,7 @@
             android:padding="20px"
             android:text="@string/add"
             android:textAllCaps="true"
-            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_36"
             android:visibility="gone"
             />
@@ -127,7 +127,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="6px"
         android:layout_below="@+id/topRl"
         android:background="@drawable/shadow_down"
         />
