@@ -72,7 +72,7 @@ public class ApiCampaignAvailRequest {
 									String image = jImage.optString(Constants.KEY_URL, "");
 									int width = jImage.optInt(Constants.KEY_WIDTH, 748);
 									int height = jImage.optInt(Constants.KEY_HEIGHT, 374);
-									callback.onSuccess(message, image, width, height);
+									callback.onSuccess(flag, message, image, width, height);
 								} else{
 									DialogPopup.alertPopup(activity, "", message);
 									callback.onFailure();
@@ -128,7 +128,7 @@ public class ApiCampaignAvailRequest {
 
 	public interface Callback{
 		void onPre();
-		void onSuccess(String message, String image, int width, int height);
+		void onSuccess(int flag, String message, String image, int width, int height);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

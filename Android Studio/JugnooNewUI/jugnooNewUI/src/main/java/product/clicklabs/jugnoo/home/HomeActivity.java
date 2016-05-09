@@ -6393,7 +6393,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onSuccess(String message, String image, int width, int height) {
+                public void onSuccess(int flag, String message, String image, int width, int height) {
                     try {
                         if(campaignApiCancelled || "".equalsIgnoreCase(image)){
                             backFromCampaignAvailLoading();
@@ -6402,7 +6402,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							Picasso.with(HomeActivity.this).load(image)
 									.resize((int) (minRatio * 0.9f * (float) width), (int) (minRatio * 0.9f * (float) height))
 									.centerCrop()
-                                    .into(getTargetAvailCampaign(message));
+                                    .into(getTargetAvailCampaign(flag, message));
 						}
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -6431,15 +6431,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private Target targetAvailCampaign;
     private String messageAvailCampaign;
-    private Target getTargetAvailCampaign(String messageAvailCampaign){
+    private int flagAvailCampaign;
+    private Target getTargetAvailCampaign(int flagAvailCampaign, String messageAvailCampaign){
         this.messageAvailCampaign = messageAvailCampaign;
+        this.flagAvailCampaign = flagAvailCampaign;
         if(targetAvailCampaign == null){
             targetAvailCampaign = new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     backFromCampaignAvailLoading();
                     if(!campaignApiCancelled){
-                        setCampaignAvailed();
+                        if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == HomeActivity.this.flagAvailCampaign) {
+                            setCampaignAvailed();
+                        }
                         new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
                             @Override
                             public void onDialogDismiss() {
