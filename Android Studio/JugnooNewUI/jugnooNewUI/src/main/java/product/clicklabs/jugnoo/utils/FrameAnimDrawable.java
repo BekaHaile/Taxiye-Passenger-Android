@@ -85,6 +85,7 @@ public class FrameAnimDrawable {
 		@Override
 		public void onBitmapFailed(Drawable drawable) {
 			loadedCount++;
+			bitmaps[position] = null;
 			checkIfLoaded();
 		}
 

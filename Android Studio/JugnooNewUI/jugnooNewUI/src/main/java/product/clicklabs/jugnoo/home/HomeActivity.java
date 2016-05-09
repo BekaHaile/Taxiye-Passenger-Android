@@ -3305,8 +3305,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null){
                 imageViewInAppCampaign.clearAnimation();
                 imageViewInAppCampaign.setVisibility(View.VISIBLE);
-                new FrameAnimDrawable(this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
-                        imageViewInAppCampaign);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new FrameAnimDrawable(HomeActivity.this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
+                                imageViewInAppCampaign);
+                    }
+                }, 1000);
             } else{
                 imageViewInAppCampaign.clearAnimation();
                 imageViewInAppCampaign.setVisibility(View.GONE);
