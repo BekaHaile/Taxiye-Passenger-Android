@@ -11,9 +11,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -72,6 +74,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,7 +87,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
@@ -105,6 +107,8 @@ import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
+import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
@@ -153,6 +157,7 @@ import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.LocalGson;
@@ -208,11 +213,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewInitialInstructions;
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
-	ImageView imageViewRideNow;
+	ImageView imageViewRideNow, imageViewInAppCampaign;
 	RelativeLayout relativeLayoutInitialSearchBar;
 	TextView textViewInitialSearch;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
+    LinearLayout linearLayoutRequest;
+    RelativeLayout relativeLayoutInAppCampaignRequest;
+    TextView textViewInAppCampaignRequest;
+    Button buttonCancelInAppCampaignRequest;
 
 	RelativeLayout relativeLayoutGoogleAttr;
 	ImageView imageViewGoogleAttrCross;
@@ -229,7 +238,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Assigining layout
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
-	SmoothProgressBar progressBarFindingDriver;
     Button assigningMyLocationBtn, initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent;
     LinearLayout linearLayoutAssigningDropLocationClick;
@@ -495,6 +503,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
 
+        imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
+        imageViewInAppCampaign.setVisibility(View.GONE);
+        linearLayoutRequest = (LinearLayout) findViewById(R.id.linearLayoutRequest);
+        linearLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
+        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+        textViewInAppCampaignRequest = (TextView) findViewById(R.id.textViewInAppCampaignRequest);
+        textViewInAppCampaignRequest.setTypeface(Fonts.mavenLight(this));
+        buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
+        buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
+
 
 
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -505,7 +524,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
 		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
 		textViewGoogleAttrText = (TextView) findViewById(R.id.textViewGoogleAttrText);
-		textViewGoogleAttrText.setTypeface(Fonts.latoRegular(this));
+        textViewGoogleAttrText.setTypeface(Fonts.latoRegular(this));
 		relativeLayoutGoogleAttr.setVisibility(View.GONE);
 
 
@@ -527,7 +546,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
-		progressBarFindingDriver = (SmoothProgressBar) findViewById(R.id.progressBarFindingDriver);
         assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
@@ -772,6 +790,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
+
+
+        imageViewInAppCampaign.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callCampaignAvailRequest();
+            }
+        });
+
+        buttonCancelInAppCampaignRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callApiCampaignRequestCancel();
+            }
+        });
+
+        relativeLayoutInAppCampaignRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
 
@@ -1540,6 +1580,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     currentLocationMarker.remove();
                 }
 
+                try {pickupLocationMarker.remove();} catch (Exception e) {}
+                try {driverLocationMarker.remove();} catch (Exception e) {}
+
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
 //                        genieLayout.setVisibility(View.GONE);
@@ -1588,14 +1631,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						try{ map.clear(); } catch(Exception e){ e.printStackTrace(); }
 
-                        try {
-                            pickupLocationMarker.remove();
-                        } catch (Exception e) {
-                        }
-                        try {
-                            driverLocationMarker.remove();
-                        } catch (Exception e) {
-                        }
+
 
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
@@ -2706,7 +2742,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                                 if (map != null && myLocation != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())), 500, null);
+                                    initialMyLocationBtn.performClick();
                                 }
                             }
                         }
@@ -3237,6 +3273,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }, 300);
                     setServiceAvailablityUI(Data.farAwayCity);
                     setupFreshUI();
+                    setupInAppCampaignUI();
                 }
                 setFareFactorToInitialState();
             } catch (Exception e) {
@@ -3259,6 +3296,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
         } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void setupInAppCampaignUI(){
+        try{
+            if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null){
+                imageViewInAppCampaign.clearAnimation();
+                imageViewInAppCampaign.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new FrameAnimDrawable(HomeActivity.this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
+									imageViewInAppCampaign);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 1000);
+            } else{
+                imageViewInAppCampaign.clearAnimation();
+                imageViewInAppCampaign.setVisibility(View.GONE);
+            }
+        } catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -4314,7 +4376,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 											}
 										}
 									});
-								}
+								} else{
+                                    try {
+                                        FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 							}
 						}
 					} catch (Exception e) {
@@ -5418,7 +5486,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
 
 
-            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, null);
+            try {
+                JSONObject map = new JSONObject();
+                map.put(KEY_FARE_VALUE, ""+Data.endRideData.fare);
+                map.put(KEY_FARE_TO_PAY, ""+Data.endRideData.toPay);
+                map.put(KEY_PAID_RIDE, ""+(Data.endRideData.toPay >= (0.5d * Data.endRideData.fare) ? 1 : 0));
+                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -5582,6 +5658,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                    topBar.imageViewAppToggle.setVisibility(View.GONE);
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
@@ -6309,5 +6386,178 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         return null;
     }
+
+
+
+    private ApiCampaignAvailRequest apiCampaignAvailRequest;
+    private ApiCampaignAvailRequest getApiCampaignAvailRequest(){
+        if(apiCampaignAvailRequest == null){
+            apiCampaignAvailRequest = new ApiCampaignAvailRequest(this, new ApiCampaignAvailRequest.Callback() {
+                @Override
+                public void onPre() {
+                    try {
+                        linearLayoutRequest.setVisibility(View.GONE);
+                        relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
+                        if(Data.campaigns.getMapLeftButton() != null){
+							textViewInAppCampaignRequest.setText(Data.campaigns.getMapLeftButton().getText());
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSuccess(int flag, String message, String image, int width, int height) {
+                    try {
+                        if(campaignApiCancelled || "".equalsIgnoreCase(image)){
+                            backFromCampaignAvailLoading();
+						} else {
+							float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+							Picasso.with(HomeActivity.this).load(image)
+									.resize((int) (minRatio * 0.9f * (float) width), (int) (minRatio * 0.9f * (float) height))
+									.centerCrop()
+                                    .into(getTargetAvailCampaign(flag, message));
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        backFromCampaignAvailLoading();
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+                    backFromCampaignAvailLoading();
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    callCampaignAvailRequest();
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+                    backFromCampaignAvailLoading();
+                }
+            });
+        }
+        return apiCampaignAvailRequest;
+    }
+
+    private Target targetAvailCampaign;
+    private String messageAvailCampaign;
+    private int flagAvailCampaign;
+    private Target getTargetAvailCampaign(int flagAvailCampaign, String messageAvailCampaign){
+        this.messageAvailCampaign = messageAvailCampaign;
+        this.flagAvailCampaign = flagAvailCampaign;
+        if(targetAvailCampaign == null){
+            targetAvailCampaign = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                    try {
+                        backFromCampaignAvailLoading();
+                        if(!campaignApiCancelled){
+							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == HomeActivity.this.flagAvailCampaign) {
+								setCampaignAvailed();
+							}
+							new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
+								@Override
+								public void onDialogDismiss() {
+
+								}
+							}).show(HomeActivity.this.messageAvailCampaign, bitmap);
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable drawable) {
+                    backFromCampaignAvailLoading();
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable drawable) {
+
+                }
+            };
+        }
+        return targetAvailCampaign;
+    }
+
+    private void callCampaignAvailRequest(){
+        try {
+            if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
+				campaignApiCancelled = false;
+				getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target,
+						Data.campaigns.getMapLeftButton().getCampaignId());
+			} else{
+				Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setCampaignAvailed(){
+        try{
+            if(Data.campaigns.getMapLeftButton().getShowCampaignAfterAvail() == 0){
+                Data.campaigns = null;
+                setupInAppCampaignUI();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    private boolean campaignApiCancelled = false;
+    private ApiCampaignRequestCancel apiCampaignRequestCancel;
+    private ApiCampaignRequestCancel getApiCampaignRequestCancel(){
+        if(apiCampaignRequestCancel == null){
+            apiCampaignRequestCancel = new ApiCampaignRequestCancel(this, new ApiCampaignRequestCancel.Callback() {
+                @Override
+                public void onSuccess() {
+                    campaignApiCancelled = true;
+                    backFromCampaignAvailLoading();
+                }
+
+                @Override
+                public void onFailure() {
+                    backFromCampaignAvailLoading();
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    callApiCampaignRequestCancel();
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+                    backFromCampaignAvailLoading();
+                }
+            });
+        }
+        return apiCampaignRequestCancel;
+    }
+
+    private void callApiCampaignRequestCancel(){
+        try {
+            if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
+				getApiCampaignRequestCancel().cancelCampaignRequest(Data.campaigns.getMapLeftButton().getCampaignId());
+			} else{
+				Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+				backFromCampaignAvailLoading();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void backFromCampaignAvailLoading(){
+        linearLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+    }
+
 
 }

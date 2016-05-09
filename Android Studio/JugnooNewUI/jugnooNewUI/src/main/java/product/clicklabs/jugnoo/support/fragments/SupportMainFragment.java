@@ -74,6 +74,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	private EndRideData endRideData;
 	private GetRideSummaryResponse getRideSummaryResponse;
 
+	public SupportMainFragment(){}
+
     @Override
     public void onStart() {
         super.onStart();
@@ -84,6 +86,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
     @Override
     public void onStop() {
+
 		super.onStop();
         FlurryAgent.onEndSession(activity);
     }
@@ -175,50 +178,54 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 
 	private void showPanel() {
-		String savedSupportVersion = Prefs.with(activity).getString(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "-1");
-		if(savedSupportVersion.equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
-			ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
-					.getSupportDataItems(SupportCategory.MAIN_MENU.getOrdinal());
-			showPanelSuccess(menu);
-		}
-		else {
-			if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
-				DialogPopup.showLoadingDialog(activity, "");
-
-				HashMap<String, String> params = new HashMap<>();
-				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-
-				RestClient.getApiServices().showPanel(params,
-						new Callback<ShowPanelResponse>() {
-							@Override
-							public void success(ShowPanelResponse showPanelResponse, Response response) {
-								DialogPopup.dismissLoadingDialog();
-								try {
-									Log.i(TAG, "showPanel reader" + new String(((TypedByteArray) response.getBody()).getBytes()));
-									showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
-									Database2.getInstance(activity)
-											.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
-													showPanelResponse.getMenu());
-									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
-											Data.userData.getInAppSupportPanelVersion());
-								} catch (Exception exception) {
-									exception.printStackTrace();
-									retryDialog(DialogErrorType.SERVER_ERROR);
-								}
-							}
-
-							@Override
-							public void failure(RetrofitError error) {
-								Log.e(TAG, "showPanel error=>" + error);
-								DialogPopup.dismissLoadingDialog();
-								recyclerViewSupportFaq.setVisibility(View.GONE);
-								showPanelCalled = -1;
-								retryDialog(DialogErrorType.CONNECTION_LOST);
-							}
-						});
-			} else {
-				retryDialog(DialogErrorType.NO_NET);
+		try {
+			String savedSupportVersion = Prefs.with(activity).getString(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "-1");
+			if(savedSupportVersion.equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
+				ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
+						.getSupportDataItems(SupportCategory.MAIN_MENU.getOrdinal());
+				showPanelSuccess(menu);
 			}
+			else {
+				if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+					DialogPopup.showLoadingDialog(activity, "");
+
+					HashMap<String, String> params = new HashMap<>();
+					params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+					RestClient.getApiServices().showPanel(params,
+							new Callback<ShowPanelResponse>() {
+								@Override
+								public void success(ShowPanelResponse showPanelResponse, Response response) {
+									DialogPopup.dismissLoadingDialog();
+									try {
+										Log.i(TAG, "showPanel reader" + new String(((TypedByteArray) response.getBody()).getBytes()));
+										showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
+										Database2.getInstance(activity)
+												.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
+														showPanelResponse.getMenu());
+										Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+												Data.userData.getInAppSupportPanelVersion());
+									} catch (Exception exception) {
+										exception.printStackTrace();
+										retryDialog(DialogErrorType.SERVER_ERROR);
+									}
+								}
+
+								@Override
+								public void failure(RetrofitError error) {
+									Log.e(TAG, "showPanel error=>" + error);
+									DialogPopup.dismissLoadingDialog();
+									recyclerViewSupportFaq.setVisibility(View.GONE);
+									showPanelCalled = -1;
+									retryDialog(DialogErrorType.CONNECTION_LOST);
+								}
+							});
+				} else {
+					retryDialog(DialogErrorType.NO_NET);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -230,40 +237,44 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 
 	public void getRideSummaryAPI(final Activity activity) {
-		new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.fixedFare,
-				new ApiGetRideSummary.Callback() {
-					@Override
-					public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
-						SupportMainFragment.this.endRideData = endRideData;
-						SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
-						setRideData();
-						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-						getRideSummaryCalled = 1;
-					}
+		try {
+			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.fixedFare,
+					new ApiGetRideSummary.Callback() {
+						@Override
+						public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+							SupportMainFragment.this.endRideData = endRideData;
+							SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+							setRideData();
+							linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+							getRideSummaryCalled = 1;
+						}
 
-					@Override
-					public boolean onActionFailed(String message) {
-						linearLayoutRideShortInfo.setVisibility(View.GONE);
-						getRideSummaryCalled = 1;
-						return false;
-					}
+						@Override
+						public boolean onActionFailed(String message) {
+							linearLayoutRideShortInfo.setVisibility(View.GONE);
+							getRideSummaryCalled = 1;
+							return false;
+						}
 
-					@Override
-					public void onFailure() {
-						getRideSummaryCalled = -1;
-						linearLayoutRideShortInfo.setVisibility(View.GONE);
-					}
+						@Override
+						public void onFailure() {
+							getRideSummaryCalled = -1;
+							linearLayoutRideShortInfo.setVisibility(View.GONE);
+						}
 
-					@Override
-					public void onRetry(View view) {
-						hitRetry();
-					}
+						@Override
+						public void onRetry(View view) {
+							hitRetry();
+						}
 
-					@Override
-					public void onNoRetry(View view) {
+						@Override
+						public void onNoRetry(View view) {
 
-					}
-				}).getRideSummaryAPI();
+						}
+					}).getRideSummaryAPI();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){

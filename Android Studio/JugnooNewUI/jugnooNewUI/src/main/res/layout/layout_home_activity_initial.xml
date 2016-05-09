@@ -185,6 +185,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayoutRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -197,6 +198,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageViewInAppCampaign"
+                android:layout_width="111px"
+                android:layout_height="111px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50px"
+                android:tag="mwar"
+                android:visibility="visible"
+                />
+
             <Button
                 android:id="@+id/initialMyLocationBtn"
                 android:layout_width="83px"
@@ -230,9 +241,9 @@
             />
 
     </LinearLayout>
-    
-    
-    
+
+
+
 
 
 

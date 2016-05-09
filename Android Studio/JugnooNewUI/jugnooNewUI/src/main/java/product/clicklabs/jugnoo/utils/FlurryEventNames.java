@@ -319,4 +319,7 @@ public interface FlurryEventNames {
     NUDGE_LOGIN_APP_SOURCE = "login_app_source"
             ;
 
+    String GOOGLE_API_GEOCODE_FAILURE = "google_api_geocode_failure",
+            GOOGLE_API_DIRECTIONS_FAILURE = "google_api_directions_failure";
+
 }

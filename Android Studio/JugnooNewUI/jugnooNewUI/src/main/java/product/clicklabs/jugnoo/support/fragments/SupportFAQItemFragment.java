@@ -71,7 +71,9 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private String parentName, phoneNumber, rideDate;
 	private ShowPanelResponse.Item item;
 
-    @Override
+	public SupportFAQItemFragment(){}
+
+	@Override
     public void onStart() {
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());

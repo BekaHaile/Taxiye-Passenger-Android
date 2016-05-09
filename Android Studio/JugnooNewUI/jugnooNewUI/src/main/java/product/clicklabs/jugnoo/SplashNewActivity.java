@@ -2857,7 +2857,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void nudgeSignupEvent(String phoneNo, String email, String userName){
 		try {
-			NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo);
+			NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo, "", "");
 			JSONObject map = new JSONObject();
 			map.put(KEY_PHONE_NO, phoneNo);
 			map.put(KEY_EMAIL, email);

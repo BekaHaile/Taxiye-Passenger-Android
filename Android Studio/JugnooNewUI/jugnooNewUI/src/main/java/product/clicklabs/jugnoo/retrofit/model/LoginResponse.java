@@ -340,6 +340,28 @@ public class LoginResponse {
 		@Expose
 		private Integer freshAvailable;
 
+		@SerializedName("campaigns")
+		@Expose
+		private Campaigns campaigns;
+
+		/**
+		 *
+		 * @return
+		 * The campaigns
+		 */
+		public Campaigns getCampaigns() {
+			return campaigns;
+		}
+
+		/**
+		 *
+		 * @param campaigns
+		 * The campaigns
+		 */
+		public void setCampaigns(Campaigns campaigns) {
+			this.campaigns = campaigns;
+		}
+
 		/**
 		 * @return The currentUserStatus
 		 */

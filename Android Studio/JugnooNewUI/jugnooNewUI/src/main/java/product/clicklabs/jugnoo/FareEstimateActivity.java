@@ -299,6 +299,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                                             @Override
                                             public void run() {
+                                                FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
                                                 DialogPopup.alertPopup(FareEstimateActivity.this, "", "Fare could not be estimated between the selected pickup and drop location");
                                                 DialogPopup.dismissLoadingDialog();
                                             }

@@ -42,7 +42,10 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	private ShowPanelResponse.Item item;
 	private String phoneNumber, rideDate;
 
-    @Override
+	public SupportFAQItemsListFragment(){}
+
+
+	@Override
     public void onStart() {
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());

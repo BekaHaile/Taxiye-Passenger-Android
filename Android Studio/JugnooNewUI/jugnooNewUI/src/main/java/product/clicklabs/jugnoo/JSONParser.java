@@ -219,6 +219,9 @@ public class JSONParser implements Constants {
         String referAllTextLogin = userData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
         String referAllTitleLogin = userData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
+        String city = userData.optString(KEY_CITY, "");
+        String cityReg = userData.optString(KEY_CITY_REG, "");
+
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
@@ -228,7 +231,8 @@ public class JSONParser implements Constants {
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
-                referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled);
+                referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
+                city, cityReg);
 
     }
 
@@ -283,7 +287,8 @@ public class JSONParser implements Constants {
 
         try {
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
-                    Data.userData.userEmail, Data.userData.phoneNo);
+                    Data.userData.userEmail, Data.userData.phoneNo,
+                    Data.userData.getCity(), Data.userData.getCityReg());
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
@@ -354,6 +359,8 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
+
+            Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.nudgespot.api.GcmClient;
 import com.nudgespot.api.auth.NudgespotCredentials;
@@ -29,14 +30,27 @@ public class NudgeClient {
 		return mGcmClient;
 	}
 
-	public static void initialize(Context context, String userId, String userName, String email, String phoneNo){
+	public static void initialize(Context context, String userId, String userName, String email, String phoneNo,
+								  String city, String cityReg){
 		try {
-			NudgespotSubscriber subscriber = new NudgespotSubscriber(userId);
+			getGcmClient(context).initialize(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg));
+			new UpdateAsync(context, userId, userName, email, phoneNo, city, cityReg).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static NudgespotSubscriber getNudgespotSubscriber(String userId, String userName, String email, String phoneNo,
+													   String city, String cityReg){
+		NudgespotSubscriber subscriber = new NudgespotSubscriber(userId);
+		try {
 			JSONObject props = new JSONObject();
 			props.put(Constants.KEY_USER_NAME, userName);
 			props.put(Constants.KEY_EMAIL, email);
 			props.put(Constants.KEY_PHONE_NO, phoneNo);
 			props.put(Constants.KEY_SIGNED_UP_AT, DateOperations.getCurrentTimeInUTC());
+			props.put(Constants.KEY_CITY, city);
+			props.put(Constants.KEY_CITY_REG, cityReg);
 
 			JSONArray jArray = new JSONArray();
 			JSONObject jContact = new JSONObject();
@@ -52,10 +66,10 @@ public class NudgeClient {
 			props.put(Constants.KEY_CONTACTS, jArray);
 
 			subscriber.setProperties(props);
-			getGcmClient(context).initialize(subscriber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return subscriber;
 	}
 
 
@@ -85,5 +99,43 @@ public class NudgeClient {
 		getGcmClient(context).clearRegistration();
 	}
 
+	public static class UpdateAsync extends AsyncTask<String, Integer, String>{
+		private Context context;
+		private String userId, userName, email, phoneNo, city, cityReg;
+		public UpdateAsync(Context context, String userId, String userName, String email, String phoneNo,
+						   String city, String cityReg){
+			this.context = context;
+			this.userId = userId;
+			this.userName = userName;
+			this.email = email;
+			this.phoneNo = phoneNo;
+			this.city = city;
+			this.cityReg = cityReg;
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			while(!getGcmClient(context).isSubscriberReady()){
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return "go";
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
+			try {
+				if(s.equalsIgnoreCase("go")){
+					getGcmClient(context).update(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

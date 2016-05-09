@@ -46,7 +46,27 @@ public class FindADriverResponse {
     @Expose
     private Integer freshAvailable;
 
+    @SerializedName("campaigns")
+    @Expose
+    private Campaigns campaigns;
 
+    /**
+     *
+     * @return
+     * The campaigns
+     */
+    public Campaigns getCampaigns() {
+        return campaigns;
+    }
+
+    /**
+     *
+     * @param campaigns
+     * The campaigns
+     */
+    public void setCampaigns(Campaigns campaigns) {
+        this.campaigns = campaigns;
+    }
 
     /**
      * @return The flag
@@ -182,4 +202,5 @@ public class FindADriverResponse {
     public void setFreshAvailable(Integer freshAvailable) {
         this.freshAvailable = freshAvailable;
     }
+
 }
