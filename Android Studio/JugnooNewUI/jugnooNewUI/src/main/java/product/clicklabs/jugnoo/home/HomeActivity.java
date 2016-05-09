@@ -4372,7 +4372,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 											}
 										}
 									});
-								}
+								} else{
+                                    try {
+                                        FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 							}
 						}
 					} catch (Exception e) {
@@ -6385,10 +6391,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             apiCampaignAvailRequest = new ApiCampaignAvailRequest(this, new ApiCampaignAvailRequest.Callback() {
                 @Override
                 public void onPre() {
-                    linearLayoutRequest.setVisibility(View.GONE);
-                    relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
-                    if(Data.campaigns.getMapLeftButton() != null){
-                        textViewInAppCampaignRequest.setText(Data.campaigns.getMapLeftButton().getText());
+                    try {
+                        linearLayoutRequest.setVisibility(View.GONE);
+                        relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
+                        if(Data.campaigns.getMapLeftButton() != null){
+							textViewInAppCampaignRequest.setText(Data.campaigns.getMapLeftButton().getText());
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -6439,17 +6449,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             targetAvailCampaign = new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                    backFromCampaignAvailLoading();
-                    if(!campaignApiCancelled){
-                        if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == HomeActivity.this.flagAvailCampaign) {
-                            setCampaignAvailed();
-                        }
-                        new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
-                            @Override
-                            public void onDialogDismiss() {
+                    try {
+                        backFromCampaignAvailLoading();
+                        if(!campaignApiCancelled){
+							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == HomeActivity.this.flagAvailCampaign) {
+								setCampaignAvailed();
+							}
+							new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
+								@Override
+								public void onDialogDismiss() {
 
-                            }
-                        }).show(HomeActivity.this.messageAvailCampaign, bitmap);
+								}
+							}).show(HomeActivity.this.messageAvailCampaign, bitmap);
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -6468,12 +6482,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void callCampaignAvailRequest(){
-        if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
-            campaignApiCancelled = false;
-            getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target,
-                    Data.campaigns.getMapLeftButton().getCampaignId());
-        } else{
-            Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+        try {
+            if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
+				campaignApiCancelled = false;
+				getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target,
+						Data.campaigns.getMapLeftButton().getCampaignId());
+			} else{
+				Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -6520,11 +6538,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void callApiCampaignRequestCancel(){
-        if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
-            getApiCampaignRequestCancel().cancelCampaignRequest(Data.campaigns.getMapLeftButton().getCampaignId());
-        } else{
-            Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
-            backFromCampaignAvailLoading();
+        try {
+            if(Data.campaigns != null && Data.campaigns.getMapLeftButton() != null) {
+				getApiCampaignRequestCancel().cancelCampaignRequest(Data.campaigns.getMapLeftButton().getCampaignId());
+			} else{
+				Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+				backFromCampaignAvailLoading();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

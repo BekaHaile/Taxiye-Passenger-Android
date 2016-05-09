@@ -53,6 +53,7 @@ public class InAppCampaignDialog {
 			TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage);
 			textViewMessage.setTypeface(Fonts.mavenRegular(activity));
 			textViewMessage.setText(Html.fromHtml(message));
+			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 
 			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -61,6 +62,13 @@ public class InAppCampaignDialog {
 			});
 
 			relative.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+
+			imageViewClose.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
