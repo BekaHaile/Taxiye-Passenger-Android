@@ -47,6 +47,9 @@ public class Campaigns {
 		@SerializedName("text")
 		@Expose
 		private String text;
+		@SerializedName("show_campaign_after_avail")
+		@Expose
+		private Integer showCampaignAfterAvail;
 
 		/**
 		 *
@@ -118,6 +121,14 @@ public class Campaigns {
 		 */
 		public void setText(String text) {
 			this.text = text;
+		}
+
+		public Integer getShowCampaignAfterAvail() {
+			return showCampaignAfterAvail;
+		}
+
+		public void setShowCampaignAfterAvail(Integer showCampaignAfterAvail) {
+			this.showCampaignAfterAvail = showCampaignAfterAvail;
 		}
 
 	}

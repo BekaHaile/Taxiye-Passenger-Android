@@ -6398,6 +6398,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if("".equalsIgnoreCase(image) || campaignApiCancelled){
                             backFromCampaignAvailLoading();
 						} else {
+                            setCampaignAvailed();
 							float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 							Picasso.with(HomeActivity.this).load(image)
 									.resize((int) (minRatio * 0.9f * (float) width), (int) (minRatio * 0.9f * (float) height))
@@ -6467,6 +6468,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Data.campaigns.getMapLeftButton().getCampaignId());
         } else{
             Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setCampaignAvailed(){
+        try{
+            if(Data.campaigns.getMapLeftButton().getShowCampaignAfterAvail() == 0){
+                Data.campaigns = null;
+                setupInAppCampaignUI();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 
