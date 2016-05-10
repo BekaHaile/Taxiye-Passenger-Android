@@ -36,6 +36,7 @@ public interface Constants {
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
+	String KEY_SEARCH_MODE = "search_mode";
 
 	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 
@@ -272,5 +273,7 @@ public interface Constants {
 	String KEY_FARE_VALUE = "fare_value";
 	String KEY_FARE_TO_PAY = "fare_to_pay";
 	String KEY_PAID_RIDE = "paid_ride";
+	String KEY_OP_DROP_LATITUDE = "op_drop_latitude";
+	String KEY_OP_DROP_LONGITUDE = "op_drop_longitude";
 
 }

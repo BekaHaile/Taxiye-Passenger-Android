@@ -39,6 +39,7 @@
         android:paddingLeft="20px"
         android:paddingRight="10px"
         android:paddingTop="20px"
+        android:layout_marginRight="10px"
         android:text="@string/tnc"
         android:textColor="@color/text_color_light"
         android:textSize="@dimen/text_size_22"/>

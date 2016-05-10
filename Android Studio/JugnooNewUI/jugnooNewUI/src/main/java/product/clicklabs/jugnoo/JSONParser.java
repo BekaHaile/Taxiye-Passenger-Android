@@ -753,9 +753,9 @@ public class JSONParser implements Constants {
                             pickupLongitude = jObject.getString("pickup_longitude");
 
                             try {
-                                if(jObject.has("op_drop_latitude") && jObject.has("op_drop_longitude")) {
-                                    dropLatitude = jObject.getDouble("op_drop_latitude");
-                                    dropLongitude = jObject.getDouble("op_drop_longitude");
+                                if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
+                                    dropLatitude = jObject.getDouble(KEY_OP_DROP_LATITUDE);
+                                    dropLongitude = jObject.getDouble(KEY_OP_DROP_LONGITUDE);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

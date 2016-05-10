@@ -394,6 +394,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private SlidingBottomPanel slidingBottomPanel;
 
     private T20Ops t20Ops = new T20Ops();
+    private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
 
 
 
@@ -724,24 +725,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        relativeLayoutDestSearchBar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                Log.v("index value of Initial search", "--> " + index);
-                if(index == 1) {
-                    //viewGroup.bringChildToFront(viewGroup.getChildAt(0));
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true);
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false);
-                }else{
-                    setServiceAvailablityUI("");
-                    passengerScreenMode = PassengerScreenMode.P_SEARCH;
-                    switchPassengerScreen(passengerScreenMode);
-                }
-                Log.i("index value of Initial search", "--> "+viewGroup.indexOfChild(relativeLayoutInitialSearchBar));
-            }
-        });
 
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
@@ -784,18 +767,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
                 int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-                Log.v("index value of Dest search", "--> " + index);
                 if(index == 1) {
-                    //viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                     translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true);
                     translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false);
                 }else{
+                    placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
                     setServiceAvailablityUI("");
                     passengerScreenMode = PassengerScreenMode.P_SEARCH;
                     switchPassengerScreen(passengerScreenMode);
                 }
-                Log.i("index value of Dest search", "--> "+viewGroup.indexOfChild(relativeLayoutDestSearchBar));
 
+            }
+        });
+
+        relativeLayoutDestSearchBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                if(index == 1) {
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false);
+                }else{
+                    placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+                    setServiceAvailablityUI("");
+                    passengerScreenMode = PassengerScreenMode.P_SEARCH;
+                    switchPassengerScreen(passengerScreenMode);
+                }
             }
         });
 
@@ -2359,7 +2357,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-                bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
+                if(placeSearchMode.getOrdinal() == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
+                    bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_destination));
+                } else{
+                    bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
+                }
+                bundle.putInt(KEY_SEARCH_MODE, placeSearchMode.getOrdinal());
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
                         .add(relativeLayoutSearch.getId(), placeSearchListFragment,
@@ -2393,6 +2396,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+                bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
                         .add(relativeLayoutAssigningDropLocationParent.getId(), placeSearchListFragment,
@@ -2424,6 +2428,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, text);
                 }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+                bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
                 placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
                         .add(relativeLayoutFinalDropLocationParent.getId(), placeSearchListFragment,
@@ -4152,8 +4157,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             params.put("access_token", Data.userData.accessToken);
             params.put("session_id", Data.cSessionId);
-            params.put("op_drop_latitude", ""+dropLatLng.latitude);
-            params.put("op_drop_longitude", "" + dropLatLng.longitude);
+            params.put(KEY_OP_DROP_LATITUDE, ""+dropLatLng.latitude);
+            params.put(KEY_OP_DROP_LONGITUDE, "" + dropLatLng.longitude);
 			if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				params.put("engagement_id", Data.cEngagementId);
 			}
@@ -5372,6 +5377,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     nameValuePairs.put("current_latitude", "" + Data.pickupLatLng.latitude);
                                     nameValuePairs.put("current_longitude", "" + Data.pickupLatLng.longitude);
                                 }
+                                if(Data.dropLatLng != null){
+                                    nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.dropLatLng.latitude));
+                                    nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.dropLatLng.longitude));
+                                }
 
                                 if (promoCouponSelectedForRide != null) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
@@ -6408,7 +6417,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if((PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                 || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+                || (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                && placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP))
                 && !"".equalsIgnoreCase(text)){
             dropLocationSearchText = text;
         }
@@ -6429,15 +6440,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
-            FlurryEventLogger.event(PICKUP_LOCATION_SET);
-            textViewInitialSearch.setText(autoCompleteSearchResult.name);
-            zoomedForSearch = true;
-            lastSearchLatLng = null;
-            passengerScreenMode = PassengerScreenMode.P_INITIAL;
-            switchPassengerScreen(passengerScreenMode);
+            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                FlurryEventLogger.event(PICKUP_LOCATION_SET);
+                textViewInitialSearch.setText(autoCompleteSearchResult.name);
+                zoomedForSearch = true;
+                lastSearchLatLng = null;
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
+            }
         }
-
-        Log.e("onPlaceClick", "="+autoCompleteSearchResult);
     }
 
     @Override
@@ -6445,7 +6456,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
-            progressBarInitialSearch.setVisibility(View.VISIBLE);
+            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                progressBarInitialSearch.setVisibility(View.VISIBLE);
+            }
         }
 
         Log.e("onPlaceSearchPre", "=");
@@ -6456,24 +6469,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-            progressBarInitialSearch.setVisibility(View.GONE);
-            if (map != null && searchResult != null) {
-                textViewInitialSearch.setText(searchResult.name);
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 500, null);
-                lastSearchLatLng = searchResult.latLng;
-                mapTouched = true;
+            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                progressBarInitialSearch.setVisibility(View.GONE);
+                if (map != null && searchResult != null) {
+                    textViewInitialSearch.setText(searchResult.name);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 500, null);
+                    lastSearchLatLng = searchResult.latLng;
+                    mapTouched = true;
 
-                try {
-                    Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
-                    if (searchResult.getThirdPartyAttributions() == null) {
-                        relativeLayoutGoogleAttr.setVisibility(View.GONE);
-                    } else {
-                        relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
-                        textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+                    try {
+                        Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
+                        if (searchResult.getThirdPartyAttributions() == null) {
+                            relativeLayoutGoogleAttr.setVisibility(View.GONE);
+                        } else {
+                            relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
+                            textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
+                textViewDestSearch.setText(searchResult.address);
+                Data.dropLatLng = searchResult.latLng;
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){

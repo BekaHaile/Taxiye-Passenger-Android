@@ -224,7 +224,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		Bundle bundle = getArguments();
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
 		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
-		if(hint.equalsIgnoreCase(activity.getResources().getString(R.string.set_pickup_location))){
+		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
 			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
 		} else{
 			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
@@ -344,6 +345,26 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	public ProgressWheel getProgressBarSearch(){
 		return progressBarSearch;
+	}
+
+	public enum PlaceSearchMode {
+		PICKUP(1),
+		DROP(2)
+		;
+
+		private int ordinal;
+		PlaceSearchMode(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+
+		public void setOrdinal(int ordinal) {
+			this.ordinal = ordinal;
+		}
 	}
 
 }

@@ -37,7 +37,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 	public PromoCouponsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_promo_coupon, parent, false);
 
-		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(660, 84);
+		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(640, 84);
 		v.setLayoutParams(layoutParams);
 
 		ASSL.DoMagic(v);

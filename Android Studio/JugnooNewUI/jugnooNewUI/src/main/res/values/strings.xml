@@ -860,5 +860,7 @@
 
 	<string name="fare_details">Fare Details</string>
 	<string name="pay_for_your_rides_using">Pay for your rides using:</string>
+	<string name="enter_destination">Enter Destination</string>
+
 
 </resources>
