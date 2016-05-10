@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -27,6 +28,8 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
+import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
+import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -152,17 +155,21 @@ public class RequestRideOptionsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
-                //TODO open payment selection dialog
+                getPaymentOptionDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
 
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.textViewMinFareMS){
-                //TODO open fare dialog
+                getFareDetailsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
-
+                startActivity(new Intent(activity, FareEstimateActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
             }
         }
     };
@@ -187,8 +194,8 @@ public class RequestRideOptionsFragment extends Fragment {
                                 .getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
             } else {
-                imageViewPaymentMode.setImageResource(R.drawable.cash_home_icon);
-                imageViewPaymentModeMS.setImageResource(R.drawable.cash_home_icon);
+                imageViewPaymentMode.setImageResource(R.drawable.ic_cash_small);
+                imageViewPaymentModeMS.setImageResource(R.drawable.ic_cash_small);
                 textViewPaymentModeValue.setText(activity.getResources().getString(R.string.cash));
                 textViewPaymentModeValueMS.setText(activity.getResources().getString(R.string.cash));
             }
@@ -196,6 +203,29 @@ public class RequestRideOptionsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    public void updatePaymentOptionInDialog(){
+        try{
+            if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
+                getPaymentOptionDialog().updatePreferredPaymentOptionUI();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setPaytmLoadingVisiblity(int visiblity){
+        try{
+            if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
+                getPaymentOptionDialog().setPaytmLoadingVisiblity(visiblity);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public void updateRegionsUI(){
         try{
@@ -364,6 +394,42 @@ public class RequestRideOptionsFragment extends Fragment {
 
     public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
         return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+    }
+
+    public void setRegionSelected(int position) {
+        if (position > -1 && position < Data.regions.size()) {
+            regionSelected = Data.regions.get(position);
+        }
+        vehiclesTabAdapter.notifyDataSetChanged();
+        recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
+        updateFareStructureUI();
+    }
+
+
+    private FareDetailsDialog fareDetailsDialog;
+    private FareDetailsDialog getFareDetailsDialog(){
+        if(fareDetailsDialog == null){
+            fareDetailsDialog = new FareDetailsDialog(activity, new FareDetailsDialog.Callback() {
+                @Override
+                public void onDialogDismiss() {
+
+                }
+            });
+        }
+        return fareDetailsDialog;
+    }
+
+    private PaymentOptionDialog paymentOptionDialog;
+    private PaymentOptionDialog getPaymentOptionDialog(){
+        if(paymentOptionDialog == null){
+            paymentOptionDialog = new PaymentOptionDialog(activity, new PaymentOptionDialog.Callback() {
+                @Override
+                public void onDialogDismiss() {
+
+                }
+            });
+        }
+        return paymentOptionDialog;
     }
 
 }

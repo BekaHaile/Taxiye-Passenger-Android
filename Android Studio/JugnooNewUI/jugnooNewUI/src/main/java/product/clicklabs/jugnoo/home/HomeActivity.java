@@ -138,6 +138,10 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
+import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
+import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
+import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
+import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -1718,6 +1722,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
 
+            slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOptionInDialog();
             slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
 
         } catch (Exception e) {
@@ -6152,6 +6157,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             JSONParser.setPaytmErrorCase();
                             setUserData();
                             menuBar.dismissPaytmLoading();
+                            slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -6160,6 +6166,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void onFinish() {
                         menuBar.dismissPaytmLoading();
+                        slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                     }
 
                     @Override
@@ -6530,7 +6537,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void setVehicleTypeSelected(int position) {
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
-        slidingBottomPanel.setRegionSelected(position);
+        slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
                 || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
@@ -6541,6 +6548,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         }
+
+        if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        }
+
     }
 
     public void forceFarAwayCity(){

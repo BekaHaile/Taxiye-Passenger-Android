@@ -29,7 +29,7 @@
             android:layout_height="33px"
             android:tag="mwar"
             android:layout_marginLeft="23px"
-            android:src="@drawable/radio_unselected_icon"/>
+            android:src="@drawable/ic_radio_button_normal"/>
         
         <ImageView
             android:layout_width="68px"
@@ -94,14 +94,14 @@
             android:layout_height="33px"
             android:tag="mwar"
             android:layout_marginLeft="23px"
-            android:src="@drawable/radio_unselected_icon"/>
+            android:src="@drawable/ic_radio_button_normal"/>
 
         <ImageView
             android:layout_width="68px"
             android:layout_height="22px"
             android:tag="mwar"
             android:layout_marginLeft="15px"
-            android:src="@drawable/cash_home_icon"/>
+            android:src="@drawable/ic_cash_small"/>
 
         <TextView
             android:id="@+id/textViewCash"

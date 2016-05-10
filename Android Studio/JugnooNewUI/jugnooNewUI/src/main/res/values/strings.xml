@@ -853,6 +853,12 @@
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="min_fare_rupee_format">Min Fare: \u20B9 %s</string>
+	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9 <b>%s</b></string>
+
+
 	<string name="format_x">%s x</string>
+
+	<string name="fare_details">Fare Details</string>
+	<string name="pay_for_your_rides_using">Pay for your rides using:</string>
 
 </resources>

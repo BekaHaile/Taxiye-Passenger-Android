@@ -97,24 +97,28 @@ public class AccessTokenGenerator {
 		}
 		else if(LOGOUT.equalsIgnoreCase(authKey)){
 			authKey = "";
-			saveAuthKey(context, authKey);
+//			saveAuthKey(context, authKey);
+			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			Editor editor = pref.edit();
+			editor.putString("authKey", "");
+			editor.commit();
 		}
-		else if("".equalsIgnoreCase(authKey)){																			// file returns empty
-			SharedPreferences pref1 = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);					// use old access token
-			final String accessToken = pref1.getString(Data.SP_ACCESS_TOKEN_KEY, "");
-				
-			if(!"".equalsIgnoreCase(accessToken)){
-				pair = new Pair<String, Integer>(accessToken, 0);
-				return pair;
-			}
-            else{
-                SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
-                authKey = pref.getString("authKey", "");
-                if (!"".equalsIgnoreCase(authKey)) {
-                    saveAuthKey(context, authKey);
-                }
-            }
-		}
+//		else if("".equalsIgnoreCase(authKey)){																			// file returns empty
+//			SharedPreferences pref1 = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);					// use old access token
+//			final String accessToken = pref1.getString(Data.SP_ACCESS_TOKEN_KEY, "");
+//
+//			if(!"".equalsIgnoreCase(accessToken)){
+//				pair = new Pair<String, Integer>(accessToken, 0);
+//				return pair;
+//			}
+//            else{
+//                SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+//                authKey = pref.getString("authKey", "");
+//                if (!"".equalsIgnoreCase(authKey)) {
+//                    saveAuthKey(context, authKey);
+//                }
+//            }
+//		}
 		else{
 			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
 			String freshInstall = pref.getString("freshInstall", "");

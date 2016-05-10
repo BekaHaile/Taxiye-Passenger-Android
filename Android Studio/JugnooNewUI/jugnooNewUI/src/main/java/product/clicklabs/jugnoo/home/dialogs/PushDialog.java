@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.home;
+package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;

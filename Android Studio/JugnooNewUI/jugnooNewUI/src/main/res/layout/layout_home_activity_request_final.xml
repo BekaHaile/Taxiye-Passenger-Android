@@ -328,7 +328,7 @@
                             android:id="@+id/imageViewIRPaymentOptionCash"
                             android:layout_width="68px"
                             android:layout_height="22px"
-                            android:background="@drawable/cash_home_icon"
+                            android:background="@drawable/ic_cash_small"
                             android:tag="mwar"
                             android:visibility="gone" />
 

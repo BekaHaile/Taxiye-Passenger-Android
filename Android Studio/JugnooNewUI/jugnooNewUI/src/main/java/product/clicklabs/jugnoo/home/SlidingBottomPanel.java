@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -29,8 +28,6 @@ public class SlidingBottomPanel {
     private RequestRideOptionsFragment requestRideOptionsFragment;
 
     private final String TAG = SlidingBottomPanel.class.getSimpleName();
-    private PromoCoupon selectedCoupon = null;
-    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
     public SlidingBottomPanel(HomeActivity activity, View view) {
         this.activity = activity;
@@ -104,23 +101,6 @@ public class SlidingBottomPanel {
 
     public SlidingUpPanelLayout getSlidingUpPanelLayout() {
         return slidingUpPanelLayout;
-    }
-
-
-    public void updatePreferredPaymentOptionUI1() {
-//        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-//        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-//            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
-//        }
-    }
-
-    public void setRegionSelected(int position) {
-//        if (position > -1 && position < Data.regions.size()) {
-//            regionSelected = Data.regions.get(position);
-//        }
-//        vehiclesTabAdapter.notifyDataSetChanged();
-//        recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
-//        updateFareStructureUI();
     }
 
 

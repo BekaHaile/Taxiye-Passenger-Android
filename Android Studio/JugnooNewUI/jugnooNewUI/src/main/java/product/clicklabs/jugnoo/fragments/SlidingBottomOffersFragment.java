@@ -72,10 +72,10 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     private void promotionSelection(ImageView selected, ImageView unSelected){
         if(selected != null){
-            selected.setImageResource(R.drawable.radio_selected_icon);
+            selected.setImageResource(R.drawable.ic_radio_button_selected);
         }
         if(unSelected != null) {
-            unSelected.setImageResource(R.drawable.radio_unselected_icon);
+            unSelected.setImageResource(R.drawable.ic_radio_button_normal);
         }
     }
 
@@ -141,9 +141,9 @@ public class SlidingBottomOffersFragment extends Fragment {
             setPromoCouponText(holder.textViewPromotion1, promoCoupon);
             if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
                     activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id){
-                holder.radioPromotion1.setImageResource(R.drawable.radio_selected_icon);
+                holder.radioPromotion1.setImageResource(R.drawable.ic_radio_button_selected);
             } else{
-                holder.radioPromotion1.setImageResource(R.drawable.radio_unselected_icon);
+                holder.radioPromotion1.setImageResource(R.drawable.ic_radio_button_normal);
             }
 
             holder.linearLayoutPromotion1.setTag(position);

@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
-import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
 
 /**
@@ -24,7 +23,7 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 				return new SlidingBottomCashFragment();
 
 			case 1:
-				return new SlidingBottomFareFragment();
+				return new SlidingBottomOffersFragment();
 
 			case 2:
 				return new SlidingBottomOffersFragment();

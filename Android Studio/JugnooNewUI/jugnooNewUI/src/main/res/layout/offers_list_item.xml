@@ -23,7 +23,7 @@
             android:layout_height="83px"
             android:padding="25px"
             android:tag="mwar"
-            android:src="@drawable/radio_unselected_icon"/>
+            android:src="@drawable/ic_radio_button_normal"/>
 
         <TextView
             android:id="@+id/textViewPromotion1"
