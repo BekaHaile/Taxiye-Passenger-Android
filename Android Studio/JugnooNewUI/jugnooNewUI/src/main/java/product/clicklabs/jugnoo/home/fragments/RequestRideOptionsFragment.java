@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,19 +16,27 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Locale;
+
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
 /**
  * Created by Shankar on 1/8/16.
@@ -59,6 +69,9 @@ public class RequestRideOptionsFragment extends Fragment {
     private VehiclesTabAdapter vehiclesTabAdapter;
 
     private Region regionSelected = null;
+    private PromoCoupon selectedCoupon = null;
+    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+
 
     public RequestRideOptionsFragment(){}
 
@@ -79,31 +92,31 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutPaymentMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentMode);
         imageViewPaymentMode = (ImageView) rootView.findViewById(R.id.imageViewPaymentMode);
         textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
-        textViewPaymentModeValue.setTypeface(Fonts.mavenLight(activity));
+        textViewPaymentModeValue.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
         linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
-        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
         textViewMinFareValue = (TextView) rootView.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareValue.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
         imageViewPriorityTip = (ImageView) rootView.findViewById(R.id.imageViewPriorityTip);
 
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
-        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
-        textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity));
+        textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
         textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
-        textViewMinFareMS.setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
-        textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity));
+        textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
         textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
-        textViewPriorityTipValueMS.setTypeface(Fonts.mavenLight(activity));
+        textViewPriorityTipValueMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
         relativeLayoutPriorityTipMS = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPriorityTipMS);
 
         recyclerViewVehicles = (RecyclerView) rootView.findViewById(R.id.recyclerViewVehicles);
@@ -196,7 +209,6 @@ public class RequestRideOptionsFragment extends Fragment {
                         break;
                     }
                 }
-                Data.regions.remove(1);
                 if(!matched){
                     regionSelected = Data.regions.get(0);
                 }
@@ -245,7 +257,8 @@ public class RequestRideOptionsFragment extends Fragment {
                 break;
             }
         }
-        textViewMinFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format)
+                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         textViewMinFareMS.setText(String.format(activity.getResources().getString(R.string.min_fare_rupee_format)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         updateFareFactorUI();
@@ -263,5 +276,94 @@ public class RequestRideOptionsFragment extends Fragment {
         }
     }
 
+    public void initSelectedCoupon(){
+        try {
+            if(selectedCoupon == null) {
+				if (Data.promoCoupons.size() > 0) {
+					selectedCoupon = noSelectionCoupon;
+				} else {
+					selectedCoupon = new CouponInfo(0, "");
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public PromoCoupon getSelectedCoupon() {
+        return selectedCoupon;
+    }
+
+    public void setSelectedCoupon(int position) {
+        if (position > -1 && position < Data.promoCoupons.size()) {
+            selectedCoupon = Data.promoCoupons.get(position);
+        } else {
+            selectedCoupon = noSelectionCoupon;
+        }
+        displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+    }
+
+    public void setSelectedCoupon(PromoCoupon promoCoupon){
+        selectedCoupon = promoCoupon;
+    }
+
+    private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
+        try {
+            if (isPaytmCoupon(promoCoupon)) {
+                if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
+                    View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openPaymentActivityInCaseOfPaytmNotAdded();
+                        }
+                    };
+                    View.OnClickListener onClickListenerCancel = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    };
+                    if (Data.userData.paytmEnabled == 1) {
+                        DialogPopup.alertPopupWithListener(activity, "",
+                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
+                                onClickListenerCancel);
+                    } else {
+                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
+                                activity.getResources().getString(R.string.ok),
+                                activity.getResources().getString(R.string.cancel),
+                                onClickListenerPaymentOption,
+                                onClickListenerCancel,
+                                true, false);
+                    }
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public void openPaymentActivityInCaseOfPaytmNotAdded() {
+        if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+            Intent intent = new Intent(activity, PaymentActivity.class);
+            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
+        }
+    }
+
+    public boolean isPaytmCoupon(PromoCoupon pc){
+        if(pc.getTitle().toLowerCase(Locale.ENGLISH)
+                .contains(activity.getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
+        return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+    }
 
 }

@@ -29,7 +29,7 @@
                 <RelativeLayout
                     android:id="@+id/mapLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/screen_height"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
                     android:splitMotionEvents="false"
                     android:visibility="visible">

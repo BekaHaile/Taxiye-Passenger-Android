@@ -116,7 +116,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                 });
                     }
                     else{
-                        activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
+                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().openPaymentActivityInCaseOfPaytmNotAdded();
                     }
                 }
                 break;
