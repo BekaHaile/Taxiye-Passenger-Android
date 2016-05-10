@@ -204,7 +204,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								Data.deepLinkPickupLongitude = Double.parseDouble(referringParams.optString("pickup_lng"));
 							} else {
 								if (Data.deepLinkIndex == -1) {
-									Data.deepLinkIndex = referringParams.optInt("deepindex", -1);
+									Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
 									Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
 									Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
 									if ("".equalsIgnoreCase(pair.first)
@@ -1310,6 +1310,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				}
 
 				new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
+				String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+				if(links != null){
+					if(!"[]".equalsIgnoreCase(links)) {
+						params.put(KEY_BRANCH_REFERRING_LINKS, links);
+					}
+				}
 
 				Log.e("params login_using_access_token", "=" + params);
 
@@ -1910,7 +1916,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, getAppSource());
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2021,7 +2033,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, getAppSource());
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2125,7 +2143,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, getAppSource());
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2526,7 +2550,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, getAppSource());
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
 
 			Log.i("register_using_email params", params.toString());
 
@@ -2644,7 +2674,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, getAppSource());
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -2749,7 +2785,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			} else {
 				params.put("device_rooted", "0");
 			}
-			params.put(KEY_SOURCE, getAppSource());
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
 
 			Log.e("register_using_facebook params", params.toString());
 
@@ -2815,7 +2857,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void nudgeSignupEvent(String phoneNo, String email, String userName){
 		try {
-			NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo);
+			NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo, "", "");
 			JSONObject map = new JSONObject();
 			map.put(KEY_PHONE_NO, phoneNo);
 			map.put(KEY_EMAIL, email);
@@ -3066,17 +3108,5 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Prefs.with(this).save(SP_APP_DOWNLOAD_SOURCE_SENT, 1);
 		}
 	}
-
-
-	private String getAppSource(){
-		StringBuilder sb = new StringBuilder();
-		sb.append(Prefs.with(this).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
-		if(sb.length() > 0){
-			sb.append("&");
-		}
-		sb.append(KEY_DOWNLOAD_SOURCE).append("=").append(Config.getDownloadSource());
-		return sb.toString();
-	}
-
 
 }

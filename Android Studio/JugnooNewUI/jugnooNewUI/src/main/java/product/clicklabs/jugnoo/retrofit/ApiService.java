@@ -397,4 +397,14 @@ public interface ApiService {
     void notificationInbox(@FieldMap Map<String, String> params,
                            Callback<NotificationInboxResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/customer/avail_campaign")
+    void availCampaign(@FieldMap Map<String, String> params,
+                                   Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/cancel_campaign")
+    void cancelCampaign(@FieldMap Map<String, String> params,
+                       Callback<SettleUserDebt> callback);
+
 }

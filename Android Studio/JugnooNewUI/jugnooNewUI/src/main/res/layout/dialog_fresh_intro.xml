@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical">
 
-    <ImageView
-        android:layout_width="246px"
-        android:layout_height="143px"
-        android:tag="mwar"
-        android:src="@drawable/ic_fresh_top_bar_arrow"
-        android:layout_marginRight="120px"
-        android:layout_marginTop="7px"
-        android:layout_alignParentRight="true"
-        />
-
 
     <LinearLayout
         android:id="@+id/linearLayoutInner"

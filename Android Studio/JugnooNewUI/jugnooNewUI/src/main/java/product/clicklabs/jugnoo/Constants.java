@@ -250,4 +250,27 @@ public interface Constants {
 	String SP_REFERRAL_CODE = "sp_referral_code";
 	String KEY_COUPON_SELECTED = "coupon_selected";
 
+	String SP_PUSH_DIALOG_CONTENT = "push_dialog_content";
+	String KEY_SHOW_DIALOG = "show_dialog";
+	String KEY_PICTURE = "picture";
+	String KEY_IMAGE = "image";
+	String KEY_BUTTON_TEXT = "button_text";
+	String KEY_SHOW_PUSH = "show_push";
+
+	String KEY_BRANCH_REFERRING_LINKS = "branch_referring_links";
+	String KEY_SP_FUGU_CAMPAIGN_NAME = "fugu_campaign_name";
+
+	String KEY_WIDTH = "width";
+	String KEY_HEIGHT = "height";
+	String KEY_CAMPAIGN_ID = "campaign_id";
+	String KEY_DATA = "data";
+	String VALUE_CAMPAIGN_DATA_REQUEST = "1";
+	String VALUE_CAMPAIGN_DATA_CANCEL = "-1";
+
+	String KEY_CITY = "city";
+	String KEY_CITY_REG = "city_reg";
+	String KEY_FARE_VALUE = "fare_value";
+	String KEY_FARE_TO_PAY = "fare_to_pay";
+	String KEY_PAID_RIDE = "paid_ride";
+
 }

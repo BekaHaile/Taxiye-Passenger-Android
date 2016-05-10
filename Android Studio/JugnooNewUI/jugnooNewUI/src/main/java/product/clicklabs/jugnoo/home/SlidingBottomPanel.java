@@ -200,8 +200,10 @@ public class SlidingBottomPanel {
                             map.put(Constants.KEY_COUPONS, coups.toString());
                             NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
 
-                            map.put(Constants.KEY_COUPONS, coupsP.toString());
-                            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
+                            if(coupsP.length() > 0) {
+                                map.put(Constants.KEY_COUPONS, coupsP.toString());
+                                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

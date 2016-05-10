@@ -32,4 +32,7 @@ public interface AppInterruptHandler {
 
 	void onPaytmRechargePush(JSONObject jObj);
 
+	void onShowDialogPush();
+
+	void onDisplayMessagePushReceived();
 }

@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -185,7 +186,8 @@ public class Data {
 	public static String farAwayCity = "";
 	public static int priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
 	public static int freshAvailable = 0;
-	
+	public static Campaigns campaigns;
+
 	public static CancelOptionsList cancelOptionsList;
     public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
 
@@ -315,8 +317,8 @@ public class Data {
 				FlurryEventLogger.event(context, FlurryEventNames.WHO_CLICKED_THE_PUSH);
 			}
 
-			if(data.getQueryParameter("deepindex") != null){
-				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter("deepindex"));
+			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
+				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
 			}
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -346,8 +348,8 @@ public class Data {
 					Data.deepLinkReferralCode = dataTarget.getQueryParameter(Constants.KEY_REFERRAL_CODE);
 				}
 
-				if(dataTarget.getQueryParameter("deepindex") != null){
-					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter("deepindex"));
+				if(dataTarget.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
+					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter(Constants.KEY_DEEPINDEX));
 				}
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
 					Data.deepLinkPickup = 1;

@@ -219,6 +219,9 @@ public class JSONParser implements Constants {
         String referAllTextLogin = userData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
         String referAllTitleLogin = userData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
+        String city = userData.optString(KEY_CITY, "");
+        String cityReg = userData.optString(KEY_CITY_REG, "");
+
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
@@ -228,7 +231,8 @@ public class JSONParser implements Constants {
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
-                referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled);
+                referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
+                city, cityReg);
 
     }
 
@@ -283,7 +287,8 @@ public class JSONParser implements Constants {
 
         try {
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
-                    Data.userData.userEmail, Data.userData.phoneNo);
+                    Data.userData.userEmail, Data.userData.phoneNo,
+                    Data.userData.getCity(), Data.userData.getCityReg());
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
@@ -293,14 +298,24 @@ public class JSONParser implements Constants {
                         Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
 
             }
+            JSONObject map = new JSONObject();
+            map.put(KEY_SOURCE, getAppSource(context));
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-
-
         return resp;
+    }
+
+    public static String getAppSource(Context context){
+        StringBuilder sb = new StringBuilder();
+        sb.append(Prefs.with(context).getString(Constants.SP_INSTALL_REFERRER_CONTENT, ""));
+        if(sb.length() > 0){
+            sb.append("&");
+        }
+        sb.append(KEY_DOWNLOAD_SOURCE).append("=").append(Config.getDownloadSource());
+        return sb.toString();
     }
 
     private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName,
@@ -344,6 +359,8 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
+
+            Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -645,9 +662,12 @@ public class JSONParser implements Constants {
                 JSONObject jObject1 = new JSONObject(responseStr);
                 String resp = parseCurrentUserStatus(context, currentUserStatus, jObject1);
 
-                Gson gson = new Gson();
-                FindADriverResponse findADriverResponse = gson.fromJson(responseStr, FindADriverResponse.class);
-                apiFindADriver.parseFindADriverResponse(findADriverResponse);
+                if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+                        || PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode) {
+                    Gson gson = new Gson();
+                    FindADriverResponse findADriverResponse = gson.fromJson(responseStr, FindADriverResponse.class);
+                    apiFindADriver.parseFindADriverResponse(findADriverResponse);
+                }
 
                 return resp;
             }
