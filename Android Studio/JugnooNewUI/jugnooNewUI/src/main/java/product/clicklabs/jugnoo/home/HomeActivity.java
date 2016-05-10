@@ -250,6 +250,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Request Final Layout
+    LinearLayout linearLayoutSurgeContainer;
     RelativeLayout requestFinalLayout;
     TextView textViewInRidePromoName, textViewInRideFareFactor;
     RelativeLayout relativeLayoutFinalDropLocationClick;
@@ -263,7 +264,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutDriverRating;
     Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent;
-	RelativeLayout relativeLayoutIRPaymentOption;
+	LinearLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue;
 	ImageView imageViewIRPaymentOptionPaytm, imageViewIRPaymentOptionCash;
 
@@ -586,6 +587,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         textViewInRidePromoName = (TextView) findViewById(R.id.textViewInRidePromoName);
         textViewInRidePromoName.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        linearLayoutSurgeContainer = (LinearLayout) findViewById(R.id.linearLayoutSurgeContainer);
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
         textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
         relativeLayoutFinalDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationClick);
@@ -618,7 +620,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
 
 
-		relativeLayoutIRPaymentOption = (RelativeLayout) findViewById(R.id.relativeLayoutIRPaymentOption);
+		relativeLayoutIRPaymentOption = (LinearLayout) findViewById(R.id.relativeLayoutIRPaymentOption);
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.mavenRegular(this));
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenRegular(this));
 		imageViewIRPaymentOptionPaytm = (ImageView) findViewById(R.id.imageViewIRPaymentOptionPaytm);
@@ -2591,10 +2593,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
-				textViewInRideFareFactor.setVisibility(View.VISIBLE);
-				textViewInRideFareFactor.setText("Price: " + decimalFormat.format(Data.userData.fareFactor) + "x");
+                linearLayoutSurgeContainer.setVisibility(View.VISIBLE);
+				textViewInRideFareFactor.setText("Rate: " + decimalFormat.format(Data.userData.fareFactor) + "x");
 			} else {
-				textViewInRideFareFactor.setVisibility(View.GONE);
+                linearLayoutSurgeContainer.setVisibility(View.GONE);
 				textViewInRideFareFactor.setText("");
 			}
 
@@ -2669,7 +2671,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewInRideState.setText("Driver\nEnroute");
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-            textViewInRideState.setText("Driver arrived\nat Pickup");
+            textViewInRideState.setText("Arrived at Pickup");
         }
     }
 

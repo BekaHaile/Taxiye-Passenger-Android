@@ -316,6 +316,7 @@
             android:layout_height="224px"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
+            android:visibility="gone"
             android:splitMotionEvents="false">
 
             <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
