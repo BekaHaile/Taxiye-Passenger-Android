@@ -201,7 +201,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm);
 			}
-            activity.getSlidingBottomPanel().updatePaymentOption();
+//            activity.getSlidingBottomPanel().updatePaymentOption();
         } catch (Exception e) {
             e.printStackTrace();
         }

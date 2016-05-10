@@ -64,7 +64,7 @@
                     android:tag="mwar"
                     android:layout_marginTop="12px"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/surge_icon_bottom"/>
+                    android:src="@drawable/ic_surge_grey"/>
 
                 <TextView
                     android:id="@+id/textViewPriorityTipValue"

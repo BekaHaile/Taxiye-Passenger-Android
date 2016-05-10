@@ -1,9 +1,10 @@
 package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +14,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -30,36 +32,39 @@ import product.clicklabs.jugnoo.utils.Utils;
  * Created by Shankar on 1/8/16.
  */
 @SuppressLint("ValidFragment")
-public class RequestRideOptionsFragment extends Fragment{
+public class RequestRideOptionsFragment extends Fragment {
 
     private View rootView;
     private HomeActivity activity;
     private LinearLayout linearLayoutSlidingBottom;
 
-    private LinearLayout linearLayoutOptionsSingleSupply, linearLayoutPayment;
-    private ImageView imageViewPaymentMode, imageViewPaymentModeTick;
+    private LinearLayout linearLayoutOptionsSingleSupply, linearLayoutPaymentMode;
+    private ImageView imageViewPaymentMode;
     private TextView textViewPaymentModeValue;
 
+
     private LinearLayout linearLayoutFare;
-    private TextView textViewMinFare, textViewMinFareValue;
+    private TextView textViewMinFareValue;
     private ImageView imageViewPriorityTip;
 
     private LinearLayout linearLayoutFareEstimate;
-    private TextView textViewFareEstimate;
 
     private RelativeLayout relativeLayoutMultipleSupplyMain;
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutPaymentModeMS;
-    private ImageView imageViewPaymentModeMS, imageViewPaymentModeTickMS;
+    private ImageView imageViewPaymentModeMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMS, textVieGetFareEstimateMS, textViewPriorityTipValueMS;
     private RelativeLayout relativeLayoutPriorityTipMS;
 
-    private RelativeLayout relativeLayoutPriorityTip;
-    private TextView textViewPriorityTipValue, textViewKMValue, textViewMinValue, textViewFareEstimage, textViewThreshold;
+    private VehiclesTabAdapter vehiclesTabAdapter;
+
+    private Region regionSelected = null;
+
+    public RequestRideOptionsFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_sliding_bottom_fare, container, false);
+        rootView = inflater.inflate(R.layout.fragment_request_ride_options, container, false);
         activity = (HomeActivity) getActivity();
         linearLayoutSlidingBottom = (LinearLayout) rootView.findViewById(R.id.linearLayoutSlidingBottom);
         try {
@@ -70,55 +75,193 @@ public class RequestRideOptionsFragment extends Fragment{
             e.printStackTrace();
         }
 
-        relativeLayoutPriorityTip = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutPriorityTip);
-        textViewPriorityTipValue = (TextView)rootView.findViewById(R.id.textViewPriorityTipValue);textViewPriorityTipValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView)rootView.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView)rootView.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenLight(activity));
-        textViewKMValue = (TextView)rootView.findViewById(R.id.textViewKMValue);textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewMinValue = (TextView)rootView.findViewById(R.id.textViewMinValue);textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewFareEstimage = (TextView)rootView.findViewById(R.id.textViewFareEstimage);textViewFareEstimage.setTypeface(Fonts.mavenLight(activity));
-        textViewThreshold = (TextView)rootView.findViewById(R.id.textViewThreshold);textViewThreshold.setTypeface(Fonts.mavenLight(activity));
+        linearLayoutOptionsSingleSupply = (LinearLayout) rootView.findViewById(R.id.linearLayoutOptionsSingleSupply);
+        linearLayoutPaymentMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentMode);
+        imageViewPaymentMode = (ImageView) rootView.findViewById(R.id.imageViewPaymentMode);
+        textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
+        textViewPaymentModeValue.setTypeface(Fonts.mavenLight(activity));
 
-        update();
+        linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
+        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareValue = (TextView) rootView.findViewById(R.id.textViewMinFareValue);
+        textViewMinFareValue.setTypeface(Fonts.mavenLight(activity));
+        imageViewPriorityTip = (ImageView) rootView.findViewById(R.id.imageViewPriorityTip);
 
-        textViewFareEstimage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(activity, FareEstimateActivity.class));
-                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
-            }
-        });
+        linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
+        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(activity));
+
+        relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
+        linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
+        imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
+        textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
+        textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity));
+
+        textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
+        textViewMinFareMS.setTypeface(Fonts.mavenLight(activity));
+
+        textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
+        textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity));
+
+        textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
+        textViewPriorityTipValueMS.setTypeface(Fonts.mavenLight(activity));
+        relativeLayoutPriorityTipMS = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPriorityTipMS);
+
+        recyclerViewVehicles = (RecyclerView) rootView.findViewById(R.id.recyclerViewVehicles);
+        recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+                LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewVehicles.setHasFixedSize(false);
+        vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.regions);
+        recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
+
+
+        linearLayoutPaymentMode.setOnClickListener(onClickListenerRequestOptions);
+        linearLayoutFare.setOnClickListener(onClickListenerRequestOptions);
+        linearLayoutFareEstimate.setOnClickListener(onClickListenerRequestOptions);
+
+        linearLayoutPaymentModeMS.setOnClickListener(onClickListenerRequestOptions);
+        textViewMinFareMS.setOnClickListener(onClickListenerRequestOptions);
+        textVieGetFareEstimateMS.setOnClickListener(onClickListenerRequestOptions);
+
 
         return rootView;
     }
 
     public void update(){
         try {
-            textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
-            textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
-            if(Data.fareStructure.thresholdDistance > 1.0){
-                textViewThreshold.setVisibility(View.VISIBLE);
-                DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                textViewThreshold.setText(String.format(activity.getResources()
-                        .getString(R.string.fare_threshold_distance_message_format),
-                        decimalFormat.format(Data.fareStructure.thresholdDistance)));
-            } else{
-                textViewThreshold.setVisibility(View.GONE);
-            }
-            if(Data.userData.fareFactor > 1.0){
-                relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
-                textViewPriorityTipValue.setText(Data.userData.fareFactor+"X");
-            } else{
-                relativeLayoutPriorityTip.setVisibility(View.GONE);
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    View.OnClickListener onClickListenerRequestOptions = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
+                //TODO open payment selection dialog
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
+
+            } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.textViewMinFareMS){
+                //TODO open fare dialog
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
+
+            } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
+
+            }
+        }
+    };
+
+
+    public void updatePaymentOption() {
+        try {
+            Data.pickupPaymentOption = (Data.userData.paytmEnabled == 1
+                    && Data.userData.getPaytmError() != 1
+                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
+                    && PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption)
+                    ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
+
+
+            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
+                imageViewPaymentMode.setImageResource(R.drawable.ic_paytm_small);
+                imageViewPaymentModeMS.setImageResource(R.drawable.ic_paytm_small);
+                textViewPaymentModeValue.setText(String.format(activity.getResources()
+                                .getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getPaytmBalanceStr()));
+                textViewPaymentModeValueMS.setText(String.format(activity.getResources()
+                                .getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getPaytmBalanceStr()));
+            } else {
+                imageViewPaymentMode.setImageResource(R.drawable.cash_home_icon);
+                imageViewPaymentModeMS.setImageResource(R.drawable.cash_home_icon);
+                textViewPaymentModeValue.setText(activity.getResources().getString(R.string.cash));
+                textViewPaymentModeValueMS.setText(activity.getResources().getString(R.string.cash));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateRegionsUI(){
+        try{
+            if(Data.regions.size() > 1){
+                boolean matched = false;
+                for (int i=0; i<Data.regions.size(); i++) {
+                    if(Data.regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())
+                            && Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
+                        regionSelected = Data.regions.get(i);
+                        matched = true;
+                        break;
+                    }
+                }
+                Data.regions.remove(1);
+                if(!matched){
+                    regionSelected = Data.regions.get(0);
+                }
+                vehiclesTabAdapter.notifyDataSetChanged();
+                updateSupplyUI(Data.regions.size());
+
+            } else if(Data.regions.size() > 0){
+                activity.setVehicleTypeSelected(0);
+                regionSelected = Data.regions.get(0);
+                updateSupplyUI(Data.regions.size());
+
+            } else{
+                activity.forceFarAwayCity();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public Region getRegionSelected() {
+        if(regionSelected == null){
+            if(Data.regions.size() > 0){
+                regionSelected = Data.regions.get(0);
+            } else{
+                regionSelected = new Region();
+            }
+        }
+        return regionSelected;
+    }
+
+    public void updateSupplyUI(int supplyCount){
+        linearLayoutOptionsSingleSupply.setVisibility(View.GONE);
+        relativeLayoutMultipleSupplyMain.setVisibility(View.GONE);
+
+        if(supplyCount > 1){
+            relativeLayoutMultipleSupplyMain.setVisibility(View.VISIBLE);
+        } else{
+            linearLayoutOptionsSingleSupply.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void updateFareStructureUI(){
+        for (int i = 0; i < Data.regions.size(); i++) {
+            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
+                Data.fareStructure = Data.regions.get(i).getFareStructure();
+                break;
+            }
+        }
+        textViewMinFareValue.setText(Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare));
+        textViewMinFareMS.setText(String.format(activity.getResources().getString(R.string.min_fare_rupee_format)
+                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+        updateFareFactorUI();
+    }
+
+    public void updateFareFactorUI(){
+        if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
+            imageViewPriorityTip.setVisibility(View.VISIBLE);
+            relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
+            textViewPriorityTipValueMS.setText(String.format(activity.getResources().getString(R.string.format_x)
+                            , Utils.getMoneyDecimalFormat().format(Data.userData.fareFactor)));
+        } else {
+            imageViewPriorityTip.setVisibility(View.GONE);
+            relativeLayoutPriorityTipMS.setVisibility(View.GONE);
+        }
+    }
+
+
 }

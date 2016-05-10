@@ -1,47 +1,30 @@
 package product.clicklabs.jugnoo.home;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
-import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
-import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
-import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
-import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.NudgeClient;
-import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
  * Created by Ankit on 1/7/16.
@@ -50,20 +33,13 @@ public class SlidingBottomPanel {
 
     private HomeActivity activity;
     private SlidingUpPanelLayout slidingUpPanelLayout;
-    private PagerSlidingTabStrip tabs;
+    private ImageView imageViewExtraForSliding;
+    private RequestRideOptionsFragment requestRideOptionsFragment;
+
     private final String TAG = SlidingBottomPanel.class.getSimpleName();
-    private ViewPager viewPager;
-    private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
-    private ImageView imageViewPaymentOp, imageViewExtraForSliding;
-    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
+
     private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
-    private ArrayList<PromoCoupon> promoCoupons;
-
-    private Region regionSelected = null;
-
-    private RecyclerView recyclerViewVehicles;
-    private VehiclesTabAdapter vehiclesTabAdapter;
 
     public SlidingBottomPanel(HomeActivity activity, View view) {
         this.activity = activity;
@@ -72,15 +48,7 @@ public class SlidingBottomPanel {
 
     private void initComponents(View view) {
         //SlidingUp Layout
-        ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
-        textViewMinFareValue = (TextView) view.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(activity));
-        textViewOffersValue = (TextView) view.findViewById(R.id.textViewOffersValue);
-        textViewOffersValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewCashValue = (TextView) view.findViewById(R.id.textViewCashValue);
-        textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
-        imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
+        requestRideOptionsFragment = ((RequestRideOptionsFragment) activity.getSupportFragmentManager().findFragmentById(R.id.frag));
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
@@ -112,15 +80,6 @@ public class SlidingBottomPanel {
             }
         });
 
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-
-        tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
-        tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
-
-        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager());
-        viewPager.setAdapter(slidingBottomFragmentAdapter);
-        tabs.setViewPager(viewPager);
-
         imageViewExtraForSliding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,174 +88,31 @@ public class SlidingBottomPanel {
             }
         });
 
-        update(null);
-
-        recyclerViewVehicles = (RecyclerView) view.findViewById(R.id.recyclerViewVehicles);
-        recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
-                LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewVehicles.setHasFixedSize(false);
-        vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.regions);
-        recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
+        update();
 
     }
 
-    public void slideOnClick(View view) {
-        if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        }
-        switch (view.getId()) {
-            case R.id.linearLayoutCash:
-                if(viewPager.getCurrentItem() == 0){
-                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                } else {
-                    viewPager.setCurrentItem(0, true);
-                }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
-                break;
-
-            case R.id.linearLayoutFare:
-                if(viewPager.getCurrentItem() == 1){
-                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                } else {
-                    viewPager.setCurrentItem(1, true);
-                }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
-                break;
-
-            case R.id.linearLayoutOffers:
-                if(viewPager.getCurrentItem() == 2){
-                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                } else {
-                    viewPager.setCurrentItem(2, true);
-                }
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
-                break;
-        }
-    }
-
-    public void update(ArrayList<PromoCoupon> promoCoupons) {
+    public void update() {
         try {
-            this.promoCoupons = promoCoupons;
-
-            if (promoCoupons != null) {
+            if (Data.promoCoupons != null) {
 				if(selectedCoupon == null) {
-					if (promoCoupons.size() > 0) {
+					if (Data.promoCoupons.size() > 0) {
 						selectedCoupon = noSelectionCoupon;
-                        try {
-                            JSONObject map = new JSONObject();
-                            JSONArray coups = new JSONArray();
-                            JSONArray coupsP = new JSONArray();
-                            for(PromoCoupon pc : promoCoupons){
-                                if(isPaytmCoupon(pc)){
-                                    coupsP.put(pc.getTitle());
-                                } else{
-                                    coups.put(pc.getTitle());
-                                }
-                            }
-                            map.put(Constants.KEY_COUPONS, coups.toString());
-                            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
-
-                            if(coupsP.length() > 0) {
-                                map.put(Constants.KEY_COUPONS, coupsP.toString());
-                                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        nudgeCouponsEvent();
 					} else {
 						selectedCoupon = new CouponInfo(0, "");
-						textViewOffersValue.setText("-");
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
 					}
 				}
-				if (promoCoupons.size() > 0) {
-					textViewOffersValue.setText(String.valueOf(promoCoupons.size()));
-					textViewOffersValue.setVisibility(View.VISIBLE);
-				} else{
-					textViewOffersValue.setText("-");
-                }
-
-            } else {
-				textViewOffersValue.setText("-");
-			}
-
-            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
-				((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
-				((SlidingBottomOffersFragment) frag).update(promoCoupons);
-			}
-            updatePaymentOption();
-
-            if(Data.regions.size() > 1){
-                boolean matched = false;
-                for (int i=0; i<Data.regions.size(); i++) {
-                    if(Data.regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())
-                            && Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
-                        regionSelected = Data.regions.get(i);
-                        matched = true;
-                        break;
-                    }
-                }
-                if(!matched){
-                    regionSelected = Data.regions.get(0);
-                }
-                vehiclesTabAdapter.notifyDataSetChanged();
-                setRecyclerViewVehiclesVisiblity(View.VISIBLE);
-
-            } else if(Data.regions.size() > 0){
-                activity.setVehicleTypeSelected(0);
-                regionSelected = Data.regions.get(0);
-                setRecyclerViewVehiclesVisiblity(View.GONE);
-
-            } else{
-                activity.forceFarAwayCity();
             }
 
-            updateFareStructureUI();
-
-            checkForGoogleLogoVisibilityBeforeRide();
+            requestRideOptionsFragment.updatePaymentOption();
+            requestRideOptionsFragment.updateRegionsUI();
+            requestRideOptionsFragment.updateFareStructureUI();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-    }
-
-    public void setRecyclerViewVehiclesVisiblity(int visiblity){
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewExtraForSliding.getLayoutParams();
-        if(visiblity == View.GONE){
-            recyclerViewVehicles.setVisibility(View.GONE);
-            params.setMargins(0, 0, 0, 0);
-        } else{
-            recyclerViewVehicles.setVisibility(View.VISIBLE);
-            params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
-        }
-        imageViewExtraForSliding.setLayoutParams(params);
-    }
-
-    public void updatePaymentOption() {
-        try {
-            if(Data.userData.getPaytmError() == 1){
-				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-            }
-            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentOp.setImageResource(R.drawable.ic_paytm_small);
-                textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-			} else {
-				imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
-				textViewCashValue.setText(activity.getResources().getString(R.string.cash));
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ArrayList<PromoCoupon> getPromoCoupons() {
-        return promoCoupons;
     }
 
     public SlidingUpPanelLayout getSlidingUpPanelLayout() {
@@ -308,8 +124,8 @@ public class SlidingBottomPanel {
     }
 
     public void setSelectedCoupon(int position) {
-        if (position > -1 && position < promoCoupons.size()) {
-            selectedCoupon = promoCoupons.get(position);
+        if (position > -1 && position < Data.promoCoupons.size()) {
+            selectedCoupon = Data.promoCoupons.get(position);
         } else {
             selectedCoupon = noSelectionCoupon;
         }
@@ -320,18 +136,11 @@ public class SlidingBottomPanel {
         selectedCoupon = promoCoupon;
     }
 
-    public void setPaytmLoadingVisiblity(int visiblity) {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
-        }
-    }
-
     public void updatePreferredPaymentOptionUI() {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
-        }
+//        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
+//        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+//            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
+//        }
     }
 
     public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
@@ -386,59 +195,13 @@ public class SlidingBottomPanel {
     }
 
 
-    public Region getRegionSelected() {
-        if(regionSelected == null){
-            if(Data.regions.size() > 0){
-                regionSelected = Data.regions.get(0);
-            } else{
-                regionSelected = new Region();
-            }
-        }
-        return regionSelected;
-    }
     public void setRegionSelected(int position) {
-        if (position > -1 && position < Data.regions.size()) {
-            regionSelected = Data.regions.get(position);
-        }
-        vehiclesTabAdapter.notifyDataSetChanged();
-        recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
-        updateFareStructureUI();
-    }
-
-
-    private void updateFareStructureUI(){
-        for (int i = 0; i < Data.regions.size(); i++) {
-            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
-                Data.fareStructure = Data.regions.get(i).getFareStructure();
-                break;
-            }
-        }
-        updateFareFrag();
-    }
-
-    private void updateFareFrag(){
-        try {
-            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
-            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
-				((SlidingBottomFareFragment) frag1).update();
-			}
-            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-					, Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void checkForGoogleLogoVisibilityBeforeRide(){
-        try{
-            float padding = 20;
-            if(recyclerViewVehicles.getVisibility() == View.VISIBLE){
-                padding = padding + 110;
-            }
-            activity.setGoogleMapPadding(padding);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+//        if (position > -1 && position < Data.regions.size()) {
+//            regionSelected = Data.regions.get(position);
+//        }
+//        vehiclesTabAdapter.notifyDataSetChanged();
+//        recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
+//        updateFareStructureUI();
     }
 
     private boolean isPaytmCoupon(PromoCoupon pc){
@@ -447,6 +210,35 @@ public class SlidingBottomPanel {
             return true;
         }
         return false;
+    }
+
+
+    private void nudgeCouponsEvent(){
+        try {
+            JSONObject map = new JSONObject();
+            JSONArray coups = new JSONArray();
+            JSONArray coupsP = new JSONArray();
+            for(PromoCoupon pc : Data.promoCoupons){
+                if(isPaytmCoupon(pc)){
+                    coupsP.put(pc.getTitle());
+                } else{
+                    coups.put(pc.getTitle());
+                }
+            }
+            map.put(Constants.KEY_COUPONS, coups.toString());
+            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+
+            if(coupsP.length() > 0) {
+                map.put(Constants.KEY_COUPONS, coupsP.toString());
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public RequestRideOptionsFragment getRequestRideOptionsFragment(){
+        return requestRideOptionsFragment;
     }
 
 }

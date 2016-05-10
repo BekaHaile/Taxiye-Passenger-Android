@@ -17,10 +17,6 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
-
-/**
- * Created by Ankit on 7/17/15.
- */
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> {
 
     private HomeActivity activity;
@@ -35,7 +31,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(185, 110);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 108);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);
@@ -49,27 +45,14 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
 
-        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRegionSelected().getVehicleType())
-                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRegionSelected().getRegionId());
-        if(position == 0) {
-            holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_lrb : R.drawable.bg_transparent_grey_light_lrb_selector);
-            holder.imageViewSep.setVisibility(View.VISIBLE);
-        } else if(position == (getItemCount()-1)){
-            holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_rrb : R.drawable.bg_transparent_grey_light_rrb_selector);
-            holder.imageViewSep.setVisibility(View.GONE);
+        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
+                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId());
+
+        if(selected){
+            holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
         } else{
-            holder.relative.setBackgroundResource(selected ? R.drawable.bg_grey_light_b : R.drawable.bg_transparent_grey_light_b_selector);
-            holder.imageViewSep.setVisibility(View.VISIBLE);
+            holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
         }
-        if(!selected){
-            int pos = position + 1;
-            if(pos < regions.size()
-                    && regions.get(pos).getVehicleType().equals(activity.getSlidingBottomPanel().getRegionSelected().getVehicleType())
-                    && regions.get(pos).getRegionId().equals(activity.getSlidingBottomPanel().getRegionSelected().getRegionId())){
-                holder.imageViewSep.setVisibility(View.GONE);
-            }
-        }
-        holder.imageViewVehicle.setImageResource(region.getVehicleIconSet().getIconTab());
 
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +62,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             }
         });
 
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.relative.getLayoutParams();
+        params.width = getItemWidth();
+        holder.relative.setLayoutParams(params);
+
 	}
 
     @Override
@@ -86,17 +73,23 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         return regions == null ? 0 : regions.size();
     }
 
+    private int getItemWidth(){
+        int width = (int)((720f / getItemCount()) * ASSL.Xscale());
+        int minWidth = (int) (100f * ASSL.Xscale());
+        return width >= minWidth ? width : minWidth;
+    }
+
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        public ImageView imageViewVehicle, imageViewSep;
+        public ImageView imageViewSep;
         public TextView textViewVehicleName;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
-            imageViewVehicle = (ImageView) itemView.findViewById(R.id.imageViewVehicle);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
-            textViewVehicleName.setTypeface(Fonts.mavenLight(activity));
+            textViewVehicleName.setTypeface(Fonts.mavenRegular(activity));
         }
     }
 }

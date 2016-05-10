@@ -48,12 +48,11 @@
                     android:gravity="center"
                     android:text="200"
                     android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_28"/>
 
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageViewPaymentModeTick"
                 android:layout_width="27px"
                 android:layout_height="27px"
                 android:layout_marginLeft="15px"
@@ -92,7 +91,7 @@
                     android:gravity="center"
                     android:text="@string/nl_min_fare"
                     android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_28"/>
 
                 <TextView
                     android:id="@+id/textViewMinFareValue"
@@ -102,7 +101,7 @@
                     android:gravity="center"
                     android:text="20"
                     android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_28"/>
             </LinearLayout>
 
             <ImageView
@@ -140,7 +139,7 @@
                 android:text="@string/fare_ln_estimate"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_26"/>
+                android:textSize="@dimen/text_size_28"/>
 
         </LinearLayout>
 
@@ -196,10 +195,9 @@
                         android:gravity="center"
                         android:text="200"
                         android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_28"/>
+                        android:textSize="@dimen/text_size_30"/>
 
                     <ImageView
-                        android:id="@+id/imageViewPaymentModeTickMS"
                         android:layout_width="27px"
                         android:layout_height="27px"
                         android:layout_marginLeft="15px"
@@ -223,7 +221,7 @@
                     android:gravity="center"
                     android:text="@string/min_fare_rupee_format"
                     android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_30"/>
 
 
             </LinearLayout>
@@ -243,7 +241,7 @@
                 android:gravity="center"
                 android:text="@string/get_fare_estimate"
                 android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_28"/>
+                android:textSize="@dimen/text_size_30"/>
 
         </LinearLayout>
 
@@ -270,7 +268,7 @@
                 android:layout_height="wrap_content"
                 android:text="2.5 X"
                 android:gravity="center"
-                android:textSize="@dimen/text_size_24"
+                android:textSize="@dimen/text_size_26"
                 android:layout_marginBottom="12px"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"

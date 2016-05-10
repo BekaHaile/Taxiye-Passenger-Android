@@ -303,7 +303,6 @@
 
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/relativeLayoutInAppCampaignRequest"
             android:layout_width="match_parent"

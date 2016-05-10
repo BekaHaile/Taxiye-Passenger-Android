@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -58,10 +59,10 @@ public class SlidingBottomOffersFragment extends Fragment {
         recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
         recyclerViewOffers.setHasFixedSize(false);
 
-        setOfferAdapter(activity.getSlidingBottomPanel().getPromoCoupons());
+        setOfferAdapter(Data.promoCoupons);
 
         try {
-            update(activity.getSlidingBottomPanel().getPromoCoupons());
+            update(Data.promoCoupons);
         } catch (Exception e) {
             e.printStackTrace();
         }

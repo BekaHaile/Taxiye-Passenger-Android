@@ -854,4 +854,8 @@
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="min_fare_rupee_format">Min Fare: \u20B9 %s</string>
 
+	<string name="no_campaign_currently">No campaign currently</string>
+
+	<string name="format_x">%s x</string>
+
 </resources>

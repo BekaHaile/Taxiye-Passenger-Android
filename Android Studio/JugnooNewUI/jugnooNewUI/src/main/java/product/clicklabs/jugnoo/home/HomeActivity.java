@@ -220,7 +220,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	TextView textViewInitialSearch, textViewDestSearch;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
-    LinearLayout linearLayoutRequest;
+    RelativeLayout relativeLayoutRequest;
     RelativeLayout relativeLayoutInAppCampaignRequest;
     TextView textViewInAppCampaignRequest;
     Button buttonCancelInAppCampaignRequest;
@@ -509,8 +509,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
         imageViewInAppCampaign.setVisibility(View.GONE);
-        linearLayoutRequest = (LinearLayout) findViewById(R.id.linearLayoutRequest);
-        linearLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutRequest = (RelativeLayout) findViewById(R.id.relativeLayoutRequest);
+        relativeLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
+        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+        textViewInAppCampaignRequest = (TextView) findViewById(R.id.textViewInAppCampaignRequest);
+        textViewInAppCampaignRequest.setTypeface(Fonts.mavenLight(this));
+        buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
+        buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
+
+        imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
+        imageViewInAppCampaign.setVisibility(View.GONE);
+        relativeLayoutRequest = (RelativeLayout) findViewById(R.id.relativeLayoutRequest);
+        relativeLayoutRequest.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
         relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
         textViewInAppCampaignRequest = (TextView) findViewById(R.id.textViewInAppCampaignRequest);
@@ -1517,10 +1528,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         mView.startAnimation(animation);
     }
 
-    public void slideOnClick(View v){
-        slidingBottomPanel.slideOnClick(v);
-    }
-
     public void onClickSearchCancel(){
         textViewInitialSearch.setText("");
         Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
@@ -1710,7 +1717,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			setPaymentOptionInRide();
 
             slidingBottomPanel.updatePreferredPaymentOptionUI();
-            slidingBottomPanel.updatePaymentOption();
+            slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -3373,7 +3380,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private ApiFindADriver createApiFindADriver(){
         if(apiFindADriver == null) {
-            apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getRegionSelected(),
+            apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(),
                     new ApiFindADriver.Callback() {
                 @Override
                 public void onPre() {
@@ -3415,19 +3422,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ApiFindADriver apiFindADriver = null;
     private void findDriversETACall(){
         createApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo,
-                slidingBottomPanel.getRegionSelected());
+                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
     }
 
     private void findADriverFinishing(){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                slidingBottomPanel.update(Data.promoCoupons);
+                slidingBottomPanel.update();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                    showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
+                    showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -3535,7 +3542,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
-                slidingBottomPanel.setRecyclerViewVehiclesVisiblity(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
@@ -4718,9 +4724,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private int getFilteredDrivers(){
         int driversCount = 0;
         for(DriverInfo driverInfo : Data.driverInfos){
-            if(slidingBottomPanel.getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
-                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRegionSelected().getRegionId())){
+                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())){
                 driversCount++;
             }
         }
@@ -5358,9 +5364,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
-                                        .getRegionSelected().getVehicleType()));
+                                        .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
-                                        .getRegionSelected().getRegionId()));
+                                        .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
@@ -6145,7 +6151,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             JSONParser.setPaytmErrorCase();
                             setUserData();
                             menuBar.dismissPaytmLoading();
-                            slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -6154,7 +6159,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void onFinish() {
                         menuBar.dismissPaytmLoading();
-                        slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
                     }
 
                     @Override
@@ -6523,17 +6527,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void setVehicleTypeSelected(int position) {
-        int oldVehicleType = slidingBottomPanel.getRegionSelected().getVehicleType();
-        int oldRegionId = slidingBottomPanel.getRegionSelected().getRegionId();
+        int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         slidingBottomPanel.setRegionSelected(position);
-        if(!slidingBottomPanel.getRegionSelected().getVehicleType().equals(oldVehicleType)
-                || !slidingBottomPanel.getRegionSelected().getRegionId().equals(oldRegionId)) {
-            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRegionSelected()
+        if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
+                || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
             imageViewRideNow.startAnimation(getBounceScale());
-            showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
+            showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
         } else if(Data.regions.size() == 1) {
-            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRegionSelected()
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         }
     }
@@ -6563,7 +6567,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onPre() {
                     try {
-                        linearLayoutRequest.setVisibility(View.GONE);
+                        relativeLayoutRequest.setVisibility(View.GONE);
                         relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
                         if(Data.campaigns.getMapLeftButton() != null){
 							textViewInAppCampaignRequest.setText(Data.campaigns.getMapLeftButton().getText());
@@ -6722,7 +6726,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void backFromCampaignAvailLoading(){
-        linearLayoutRequest.setVisibility(View.VISIBLE);
+        relativeLayoutRequest.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
     }
 
