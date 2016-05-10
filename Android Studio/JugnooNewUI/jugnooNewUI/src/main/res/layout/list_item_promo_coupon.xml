@@ -4,50 +4,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:splitMotionEvents="false"
     >
 
     <ImageView
-        android:id="@+id/imageViewCoupon"
-        android:layout_width="40px"
-        android:layout_height="40px"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="12px"
-        android:src="@drawable/ic_promocode_normal"
+        android:id="@+id/imageViewRadio"
+        android:layout_width="83px"
+        android:layout_height="83px"
+        android:padding="25px"
+        android:src="@drawable/ic_radio_button_normal"
         android:tag="mwar"
+        android:layout_centerVertical="true"
         />
 
     <TextView
-        android:id="@+id/textViewCouponTitle"
-        android:layout_width="400px"
+        android:id="@+id/textViewOfferName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="27px"
-        android:layout_marginLeft="62px"
-        android:paddingBottom="27px"
-        android:gravity="center_vertical"
-        android:text="Location Insensitive Discount"
-        android:textColor="@color/black_text"
-        android:textSize="30px"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/textViewTNC"
+        android:layout_toRightOf="@+id/imageViewRadio"
+        android:text="cashback"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_30"
+        android:singleLine="true"
         />
 
     <TextView
-        android:id="@+id/textViewCouponSelect"
+        android:id="@+id/textViewTNC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15px"
-        android:background="@drawable/background_white_r_more_yellow_b"
-        android:gravity="center"
-        android:paddingBottom="8px"
-        android:paddingLeft="14px"
-        android:paddingRight="14px"
-        android:paddingTop="8px"
-        android:text="SELECTED"
-        android:textColor="@color/yellow"
-        android:textSize="26px"
-
-        />
-
+        android:paddingBottom="20px"
+        android:paddingLeft="20px"
+        android:paddingRight="10px"
+        android:paddingTop="20px"
+        android:text="@string/tnc"
+        android:textColor="@color/text_color_light"
+        android:textSize="@dimen/text_size_22"/>
 
 </RelativeLayout>

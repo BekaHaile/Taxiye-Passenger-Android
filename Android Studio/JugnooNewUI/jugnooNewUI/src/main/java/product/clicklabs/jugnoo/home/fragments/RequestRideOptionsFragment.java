@@ -95,28 +95,28 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutPaymentMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentMode);
         imageViewPaymentMode = (ImageView) rootView.findViewById(R.id.imageViewPaymentMode);
         textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
-        textViewPaymentModeValue.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        textViewPaymentModeValue.setTypeface(Fonts.mavenLight(activity));
 
         linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
-        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
         textViewMinFareValue = (TextView) rootView.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        textViewMinFareValue.setTypeface(Fonts.mavenLight(activity));
         imageViewPriorityTip = (ImageView) rootView.findViewById(R.id.imageViewPriorityTip);
 
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
-        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(activity));
 
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
-        textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity));
 
         textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
-        textViewMinFareMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        textViewMinFareMS.setTypeface(Fonts.mavenLight(activity));
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
-        textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity));
 
         textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
         textViewPriorityTipValueMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);

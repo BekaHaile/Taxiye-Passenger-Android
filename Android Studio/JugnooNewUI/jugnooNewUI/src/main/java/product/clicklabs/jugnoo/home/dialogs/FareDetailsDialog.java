@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -64,7 +65,7 @@ public class FareDetailsDialog {
 
 			RelativeLayout relativeLayoutPriorityTip = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPriorityTip);
 			TextView textViewPriorityTipValue = (TextView) dialog.findViewById(R.id.textViewPriorityTipValue);
-			textViewPriorityTipValue.setTypeface(Fonts.mavenLight(activity));
+			textViewPriorityTipValue.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			imageViewClose.setOnClickListener(new View.OnClickListener() {
@@ -95,8 +96,8 @@ public class FareDetailsDialog {
 				}
 			});
 
-			textViewMinimumFare.setText(String.format(activity.getResources().getString(R.string.minimum_fare_rupee_format),
-					Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.minimum_fare_rupee_format),
+					Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare))));
 			textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
 					Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
 			textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),

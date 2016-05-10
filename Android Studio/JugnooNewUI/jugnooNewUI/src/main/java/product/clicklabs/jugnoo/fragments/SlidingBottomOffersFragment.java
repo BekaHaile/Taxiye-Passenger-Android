@@ -125,7 +125,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.offers_list_item, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_promo_coupon, parent, false);
 
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
@@ -198,9 +198,9 @@ public class SlidingBottomOffersFragment extends Fragment {
             public TextView textViewPromotion1, textViewTNC;
             public ViewHolder(View itemView, Activity activity) {
                 super(itemView);
-                linearLayoutPromotion1 = (RelativeLayout) itemView.findViewById(R.id.linearLayoutPromotion1);
-                radioPromotion1 = (ImageView)itemView.findViewById(R.id.radioPromotion1);
-                textViewPromotion1 = (TextView) itemView.findViewById(R.id.textViewPromotion1);
+                linearLayoutPromotion1 = (RelativeLayout) itemView.findViewById(R.id.relative);
+                radioPromotion1 = (ImageView)itemView.findViewById(R.id.imageViewRadio);
+                textViewPromotion1 = (TextView) itemView.findViewById(R.id.textViewOfferName);
                 textViewPromotion1.setTypeface(Fonts.mavenLight(activity));
                 textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);
                 textViewTNC.setTypeface(Fonts.mavenLight(activity));

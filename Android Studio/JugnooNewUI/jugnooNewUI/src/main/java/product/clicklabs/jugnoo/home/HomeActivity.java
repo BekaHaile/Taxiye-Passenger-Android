@@ -141,6 +141,7 @@ import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
+import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
@@ -747,89 +748,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-				try {
-					if(map != null) {
-                        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                            Data.pickupLatLng = map.getCameraPosition().target;
-                            FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
-                            FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
-
-                            boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
-                            if(proceed) {
-                                boolean callRequestRide = true;
-                                if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
-                                    if (Data.userData.getPaytmBalance() > 0) {
-                                        callRequestRide = true;
-                                        if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
-                                            DialogPopup.dialogBanner(HomeActivity.this, getResources().getString(R.string.paytm_low_cash));
-                                        }
-                                    } else {
-                                        callRequestRide = false;
-                                        if(Data.userData.getPaytmError() == 1){
-                                            DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_error_cash_select_cash));
-                                        } else{
-                                            DialogPopup.alertPopupWithListener(HomeActivity.this, "",
-                                                    getResources().getString(R.string.paytm_no_cash),
-                                                    new OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                                                            if(Data.userData.paytmEnabled == 1) {
-                                                                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-                                                            } else {
-                                                                intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-                                                            }
-                                                            startActivity(intent);
-                                                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                                        }
-                                                    });
-                                        }
-                                    }
-                                    FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
-                                } else {
-                                    FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
-                                    callRequestRide = true;
-                                }
-                                if (callRequestRide) {
-                                    promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-                                    callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
-
-                                    Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
-                                    Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
-
-                                    FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
-                                    if (promoCouponSelectedForRide.id > 0) {
-                                        FlurryEventLogger.event(COUPONS_SELECTED);
-                                    } else {
-                                        FlurryEventLogger.event(COUPON_NOT_SELECTED);
-                                    }
-                                }
-
-                                Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-                            }
-
-                        } else {
-                            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
-                                @Override
-                                public void positiveClick(View v) {
-                                    imageViewRideNow.performClick();
-                                }
-
-                                @Override
-                                public void neutralClick(View v) {
-
-                                }
-
-                                @Override
-                                public void negativeClick(View v) {
-
-                                }
-                            });
-                        }
-                    }
-                } catch (Exception e) {
-					e.printStackTrace();
-				}
+                requestRideClick();
 			}
         });
 
@@ -1452,14 +1371,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(viewExchange) {
+                if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.dropshadow_grey);
-                }else{
+                } else {
                     mView.setBackgroundResource(R.drawable.dropshadow_rank2);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin - (int)(ASSL.Yscale()*25);
+                params.topMargin = params.topMargin - (int) (ASSL.Yscale() * 25);
                 mView.setLayoutParams(params);
             }
 
@@ -1485,11 +1404,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(viewExchange) {
+                if (viewExchange) {
                     viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                 }
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = params.topMargin - (int)(ASSL.Yscale() * 25f);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
+                params.topMargin = params.topMargin - (int) (ASSL.Yscale() * 25f);
                 mView.setLayoutParams(params);
                 translateViewTopBottom(mView, viewExchange);
             }
@@ -1515,14 +1434,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(viewExchange) {
+                if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.dropshadow_grey);
-                }else{
+                } else {
                     mView.setBackgroundResource(R.drawable.dropshadow_rank2);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin + (int)(ASSL.Yscale() * 25f);
+                params.topMargin = params.topMargin + (int) (ASSL.Yscale() * 25f);
                 mView.setLayoutParams(params);
             }
 
@@ -1653,7 +1572,123 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchRequestRideUI();
             startTimerRequestRide();
         }
+    }
 
+
+    private PromoCouponsDialog promoCouponsDialog;
+    private PromoCouponsDialog getPromoCouponsDialog(){
+        if(promoCouponsDialog == null){
+            promoCouponsDialog = new PromoCouponsDialog(this, new PromoCouponsDialog.Callback() {
+                @Override
+                public void onCouponApplied() {
+                    onRequestRideTap();
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+            });
+        }
+        return promoCouponsDialog;
+    }
+
+    private void requestRideClick(){
+        try{
+            if(Data.promoCoupons == null || Data.promoCoupons.size() < 1){
+                onRequestRideTap();
+            } else{
+                getPromoCouponsDialog().show();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void onRequestRideTap(){
+        try {
+            if(map != null) {
+                if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+                    Data.pickupLatLng = map.getCameraPosition().target;
+                    FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
+                    FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
+
+                    boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
+                    if(proceed) {
+                        boolean callRequestRide = true;
+                        if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
+                            if (Data.userData.getPaytmBalance() > 0) {
+                                callRequestRide = true;
+                                if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
+                                    DialogPopup.dialogBanner(HomeActivity.this, getResources().getString(R.string.paytm_low_cash));
+                                }
+                            } else {
+                                callRequestRide = false;
+                                if(Data.userData.getPaytmError() == 1){
+                                    DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_error_cash_select_cash));
+                                } else{
+                                    DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                                            getResources().getString(R.string.paytm_no_cash),
+                                            new OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                                                    if(Data.userData.paytmEnabled == 1) {
+                                                        intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                                                    } else {
+                                                        intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                                                    }
+                                                    startActivity(intent);
+                                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                                }
+                                            });
+                                }
+                            }
+                            FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
+                        } else {
+                            FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
+                            callRequestRide = true;
+                        }
+                        if (callRequestRide) {
+                            promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+                            callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
+
+                            Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
+                            Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
+
+                            FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
+                            if (promoCouponSelectedForRide.id > 0) {
+                                FlurryEventLogger.event(COUPONS_SELECTED);
+                            } else {
+                                FlurryEventLogger.event(COUPON_NOT_SELECTED);
+                            }
+                        }
+
+                        Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                    }
+
+                } else {
+                    DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View v) {
+                            imageViewRideNow.performClick();
+                        }
+
+                        @Override
+                        public void neutralClick(View v) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View v) {
+
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

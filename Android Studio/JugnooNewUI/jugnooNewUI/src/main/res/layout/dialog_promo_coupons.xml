@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:layout_margin="40px"
+        >
+
+        <TextView
+            android:id="@+id/textViewCoupons"
+            android:layout_width="match_parent"
+            android:layout_height="108px"
+            android:background="@drawable/background_orange_rounded"
+            android:textAllCaps="true"
+            android:text="@string/coupons_available"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_38"
+            android:gravity="center"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@color/white"
+            android:layout_marginTop="-6px"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewPromoCoupons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:splitMotionEvents="false"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:layout_marginTop="-6px"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+
+        <Button
+            android:id="@+id/buttonApply"
+            style="@style/ButtonTheme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:layout_marginBottom="40px"
+            android:text="@string/apply"/>
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="74px"
+        android:layout_height="74px"
+        android:layout_alignRight="@+id/linearLayoutInner"
+        android:layout_alignTop="@+id/linearLayoutInner"
+        android:layout_marginRight="-25px"
+        android:layout_marginTop="-25px"
+        android:paddingBottom="20px"
+        android:paddingLeft="20px"
+        android:src="@drawable/close_icon_selector"
+        android:tag="mwar"
+        />
+
+
+</RelativeLayout>
