@@ -975,6 +975,7 @@ public class JSONParser implements Constants {
             Data.feedbackReasons = new ArrayList<>();
         }
         try{
+            Data.feedbackReasons.clear();
             for(String resason : loginResponse.getBadRatingReasons()){
                 Data.feedbackReasons.add(new FeedbackReason(resason));
             }

@@ -748,7 +748,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
                             FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
-                            boolean proceed = slidingBottomPanel.displayAlertAndCheckForSelectedPaytmCoupon();
+                            boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
                             if(proceed) {
                                 boolean callRequestRide = true;
                                 if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
@@ -785,7 +785,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     callRequestRide = true;
                                 }
                                 if (callRequestRide) {
-                                    promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
+                                    promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
                                     callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
 
                                     Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
@@ -5627,7 +5627,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             firstTimeZoom = false;
             pickupDropZoomed = false;
 
-            slidingBottomPanel.setSelectedCoupon(null);
+            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             new Handler().postDelayed(new Runnable() {
