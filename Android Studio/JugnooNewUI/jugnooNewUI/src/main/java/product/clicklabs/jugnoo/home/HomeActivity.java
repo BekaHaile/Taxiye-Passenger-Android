@@ -256,7 +256,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     //Request Final Layout
     LinearLayout linearLayoutSurgeContainer;
-    RelativeLayout requestFinalLayout;
+    RelativeLayout requestFinalLayout, relativeLayoutInRideInfo;
     TextView textViewInRidePromoName, textViewInRideFareFactor;
     RelativeLayout relativeLayoutFinalDropLocationClick;
     TextView textViewFinalDropLocationClick;
@@ -591,8 +591,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //Request Final Layout
         requestFinalLayout = (RelativeLayout) findViewById(R.id.requestFinalLayout);
 
+        relativeLayoutInRideInfo = (RelativeLayout) findViewById(R.id.relativeLayoutInRideInfo);
         textViewInRidePromoName = (TextView) findViewById(R.id.textViewInRidePromoName);
-        textViewInRidePromoName.setTypeface(Fonts.latoLight(this), Typeface.BOLD);
+        textViewInRidePromoName.setTypeface(Fonts.mavenRegular(this));
         linearLayoutSurgeContainer = (LinearLayout) findViewById(R.id.linearLayoutSurgeContainer);
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
         textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
@@ -609,7 +610,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideDriverName = (TextView) findViewById(R.id.textViewInRideDriverName);
         textViewInRideDriverName.setTypeface(Fonts.mavenRegular(this));
         textViewInRideDriverCarNumber = (TextView) findViewById(R.id.textViewInRideDriverCarNumber);
-        textViewInRideDriverCarNumber.setTypeface(Fonts.mavenRegular(this));
+        textViewInRideDriverCarNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
         textViewInRideState.setTypeface(Fonts.mavenRegular(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
@@ -2628,17 +2629,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 
             if (!Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
-				textViewInRidePromoName.setVisibility(View.VISIBLE);
+                relativeLayoutInRideInfo.setVisibility(View.VISIBLE);
 				textViewInRidePromoName.setText(Data.assignedDriverInfo.promoName);
 			} else {
-				textViewInRidePromoName.setVisibility(View.GONE);
+                relativeLayoutInRideInfo.setVisibility(View.GONE);
 				textViewInRidePromoName.setText("");
 			}
 
 
             if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
                 linearLayoutSurgeContainer.setVisibility(View.VISIBLE);
-				textViewInRideFareFactor.setText("Rate: " + decimalFormat.format(Data.userData.fareFactor) + "x");
+				textViewInRideFareFactor.setText(decimalFormat.format(Data.userData.fareFactor) + "x");
 			} else {
                 linearLayoutSurgeContainer.setVisibility(View.GONE);
 				textViewInRideFareFactor.setText("");

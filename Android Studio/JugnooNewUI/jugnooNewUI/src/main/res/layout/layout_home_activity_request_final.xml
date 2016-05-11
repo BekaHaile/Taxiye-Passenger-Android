@@ -7,33 +7,12 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
-    <!-- promo name fare factor layout-->
-    <RelativeLayout
-        android:id="@+id/relativeLayoutInRideInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutFinalDropLocationClick"
-        android:background="@color/sliding_bottom_bg_color">
 
-        <TextView
-            android:id="@+id/textViewInRidePromoName"
-            android:layout_width="470px"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:padding="10px"
-            android:text="No Promo Code applied"
-            android:textColor="@color/text_color"
-            android:textSize="28px" />
-
-
-    </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:visibility="gone"
         android:layout_below="@+id/relativeLayoutInRideInfo"
         android:rotation="180"
         android:src="@drawable/shadow_up" />
@@ -133,7 +112,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutInRideContainer"
         android:layout_width="match_parent"
-        android:layout_height="425px"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/transparent">
 
@@ -143,18 +122,58 @@
             android:layout_above="@+id/linearLayoutInRideDriverInfo"
             android:src="@drawable/shadow_up" />
 
+
+
         <LinearLayout
             android:id="@+id/linearLayoutInRideDriverInfo"
             android:layout_width="match_parent"
-            android:layout_height="352px"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="80px">
 
+            <!-- promo name fare factor layout-->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutInRideInfo"
+                android:layout_width="match_parent"
+                android:layout_height="83px"
+                android:background="@color/sliding_bottom_bg_color">
+
+                <ImageView
+                    android:id="@+id/imageViewPromo"
+                    android:layout_width="30px"
+                    android:layout_height="30px"
+                    android:layout_marginLeft="30px"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"
+                    android:src="@drawable/button_blue"/>
+
+                <TextView
+                    android:id="@+id/textViewInRidePromoName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/imageViewPromo"
+                    android:layout_marginLeft="20px"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:padding="10px"
+                    android:text="No Promo Code applied"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:src="@color/text_color_hint"
+                    android:layout_marginLeft="25px"
+                    android:layout_marginRight="25px"
+                    android:layout_alignParentBottom="true"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="248px"
+                android:layout_height="207px"
                 android:background="@color/sliding_bottom_bg_color">
 
                 <RelativeLayout
@@ -256,7 +275,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10px"
-                        android:layout_marginTop="5px"
+                        android:layout_marginTop="20px"
                         android:gravity="left"
                         android:maxLines="1"
                         android:text="Driver\nEnroute"
@@ -264,33 +283,7 @@
                         android:textColor="#39BDF6"
                         android:textSize="@dimen/text_size_28" />
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutSurgeContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="30px"
-                            android:layout_height="34px"
-                            android:src="@drawable/ic_surge_grey" />
-
-                        <TextView
-                            android:id="@+id/textViewInRideFareFactor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:gravity="center_vertical"
-                            android:padding="10px"
-                            android:singleLine="true"
-                            android:text="Rate: 1.0x"
-                            android:textColor="@color/text_color"
-                            android:textSize="28px"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
                 </LinearLayout>
 
                 <ImageView
@@ -304,7 +297,7 @@
                 <LinearLayout
                     android:id="@+id/relativeLayoutIRPaymentOption"
                     android:layout_width="230px"
-                    android:layout_height="218px"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -357,7 +350,33 @@
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
+                    <LinearLayout
+                        android:id="@+id/linearLayoutSurgeContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
+                        <ImageView
+                            android:layout_width="30px"
+                            android:layout_height="34px"
+                            android:src="@drawable/ic_surge_grey" />
+
+                        <TextView
+                            android:id="@+id/textViewInRideFareFactor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:padding="10px"
+                            android:singleLine="true"
+                            android:text="1.0x"
+                            android:textColor="@color/text_color"
+                            android:textSize="28px"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
 
@@ -371,7 +390,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="108px"
+                android:layout_height="83px"
                 android:orientation="horizontal"
                 android:splitMotionEvents="false">
 
@@ -405,8 +424,8 @@
                     android:layout_width="2px"
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="31px"
-                    android:layout_marginTop="31px"
+                    android:layout_marginBottom="25px"
+                    android:layout_marginTop="25px"
                     android:background="@color/grey_light" />
 
                 <Button
