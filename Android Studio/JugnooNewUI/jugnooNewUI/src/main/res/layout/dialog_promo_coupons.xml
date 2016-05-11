@@ -17,17 +17,23 @@
         android:layout_margin="40px"
         >
 
-        <TextView
-            android:id="@+id/textViewCoupons"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="108px"
+            android:layout_height="252px"
             android:background="@drawable/background_orange_rounded"
-            android:textAllCaps="true"
-            android:text="@string/coupons_available"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_38"
-            android:gravity="center"
-            />
+            >
+
+            <ImageView
+                android:layout_width="374px"
+                android:layout_height="213px"
+                android:tag="mwar"
+                android:src="@drawable/ic_offer_popup"
+                android:layout_centerInParent="true"
+                />
+
+
+        </RelativeLayout>
+        
         <View
             android:layout_width="match_parent"
             android:layout_height="6px"
@@ -42,18 +48,11 @@
             android:splitMotionEvents="false"
             android:scrollbars="vertical"
             android:fadeScrollbars="true"
-            android:layout_marginTop="-6px"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="20px"
             >
         </android.support.v7.widget.RecyclerView>
 
-
-        <Button
-            android:id="@+id/buttonApply"
-            style="@style/ButtonTheme"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40px"
-            android:layout_marginBottom="40px"
-            android:text="@string/apply"/>
 
     </LinearLayout>
 

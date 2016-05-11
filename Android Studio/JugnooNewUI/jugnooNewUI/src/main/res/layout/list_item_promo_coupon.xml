@@ -23,10 +23,10 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/textViewTNC"
         android:layout_toRightOf="@+id/imageViewRadio"
-        android:text="cashback"
+        android:text="cashback\nabc"
+        android:maxLines="2"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_30"
-        android:singleLine="true"
         />
 
     <TextView

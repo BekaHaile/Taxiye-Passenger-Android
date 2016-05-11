@@ -27,10 +27,12 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 
 	private HomeActivity activity;
 	private ArrayList<PromoCoupon> offerList = new ArrayList<>();
+	private Callback callback;
 
-	public PromoCouponsAdapter(HomeActivity activity, ArrayList<PromoCoupon> offerList) {
+	public PromoCouponsAdapter(HomeActivity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
 		this.activity = activity;
 		this.offerList = offerList;
+		this.callback = callback;
 	}
 
 	@Override
@@ -87,6 +89,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					} else {
 						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
+						callback.onCouponSelected();
 					}
 					notifyDataSetChanged();
 				} catch (Exception e) {
@@ -116,4 +119,9 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 			textViewTNC.setTypeface(Fonts.mavenLight(activity));
 		}
 	}
+
+	public interface Callback{
+		void onCouponSelected();
+	}
+
 }

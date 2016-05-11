@@ -1,24 +1,20 @@
 package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Dialog;
-import android.graphics.Typeface;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by shankar on 5/2/16.
@@ -53,14 +49,18 @@ public class PromoCouponsDialog {
 			dialog.setCancelable(false);
 			dialog.setCanceledOnTouchOutside(false);
 
-			((TextView) dialog.findViewById(R.id.textViewCoupons)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-
 			recyclerViewPromoCoupons = (RecyclerView) dialog.findViewById(R.id.recyclerViewPromoCoupons);
 			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
 			recyclerViewPromoCoupons.setItemAnimator(new DefaultItemAnimator());
 			recyclerViewPromoCoupons.setHasFixedSize(false);
 
-			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.promoCoupons);
+			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.promoCoupons, new PromoCouponsAdapter.Callback() {
+				@Override
+				public void onCouponSelected() {
+					dialog.dismiss();
+					callback.onCouponApplied();
+				}
+			});
 
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerViewPromoCoupons.getLayoutParams();
 			params.height = Data.promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
@@ -68,23 +68,12 @@ public class PromoCouponsDialog {
 			recyclerViewPromoCoupons.setLayoutParams(params);
 			recyclerViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
-			Button buttonApply = (Button) dialog.findViewById(R.id.buttonApply);
-			buttonApply.setTypeface(Fonts.mavenRegular(activity));
-
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			imageViewClose.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onCancelled();
-				}
-			});
-
-			buttonApply.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-					callback.onCouponApplied();
 				}
 			});
 
