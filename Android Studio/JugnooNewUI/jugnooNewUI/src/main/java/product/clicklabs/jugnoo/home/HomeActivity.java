@@ -223,6 +223,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	ImageView imageViewRideNow, imageViewInAppCampaign;
 	RelativeLayout relativeLayoutInitialSearchBar, relativeLayoutDestSearchBar;
 	TextView textViewInitialSearch, textViewDestSearch;
+    ImageView imageViewDropCross;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
     RelativeLayout relativeLayoutRequest;
@@ -336,7 +337,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         zoomedToMyLocation = false,
         mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, pickupDropZoomed = false, firstTimeZoom = false, zoomingForDeepLink = false;
-
+    boolean dropLocationSet = false;
 
     Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
     PushDialog pushDialog;
@@ -457,6 +458,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		firstTimeZoom = false;
 		zoomingForDeepLink = false;
         freshIntroDialog = null;
+        dropLocationSet = false;
 
 
 
@@ -544,6 +546,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewDestSearch = (TextView) findViewById(R.id.textViewDestSearch); textViewDestSearch.setTypeface(Fonts.mavenRegular(this));
         progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
+        imageViewDropCross = (ImageView) findViewById(R.id.imageViewDropCross);
+        imageViewDropCross.setVisibility(View.GONE);
 
 		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
 		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
@@ -768,9 +772,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
                 int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-                if(index == 1) {
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true);
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false);
+                if(index == 1 && Data.dropLatLng == null) {
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
                 }else{
                     placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
                     setServiceAvailablityUI("");
@@ -786,15 +790,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
                 int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                if(index == 1) {
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true);
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false);
+                if(index == 1 && Data.dropLatLng == null) {
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
                 }else{
                     placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
                     setServiceAvailablityUI("");
                     passengerScreenMode = PassengerScreenMode.P_SEARCH;
                     switchPassengerScreen(passengerScreenMode);
                 }
+            }
+        });
+
+        imageViewDropCross.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Data.dropLatLng = null;
+                dropLocationSearched = false;
+                textViewDestSearch.setText("");
+                imageViewDropCross.setVisibility(View.GONE);
+                translateViewBottomTop(relativeLayoutDestSearchBar, true);
+                translateViewTopBottom(relativeLayoutInitialSearchBar, false);
             }
         });
 
@@ -1326,7 +1342,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
-    private void translateViewBottom(final ViewGroup viewGroup, final View mView, final boolean viewExchange) {
+    private void translateViewBottom(final ViewGroup viewGroup, final View mView, final boolean viewExchange,
+                                     final boolean callNextAnim) {
         TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale()*25f));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
@@ -1342,10 +1359,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(viewExchange) {
                     viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                 }
+                mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
                 params.topMargin = params.topMargin + (int)(ASSL.Yscale()*25);
                 mView.setLayoutParams(params);
-                translateViewBottomTop(mView, viewExchange);
+                if(callNextAnim) {
+                    translateViewBottomTop(mView, viewExchange);
+                }
             }
 
             @Override
@@ -1390,7 +1410,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private void translateViewTop(final ViewGroup viewGroup, final View mView, final boolean viewExchange) {
+    private void translateViewTop(final ViewGroup viewGroup, final View mView, final boolean viewExchange,
+                                  final boolean callNextAnim) {
         TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * (-25f)));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
@@ -1406,10 +1427,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                 }
+                mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = params.topMargin - (int) (ASSL.Yscale() * 25f);
                 mView.setLayoutParams(params);
-                translateViewTopBottom(mView, viewExchange);
+                if(callNextAnim) {
+                    translateViewTopBottom(mView, viewExchange);
+                }
             }
 
             @Override
@@ -1835,7 +1859,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         GCMIntentService.clearNotifications(HomeActivity.this);
 
-						Data.dropLatLng = null;
+                        if(!dropLocationSet) {
+                            Data.dropLatLng = null;
+                        }
 
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
@@ -2161,6 +2187,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						Data.pickupLatLng = null;
 
                         dismissPushDialog(true);
+
+                        dropLocationSet = false;
 
                         break;
 
@@ -6492,9 +6520,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
                 textViewDestSearch.setText(searchResult.address);
-                Data.dropLatLng = searchResult.latLng;
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+
+                Data.dropLatLng = searchResult.latLng;
+                dropLocationSet = true;
+                translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_grey);
+                imageViewDropCross.setVisibility(View.VISIBLE);
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
