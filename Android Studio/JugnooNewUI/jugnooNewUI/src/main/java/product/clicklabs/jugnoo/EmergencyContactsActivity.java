@@ -120,44 +120,44 @@ public class EmergencyContactsActivity extends BaseActivity implements RefreshEm
 
         // Emergency contact 1
         relativeLayoutEmergencyContact1Top = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact1Top);
-        textViewEmergencyContact1 = (TextView) findViewById(R.id.textViewEmergencyContact1); textViewEmergencyContact1.setTypeface(Fonts.latoRegular(this));
+        textViewEmergencyContact1 = (TextView) findViewById(R.id.textViewEmergencyContact1); textViewEmergencyContact1.setTypeface(Fonts.mavenMedium(this));
         imageViewEmergencyContact1PM = (ImageView) findViewById(R.id.imageViewEmergencyContact1PM);
         imageViewEmergencyContact1Edit = (ImageView) findViewById(R.id.imageViewEmergencyContact1Edit);
-        ((TextView) findViewById(R.id.textViewEmergencyContact1)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEmergencyContact1)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutEmergencyContact1Fields = (LinearLayout) findViewById(R.id.linearLayoutEmergencyContact1Fields);
-        editTextEC1Name = (EditText) findViewById(R.id.editTextEC1Name); editTextEC1Name.setTypeface(Fonts.latoRegular(this));
-        editTextEC1Phone = (EditText) findViewById(R.id.editTextEC1Phone); editTextEC1Phone.setTypeface(Fonts.latoRegular(this));
-        editTextEC1Email = (EditText) findViewById(R.id.editTextEC1Email); editTextEC1Email.setTypeface(Fonts.latoRegular(this));
+        editTextEC1Name = (EditText) findViewById(R.id.editTextEC1Name); editTextEC1Name.setTypeface(Fonts.mavenMedium(this));
+        editTextEC1Phone = (EditText) findViewById(R.id.editTextEC1Phone); editTextEC1Phone.setTypeface(Fonts.mavenMedium(this));
+        editTextEC1Email = (EditText) findViewById(R.id.editTextEC1Email); editTextEC1Email.setTypeface(Fonts.mavenMedium(this));
         imageViewEC1PickContact = (ImageView) findViewById(R.id.imageViewEC1PickContact);
         relativeLayoutEC1Delete = (RelativeLayout) findViewById(R.id.relativeLayoutEC1Delete);
-        ((TextView) findViewById(R.id.textViewEC1Delete)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEC1Phone91)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEC1Delete)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.textViewEC1Phone91)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEC1Operations = (RelativeLayout) findViewById(R.id.relativeLayoutEC1Operations);
-        buttonVerifyEC1 = (Button) findViewById(R.id.buttonVerifyEC1); buttonVerifyEC1.setTypeface(Fonts.latoRegular(this));
-        buttonResendSMSEC1 = (Button) findViewById(R.id.buttonResendSMSEC1); buttonResendSMSEC1.setTypeface(Fonts.latoRegular(this));
-        textViewEC1NotVerified = (TextView) findViewById(R.id.textViewEC1NotVerified); textViewEC1NotVerified.setTypeface(Fonts.latoRegular(this));
+        buttonVerifyEC1 = (Button) findViewById(R.id.buttonVerifyEC1); buttonVerifyEC1.setTypeface(Fonts.mavenMedium(this));
+        buttonResendSMSEC1 = (Button) findViewById(R.id.buttonResendSMSEC1); buttonResendSMSEC1.setTypeface(Fonts.mavenMedium(this));
+        textViewEC1NotVerified = (TextView) findViewById(R.id.textViewEC1NotVerified); textViewEC1NotVerified.setTypeface(Fonts.mavenMedium(this));
         linearLayoutEmergencyContact1Fields.setVisibility(View.GONE);
 
 
 
         //Emergency contact 2
         relativeLayoutEmergencyContact2Top = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact2Top);
-        textViewEmergencyContact2 = (TextView) findViewById(R.id.textViewEmergencyContact2); textViewEmergencyContact2.setTypeface(Fonts.latoRegular(this));
+        textViewEmergencyContact2 = (TextView) findViewById(R.id.textViewEmergencyContact2); textViewEmergencyContact2.setTypeface(Fonts.mavenMedium(this));
         imageViewEmergencyContact2PM = (ImageView) findViewById(R.id.imageViewEmergencyContact2PM);
         imageViewEmergencyContact2Edit = (ImageView) findViewById(R.id.imageViewEmergencyContact2Edit);
-        ((TextView) findViewById(R.id.textViewEmergencyContact2)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEmergencyContact2)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutEmergencyContact2Fields = (LinearLayout) findViewById(R.id.linearLayoutEmergencyContact2Fields);
-        editTextEC2Name = (EditText) findViewById(R.id.editTextEC2Name); editTextEC2Name.setTypeface(Fonts.latoRegular(this));
-        editTextEC2Phone = (EditText) findViewById(R.id.editTextEC2Phone); editTextEC2Phone.setTypeface(Fonts.latoRegular(this));
-        editTextEC2Email = (EditText) findViewById(R.id.editTextEC2Email); editTextEC2Email.setTypeface(Fonts.latoRegular(this));
+        editTextEC2Name = (EditText) findViewById(R.id.editTextEC2Name); editTextEC2Name.setTypeface(Fonts.mavenMedium(this));
+        editTextEC2Phone = (EditText) findViewById(R.id.editTextEC2Phone); editTextEC2Phone.setTypeface(Fonts.mavenMedium(this));
+        editTextEC2Email = (EditText) findViewById(R.id.editTextEC2Email); editTextEC2Email.setTypeface(Fonts.mavenMedium(this));
         imageViewEC2PickContact = (ImageView) findViewById(R.id.imageViewEC2PickContact);
         relativeLayoutEC2Delete = (RelativeLayout) findViewById(R.id.relativeLayoutEC2Delete);
-        ((TextView) findViewById(R.id.textViewEC2Delete)).setTypeface(Fonts.latoRegular(this));
-        ((TextView) findViewById(R.id.textViewEC2Phone91)).setTypeface(Fonts.latoRegular(this));
+        ((TextView) findViewById(R.id.textViewEC2Delete)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.textViewEC2Phone91)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEC2Operations = (RelativeLayout) findViewById(R.id.relativeLayoutEC2Operations);
-        buttonVerifyEC2 = (Button) findViewById(R.id.buttonVerifyEC2); buttonVerifyEC2.setTypeface(Fonts.latoRegular(this));
-        buttonResendSMSEC2 = (Button) findViewById(R.id.buttonResendSMSEC2); buttonResendSMSEC2.setTypeface(Fonts.latoRegular(this));
-        textViewEC2NotVerified = (TextView) findViewById(R.id.textViewEC2NotVerified); textViewEC2NotVerified.setTypeface(Fonts.latoRegular(this));
+        buttonVerifyEC2 = (Button) findViewById(R.id.buttonVerifyEC2); buttonVerifyEC2.setTypeface(Fonts.mavenMedium(this));
+        buttonResendSMSEC2 = (Button) findViewById(R.id.buttonResendSMSEC2); buttonResendSMSEC2.setTypeface(Fonts.mavenMedium(this));
+        textViewEC2NotVerified = (TextView) findViewById(R.id.textViewEC2NotVerified); textViewEC2NotVerified.setTypeface(Fonts.mavenMedium(this));
         linearLayoutEmergencyContact2Fields.setVisibility(View.GONE);
 
 

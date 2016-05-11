@@ -91,7 +91,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
         textViewForgotPasswordHelp.setTypeface(Fonts.mavenLight(this));
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextEmail.setTypeface(Fonts.latoRegular(this));
+        editTextEmail.setTypeface(Fonts.mavenMedium(this));
 
         buttonSendEmail = (Button) findViewById(R.id.buttonSendEmail);
         buttonSendEmail.setTypeface(Fonts.mavenRegular(this));

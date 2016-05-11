@@ -405,12 +405,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonRegister = (Button) findViewById(R.id.buttonRegister);
 			buttonRegister.setTypeface(Fonts.mavenRegular(this));
 			textViewTerms = (TextView) findViewById(R.id.textViewTerms);
-			textViewTerms.setTypeface(Fonts.latoRegular(this));
-			((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.latoRegular(this));
+			textViewTerms.setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.mavenMedium(this));
 
 			linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 			textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
-			textViewNoNet.setTypeface(Fonts.latoRegular(this));
+			textViewNoNet.setTypeface(Fonts.mavenMedium(this));
 			buttonNoNetCall = (Button) findViewById(R.id.buttonNoNetCall);
 			buttonNoNetCall.setTypeface(Fonts.mavenRegular(this));
 			buttonRefresh = (Button) findViewById(R.id.buttonRefresh);
@@ -433,15 +433,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			linearLayoutLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
 			editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
-			editTextEmail.setTypeface(Fonts.latoRegular(this));
+			editTextEmail.setTypeface(Fonts.mavenMedium(this));
 			editTextEmail.setAdapter(adapter);
 			editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-			editTextPassword.setTypeface(Fonts.latoRegular(this), Typeface.ITALIC);
+			editTextPassword.setTypeface(Fonts.mavenMedium(this), Typeface.ITALIC);
 			textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
-			textViewEmailRequired.setTypeface(Fonts.latoRegular(this));
+			textViewEmailRequired.setTypeface(Fonts.mavenMedium(this));
 			textViewPasswordRequired = (TextView) findViewById(R.id.textViewPasswordRequired);
-			textViewPasswordRequired.setTypeface(Fonts.latoRegular(this));
-			((TextView) findViewById(R.id.textViewLoginOr)).setTypeface(Fonts.latoRegular(this));
+			textViewPasswordRequired.setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewLoginOr)).setTypeface(Fonts.mavenMedium(this));
 			textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
 			textViewForgotPassword.setTypeface(Fonts.mavenRegular(this));
 			buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin);
@@ -454,25 +454,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
 			editTextSName = (EditText) findViewById(R.id.editTextSName);
-			editTextSName.setTypeface(Fonts.latoRegular(this));
+			editTextSName.setTypeface(Fonts.mavenMedium(this));
 			editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
-			editTextSEmail.setTypeface(Fonts.latoRegular(this));
+			editTextSEmail.setTypeface(Fonts.mavenMedium(this));
 			editTextSPhone = (EditText) findViewById(R.id.editTextSPhone);
-			editTextSPhone.setTypeface(Fonts.latoRegular(this));
+			editTextSPhone.setTypeface(Fonts.mavenMedium(this));
 			editTextSPassword = (EditText) findViewById(R.id.editTextSPassword);
-			editTextSPassword.setTypeface(Fonts.latoRegular(this));
+			editTextSPassword.setTypeface(Fonts.mavenMedium(this));
 			editTextSPromo = (EditText) findViewById(R.id.editTextSPromo);
-			editTextSPromo.setTypeface(Fonts.latoRegular(this));
+			editTextSPromo.setTypeface(Fonts.mavenMedium(this));
 			textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired);
-			textViewSNameRequired.setTypeface(Fonts.latoRegular(this));
+			textViewSNameRequired.setTypeface(Fonts.mavenMedium(this));
 			textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired);
-			textViewSEmailRequired.setTypeface(Fonts.latoRegular(this));
+			textViewSEmailRequired.setTypeface(Fonts.mavenMedium(this));
 			textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired);
-			textViewSPhoneRequired.setTypeface(Fonts.latoRegular(this));
+			textViewSPhoneRequired.setTypeface(Fonts.mavenMedium(this));
 			textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired);
-			textViewSPasswordRequired.setTypeface(Fonts.latoRegular(this));
-			((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.latoRegular(this));
-			((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.latoRegular(this));
+			textViewSPasswordRequired.setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.mavenMedium(this));
 			buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
 			buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
 			buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup);
@@ -480,7 +480,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup);
 			buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
 			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
-			textViewSTerms.setTypeface(Fonts.latoRegular(this));
+			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -1639,7 +1639,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
 			textMessage.setTypeface(Fonts.mavenLight(activity));
 			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode);
-			etCode.setTypeface(Fonts.latoRegular(activity));
+			etCode.setTypeface(Fonts.mavenMedium(activity));
 
 			textHead.setText("Confirm Debug Password");
 			textMessage.setText("Please enter password to continue.");

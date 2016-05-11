@@ -61,7 +61,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
-        textViewInfo.setTypeface(Fonts.latoRegular(this));
+        textViewInfo.setTypeface(Fonts.mavenMedium(this));
 
         webview = (WebView) findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);

@@ -371,8 +371,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             linearLayoutName = (LinearLayout) convertView.findViewById(R.id.linearLayoutName);
             imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
-            textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.latoRegular(context));
-            textViewViewAccount = (TextView) convertView.findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Fonts.latoRegular(context));
+            textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(context));
+            textViewViewAccount = (TextView) convertView.findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Fonts.mavenMedium(context));
         }
     }
 

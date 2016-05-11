@@ -127,7 +127,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
         editTextOtherCancelOption = (EditText) findViewById(R.id.editTextOtherCancelOption); editTextOtherCancelOption.setTypeface(Fonts.mavenRegular(this));
         editTextOtherCancelOption.setMinHeight((int) (ASSL.Yscale() * 160));
 		relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
-		((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.mavenMedium(this));
 		relativeLayoutOtherError.setVisibility(View.GONE);
 
 

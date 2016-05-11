@@ -40,13 +40,13 @@ public class AddFavouritePlaces extends BaseActivity{
         root = (LinearLayout)findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.latoRegular(this), Typeface.BOLD);
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         imageViewBack = (ImageView)findViewById(R.id.imageViewBack);
         linearLayoutPlaces = (LinearLayout)findViewById(R.id.linearLayoutPlaces);
-        textViewHome = (TextView)findViewById(R.id.textViewHome); textViewHome.setTypeface(Fonts.latoRegular(this));
-        textViewWork = (TextView)findViewById(R.id.textViewWork); textViewWork.setTypeface(Fonts.latoRegular(this));
-        textViewGym = (TextView)findViewById(R.id.textViewGym); textViewGym.setTypeface(Fonts.latoRegular(this));
-        textViewFriend = (TextView)findViewById(R.id.textViewFriend); textViewFriend.setTypeface(Fonts.latoRegular(this));
+        textViewHome = (TextView)findViewById(R.id.textViewHome); textViewHome.setTypeface(Fonts.mavenMedium(this));
+        textViewWork = (TextView)findViewById(R.id.textViewWork); textViewWork.setTypeface(Fonts.mavenMedium(this));
+        textViewGym = (TextView)findViewById(R.id.textViewGym); textViewGym.setTypeface(Fonts.mavenMedium(this));
+        textViewFriend = (TextView)findViewById(R.id.textViewFriend); textViewFriend.setTypeface(Fonts.mavenMedium(this));
 
         setSavePlaces();
 

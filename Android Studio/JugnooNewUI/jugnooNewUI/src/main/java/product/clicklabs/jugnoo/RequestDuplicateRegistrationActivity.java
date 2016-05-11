@@ -79,7 +79,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
         ((TextView) findViewById(R.id.textViewRegisterEmail)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewRegisterPhone)).setTypeface(Fonts.mavenLight(this));
 
-        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Fonts.latoRegular(this));
+        editTextMessage = (EditText) findViewById(R.id.editTextMessage); editTextMessage.setTypeface(Fonts.mavenMedium(this));
 
         buttonSubmitRequest = (Button) findViewById(R.id.buttonSubmitRequest); buttonSubmitRequest.setTypeface(Fonts.mavenRegular(this));
 

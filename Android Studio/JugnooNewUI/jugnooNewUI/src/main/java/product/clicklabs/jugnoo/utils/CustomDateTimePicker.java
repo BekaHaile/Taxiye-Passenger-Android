@@ -183,7 +183,7 @@
 //		btn_set.setText("Set");
 //		btn_set.setId(SET);
 //		btn_set.setOnClickListener(this);
-//		btn_set.setTypeface(Fonts.latoRegular(activity));
+//		btn_set.setTypeface(Fonts.mavenMedium(activity));
 //		btn_set.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 //		btn_set.setTextColor(activity.getResources().getColor(R.drawable.text_color_white_alpha_selector));
 //		btn_set.setBackgroundResource(R.drawable.button_yellow_selector);
@@ -195,7 +195,7 @@
 //		btn_cancel.setText("Cancel");
 //		btn_cancel.setId(CANCEL);
 //		btn_cancel.setOnClickListener(this);
-//		btn_cancel.setTypeface(Fonts.latoRegular(activity));
+//		btn_cancel.setTypeface(Fonts.mavenMedium(activity));
 //		btn_cancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 //		btn_cancel.setTextColor(activity.getResources().getColor(R.drawable.text_color_white_alpha_selector));
 //		btn_cancel.setBackgroundResource(R.drawable.grey_btn_selector);

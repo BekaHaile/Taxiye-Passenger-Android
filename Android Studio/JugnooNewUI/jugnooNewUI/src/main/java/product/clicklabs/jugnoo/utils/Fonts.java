@@ -8,14 +8,14 @@ import android.graphics.Typeface;
  */
 public class Fonts {
 
-    private static Typeface latoRegular, latoLight, mavenRegular, mavenLight;																// fonts declaration
+    private static Typeface mavenMedium, latoLight, mavenRegular, mavenLight;																// fonts declaration
 
 
-    public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
-        if (latoRegular == null) {
-            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
+    public static Typeface mavenMedium(Context appContext) {											// accessing fonts functions
+        if (mavenMedium == null) {
+            mavenMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/MavenPro-Medium.ttf");
         }
-        return latoRegular;
+        return mavenMedium;
     }
 
     public static Typeface latoLight(Context appContext) {											// accessing fonts functions

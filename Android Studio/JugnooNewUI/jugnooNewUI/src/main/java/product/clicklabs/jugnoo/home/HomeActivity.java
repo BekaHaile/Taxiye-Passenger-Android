@@ -34,6 +34,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -293,7 +294,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewRideSummary;
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
-    LinearLayout linearLayoutRSViewInvoice;
+    LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites;
 
     RatingBar ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
@@ -302,6 +303,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
+    private TextView textViewSendInvites, textViewSendInvites2;
 
     private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
@@ -552,7 +554,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
 		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
 		textViewGoogleAttrText = (TextView) findViewById(R.id.textViewGoogleAttrText);
-        textViewGoogleAttrText.setTypeface(Fonts.latoRegular(this));
+        textViewGoogleAttrText.setTypeface(Fonts.mavenMedium(this));
 		relativeLayoutGoogleAttr.setVisibility(View.GONE);
 
 
@@ -562,7 +564,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		//Location error layout
 		relativeLayoutLocationError = (RelativeLayout) findViewById(R.id.relativeLayoutLocationError);
 		relativeLayoutLocationErrorSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutLocationErrorSearchBar);
-		((TextView)findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.latoRegular(this));
+		((TextView)findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.mavenMedium(this));
 		relativeLayoutLocationError.setVisibility(View.GONE);
 
 
@@ -584,7 +586,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
         linearLayoutAssigningDropLocationClick = (LinearLayout) findViewById(R.id.linearLayoutAssigningDropLocationClick);
         textViewAssigningDropLocationClick = (TextView)findViewById(R.id.textViewAssigningDropLocationClick);
-        textViewAssigningDropLocationClick.setTypeface(Fonts.latoRegular(this));
+        textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
         progressBarAssigningDropLocation = (ProgressWheel)findViewById(R.id.progressBarAssigningDropLocation);
         imageViewAssigningDropLocationEdit = (ImageView)findViewById(R.id.imageViewAssigningDropLocationEdit);
         imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
@@ -600,10 +602,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRidePromoName.setTypeface(Fonts.mavenRegular(this));
         linearLayoutSurgeContainer = (LinearLayout) findViewById(R.id.linearLayoutSurgeContainer);
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
-        textViewInRideFareFactor.setTypeface(Fonts.latoRegular(this));
+        textViewInRideFareFactor.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutFinalDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationClick);
         textViewFinalDropLocationClick = (TextView)findViewById(R.id.textViewFinalDropLocationClick);
-        textViewFinalDropLocationClick.setTypeface(Fonts.latoRegular(this));
+        textViewFinalDropLocationClick.setTypeface(Fonts.mavenMedium(this));
         imageViewFinalDropLocationEdit = (ImageView) findViewById(R.id.imageViewFinalDropLocationEdit);
         imageViewFinalDropLocationEdit.setVisibility(View.GONE);
         progressBarFinalDropLocation = (ProgressWheel) findViewById(R.id.progressBarFinalDropLocation);
@@ -616,7 +618,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideDriverCarNumber = (TextView) findViewById(R.id.textViewInRideDriverCarNumber);
         textViewInRideDriverCarNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
-        textViewInRideState.setTypeface(Fonts.mavenRegular(this));
+        textViewInRideState.setTypeface(Fonts.mavenMedium(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
         textViewDriverRating.setTypeface(Fonts.mavenLight(this));
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
@@ -633,11 +635,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 		relativeLayoutIRPaymentOption = (LinearLayout) findViewById(R.id.relativeLayoutIRPaymentOption);
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.mavenRegular(this));
-		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenRegular(this));
+		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
 		imageViewIRPaymentOptionPaytm = (ImageView) findViewById(R.id.imageViewIRPaymentOptionPaytm);
 		imageViewIRPaymentOptionCash = (ImageView) findViewById(R.id.imageViewIRPaymentOptionCash);
 
-
+        linearLayoutSendInvites = (LinearLayout) findViewById(R.id.linearLayoutSendInvites);
+        textViewSendInvites = (TextView) findViewById(R.id.textViewSendInvites); textViewSendInvites.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        textViewSendInvites2 = (TextView) findViewById(R.id.textViewSendInvites2); textViewSendInvites2.setTypeface(Fonts.mavenRegular(this));
 
 
         //Search Layout
@@ -651,8 +655,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         centreLocationPin = (ImageView) findViewById(R.id.centreLocationPin);
 		imageViewCenterPinMargin = (ImageView) findViewById(R.id.imageViewCenterPinMargin);
 		textViewCentrePinETA = (TextView) findViewById(R.id.textViewCentrePinETA);
-        textViewCentrePinETA.setTypeface(Fonts.latoRegular(this));
-		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.latoRegular(this));
+        textViewCentrePinETA.setTypeface(Fonts.mavenMedium(this));
+		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.mavenMedium(this));
 
         //Review Layout
         endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
@@ -888,13 +892,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Search Layout Events
 		relativeLayoutSearch.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 			}
 		});
 
-
+        linearLayoutSendInvites.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intentToShareActivity(false);
+            }
+        });
 
 
         // customer request final layout events
@@ -2158,7 +2166,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 
                         buttonCancelRide.setVisibility(View.GONE);
-                        buttonAddPaytmCash.setVisibility(View.VISIBLE);
+                        buttonAddPaytmCash.setVisibility(View.GONE);
                         updateInRideAddPaytmButtonText();
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
@@ -2677,7 +2685,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (PassengerScreenMode.P_REQUEST_FINAL == mode || PassengerScreenMode.P_DRIVER_ARRIVED == mode) {
 				updateDriverETAText(mode);
 			} else {
-				textViewInRideState.setText("Ride in\nprogress");
+				textViewInRideState.setText("Ride in progress");
 			}
 
             try {
@@ -2713,6 +2721,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				imageViewIRPaymentOptionPaytm.setVisibility(View.VISIBLE);
 				imageViewIRPaymentOptionCash.setVisibility(View.GONE);
 				textViewIRPaymentOption.setText(getResources().getString(R.string.paytm));
+                textViewIRPaymentOption.setVisibility(View.GONE);
 				textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
 				textViewIRPaymentOptionValue.setText(String.format(getResources()
                         .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
@@ -2722,6 +2731,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
 				imageViewIRPaymentOptionPaytm.setVisibility(View.GONE);
 				imageViewIRPaymentOptionCash.setVisibility(View.VISIBLE);
+                textViewIRPaymentOption.setVisibility(View.VISIBLE);
 				textViewIRPaymentOption.setText(getResources().getString(R.string.cash));
 				textViewIRPaymentOptionValue.setVisibility(View.GONE);
 			}
@@ -2741,7 +2751,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                textViewInRideState.setText("Driver\nEnroute");
+                textViewInRideState.setText("Driver Enroute");
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
             textViewInRideState.setText("Arrived at Pickup");
@@ -4006,11 +4016,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             noDriversDialog.setCanceledOnTouchOutside(true);
 
             TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            textHead.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
             textHead.setVisibility(View.GONE);
 
             TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.latoRegular(activity));
+            textMessage.setTypeface(Fonts.mavenMedium(activity));
 
             textMessage.setMovementMethod(new ScrollingMovementMethod());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
@@ -4027,7 +4037,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            btnOk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
             btnOk.setOnClickListener(new OnClickListener() {
                 @Override
@@ -4666,18 +4676,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            textHead.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
             TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.latoRegular(activity));
+            textMessage.setTypeface(Fonts.mavenMedium(activity));
 
             textHead.setVisibility(View.VISIBLE);
             textHead.setText("Chalo Jugnoo Se");
 
 
             final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.latoRegular(activity), Typeface.BOLD);
+            btnOk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-            btnCancel.setTypeface(Fonts.latoRegular(activity));
+            btnCancel.setTypeface(Fonts.mavenMedium(activity));
 
             btnOk.setText("OK");
             btnCancel.setText("Cancel");
@@ -5904,9 +5914,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     || PassengerScreenMode.P_RIDE_END == passengerScreenMode){
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if(modeEnabled == 1){
-                    topBar.topRl.setBackgroundResource(R.drawable.background_red_dark);
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
+                    topBar.title.getPaint().setShader(null);
+                    topBar.title.setTextColor(getResources().getColor(R.color.red));
                     topBar.imageViewAppToggle.setVisibility(View.GONE);
+                    localModeEnabled = modeEnabled;
+                    return;
                 } else{
                     if(localModeEnabled == 1){
                         DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),

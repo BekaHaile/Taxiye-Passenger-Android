@@ -113,7 +113,7 @@ public class MenuBar {
 		textViewUserName = (TextView) drawerLayout.findViewById(R.id.textViewUserName);
 		textViewUserName.setTypeface(Fonts.mavenRegular(activity));
 		textViewViewAccount = (TextView) drawerLayout.findViewById(R.id.textViewViewAccount);
-		textViewViewAccount.setTypeface(Fonts.latoRegular(activity));
+		textViewViewAccount.setTypeface(Fonts.mavenMedium(activity));
 
 		relativeLayoutGamePredict = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutGamePredict);
 		imageViewGamePredict = (ImageView) drawerLayout.findViewById(R.id.imageViewGamePredict);
@@ -134,7 +134,7 @@ public class MenuBar {
 		textViewWallet = (TextView) drawerLayout.findViewById(R.id.textViewWallet);
 		textViewWallet.setTypeface(Fonts.mavenLight(activity));
 		textViewWalletValue = (TextView) drawerLayout.findViewById(R.id.textViewWalletValue);
-		textViewWalletValue.setTypeface(Fonts.latoRegular(activity));
+		textViewWalletValue.setTypeface(Fonts.mavenMedium(activity));
 		progressBarMenuPaytmWalletLoading = (ProgressWheel) drawerLayout.findViewById(R.id.progressBarMenuPaytmWalletLoading);
 		progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
 
@@ -148,7 +148,7 @@ public class MenuBar {
 		textViewPromotions = (TextView) drawerLayout.findViewById(R.id.textViewPromotions);
 		textViewPromotions.setTypeface(Fonts.mavenLight(activity));
 		textViewPromotionsValue = (TextView) drawerLayout.findViewById(R.id.textViewPromotionsValue);
-		textViewPromotionsValue.setTypeface(Fonts.latoRegular(activity));
+		textViewPromotionsValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewPromotionsValue.setVisibility(View.GONE);
 
 		relativeLayoutTransactions = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutTransactions);

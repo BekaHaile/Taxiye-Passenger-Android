@@ -165,9 +165,9 @@ public class SearchListAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.list_item_search_item, null);
 
             holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
-            holder.textViewSearchName.setTypeface(Fonts.latoRegular(context));
+            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
-            holder.textViewSearchAddress.setTypeface(Fonts.latoRegular(context));
+            holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
             holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
 

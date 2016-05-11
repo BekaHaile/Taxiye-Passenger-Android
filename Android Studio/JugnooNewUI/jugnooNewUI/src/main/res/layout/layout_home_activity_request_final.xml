@@ -128,25 +128,30 @@
             android:id="@+id/linearLayoutInRideDriverInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical"
             android:layout_marginTop="80px">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:src="@drawable/shadow_up"
+                android:tag="mwar"/>
 
             <!-- promo name fare factor layout-->
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideInfo"
                 android:layout_width="match_parent"
                 android:layout_height="83px"
-                android:background="@color/sliding_bottom_bg_color">
+                android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/imageViewPromo"
                     android:layout_width="30px"
-                    android:layout_height="30px"
+                    android:layout_height="29px"
                     android:layout_marginLeft="30px"
                     android:layout_centerVertical="true"
                     android:tag="mwar"
-                    android:src="@drawable/button_blue"/>
+                    android:src="@drawable/ic_gift"/>
 
                 <TextView
                     android:id="@+id/textViewInRidePromoName"
@@ -165,7 +170,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:src="@color/text_color_hint"
+                    android:src="@color/search_stroke_color"
                     android:layout_marginLeft="25px"
                     android:layout_marginRight="25px"
                     android:layout_alignParentBottom="true"/>
@@ -174,7 +179,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="207px"
-                android:background="@color/sliding_bottom_bg_color">
+                android:background="@color/white">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutInRideDriverImage"
@@ -183,33 +188,29 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px">
 
-                    <ImageView
-                        android:layout_width="145px"
-                        android:layout_height="145px"
-                        android:background="@drawable/circle_grey"
-                        android:tag="mwar" />
 
                     <ImageView
                         android:id="@+id/imageViewInRideDriver"
-                        android:layout_width="135px"
-                        android:layout_height="135px"
+                        android:layout_width="130px"
+                        android:layout_height="130px"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5px"
                         android:tag="mwar" />
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutDriverRating"
-                        android:layout_width="102px"
-                        android:layout_height="40px"
+                        android:layout_width="80px"
+                        android:layout_height="30px"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="122px"
+                        android:layout_marginTop="130px"
                         android:background="@drawable/background_white_bordered">
 
                         <ImageView
-                            android:layout_width="28px"
-                            android:layout_height="28px"
+                            android:layout_width="24px"
+                            android:layout_height="24px"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="12px"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="8px"
                             android:src="@drawable/ic_star_orange_small"
                             android:tag="mwar" />
 
@@ -221,15 +222,14 @@
 
                         <TextView
                             android:id="@+id/textViewDriverRating"
-                            android:layout_width="50px"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="2px"
                             android:gravity="center"
+                            android:layout_marginLeft="8px"
+                            android:layout_centerVertical="true"
                             android:text="3.4"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_26" />
+                            android:textSize="@dimen/text_size_22" />
 
                     </RelativeLayout>
 
@@ -279,7 +279,6 @@
                         android:gravity="left"
                         android:maxLines="1"
                         android:text="Driver\nEnroute"
-                        android:textAllCaps="true"
                         android:textColor="#39BDF6"
                         android:textSize="@dimen/text_size_28" />
 
@@ -292,7 +291,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="70px"
                     android:layout_toLeftOf="@+id/relativeLayoutIRPaymentOption"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/search_stroke_color" />
 
                 <LinearLayout
                     android:id="@+id/relativeLayoutIRPaymentOption"
@@ -315,15 +314,15 @@
                             android:layout_height="23px"
                             android:src="@drawable/ic_paytm_small"
                             android:tag="mwar"
-                            android:visibility="visible" />
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/imageViewIRPaymentOptionCash"
-                            android:layout_width="68px"
-                            android:layout_height="22px"
-                            android:background="@drawable/ic_cash_small"
+                            android:layout_width="39px"
+                            android:layout_height="20px"
+                            android:background="@drawable/ic_cash"
                             android:tag="mwar"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                     </LinearLayout>
 
@@ -333,12 +332,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
                         android:layout_toRightOf="@+id/linearLayoutIRPaymentOption"
-                        android:text="Paytm Wallet"
+                        android:layout_marginTop="10px"
+                        android:text="Cash"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_30"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/textViewIRPaymentOptionValue"
@@ -346,7 +346,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
                         android:gravity="center"
-                        android:text="Rs. 0"
+                        android:text="Rs. 0100"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -385,18 +385,19 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/grey_light" />
+                android:layout_height="6px"
+                android:background="@drawable/shadow_up" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="83px"
                 android:orientation="horizontal"
+                android:background="@color/sliding_bottom_bg_color"
                 android:splitMotionEvents="false">
 
                 <Button
                     android:id="@+id/buttonCancelRide"
-                    android:layout_width="359px"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_white_grey_selector"
                     android:singleLine="true"
@@ -416,40 +417,46 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_32"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
-                <ImageView
-                    android:id="@+id/imageViewIRButtonSep"
-                    android:layout_width="2px"
+                <LinearLayout
+                    android:id="@+id/linearLayoutSendInvites"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="25px"
-                    android:layout_marginTop="25px"
-                    android:background="@color/grey_light" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/buttonCallDriver"
-                    android:layout_width="359px"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_weight="1"
-                    android:background="@drawable/background_white_grey_selector"
-                    android:singleLine="true"
-                    android:text="Call Driver"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_32" />
+                    <TextView
+                        android:id="@+id/textViewSendInvites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/send_invites"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/text_size_26"
+                        android:textColor="@color/theme_color"/>
+
+                    <TextView
+                        android:id="@+id/textViewSendInvites2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:text="@string/send_invites_2"
+                        android:layout_marginLeft="20px"
+                        android:textSize="@dimen/text_size_26"/>
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
 
-        <ImageView
+        <Button
+            android:id="@+id/buttonCallDriver"
             android:layout_width="128px"
             android:layout_height="132px"
             android:layout_alignParentRight="true"
             android:layout_marginRight="50px"
-            android:src="@drawable/ic_ride_call_selector"/>
+            android:tag="mwar"
+            android:background="@drawable/ic_ride_call_selector"/>
     </RelativeLayout>
 
     <!-- drop location layout-->

@@ -664,7 +664,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		final TextView textView1 = new TextView(context);
 		textView1.setText(text);
 		textView1.setTextSize(fontSize);
-		textView1.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
+		textView1.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 
 		final Rect boundsText1 = new Rect();
 
@@ -676,7 +676,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		final TextView textView2 = new TextView(context);
 		textView2.setText("min");
 		textView2.setTextSize(fontSize-4);
-		textView2.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
+		textView2.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 
 		final Rect boundsText2 = new Rect();
 

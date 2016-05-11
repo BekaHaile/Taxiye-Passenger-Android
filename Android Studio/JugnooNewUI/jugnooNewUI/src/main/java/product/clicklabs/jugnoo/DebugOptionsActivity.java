@@ -105,7 +105,7 @@ public class DebugOptionsActivity extends BaseActivity {
 		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
 		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
 		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
-		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.latoRegular(this));
+		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.mavenMedium(this));
 
 
         buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.mavenRegular(this));
