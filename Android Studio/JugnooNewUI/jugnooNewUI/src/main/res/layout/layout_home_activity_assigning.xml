@@ -6,26 +6,14 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
-
-
-    <Button
-        android:id="@+id/assigningMyLocationBtn"
-        android:layout_width="83px"
-        android:layout_height="83px"
-        android:layout_above="@+id/linearLayoutAssigningButtons"
-        android:layout_marginBottom="40px"
-        android:layout_marginLeft="50px"
-        android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar"
-        android:visibility="gone" />
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/linearLayoutAssigningButtons"
         android:layout_width="match_parent"
         android:layout_height="224px"
         android:layout_alignParentBottom="true"
-        android:background="@color/sliding_bottom_bg_color"
+        android:background="@color/white"
         android:splitMotionEvents="false">
 
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
@@ -88,98 +76,82 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutAssigningDropLocationClick"
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutAssigningDropLocationClick"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
-        android:orientation="vertical"
+        android:layout_height="100px"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:background="@drawable/dropshadow_grey"
         android:splitMotionEvents="false">
 
         <ImageView
+            android:id="@+id/imageViewAssigningDropLocationSearch"
+            android:layout_width="20px"
+            android:layout_height="20px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"
+            android:src="@drawable/circle_red"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/textViewAssigningDropLocationClick"
             android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_below="@+id/linearLayoutAssigningDropLocationClick"
-            android:src="@drawable/shadow_down" />
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:layout_toLeftOf="@+id/linearLayoutAssigningDropLocationEditProgress"
+            android:layout_toRightOf="@+id/imageViewAssigningDropLocationSearch"
+            android:background="@color/transparent"
+            android:gravity="center_vertical"
+            android:hint="@string/enter_your_destination"
+            android:singleLine="true"
+            android:textColor="@color/text_color"
+            android:textCursorDrawable="@null"
+            android:textSize="30px"
+            />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:background="@color/white"
-            android:splitMotionEvents="false">
+        <LinearLayout
+            android:id="@+id/linearLayoutAssigningDropLocationEditProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
 
-            <ImageView
-                android:id="@+id/imageViewAssigningDropLocationSearch"
-                android:layout_width="33px"
-                android:layout_height="33px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
-                android:src="@drawable/search_icon"
-                android:tag="mwar" />
-
-            <TextView
-                android:id="@+id/textViewAssigningDropLocationClick"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20px"
-                android:background="@color/transparent"
-                android:gravity="center_vertical"
-                android:hint="@string/enter_your_destination"
-                android:singleLine="true"
-                android:textColor="@color/text_color"
-                android:textCursorDrawable="@null"
-                android:textSize="30px"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/imageViewAssigningDropLocationSearch"
-                android:layout_toLeftOf="@+id/linearLayoutAssigningDropLocationEditProgress"
+            <product.clicklabs.jugnoo.utils.ProgressWheel
+                android:id="@+id/progressBarAssigningDropLocation"
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:tag="mwar"
+                android:visibility="visible"
+                wheel:matProg_barColor="@color/theme_color"
+                wheel:matProg_barWidth="3dp"
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="true"
                 />
 
-            <LinearLayout
-                android:id="@+id/linearLayoutAssigningDropLocationEditProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10px"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                >
+            <ImageView
+                android:id="@+id/imageViewAssigningDropLocationEdit"
+                android:layout_width="60px"
+                android:layout_height="60px"
+                android:padding="15px"
+                android:src="@drawable/edit_icon_selector"
+                android:tag="mwar"
+                android:visibility="visible"
+                />
 
-                <product.clicklabs.jugnoo.utils.ProgressWheel
-                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/progressBarAssigningDropLocation"
-                    android:layout_width="70px"
-                    android:layout_height="70px"
-                    android:tag="mwar"
-                    wheel:matProg_barColor="@color/theme_color"
-                    wheel:matProg_barWidth="3dp"
-                    wheel:matProg_fillRadius="true"
-                    wheel:matProg_progressIndeterminate="true"
-                    android:visibility="visible"
-                    />
-
-                <ImageView
-                    android:id="@+id/imageViewAssigningDropLocationEdit"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
-                    android:padding="15px"
-                    android:src="@drawable/edit_icon_selector"
-                    android:tag="mwar"
-                    android:visibility="visible"
-                    />
-
-            </LinearLayout>
+        </LinearLayout>
 
 
-        </RelativeLayout>
+    </RelativeLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_below="@+id/linearLayoutAssigningDropLocationClick"
-            android:src="@drawable/shadow_down" />
-    </LinearLayout>
 
 
     <!-- drop location layout-->

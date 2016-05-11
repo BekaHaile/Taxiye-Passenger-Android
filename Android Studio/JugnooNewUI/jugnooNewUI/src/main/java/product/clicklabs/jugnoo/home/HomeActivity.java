@@ -247,9 +247,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Assigining layout
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
-    Button assigningMyLocationBtn, initialCancelRideBtn;
+    Button initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent;
-    LinearLayout linearLayoutAssigningDropLocationClick;
+    RelativeLayout relativeLayoutAssigningDropLocationClick;
     TextView textViewAssigningDropLocationClick;
     ProgressWheel progressBarAssigningDropLocation;
     ImageView imageViewAssigningDropLocationEdit;
@@ -290,7 +290,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //End Ride layout
-    RelativeLayout endRideReviewRl;
+    LinearLayout endRideReviewRl;
     ScrollView scrollViewRideSummary;
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
@@ -576,7 +576,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
-        assigningMyLocationBtn = (Button) findViewById(R.id.assigningMyLocationBtn);
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
         findDriverJugnooAnimation = (ImageView) findViewById(R.id.findDriverJugnooAnimation);
@@ -584,7 +583,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
-        linearLayoutAssigningDropLocationClick = (LinearLayout) findViewById(R.id.linearLayoutAssigningDropLocationClick);
+        relativeLayoutAssigningDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationClick);
         textViewAssigningDropLocationClick = (TextView)findViewById(R.id.textViewAssigningDropLocationClick);
         textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
         progressBarAssigningDropLocation = (ProgressWheel)findViewById(R.id.progressBarAssigningDropLocation);
@@ -659,7 +658,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.mavenMedium(this));
 
         //Review Layout
-        endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
+        endRideReviewRl = (LinearLayout) findViewById(R.id.endRideReviewRl);
 
         scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
         linearLayoutRideSummaryContainer = (LinearLayout) findViewById(R.id.linearLayoutRideSummaryContainer);
@@ -813,8 +812,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 dropLocationSearched = false;
                 textViewDestSearch.setText("");
                 imageViewDropCross.setVisibility(View.GONE);
-                translateViewBottomTop(relativeLayoutDestSearchBar, true);
-                translateViewTopBottom(relativeLayoutInitialSearchBar, false);
+                translateViewBottomTop(relativeLayoutDestSearchBar, false);
+                translateViewTopBottom(relativeLayoutInitialSearchBar, true);
             }
         });
 
@@ -882,7 +881,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
-        linearLayoutAssigningDropLocationClick.setOnClickListener(new OnClickListener() {
+        relativeLayoutAssigningDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 initDropLocationSearchUI(false);
@@ -1282,7 +1281,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
-            assigningMyLocationBtn.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 
         }
@@ -1946,6 +1944,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForFareAvailablity();
 
                         findADriverFinishing();
+                        setGoogleMapPadding(0);
 
                         break;
 
@@ -2533,14 +2532,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if(Data.dropLatLng == null){
 				if ("".equalsIgnoreCase(Data.cSessionId)) {
-					linearLayoutAssigningDropLocationClick.setVisibility(View.GONE);
+					relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
 				}
 				else{
-					if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-						linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+					if(relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+						relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
 						try {
 							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-							linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+							relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -2551,11 +2550,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
 			}
 			else{
-				if(linearLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-					linearLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+				if(relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+					relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
 					try {
 						Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-						linearLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+						relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

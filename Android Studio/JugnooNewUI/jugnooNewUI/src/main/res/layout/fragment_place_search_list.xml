@@ -10,12 +10,12 @@
         android:id="@+id/relativeLayoutSearchBar"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:layout_marginTop="30px"
+        android:layout_marginTop="20px"
         android:layout_marginRight="20px"
         android:layout_marginLeft="20px"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15px"
-        android:background="@drawable/background_wallet_border"
+        android:background="@drawable/dropshadow_grey"
         android:splitMotionEvents="false">
 
         <ImageView
@@ -85,7 +85,6 @@
             android:layout_height="110px"
             android:visibility="visible">
 
-
             <TextView
                 android:id="@+id/textViewAddHome"
                 android:layout_width="match_parent"
@@ -117,7 +116,7 @@
             android:id="@+id/imageViewSep"
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/grey_dark" />
+            android:background="@color/stroke_color_light" />
 
 
         <RelativeLayout
@@ -166,15 +165,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="20px"
-                android:layout_marginRight="20px"
-                android:layout_marginTop="10px"
-                android:src="@color/text_color_hint"
-                android:visibility="visible" />
 
             <product.clicklabs.jugnoo.utils.NonScrollListView
                 android:id="@+id/listViewSearch"

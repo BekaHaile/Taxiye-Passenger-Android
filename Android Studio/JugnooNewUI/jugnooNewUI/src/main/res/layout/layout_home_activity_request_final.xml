@@ -7,16 +7,6 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
-
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:visibility="gone"
-        android:layout_below="@+id/relativeLayoutInRideInfo"
-        android:rotation="180"
-        android:src="@drawable/shadow_up" />
-
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
         android:layout_width="match_parent"
@@ -86,14 +76,6 @@
 
 
     </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:visibility="gone"
-        android:layout_below="@+id/relativeLayoutFinalDropLocationClick"
-        android:rotation="180"
-        android:src="@drawable/shadow_up" />
 
     <Button
         android:id="@+id/customerInRideMyLocationBtn"

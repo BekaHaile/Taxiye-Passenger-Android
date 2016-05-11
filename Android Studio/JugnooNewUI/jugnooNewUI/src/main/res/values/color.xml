@@ -156,7 +156,7 @@
  <color name="text_color">#595968</color>
     <color name="theme_green_color">#5DC647</color>
     <color name="theme_red_color">#F54646</color>
- <color name="text_color_light">#9D9D9D</color>
+ <color name="text_color_light">#A4A4A4</color>
  <color name="white_alpha_33">#33FFFFFF</color>
  <color name="sliding_bottom_bg_color">#F7F7F7</color>
  <color name="text_color_hint">#BCBCBC</color>

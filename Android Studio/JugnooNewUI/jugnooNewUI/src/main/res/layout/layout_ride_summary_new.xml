@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
+    android:id="@+id/endRideReviewRl"
+    android:layout_marginTop="@dimen/top_bar_height"
+    android:splitMotionEvents="false"
     >
 
     <LinearLayout

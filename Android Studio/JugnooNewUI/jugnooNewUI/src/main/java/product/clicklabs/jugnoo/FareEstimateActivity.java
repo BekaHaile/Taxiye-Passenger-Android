@@ -2,8 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Point;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -185,6 +183,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
         bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+        bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
         placeSearchListFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
