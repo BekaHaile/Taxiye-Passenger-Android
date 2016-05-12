@@ -681,7 +681,7 @@ public class Utils {
 	public static Shader textColorGradient(int mWidth){
 		Shader shader;
 		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
-		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0, Color.parseColor("#FE8162"), Color.parseColor("#F8B642"), tile_mode);
+		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0, Color.parseColor("#FF7D49"), Color.parseColor("#FF8E21"), tile_mode);
 		shader = lin_grad;
 
 		return shader;

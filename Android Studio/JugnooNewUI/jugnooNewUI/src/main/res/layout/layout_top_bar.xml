@@ -52,7 +52,7 @@
             android:text="@string/app_name"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_40"/>
 
 
         <LinearLayout
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginRight="20px"
             android:orientation="horizontal"
             >
 
@@ -78,7 +78,6 @@
                 android:id="@+id/imageViewAppToggle"
                 android:layout_width="78px"
                 android:layout_height="68px"
-                android:padding="15px"
                 android:src="@drawable/ic_auto_white"
                 android:layout_gravity="center_vertical"
                 android:tag="mwar"/>

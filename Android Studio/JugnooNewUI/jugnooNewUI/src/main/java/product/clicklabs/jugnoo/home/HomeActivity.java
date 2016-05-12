@@ -5914,8 +5914,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
                     topBar.title.getPaint().setShader(null);
+                    topBar.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_30));
                     topBar.title.setTextColor(getResources().getColor(R.color.red));
                     topBar.imageViewAppToggle.setVisibility(View.GONE);
+                    topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
                     localModeEnabled = modeEnabled;
                     return;
                 } else{
@@ -5937,6 +5939,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 localModeEnabled = 0;
             }
 
+            topBar.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_40));
+            topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector);
             topBar.title.measure(0, 0);
             int mWidth = topBar.title.getMeasuredWidth();
             topBar.title.getPaint().setShader(Utils.textColorGradient(mWidth));

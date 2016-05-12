@@ -87,7 +87,7 @@ public class TopBar {
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		if(activity instanceof FreshActivity){
 			imageViewHelp.setVisibility(View.GONE);
-			imageViewAppToggle.setImageResource(R.drawable.ic_auto_white);
+			imageViewAppToggle.setImageResource(R.drawable.ic_autos_topbar_selector);
 			paramsAppToggle.width = (int)(minRatio * 78f);
 			paramsAppToggle.height = (int)(minRatio * 68f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
@@ -96,9 +96,9 @@ public class TopBar {
 			title.setText(activity.getResources().getString(R.string.fresh));
 
 		} else if(activity instanceof HomeActivity) {
-			imageViewAppToggle.setImageResource(R.drawable.ic_fresh_white);
-			paramsAppToggle.width = (int)(minRatio * 92f);
-			paramsAppToggle.height = (int)(minRatio * 66f);
+			imageViewAppToggle.setImageResource(R.drawable.ic_fresh_topbar_selector);
+			paramsAppToggle.width = (int)(minRatio * 62f);
+			paramsAppToggle.height = (int)(minRatio * 36f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
 			imageViewSearchIcon.setVisibility(View.GONE);
 

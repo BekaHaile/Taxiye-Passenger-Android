@@ -250,6 +250,9 @@ public class FreshActivity extends FragmentActivity {
 			topBar.imageViewAppToggle.setVisibility(View.VISIBLE);
 			topBar.imageViewSearchIcon.setVisibility(View.GONE);
 			topBar.title.setText(getResources().getString(R.string.fresh));
+			topBar.title.measure(0, 0);
+			int mWidth = topBar.title.getMeasuredWidth();
+			topBar.title.getPaint().setShader(Utils.textColorGradient(mWidth));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshCartItemsFragment){

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -79,11 +79,11 @@
 
     <Button
         android:id="@+id/customerInRideMyLocationBtn"
-        android:layout_width="83px"
-        android:layout_height="83px"
+        android:layout_width="109px"
+        android:layout_height="109px"
         android:layout_above="@+id/relativeLayoutInRideContainer"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="45px"
+        android:layout_marginBottom="40px"
         android:layout_marginRight="45px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar"
@@ -302,7 +302,7 @@
                             android:id="@+id/imageViewIRPaymentOptionCash"
                             android:layout_width="39px"
                             android:layout_height="20px"
-                            android:background="@drawable/ic_cash"
+                            android:src="@drawable/ic_cash"
                             android:tag="mwar"
                             android:visibility="visible" />
 
@@ -381,7 +381,7 @@
                     android:id="@+id/buttonCancelRide"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/background_white_grey_selector"
+                    android:background="@color/menu_item_selector_color"
                     android:singleLine="true"
                     android:text="Cancel Ride"
                     android:textAllCaps="true"

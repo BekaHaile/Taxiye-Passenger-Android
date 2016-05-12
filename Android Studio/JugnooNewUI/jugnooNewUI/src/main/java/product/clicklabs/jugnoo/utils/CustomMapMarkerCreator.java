@@ -61,8 +61,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createPinMarkerBitmapEnd(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(47.0f * scale);
-        int height = (int)(79.0f * scale);
+        int width = (int)(46.0f * scale);
+        int height = (int)(94.0f * scale);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball_end);
@@ -73,8 +73,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createPinMarkerBitmapStart(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(47.0f * scale);
-        int height = (int)(79.0f * scale);
+        int width = (int)(46.0f * scale);
+        int height = (int)(94.0f * scale);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball_start);

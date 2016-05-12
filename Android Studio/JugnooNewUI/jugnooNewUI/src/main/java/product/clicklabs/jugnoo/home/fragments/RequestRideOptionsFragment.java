@@ -231,7 +231,7 @@ public class RequestRideOptionsFragment extends Fragment {
                         matched = true;
                         break;
                     }
-                }
+                }//Data.regions.remove(0);
                 if(!matched){
                     regionSelected = Data.regions.get(0);
                 }

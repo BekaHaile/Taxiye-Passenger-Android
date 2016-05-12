@@ -228,7 +228,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/top_bar_height"
             android:splitMotionEvents="false"
-            >
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
