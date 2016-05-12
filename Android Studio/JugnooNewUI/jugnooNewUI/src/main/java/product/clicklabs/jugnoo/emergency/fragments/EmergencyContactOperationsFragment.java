@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -127,7 +128,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewSend = (TextView) rootView.findViewById(R.id.textViewSend); textViewSend.setTypeface(Fonts.mavenRegular(activity));
 
@@ -147,6 +148,10 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		recyclerViewEmergencyContacts.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewEmergencyContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewEmergencyContacts.setHasFixedSize(false);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		emergencyContactBeans = new ArrayList<>();
 		emergencyContactsListAdapter = new ContactsListAdapter(emergencyContactBeans, activity, R.layout.list_item_contact,

@@ -106,7 +106,7 @@
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
                             android:layout_gravity="center_horizontal"
-                            android:src="@color/text_color_hint" />
+                            android:src="@color/stroke_color_light" />
 
                         <TextView
                             android:id="@+id/textViewInfo"
@@ -160,6 +160,7 @@
                     <ImageView
                         android:layout_width="660px"
                         android:layout_height="2px"
+                        android:visibility="gone"
                         android:layout_gravity="center_horizontal"
                         android:src="@color/text_color_hint" />
 
@@ -212,6 +213,7 @@
                     <ImageView
                         android:layout_width="660px"
                         android:layout_height="2px"
+                        android:visibility="gone"
                         android:layout_gravity="center_horizontal"
                         android:src="@color/text_color_hint" />
 
@@ -327,6 +329,7 @@
                     <ImageView
                         android:layout_width="660px"
                         android:layout_height="2px"
+                        android:visibility="gone"
                         android:layout_gravity="center_horizontal"
                         android:src="@color/text_color_hint" />
 
@@ -364,6 +367,7 @@
                         <ImageView
                             android:layout_width="720px"
                             android:layout_height="2px"
+                            android:visibility="gone"
                             android:layout_alignParentBottom="true"
                             android:layout_gravity="center_horizontal"
                             android:src="@color/text_color_hint" />
@@ -373,6 +377,7 @@
                         android:id="@+id/relativeLayoutChangePassword"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/top_bar_height"
+                        android:layout_marginTop="10px"
                         android:layout_gravity="center_horizontal"
                         android:background="@color/sliding_bottom_bg_color"
                         android:visibility="visible">
@@ -387,6 +392,7 @@
                             android:layout_marginLeft="30px"
                             android:layout_marginRight="70px"
                             android:gravity="center"
+                            android:textAllCaps="true"
                             android:text="Change Password"
                             android:textColor="@drawable/text_color_black_alpha_selector"
                             android:textSize="28px" />
@@ -397,7 +403,7 @@
                             android:layout_height="26px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="30px"
+                            android:layout_marginRight="55px"
                             android:src="@drawable/arrow_icon_selector"
                             android:tag="mwar" />
 
@@ -406,7 +412,7 @@
                             android:layout_height="2px"
                             android:layout_alignParentBottom="true"
                             android:layout_gravity="center_horizontal"
-                            android:src="@color/text_color_hint" />
+                            android:src="@color/stroke_color_light" />
                     </RelativeLayout>
 
 
@@ -424,6 +430,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
+                            android:textAllCaps="true"
                             android:layout_marginLeft="30px"
                             android:layout_marginRight="70px"
                             android:gravity="center"
@@ -436,13 +443,14 @@
                             android:layout_height="26px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="30px"
+                            android:layout_marginRight="55px"
                             android:src="@drawable/arrow_icon_selector"
                             android:tag="mwar" />
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="2px"
+                            android:visibility="gone"
                             android:layout_alignParentBottom="true"
                             android:layout_gravity="center_horizontal"
                             android:src="@color/text_color_hint" />
@@ -473,12 +481,12 @@
 
                         <ImageView
                             android:id="@+id/imageViewAddHome"
-                            android:layout_width="36px"
-                            android:layout_height="34px"
+                            android:layout_width="27px"
+                            android:layout_height="24px"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="30px"
-                            android:src="@drawable/home"
+                            android:src="@drawable/ic_home"
                             android:tag="mwar" />
 
                         <ImageView
@@ -496,6 +504,7 @@
                         <ImageView
                             android:layout_width="660px"
                             android:layout_height="2px"
+                            android:visibility="gone"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:src="@color/text_color_hint" />
@@ -528,12 +537,12 @@
 
                         <ImageView
                             android:id="@+id/imageViewAddWork"
-                            android:layout_width="36px"
-                            android:layout_height="34px"
+                            android:layout_width="26px"
+                            android:layout_height="23px"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="30px"
-                            android:src="@drawable/work"
+                            android:src="@drawable/ic_work"
                             android:tag="mwar" />
 
                         <ImageView
@@ -551,6 +560,7 @@
                         <ImageView
                             android:layout_width="660px"
                             android:layout_height="2px"
+                            android:visibility="gone"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:src="@color/text_color_hint" />

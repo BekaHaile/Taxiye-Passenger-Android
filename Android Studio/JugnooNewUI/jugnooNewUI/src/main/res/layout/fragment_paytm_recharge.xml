@@ -44,7 +44,7 @@
             android:layout_marginRight="10px"
             android:padding="15px"
             android:text="EDIT"
-            android:textColor="@drawable/text_color_white_dark_selector"
+            android:textColor="@color/text_color_light_selector"
             android:textSize="30.6px" />
     </RelativeLayout>
 

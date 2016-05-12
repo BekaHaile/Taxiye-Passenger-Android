@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -106,7 +107,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
 		textViewEmergencyModeEnabledMessage = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledMessage);
@@ -119,6 +120,10 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonCallEmergencyContact.setTypeface(Fonts.mavenRegular(activity));
 		buttonDisableEmergencyMode = (Button) rootView.findViewById(R.id.buttonDisableEmergencyMode);
 		buttonDisableEmergencyMode.setTypeface(Fonts.mavenRegular(activity));
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		linearLayoutDisableEmergencyMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutDisableEmergencyMode);
 
