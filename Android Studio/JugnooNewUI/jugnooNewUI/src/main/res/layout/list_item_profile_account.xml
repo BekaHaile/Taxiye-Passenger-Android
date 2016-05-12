@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="244px"
-        android:background="@color/rank_1">
+        android:background="@color/sliding_bottom_bg_color">
 
     <LinearLayout
         android:layout_width="match_parent"

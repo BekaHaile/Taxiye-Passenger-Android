@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -108,13 +109,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
 		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
 
-
-		linearLayoutAddFav = (LinearLayout) rootView.findViewById(R.id.linearLayoutAddFav);
-		relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
-		relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
-		textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome);
-		textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
-		imageViewSep = (ImageView) rootView.findViewById(R.id.imageViewSep);
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {
@@ -132,8 +126,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				editTextSearch.setText("");
 			}
 		});
-
-		showSearchLayout();
 
 		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
 				new SearchListAdapter.SearchListActionsHandler() {
@@ -197,6 +189,20 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				});
 
 		listViewSearch.setAdapter(searchListAdapter);
+
+		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
+		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
+		ASSL.DoMagic(header);
+		listViewSearch.addHeaderView(header, null, false);
+
+		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
+		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
+		relativeLayoutAddWork = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddWork);
+		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
+		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
+		imageViewSep = (ImageView) header.findViewById(R.id.imageViewSep);
+
+		showSearchLayout();
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -262,13 +268,13 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		if(work.equalsIgnoreCase("")){
 			relativeLayoutAddWork.setVisibility(View.VISIBLE);
-			if(home.equalsIgnoreCase("")){
-				imageViewSep.setVisibility(View.VISIBLE);
-			} else{
-				imageViewSep.setVisibility(View.GONE);
-			}
 		}else{
 			relativeLayoutAddWork.setVisibility(View.GONE);
+		}
+
+		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
+			imageViewSep.setVisibility(View.VISIBLE);
+		} else{
 			imageViewSep.setVisibility(View.GONE);
 		}
 

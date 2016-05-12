@@ -111,6 +111,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
 
         linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
+        linearLayoutContainer.setVisibility(View.VISIBLE);
 
         relativeLayoutFareEstimateDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimateDetails);
 
@@ -138,11 +139,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
         textViewDropLocation.setTypeface(Fonts.mavenLight(this));
         textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
-        textViewEstimateTime.setTypeface(Fonts.mavenRegular(this));
+        textViewEstimateTime.setTypeface(Fonts.mavenMedium(this));
         textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
-        textViewEstimateDistance.setTypeface(Fonts.mavenRegular(this));
+        textViewEstimateDistance.setTypeface(Fonts.mavenMedium(this));
         textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
-        textViewEstimateFare.setTypeface(Fonts.mavenRegular(this));
+        textViewEstimateFare.setTypeface(Fonts.mavenMedium(this));
 		textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
 		textViewConvenienceCharge.setTypeface(Fonts.mavenLight(this));
 		textViewConvenienceCharge.setText("");
@@ -153,8 +154,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
 
-        ((TextView)findViewById(R.id.textViewStart)).setTypeface(Fonts.mavenRegular(this));
-        ((TextView)findViewById(R.id.textViewEnd)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView)findViewById(R.id.textViewStart)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView)findViewById(R.id.textViewEnd)).setTypeface(Fonts.mavenMedium(this));
         ((TextView)findViewById(R.id.textViewEstimateDistanceText)).setTypeface(Fonts.mavenLight(this));
         ((TextView)findViewById(R.id.textViewEstimateRideTimeText)).setTypeface(Fonts.mavenLight(this));
 
@@ -255,14 +256,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                                     markerOptionsS.title("Start");
                                                     markerOptionsS.position(sourceLatLng);
                                                     markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-                                                        assl, R.drawable.ic_small_pin_start)));
+                                                        assl, R.drawable.pin_ball_start)));
                                                     mapLite.addMarker(markerOptionsS);
 
                                                     MarkerOptions markerOptionsE = new MarkerOptions();
                                                     markerOptionsE.title("Start");
                                                     markerOptionsE.position(destLatLng);
                                                     markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-                                                        assl, R.drawable.ic_small_pin_end)));
+                                                        assl, R.drawable.pin_ball_end)));
                                                     mapLite.addMarker(markerOptionsE);
 
 

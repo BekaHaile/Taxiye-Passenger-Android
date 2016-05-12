@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="110px"
-    android:background="@drawable/background_search_list"
-    android:orientation="horizontal"
     android:tag="mwar"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    >
 
     <ImageView
         android:id="@+id/imageViewType"
         android:layout_width="36px"
         android:layout_height="34px"
-        android:layout_gravity="center_vertical"
-        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="30px"
         android:src="@drawable/work"
         android:visibility="gone"
@@ -22,12 +20,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15px"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
-        android:layout_marginBottom="15px"
         android:orientation="vertical"
-        android:splitMotionEvents="false">
+        android:splitMotionEvents="false"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/imageViewType"
+        >
 
         <TextView
             android:id="@+id/textViewSearchName"
@@ -45,10 +44,19 @@
             android:singleLine="true"
             android:text=""
             android:textColor="@color/text_color_light"
-            android:textSize="26px" />
-
+            android:textSize="26px"
+            />
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imageViewSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="2px"
+        android:layout_marginRight="2px"
+        android:background="@color/stroke_color_light"
+        android:layout_alignParentBottom="true"
+        />
 
-</LinearLayout>
+</RelativeLayout>

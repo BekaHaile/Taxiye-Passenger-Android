@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,8 +51,8 @@ public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress;
-        ImageView imageViewType;
-        LinearLayout relative;
+        ImageView imageViewType, imageViewSep;
+        RelativeLayout relative;
         int id;
     }
 
@@ -168,12 +168,13 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
-            holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+            holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
+            holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(ASSL.Yscale())*110));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 110));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -196,6 +197,12 @@ public class SearchListAdapter extends BaseAdapter{
                 holder.imageViewType.setImageResource(R.drawable.work);
             } else{
                 holder.imageViewType.setVisibility(View.GONE);
+            }
+
+            if(position == getCount()-1){
+                holder.imageViewSep.setVisibility(View.GONE);
+            } else{
+                holder.imageViewSep.setVisibility(View.VISIBLE);
             }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +252,6 @@ public class SearchListAdapter extends BaseAdapter{
     public void setShowSavedPlaces(boolean showSavedPlaces) {
         this.showSavedPlaces = showSavedPlaces;
     }
-
 
     private boolean refreshingAutoComplete = false;
 

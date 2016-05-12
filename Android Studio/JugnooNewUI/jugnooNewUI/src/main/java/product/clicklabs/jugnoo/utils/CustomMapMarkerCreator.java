@@ -21,18 +21,6 @@ import product.clicklabs.jugnoo.R;
 
 @SuppressWarnings("static-access")
 public class CustomMapMarkerCreator {
-	
-	public static Bitmap createCarMarkerBitmap(Activity activity, ASSL assl){
-		float scale = Math.min(assl.Xscale(), assl.Yscale());
-		int width = (int)(35.0f * scale);
-		int height = (int)(54.0f * scale);
-		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mDotMarkerBitmap);
-		Drawable shape = activity.getResources().getDrawable(R.drawable.ic_auto_marker);
-		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
-		shape.draw(canvas);
-		return mDotMarkerBitmap;
-	}
 
 	public static Bitmap createMarkerBitmapForResource(Activity activity, ASSL assl, int resourceId){
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
@@ -86,8 +74,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createSmallPinMarkerBitmap(Activity activity, ASSL assl, int drawableId){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(24.0f * scale);
-        int height = (int)(41.0f * scale);
+        int width = (int)(46.0f * scale * 0.5f);
+        int height = (int)(94.0f * scale * 0.5f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(drawableId);
