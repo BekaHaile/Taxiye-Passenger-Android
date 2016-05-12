@@ -143,13 +143,6 @@ public class RequestRideOptionsFragment extends Fragment {
         return rootView;
     }
 
-    public void update(){
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     View.OnClickListener onClickListenerRequestOptions = new View.OnClickListener() {
         @Override

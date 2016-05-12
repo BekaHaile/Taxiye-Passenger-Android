@@ -21,7 +21,7 @@
             android:id="@+id/textViewFareDetails"
             android:layout_width="match_parent"
             android:layout_height="108px"
-            android:background="@drawable/background_orange_rounded"
+            android:background="@drawable/background_orange_tr"
             android:textAllCaps="true"
             android:text="@string/fare_details"
             android:textColor="@color/white"

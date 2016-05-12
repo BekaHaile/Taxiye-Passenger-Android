@@ -152,7 +152,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:src="@color/search_stroke_color"
+                    android:src="@color/stroke_color_light"
                     android:layout_marginLeft="25px"
                     android:layout_marginRight="25px"
                     android:layout_alignParentBottom="true"/>
@@ -273,7 +273,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="70px"
                     android:layout_toLeftOf="@+id/relativeLayoutIRPaymentOption"
-                    android:src="@color/search_stroke_color" />
+                    android:src="@color/stroke_color_light" />
 
                 <LinearLayout
                     android:id="@+id/relativeLayoutIRPaymentOption"

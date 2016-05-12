@@ -185,7 +185,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="10px"
-                android:background="@color/stroke_color_light"
+                android:background="@color/stroke_color_dark"
                 />
 
             <LinearLayout
@@ -230,7 +230,7 @@
                     android:layout_width="2px"
                     android:layout_height="90px"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/stroke_color_light"
+                    android:background="@color/stroke_color_dark"
                     />
 
                 <LinearLayout
@@ -275,7 +275,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="10px"
-                android:background="@color/stroke_color_light"
+                android:background="@color/stroke_color_dark"
                 />
 
         </LinearLayout>

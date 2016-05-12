@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by shankar on 5/2/16.
@@ -57,10 +58,9 @@ public class PromoCouponsDialog {
 			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override
 				public void onCouponSelected() {
-					dialog.dismiss();
-					callback.onCouponApplied();
 				}
 			});
+			activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerViewPromoCoupons.getLayoutParams();
 			params.height = Data.promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
@@ -68,12 +68,25 @@ public class PromoCouponsDialog {
 			recyclerViewPromoCoupons.setLayoutParams(params);
 			recyclerViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
-			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
-			imageViewClose.setOnClickListener(new View.OnClickListener() {
+			Button buttonSkip = (Button) dialog.findViewById(R.id.buttonSkip);
+			buttonSkip.setTypeface(Fonts.mavenRegular(activity));
+			Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
+			buttonContinue.setTypeface(Fonts.mavenRegular(activity));
+
+			buttonSkip.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+					dialog.dismiss();
+					callback.onSkipped();
+				}
+			});
+
+			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					callback.onCancelled();
+					callback.onCouponApplied();
 				}
 			});
 
@@ -87,7 +100,7 @@ public class PromoCouponsDialog {
 
 	public interface Callback{
 		void onCouponApplied();
-		void onCancelled();
+		void onSkipped();
 	}
 
 

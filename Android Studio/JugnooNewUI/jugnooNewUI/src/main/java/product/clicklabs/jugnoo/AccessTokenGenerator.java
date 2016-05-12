@@ -18,12 +18,13 @@ public class AccessTokenGenerator {
     public static final String AUTOS_PACKAGE = "product.clicklabs.jugnoo", AUTOS_CLIENT_ID = "EEBUOvQq7RRJBxJm";
 	public static final String MEALS_PACKAGE = "com.cdk23.nlk", MEALS_CLIENT_ID = "QNrWRzMToQNnxrQ5";
 	public static final String FATAFAT_PACKAGE = "com.cdk23.nlkf", FATAFAT_CLIENT_ID = "g3Ql58Kx2VCDYVk3";
+	public static final String FATAFAT_FRESH_PACKAGE = "com.sabkuchfresh", FATAFAT_FRESH_CLIENT_ID = "FHkmrtv6zn0KuGcW";
 
 
 
 
 
-	private static final String[] OTHER_JUGNOO_APP_PACKAGES = new String[]{ MEALS_PACKAGE, FATAFAT_PACKAGE };
+	private static final String[] OTHER_JUGNOO_APP_PACKAGES = new String[]{ MEALS_PACKAGE, FATAFAT_PACKAGE, FATAFAT_FRESH_PACKAGE };
 	
 	@SuppressWarnings("deprecation")
 	public static void saveAuthKey(Context context, String authKey) {

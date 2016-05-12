@@ -447,6 +447,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							} else if (AccessTokenGenerator.FATAFAT_CLIENT_ID.equalsIgnoreCase(clientId)) {
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
 										AccessTokenGenerator.FATAFAT_PACKAGE, playSound);
+							} else if (AccessTokenGenerator.FATAFAT_FRESH_CLIENT_ID.equalsIgnoreCase(clientId)) {
+								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
+										AccessTokenGenerator.FATAFAT_FRESH_PACKAGE, playSound);
 							} else {
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
 										AccessTokenGenerator.AUTOS_PACKAGE, playSound);
