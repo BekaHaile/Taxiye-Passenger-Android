@@ -863,6 +863,7 @@
 	<string name="fare_details">Fare Details</string>
 	<string name="pay_for_your_rides_using">Pay for your rides using:</string>
 	<string name="enter_destination">Enter Destination</string>
+	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
 
 
 </resources>

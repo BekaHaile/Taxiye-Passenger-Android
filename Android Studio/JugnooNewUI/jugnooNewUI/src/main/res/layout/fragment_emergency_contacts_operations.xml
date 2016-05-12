@@ -18,8 +18,8 @@
             android:layout_centerInParent="true"
             android:text="@string/call_your_contacts"
             android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_36"
             />
 
         <ImageView
@@ -42,7 +42,7 @@
             android:text="@string/send"
             android:textAllCaps="true"
             android:textColor="@color/text_color_light_selector"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="@dimen/text_size_32"
             />
 
     </RelativeLayout>

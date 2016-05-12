@@ -15,7 +15,7 @@
         android:layout_marginLeft="20px"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15px"
-        android:background="@drawable/background_wallet_border"
+        android:background="@drawable/background_white_rounded_bordered"
         android:splitMotionEvents="false">
 
         <ImageView
@@ -90,7 +90,7 @@
                 android:dividerHeight="0px"
                 android:layout_marginTop="20px"
                 android:splitMotionEvents="false"
-                android:background="@drawable/background_wallet_border"
+                android:background="@drawable/background_white_rounded_bordered"
                 />
 
             <ImageView

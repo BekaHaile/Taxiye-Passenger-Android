@@ -184,7 +184,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.printStackTrace();
             }
 
-            holder.linearLayoutName.setOnClickListener(new View.OnClickListener() {
+            holder.relative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     activity.startActivity(new Intent(activity, AccountActivity.class));
@@ -368,7 +368,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public LinearLayout linearLayoutName;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
-            //relative = (RelativeLayout) convertView.findViewById(R.id.relative);
+            relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             linearLayoutName = (LinearLayout) convertView.findViewById(R.id.linearLayoutName);
             imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
             textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(context));

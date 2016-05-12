@@ -112,7 +112,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
         ASSL.DoMagic(viewF);
 		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
-		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.latoLight(paymentActivity), Typeface.BOLD);
+		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.mavenRegular(paymentActivity));
 		relativeLayoutShowMore.setVisibility(View.GONE);
 		
 		transactionListAdapter = new TransactionListAdapter(paymentActivity);
@@ -238,11 +238,11 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				holder = new ViewHolderTransaction();
 				convertView = mInflater.inflate(R.layout.list_item_trans_naw, null);
 				
-				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenRegular(context));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 				
 				holder.relative.setTag(holder);

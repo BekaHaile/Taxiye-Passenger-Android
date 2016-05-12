@@ -87,7 +87,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="43px"
                 android:text="Cash Added"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_28"/>
         </RelativeLayout>
     </LinearLayout>
@@ -95,7 +95,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/text_color_light"
+        android:background="@color/stroke_color_light"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
         android:layout_alignParentBottom="true"

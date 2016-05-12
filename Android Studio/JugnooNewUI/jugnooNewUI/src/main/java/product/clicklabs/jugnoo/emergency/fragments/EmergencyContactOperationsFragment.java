@@ -309,7 +309,6 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			textViewTitle.setText(activity.getResources().getString(R.string.call_your_contacts));
 		}
 
-
 		return rootView;
 	}
 
