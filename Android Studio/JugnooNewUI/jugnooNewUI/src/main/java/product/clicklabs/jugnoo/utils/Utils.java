@@ -14,7 +14,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.location.Location;
@@ -678,10 +677,12 @@ public class Utils {
 		}
 	}
 
-	public static Shader textColorGradient(int mWidth){
+	public static Shader textColorGradient(Context context, int mWidth){
 		Shader shader;
 		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
-		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0, Color.parseColor("#FF7D49"), Color.parseColor("#FF8E21"), tile_mode);
+		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
+				context.getResources().getColor(R.color.theme_color),
+				context.getResources().getColor(R.color.theme_color_end), tile_mode);
 		shader = lin_grad;
 
 		return shader;

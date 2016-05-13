@@ -337,7 +337,7 @@ public class FreshActivity extends FragmentActivity {
 
 		topBar.title.measure(0, 0);
 		int mWidth = topBar.title.getMeasuredWidth();
-		topBar.title.getPaint().setShader(Utils.textColorGradient(mWidth));
+		topBar.title.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 	}
 
 

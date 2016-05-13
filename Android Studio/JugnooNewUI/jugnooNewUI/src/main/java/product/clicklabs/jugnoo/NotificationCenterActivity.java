@@ -82,7 +82,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
         textViewTitle.measure(0, 0);
         int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override

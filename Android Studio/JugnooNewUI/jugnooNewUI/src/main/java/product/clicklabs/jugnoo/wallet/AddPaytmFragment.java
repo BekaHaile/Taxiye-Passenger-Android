@@ -125,7 +125,7 @@ public class AddPaytmFragment extends Fragment {
 
 		textViewTitle.measure(0, 0);
 		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 

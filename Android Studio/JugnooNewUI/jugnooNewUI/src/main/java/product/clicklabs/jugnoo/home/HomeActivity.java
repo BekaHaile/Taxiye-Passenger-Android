@@ -5945,7 +5945,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector);
             topBar.title.measure(0, 0);
             int mWidth = topBar.title.getMeasuredWidth();
-            topBar.title.getPaint().setShader(Utils.textColorGradient(mWidth));
+            topBar.title.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
         } catch(Exception e){
             e.printStackTrace();

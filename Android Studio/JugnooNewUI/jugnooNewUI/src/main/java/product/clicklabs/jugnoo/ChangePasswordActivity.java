@@ -94,7 +94,7 @@ public class ChangePasswordActivity extends BaseActivity {
 
 		textViewTitle.measure(0, 0);
 		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 		
 		
 		buttonChangePassword.setOnClickListener(new View.OnClickListener() {

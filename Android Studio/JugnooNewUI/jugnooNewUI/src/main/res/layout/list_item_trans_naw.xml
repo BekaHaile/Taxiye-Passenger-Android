@@ -3,7 +3,6 @@
      xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="@dimen/screen_width"
      android:layout_height="156px"
-     android:background="@color/white"
      android:orientation="vertical"
      android:splitMotionEvents="false">
 
@@ -16,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="@color/white"
         android:orientation="vertical"
         android:splitMotionEvents="false"
         >

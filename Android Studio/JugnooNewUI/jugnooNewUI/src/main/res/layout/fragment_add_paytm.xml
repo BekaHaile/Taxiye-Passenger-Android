@@ -125,14 +125,14 @@
                         android:layout_gravity="center_horizontal"
                         android:background="#0000"
                         android:gravity="center"
-                        android:hint="Enter Code"
+                        android:hint="@string/nl_otp_enter_otp"
                         android:inputType="number"
                         android:maxLength="6"
                         android:padding="20px"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="34px" />
+                        android:textSize="@dimen/text_size_30" />
 
                     <ImageView
                         android:layout_width="410px"

@@ -95,7 +95,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
         textViewTitle.measure(0, 0);
         int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {

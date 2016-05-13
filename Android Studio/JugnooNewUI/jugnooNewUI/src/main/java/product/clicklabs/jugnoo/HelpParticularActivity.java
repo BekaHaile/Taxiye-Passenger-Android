@@ -71,7 +71,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
         textViewTitle.measure(0, 0);
         int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 
         //override the web client to open all links in the same webview

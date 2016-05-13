@@ -111,7 +111,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
         textViewTitle.measure(0, 0);
         int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
         textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.mavenMedium(this));
         listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    android:background="@color/white"
+    >
 
     <RelativeLayout
         android:id="@+id/topRl"
@@ -24,7 +25,7 @@
             android:text="@string/nl_otp_verification"
             android:textColor="@color/white"
             android:textAllCaps="true"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_40" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -36,16 +37,19 @@
             android:tag="mwar" />
     </RelativeLayout>
 
+    <include
+        layout="@layout/layout_otp_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topRl"
+        />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topRl"
         />
 
 
-    <include
-        layout="@layout/layout_otp_screen"
-        ></include>
-
-
-</LinearLayout>
+</RelativeLayout>

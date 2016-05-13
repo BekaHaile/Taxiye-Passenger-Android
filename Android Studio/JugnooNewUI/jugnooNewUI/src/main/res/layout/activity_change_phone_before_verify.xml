@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     android:splitMotionEvents="false">
 
     <RelativeLayout
@@ -25,7 +24,7 @@
             android:text="@string/nl_change_phone_number"
             android:textColor="@color/white"
             android:textAllCaps="true"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_40" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -41,7 +40,9 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:splitMotionEvents="false">
+        android:splitMotionEvents="false"
+        android:layout_below="@+id/topRl"
+        >
 
         <LinearLayout
             android:id="@+id/mainLinear"
@@ -125,4 +126,11 @@
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topRl"
+        />
+
+</RelativeLayout>

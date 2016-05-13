@@ -131,7 +131,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 		textViewTitle.measure(0, 0);
 		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, mWidth));
 
 		contactBeans = new ArrayList<>();
 		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,

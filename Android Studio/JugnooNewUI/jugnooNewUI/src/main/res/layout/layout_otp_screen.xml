@@ -15,10 +15,9 @@
 
 
         <LinearLayout
-            android:id="@+id/linearLayoutEnterOtp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/sliding_bottom_bg_color"
+            android:background="@color/menu_item_selector_color"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible">
@@ -32,12 +31,13 @@
 
                 <ImageView
                     android:id="@+id/imageViewPaytmIcon"
-                    android:layout_width="167px"
-                    android:layout_height="53px"
                     android:layout_marginTop="30px"
                     android:visibility="gone"
+                    android:layout_width="121px"
+                    android:layout_height="39px"
                     android:src="@drawable/ic_paytm_big"
-                    android:tag="mwar" />
+                    android:tag="mwar"
+                    />
 
                 <TextView
                     android:id="@+id/otpHelpText"
@@ -73,7 +73,7 @@
                         android:layout_width="2px"
                         android:layout_height="35px"
                         android:layout_marginLeft="10px"
-                        android:background="@color/black_translucent" />
+                        android:background="@color/stroke_color_light" />
 
                     <ImageView
                         android:id="@+id/imageViewChangePhoneNumber"
@@ -93,19 +93,18 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/text_color_hint" />
+            android:background="@color/stroke_color_light" />
 
 
         <EditText
             android:id="@+id/editTextOTP"
-            android:layout_width="400px"
+            android:layout_width="410px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10px"
             android:layout_marginTop="70px"
             android:background="#0000"
             android:gravity="center"
-            android:hint="@string/enter_code"
+            android:hint="@string/nl_otp_enter_otp"
             android:inputType="number"
             android:maxLength="6"
             android:paddingLeft="20px"
@@ -113,10 +112,13 @@
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_32" />
+            android:textSize="@dimen/text_size_32"
+            android:paddingTop="15px"
+            android:paddingBottom="15px"
+            />
 
         <ImageView
-            android:layout_width="400px"
+            android:layout_width="410px"
             android:layout_height="2px"
             android:layout_gravity="center_horizontal"
             android:src="@color/theme_color" />
@@ -183,91 +185,65 @@
             android:layout_marginTop="100px"
             android:text="@string/nl_otp_verify" />
 
-        <Button
-            android:id="@+id/buttonOtpViaCall"
-            style="@style/ButtonThemeAlternate"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25px"
-            android:text="@string/receive_otp_via_call"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_size_28" />
-
-
-        <!-- Missed Call Layout-->
         <LinearLayout
             android:id="@+id/linearLayoutOtherOptions"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_gravity="center_horizontal"
+            >
 
+            <Button
+                android:id="@+id/buttonOtpViaCall"
+                style="@style/ButtonThemeAlternate"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25px"
+                android:text="@string/receive_otp_via_call"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_28" />
 
-
-            <!-- Or layout -->
-            <LinearLayout
-                android:id="@+id/linearLayoutOR"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textViewOr"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25px"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="150px"
-                    android:layout_height="2px"
-                    android:layout_marginRight="30px"
-                    android:src="@color/text_color_hint" />
-
-                <TextView
-                    android:id="@+id/textViewOr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:text="@string/or"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
-
-                <ImageView
-                    android:layout_width="150px"
-                    android:layout_height="2px"
-                    android:layout_marginLeft="30px"
-                    android:src="@color/text_color_hint" />
-
-            </LinearLayout>
+                android:text="@string/or"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30"
+                />
 
             <!-- Missed call Button -->
             <LinearLayout
-                android:id="@+id/linearLayoutGiveAMissedCall"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="25px"
-                android:background="@drawable/button_white_grey_theme_border_selector"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            android:id="@+id/linearLayoutGiveAMissedCall"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25px"
+            android:background="@drawable/button_white_grey_theme_border_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="35px"
-                    android:layout_height="26px"
-                    android:layout_marginLeft="26px"
-                    android:layout_marginRight="16px"
-                    android:src="@drawable/ic_otp_missed_call"
-                    android:tag="mwar" />
+            <ImageView
+                android:layout_width="35px"
+                android:layout_height="26px"
+                android:layout_marginLeft="26px"
+                android:layout_marginRight="16px"
+                android:src="@drawable/ic_otp_missed_call"
+                android:tag="mwar" />
 
-                <TextView
-                    android:id="@+id/textViewGiveAMissedCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/nl_otp_give_missed_call"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_30" />
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/textViewGiveAMissedCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/nl_otp_give_missed_call"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_theme_selector"
+                android:textSize="@dimen/text_size_30" />
+        </LinearLayout>
         </LinearLayout>
 
         <TextView

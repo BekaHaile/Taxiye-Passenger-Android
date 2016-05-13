@@ -83,7 +83,7 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
 
         textViewTitle.measure(0, 0);
         int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
         buttonRefer.setOnClickListener(new OnClickListener() {
             @Override

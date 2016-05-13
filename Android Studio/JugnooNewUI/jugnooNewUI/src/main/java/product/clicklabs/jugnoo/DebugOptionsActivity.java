@@ -87,7 +87,7 @@ public class DebugOptionsActivity extends BaseActivity {
 
         textViewTitle.measure(0, 0);
         int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 
         relativeLayoutLive4012 = (RelativeLayout) findViewById(R.id.relativeLayoutLive4012);

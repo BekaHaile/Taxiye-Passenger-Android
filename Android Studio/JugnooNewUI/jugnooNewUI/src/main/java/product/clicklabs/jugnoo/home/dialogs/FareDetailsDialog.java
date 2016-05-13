@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -62,6 +60,8 @@ public class FareDetailsDialog {
 			textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
 			TextView textViewThresholdDistance = (TextView) dialog.findViewById(R.id.textViewThresholdDistance);
 			textViewThresholdDistance.setTypeface(Fonts.mavenLight(activity));
+			TextView textViewConvenienceCharge = (TextView) dialog.findViewById(R.id.textViewConvenienceCharge);
+			textViewConvenienceCharge.setTypeface(Fonts.mavenLight(activity));
 
 			RelativeLayout relativeLayoutPriorityTip = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPriorityTip);
 			TextView textViewPriorityTipValue = (TextView) dialog.findViewById(R.id.textViewPriorityTipValue);
@@ -105,10 +105,9 @@ public class FareDetailsDialog {
 
 			if(Data.fareStructure.thresholdDistance > 1.0){
 				textViewThresholdDistance.setVisibility(View.VISIBLE);
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
 				textViewThresholdDistance.setText(String.format(activity.getResources()
 								.getString(R.string.fare_threshold_distance_message_format),
-						decimalFormat.format(Data.fareStructure.thresholdDistance)));
+						Utils.getMoneyDecimalFormat().format(Data.fareStructure.thresholdDistance)));
 			} else{
 				textViewThresholdDistance.setVisibility(View.GONE);
 			}
@@ -119,6 +118,15 @@ public class FareDetailsDialog {
 						Utils.getMoneyDecimalFormat().format(Data.userData.fareFactor)));
 			} else{
 				relativeLayoutPriorityTip.setVisibility(View.GONE);
+			}
+
+			if(Data.fareStructure.convenienceCharge > 0.0d){
+				textViewConvenienceCharge.setVisibility(View.VISIBLE);
+				textViewConvenienceCharge.setText(String.format(activity.getResources()
+								.getString(R.string.convenience_charge_rupees_format),
+						Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge)));
+			} else{
+				textViewConvenienceCharge.setVisibility(View.GONE);
 			}
 
 			dialog.show();

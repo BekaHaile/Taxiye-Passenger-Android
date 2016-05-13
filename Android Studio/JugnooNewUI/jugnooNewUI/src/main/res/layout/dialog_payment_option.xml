@@ -98,7 +98,8 @@
                 wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_barWidth="3dp"
                 wheel:matProg_fillRadius="true"
-                wheel:matProg_progressIndeterminate="true" />
+                wheel:matProg_progressIndeterminate="true"
+                />
 
 
         </RelativeLayout>

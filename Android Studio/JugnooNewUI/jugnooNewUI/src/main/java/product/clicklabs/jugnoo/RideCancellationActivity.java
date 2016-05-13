@@ -119,7 +119,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 		textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 		textViewTitle.measure(0, 0);
 		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 		textViewWantToCancel = (TextView) findViewById(R.id.textViewWantToCancel); textViewWantToCancel.setTypeface(Fonts.mavenRegular(this));
 		
