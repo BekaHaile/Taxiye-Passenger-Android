@@ -222,6 +222,9 @@ public class JSONParser implements Constants {
         String city = userData.optString(KEY_CITY, "");
         String cityReg = userData.optString(KEY_CITY_REG, "");
 
+        int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
+        int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
+
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
@@ -232,7 +235,7 @@ public class JSONParser implements Constants {
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
-                city, cityReg);
+                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled);
 
     }
 

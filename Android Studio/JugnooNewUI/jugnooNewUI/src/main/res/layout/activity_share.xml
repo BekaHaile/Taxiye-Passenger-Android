@@ -1,5 +1,5 @@
-<LinearLayout
-    android:id="@+id/linearLayoutRoot"
+<RelativeLayout
+    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,8 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="FREE RIDES"
+            android:text="@string/promotions"
             android:textColor="@color/white"
+            android:textAllCaps="true"
             android:textSize="@dimen/top_bar_title_text_size"/>
 
         <ImageView
@@ -35,29 +36,35 @@
             android:src="@drawable/back_white_selector"/>
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
-
     <product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="110px"
+        android:layout_height="90px"
         android:visibility="visible"
-        app:pstsIndicatorHeight="10px"
-        app:pstsDividerColor="@color/text_color_hint"
+        app:pstsIndicatorHeight="6px"
+        app:pstsDividerColor="@color/transparent"
         app:pstsShouldExpand="true"
-        app:pstsUnderlineColor="@color/text_color_hint"
-        app:pstsUnderlineHeight="2px"
+        app:pstsUnderlineColor="@color/transparent"
+        app:pstsUnderlineHeight="0px"
+        android:layout_below="@+id/topBar"
         />
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabs"
+        >
     </android.support.v4.view.ViewPager>
 
-</LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/tabs"
+        />
+
+</RelativeLayout>

@@ -870,6 +870,9 @@
 	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9 %s</string>
 	<string name="min">Min</string>
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
-
+	<string name="promotions">Promotions</string>
+	<string name="referrals">Referrals</string>
+	<string name="leaderboard">Leaderboard</string>
+	<string name="activity">Activity</string>
 
 </resources>

@@ -276,4 +276,7 @@ public interface Constants {
 	String KEY_OP_DROP_LATITUDE = "op_drop_latitude";
 	String KEY_OP_DROP_LONGITUDE = "op_drop_longitude";
 
+	String KEY_REFERRAL_LEADERBOARD_ENABLED = "referral_leaderboard_enabled";
+	String KEY_REFERRAL_ACTIVITY_ENABLED = "referral_activity_enabled";
+
 }

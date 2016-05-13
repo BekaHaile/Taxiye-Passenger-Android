@@ -39,6 +39,8 @@ public class UserData {
 	private PaytmRechargeInfo paytmRechargeInfo = null;
 	private String city, cityReg;
 
+	private int referralLeaderboardEnabled, referralActivityEnabled;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
 					String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
@@ -51,7 +53,7 @@ public class UserData {
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
-					String city, String cityReg){
+					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -117,6 +119,9 @@ public class UserData {
 
 		this.city = city;
 		this.cityReg = cityReg;
+
+		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
+		this.referralActivityEnabled = referralActivityEnabled;
 	}
 
 	public double getJugnooBalance() {
@@ -419,5 +424,21 @@ public class UserData {
 
 	public void setCityReg(String cityReg) {
 		this.cityReg = cityReg;
+	}
+
+	public int getReferralLeaderboardEnabled() {
+		return referralLeaderboardEnabled;
+	}
+
+	public void setReferralLeaderboardEnabled(int referralLeaderboardEnabled) {
+		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
+	}
+
+	public int getReferralActivityEnabled() {
+		return referralActivityEnabled;
+	}
+
+	public void setReferralActivityEnabled(int referralActivityEnabled) {
+		this.referralActivityEnabled = referralActivityEnabled;
 	}
 }
