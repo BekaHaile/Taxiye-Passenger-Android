@@ -23,15 +23,14 @@ import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
-import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
+import product.clicklabs.jugnoo.promotion.PromotionsActivity;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -339,14 +338,6 @@ public class MenuBar {
 				} else if(activity instanceof FreshActivity){
 					((FreshActivity)activity).openOrderHistory();
 				}
-			}
-		});
-
-		relativeLayoutReferDriver.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				activity.startActivity(new Intent(activity, ReferDriverActivity.class));
-				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
 

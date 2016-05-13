@@ -130,7 +130,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".PromotionsActivity"
+            android:name=".promotion.PromotionsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
@@ -159,7 +159,7 @@
         </receiver>
 
         <activity
-            android:name=".ShareActivity"
+            android:name=".promotion.ShareActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
@@ -265,11 +265,6 @@
         </activity>
         <activity
             android:name=".fresh.FreshActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".ReferDriverActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>

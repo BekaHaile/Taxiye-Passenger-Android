@@ -3,47 +3,41 @@
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
-    <RelativeLayout
-        android:id="@+id/topBar"
-        android:layout_width="@dimen/screen_width"
-        android:layout_height="@dimen/top_bar_height"
-        android:background="@color/white">
-
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/refer_a_driver"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size" />
-
-        <ImageView
-            android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector" />
-    </RelativeLayout>
-
+    >
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topBar">
+        android:background="@drawable/dropshadow_black"
+        android:layout_marginLeft="26px"
+        android:layout_marginRight="26px"
+        android:layout_marginTop="50px"
+        android:layout_marginBottom="-10px"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/refer_a_driver"
+                android:layout_marginTop="60px"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/top_bar_title_text_size"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                />
+
+
 
             <TextView
                 android:id="@+id/textViewCameAcross"
@@ -54,14 +48,14 @@
                 android:gravity="center"
                 android:text="@string/came_across_auto_driver"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32" />
+                android:textSize="@dimen/text_size_30" />
 
             <ImageView
-                android:layout_width="435px"
-                android:layout_height="226px"
+                android:layout_width="459px"
+                android:layout_height="239px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="55px"
-                android:src="@drawable/ic_refer_driver"
+                android:layout_marginTop="35px"
+                android:src="@drawable/ic_promotions_driver_refer"
                 android:tag="mwar" />
 
             <TextView
@@ -69,31 +63,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="34px"
-                android:visibility="gone"
+                android:layout_marginTop="25px"
                 android:gravity="center"
                 android:text="@string/kindly_recommend_us_to_them"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32" />
+                android:textSize="@dimen/text_size_30" />
 
             <TextView
                 android:id="@+id/textViewIfTheyAreInterested"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="34px"
+                android:layout_marginTop="20px"
                 android:gravity="center"
                 android:text="@string/if_they_are_interested"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32" />
+                android:textSize="@dimen/text_size_30" />
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="85px"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
-                android:layout_marginTop="60px">
+                android:layout_marginTop="30px">
 
                 <ImageView
                     android:layout_width="18px"
@@ -106,7 +99,7 @@
                 <EditText
                     android:id="@+id/editTextName"
                     android:layout_width="match_parent"
-                    android:layout_height="88px"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="44px"
                     android:background="#0000"
@@ -121,7 +114,7 @@
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/text_size_34" />
+                    android:textSize="@dimen/text_size_30" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -134,7 +127,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="85px"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px">
 
@@ -149,7 +142,7 @@
                 <EditText
                     android:id="@+id/editTextPhone"
                     android:layout_width="match_parent"
-                    android:layout_height="88px"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="44px"
                     android:background="#0000"
@@ -163,7 +156,7 @@
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/text_size_34" />
+                    android:textSize="@dimen/text_size_30" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -179,13 +172,13 @@
                 android:id="@+id/buttonRefer"
                 style="@style/ButtonTheme"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="60px"
-                android:layout_marginTop="60px"
+                android:layout_marginBottom="40px"
+                android:layout_marginTop="50px"
                 android:text="@string/refer" />
 
             <TextView
                 android:id="@+id/textViewScroll"
-                android:layout_width="1px"
+                android:layout_width="20px"
                 android:layout_height="1px" />
 
 
@@ -195,10 +188,16 @@
 
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:layout_below="@+id/topBar"
-        android:background="@drawable/shadow_down" />
-
+        android:id="@+id/imageViewBack"
+        android:layout_width="70px"
+        android:layout_height="71px"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="20px"
+        android:padding="20px"
+        android:src="@drawable/ic_cross_grey_selector"
+        android:layout_alignTop="@+id/scrollView"
+        android:layout_alignLeft="@+id/scrollView"
+        />
 
 </RelativeLayout>

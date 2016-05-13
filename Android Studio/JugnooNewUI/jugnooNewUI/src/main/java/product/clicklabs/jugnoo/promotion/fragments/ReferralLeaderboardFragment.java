@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.fragments;
+package product.clicklabs.jugnoo.promotion.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.ShareActivity;
-import product.clicklabs.jugnoo.adapters.LeaderboardItemsAdapter;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.promotion.adapters.LeaderboardItemsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.Ranklist;
@@ -29,7 +29,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class ShareLeaderboardFragment extends Fragment implements FlurryEventNames, Constants {
+public class ReferralLeaderboardFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private LinearLayout linearLayoutRoot;
 
@@ -50,7 +50,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(ShareLeaderboardFragment.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(ReferralLeaderboardFragment.class.getSimpleName() + " started");
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_share_leaderboard, container, false);
+        rootView = inflater.inflate(R.layout.fragment_referral_leaderboard, container, false);
 
 
         activity = (ShareActivity) getActivity();

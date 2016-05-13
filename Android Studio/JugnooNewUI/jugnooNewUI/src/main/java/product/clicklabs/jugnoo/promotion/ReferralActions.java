@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.promotion;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +15,9 @@ import com.facebook.CallbackManager;
 
 import java.util.List;
 
-import product.clicklabs.jugnoo.adapters.ShareIntentListAdapter;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.promotion.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;

@@ -1,8 +1,8 @@
 package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -26,16 +26,15 @@ import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
-import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.promotion.PromotionsActivity;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -318,9 +317,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((FreshActivity)activity).openOrderHistory();
                     //drawerLayout.closeDrawer(menuLayout);
                 }
-            } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
-                activity.startActivity(new Intent(activity, ReferDriverActivity.class));
-                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
                     activity.startActivity(new Intent(activity, SupportActivity.class));

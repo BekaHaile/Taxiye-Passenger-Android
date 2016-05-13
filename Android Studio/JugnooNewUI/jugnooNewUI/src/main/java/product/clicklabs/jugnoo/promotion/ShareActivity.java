@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.promotion;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -15,11 +15,17 @@ import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.adapters.ShareFragmentAdapter;
+import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.promotion.adapters.PromotionsFragmentAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.fragments.ShareActivityFragment;
-import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -47,7 +53,7 @@ public class ShareActivity extends BaseFragmentActivity {
 	TextView textViewTitle;
 
 	ViewPager viewPager;
-	ShareFragmentAdapter shareFragmentAdapter;
+	PromotionsFragmentAdapter promotionsFragmentAdapter;
 	PagerSlidingTabStrip tabs;
     private CallbackManager callbackManager;
 	public boolean fromDeepLink = false;
@@ -100,8 +106,8 @@ public class ShareActivity extends BaseFragmentActivity {
         callbackManager = CallbackManager.Factory.create();
 
 		viewPager = (ViewPager) findViewById(R.id.viewPager);
-		shareFragmentAdapter = new ShareFragmentAdapter(getSupportFragmentManager());
-		viewPager.setAdapter(shareFragmentAdapter);
+		promotionsFragmentAdapter = new PromotionsFragmentAdapter(getSupportFragmentManager());
+		viewPager.setAdapter(promotionsFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color, R.color.text_color);
@@ -109,11 +115,8 @@ public class ShareActivity extends BaseFragmentActivity {
 		tabs.setViewPager(viewPager);
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
-
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		getLeaderboardCall();
 
@@ -251,9 +254,9 @@ public class ShareActivity extends BaseFragmentActivity {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + pos);
 		if (page != null) {
 			if(pos == 1){
-				((ShareLeaderboardFragment) page).update();
+				((ReferralLeaderboardFragment) page).update();
 			} else if(pos == 2){
-				((ShareActivityFragment) page).update();
+				((ReferralActivityFragment) page).update();
 			}
 		}
 	}

@@ -1,19 +1,19 @@
-package product.clicklabs.jugnoo.adapters;
+package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import product.clicklabs.jugnoo.fragments.ShareActivityFragment;
-import product.clicklabs.jugnoo.fragments.ShareEarnFragment;
-import product.clicklabs.jugnoo.fragments.ShareLeaderboardFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralsFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 
 /**
  * Created by shankar on 12/29/15.
  */
-public class ShareFragmentAdapter extends FragmentPagerAdapter {
+public class PromotionsFragmentAdapter extends FragmentPagerAdapter {
 
-	public ShareFragmentAdapter(FragmentManager fm) {
+	public PromotionsFragmentAdapter(FragmentManager fm) {
 		super(fm);
 	}
 
@@ -22,15 +22,15 @@ public class ShareFragmentAdapter extends FragmentPagerAdapter {
 		Fragment fragment = null;
 		switch(position){
 			case 0:
-				fragment = new ShareEarnFragment();
+				fragment = new ReferralsFragment();
 				break;
 
 			case 1:
-				fragment = new ShareLeaderboardFragment();
+				fragment = new ReferralLeaderboardFragment();
 				break;
 
 			case 2:
-				fragment = new ShareActivityFragment();
+				fragment = new ReferralActivityFragment();
 				break;
 		}
 

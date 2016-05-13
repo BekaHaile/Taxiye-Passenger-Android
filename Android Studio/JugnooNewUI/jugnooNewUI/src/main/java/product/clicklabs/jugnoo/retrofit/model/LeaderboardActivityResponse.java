@@ -18,7 +18,7 @@ public class LeaderboardActivityResponse {
     private Integer nFirstRides;
     @SerializedName("nMoneyEarned")
     @Expose
-    private Integer nMoneyEarned;
+    private Double nMoneyEarned;
     @SerializedName("date")
     @Expose
     private String date;
@@ -82,7 +82,7 @@ public class LeaderboardActivityResponse {
      * @return
      * The nMoneyEarned
      */
-    public Integer getNMoneyEarned() {
+    public Double getNMoneyEarned() {
         return nMoneyEarned;
     }
 
@@ -91,7 +91,7 @@ public class LeaderboardActivityResponse {
      * @param nMoneyEarned
      * The nMoneyEarned
      */
-    public void setNMoneyEarned(Integer nMoneyEarned) {
+    public void setNMoneyEarned(Double nMoneyEarned) {
         this.nMoneyEarned = nMoneyEarned;
     }
 

@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/ic_cross_white_grey_selector"/>
+            android:src="@drawable/ic_cross_grey_selector"/>
     </RelativeLayout>
 
     <ImageView

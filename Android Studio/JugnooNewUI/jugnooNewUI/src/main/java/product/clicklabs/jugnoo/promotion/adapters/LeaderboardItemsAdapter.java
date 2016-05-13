@@ -1,7 +1,6 @@
-package product.clicklabs.jugnoo.adapters;
+package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

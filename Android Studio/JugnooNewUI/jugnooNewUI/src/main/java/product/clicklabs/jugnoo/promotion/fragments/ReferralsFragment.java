@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.fragments;
+package product.clicklabs.jugnoo.promotion.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -15,9 +15,10 @@ import com.squareup.picasso.Picasso;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.ReferralActions;
-import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.promotion.ReferralActions;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -27,13 +28,14 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 
 
-public class ShareEarnFragment extends Fragment {
+public class ReferralsFragment extends Fragment {
 
-	private LinearLayout linearLayoutRoot;
+	private RelativeLayout relativeLayoutRoot;
 
 	private ImageView imageViewLogo;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo;
 	private Button buttonInvite;
+	private RelativeLayout relativeLayoutReferADriver;
 
 	private View rootView;
     private ShareActivity activity;
@@ -43,7 +45,7 @@ public class ShareEarnFragment extends Fragment {
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(ShareEarnFragment.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(ReferralsFragment.class.getSimpleName() + " started");
     }
 
     @Override
@@ -55,27 +57,30 @@ public class ShareEarnFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_share_earn, container, false);
+        rootView = inflater.inflate(R.layout.fragment_referrals, container, false);
 
 
         activity = (ShareActivity) getActivity();
 
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		relativeLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(relativeLayoutRoot != null) {
+				new ASSL(activity, relativeLayoutRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		imageViewLogo = (ImageView) rootView.findViewById(R.id.imageViewLogo);
-		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.mavenLight(activity));
-		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenLight(activity));
-		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.mavenRegular(activity));
+		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenRegular(activity));
+		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenRegular(activity));
 
-		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenLight(activity));
+		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenMedium(activity));
 		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenRegular(activity));
+
+		relativeLayoutReferADriver = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferADriver);
+		((TextView)rootView.findViewById(R.id.textViewReferDriver)).setTypeface(Fonts.mavenRegular(activity));
 
 		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -114,13 +119,20 @@ public class ShareEarnFragment extends Fragment {
 			}
 		});
 
+		relativeLayoutReferADriver.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getReferDriverDialog().show();
+			}
+		});
+
 		try {
 			textViewCode.setText(Data.userData.referralCode);
 			textViewDesc.setText(Data.referralMessages.referralShortMessage);
 
 			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
 				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
-						.placeholder(R.drawable.free_rides_pic_new).error(R.drawable.free_rides_pic_new)
+						.placeholder(R.drawable.ic_promotions_friend_refer).error(R.drawable.ic_promotions_friend_refer)
 						.into(imageViewLogo);
 			}
 			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
@@ -133,11 +145,19 @@ public class ShareEarnFragment extends Fragment {
 		return rootView;
 	}
 
+	private ReferDriverDialog referDriverDialog;
+	private ReferDriverDialog getReferDriverDialog(){
+		if(referDriverDialog == null){
+			referDriverDialog = new ReferDriverDialog(activity);
+		}
+		return referDriverDialog;
+	}
+
 
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(relativeLayoutRoot);
         System.gc();
 	}
 

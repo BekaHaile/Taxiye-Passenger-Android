@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/ic_cross_white" android:state_pressed="true"/>
+    <item android:drawable="@drawable/ic_cross_grey_pressed" android:state_pressed="true"/>
     <item android:drawable="@drawable/ic_cross_grey"/>
     
 </selector>

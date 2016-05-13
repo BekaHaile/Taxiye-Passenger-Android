@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.fragments;
+package product.clicklabs.jugnoo.promotion.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,16 +10,18 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import java.text.DecimalFormat;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.ShareActivity;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class ShareActivityFragment extends Fragment implements FlurryEventNames, Constants {
+public class ReferralActivityFragment extends Fragment implements FlurryEventNames, Constants {
 
 	private LinearLayout linearLayoutRoot;
 
@@ -34,7 +36,7 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
         super.onStart();
         FlurryAgent.init(activity, Config.getFlurryKey());
         FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(ShareActivityFragment.class.getSimpleName() + " started");
+        FlurryAgent.onEvent(ReferralActivityFragment.class.getSimpleName() + " started");
     }
 
     @Override
@@ -46,7 +48,7 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_share_activity, container, false);
+        rootView = inflater.inflate(R.layout.fragment_referral_activity, container, false);
 
 
         activity = (ShareActivity) getActivity();
@@ -89,9 +91,10 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 	public void update(){
 		try{
 			if(activity.leaderboardActivityResponse != null){
-				textViewNumberOfDownloadsValue.setText(""+activity.leaderboardActivityResponse.getNDownloads());
-				textViewNumberOfFirstRidesValue.setText(""+activity.leaderboardActivityResponse.getNFirstRides());
-				textViewMoneyEarnedValue.setText(""+activity.leaderboardActivityResponse.getNMoneyEarned());
+				textViewNumberOfDownloadsValue.setText(String.valueOf(activity.leaderboardActivityResponse.getNDownloads()));
+				textViewNumberOfFirstRidesValue.setText(String.valueOf(activity.leaderboardActivityResponse.getNFirstRides()));
+				DecimalFormat decimalFormat = new DecimalFormat("#");
+				textViewMoneyEarnedValue.setText(decimalFormat.format(activity.leaderboardActivityResponse.getNMoneyEarned()));
 				textViewDataEffective.setText(String.format(activity.getResources()
 						.getString(R.string.data_effective_format), activity.leaderboardActivityResponse.getDate()));
 			}

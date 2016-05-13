@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
 
@@ -675,6 +676,19 @@ public class Utils {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public static Shader textColorGradient(Context context, TextView textView){
+		textView.measure(0, 0);
+		int mWidth = textView.getMeasuredWidth();
+		Shader shader;
+		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
+		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
+				context.getResources().getColor(R.color.theme_color),
+				context.getResources().getColor(R.color.theme_color_end), tile_mode);
+		shader = lin_grad;
+
+		return shader;
 	}
 
 	public static Shader textColorGradient(Context context, int mWidth){

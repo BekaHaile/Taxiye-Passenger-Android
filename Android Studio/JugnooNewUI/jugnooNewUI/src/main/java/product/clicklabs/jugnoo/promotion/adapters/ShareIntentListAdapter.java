@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.adapters;
+package product.clicklabs.jugnoo.promotion.adapters;
 
 /**
  * Created by Shankar on 12/8/2015.

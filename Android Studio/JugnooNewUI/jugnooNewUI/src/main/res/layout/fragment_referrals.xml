@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutRoot"
+    android:id="@+id/relativeLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <LinearLayout
             android:id="@+id/relativeLayoutShare"
             android:layout_width="match_parent"
@@ -24,11 +21,11 @@
 
             <ImageView
                 android:id="@+id/imageViewLogo"
-                android:layout_width="589px"
-                android:layout_height="443px"
+                android:layout_width="619px"
+                android:layout_height="283px"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5px"
-                android:src="@drawable/free_rides_pic_new"
+                android:layout_marginTop="30px"
+                android:src="@drawable/ic_promotions_friend_refer"
                 android:tag="mlar"
                 android:visibility="visible"
                 android:scaleType="centerCrop"
@@ -106,9 +103,8 @@
                 android:paddingRight="40px"
                 android:text="@string/free_ride_desc"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
+                android:textSize="@dimen/text_size_28"
                 />
-            <!-- #6B6B76-->
 
             <TextView
                 android:id="@+id/textViewMoreInfo"
@@ -119,11 +115,11 @@
                 android:gravity="center"
                 android:text="More Info"
                 android:textColor="@color/text_color_theme_selector"
-                android:textSize="@dimen/text_size_40"
+                android:textSize="@dimen/text_size_36"
                 />
 
             <ImageView
-                android:layout_width="174px"
+                android:layout_width="164px"
                 android:layout_height="4px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="-2px"
@@ -135,5 +131,42 @@
         </LinearLayout>
     </ScrollView>
 
+    <RelativeLayout
+        android:id="@+id/relativeLayoutReferADriver"
+        android:layout_width="wrap_content"
+        android:layout_height="158px"
+        android:layout_alignParentBottom="true"
+        >
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/stroke_color_light"
+            android:layout_above="@+id/textViewReferDriver"
+            />
+
+        <TextView
+            android:id="@+id/textViewReferDriver"
+            android:layout_width="match_parent"
+            android:layout_height="88px"
+            android:textColor="@color/text_color_light_selector"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_30"
+            android:text="@string/want_to_refer_a_driver"
+            android:textAllCaps="true"
+            android:background="@color/menu_item_selector_color"
+            android:layout_alignParentBottom="true"
+            />
+
+        <ImageView
+            android:layout_width="126px"
+            android:layout_height="126px"
+            android:background="@drawable/ic_promotions_driver_refer_selector"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30px"
+            android:tag="mwar"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
