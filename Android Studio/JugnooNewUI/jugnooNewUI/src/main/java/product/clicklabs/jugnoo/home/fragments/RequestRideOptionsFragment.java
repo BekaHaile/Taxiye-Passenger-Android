@@ -95,12 +95,13 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutPaymentMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentMode);
         imageViewPaymentMode = (ImageView) rootView.findViewById(R.id.imageViewPaymentMode);
         textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
-        textViewPaymentModeValue.setTypeface(Fonts.mavenLight(activity));
+        textViewPaymentModeValue.setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
-        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewFare)).setTypeface(Fonts.mavenLight(activity));
         textViewMinFareValue = (TextView) rootView.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewPriorityTip = (ImageView) rootView.findViewById(R.id.imageViewPriorityTip);
 
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
@@ -231,7 +232,7 @@ public class RequestRideOptionsFragment extends Fragment {
                         matched = true;
                         break;
                     }
-                }//Data.regions.remove(0);
+                }
                 if(!matched){
                     regionSelected = Data.regions.get(0);
                 }

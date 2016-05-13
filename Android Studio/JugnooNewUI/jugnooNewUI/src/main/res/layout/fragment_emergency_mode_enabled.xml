@@ -58,15 +58,28 @@
             />
 
         <TextView
-            android:id="@+id/textViewEmergencyModeEnabledMessage"
+            android:id="@+id/textViewEmergencyModeEnabledTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="64px"
             android:gravity="center_horizontal"
+            android:text="@string/emergency_mode_enabled_title"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+
+            />
+
+        <TextView
+            android:id="@+id/textViewEmergencyModeEnabledMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10px"
+            android:gravity="center_horizontal"
             android:text="@string/emergency_mode_enabled_message"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="@dimen/text_size_30"
 
             />
 
@@ -111,7 +124,7 @@
                     android:layout_marginLeft="80px"
                     android:layout_marginRight="20px"
                     android:layout_toLeftOf="@+id/textViewOr"
-                    android:src="@color/text_color_hint"
+                    android:src="@color/stroke_color_light"
                     />
 
                 <TextView
@@ -132,7 +145,7 @@
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="80px"
                     android:layout_toRightOf="@+id/textViewOr"
-                    android:src="@color/text_color_hint"
+                    android:src="@color/stroke_color_light"
                     />
 
             </RelativeLayout>

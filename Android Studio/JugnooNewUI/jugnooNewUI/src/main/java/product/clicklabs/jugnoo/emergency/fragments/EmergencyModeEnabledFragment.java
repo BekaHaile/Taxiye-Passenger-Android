@@ -50,7 +50,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 	private TextView textViewTitle;
 	private ImageView imageViewBack;
 
-	private TextView textViewEmergencyModeEnabledMessage;
+	private TextView textViewEmergencyModeEnabledTitle, textViewEmergencyModeEnabledMessage;
 	private Button buttonCallPolice, buttonCallEmergencyContact, buttonDisableEmergencyMode;
 	private LinearLayout linearLayoutDisableEmergencyMode;
 
@@ -110,6 +110,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
+		textViewEmergencyModeEnabledTitle = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledTitle);
+		textViewEmergencyModeEnabledTitle.setTypeface(Fonts.mavenRegular(activity));
 		textViewEmergencyModeEnabledMessage = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledMessage);
 		textViewEmergencyModeEnabledMessage.setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOr)).setTypeface(Fonts.mavenLight(activity));

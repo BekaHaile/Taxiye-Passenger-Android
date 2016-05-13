@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/sliding_bottom_bg_color"
     android:orientation="vertical">
 
     <LinearLayout
@@ -21,44 +20,26 @@
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:orientation="vertical"
             >
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/imageViewPaymentMode"
+                android:layout_width="68px"
+                android:layout_height="22px"
+                android:src="@drawable/ic_paytm_small"
+                android:tag="mwar"/>
+
+            <TextView
+                android:id="@+id/textViewPaymentModeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="75px"
+                android:layout_marginTop="5px"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
-
-                <ImageView
-                    android:id="@+id/imageViewPaymentMode"
-                    android:layout_width="68px"
-                    android:layout_height="22px"
-                    android:src="@drawable/ic_paytm_small"
-                    android:tag="mwar"/>
-
-                <TextView
-                    android:id="@+id/textViewPaymentModeValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5px"
-                    android:gravity="center"
-                    android:text="200"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"/>
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="27px"
-                android:layout_height="27px"
-                android:layout_marginLeft="15px"
-                android:src="@drawable/ic_payment_selected"
-                android:tag="mwar"
-                />
+                android:text="200"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_28"/>
 
         </LinearLayout>
 
@@ -75,43 +56,60 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
+                android:orientation="horizontal"
                 >
 
                 <TextView
-                    android:id="@+id/textViewMinFare"
+                    android:id="@+id/textViewMin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/nl_min_fare"
+                    android:text="@string/min"
                     android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28"
+                    android:layout_marginRight="2px"
+                    />
+
+                <ImageView
+                    android:id="@+id/imageViewPriorityTip"
+                    android:layout_width="29px"
+                    android:layout_height="34px"
+                    android:tag="mwar"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_surge_grey"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="7px"
+                    android:layout_marginRight="7px"
+
+                    />
 
                 <TextView
-                    android:id="@+id/textViewMinFareValue"
+                    android:id="@+id/textViewFare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5px"
                     android:gravity="center"
-                    android:text="20"
+                    android:text="@string/fare"
                     android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28"
+                    android:layout_marginLeft="2px"
+                    />
+
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageViewPriorityTip"
-                android:layout_width="29px"
-                android:layout_height="34px"
-                android:tag="mwar"
-                android:layout_marginLeft="8px"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_surge_grey"/>
+            <TextView
+                android:id="@+id/textViewMinFareValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5px"
+                android:gravity="center"
+                android:text="20"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_28"/>
 
         </LinearLayout>
 
@@ -149,7 +147,9 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutMultipleSupplyMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/sliding_bottom_bg_color"
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewVehicles"
@@ -196,14 +196,6 @@
                         android:text="200"
                         android:textColor="@color/text_color_light_selector"
                         android:textSize="@dimen/text_size_30"/>
-
-                    <ImageView
-                        android:layout_width="27px"
-                        android:layout_height="27px"
-                        android:layout_marginLeft="15px"
-                        android:src="@drawable/ic_payment_selected"
-                        android:tag="mwar"
-                        />
 
                 </LinearLayout>
 

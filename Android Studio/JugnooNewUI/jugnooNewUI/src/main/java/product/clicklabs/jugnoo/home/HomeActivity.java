@@ -283,7 +283,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Center Location Layout
-    RelativeLayout centreLocationRl;
+    RelativeLayout centreLocationRl, relativeLayoutPinEtaRotate;
     ImageView centreLocationPin, imageViewCenterPinMargin;
 	TextView textViewCentrePinETA;
 
@@ -651,6 +651,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Center location layout
         centreLocationRl = (RelativeLayout) findViewById(R.id.centreLocationRl);
+        relativeLayoutPinEtaRotate = (RelativeLayout) findViewById(R.id.relativeLayoutPinEtaRotate);
         centreLocationPin = (ImageView) findViewById(R.id.centreLocationPin);
 		imageViewCenterPinMargin = (ImageView) findViewById(R.id.imageViewCenterPinMargin);
 		textViewCentrePinETA = (TextView) findViewById(R.id.textViewCentrePinETA);
@@ -814,6 +815,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 Data.dropLatLng = null;
+                dropLocationSet = false;
                 dropLocationSearched = false;
                 textViewDestSearch.setText("");
                 imageViewDropCross.setVisibility(View.GONE);
@@ -1968,7 +1970,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //							genieLayout.setVisibility(View.GONE);
 							centreLocationRl.setVisibility(View.GONE);
                             changeLocalityLayout.setVisibility(View.GONE);
-                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
 							Data.locationSettingsNoPressed = false;
 						}
@@ -1978,7 +1979,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							imageViewRideNow.setVisibility(View.VISIBLE);
 //							genieLayout.setVisibility(View.VISIBLE);
 							centreLocationRl.setVisibility(View.VISIBLE);
-                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 						}
 
                         checkForFareAvailablity();
@@ -2102,6 +2102,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewAppToggle.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2164,6 +2165,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewAppToggle.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2211,6 +2213,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewAppToggle.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2225,6 +2228,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
+                        topBar.imageViewAppToggle.setVisibility(View.GONE);
 						setGoogleMapPadding(0);
 
                         linearLayoutRideSummaryContainerSetVisiblity(View.GONE);
@@ -2630,7 +2634,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void setDropLocationMarker(){
-		if(Data.dropLatLng != null) {
+		if(Data.dropLatLng != null
+                && PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+                && PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                && PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                && PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
 			if (dropLocationMarker != null) {
 				dropLocationMarker.remove();
 			}
@@ -3885,6 +3893,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		stopPickupAddressFetcherThread();
 		try {
             progressBar.setVisibility(View.VISIBLE);
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                relativeLayoutPinEtaRotate.setVisibility(View.GONE);
+            }
             textView.setText("");
             textView.setHint("Getting address...");
             pickupAddressFetcherThread = new Thread(new Runnable() {
@@ -3918,6 +3929,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void run() {
                 progressBar.setVisibility(View.GONE);
+                if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                    relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
+                }
                 if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                     textView.setHint(getResources().getString(R.string.set_pickup_location));
                     textView.setText(address);
@@ -4792,7 +4806,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
 
             Data.pickupLatLng = pickupLatLng;
-            Data.dropLatLng = null;
 
             //30.7500, 76.7800
 			//22.971723, 78.754263
@@ -5358,7 +5371,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         initialMyLocationBtn.setVisibility(View.VISIBLE);
         imageViewRideNow.setVisibility(View.VISIBLE);
         centreLocationRl.setVisibility(View.VISIBLE);
-        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
 
@@ -5768,6 +5780,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }, 150);
 
+            Data.pickupLatLng = null;
+            Data.dropLatLng = null;
+            dropLocationSet = false;
             Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
             setUserData();
 
@@ -5971,14 +5986,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     topBar.topRl.setBackgroundResource(R.color.white);
                     topBar.title.setText(getResources().getString(R.string.app_name));
-                    topBar.setupFreshUI();
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 topBar.topRl.setBackgroundResource(R.color.white);
                 topBar.title.setText(getResources().getString(R.string.app_name));
-                topBar.setupFreshUI();
 
                 localModeEnabled = 0;
             }
@@ -6582,10 +6595,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
 
+                if(Data.dropLatLng == null){
+                    translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                    translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+                }
                 Data.dropLatLng = searchResult.latLng;
                 dropLocationSet = true;
-                translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
-                translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
                 relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_grey);
                 imageViewDropCross.setVisibility(View.VISIBLE);
             }
