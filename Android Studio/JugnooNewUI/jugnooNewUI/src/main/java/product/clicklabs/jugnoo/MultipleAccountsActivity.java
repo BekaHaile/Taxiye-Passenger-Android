@@ -68,7 +68,9 @@ public class MultipleAccountsActivity extends BaseActivity {
         previousAccountsAdapter = new PreviousAccountsAdapter(this);
         listViewPreviousAccounts.setAdapter(previousAccountsAdapter);
 
-
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 

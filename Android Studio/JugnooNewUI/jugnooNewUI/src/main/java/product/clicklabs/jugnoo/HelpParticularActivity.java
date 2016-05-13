@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -58,7 +59,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.mavenMedium(this));
@@ -67,6 +68,10 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setDatabaseEnabled(true);
+
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 
         //override the web client to open all links in the same webview

@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
             android:splitMotionEvents="false"
-            android:background="@drawable/nl_background_theme_color"
+            android:background="@color/white"
             >
 
             <TextView

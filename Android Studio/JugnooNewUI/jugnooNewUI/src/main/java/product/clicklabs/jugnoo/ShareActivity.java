@@ -111,6 +111,10 @@ public class ShareActivity extends BaseFragmentActivity {
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
 
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
+
 		getLeaderboardCall();
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {

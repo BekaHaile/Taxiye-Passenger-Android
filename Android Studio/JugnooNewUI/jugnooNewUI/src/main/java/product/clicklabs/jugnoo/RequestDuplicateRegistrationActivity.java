@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -86,6 +87,9 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 		imageViewBack.setOnClickListener(new OnClickListener() {
 

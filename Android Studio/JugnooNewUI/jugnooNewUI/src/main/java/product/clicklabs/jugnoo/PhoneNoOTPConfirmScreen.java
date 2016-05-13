@@ -124,7 +124,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -149,6 +149,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(mWidth));
 
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
