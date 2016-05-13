@@ -303,11 +303,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
-    private TextView textViewSendInvites, textViewSendInvites2;
+    private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp;
 
     private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
-    private ImageView findDriverJugnooAnimation;
+    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp;
 
 
     // data variables declaration
@@ -384,7 +384,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public ASSL assl;
 
 
-    private int showAllDrivers = 0, showDriverInfo = 0;
+    private int showAllDrivers = 0, showDriverInfo = 0, rating = 0;
 
     private boolean intentFired = false, dropLocationSearched = false;
 
@@ -670,6 +670,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
         ((TextView)findViewById(R.id.textViewRSInvoice)).setTypeface(Fonts.mavenLight(this));
         ((TextView)findViewById(R.id.textViewRSRateYourRide)).setTypeface(Fonts.mavenRegular(this));
+        imageViewThumbsDown = (ImageView) findViewById(R.id.imageViewThumbsDown);
+        imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
+        textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.mavenRegular(this));
+        textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.mavenRegular(this));
+
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove); textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
@@ -1061,42 +1066,41 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     String feedbackStr = editTextRSFeedback.getText().toString().trim();
-                    int rating = (int) ratingBarRSFeedback.getRating();
-                    rating = Math.abs(rating);
+                    //int rating = (int) ratingBarRSFeedback.getRating();
+                    //rating = Math.abs(rating);
                     Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
                     String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
                     boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
                     if (0 == rating) {
-						DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
-						FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
-					} else {
-						if(Data.feedbackReasons.size() > 0 && rating <= 3){
-							if(feedbackReasons.length() > 0){
-								if(isLastReasonSelected && feedbackStr.length() == 0){
-									textViewRSOtherError.setText(getString(R.string.star_required));
-									return;
-								}
-							}
-							else{
-								DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
-								return;
-							}
-						}
+                        DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
+                        FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                    } else {
+                        if (Data.feedbackReasons.size() > 0 && rating <= 3) {
+                            if (feedbackReasons.length() > 0) {
+                                if (isLastReasonSelected && feedbackStr.length() == 0) {
+                                    textViewRSOtherError.setText(getString(R.string.star_required));
+                                    return;
+                                }
+                            } else {
+                                DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
+                                return;
+                            }
+                        }
 
-						if (feedbackStr.length() > 300) {
-							editTextRSFeedback.requestFocus();
-							editTextRSFeedback.setError(getString(R.string.review_must_be_in));
-						} else {
-							submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
-								rating, feedbackStr, feedbackReasons);
-							FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
-							if (feedbackStr.length() > 0) {
-								FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
-							}
-						}
-					}
+                        if (feedbackStr.length() > 300) {
+                            editTextRSFeedback.requestFocus();
+                            editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+                        } else {
+                            submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+                                    rating, feedbackStr, feedbackReasons);
+                            FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
+                            if (feedbackStr.length() > 0) {
+                                FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
+                            }
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1121,7 +1125,40 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
+        imageViewThumbsUp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rating = 5;
+                imageViewThumbsDown.clearAnimation();
+                //imageViewThumbsUp.clearAnimation();
+                textViewThumbsUp.setVisibility(View.VISIBLE);
+                textViewThumbsDown.setVisibility(View.INVISIBLE);
+                imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
+                textViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
 
+                setZeroRatingView();
+            }
+        });
+
+        imageViewThumbsDown.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rating = 1;
+                imageViewThumbsUp.clearAnimation();
+                //imageViewThumbsDown.clearAnimation();
+                textViewThumbsDown.setVisibility(View.VISIBLE);
+                textViewThumbsUp.setVisibility(View.INVISIBLE);
+                imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
+                textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
+
+                textViewRSWhatImprove.setVisibility(View.VISIBLE);
+                gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+                layoutParams.height = (int) (ASSL.Yscale() * 150);
+                editTextRSFeedback.setLayoutParams(layoutParams);
+            }
+        });
 
         // map object initialized
         if (map != null) {
@@ -1840,9 +1877,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
                         textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-                            "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
+                                "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
                         textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                             ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
+
+                        imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
+                        imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
 
@@ -2220,6 +2260,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
 
 
     private void callT20AndReferAllDialog(PassengerScreenMode mode){

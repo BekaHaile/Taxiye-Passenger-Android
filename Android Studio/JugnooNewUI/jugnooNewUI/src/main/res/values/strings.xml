@@ -109,6 +109,8 @@
 	<string name="invite_friends">Invite Friends</string>
 	<string name="invite_friends_caps">INVITE FRIENDS</string>
 	<string name="about">About</string>
+	<string name="great">Great!</string>
+	<string name="bad">Bad!</string>
 	<string name="support">Support</string>
 	<string name="sos">SOS</string>
 	<string name="language_preferences">Language Preferences</string>
@@ -269,7 +271,7 @@
 	<string name="total_fare">TOTAL FARE</string>
 	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
-	<string name="rate_your_ride">RATE YOUR RIDE</string>
+	<string name="rate_your_ride">How was your ride ?</string>
 	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
 	<string name="skip">Skip</string>
 	<string name="star_required">* Required</string>
