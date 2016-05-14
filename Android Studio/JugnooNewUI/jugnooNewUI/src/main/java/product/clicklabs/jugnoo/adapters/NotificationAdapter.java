@@ -20,7 +20,6 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.promotion.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -205,7 +204,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else if(AppLinkIndex.PROMOTIONS.getOrdinal() == deepInt){
                 if(AppStatus.getInstance(activity).isOnline(activity)) {
-                    intent.setClass(activity, PromotionsActivity.class);
+                    intent.setClass(activity, ShareActivity.class);
                     activity.startActivity(intent);
                 } else {
                     DialogPopup.dialogNoInternet(activity,

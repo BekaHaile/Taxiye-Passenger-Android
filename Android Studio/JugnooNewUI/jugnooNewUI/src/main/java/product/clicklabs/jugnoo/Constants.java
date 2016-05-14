@@ -278,5 +278,6 @@ public interface Constants {
 
 	String KEY_REFERRAL_LEADERBOARD_ENABLED = "referral_leaderboard_enabled";
 	String KEY_REFERRAL_ACTIVITY_ENABLED = "referral_activity_enabled";
+	String KEY_CODE = "code";
 
 }

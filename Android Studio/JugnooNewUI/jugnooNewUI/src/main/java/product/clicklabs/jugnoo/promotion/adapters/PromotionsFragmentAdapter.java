@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.promotion.fragments.PromotionsFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralsFragment;
@@ -30,11 +31,14 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter {
 				return new ReferralsFragment();
 
 			case 1:
+				return new PromotionsFragment();
+
+			case 2:
 				if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1) {
 					return new ReferralLeaderboardFragment();
 				}
 
-			case 2:
+			case 3:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {
 					return new ReferralActivityFragment();
 				}
@@ -45,7 +49,7 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public int getCount() {
-		int count = 1;
+		int count = 2;
 		if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1){
 			count = count + 1;
 		}
@@ -59,14 +63,16 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		switch (position) {
 			case 0:
-				return context.getResources().getString(R.string.referrals);
+				return context.getResources().getString(R.string.referrals).toUpperCase();
 			case 1:
-				if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1) {
-					return context.getResources().getString(R.string.leaderboard);
-				}
+				return context.getResources().getString(R.string.nl_offers).toUpperCase();
 			case 2:
+				if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1) {
+					return context.getResources().getString(R.string.leaderboard).toUpperCase();
+				}
+			case 3:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {
-					return context.getResources().getString(R.string.activity);
+					return context.getResources().getString(R.string.activity).toUpperCase();
 				}
 		}
 		return "";

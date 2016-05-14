@@ -112,6 +112,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color, R.color.text_color);
 		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.NORMAL);
+		tabs.setTextSize(30);
 		tabs.setViewPager(viewPager);
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
@@ -139,10 +140,14 @@ public class ShareActivity extends BaseFragmentActivity {
 				if(position == 0){
 					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_INVITE_FRIENDS);
 				} else if(position == 1){
-					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_LEADERBOARD);
+					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_OFFERS);
 				} else if(position == 2){
+					FlurryEventLogger.event(ShareActivity.this, Data.userData.getReferralLeaderboardEnabled() == 1 ?
+							FlurryEventNames.WHO_CLICKED_ON_LEADERBOARD : FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
+				} else if(position == 3){
 					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
 				}
+				Utils.hideSoftKeyboard(ShareActivity.this, imageViewBack);
 			}
 
 			@Override
@@ -208,7 +213,7 @@ public class ShareActivity extends BaseFragmentActivity {
 											if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 												Log.v("success at", "leaderboeard");
 												ShareActivity.this.leaderboardResponse = leaderboardResponse;
-												updateFragment(1);
+												updateFragment(2);
 											} else {
 												retryLeaderboardDialog(message);
 											}
@@ -253,13 +258,13 @@ public class ShareActivity extends BaseFragmentActivity {
 	public void updateFragment(int pos) {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + pos);
 		if (page != null) {
-			if(pos == 1 && Data.userData.getReferralLeaderboardEnabled() == 1){
+			if(pos == 2 && Data.userData.getReferralLeaderboardEnabled() == 1){
 				((ReferralLeaderboardFragment) page).update();
 
-			} else if(pos == 1 && Data.userData.getReferralLeaderboardEnabled() != 1){
+			} else if(pos == 2 && Data.userData.getReferralLeaderboardEnabled() != 1){
 				((ReferralActivityFragment) page).update();
 
-			} else if(pos == 2){
+			} else if(pos == 3){
 				((ReferralActivityFragment) page).update();
 			}
 		}
@@ -302,7 +307,7 @@ public class ShareActivity extends BaseFragmentActivity {
 										if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
 											if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 												ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
-												updateFragment(Data.userData.getReferralLeaderboardEnabled() == 1 ? 2 : 1);
+												updateFragment(Data.userData.getReferralLeaderboardEnabled() == 1 ? 3 : 2);
 												Log.v("success at", "leaderboeard");
 											} else {
 												DialogPopup.alertPopup(ShareActivity.this, "", message);

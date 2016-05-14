@@ -33,7 +33,6 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
-import product.clicklabs.jugnoo.promotion.PromotionsActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -279,7 +278,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
                     if(AppStatus.getInstance(activity).isOnline(activity)) {
-                        activity.startActivity(new Intent(activity, PromotionsActivity.class));
+                        activity.startActivity(new Intent(activity, ShareActivity.class));
                         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
                     } else {

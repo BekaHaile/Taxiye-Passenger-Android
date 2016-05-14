@@ -29,7 +29,6 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
-import product.clicklabs.jugnoo.promotion.PromotionsActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -296,7 +295,7 @@ public class MenuBar {
 					Data.latitude = currLatLng.latitude;
 					Data.longitude = currLatLng.longitude;
 					if(AppStatus.getInstance(activity).isOnline(activity)) {
-						activity.startActivity(new Intent(activity, PromotionsActivity.class));
+						activity.startActivity(new Intent(activity, ShareActivity.class));
 						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 						FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
 					} else {

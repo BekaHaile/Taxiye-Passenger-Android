@@ -197,6 +197,7 @@ public interface FlurryEventNames {
     String WHO_VISITED_FREE_RIDE_SCREEN = "who_visited_free_ride_screen",
             WHO_CLICKED_ON_INVITE_FRIENDS = "who_clicked_on_invite_friends",
             WHO_CLICKED_ON_LEADERBOARD = "who_clicked_on_leaderboard",
+            WHO_CLICKED_ON_OFFERS = "who_clicked_on_offers",
             WHO_CLICKED_ON_ACTIVITY = "who_clicked_on_activity",
             WHO_CLICKED_ON_WHATSAPP = "who_clicked_on_whatsapp",
             WHO_CLICKED_ON_FACEBOOK = "who_clicked_on_facebook",
