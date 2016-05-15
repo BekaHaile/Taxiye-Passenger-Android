@@ -20,7 +20,7 @@
     
     
      <style name="YellowRatingBarNew" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/rating_star_yellow_new_selector</item>
+        <item name="android:progressDrawable">@drawable/rating_star_theme_selector</item>
         <item name="android:minHeight">50dp</item>
         <item name="android:maxHeight">50dp</item>
     </style>

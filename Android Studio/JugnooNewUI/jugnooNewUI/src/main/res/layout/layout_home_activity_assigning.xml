@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/linearLayoutAssigningButtons"
@@ -61,7 +61,7 @@
                 android:layout_width="@dimen/jugnoo_anim_loading_width"
                 android:layout_height="@dimen/jugnoo_anim_loading_height"
                 android:layout_marginTop="20px"
-                android:background="@drawable/anim"
+                android:background="@drawable/auto_loading_frame_anim"
                 android:layout_gravity="center_horizontal"/>
 
             <Button
@@ -84,7 +84,7 @@
         android:layout_marginTop="20px"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
-        android:background="@drawable/dropshadow_grey"
+        android:background="@drawable/dropshadow_in_white"
         android:splitMotionEvents="false">
 
         <ImageView

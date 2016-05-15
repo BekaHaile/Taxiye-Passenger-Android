@@ -290,7 +290,7 @@
                 android:layout_marginTop="10px"
                 android:background="@drawable/background_transparent"
                 android:text="@string/skip"
-                android:textColor="@drawable/text_color_grey_dark_light_selector"
+                android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/button_small_text_size"/>
 
             <TextView

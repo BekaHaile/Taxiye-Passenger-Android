@@ -35,7 +35,7 @@
                 android:layout_height="96.9px"
                 android:layout_marginLeft="5px"
                 android:padding="30px"
-                android:src="@drawable/back_white_selector"
+                android:src="@drawable/ic_back_selector"
                 android:tag="mwar" />
         </RelativeLayout>
 
@@ -170,7 +170,7 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="40px"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/dropshadow_grey"
+                    android:background="@drawable/dropshadow_in_white"
                     android:gravity="left"
                     android:hint="@string/nl_signup_request_registration_you_have_already_format"
                     android:padding="25px"

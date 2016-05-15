@@ -29,7 +29,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/ic_back_selector"/>
     </RelativeLayout>
 
     <ImageView

@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="52px"
-                android:background="@drawable/dropshadow_sliding_bottom_bg_color"
+                android:background="@drawable/dropshadow_in_sliding_bottom_bg_color"
                 android:orientation="vertical"
                 >
 

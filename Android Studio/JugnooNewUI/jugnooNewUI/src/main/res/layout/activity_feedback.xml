@@ -29,7 +29,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
                 android:padding="20px"
-                android:src="@drawable/back_white_selector" />
+                android:src="@drawable/ic_back_selector" />
         </RelativeLayout>
 
     <ImageView
@@ -172,7 +172,7 @@
                 android:layout_marginRight="20px"
                 android:layout_toLeftOf="@+id/imageViewSkipArrow"
                 android:text="Skip"
-                android:textColor="@drawable/text_color_grey_dark_white_selector"
+                android:textColor="@color/text_color_light_selector"
                 android:textSize="32px" />
 
             <ImageView

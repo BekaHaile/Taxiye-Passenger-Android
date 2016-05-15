@@ -30,7 +30,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="73px"
-                android:background="@drawable/dropshadow_rank2"
+                android:background="@drawable/dropshadow_in_sliding_bottom_bg_color"
                 android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
 
@@ -80,7 +80,7 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_marginTop="28px"
-            android:background="@drawable/dropshadow_grey"
+            android:background="@drawable/dropshadow_in_white"
             android:layout_gravity="center_horizontal"
             android:splitMotionEvents="false">
 

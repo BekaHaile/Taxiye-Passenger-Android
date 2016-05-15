@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/ic_back_selector"/>
     </RelativeLayout>
 
     <!-- Transactions list rl-->
@@ -61,7 +61,7 @@
             android:layout_width="@dimen/jugnoo_anim_loading_width"
             android:layout_height="@dimen/jugnoo_anim_loading_height"
             android:layout_centerInParent="true"
-            android:background="@drawable/anim"
+            android:background="@drawable/auto_loading_frame_anim"
             android:layout_gravity="center_horizontal"/>
     </RelativeLayout>
 

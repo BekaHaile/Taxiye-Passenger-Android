@@ -51,7 +51,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_emergency_mode);
+        setContentView(R.layout.activity_emergency);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
         new ASSL(this, relativeLayoutContainer, 1134, 720, false);

@@ -111,8 +111,8 @@ public class ShareActivity extends BaseFragmentActivity {
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color, R.color.text_color);
-		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.NORMAL);
-		tabs.setTextSize(30);
+		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		tabs.setTextSize(28);
 		tabs.setViewPager(viewPager);
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 

@@ -34,7 +34,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
                 android:padding="20px"
-                android:src="@drawable/back_white_selector" />
+                android:src="@drawable/ic_back_selector" />
         </RelativeLayout>
 
         <LinearLayout
@@ -270,7 +270,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="20px"
                                 android:rotation="180"
-                                android:src="@drawable/back_white_selector"
+                                android:src="@drawable/ic_back_selector"
                                 android:tag="mwar" />
                         </RelativeLayout>
                     </RelativeLayout>
@@ -351,7 +351,7 @@
                             android:layout_marginLeft="30px"
                             android:gravity="center"
                             android:text="@string/jugnoo_jeanie"
-                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textColor="@color/text_color_light_selector"
                             android:textSize="28px" />
 
                         <ImageView
@@ -394,7 +394,7 @@
                             android:gravity="center"
                             android:textAllCaps="true"
                             android:text="Change Password"
-                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textColor="@color/text_color_light_selector"
                             android:textSize="28px" />
 
                         <ImageView
@@ -435,7 +435,7 @@
                             android:layout_marginRight="70px"
                             android:gravity="center"
                             android:text="@string/emergency_contacts"
-                            android:textColor="@drawable/text_color_black_alpha_selector"
+                            android:textColor="@color/text_color_light_selector"
                             android:textSize="28px" />
 
                         <ImageView

@@ -215,7 +215,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			builder.setWhen(when);
 
 			if(eta != null){
-				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_yellow_size);
+				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_theme_size);
 				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
 			} else{
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));

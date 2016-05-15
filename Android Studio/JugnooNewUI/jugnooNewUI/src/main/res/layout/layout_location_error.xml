@@ -15,7 +15,7 @@
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
         android:layout_marginTop="124px"
-        android:background="@drawable/dropshadow_rank2"
+        android:background="@drawable/dropshadow_in_sliding_bottom_bg_color"
         android:splitMotionEvents="false">
 
         <ImageView

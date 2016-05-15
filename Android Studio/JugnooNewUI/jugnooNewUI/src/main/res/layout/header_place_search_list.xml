@@ -24,7 +24,7 @@
             android:maxLines="2"
             android:paddingRight="20px"
             android:text="@string/add_home"
-            android:textColor="@drawable/text_color_black_alpha_selector"
+            android:textColor="@color/text_color_light_selector"
             android:textSize="28px" />
 
         <ImageView
@@ -65,7 +65,7 @@
             android:maxLines="2"
             android:paddingRight="20px"
             android:text="@string/add_work"
-            android:textColor="@drawable/text_color_black_alpha_selector"
+            android:textColor="@color/text_color_light_selector"
             android:textSize="28px" />
 
         <ImageView

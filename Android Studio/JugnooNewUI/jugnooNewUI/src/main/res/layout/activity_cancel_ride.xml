@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            android:src="@drawable/ic_back_selector"/>
     </RelativeLayout>
 
     <ScrollView
@@ -112,7 +112,7 @@
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="10px"
-                android:background="@drawable/edittext_background"
+                android:background="@drawable/background_white_rounded_bordered"
                 android:gravity="left"
                 android:hint="Please specify the reason"
                 android:maxLength="250"

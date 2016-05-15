@@ -97,16 +97,13 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database;
 import product.clicklabs.jugnoo.Database2;
-import product.clicklabs.jugnoo.EmergencyContactsActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.RideCancellationActivity;
-import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -122,7 +119,6 @@ import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -146,6 +142,8 @@ import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.promotion.ReferralActions;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -1436,9 +1434,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (viewExchange) {
-                    mView.setBackgroundResource(R.drawable.dropshadow_grey);
+                    mView.setBackgroundResource(R.drawable.dropshadow_in_white);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_rank2);
+                    mView.setBackgroundResource(R.drawable.dropshadow_in_sliding_bottom_bg_color);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1503,9 +1501,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (viewExchange) {
-                    mView.setBackgroundResource(R.drawable.dropshadow_grey);
+                    mView.setBackgroundResource(R.drawable.dropshadow_in_white);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_rank2);
+                    mView.setBackgroundResource(R.drawable.dropshadow_in_sliding_bottom_bg_color);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -5893,12 +5891,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onEmergencyContactVerified(int emergencyContactId) {
         try {
-            EmergencyContact emergencyContact = new EmergencyContact(emergencyContactId);
-            if (Data.emergencyContactsList != null && Data.emergencyContactsList.contains(emergencyContact)) {
-                if (EmergencyContactsActivity.refreshEmergencyContacts != null) {
-                    EmergencyContactsActivity.refreshEmergencyContacts.refreshEmergencyContacts();
-                }
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -6601,7 +6593,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 Data.dropLatLng = searchResult.latLng;
                 dropLocationSet = true;
-                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_grey);
+                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
                 imageViewDropCross.setVisibility(View.VISIBLE);
             }
         }
