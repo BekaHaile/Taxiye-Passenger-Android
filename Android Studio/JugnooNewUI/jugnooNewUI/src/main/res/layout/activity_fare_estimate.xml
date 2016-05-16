@@ -1,6 +1,6 @@
 <LinearLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -22,7 +22,7 @@
             android:gravity="center"
             android:text="FARE ESTIMATE"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_40"/>
+            android:textSize="@dimen/text_size_40" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -31,27 +31,24 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
             android:padding="20px"
-            android:src="@drawable/ic_back_selector"/>
+            android:src="@drawable/ic_back_selector" />
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 
     <LinearLayout
         android:id="@+id/linearLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
         <!-- Drop location layout -->
 
     </LinearLayout>
-
 
 
     <!-- fare estimate layout-->
@@ -59,26 +56,24 @@
         android:id="@+id/relativeLayoutFareEstimateDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:visibility="visible"
         android:background="@color/sliding_bottom_bg_color"
-        >
+        android:gravity="center_horizontal"
+        android:visibility="visible">
 
 
         <RelativeLayout
             android:id="@+id/relativeLayoutMapLite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_white_bordered"
-            android:padding="2px"
             android:layout_margin="26px"
-            >
+            android:background="@drawable/background_white_bordered"
+            android:padding="2px">
+
             <fragment
                 android:id="@+id/mapLite"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="240px"
-                />
+                android:layout_height="240px" />
         </RelativeLayout>
 
         <!-- start end locations -->
@@ -97,8 +92,7 @@
                 android:layout_height="44px"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/start_end_icon"
-                android:tag="mwar"
-                />
+                android:tag="mwar" />
 
             <LinearLayout
                 android:layout_width="280px"
@@ -115,7 +109,7 @@
                     android:gravity="center"
                     android:text="@string/start"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28" />
 
                 <TextView
                     android:id="@+id/textViewPickupLocation"
@@ -129,7 +123,7 @@
                     android:maxLines="5"
                     android:text="Sector 37, Chandigarh\nIndia"
                     android:textColor="@color/stroke_color_dark"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_26" />
             </LinearLayout>
 
             <LinearLayout
@@ -148,7 +142,7 @@
                     android:gravity="center"
                     android:text="@string/end"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28" />
 
                 <TextView
                     android:id="@+id/textViewDropLocation"
@@ -162,7 +156,7 @@
                     android:maxLines="5"
                     android:text="Sector 28, Chandigarh\nIndia"
                     android:textColor="@color/stroke_color_dark"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_26" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -175,18 +169,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeLayoutEndRideStartEndInfo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="40px"
-            android:orientation="vertical"
             android:layout_marginLeft="65px"
             android:layout_marginRight="65px"
-            >
+            android:layout_marginTop="40px"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/stroke_color_light"
-                />
+                android:background="@color/stroke_color_light" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -197,8 +189,7 @@
                     android:layout_width="300px"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textViewEstimateDistanceText"
@@ -216,8 +207,8 @@
                         android:id="@+id/textViewEstimateDistance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
                         android:layout_marginBottom="10px"
+                        android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
                         android:text="23 Km"
                         android:textColor="@color/text_color"
@@ -230,15 +221,13 @@
                     android:layout_width="2px"
                     android:layout_height="76px"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/stroke_color_light"
-                    />
+                    android:background="@color/stroke_color_light" />
 
                 <LinearLayout
                     android:layout_width="300px"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textViewEstimateRideTimeText"
@@ -256,8 +245,8 @@
                         android:id="@+id/textViewEstimateTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
                         android:layout_marginBottom="10px"
+                        android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
                         android:text="54 minutes"
                         android:textColor="@color/text_color"
@@ -269,12 +258,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/stroke_color_light"
-                />
+                android:background="@color/stroke_color_light" />
 
         </LinearLayout>
 
@@ -308,31 +297,30 @@
         <Button
             android:id="@+id/buttonOk"
             style="@style/ButtonTheme"
+            android:layout_above="@+id/textViewEstimateFareNote"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="40px"
-            android:text="@string/ok"
-            android:layout_above="@+id/textViewEstimateFareNote"
-            />
+            android:text="@string/ok" />
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4px"
-            android:background="@drawable/shadow_up"
             android:layout_above="@+id/textViewEstimateFareNote"
-            />
+            android:background="@drawable/shadow_up" />
+
         <TextView
             android:id="@+id/textViewEstimateFareNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/white"
             android:gravity="center"
+            android:paddingBottom="12px"
+            android:paddingTop="12px"
             android:text="Note: This is just an estimate. Actual cost, time and dist may vary"
             android:textColor="@color/stroke_color_light"
             android:textSize="@dimen/text_size_22"
-            android:background="@color/white"
-            android:paddingTop="12px"
-            android:paddingBottom="12px"
 
             />
 

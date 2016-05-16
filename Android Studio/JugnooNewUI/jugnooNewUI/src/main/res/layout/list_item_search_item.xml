@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="30px"
         android:src="@drawable/work"
-        android:visibility="gone"
+        android:visibility="visible"
         android:tag="mwar" />
 
     <LinearLayout

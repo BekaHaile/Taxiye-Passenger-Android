@@ -1,42 +1,36 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/dropshadow_in_white"
+        android:layout_marginBottom="-10px"
         android:layout_marginLeft="26px"
         android:layout_marginRight="26px"
         android:layout_marginTop="50px"
-        android:layout_marginBottom="-10px"
-        >
+        android:background="@drawable/dropshadow_in_white">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/refer_a_driver"
                 android:layout_marginTop="60px"
-                android:textAllCaps="true"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/top_bar_title_text_size"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                />
-
+                android:text="@string/refer_a_driver"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/top_bar_title_text_size" />
 
 
             <TextView
@@ -191,13 +185,19 @@
         android:id="@+id/imageViewBack"
         android:layout_width="70px"
         android:layout_height="71px"
+        android:layout_alignLeft="@+id/scrollView"
+        android:layout_alignTop="@+id/scrollView"
         android:layout_centerVertical="true"
         android:layout_marginRight="20px"
         android:layout_marginTop="20px"
         android:padding="20px"
+<<<<<<< Updated upstream
         android:src="@drawable/ic_cross_grey_selector"
         android:layout_alignTop="@+id/scrollView"
         android:layout_alignRight="@+id/scrollView"
         />
+=======
+        android:src="@drawable/ic_cross_grey_selector" />
+>>>>>>> Stashed changes
 
 </RelativeLayout>

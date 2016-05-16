@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/emergency_contacts"
             android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"
+            android:textSize="@dimen/text_size_34"
             android:layout_centerInParent="true"
             android:textAllCaps="true"
             />

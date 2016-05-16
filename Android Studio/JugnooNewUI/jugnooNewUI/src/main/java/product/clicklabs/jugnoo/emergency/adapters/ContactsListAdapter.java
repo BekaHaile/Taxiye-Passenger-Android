@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -102,7 +103,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                if(ListMode.ADD_CONTACTS == getListMode()) {
+                if (ListMode.ADD_CONTACTS == getListMode()) {
                     if (contactBeans.get(position).isSelected()) {
                         contactBeans.get(position).setSelected(false);
                         selectedCount--;
@@ -111,19 +112,17 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                         contactBeans.get(position).setSelected(true);
                         selectedCount++;
                         callback.contactClicked(position, contactBeans.get(position));
+                    } else {
+                        Toast.makeText(activity, "You can add only three contacts.", Toast.LENGTH_SHORT).show();
                     }
                     notifyDataSetChanged();
-                }
-                else if(ListMode.EMERGENCY_CONTACTS == getListMode()){
+                } else if (ListMode.EMERGENCY_CONTACTS == getListMode()) {
                     callback.contactClicked(position, contactBeans.get(position));
-                }
-                else if(ListMode.DELETE_CONTACTS == getListMode()){
+                } else if (ListMode.DELETE_CONTACTS == getListMode()) {
                     callback.contactClicked(position, contactBeans.get(position));
-                }
-                else if(ListMode.CALL_CONTACTS == getListMode()){
+                } else if (ListMode.CALL_CONTACTS == getListMode()) {
                     callback.contactClicked(position, contactBeans.get(position));
-                }
-                else if(ListMode.SEND_RIDE_STATUS == getListMode()){
+                } else if (ListMode.SEND_RIDE_STATUS == getListMode()) {
                     if (contactBeans.get(position).isSelected()) {
                         contactBeans.get(position).setSelected(false);
                         callback.contactClicked(position, contactBeans.get(position));
