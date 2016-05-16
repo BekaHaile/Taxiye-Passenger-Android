@@ -49,6 +49,7 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/textViewCouponTitle"
             android:layout_marginLeft="-9px"
+            android:src="@drawable/ic_promotions_offer_strip_scissor"
             />
 
     </RelativeLayout>

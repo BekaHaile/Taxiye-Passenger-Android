@@ -533,6 +533,7 @@ public class JSONParser implements Constants {
             Data.cDriverId = jDriverInfo.getString("id");
 
             Data.pickupLatLng = new LatLng(0, 0);
+            Data.dropLatLng = null;
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
@@ -652,11 +653,14 @@ public class JSONParser implements Constants {
 
 
 
-    public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver) {
+    public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver,
+                                LatLng latLng) {
         try {
             long startTime = System.currentTimeMillis();
             HashMap<String, String> nameValuePairs = new HashMap<>();
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
+            nameValuePairs.put(KEY_LATITUDE, String.valueOf(latLng.latitude));
+            nameValuePairs.put(KEY_LONGITUDE, String.valueOf(latLng.longitude));
             Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
@@ -725,12 +729,14 @@ public class JSONParser implements Constants {
 
                         sessionId = jObject1.getString("session_id");
                         double assigningLatitude = 0, assigningLongitude = 0;
-                        if (jObject1.has("latitude") && jObject1.has("longitude")) {
-                            assigningLatitude = jObject1.getDouble("latitude");
-                            assigningLongitude = jObject1.getDouble("longitude");
+                        if (jObject1.has(KEY_LATITUDE) && jObject1.has(KEY_LONGITUDE)) {
+                            assigningLatitude = jObject1.getDouble(KEY_LATITUDE);
+                            assigningLongitude = jObject1.getDouble(KEY_LONGITUDE);
                             Log.e("assigningLatitude,assigningLongitude ====@@@", "" + assigningLatitude + "," + assigningLongitude);
                         }
+
                         Data.pickupLatLng = new LatLng(assigningLatitude, assigningLongitude);
+                        parseDropLatLng(jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1179,6 +1185,20 @@ public class JSONParser implements Constants {
             paytmRechargeInfo = null;
         }
         return paytmRechargeInfo;
+    }
+
+    public static void parseDropLatLng(JSONObject jObject1){
+        try {
+            if (jObject1.has(KEY_OP_DROP_LATITUDE) && jObject1.has(KEY_OP_DROP_LONGITUDE)) {
+				Data.dropLatLng = new LatLng(jObject1.getDouble(KEY_OP_DROP_LATITUDE),
+                        jObject1.getDouble(KEY_OP_DROP_LONGITUDE));
+			} else{
+                Data.dropLatLng = null;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            Data.dropLatLng = null;
+        }
     }
 
 

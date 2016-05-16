@@ -1717,7 +1717,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                         if (callRequestRide) {
                             promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-                            callAnAutoPopup(HomeActivity.this, Data.pickupLatLng);
+                            callAnAutoPopup(HomeActivity.this);
 
                             Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
                             Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
@@ -2633,10 +2633,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setDropLocationMarker(){
 		if(Data.dropLatLng != null
-                && PassengerScreenMode.P_ASSIGNING == passengerScreenMode
-                && PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                && PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                && PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                && (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+                || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)) {
 			if (dropLocationMarker != null) {
 				dropLocationMarker.remove();
 			}
@@ -3035,7 +3035,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (activityResumed) {
                         if (!feedbackSkipped && !placeAdded
-                            && PassengerScreenMode.P_RIDE_END != passengerScreenMode) {
+                                && PassengerScreenMode.P_RIDE_END != passengerScreenMode
+                                && PassengerScreenMode.P_SEARCH != passengerScreenMode) {
                             mapTouched = false;
                             callAndHandleStateRestoreAPI(false);
                         }
@@ -4712,7 +4713,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return markerOptions;
     }
 
-    void callAnAutoPopup(final Activity activity, LatLng pickupLatLng) {
+    void callAnAutoPopup(final Activity activity) {
         try {
 
             final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -4802,8 +4803,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     dialog.dismiss();
                 }
             });
-
-            Data.pickupLatLng = pickupLatLng;
 
             //30.7500, 76.7800
 			//22.971723, 78.754263
@@ -5051,6 +5050,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			String promoName = JSONParser.getPromoName(jObj);
 
             Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
+            JSONParser.parseDropLatLng(jObj);
 
 			double fareFactor = 1.0;
 			if (jObj.has("fare_factor")) {
@@ -6020,10 +6020,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         });
                         int currentUserStatus = 2;
                         String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                currentUserStatus, createApiFindADriver());
+                                currentUserStatus, createApiFindADriver(), Data.pickupLatLng);
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
                             String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                    currentUserStatus, createApiFindADriver());
+                                    currentUserStatus, createApiFindADriver(), Data.pickupLatLng);
                             if (resp1.contains(Constants.SERVER_TIMEOUT)) {
                                 runOnUiThread(new Runnable() {
                                     @Override

@@ -119,6 +119,7 @@ public class ApiFindADriver {
 				Data.priorityTipCategory = findADriverResponse.getPriorityTipCategory();
 			}
 
+			Data.userData.fareFactor = 1d;
 			if(findADriverResponse.getFareFactor() != null) {
 				Data.userData.fareFactor = findADriverResponse.getFareFactor();
 			}
