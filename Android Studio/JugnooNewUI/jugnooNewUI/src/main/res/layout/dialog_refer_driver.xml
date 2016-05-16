@@ -185,19 +185,13 @@
         android:id="@+id/imageViewBack"
         android:layout_width="70px"
         android:layout_height="71px"
-        android:layout_alignLeft="@+id/scrollView"
-        android:layout_alignTop="@+id/scrollView"
         android:layout_centerVertical="true"
         android:layout_marginRight="20px"
         android:layout_marginTop="20px"
         android:padding="20px"
-<<<<<<< Updated upstream
         android:src="@drawable/ic_cross_grey_selector"
         android:layout_alignTop="@+id/scrollView"
-        android:layout_alignRight="@+id/scrollView"
-        />
-=======
-        android:src="@drawable/ic_cross_grey_selector" />
->>>>>>> Stashed changes
+        android:layout_alignRight="@+id/scrollView"/>
+
 
 </RelativeLayout>
