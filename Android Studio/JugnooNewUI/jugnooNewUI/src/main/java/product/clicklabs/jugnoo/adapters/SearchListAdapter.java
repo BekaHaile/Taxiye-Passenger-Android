@@ -191,12 +191,13 @@ public class SearchListAdapter extends BaseAdapter{
 
             if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_HOME){
                 holder.imageViewType.setVisibility(View.VISIBLE);
-                holder.imageViewType.setImageResource(R.drawable.home);
+                holder.imageViewType.setImageResource(R.drawable.ic_home);
             } else if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_WORK){
                 holder.imageViewType.setVisibility(View.VISIBLE);
-                holder.imageViewType.setImageResource(R.drawable.work);
+                holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
-                holder.imageViewType.setVisibility(View.GONE);
+                holder.imageViewType.setVisibility(View.VISIBLE);
+                holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
             }
 
             if(position == getCount()-1){

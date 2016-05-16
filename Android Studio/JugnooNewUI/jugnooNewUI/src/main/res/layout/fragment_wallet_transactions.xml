@@ -52,7 +52,7 @@
             android:dividerHeight="0px"
             android:listSelector="@drawable/background_transparent"
             android:splitMotionEvents="false"
-            >
+            android:visibility="visible">
         </ListView>
 
 

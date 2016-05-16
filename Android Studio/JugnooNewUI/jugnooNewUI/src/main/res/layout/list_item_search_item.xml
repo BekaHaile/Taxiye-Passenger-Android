@@ -9,11 +9,11 @@
 
     <ImageView
         android:id="@+id/imageViewType"
-        android:layout_width="36px"
-        android:layout_height="34px"
+        android:layout_width="50px"
+        android:layout_height="50px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="30px"
-        android:src="@drawable/work"
+        android:layout_marginLeft="20px"
+        android:src="@drawable/ic_work"
         android:visibility="visible"
         android:tag="mwar" />
 

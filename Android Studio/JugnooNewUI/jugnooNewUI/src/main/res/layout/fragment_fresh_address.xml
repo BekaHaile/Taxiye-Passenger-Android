@@ -46,12 +46,12 @@
 
                 <ImageView
                     android:id="@+id/imageViewHome"
-                    android:layout_width="36px"
-                    android:layout_height="34px"
+                    android:layout_width="50px"
+                    android:layout_height="50px"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/home"
+                    android:layout_marginLeft="20px"
+                    android:src="@drawable/ic_home"
                     android:tag="mwar"/>
 
                 <ImageView
@@ -88,12 +88,12 @@
 
                 <ImageView
                     android:id="@+id/imageViewWork"
-                    android:layout_width="36px"
-                    android:layout_height="34px"
+                    android:layout_width="50px"
+                    android:layout_height="50px"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/work"
+                    android:layout_marginLeft="20px"
+                    android:src="@drawable/ic_work"
                     android:tag="mwar"/>
 
                 <ImageView

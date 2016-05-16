@@ -481,11 +481,11 @@
 
                         <ImageView
                             android:id="@+id/imageViewAddHome"
-                            android:layout_width="27px"
-                            android:layout_height="24px"
+                            android:layout_width="50px"
+                            android:layout_height="50px"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="30px"
+                            android:layout_marginLeft="20px"
                             android:src="@drawable/ic_home"
                             android:tag="mwar" />
 
@@ -537,11 +537,11 @@
 
                         <ImageView
                             android:id="@+id/imageViewAddWork"
-                            android:layout_width="26px"
-                            android:layout_height="23px"
+                            android:layout_width="50px"
+                            android:layout_height="50px"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="30px"
+                            android:layout_marginLeft="20px"
                             android:src="@drawable/ic_work"
                             android:tag="mwar" />
 
