@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -79,8 +79,8 @@
 
     <Button
         android:id="@+id/customerInRideMyLocationBtn"
-        android:layout_width="109px"
-        android:layout_height="109px"
+        android:layout_width="121px"
+        android:layout_height="117px"
         android:layout_above="@+id/relativeLayoutInRideContainer"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="40px"

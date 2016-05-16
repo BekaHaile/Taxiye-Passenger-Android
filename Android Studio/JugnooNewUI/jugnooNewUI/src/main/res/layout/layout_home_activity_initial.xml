@@ -255,11 +255,11 @@
 
         <Button
             android:id="@+id/initialMyLocationBtn"
-            android:layout_width="83px"
-            android:layout_height="83px"
+            android:layout_width="121px"
+            android:layout_height="117px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="92px"
+            android:layout_marginRight="60px"
             android:background="@drawable/mylocation_btn_selector"
             android:tag="mwar"/>
 
