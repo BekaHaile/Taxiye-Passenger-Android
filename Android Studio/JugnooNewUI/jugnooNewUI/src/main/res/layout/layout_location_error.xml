@@ -15,15 +15,15 @@
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
         android:layout_marginTop="124px"
-        android:background="@drawable/dropshadow_in_sliding_bottom_bg_color"
+        android:background="@drawable/dropshadow_in_white"
         android:splitMotionEvents="false">
 
         <ImageView
             android:id="@+id/imageViewLocationErrorSearchGPSIcon"
-            android:layout_width="20px"
-            android:layout_height="20px"
+            android:layout_width="16px"
+            android:layout_height="16px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="37px"
             android:src="@drawable/circle_green"
             android:tag="mwar"/>
 
@@ -32,12 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
+            android:layout_marginLeft="37px"
             android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/set_pickup_location"
-            android:padding="10px"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textSize="30px"/>

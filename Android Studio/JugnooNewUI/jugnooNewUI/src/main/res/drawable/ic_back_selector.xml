@@ -3,5 +3,5 @@
 
     <item android:drawable="@drawable/ic_back_pressed" android:state_pressed="true"/>
     <item android:drawable="@drawable/ic_back"/>
-    
+
 </selector>

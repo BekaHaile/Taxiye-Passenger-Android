@@ -24,12 +24,7 @@
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="60.7px"
-                android:layout_height="76.9px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:padding="20px"
-                android:src="@drawable/ic_back_selector" />
+                style="@style/back_image" />
         </RelativeLayout>
 
     <ImageView
@@ -169,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20px"
+                android:layout_marginRight="0px"
                 android:layout_toLeftOf="@+id/imageViewSkipArrow"
                 android:text="Skip"
                 android:textColor="@color/text_color_light_selector"
@@ -177,13 +172,9 @@
 
             <ImageView
                 android:id="@+id/imageViewSkipArrow"
-                android:layout_width="13px"
-                android:layout_height="26px"
+                style="@style/forward_image"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="40px"
-                android:src="@drawable/arrow_icon_selector"
-                android:tag="mwar" />
+                />
         </RelativeLayout>
 
 

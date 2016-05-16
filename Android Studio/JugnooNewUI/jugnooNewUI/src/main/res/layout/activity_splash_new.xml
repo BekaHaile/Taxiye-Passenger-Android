@@ -235,12 +235,10 @@
 
     <ImageView
         android:id="@+id/imageViewBack"
-        android:layout_width="80.7px"
-        android:layout_height="96.9px"
-        android:layout_marginLeft="5px"
-        android:padding="30px"
-        android:src="@drawable/ic_back_selector"
-        android:tag="mhar"
-        android:visibility="gone" />
+        style="@style/back_image"
+        android:visibility="gone"
+        android:layout_centerVertical="false"
+        android:layout_marginTop="10px"
+        />
 
 </RelativeLayout>

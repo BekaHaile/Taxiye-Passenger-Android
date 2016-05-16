@@ -30,7 +30,7 @@
 	
     <string name="rupee">\u20B9</string> 
     
-    <string name="rupee_0">\u20B9 0</string>
+    <string name="rupee_0">\u20B90</string>
     
     
     
@@ -189,10 +189,10 @@
 
 
     <!-- wallet screen-->
-    <string name="first_amount">\u20B9 599</string>
-    <string name="middle_amount">\u20B9 999</string>
-    <string name="last_amount">\u20B9 1999</string>
-    <string name="amount_value">Enter amount between \u20B9 100 - \u20B9 5000</string>
+    <string name="first_amount">\u20B9599</string>
+    <string name="middle_amount">\u20B9999</string>
+    <string name="last_amount">\u20B91999</string>
+    <string name="amount_value">Enter amount between \u20B9100 - \u20B95000</string>
     <string name="drop_text">Drop the change\nJust Tap, Pay &amp; Go</string>
     <!--string used in activity_add_jugnoo_cash-->
     <string name="add_jugnoo_cash">ADD JUGNOO CASH</string>
@@ -232,7 +232,7 @@
     <string name="amount_range">Recharge amount should be between Rs. 1 - Rs. 5000</string>
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
 	<string name="share_your_code">Share your referral code</string>
-	<string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9 100!</string>
+	<string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9100!</string>
 
 
 
@@ -277,7 +277,7 @@
 	<string name="star_required">* Required</string>
 	<string name="leave_a_comment">Leave a comment</string>
 	<string name="what_could_we_improve">What could we improve?</string>
-	<string name="rupees_value_format">\u20B9 %s</string>
+	<string name="rupees_value_format">\u20B9%s</string>
 	<string name="rupees_value_format_without_space">\u20B9%s</string>
 	<string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
 	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
@@ -378,8 +378,8 @@
 
 	<!-- User Debt-->
 	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
-	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9 %s balance from the last ride</string>
-	<string name="user_debt_settle_balance_message_fresh">Before you order again, please settle \u20B9 %s balance from the last order</string>
+	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9%s balance from the last ride</string>
+	<string name="user_debt_settle_balance_message_fresh">Before you order again, please settle \u20B9%s balance from the last order</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
 
@@ -814,7 +814,7 @@
 	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
 	<string name="no_slots_currently">No Delivery Slots currently</string>
 	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>
-	<string name="pay_rupees_using_format">Pay \u20B9 %s using:</string>
+	<string name="pay_rupees_using_format">Pay \u20B9%s using:</string>
 	<string name="payment">Payment</string>
 	<string name="place_order">Place Order</string>
 	<string name="recharge_now">Recharge Now</string>
@@ -857,8 +857,8 @@
 	<string name="inbox">Inbox</string>
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
-	<string name="min_fare_rupee_format">Min Fare: \u20B9 %s</string>
-	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9 <b>%s</b></string>
+	<string name="min_fare">Min Fare:</string>
+	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
 
 
 	<string name="format_x">%s x</string>
@@ -867,7 +867,7 @@
 	<string name="pay_for_your_rides_using">Pay for your rides using:</string>
 	<string name="enter_destination">Enter Destination</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
-	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9 %s</string>
+	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9%s</string>
 	<string name="min">Min</string>
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
 	<string name="promotions">Promotions</string>

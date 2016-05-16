@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
-    android:layout_width="match_parent"
-    android:layout_height="264px"
-    android:background="@color/white"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="244px"
-        android:background="@color/sliding_bottom_bg_color">
+<RelativeLayout android:id="@+id/relative"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="244px"
+                android:background="@color/sliding_bottom_bg_color"
+                android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/imageViewProfile"
-            android:layout_width="144px"
-            android:layout_height="144px"
-            android:layout_marginLeft="50px"
-            android:layout_centerInParent="true"
-            android:tag="mwar" />
+
+        <RelativeLayout
+            android:layout_width="148px"
+            android:layout_height="148px"
+            android:layout_marginLeft="48px"
+            android:background="@drawable/circle_grey"
+            android:tag="mwar">
+
+            <ImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="144px"
+                android:layout_height="144px"
+                android:layout_centerInParent="true"
+                android:tag="mwar"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30px"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30px"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/textViewUserName"
                 android:layout_width="match_parent"
@@ -38,15 +42,16 @@
                 android:textAllCaps="true"
                 android:textColor="@color/view_account_name_color"
                 android:textSize="@dimen/text_size_32"/>
+
             <TextView
                 android:id="@+id/textViewViewAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:layout_marginTop="10px"
+                android:singleLine="true"
                 android:text="View Account"
                 android:textColor="@color/text_color_view_account_selector"
-                android:textSize="@dimen/text_size_28" />
+                android:textSize="@dimen/text_size_28"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -54,8 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_alignParentBottom="true"
-        android:src="@color/view_account_stroke_color"/>
-
-    </RelativeLayout>
+        android:src="@color/stroke_color_light"/>
 
 </RelativeLayout>

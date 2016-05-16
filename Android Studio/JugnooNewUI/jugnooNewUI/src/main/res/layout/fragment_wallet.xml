@@ -27,12 +27,7 @@
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/ic_back_selector" />
+            style="@style/back_image" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -192,11 +187,11 @@
 
             <ImageView
                 android:id="@+id/imageViewWalletTransactionsIcon"
-                android:layout_width="31px"
-                android:layout_height="37px"
+                android:layout_width="33px"
+                android:layout_height="35px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30px"
-                android:src="@drawable/wallet_recent_transacions_icon" />
+                android:src="@drawable/ic_recent_transactions" />
 
             <TextView
                 android:id="@+id/textViewWalletTransactions"
@@ -211,13 +206,10 @@
 
             <ImageView
                 android:id="@+id/imageViewWalletArrow"
-                android:layout_width="13px"
-                android:layout_height="26px"
+                style="@style/forward_image"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="36px"
-                android:src="@drawable/arrow_icon_selector"
-                android:tag="mwar" />
+                android:layout_marginRight="10px"
+                />
 
 
         </RelativeLayout>

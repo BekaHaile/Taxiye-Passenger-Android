@@ -16,6 +16,7 @@ import android.content.pm.Signature;
 import android.graphics.BitmapFactory;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.graphics.drawable.StateListDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -700,6 +701,15 @@ public class Utils {
 		shader = lin_grad;
 
 		return shader;
+	}
+
+	public static StateListDrawable getSelector(Context context, int normalState, int pressedState){
+		StateListDrawable stateListDrawable = new StateListDrawable();
+		stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
+				context.getResources().getDrawable(pressedState));
+		stateListDrawable.addState(new int[]{},
+				context.getResources().getDrawable(normalState));
+		return stateListDrawable;
 	}
 
 }

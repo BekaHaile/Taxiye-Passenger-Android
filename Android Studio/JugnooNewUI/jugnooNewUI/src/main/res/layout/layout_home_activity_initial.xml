@@ -26,20 +26,20 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBar"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="106px"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="73px"
-                android:background="@drawable/dropshadow_in_sliding_bottom_bg_color"
+                android:background="@drawable/dropshadow_in_menu_item_selector_color"
                 android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
 
                 <ImageView
                     android:id="@+id/imageViewDestSearchGPSIcon"
-                    android:layout_width="20px"
-                    android:layout_height="20px"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
+                    android:layout_marginLeft="37px"
                     android:src="@drawable/circle_red"
                     android:tag="mwar" />
 
@@ -48,8 +48,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:padding="10px"
+                    android:layout_marginLeft="37px"
+                    android:paddingRight="20px"
                     android:layout_toRightOf="@+id/imageViewDestSearchGPSIcon"
                     android:layout_toLeftOf="@+id/imageViewDropCross"
                     android:background="@color/transparent"
@@ -66,8 +66,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5px"
-                    android:padding="20px"
-                    android:src="@drawable/ic_cross_et"
+                    android:padding="16px"
+                    android:src="@drawable/ic_cross_et_selector"
                     android:tag="mwar" />
 
 
@@ -86,10 +86,10 @@
 
             <ImageView
                 android:id="@+id/imageViewInitialSearchGPSIcon"
-                android:layout_width="20px"
-                android:layout_height="20px"
+                android:layout_width="16px"
+                android:layout_height="16px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
+                android:layout_marginLeft="37px"
                 android:src="@drawable/circle_green"
                 android:tag="mwar" />
 
@@ -98,8 +98,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                android:padding="10px"
+                android:layout_marginLeft="37px"
+                android:paddingRight="20px"
                 android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
                 android:background="@color/transparent"
                 android:gravity="center_vertical"
@@ -127,8 +127,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="5px"
                 android:layout_marginTop="15px"
-                android:padding="20px"
-                android:src="@drawable/ic_cross_et"
+                android:padding="16px"
+                android:src="@drawable/ic_cross_et_selector"
                 android:tag="mwar" />
 
             <TextView

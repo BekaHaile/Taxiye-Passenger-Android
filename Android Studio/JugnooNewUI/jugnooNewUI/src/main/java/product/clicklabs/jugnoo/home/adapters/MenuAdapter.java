@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +103,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 holder.textViewValue.setVisibility(View.GONE);
+                holder.textViewValue.setBackgroundResource(R.drawable.background_theme_rounded);
+                LinearLayout.LayoutParams paramsP = (LinearLayout.LayoutParams) holder.textViewValue.getLayoutParams();
+                paramsP.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                holder.textViewValue.setLayoutParams(paramsP);
                 if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageDrawable(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal));
                     try {
@@ -161,6 +166,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if(unreadNotificationsCount > 0){
                             holder.textViewValue.setVisibility(View.VISIBLE);
                             holder.textViewValue.setText(String.valueOf(unreadNotificationsCount));
+                            holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
+                            setLayoutParamsForValue(holder.textViewValue);
                         }
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
@@ -171,6 +178,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if(Data.userData.numCouponsAvaliable > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
                             holder.textViewValue.setText(String.valueOf(Data.userData.numCouponsAvaliable));
+                            holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
+                            setLayoutParamsForValue(holder.textViewValue);
 						}
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -234,6 +243,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
 
+    }
+
+    private void setLayoutParamsForValue(TextView textView){
+        LinearLayout.LayoutParams paramsP = (LinearLayout.LayoutParams) textView.getLayoutParams();
+        float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+        paramsP.width = (int)(minRatio * 56f);
+        textView.setLayoutParams(paramsP);
     }
 
     @Override

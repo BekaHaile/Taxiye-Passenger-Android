@@ -186,7 +186,7 @@
                         android:id="@+id/imageViewPaymentModeMS"
                         android:layout_width="68px"
                         android:layout_height="22px"
-                        android:src="@drawable/ic_paytm_small"
+                        android:src="@drawable/ic_cash"
                         android:tag="mwar"/>
 
                     <TextView
@@ -208,14 +208,30 @@
                     android:layout_marginTop="14px"
                     android:src="@color/grey_light"/>
 
-                <TextView
-                    android:id="@+id/textViewMinFareMS"
+                <LinearLayout
+                    android:id="@+id/linearLayoutMinFareMS"
                     android:layout_width="330px"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/min_fare_rupee_format"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_30"/>
+                    >
+                    <TextView
+                        android:id="@+id/textViewMinFareMS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/min_fare"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_30"/>
+                    <TextView
+                        android:id="@+id/textViewMinFareMSValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10px"
+                        android:gravity="center"
+                        android:text="@string/rupees_value_format_without_space"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_30"/>
+                </LinearLayout>
 
 
             </LinearLayout>

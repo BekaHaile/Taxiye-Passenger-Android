@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/linearLayoutAssigningButtons"
@@ -89,10 +89,10 @@
 
         <ImageView
             android:id="@+id/imageViewAssigningDropLocationSearch"
-            android:layout_width="20px"
-            android:layout_height="20px"
+            android:layout_width="16px"
+            android:layout_height="16px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="37px"
             android:src="@drawable/circle_red"
             android:tag="mwar"/>
 
@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
+            android:layout_marginLeft="37px"
             android:layout_toLeftOf="@+id/linearLayoutAssigningDropLocationEditProgress"
             android:layout_toRightOf="@+id/imageViewAssigningDropLocationSearch"
             android:background="@color/transparent"
@@ -111,6 +111,7 @@
             android:textColor="@color/text_color"
             android:textCursorDrawable="@null"
             android:textSize="30px"
+            android:paddingRight="20px"
             />
 
         <LinearLayout

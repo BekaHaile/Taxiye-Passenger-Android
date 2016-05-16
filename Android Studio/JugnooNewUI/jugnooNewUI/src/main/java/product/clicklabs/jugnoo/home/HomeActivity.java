@@ -1405,7 +1405,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = params.topMargin + (int)(ASSL.Yscale()*25);
+                params.topMargin = params.topMargin + (int)(ASSL.Yscale()*25f);
                 mView.setLayoutParams(params);
                 if(callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
@@ -1437,11 +1437,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.dropshadow_in_white);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_sliding_bottom_bg_color);
+                    mView.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin - (int) (ASSL.Yscale() * 25);
+                params.topMargin = params.topMargin - (int) (ASSL.Yscale() * 25f);
                 mView.setLayoutParams(params);
             }
 
@@ -1504,7 +1504,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.dropshadow_in_white);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_sliding_bottom_bg_color);
+                    mView.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1900,6 +1900,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
 
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+
                 switch (mode) {
 
                     case P_INITIAL:
@@ -1998,6 +2001,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
+                        topBar.imageViewBack.setVisibility(View.VISIBLE);
+                        topBar.imageViewMenu.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2024,7 +2029,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                    .getTextBitmap(HomeActivity.this, assl,
+                                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
 
                             pickupLocationMarker = map.addMarker(markerOptions);
 							new Handler().postDelayed(new Runnable() {
@@ -2042,7 +2050,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setDropLocationAssigningUI();
 
                         relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
-						setGoogleMapPadding(0);
+						setGoogleMapPadding(getResources().getDimension(R.dimen.map_padding_assigning));
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
@@ -2668,7 +2676,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void checkForGoogleLogoVisibilityInRide(){
 		try{
-			setGoogleMapPadding(315f);
+            float padding = getResources().getDimension(R.dimen.map_padding_request_final);
+            if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+                padding = padding + getResources().getDimension(R.dimen.map_padding_request_final_extra);
+            }
+			setGoogleMapPadding(padding);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -2795,7 +2807,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     pickupLocationMarker.setIcon(BitmapDescriptorFactory
                             .fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 11)));
+                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
+                                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -3408,12 +3421,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-	private void backFromSearchToInitial(){
+	public void backFromSearchToInitial(){
 		try {
 			textViewInitialSearch.setText("");
 			passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			switchPassengerScreen(passengerScreenMode);
 			FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
+            Utils.hideSoftKeyboard(this, textViewInitialSearch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3698,7 +3712,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else{
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
-                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(), 11)));
+                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
+                                    getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
         }
         return markerOptions;
     }
@@ -3736,7 +3751,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             markerOptions.title("customer_current_location");
             markerOptions.snippet("");
             markerOptions.position(latLng);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmap(HomeActivity.this, assl)));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                    .getTextBitmap(HomeActivity.this, assl,
+                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
             currentLocationMarker = map.addMarker(markerOptions);
         } catch (Exception e) {
         }

@@ -51,7 +51,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	}
 
 	public interface CustomTabProvider {
-		public View getCustomTabView(int position);
+		public View getCustomTabView(int position, boolean selected);
 	}
 
 	// @formatter:off
@@ -210,7 +210,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			if (pager.getAdapter() instanceof IconTabProvider) {
 				addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
 			} else if(pager.getAdapter() instanceof CustomTabProvider){
-				addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i));
+				addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i, i == pager.getCurrentItem()));
 			} else {
 				addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
 			}
@@ -236,6 +236,25 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			}
 		});
 
+	}
+
+	public void notifyTabs() {
+
+		tabsContainer.removeAllViews();
+
+		tabCount = pager.getAdapter().getCount();
+
+		for (int i = 0; i < tabCount; i++) {
+			if (pager.getAdapter() instanceof IconTabProvider) {
+				addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+			} else if (pager.getAdapter() instanceof CustomTabProvider) {
+				addTab(i, ((CustomTabProvider) pager.getAdapter()).getCustomTabView(i, i == pager.getCurrentItem()));
+			} else {
+				addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+			}
+		}
+
+		updateTabStyles(0);
 	}
 
 	private void addTextTab(final int position, String title) {

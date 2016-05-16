@@ -29,12 +29,8 @@
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="60.7px"
-                android:layout_height="76.9px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:padding="20px"
-                android:src="@drawable/ic_back_selector" />
+                style="@style/back_image"
+                />
         </RelativeLayout>
 
         <LinearLayout
@@ -256,22 +252,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="50px"
+                                android:layout_marginRight="15px"
                                 android:gravity="center"
                                 android:text="VERIFY ME"
                                 android:textColor="@drawable/text_color_white_alpha_selector"
                                 android:textSize="26px" />
 
-                            <ImageView
-                                android:id="@+id/imageViewEmailVerifyArrow"
-                                android:layout_width="13px"
-                                android:layout_height="26px"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="20px"
-                                android:rotation="180"
-                                android:src="@drawable/ic_back_selector"
-                                android:tag="mwar" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -399,13 +385,10 @@
 
                         <ImageView
                             android:id="@+id/imageViewChangePassword"
-                            android:layout_width="13px"
-                            android:layout_height="26px"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="55px"
-                            android:src="@drawable/arrow_icon_selector"
-                            android:tag="mwar" />
+                            android:layout_marginRight="20px"
+                            style="@style/forward_image"
+                            />
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -439,13 +422,9 @@
                             android:textSize="28px" />
 
                         <ImageView
-                            android:layout_width="13px"
-                            android:layout_height="26px"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="55px"
-                            android:src="@drawable/arrow_icon_selector"
-                            android:tag="mwar" />
+                            android:layout_marginRight="20px"
+                            style="@style/forward_image" />
 
                         <ImageView
                             android:layout_width="match_parent"

@@ -64,9 +64,9 @@ public class RequestRideOptionsFragment extends Fragment {
 
     private RelativeLayout relativeLayoutMultipleSupplyMain;
     private RecyclerView recyclerViewVehicles;
-    private LinearLayout linearLayoutPaymentModeMS;
+    private LinearLayout linearLayoutPaymentModeMS, linearLayoutMinFareMS;
     private ImageView imageViewPaymentModeMS;
-    private TextView textViewPaymentModeValueMS, textViewMinFareMS, textVieGetFareEstimateMS, textViewPriorityTipValueMS;
+    private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS;
     private RelativeLayout relativeLayoutPriorityTipMS;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -113,8 +113,10 @@ public class RequestRideOptionsFragment extends Fragment {
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
         textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity));
 
-        textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
-        textViewMinFareMS.setTypeface(Fonts.mavenLight(activity));
+        linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
+        ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareMSValue = (TextView) rootView.findViewById(R.id.textViewMinFareMSValue);
+        textViewMinFareMSValue.setTypeface(Fonts.mavenMedium(activity));
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity));
@@ -137,7 +139,7 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutFareEstimate.setOnClickListener(onClickListenerRequestOptions);
 
         linearLayoutPaymentModeMS.setOnClickListener(onClickListenerRequestOptions);
-        textViewMinFareMS.setOnClickListener(onClickListenerRequestOptions);
+        linearLayoutMinFareMS.setOnClickListener(onClickListenerRequestOptions);
         textVieGetFareEstimateMS.setOnClickListener(onClickListenerRequestOptions);
 
 
@@ -153,7 +155,7 @@ public class RequestRideOptionsFragment extends Fragment {
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
 
-            } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.textViewMinFareMS){
+            } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 getFareDetailsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
@@ -178,9 +180,11 @@ public class RequestRideOptionsFragment extends Fragment {
                     ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
 
 
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewPaymentModeMS.getLayoutParams();
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
                 imageViewPaymentMode.setImageResource(R.drawable.ic_paytm_small);
                 imageViewPaymentModeMS.setImageResource(R.drawable.ic_paytm_small);
+                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
                 textViewPaymentModeValue.setText(String.format(activity.getResources()
                                 .getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
@@ -190,9 +194,11 @@ public class RequestRideOptionsFragment extends Fragment {
             } else {
                 imageViewPaymentMode.setImageResource(R.drawable.ic_cash_small);
                 imageViewPaymentModeMS.setImageResource(R.drawable.ic_cash_small);
+                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
                 textViewPaymentModeValue.setText(activity.getResources().getString(R.string.cash));
                 textViewPaymentModeValueMS.setText(activity.getResources().getString(R.string.cash));
             }
+            imageViewPaymentModeMS.setLayoutParams(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -283,7 +289,7 @@ public class RequestRideOptionsFragment extends Fragment {
         }
         textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-        textViewMinFareMS.setText(String.format(activity.getResources().getString(R.string.min_fare_rupee_format)
+        textViewMinFareMSValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         updateFareFactorUI();
     }

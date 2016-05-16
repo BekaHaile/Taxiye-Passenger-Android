@@ -58,6 +58,7 @@ public class TopBar {
 		imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
+		imageViewBack.setVisibility(View.GONE);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 		textViewAdd = (TextView) drawerLayout.findViewById(R.id.textViewAdd); textViewAdd.setTypeface(Fonts.mavenRegular(activity));
 
@@ -132,7 +133,10 @@ public class TopBar {
 					break;
 
 				case R.id.imageViewBack:
-					if(activity instanceof FreshActivity){
+					if(activity instanceof HomeActivity) {
+						((HomeActivity)activity).backFromSearchToInitial();
+					}
+					else if(activity instanceof FreshActivity){
 						((FreshActivity)activity).performBackPressed();
 					}
 					break;

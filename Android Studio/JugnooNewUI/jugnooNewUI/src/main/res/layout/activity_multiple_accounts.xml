@@ -33,12 +33,7 @@
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="80.7px"
-                android:layout_height="96.9px"
-                android:layout_marginLeft="5px"
-                android:padding="30px"
-                android:src="@drawable/ic_back_selector"
-                android:tag="mwar" />
+                style="@style/back_image" />
         </RelativeLayout>
 
         <View
@@ -151,13 +146,10 @@
                         android:textAllCaps="true"/>
 
                     <ImageView
-                        android:layout_width="13px"
-                        android:layout_height="26px"
+                        style="@style/forward_image"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="40px"
-                        android:src="@drawable/arrow_icon_selector"
-                        android:tag="mwar" />
+                        android:layout_marginRight="20px"
+                        />
 
                     <ImageView
                         android:layout_width="match_parent"
