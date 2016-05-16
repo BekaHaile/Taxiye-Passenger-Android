@@ -149,9 +149,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		recyclerViewEmergencyContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewEmergencyContacts.setHasFixedSize(false);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 		emergencyContactBeans = new ArrayList<>();
 		emergencyContactsListAdapter = new ContactsListAdapter(emergencyContactBeans, activity, R.layout.list_item_contact,

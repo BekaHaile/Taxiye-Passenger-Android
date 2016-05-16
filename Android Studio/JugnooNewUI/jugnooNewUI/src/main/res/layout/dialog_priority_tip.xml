@@ -185,7 +185,7 @@
                         android:layout_marginTop="20px"
                         android:tag="mwar"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_surge_grey"/>
+                        android:src="@drawable/ic_surge_white"/>
 
                     <TextView
                         android:id="@+id/textViewTipValue"

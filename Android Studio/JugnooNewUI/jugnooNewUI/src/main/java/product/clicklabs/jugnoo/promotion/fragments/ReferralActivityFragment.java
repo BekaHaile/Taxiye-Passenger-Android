@@ -76,12 +76,6 @@ public class ReferralActivityFragment extends Fragment implements FlurryEventNam
 		textViewDataEffective.setTypeface(Fonts.mavenLight(activity));
 
 
-
-		try {
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-
 		update();
 
 		return rootView;

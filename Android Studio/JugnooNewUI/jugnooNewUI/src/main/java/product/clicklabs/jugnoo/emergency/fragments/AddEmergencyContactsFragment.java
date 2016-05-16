@@ -129,9 +129,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewContacts.setHasFixedSize(false);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 		contactBeans = new ArrayList<>();
 		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,

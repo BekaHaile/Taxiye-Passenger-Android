@@ -27,7 +27,7 @@
                 android:text="@string/nl_signup_request_registration"
                 android:textColor="@color/white"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_size_34" />
+                android:textSize="@dimen/text_size_40" />
 
             <ImageView
                 android:id="@+id/imageViewBack"

@@ -132,10 +132,17 @@ public class ReferralsFragment extends Fragment {
 
 			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
 				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
-						.placeholder(R.drawable.ic_promotions_friend_refer).error(R.drawable.ic_promotions_friend_refer)
+						.placeholder(R.drawable.ic_promotions_friend_refer)
+						.error(R.drawable.ic_promotions_friend_refer)
 						.into(imageViewLogo);
 			}
 			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
+
+			if(Data.userData.getcToDReferralEnabled() == 1){
+				relativeLayoutReferADriver.setVisibility(View.VISIBLE);
+			} else {
+				relativeLayoutReferADriver.setVisibility(View.GONE);
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

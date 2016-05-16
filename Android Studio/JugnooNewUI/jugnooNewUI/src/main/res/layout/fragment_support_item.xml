@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/sliding_bottom_bg_color"
     >
     <LinearLayout
         android:id="@+id/linearLayoutMain"

@@ -51,9 +51,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		imageViewInvoice = (ImageView) findViewById(R.id.imageViewInvoice);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		imageViewBack.setOnClickListener(new OnClickListener() {
 

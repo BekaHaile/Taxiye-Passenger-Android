@@ -85,9 +85,7 @@ public class DebugOptionsActivity extends BaseActivity {
         ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.mavenLight(this));
 
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 
         relativeLayoutLive4012 = (RelativeLayout) findViewById(R.id.relativeLayoutLive4012);

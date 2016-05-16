@@ -136,9 +136,7 @@ public class EmergencyContactsFragment extends Fragment {
 		linearLayoutContactsList.setVisibility(View.VISIBLE);
 		linearLayoutNoContacts.setVisibility(View.GONE);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 
 		buttonAddContact = (Button) rootView.findViewById(R.id.buttonAddContact);

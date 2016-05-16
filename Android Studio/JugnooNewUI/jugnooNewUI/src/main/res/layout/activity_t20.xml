@@ -1,18 +1,10 @@
-<RelativeLayout
-    android:id="@+id/relative"
+<LinearLayout
+    android:id="@+id/linearLayoutContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="vertical"
+    android:splitMotionEvents="false"
+    >
 
-    <LinearLayout
-        android:id="@+id/linearLayoutContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:splitMotionEvents="false"
-        >
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

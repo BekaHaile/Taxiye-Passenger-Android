@@ -477,10 +477,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
 
-                /*startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                dissmissEmailVerify();
-                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);*/
             }
         });
 

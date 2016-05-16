@@ -123,9 +123,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonDisableEmergencyMode = (Button) rootView.findViewById(R.id.buttonDisableEmergencyMode);
 		buttonDisableEmergencyMode.setTypeface(Fonts.mavenRegular(activity));
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 		linearLayoutDisableEmergencyMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutDisableEmergencyMode);
 

@@ -148,9 +148,7 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, textViewTitle));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
