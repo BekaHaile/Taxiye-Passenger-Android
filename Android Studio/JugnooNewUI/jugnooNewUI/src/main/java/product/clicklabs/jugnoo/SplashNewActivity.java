@@ -136,7 +136,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
 	TextView textViewSTerms;
 
-	boolean loginDataFetched = false, resumed = false;
+	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
@@ -1595,6 +1595,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	}
 
+	@Override
+	public void startActivity(Intent intent) {
+		newActivityStarted = true;
+		super.startActivity(intent);
+	}
 
 	@Override
 	protected void onDestroy() {

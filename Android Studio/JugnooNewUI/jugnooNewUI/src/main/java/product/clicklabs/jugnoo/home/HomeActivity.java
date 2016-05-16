@@ -120,6 +120,7 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -2289,7 +2290,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                menuBar.relativeLayoutPromotions.performClick();
+                                menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
                             }
                         });
                 Data.userData.setPromoSuccess(1);
@@ -3251,31 +3252,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 intentToShareActivity(true);
 			}
 			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-				menuBar.relativeLayoutWallet.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.WALLET.getTag());
 			}
 			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutPromotions.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutTransactions.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag());
 			}
 			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutSupport.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.SUPPORT.getTag());
 			}
 			else if(AppLinkIndex.ABOUT.getOrdinal() == Data.deepLinkIndex){
-				menuBar.relativeLayoutAbout.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.ABOUT.getTag());
 			}
 			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
-                menuBar.linearLayoutProfile.performClick();
+                menuBar.menuAdapter.accountClick();
 			}
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutInbox.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.INBOX.getTag());
 			}
             else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutGamePredict.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.GAME.getTag());
             }
             else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
-                menuBar.relativeLayoutFresh.performClick();
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_FRESH.getTag());
             }
 
         } catch(Exception e){
@@ -3634,7 +3635,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         @Override
         public void onContinueClicked() {
-            menuBar.relativeLayoutFresh.performClick();
+            menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_FRESH.getTag());
         }
 
         @Override
@@ -6293,7 +6294,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         try {
                             JSONParser.setPaytmErrorCase();
                             setUserData();
-                            menuBar.dismissPaytmLoading();
                             slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -6302,7 +6302,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void onFinish() {
-                        menuBar.dismissPaytmLoading();
                         slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                     }
 

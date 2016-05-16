@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -43,6 +44,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
@@ -54,13 +56,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 2;
     private static final int TYPE_ITEM = 1;
     private Activity activity;
-    private int rowLayout;
     private ArrayList<MenuInfo> menuList;
 
-    public MenuAdapter(ArrayList<MenuInfo> menuList, Activity activity, int rowLayout) {
+    public MenuAdapter(ArrayList<MenuInfo> menuList, Activity activity) {
         this.menuList = menuList;
         this.activity = activity;
-        this.rowLayout = rowLayout;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ASSL.DoMagic(v);
             return new ViewHeaderHolder(v, activity);
         } else{
-            View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menu, parent, false);
 
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 90);
             v.setLayoutParams(layoutParams);
@@ -93,23 +93,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MenuInfo menuInfo = menuList.get(position);
                 ViewHolder holder = (ViewHolder) viewholder;
                 holder.relative.setTag(position);
-                holder.relativeLayoutContainer.setTag(position);
                 holder.textViewMenu.setText(menuInfo.getName());
 
                 if(menuInfo.getIsNew() == 1){
-                    holder.textViewGameNew.setVisibility(View.VISIBLE);
+                    holder.textViewNew.setVisibility(View.VISIBLE);
                 } else{
-                    holder.textViewGameNew.setVisibility(View.GONE);
+                    holder.textViewNew.setVisibility(View.GONE);
                 }
 
-                if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
-                    holder.textViewWalletValue.setVisibility(View.VISIBLE);
-                } else{
-                    holder.textViewWalletValue.setVisibility(View.GONE);
-                }
-
-                holder.relativeLayoutContainer.setTag(position);
-
+                holder.textViewValue.setVisibility(View.GONE);
                 if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageDrawable(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal));
                     try {
@@ -122,9 +114,19 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if(!"".equalsIgnoreCase(icon)){
                             Picasso.with(activity)
                                     .load(icon)
-                                    .placeholder(R.drawable.ic_play_normal)
-                                    .error(R.drawable.ic_play_normal)
+                                    .placeholder(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
+                                    .error(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
                                     .into(holder.imageViewMenuIcon);
+                        }
+                        holder.textViewMenu.setText(Data.userData.getGamePredictName());
+                        if(!"".equalsIgnoreCase(Data.userData.getGamePredictNew())){
+                            holder.textViewNew.setText(Data.userData.getGamePredictNew());
+                        } else{
+                            holder.textViewNew.setVisibility(View.GONE);
+                        }
+                        if(Data.userData.getGamePredictEnable() != 1
+                                || "".equalsIgnoreCase(Data.userData.getGamePredictName())){
+                            holder.relative.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -133,25 +135,67 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_get_a_ride_selector);
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fresh_selector);
+                    if(activity instanceof HomeActivity) {
+                        if (1 == Data.freshAvailable) {
+                            holder.relative.setVisibility(View.VISIBLE);
+                        } else {
+                            holder.relative.setVisibility(View.GONE);
+                        }
+                    }
                 }else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_share_selector);
                 } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
+                    try {
+                        holder.textViewValue.setText(String.format(activity.getResources()
+                                        .getString(R.string.rupees_value_format_without_space),
+                                Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
+                        holder.textViewValue.setVisibility(View.VISIBLE);
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    }
                 } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_inbox_selector);
+                    try {
+                        int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
+                        if(unreadNotificationsCount > 0){
+                            holder.textViewValue.setVisibility(View.VISIBLE);
+                            holder.textViewValue.setText(String.valueOf(unreadNotificationsCount));
+                        }
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    }
                 } else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_promotion_selector);
+                    try {
+                        if(Data.userData.numCouponsAvaliable > 0) {
+                            holder.textViewValue.setVisibility(View.VISIBLE);
+                            holder.textViewValue.setText(String.valueOf(Data.userData.numCouponsAvaliable));
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
+                    if(activity instanceof FreshActivity){
+                        holder.textViewMenu.setText(activity.getResources().getString(R.string.order_history));
+                    }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_refer_a_driver_selector);
+                    try {
+                        if(Data.userData.getcToDReferralEnabled() != 1){
+                            holder.relative.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
                 }
 
-                holder.relativeLayoutContainer.setOnClickListener(new View.OnClickListener() {
+                holder.relative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -185,9 +229,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.relative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(activity, AccountActivity.class));
-                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_ACCOUNT);
+                    accountClick();
                 }
             });
         }
@@ -210,10 +252,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return TYPE_HEADER;
         }
         return TYPE_ITEM;
-    }
-
-    public void setMenuItems(MenuInfo menuInfo){
-
     }
 
     public void onClickAction(final String tag){
@@ -255,6 +293,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
+
             } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, PaymentActivity.class);
                 intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
@@ -263,10 +302,22 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
+
             } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
+                LatLng currLatLng = null;
+                if(activity instanceof HomeActivity){
+                    currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+                } else if(activity instanceof FreshActivity){
+                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+                }
+                if(currLatLng != null){
+                    Data.latitude = currLatLng.latitude;
+                    Data.longitude = currLatLng.longitude;
+                }
                 activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
+
             }else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
                 if(activity instanceof HomeActivity){
@@ -314,7 +365,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else if(activity instanceof FreshActivity){
                     ((FreshActivity)activity).openOrderHistory();
-                    //drawerLayout.closeDrawer(menuLayout);
                 }
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
@@ -322,7 +372,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else if(activity instanceof FreshActivity){
                     ((FreshActivity)activity).openSupport();
-                    //drawerLayout.closeDrawer(menuLayout);
                 }
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
@@ -334,24 +383,24 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    public void accountClick(){
+        activity.startActivity(new Intent(activity, AccountActivity.class));
+        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_ACCOUNT);
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewMenu, textViewGameNew, textViewWalletValue;
-        public ImageView imageViewSelection, imageViewMenuIcon;
-        public RelativeLayout relative, relativeLayoutContainer;
-        public LinearLayout linearLayoutNewContainer;
+        public TextView textViewMenu, textViewNew, textViewValue;
+        public ImageView imageViewMenuIcon;
+        public RelativeLayout relative;
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
             textViewMenu = (TextView) convertView.findViewById(R.id.textViewMenu); textViewMenu.setTypeface(Fonts.mavenRegular(context));
-            textViewGameNew = (TextView) convertView.findViewById(R.id.textViewGameNew); textViewGameNew.setTypeface(Fonts.mavenRegular(context));
-            textViewWalletValue = (TextView) convertView.findViewById(R.id.textViewWalletValue); textViewWalletValue.setTypeface(Fonts.mavenRegular(context));
-            linearLayoutNewContainer = (LinearLayout) convertView.findViewById(R.id.linearLayoutNewContainer);
-            imageViewSelection = (ImageView) convertView.findViewById(R.id.imageViewSelection);
+            textViewNew = (TextView) convertView.findViewById(R.id.textViewNew); textViewNew.setTypeface(Fonts.mavenRegular(context));
+            textViewValue = (TextView) convertView.findViewById(R.id.textViewValue); textViewValue.setTypeface(Fonts.mavenRegular(context));
             imageViewMenuIcon = (ImageView) convertView.findViewById(R.id.imageViewMenuIcon);
-
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
-            relativeLayoutContainer = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutContainer);
         }
     }
 
@@ -360,11 +409,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public RelativeLayout relative;
         public ImageView imageViewProfile;
         public TextView textViewUserName, textViewViewAccount;
-        public LinearLayout linearLayoutName;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
-            linearLayoutName = (LinearLayout) convertView.findViewById(R.id.linearLayoutName);
             imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
             textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(context));
             textViewViewAccount = (TextView) convertView.findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Fonts.mavenMedium(context));

@@ -155,7 +155,6 @@ public class FreshActivity extends FragmentActivity {
 
 		if(!HomeActivity.checkIfUserDataNull(this)){
 			menuBar.setUserData();
-			menuBar.dismissPaytmLoading();
 			topBar.setUserData();
 		}
 
