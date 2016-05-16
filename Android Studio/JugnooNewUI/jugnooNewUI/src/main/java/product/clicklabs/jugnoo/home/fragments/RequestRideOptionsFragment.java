@@ -281,7 +281,7 @@ public class RequestRideOptionsFragment extends Fragment {
                 break;
             }
         }
-        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format)
+        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         textViewMinFareMS.setText(String.format(activity.getResources().getString(R.string.min_fare_rupee_format)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));

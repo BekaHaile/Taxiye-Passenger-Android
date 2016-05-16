@@ -90,11 +90,11 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         holder.textViewFeedbackReason.setText(feedbackReason.name);
 
         if(feedbackReason.checked){
-            holder.relative.setBackgroundColor(Color.WHITE);
+            //holder.relative.setBackgroundColor(Color.WHITE);
             holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_checked);
         }
         else{
-            holder.relative.setBackgroundColor(Color.TRANSPARENT);
+            //holder.relative.setBackgroundColor(Color.TRANSPARENT);
             holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_unchecked);
         }
 
