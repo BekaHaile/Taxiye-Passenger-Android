@@ -77,6 +77,18 @@
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
+        <ImageView
+            android:id="@+id/imageViewPriorityTip"
+            android:layout_width="29px"
+            android:layout_height="34px"
+            android:tag="mwar"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_surge_grey"
+            android:layout_marginBottom="90px"
+            android:visibility="visible"
+            />
+
         <!-- Location error -->
         <include layout="@layout/layout_location_error" />
 
@@ -164,7 +176,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/white"
                 android:splitMotionEvents="false"
-                android:visibility="gone">
+                >
 
                 <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
                     android:id="@+id/progressBarInAppCampaignRequest"

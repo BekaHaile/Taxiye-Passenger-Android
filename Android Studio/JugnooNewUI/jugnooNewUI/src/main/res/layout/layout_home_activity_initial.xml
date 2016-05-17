@@ -151,64 +151,6 @@
         </RelativeLayout>
 
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutInitialFareFactor"
-            android:layout_width="match_parent"
-            android:layout_height="55px"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/sliding_bottom_bg_color"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:src="@color/text_color_hint"/>
-
-            <ImageView
-                android:id="@+id/imageViewPriorityTip"
-                android:layout_width="34px"
-                android:layout_height="39px"
-                android:layout_marginLeft="30px"
-                android:layout_centerVertical="true"
-                android:src="@drawable/surge_icon_top"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/imageViewPriorityTip"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewCurrentFareFactor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:text="1.2x"
-                    android:textColor="@color/text_color"
-                    android:textSize="26px" />
-
-
-                <TextView
-                    android:id="@+id/textViewCurrentRatesInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:text="of standard rates applicable right now"
-                    android:textColor="@color/text_color"
-                    android:textSize="24px" />
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
-
-
     </LinearLayout>
 
     <RelativeLayout

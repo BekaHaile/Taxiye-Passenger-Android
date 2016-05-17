@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
@@ -26,7 +25,7 @@ public class FreshSupportFragment extends Fragment {
 
 	private final String TAG = FreshSupportFragment.class.getSimpleName();
 	private LinearLayout linearLayoutRoot;
-	private RelativeLayout relativeLayoutCallSupport;
+	private LinearLayout linearLayoutCallSupport;
 
 	private View rootView;
     private FreshActivity activity;
@@ -69,9 +68,9 @@ public class FreshSupportFragment extends Fragment {
 		((TextView)rootView.findViewById(R.id.textViewJustContact)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		((TextView)rootView.findViewById(R.id.textViewCallSupport)).setTypeface(Fonts.mavenRegular(activity));
 
-		relativeLayoutCallSupport = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCallSupport);
+		linearLayoutCallSupport = (LinearLayout) rootView.findViewById(R.id.linearLayoutCallSupport);
 
-		relativeLayoutCallSupport.setOnClickListener(new View.OnClickListener() {
+		linearLayoutCallSupport.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(activity.getProductsResponse() != null

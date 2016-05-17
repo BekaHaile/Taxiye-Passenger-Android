@@ -26,6 +26,7 @@ public class SlidingBottomPanel {
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private ImageView imageViewExtraForSliding;
     private RequestRideOptionsFragment requestRideOptionsFragment;
+    private ImageView imageViewPriorityTip;
 
     private final String TAG = SlidingBottomPanel.class.getSimpleName();
 
@@ -38,6 +39,7 @@ public class SlidingBottomPanel {
         //SlidingUp Layout
         requestRideOptionsFragment = ((RequestRideOptionsFragment) activity.getSupportFragmentManager().findFragmentById(R.id.frag));
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
+        imageViewPriorityTip = (ImageView) view.findViewById(R.id.imageViewPriorityTip);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (240 * ASSL.Yscale()));
@@ -130,6 +132,18 @@ public class SlidingBottomPanel {
 
     public RequestRideOptionsFragment getRequestRideOptionsFragment(){
         return requestRideOptionsFragment;
+    }
+
+    public void updateFareFactorUI(int supplyCount){
+        if(supplyCount == 1) {
+            if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
+                imageViewPriorityTip.setVisibility(View.VISIBLE);
+            } else {
+                imageViewPriorityTip.setVisibility(View.GONE);
+            }
+        } else{
+            imageViewPriorityTip.setVisibility(View.GONE);
+        }
     }
 
 }

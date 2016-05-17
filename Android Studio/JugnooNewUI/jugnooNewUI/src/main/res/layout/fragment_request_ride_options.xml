@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@drawable/background_white_eeeeee_selector"
+            android:background="@drawable/bg_white_menu_item_selector_color_selector"
             android:orientation="vertical"
             >
 
@@ -39,8 +39,10 @@
                 android:layout_marginTop="5px"
                 android:gravity="center"
                 android:text="200"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_28"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                android:textAllCaps="true"
+                />
 
         </LinearLayout>
 
@@ -57,51 +59,19 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@drawable/background_white_eeeeee_selector"
+            android:background="@drawable/bg_white_menu_item_selector_color_selector"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textViewMinFare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/textViewMin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/min"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"
-                    android:layout_marginRight="2px"
-                    />
-
-                <ImageView
-                    android:id="@+id/imageViewPriorityTip"
-                    android:layout_width="29px"
-                    android:layout_height="34px"
-                    android:tag="mwar"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_surge_grey"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="7px"
-                    android:layout_marginRight="7px"
-
-                    />
-
-                <TextView
-                    android:id="@+id/textViewFare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/fare"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"
-                    android:layout_marginLeft="2px"
-                    />
-
-            </LinearLayout>
+                android:gravity="center"
+                android:text="@string/min_fare"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                android:textAllCaps="true"
+                />
 
             <TextView
                 android:id="@+id/textViewMinFareValue"
@@ -110,8 +80,10 @@
                 android:layout_marginTop="5px"
                 android:gravity="center"
                 android:text="20"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_28"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                android:textAllCaps="true"
+                />
 
         </LinearLayout>
 
@@ -128,7 +100,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@drawable/background_white_eeeeee_selector"
+            android:background="@drawable/bg_white_menu_item_selector_color_selector"
             android:orientation="vertical">
 
             <TextView
@@ -139,7 +111,9 @@
                 android:lineSpacingExtra="5px"
                 android:text="@string/fare_ln_estimate"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_size_28"/>
+                android:textSize="@dimen/text_size_28"
+                android:textColor="@color/text_color"
+                />
 
         </LinearLayout>
 
@@ -163,7 +137,7 @@
         <LinearLayout
             android:id="@+id/linearLayoutOptionsMultipleSupply"
             android:layout_width="match_parent"
-            android:layout_height="180px"
+            android:layout_height="200px"
             android:layout_margin="30px"
             android:background="@drawable/background_white_rounded_bordered"
             android:orientation="vertical"
@@ -172,7 +146,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="90px">
+                android:layout_height="100px">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutPaymentModeMS"
@@ -180,6 +154,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="horizontal"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
                     >
 
                     <ImageView
@@ -196,32 +171,40 @@
                         android:layout_marginLeft="10px"
                         android:gravity="center"
                         android:text="200"
-                        android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_30"/>
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        android:textAllCaps="true"
+                        />
 
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="2px"
+                    android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="14px"
                     android:layout_marginTop="14px"
-                    android:src="@color/grey_light"/>
+                    android:src="@color/grey_light"
+                    android:layout_marginLeft="-1dp"
+                    />
 
                 <LinearLayout
                     android:id="@+id/linearLayoutMinFareMS"
                     android:layout_width="330px"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
+                    android:layout_marginLeft="-1dp"
                     >
                     <TextView
                         android:id="@+id/textViewMinFareMS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/min_fare"
-                        android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_30"/>
+                        android:text="@string/min_fare_colon"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        android:textAllCaps="true"
+                        />
                     <TextView
                         android:id="@+id/textViewMinFareMSValue"
                         android:layout_width="wrap_content"
@@ -229,8 +212,10 @@
                         android:layout_marginLeft="10px"
                         android:gravity="center"
                         android:text="@string/rupees_value_format_without_space"
-                        android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_30"/>
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        android:textAllCaps="true"
+                        />
                 </LinearLayout>
 
 
@@ -238,20 +223,25 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2px"
+                android:layout_height="1dp"
                 android:layout_marginLeft="5px"
                 android:layout_marginRight="5px"
                 android:background="@color/text_color_hint"
+                android:layout_marginTop="-1dp"
                 />
 
             <TextView
                 android:id="@+id/textVieGetFareEstimateMS"
                 android:layout_width="match_parent"
-                android:layout_height="90px"
+                android:layout_height="100px"
                 android:gravity="center"
                 android:text="@string/get_fare_estimate"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_30"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30"
+                android:textAllCaps="true"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
+                android:layout_marginTop="-1dp"
+                />
 
         </LinearLayout>
 
@@ -260,7 +250,9 @@
             android:layout_width="94px"
             android:layout_height="94px"
             android:tag="mwar"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/linearLayoutOptionsMultipleSupply"
+            android:layout_marginTop="-10px"
             android:background="@drawable/circle_surge_price">
 
             <ImageView

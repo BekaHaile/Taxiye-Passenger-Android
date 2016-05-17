@@ -69,7 +69,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_profile_account, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 300);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 280);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);

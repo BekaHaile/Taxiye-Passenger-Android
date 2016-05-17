@@ -857,7 +857,7 @@
 	<string name="inbox">Inbox</string>
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
-	<string name="min_fare">Min Fare:</string>
+	<string name="min_fare_colon">Min Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
 
 
@@ -868,7 +868,7 @@
 	<string name="enter_destination">Enter Destination</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
 	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9%s</string>
-	<string name="min">Min</string>
+	<string name="min_fare">Min Fare</string>
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
 	<string name="promotions">Promotions</string>
 	<string name="referrals">Referrals</string>

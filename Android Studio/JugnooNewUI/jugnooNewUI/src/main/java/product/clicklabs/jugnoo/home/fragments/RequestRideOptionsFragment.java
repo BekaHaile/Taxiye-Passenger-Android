@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -58,7 +57,6 @@ public class RequestRideOptionsFragment extends Fragment {
 
     private LinearLayout linearLayoutFare;
     private TextView textViewMinFareValue;
-    private ImageView imageViewPriorityTip;
 
     private LinearLayout linearLayoutFareEstimate;
 
@@ -98,31 +96,29 @@ public class RequestRideOptionsFragment extends Fragment {
         textViewPaymentModeValue.setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
-        ((TextView) rootView.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewFare)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenRegular(activity));
         textViewMinFareValue = (TextView) rootView.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
-        imageViewPriorityTip = (ImageView) rootView.findViewById(R.id.imageViewPriorityTip);
+        textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
 
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
-        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenRegular(activity));
 
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
-        textViewPaymentModeValueMS.setTypeface(Fonts.mavenLight(activity));
+        textViewPaymentModeValueMS.setTypeface(Fonts.mavenRegular(activity));
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
-        ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.mavenRegular(activity));
         textViewMinFareMSValue = (TextView) rootView.findViewById(R.id.textViewMinFareMSValue);
-        textViewMinFareMSValue.setTypeface(Fonts.mavenMedium(activity));
+        textViewMinFareMSValue.setTypeface(Fonts.mavenRegular(activity));
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
-        textVieGetFareEstimateMS.setTypeface(Fonts.mavenLight(activity));
+        textVieGetFareEstimateMS.setTypeface(Fonts.mavenRegular(activity));
 
         textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
-        textViewPriorityTipValueMS.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+        textViewPriorityTipValueMS.setTypeface(Fonts.mavenRegular(activity));
         relativeLayoutPriorityTipMS = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPriorityTipMS);
 
         recyclerViewVehicles = (RecyclerView) rootView.findViewById(R.id.recyclerViewVehicles);
@@ -296,14 +292,13 @@ public class RequestRideOptionsFragment extends Fragment {
 
     public void updateFareFactorUI(){
         if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
-            imageViewPriorityTip.setVisibility(View.VISIBLE);
             relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
             textViewPriorityTipValueMS.setText(String.format(activity.getResources().getString(R.string.format_x)
                             , Utils.getMoneyDecimalFormat().format(Data.userData.fareFactor)));
         } else {
-            imageViewPriorityTip.setVisibility(View.GONE);
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }
+        activity.getSlidingBottomPanel().updateFareFactorUI(Data.regions.size());
     }
 
     public void initSelectedCoupon(){

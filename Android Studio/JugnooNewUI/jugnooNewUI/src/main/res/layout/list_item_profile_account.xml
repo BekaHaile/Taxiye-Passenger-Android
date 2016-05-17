@@ -2,22 +2,25 @@
 <RelativeLayout android:id="@+id/relative"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="244px"
-                android:background="@color/sliding_bottom_bg_color"
+                android:layout_height="280px"
                 android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+        android:layout_height="224px"
+        android:orientation="horizontal"
+        android:background="@color/sliding_bottom_bg_color"
+        >
 
         <RelativeLayout
             android:layout_width="148px"
             android:layout_height="148px"
             android:layout_marginLeft="48px"
             android:background="@drawable/circle_grey"
-            android:tag="mwar">
+            android:tag="mwar"
+            android:layout_gravity="center_vertical"
+            >
 
             <ImageView
                 android:id="@+id/imageViewProfile"
@@ -55,10 +58,17 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="76px"
+        android:layout_below="@+id/linearLayout"
+        android:background="@color/white"
+        />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/linearLayout"
         android:src="@color/stroke_color_light"/>
 
 </RelativeLayout>
