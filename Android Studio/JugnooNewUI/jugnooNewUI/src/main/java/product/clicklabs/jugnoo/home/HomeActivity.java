@@ -1313,12 +1313,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
-            map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            /*map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                 @Override
                 public void onCameraChange(CameraPosition cameraPosition) {
                     checkForMyLocationButtonVisibility();
                 }
-            });
+            });*/
 
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
