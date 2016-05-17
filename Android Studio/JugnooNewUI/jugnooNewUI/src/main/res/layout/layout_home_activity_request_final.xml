@@ -102,33 +102,27 @@
         android:layout_alignParentBottom="true"
         android:background="@color/transparent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="4px"
-            android:layout_above="@+id/linearLayoutInRideDriverInfo"
-            android:src="@drawable/shadow_up" />
-
-
-
         <LinearLayout
             android:id="@+id/linearLayoutInRideDriverInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="80px">
-
+            android:layout_marginTop="80px"
+            >
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="4px"
                 android:src="@drawable/shadow_up"
-                android:tag="mwar"/>
+                />
 
             <!-- promo name fare factor layout-->
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideInfo"
                 android:layout_width="match_parent"
                 android:layout_height="83px"
-                android:background="@color/white">
+                android:visibility="visible"
+                android:background="@color/white"
+                >
 
                 <ImageView
                     android:id="@+id/imageViewPromo"
@@ -165,7 +159,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="207px"
-                android:background="@color/white">
+                android:background="@color/white"
+                >
 
                 <ImageView
                     android:id="@+id/imageViewInRideDriver"
@@ -196,7 +191,7 @@
                         android:tag="mwar"/>
 
                     <ImageView
-                        android:layout_width="1px"
+                        android:layout_width="2px"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:src="@color/text_color_light"/>
@@ -214,7 +209,9 @@
                             android:gravity="center"
                             android:text="3.4"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_22"/>
+                            android:textSize="@dimen/text_size_22"
+                            android:layout_marginTop="2px"
+                            />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -367,17 +364,17 @@
             </RelativeLayout>
 
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="6px"
-                android:background="@drawable/shadow_up" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="83px"
-                android:orientation="horizontal"
-                android:background="@color/sliding_bottom_bg_color"
+                android:layout_height="89px"
+                android:orientation="vertical"
+                android:background="@color/white"
                 android:splitMotionEvents="false">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="6px"
+                    android:background="@drawable/shadow_up" />
 
                 <Button
                     android:id="@+id/buttonCancelRide"
@@ -389,7 +386,9 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_32"
-                    android:visibility="visible" />
+                    android:visibility="gone"
+
+                    />
 
                 <Button
                     android:id="@+id/buttonAddPaytmCash"
@@ -411,6 +410,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="visible"
+                    android:background="@color/menu_item_selector_color"
                     >
 
                     <TextView

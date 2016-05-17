@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -246,6 +247,14 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				Utils.showSoftKeyboard(activity, editTextSearch);
 			}
 		});
+
+		ImageView imageViewShadow = (ImageView) rootView.findViewById(R.id.imageViewShadow);
+		if(activity instanceof HomeActivity){
+			imageViewShadow.setVisibility(View.VISIBLE);
+		} else {
+			imageViewShadow.setVisibility(View.GONE);
+		}
+
 
         return rootView;
 	}

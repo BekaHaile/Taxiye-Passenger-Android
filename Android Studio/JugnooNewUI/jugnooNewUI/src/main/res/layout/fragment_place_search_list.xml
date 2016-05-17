@@ -7,9 +7,9 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/imageViewShadow"
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:layout_below="@+id/topRl"
         android:background="@drawable/shadow_down"
         />
 

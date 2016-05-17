@@ -289,7 +289,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //End Ride layout
-    LinearLayout endRideReviewRl;
+    RelativeLayout endRideReviewRl;
     ScrollView scrollViewRideSummary;
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
@@ -655,7 +655,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		((TextView) findViewById(R.id.textViewCentrePinETAMin)).setTypeface(Fonts.mavenMedium(this));
 
         //Review Layout
-        endRideReviewRl = (LinearLayout) findViewById(R.id.endRideReviewRl);
+        endRideReviewRl = (RelativeLayout) findViewById(R.id.endRideReviewRl);
 
         scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
         linearLayoutRideSummaryContainer = (LinearLayout) findViewById(R.id.linearLayoutRideSummaryContainer);
