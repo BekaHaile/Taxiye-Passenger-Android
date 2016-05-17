@@ -82,16 +82,7 @@
 
     <ImageView
         android:id="@+id/imageViewClose"
-        android:layout_width="74px"
-        android:layout_height="74px"
-        android:layout_alignRight="@+id/linearLayoutInner"
-        android:layout_alignTop="@+id/linearLayoutInner"
-        android:layout_marginRight="-25px"
-        android:layout_marginTop="-25px"
-        android:paddingBottom="20px"
-        android:paddingLeft="20px"
-        android:src="@drawable/close_icon_selector"
-        android:tag="mwar"
+        style="@style/cross_popup"
         />
 
 

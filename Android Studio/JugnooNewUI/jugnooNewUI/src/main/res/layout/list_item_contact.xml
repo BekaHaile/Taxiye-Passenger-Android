@@ -13,6 +13,7 @@
         android:layout_height="132px"
         android:src="@drawable/ic_contact_placeholder"
         android:layout_marginTop="-4px"
+        android:layout_marginBottom="-4px"
         />
 
 
@@ -52,7 +53,8 @@
         android:layout_centerVertical="true"
         android:padding="20px"
         android:src="@drawable/ic_cross_grey"
-        android:tag="mwar"/>
+        android:tag="mwar"
+        />
 
     <!-- checkbox_signup_checked -->
     <!-- checkbox_signup_unchecked -->

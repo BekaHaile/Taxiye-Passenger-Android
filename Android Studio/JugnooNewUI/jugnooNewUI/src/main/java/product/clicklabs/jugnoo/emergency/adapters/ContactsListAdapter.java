@@ -61,7 +61,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(640, 128);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(640, 120);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);

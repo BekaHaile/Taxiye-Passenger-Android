@@ -7,11 +7,6 @@
     android:visibility="visible">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    <LinearLayout
         android:id="@+id/linearLayoutInitialSearchBarMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -156,16 +151,6 @@
         </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/textViewInitialInstructions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@drawable/background_initial_instruction"
-            android:text="No drivers available"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30" />
-
         <RelativeLayout
             android:id="@+id/relativeLayoutInitialFareFactor"
             android:layout_width="match_parent"
@@ -225,14 +210,6 @@
 
 
     </LinearLayout>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/shadow_down" />
-    </LinearLayout>
-
 
     <RelativeLayout
         android:id="@+id/relativeLayoutRequest"
@@ -250,7 +227,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50px"
             android:tag="mwar"
-            android:visibility="visible"
+            android:visibility="gone"
             />
 
         <Button
@@ -261,7 +238,9 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="60px"
             android:background="@drawable/mylocation_btn_selector"
-            android:tag="mwar"/>
+            android:tag="mwar"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/imageViewRideNow"

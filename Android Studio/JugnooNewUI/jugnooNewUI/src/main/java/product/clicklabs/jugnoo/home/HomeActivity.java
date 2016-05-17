@@ -67,6 +67,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -217,7 +218,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Initial layout
     RelativeLayout initialLayout;
 
-    TextView textViewInitialInstructions;
     RelativeLayout relativeLayoutInitialFareFactor;
     TextView textViewCurrentFareFactor;
 	ImageView imageViewRideNow, imageViewInAppCampaign;
@@ -495,9 +495,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Initial layout
         initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
-        textViewInitialInstructions = (TextView) findViewById(R.id.textViewInitialInstructions);
-        textViewInitialInstructions.setTypeface(Fonts.mavenLight(this));
-        textViewInitialInstructions.setVisibility(View.GONE);
         changeLocalityLayout = (RelativeLayout)findViewById(R.id.changeLocalityLayout);
         textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
         buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
@@ -1316,6 +1313,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
+            map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                @Override
+                public void onCameraChange(CameraPosition cameraPosition) {
+                    checkForMyLocationButtonVisibility();
+                }
+            });
+
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
@@ -1385,6 +1389,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
     }
+
+    private void checkForMyLocationButtonVisibility(){
+        try{
+            if(MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
+                    map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK){
+                initialMyLocationBtn.setVisibility(View.VISIBLE);
+                buttonChangeLocalityMyLocation.setVisibility(View.VISIBLE);
+                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+            } else{
+                initialMyLocationBtn.setVisibility(View.GONE);
+                buttonChangeLocalityMyLocation.setVisibility(View.GONE);
+                customerInRideMyLocationBtn.setVisibility(View.GONE);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     private void translateViewBottom(final ViewGroup viewGroup, final View mView, final boolean viewExchange,
                                      final boolean callNextAnim) {
@@ -1927,8 +1949,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
-                        textViewInitialInstructions.setVisibility(View.GONE);
-
                         imageViewRideNow.setVisibility(View.VISIBLE);
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
                         changeLocalityLayout.setVisibility(View.GONE);
@@ -2105,6 +2125,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddPaytmCash.setVisibility(View.GONE);
+                        linearLayoutSendInvites.setVisibility(View.GONE);
+                        linearLayoutSendInvites.clearAnimation();
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
@@ -2168,6 +2190,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddPaytmCash.setVisibility(View.GONE);
+                        linearLayoutSendInvites.setVisibility(View.GONE);
+                        linearLayoutSendInvites.clearAnimation();
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
@@ -2210,11 +2234,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 						setDropLocationEngagedUI();
 
-						setAssignedDriverData(mode);
+                        setAssignedDriverData(mode);
                         zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddPaytmCash.setVisibility(View.GONE);
+                        linearLayoutSendInvites.setVisibility(View.VISIBLE);
                         updateInRideAddPaytmButtonText();
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
@@ -3535,7 +3560,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     try {
                         promoCouponSelectedForRide = null;
                         if (userMode == UserMode.PASSENGER) {
-                            textViewInitialInstructions.setVisibility(View.GONE);
                             dontCallRefreshDriver = false;
                         }
                     } catch (Exception e) {
@@ -3552,8 +3576,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onFailure() {
                     try {
                         if (Data.driverInfos.size() == 0) {
-                            textViewInitialInstructions.setVisibility(View.GONE);
-                            textViewInitialInstructions.setText(getResources().getString(R.string.couldnt_find_drivers_nearby));
                             textViewCentrePinETA.setText("-");
                             noDriverNearbyToast(getResources().getString(R.string.couldnt_find_drivers_nearby));
                         }
@@ -3682,8 +3704,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
-                textViewInitialInstructions.setVisibility(View.GONE);
-                textViewInitialInstructions.setText(farAwayCity);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
 
@@ -3784,7 +3804,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if (Data.driverInfos.size() == 0) {
                             textViewCentrePinETA.setText("-");
                         } else {
-                            textViewInitialInstructions.setVisibility(View.GONE);
                             textViewCentrePinETA.setText(region.getEta());
                         }
 					}

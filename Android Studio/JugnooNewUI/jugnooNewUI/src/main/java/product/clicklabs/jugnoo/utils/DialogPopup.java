@@ -281,7 +281,7 @@ public class DialogPopup {
 				}
 			});
 
-			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+			dialog.findViewById(R.id.linearLayoutInner).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 

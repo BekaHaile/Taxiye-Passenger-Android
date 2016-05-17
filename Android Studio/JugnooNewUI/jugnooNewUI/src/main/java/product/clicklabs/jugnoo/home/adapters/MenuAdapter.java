@@ -249,6 +249,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         LinearLayout.LayoutParams paramsP = (LinearLayout.LayoutParams) textView.getLayoutParams();
         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
         paramsP.width = (int)(minRatio * 56f);
+        paramsP.height = (int)(minRatio * 56f);
         textView.setLayoutParams(paramsP);
     }
 

@@ -111,4 +111,20 @@
         <item name="android:tag">mwar</item>
     </style>
 
+
+    <style name="cross_popup">
+        <item name="android:layout_width">73px</item>
+        <item name="android:layout_height">73px</item>
+        <item name="android:layout_alignRight">@+id/linearLayoutInner</item>
+        <item name="android:layout_alignTop">@+id/linearLayoutInner</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:src">@drawable/ic_cross_popup_selector</item>
+        <item name="android:tag">mwar</item>
+        <item name="android:paddingLeft">10px</item>
+        <item name="android:paddingBottom">10px</item>
+        <item name="android:layout_marginRight">-20px</item>
+        <item name="android:layout_marginTop">-20px</item>
+    </style>
+
 </resources>

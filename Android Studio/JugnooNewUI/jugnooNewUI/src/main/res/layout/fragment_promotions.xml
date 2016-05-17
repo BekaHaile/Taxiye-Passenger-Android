@@ -31,7 +31,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/linearLayoutPromocodeInner"
+                android:id="@+id/linearLayoutInner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="52px"
@@ -78,16 +78,7 @@
 
             <ImageView
                 android:id="@+id/imageViewClose"
-                android:layout_width="74px"
-                android:layout_height="74px"
-                android:layout_alignRight="@+id/linearLayoutPromocodeInner"
-                android:layout_alignTop="@+id/linearLayoutPromocodeInner"
-                android:layout_marginRight="-25px"
-                android:layout_marginTop="-25px"
-                android:paddingBottom="20px"
-                android:paddingLeft="20px"
-                android:src="@drawable/close_icon_selector"
-                android:tag="mwar"
+                style="@style/cross_popup"
                 />
         </RelativeLayout>
     </RelativeLayout>
@@ -133,7 +124,7 @@
         android:id="@+id/recyclerViewOffers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30px"
+        android:layout_marginTop="40px"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
         />

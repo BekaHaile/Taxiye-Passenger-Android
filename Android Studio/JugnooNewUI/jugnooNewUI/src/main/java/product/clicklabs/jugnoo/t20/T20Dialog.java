@@ -83,7 +83,6 @@ public class T20Dialog {
 			dialog.setCancelable(false);
 			dialog.setCanceledOnTouchOutside(false);
 
-			LinearLayout innerRl = (LinearLayout) dialog.findViewById(R.id.innerRl);
 			ImageView imageViewDialogTop = (ImageView) dialog.findViewById(R.id.imageViewDialogTop);
 
 			LinearLayout linearLayoutBeforeRide = (LinearLayout) dialog.findViewById(R.id.linearLayoutBeforeRide);
