@@ -4,13 +4,14 @@ public class PromotionInfo extends PromoCoupon{
 	
 	private String title;
 	public String terms;
-    public String expiryDate;
+    public String expiryDate, endOn;
 	
-	public PromotionInfo(int id, String title, String terms, String endOn){
+	public PromotionInfo(int id, String title, String terms, String expiryDate, String endOn){
 		this.id = id;
 		this.title = title;
 		this.terms = terms;
-        this.expiryDate = endOn;
+        this.expiryDate = expiryDate;
+		this.endOn = endOn;
 	}
 
     public PromotionInfo(int id, String title, String terms){
@@ -18,6 +19,7 @@ public class PromotionInfo extends PromoCoupon{
         this.title = title;
         this.terms = terms;
         this.expiryDate = "";
+		this.endOn = "";
     }
 
 	@Override

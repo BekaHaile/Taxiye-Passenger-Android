@@ -6532,6 +6532,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
             }
+            else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
+                textViewDestSearch.setText(autoCompleteSearchResult.name);
+            }
+        }
+        else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+            textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.name);
+        }
+        else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.name);
         }
     }
 
@@ -6574,7 +6585,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
             } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
-                textViewDestSearch.setText(searchResult.address);
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
 
@@ -6589,7 +6599,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-            textViewAssigningDropLocationClick.setText(searchResult.address);
             sendDropLocationAPI(HomeActivity.this, searchResult.latLng,
                     getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch());
             FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
@@ -6597,7 +6606,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-            textViewFinalDropLocationClick.setText(searchResult.address);
             sendDropLocationAPI(HomeActivity.this, searchResult.latLng,
                     getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch());
             FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
@@ -6612,6 +6620,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
             progressBarInitialSearch.setVisibility(View.GONE);
+            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
+                textViewDestSearch.setText("");
+            }
+        }
+        else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+            textViewAssigningDropLocationClick.setText("");
+        }
+        else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            textViewFinalDropLocationClick.setText("");
         }
 
         Log.e("onPlaceSearchError", "=");

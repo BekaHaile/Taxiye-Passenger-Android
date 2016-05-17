@@ -77,7 +77,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else{
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menu, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 90);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
@@ -107,6 +107,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 LinearLayout.LayoutParams paramsP = (LinearLayout.LayoutParams) holder.textViewValue.getLayoutParams();
                 paramsP.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 holder.textViewValue.setLayoutParams(paramsP);
+                showLayout(holder.relative);
                 if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageDrawable(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal));
                     try {
@@ -141,9 +142,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fresh_selector);
                     if(activity instanceof HomeActivity) {
-                        if (1 == Data.freshAvailable) {
-                            showLayout(holder.relative);
-                        } else {
+                        if (1 != Data.freshAvailable) {
                             hideLayout(holder.relative);
                         }
                     }
@@ -253,7 +252,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void showLayout(View view){
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
-        params.height = (int)(90);
+        float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+        params.height = (int)(minRatio * 81f);
         view.setLayoutParams(params);
     }
 

@@ -1065,7 +1065,7 @@ public class JSONParser implements Constants {
                         JSONObject poData = promotionsData.getJSONObject(i);
 
                         PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
-                            poData.getString("terms_n_conds"), poData.getString("validity_text"));
+                            poData.getString("terms_n_conds"), poData.getString("validity_text"), poData.getString("end_on"));
 
                         promotionInfoList.add(promotionInfo);
                     }
@@ -1190,8 +1190,13 @@ public class JSONParser implements Constants {
     public static void parseDropLatLng(JSONObject jObject1){
         try {
             if (jObject1.has(KEY_OP_DROP_LATITUDE) && jObject1.has(KEY_OP_DROP_LONGITUDE)) {
-				Data.dropLatLng = new LatLng(jObject1.getDouble(KEY_OP_DROP_LATITUDE),
-                        jObject1.getDouble(KEY_OP_DROP_LONGITUDE));
+                double dropLatitude = jObject1.getDouble(KEY_OP_DROP_LATITUDE);
+                double dropLongitude = jObject1.getDouble(KEY_OP_DROP_LONGITUDE);
+                if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
+                    Data.dropLatLng = null;
+                } else{
+                    Data.dropLatLng = new LatLng(dropLatitude, dropLongitude);
+                }
 			} else{
                 Data.dropLatLng = null;
 			}

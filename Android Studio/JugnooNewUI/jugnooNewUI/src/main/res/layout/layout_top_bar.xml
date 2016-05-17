@@ -11,6 +11,7 @@
         android:layout_height="@dimen/top_bar_height"
         android:background="@color/white"
         android:splitMotionEvents="false"
+        android:soundEffectsEnabled="false"
         >
 
         <ImageView
@@ -30,6 +31,7 @@
             android:background="@drawable/background_transparent"
             android:layout_toRightOf="@+id/imageViewMenu"
             android:layout_marginLeft="50px"
+            android:soundEffectsEnabled="false"
             />
 
         <ImageView

@@ -41,6 +41,7 @@
             android:layout_toRightOf="@+id/textViewCouponTitle"
             android:textSize="@dimen/text_size_20"
             android:maxLines="3"
+            android:padding="10px"
             />
 
         <ImageView

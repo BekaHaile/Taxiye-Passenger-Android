@@ -361,7 +361,7 @@
 	<!-- NL OTP-->
 	<string name="nl_otp_verification">Verification</string>
 	<string name="nl_otp_please_enter_otp">Please enter the One Time Password sent to</string>
-	<string name="nl_otp_enter_otp">Enter One Time Password</string>
+	<string name="nl_otp_enter_otp">Enter OTP</string>
 	<string name="nl_otp_waiting_to_detect_otp">Waiting to automatically detect OTP</string>
 	<string name="nl_otp_verify">Verify Me</string>
 	<string name="nl_otp_receive_otp_via_call">Receive the OTP via call</string>

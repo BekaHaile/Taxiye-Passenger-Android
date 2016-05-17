@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!-- Drop location layout -->
 
@@ -314,7 +314,7 @@
             android:paddingBottom="12px"
             android:paddingTop="12px"
             android:text="Note: This is just an estimate. Actual cost, time and dist may vary"
-            android:textColor="@color/stroke_color_light"
+            android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_22"
 
             />

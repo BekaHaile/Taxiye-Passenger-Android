@@ -62,6 +62,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TransactionListAdapter transactionListAdapter;
 	RelativeLayout relativeLayoutShowMore;
 	TextView textViewShowMore;
+
+	LinearLayout linearLayoutNoItems;
 	
 	public double jugnooBalance = 0;
 	public int totalTransactions = 0, pageSize = 0;
@@ -114,6 +116,10 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
 		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.mavenRegular(paymentActivity));
 		relativeLayoutShowMore.setVisibility(View.GONE);
+
+		linearLayoutNoItems = (LinearLayout) rootView.findViewById(R.id.linearLayoutNoItems);
+		((TextView)rootView.findViewById(R.id.textViewNoItems)).setTypeface(Fonts.mavenRegular(paymentActivity));
+		linearLayoutNoItems.setVisibility(View.GONE);
 		
 		transactionListAdapter = new TransactionListAdapter(paymentActivity);
 		listViewTransactions.setAdapter(transactionListAdapter);
@@ -189,12 +195,15 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			transactionInfoList.clear();
 			transactionListAdapter.notifyDataSetChanged();
 			relativeLayoutShowMore.setVisibility(View.GONE);
+			linearLayoutNoItems.setVisibility(View.GONE);
 		}
 		else{
 			if(transactionInfoList.size() == 0){
+				linearLayoutNoItems.setVisibility(View.VISIBLE);
 				relativeLayoutShowMore.setVisibility(View.GONE);
 			}
 			else{
+				linearLayoutNoItems.setVisibility(View.GONE);
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
