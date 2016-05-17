@@ -131,7 +131,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                         if(Data.userData.getGamePredictEnable() != 1
                                 || "".equalsIgnoreCase(Data.userData.getGamePredictName())){
-                            holder.relative.setVisibility(View.GONE);
+                            hideLayout(holder.relative);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -142,9 +142,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fresh_selector);
                     if(activity instanceof HomeActivity) {
                         if (1 == Data.freshAvailable) {
-                            holder.relative.setVisibility(View.VISIBLE);
+                            showLayout(holder.relative);
                         } else {
-                            holder.relative.setVisibility(View.GONE);
+                            hideLayout(holder.relative);
                         }
                     }
                 }else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -193,7 +193,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_refer_a_driver_selector);
                     try {
                         if(Data.userData.getcToDReferralEnabled() != 1){
-                            holder.relative.setVisibility(View.GONE);
+                            hideLayout(holder.relative);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -243,6 +243,18 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
 
+    }
+
+    private void hideLayout(View view){
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+        params.height = (int)(0f);
+        view.setLayoutParams(params);
+    }
+
+    private void showLayout(View view){
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+        params.height = (int)(90);
+        view.setLayoutParams(params);
     }
 
     private void setLayoutParamsForValue(TextView textView){

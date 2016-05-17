@@ -136,6 +136,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
+import product.clicklabs.jugnoo.home.dialogs.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
@@ -5965,8 +5966,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     return;
                 } else{
                     if(localModeEnabled == 1){
-                        DialogPopup.alertPopup(this, getResources().getString(R.string.everything_is_alright_caps),
-                                getResources().getString(R.string.you_have_disabled_jugnoo_emergency), true);
+                        EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
+                        emergencyDisableDialog.show();
                     }
                     topBar.topRl.setBackgroundResource(R.color.white);
                     topBar.title.setText(getResources().getString(R.string.app_name));

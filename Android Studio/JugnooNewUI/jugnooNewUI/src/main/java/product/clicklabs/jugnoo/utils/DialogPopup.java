@@ -215,6 +215,14 @@ public class DialogPopup {
 		}
 	}
 
+	public static void dialogWithTitleAndDesc(Activity activity, String title, String message){
+		try {
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	public static void dialogNoInternet(Activity activity, String title, String message,
 										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface){
 		dialogNoInternet(activity, title, message, alertCallBackWithButtonsInterface, false);
