@@ -8,6 +8,7 @@ import com.google.android.gms.analytics.Tracker;
 import java.util.HashMap;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -60,7 +61,10 @@ public final class AnalyticsTrackers {
 			Tracker tracker;
 			switch (target) {
 				case APP:
-					tracker = GoogleAnalytics.getInstance(mContext).newTracker(R.xml.app_tracker);
+					if(BuildConfig.DEBUG)
+						tracker = GoogleAnalytics.getInstance(mContext).newTracker(R.xml.app_tracker_debug);
+					else
+						tracker = GoogleAnalytics.getInstance(mContext).newTracker(R.xml.app_tracker);
 					break;
 				default:
 					throw new IllegalArgumentException("Unhandled analytics target " + target);

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -42,8 +44,8 @@ import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
@@ -68,6 +70,7 @@ import retrofit.mime.TypedByteArray;
 public class JSONParser implements Constants {
 
     private final String TAG = JSONParser.class.getSimpleName();
+
 
     public JSONParser() {
 
@@ -552,7 +555,7 @@ public class JSONParser implements Constants {
 
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
-
+        List<Product> productList = new ArrayList<>();
 
 		double baseFare = initialBaseFare;
 		if (jLastRideData.has("base_fare")) {
@@ -629,6 +632,21 @@ public class JSONParser implements Constants {
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+
+        Product product = new Product()
+                .setCategory("Auto")
+                .setId("0")
+                .setName("Paytm")
+                .setPrice(paidUsingPaytm);
+//                                                                .setPosition(4);
+        productList.add(product);
+
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
+                .setTransactionId(engagementId)
+                .setTransactionAffiliation("Auto")
+                .setTransactionRevenue(jLastRideData.getDouble("fare"));
+
+        FlurryEventLogger.orderedProduct(productList, productAction);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),

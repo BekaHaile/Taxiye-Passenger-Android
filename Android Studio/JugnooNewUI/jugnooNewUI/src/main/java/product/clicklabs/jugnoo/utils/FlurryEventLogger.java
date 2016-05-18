@@ -3,8 +3,11 @@ package product.clicklabs.jugnoo.utils;
 import android.content.Context;
 
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.Constants;
@@ -154,7 +157,21 @@ public class FlurryEventLogger {
 		}
 		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
-	
 
+	/**
+	 *
+	 * @param mUserId
+	 */
+	public static void setGAUserId(String mUserId) {
+		try{ MyApplication.getInstance().setGAUserId(mUserId);} catch (Exception e){}
+	}
+
+	public static void orderedProduct(List<Product> product, ProductAction productAction){
+		try {
+			MyApplication.getInstance().transactions(product, productAction);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
