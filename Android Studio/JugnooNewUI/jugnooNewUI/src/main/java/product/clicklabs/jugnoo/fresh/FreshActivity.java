@@ -538,7 +538,8 @@ public class FreshActivity extends FragmentActivity {
 		try{
 			JSONObject jCart = new JSONObject();
 			if(getProductsResponse() != null
-					&& getProductsResponse().getCategories() != null) {
+					&& getProductsResponse().getCategories() != null
+					&& getProductsResponse().getCategories().size() > 0) {
 				for (Category category : getProductsResponse().getCategories()) {
 					for (SubItem subItem : category.getSubItems()) {
 						if (subItem.getSubItemQuantitySelected() > 0) {
@@ -550,8 +551,8 @@ public class FreshActivity extends FragmentActivity {
 						}
 					}
 				}
+				Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
 			}
-			Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
 		} catch(Exception e){
 			e.printStackTrace();
 		}

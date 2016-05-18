@@ -518,18 +518,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
         buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
 
-        imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
-        imageViewInAppCampaign.setVisibility(View.GONE);
-        relativeLayoutRequest = (RelativeLayout) findViewById(R.id.relativeLayoutRequest);
-        relativeLayoutRequest.setVisibility(View.VISIBLE);
-        relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
-        relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
-        textViewInAppCampaignRequest = (TextView) findViewById(R.id.textViewInAppCampaignRequest);
-        textViewInAppCampaignRequest.setTypeface(Fonts.mavenLight(this));
-        buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
-        buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
-
-
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
         relativeLayoutDestSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutDestSearchBar);
@@ -735,6 +723,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 requestRideClick();
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 			}
         });
 
@@ -746,6 +735,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 callCampaignAvailRequest();
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
 
@@ -828,6 +818,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutInitialSearchBar.performClick();
             }
         });
+
+        relativeLayoutRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+
 
 
 		//Location error layout

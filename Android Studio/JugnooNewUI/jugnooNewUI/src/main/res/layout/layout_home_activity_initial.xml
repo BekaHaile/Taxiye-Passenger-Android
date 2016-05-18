@@ -160,6 +160,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30px"
         android:animateLayoutChanges="true"
+        android:soundEffectsEnabled="false"
         >
 
         <ImageView

@@ -183,7 +183,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="14px"
                     android:layout_marginTop="14px"
-                    android:src="@color/grey_light"
+                    android:src="@color/text_color_hint"
                     android:layout_marginLeft="-1dp"
                     />
 

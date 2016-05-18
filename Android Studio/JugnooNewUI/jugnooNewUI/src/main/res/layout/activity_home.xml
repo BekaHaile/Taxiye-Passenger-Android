@@ -69,7 +69,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
-                    android:visibility="gone"/>
+                    android:visibility="visible"
+                    android:soundEffectsEnabled="false"
+                    android:layout_marginBottom="217px"
+                    />
 
             </RelativeLayout>
 
