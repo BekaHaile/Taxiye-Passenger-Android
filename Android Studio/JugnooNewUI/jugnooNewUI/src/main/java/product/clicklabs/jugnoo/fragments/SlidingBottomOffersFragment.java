@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -22,6 +23,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
@@ -134,7 +136,7 @@ public class SlidingBottomOffersFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(OffersAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position) {
             PromoCoupon promoCoupon = offerList.get(position);
 
             setPromoCouponText(holder.textViewPromotion1, promoCoupon);
@@ -160,6 +162,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 						} else if (promoCoupon instanceof PromotionInfo) {
 							DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo)promoCoupon).terms);
 						}
+                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "offer t&c");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

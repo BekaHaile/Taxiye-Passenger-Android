@@ -66,7 +66,7 @@ import retrofit.mime.TypedByteArray;
 
 public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants{
 
-	private final String TAG = OTPConfirmScreen.class.getSimpleName();
+	private final String TAG = "OTP screen";
 
 	ImageView imageViewBack;
 	TextView textViewTitle;
@@ -180,6 +180,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Back");
 				performBackPressed();
 			}
 		});
@@ -205,6 +206,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
+					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
 					editTextOTP.setError("Code can't be empty");
@@ -290,6 +292,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									public void onClick(View v) {
 										Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
+										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
 								},
 								new View.OnClickListener() {
@@ -313,6 +316,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
             public void onClick(View v) {
 				editTextOTP.setError(null);
                 FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
+				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
 				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
 				intent.putExtra(LINKED_WALLET, linkedWallet);
 				startActivity(intent);

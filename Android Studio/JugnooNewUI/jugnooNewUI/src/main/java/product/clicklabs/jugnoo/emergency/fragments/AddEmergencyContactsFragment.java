@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -134,6 +135,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
 						if(contactBean.isSelected()){
+							FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "select contact");
 							editTextContacts.addObject(contactBean);
 						} else{
 							editTextContacts.removeObject(contactBean);
@@ -196,6 +198,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 				switch(v.getId()){
 
 					case R.id.imageViewBack:
+
 						performBackPressed();
 						break;
 
@@ -211,6 +214,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 								}
 							}
 							if(jsonArray.length() > 0) {
+								FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "add contact");
 								addEmergencyContactsAPI(activity, jsonArray.toString());
 							} else{
 								Toast.makeText(activity,
@@ -250,6 +254,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 	private void performBackPressed() {
 		Utils.hideSoftKeyboard(activity, editTextContacts);
 		if(activity instanceof EmergencyActivity){
+			FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "close");
 			((EmergencyActivity)activity).performBackPressed();
 		}
 	}

@@ -109,7 +109,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
 
-	private final String TAG = SplashNewActivity.class.getSimpleName();
+	private final String TAG = "Splash Screen";
 
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
@@ -524,6 +524,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					if (isBranchLinkNotClicked()) {
 						linkedWallet = 0;
 						FlurryEventLogger.event(LOGIN_OPTION_MAIN);
+						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Sign up");
 						changeUIState(State.LOGIN);
 					} else {
 						clickCount = clickCount + 1;
@@ -537,6 +538,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					if(isBranchLinkNotClicked()) {
 						linkedWallet = 1;
 						FlurryEventLogger.event(SIGNUP);
+						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
 						changeUIState(State.SIGNUP);
 					} else{
@@ -757,6 +759,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					finish();
 					FlurryEventLogger.event(FORGOT_PASSWORD);
+					FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Forget password");
 				}
 			});
 
@@ -940,6 +943,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					try {
+						FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Terms of use");
 						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
 						startActivity(browserIntent);
 					} catch (Exception e) {
@@ -1610,8 +1614,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	public void onBackPressed() {
 		if (State.LOGIN == state) {
+			FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Back");
 			performLoginBackPressed();
 		} else if (State.SIGNUP == state) {
+			FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Back");
 			performSignupBackPressed();
 		} else {
 			super.onBackPressed();
@@ -1964,6 +1970,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL);
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
@@ -2078,6 +2085,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK);
 									loginDataFetched = true;
@@ -2194,6 +2202,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.GOOGLE);
+									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
@@ -2583,6 +2592,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									setIntent(new Intent().putExtra(KEY_ALREADY_REGISTERED_EMAIL, emailId));
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+									FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up");
 									SplashNewActivity.this.name = name;
 									SplashNewActivity.this.emailId = emailId;
 									parseOTPSignUpData(jObj, password, referralCode);
@@ -2705,6 +2715,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									String error = jObj.getString("error");
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+									FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
 									parseOTPSignUpData(jObj, password, referralCode);
 									nudgeSignupEvent(phoneNo, Data.facebookUserData.userEmail,
 											Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -2815,6 +2826,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									String error = jObj.getString("error");
 									DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
 								} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+									FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Google");
 									parseOTPSignUpData(jObj, password, referralCode);
 									nudgeSignupEvent(phoneNo, Data.googleSignInAccount.getEmail(),
 											Data.googleSignInAccount.getDisplayName());

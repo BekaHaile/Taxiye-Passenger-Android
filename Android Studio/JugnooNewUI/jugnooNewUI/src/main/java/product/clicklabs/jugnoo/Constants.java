@@ -273,4 +273,15 @@ public interface Constants {
 	String KEY_FARE_TO_PAY = "fare_to_pay";
 	String KEY_PAID_RIDE = "paid_ride";
 
+	String ACQUISITION = "Acquisition";
+	String CAMPAIGNS = "Campaigns";
+	String ACTIVATION = "Activation";
+	String REVENUE = "Revenue";
+	String RETENTION = "Retention";
+	String HELP = "Help";
+	String INFORMATIVE = "Informative";
+	String REFERRAL = "Referral";
+	String ISSUES = "Issues";
+	String SLASH = "/";
+
 }
