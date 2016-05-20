@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 
@@ -102,6 +103,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 									((RideTransactionsActivity)activity).getContainer(),
 									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber);
 						}
+						FlurryEventLogger.eventGA(Constants.ISSUES, SupportFAQItemsListFragment.this.item.getText(), item.getText());
 					}
 				});
 		recyclerViewItems.setAdapter(supportFAQItemsAdapter);

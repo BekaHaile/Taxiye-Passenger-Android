@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.Ranklist;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -71,6 +72,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "LeaderBoard");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,6 +104,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		buttonLocal.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Local");
 				updateList(LBLocationType.LOCAL, lbTimeType);
 			}
 		});
@@ -109,6 +112,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		buttonGlobal.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Global");
 				updateList(LBLocationType.GLOBAL, lbTimeType);
 			}
 		});
@@ -116,6 +120,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		textViewDaily.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Daily");
 				updateList(lbLocationType, LBTimeType.DAILY);
 			}
 		});
@@ -123,6 +128,7 @@ public class ShareLeaderboardFragment extends Fragment implements FlurryEventNam
 		textViewWeekly.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Weekly");
 				updateList(lbLocationType, LBTimeType.WEEKLY);
 			}
 		});

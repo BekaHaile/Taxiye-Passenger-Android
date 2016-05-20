@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.support;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
@@ -36,6 +37,7 @@ public class TransactionUtils {
 								.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commitAllowingStateLoss();
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_HISTORY);
+				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", item.getText());
 			}
 		}
 		else if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()

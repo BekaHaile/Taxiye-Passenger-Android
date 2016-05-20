@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferralActions;
@@ -64,6 +65,7 @@ public class ShareEarnFragment extends Fragment {
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Earn");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,6 +84,7 @@ public class ShareEarnFragment extends Fragment {
 			public void onClick(View view) {
 				try {
 					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "rides", "more info");
 					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
@@ -97,6 +100,7 @@ public class ShareEarnFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if(AppStatus.getInstance(activity).isOnline(activity)) {
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "rides", "invite friends");
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {
 						if(activity.fromDeepLink){

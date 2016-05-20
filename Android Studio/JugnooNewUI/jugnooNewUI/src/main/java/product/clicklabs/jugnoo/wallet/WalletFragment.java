@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -105,6 +106,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Back");
 				paymentActivity.finish();
 				paymentActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
@@ -123,6 +125,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
 					DialogPopup.alertPopupLeftOriented(paymentActivity, "", Data.userData.getJugnooCashTNC());
 					FlurryEventLogger.event(JUGNOO_CASH_CHECKED);
+					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Jugnoo Cash");
 				}
 			}
 		});
@@ -153,6 +156,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
 					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
+					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 				}
 			}
 		});
@@ -194,6 +198,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
 				FlurryEventLogger.event(RECENT_TRANSACTIONS);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "View Recent Transaction");
 			}
 		});
 

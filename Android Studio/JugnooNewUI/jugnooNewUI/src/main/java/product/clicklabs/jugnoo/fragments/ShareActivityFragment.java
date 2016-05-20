@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -76,6 +77,7 @@ public class ShareActivityFragment extends Fragment implements FlurryEventNames,
 
 
 		try {
+			FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Activity");
 		} catch(Exception e){
 			e.printStackTrace();
 		}

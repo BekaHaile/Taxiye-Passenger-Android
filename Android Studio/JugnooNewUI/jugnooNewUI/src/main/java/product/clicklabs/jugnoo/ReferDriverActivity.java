@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -113,6 +114,7 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
         imageViewBack.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.eventGA(Constants.REFERRAL, "Refer a driver", "Back");
                 performBackPressed();
             }
         });
@@ -168,22 +170,27 @@ public class ReferDriverActivity extends BaseActivity implements FlurryEventName
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         DialogPopup.dismissLoadingDialog();
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i("Refer Driver Response", "" + responseStr);
-                        if(settleUserDebt.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                            DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    performBackPressed();
-                                }
-                            });
-                        }else {
-                            DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                        try {
+                            FlurryEventLogger.eventGA(Constants.REFERRAL, "Refer a driver", "Refer");
+                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                            Log.i("Refer Driver Response", "" + responseStr);
+                            if(settleUserDebt.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                                DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        performBackPressed();
+                                    }
+                                });
+                            }else {
+                                DialogPopup.alertPopupWithListener(ReferDriverActivity.this, "", settleUserDebt.getMessage(), new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                     }

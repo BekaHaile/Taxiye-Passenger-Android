@@ -153,6 +153,7 @@ public class PaytmRechargeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextAmount);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Back");
 				performBackPressed();
 			}
 		});
@@ -205,6 +206,7 @@ public class PaytmRechargeFragment extends Fragment {
 							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
 								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
+								FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Add Paytm Cash "+editTextAmount.getText().toString().trim());
 							}
 						}
 					}
@@ -223,6 +225,7 @@ public class PaytmRechargeFragment extends Fragment {
 				textViewTitleEdit.setVisibility(View.GONE);
 				textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.white_light_grey));
 				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Edit");
 			}
 		});
 
@@ -248,6 +251,7 @@ public class PaytmRechargeFragment extends Fragment {
 						}, false, false);
 				}
 				FlurryEventLogger.event(paymentActivity, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Remove Wallet");
 			}
 		});
 

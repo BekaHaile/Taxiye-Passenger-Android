@@ -116,6 +116,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Back");
 				performbackPressed();
 			}
 		});

@@ -187,6 +187,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
 					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_DRIVER);
+					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Driver");
 				}
 			}
 		});
@@ -197,6 +198,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
 					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_JUGNOO);
+					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Jugnoo");
 				}
 			}
 		});

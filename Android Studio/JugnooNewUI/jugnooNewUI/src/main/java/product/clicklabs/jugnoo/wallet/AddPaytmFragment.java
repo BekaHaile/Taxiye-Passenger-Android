@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
@@ -35,6 +36,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -135,6 +137,7 @@ public class AddPaytmFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Request OTP");
 				generateOTP(false);
 			}
 		});
