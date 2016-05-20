@@ -47,8 +47,8 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
 
-        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
-                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId());
+        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRegionSelected().getVehicleType())
+                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRegionSelected().getRegionId());
 
         if(selected){
             holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));

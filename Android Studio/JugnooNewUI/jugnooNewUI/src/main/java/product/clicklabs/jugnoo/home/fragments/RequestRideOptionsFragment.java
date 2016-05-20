@@ -298,7 +298,7 @@ public class RequestRideOptionsFragment extends Fragment {
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }
-        activity.getSlidingBottomPanel().updateFareFactorUI(Data.regions.size());
+        activity.getSlidingBottomPanel().updateFareFactorUI();
     }
 
     public void initSelectedCoupon(){

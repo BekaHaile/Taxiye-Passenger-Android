@@ -1,14 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutSlidingBottom"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:id="@+id/linearLayoutSlidingBottom"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/nl_sliding_bottom_with_tabs"
+              android:orientation="vertical">
 
-    <fragment
-        class="product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment"
-        android:id="@+id/frag"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="116px"
+            android:visibility="visible"
+            android:background="@color/white"
+            app:pstsIndicatorHeight="8px"
+            app:pstsShouldExpand="true"
+            app:pstsUnderlineColor="@color/grey_light"
+            app:pstsUnderlineHeight="2px" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="108px"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:id="@+id/linearLayoutCash"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+
+                <ImageView
+                    android:id="@+id/imageViewPaymentOp"
+                    android:layout_width="68px"
+                    android:layout_height="22px"
+                    android:src="@drawable/ic_cash_small"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/textViewCashValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5px"
+                    android:gravity="center"
+                    android:text="200"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_40" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="25px"
+                android:layout_marginTop="25px"
+                android:src="@color/grey_light" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutFare"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textViewMinFare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/nl_min_fare"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
+
+                <TextView
+                    android:id="@+id/textViewMinFareValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5px"
+                    android:gravity="center"
+                    android:text="20"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_40" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="25px"
+                android:layout_marginTop="25px"
+                android:src="@color/grey_light" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutOffers"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textViewOffers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/nl_offers"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
+
+                <TextView
+                    android:id="@+id/textViewOffersValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5px"
+                    android:gravity="center"
+                    android:text="2"
+                    android:visibility="visible"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_40" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:src="@color/grey_light" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
+        android:background="@color/sliding_bottom_bg_color"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
 </LinearLayout>

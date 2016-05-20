@@ -192,6 +192,15 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/auto_icon_r_selector"
             android:tag="mwar"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewVehicles"
+            android:layout_width="match_parent"
+            android:layout_height="108px"
+            android:splitMotionEvents="false"
+            android:layout_below="@+id/imageViewRideNow"
+            />
+
     </RelativeLayout>
 
 
