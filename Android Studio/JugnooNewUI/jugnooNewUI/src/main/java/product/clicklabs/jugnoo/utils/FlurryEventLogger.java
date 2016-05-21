@@ -27,20 +27,20 @@ public class FlurryEventLogger {
 
 	public static void event(String eventName, Map<String, String> map){
 		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
-		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
 	}
 
 	public static void event(Context context, String eventName){
 		HashMap<String, String> map = new HashMap<>();
 		map.put(Constants.KEY_USER_ID, Prefs.with(context).getString(Constants.SP_USER_ID, ""));
 		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
-		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
 	}
 
 	public static void event(Context context, String eventName, Map<String, String> map){
 		map.put(Constants.KEY_USER_ID, Prefs.with(context).getString(Constants.SP_USER_ID, ""));
 		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
-		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}
 	}
 
 	public static void eventApiResponseTime(String apiName, long startTime){
@@ -88,8 +88,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");
-		} catch (Exception e){}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch (Exception e){}
 	}
 
 
@@ -102,7 +101,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 	
@@ -119,7 +118,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 
@@ -132,7 +131,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 	
@@ -145,7 +144,7 @@ public class FlurryEventLogger {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
 	
 
