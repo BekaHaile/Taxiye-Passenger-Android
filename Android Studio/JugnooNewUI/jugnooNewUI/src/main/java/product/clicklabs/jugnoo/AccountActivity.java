@@ -64,7 +64,7 @@ import retrofit.mime.TypedByteArray;
 
 public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
-    private final String TAG = AccountActivity.class.getSimpleName();
+    private final String TAG = "View Account";
 
 	RelativeLayout relative;
 
@@ -179,6 +179,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
                 performBackPressed();
                 dissmissEmailVerify();
             }
@@ -292,6 +293,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "edit name");
                 imageViewEditName.performClick();
                 return true;
             }
@@ -341,6 +343,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
                 imageViewEditEmail.performClick();
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "edit email");
                 return true;
             }
         });
@@ -366,6 +369,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             } else {
                                 imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
                                 updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
+                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "edit phone number");
                             }
                         } else {
                             editTextPhone.requestFocus();
@@ -433,6 +437,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 				startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 dissmissEmailVerify();
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
 			}
 		});
 
@@ -447,6 +452,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 dissmissEmailVerify();
                 FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_EMERGENCY_CONTACTS);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Emergency contacts");
             }
         });
 
@@ -459,6 +465,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivityForResult(intent, ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Home");
 
                 /*startActivity(new Intent(AccountActivity.this, AddPlaceActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -476,6 +483,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivityForResult(intent, ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Work");
 
             }
         });
@@ -896,6 +904,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
                                 Branch.getInstance(activity).logout();
+                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Logout");
                             }
                             else{
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

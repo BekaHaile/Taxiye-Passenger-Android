@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -125,6 +126,7 @@ public class ReferDriverDialog {
 				@Override
 				public void onClick(View v) {
 					dismissDialog();
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "Refer a driver", "Back");
 				}
 			});
 
@@ -188,6 +190,7 @@ public class ReferDriverDialog {
 									dismissDialog();
 								}
 							});
+							FlurryEventLogger.eventGA(Constants.REFERRAL, "Refer a driver", "Refer");
 						}else {
 							DialogPopup.alertPopupWithListener(activity, "", settleUserDebt.getMessage(), new View.OnClickListener() {
 								@Override

@@ -10,7 +10,10 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
 
+import java.util.List;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -93,6 +96,18 @@ public class MyApplication extends Application{
 		GoogleAnalytics.getInstance(this).dispatchLocalHits();
 	}
 
+	public void setGAUserId(String mUserId) {
+		Tracker t = getGoogleAnalyticsTracker();
+
+		// Set screen name.
+		t.setClientId(mUserId);
+
+		// Send a screen view.
+		t.send(new HitBuilders.ScreenViewBuilder().build());
+
+		GoogleAnalytics.getInstance(this).dispatchLocalHits();
+	}
+
 	/***
 	 * Tracking exception
 	 *
@@ -145,6 +160,25 @@ public class MyApplication extends Application{
 
 		// Build and send an Event.
 		t.send(eventBuilder.build());
+	}
+
+	public void transactions(List<Product> product, ProductAction productAction) {
+		HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
+		for(int i=0;i<product.size();i++) {
+			builder.addProduct(product.get(i));
+		}
+
+		builder.setProductAction(productAction);
+
+		Tracker t = getGoogleAnalyticsTracker();
+		t.setScreenName("transaction");
+		t.send(builder.build());
+
+//        t.send(new HitBuilders.ScreenViewBuilder()
+//                .setNewSession()
+//                .build());
+
+
 	}
 
 }

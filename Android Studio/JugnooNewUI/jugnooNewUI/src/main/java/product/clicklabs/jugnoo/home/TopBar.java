@@ -14,9 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -121,6 +123,16 @@ public class TopBar {
 					drawerLayout.openDrawer(GravityCompat.START);
 					FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
+
+					try {
+						if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity)activity).passengerScreenMode) {
+							FlurryEventLogger.eventGA(Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Ride Start", "menu");
+						} else {
+							FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "menu");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					break;
 
 				case R.id.buttonCheckServer:
@@ -129,6 +141,16 @@ public class TopBar {
 				case R.id.imageViewHelp:
 					if(activity instanceof HomeActivity) {
 						((HomeActivity)activity).sosDialog(activity);
+						try {
+							if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity)activity).passengerScreenMode) {
+                                //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+                            } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity)activity).passengerScreenMode) {
+                                FlurryEventLogger.eventGA(Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Ride Start", "help");
+                            }
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
 					}
 					break;
 
@@ -169,6 +191,7 @@ public class TopBar {
 						activity.startActivity(new Intent(activity, FreshActivity.class));
 						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
+						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "fresh");
 
 					}
 					break;

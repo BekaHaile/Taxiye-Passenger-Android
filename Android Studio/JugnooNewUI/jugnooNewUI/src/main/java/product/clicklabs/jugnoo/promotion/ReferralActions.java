@@ -15,10 +15,11 @@ import com.facebook.CallbackManager;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.promotion.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.promotion.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
@@ -245,6 +246,7 @@ public class ReferralActions {
                 if (info.activityInfo.packageName.contains("com.facebook.katana")) {
                     shareToFacebookBasic(activity, callbackManager, link);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
+                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "Facebook");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_FACEBOOK, null);
                 }
 				else if(info.activityInfo.packageName.contains("com.google.android.gm")
@@ -258,6 +260,7 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
+                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "Gmail");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_EMAIL, null);
 				}
 				else if(info.activityInfo.packageName.contains("com.whatsapp")){
@@ -267,6 +270,7 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
+                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "WhatsApp");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_WHATSAPP, null);
 				}
 				else {
@@ -281,9 +285,11 @@ public class ReferralActions {
                     } else if(info.activityInfo.packageName.contains("com.android.mms")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_SMS, null);
+                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "SMS");
                     } else{
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_OTHER, null);
+                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "Other");
                     }
                 }
             }

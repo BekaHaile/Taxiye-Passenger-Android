@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -75,6 +76,13 @@ public class ReferralActivityFragment extends Fragment implements FlurryEventNam
 		textViewDataEffective = (TextView)rootView.findViewById(R.id.textViewDataEffective);
 		textViewDataEffective.setTypeface(Fonts.mavenLight(activity));
 
+
+
+		try {
+			FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Activity");
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
 		update();
 

@@ -216,6 +216,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 							((RideTransactionsActivity)activity).getContainer(),
 							engagementId, endRideData, getRideSummaryResponse);
 					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
 				} else {
 					performBackPressed();
 				}
@@ -430,6 +431,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	public void performBackPressed() {
 		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).performBackPressed();
+			FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", "Back");
 		} else if(activity instanceof HomeActivity){
 			((HomeActivity)activity).onBackPressed();
 		} else if(activity instanceof SupportActivity){

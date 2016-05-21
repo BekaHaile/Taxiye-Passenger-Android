@@ -3,8 +3,11 @@ package product.clicklabs.jugnoo.utils;
 import android.content.Context;
 
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.Constants;
@@ -15,8 +18,12 @@ public class FlurryEventLogger {
 
     public static void event(String eventName){
         try{ FlurryAgent.logEvent(eventName); } catch(Exception e){ e.printStackTrace(); }
-		try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName);} catch(Exception e){e.printStackTrace();}
+		//try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName);} catch(Exception e){e.printStackTrace();}
     }
+
+	public static void eventGA(String category, String action, String label){
+		try{ MyApplication.getInstance().trackEvent(category, action, label);} catch(Exception e){e.printStackTrace();}
+	}
 
 	public static void event(String eventName, Map<String, String> map){
 		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
@@ -154,7 +161,21 @@ public class FlurryEventLogger {
 		}
 		try{ MyApplication.getInstance().trackEvent("App Analytics", "Check server link pressed", "Check server link pressed");} catch(Exception e){}
 	}
-	
 
+	/**
+	 *
+	 * @param mUserId
+	 */
+	public static void setGAUserId(String mUserId) {
+		try{ MyApplication.getInstance().setGAUserId(mUserId);} catch (Exception e){}
+	}
+
+	public static void orderedProduct(List<Product> product, ProductAction productAction){
+		try {
+			MyApplication.getInstance().transactions(product, productAction);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

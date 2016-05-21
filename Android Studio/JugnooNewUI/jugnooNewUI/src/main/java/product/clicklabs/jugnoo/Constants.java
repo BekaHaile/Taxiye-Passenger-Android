@@ -280,4 +280,15 @@ public interface Constants {
 	String KEY_REFERRAL_ACTIVITY_ENABLED = "referral_activity_enabled";
 	String KEY_CODE = "code";
 
+	String ACQUISITION = "Acquisition";
+	String CAMPAIGNS = "Campaigns";
+	String ACTIVATION = "Activation";
+	String REVENUE = "Revenue";
+	String RETENTION = "Retention";
+	String HELP = "Help";
+	String INFORMATIVE = "Informative";
+	String REFERRAL = "Referral";
+	String ISSUES = "Issues";
+	String SLASH = "/";
+
 }
