@@ -685,7 +685,7 @@ public class Utils {
 		Shader shader;
 		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
 		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
-				context.getResources().getColor(R.color.theme_color),
+				context.getResources().getColor(R.color.theme_color_start),
 				context.getResources().getColor(R.color.theme_color_end), tile_mode);
 		shader = lin_grad;
 
@@ -696,7 +696,7 @@ public class Utils {
 		Shader shader;
 		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
 		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
-				context.getResources().getColor(R.color.theme_color),
+				context.getResources().getColor(R.color.theme_color_start),
 				context.getResources().getColor(R.color.theme_color_end), tile_mode);
 		shader = lin_grad;
 

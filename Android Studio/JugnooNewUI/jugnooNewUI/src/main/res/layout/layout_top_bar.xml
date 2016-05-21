@@ -16,12 +16,11 @@
 
         <ImageView
             android:id="@+id/imageViewMenu"
-            android:layout_width="83px"
+            android:layout_width="70px"
             android:layout_height="70px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/menu_icon_selector"
+            android:src="@drawable/ic_menu_selector"
             android:tag="mwar"/>
 
         <Button
@@ -40,7 +39,7 @@
             />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

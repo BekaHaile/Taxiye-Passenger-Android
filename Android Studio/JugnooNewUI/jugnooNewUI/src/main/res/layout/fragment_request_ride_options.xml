@@ -161,7 +161,7 @@
                         android:id="@+id/imageViewPaymentModeMS"
                         android:layout_width="68px"
                         android:layout_height="22px"
-                        android:src="@drawable/ic_cash"
+                        android:src="@drawable/ic_cash_small"
                         android:tag="mwar"/>
 
                     <TextView

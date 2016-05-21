@@ -46,11 +46,11 @@
                     android:id="@+id/textViewCentrePinETA"
                     android:layout_width="86px"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12px"
+                    android:layout_marginTop="14px"
                     android:gravity="center"
                     android:text="-"
                     android:textColor="@color/white"
-                    android:textSize="28px"/>
+                    android:textSize="@dimen/text_size_30"/>
 
                 <TextView
                     android:id="@+id/textViewCentrePinETAMin"
@@ -61,14 +61,14 @@
                     android:gravity="center"
                     android:text="MIN"
                     android:textColor="@color/white"
-                    android:textSize="22px"/>
+                    android:textSize="@dimen/text_size_22"/>
             </RelativeLayout>
 
             <product.clicklabs.jugnoo.utils.ProgressWheel
                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/progressBarInitialSearch"
-                android:layout_width="82px"
-                android:layout_height="82px"
+                android:layout_width="84px"
+                android:layout_height="84px"
                 android:layout_marginTop="1px"
                 android:layout_centerHorizontal="true"
                 android:tag="mwar"

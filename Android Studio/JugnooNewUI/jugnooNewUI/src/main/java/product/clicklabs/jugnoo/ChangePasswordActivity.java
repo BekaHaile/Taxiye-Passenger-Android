@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -77,7 +76,7 @@ public class ChangePasswordActivity extends BaseActivity {
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(ChangePasswordActivity.this, relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		
 		editTextOldPassword = (EditText) findViewById(R.id.editTextOldPassword); editTextOldPassword.setTypeface(Fonts.mavenMedium(this));

@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -59,7 +58,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
 
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
         textViewInfo.setTypeface(Fonts.mavenMedium(this));

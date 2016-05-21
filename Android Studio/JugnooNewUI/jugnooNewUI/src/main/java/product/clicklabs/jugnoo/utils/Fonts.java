@@ -8,21 +8,14 @@ import android.graphics.Typeface;
  */
 public class Fonts {
 
-    private static Typeface mavenMedium, latoLight, mavenRegular, mavenLight;																// fonts declaration
+    private static Typeface mavenMedium, mavenRegular, mavenLight, avenirNext;																// fonts declaration
 
 
     public static Typeface mavenMedium(Context appContext) {											// accessing fonts functions
         if (mavenMedium == null) {
-            mavenMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/MavenPro-Medium.ttf");
+            mavenMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_medium.ttf");
         }
         return mavenMedium;
-    }
-
-    public static Typeface latoLight(Context appContext) {											// accessing fonts functions
-        if (latoLight == null) {
-            latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_light.ttf");
-        }
-        return latoLight;
     }
 
     public static Typeface mavenRegular(Context appContext) {											// accessing fonts functions
@@ -37,6 +30,13 @@ public class Fonts {
             mavenLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.otf");
         }
         return mavenLight;
+    }
+
+    public static Typeface avenirNext(Context appContext) {											// accessing fonts functions
+        if (avenirNext == null) {
+            avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_medium.ttf");
+        }
+        return avenirNext;
     }
 
 }

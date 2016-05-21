@@ -5966,10 +5966,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     || PassengerScreenMode.P_RIDE_END == passengerScreenMode){
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if(modeEnabled == 1){
-                    topBar.title.setText(getResources().getString(R.string.emergency_mode_enabled));
-                    topBar.title.getPaint().setShader(null);
-                    topBar.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
-                    topBar.title.setTextColor(getResources().getColor(R.color.red));
+                    topBar.textViewTitle.setText(getResources().getString(R.string.emergency_mode_enabled));
+                    topBar.textViewTitle.getPaint().setShader(null);
+                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
+                    topBar.textViewTitle.setTextColor(getResources().getColor(R.color.red));
                     topBar.imageViewAppToggle.setVisibility(View.GONE);
                     topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
                     localModeEnabled = modeEnabled;
@@ -5979,23 +5979,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
                         emergencyDisableDialog.show();
                     }
-                    topBar.topRl.setBackgroundResource(R.color.white);
-                    topBar.title.setText(getResources().getString(R.string.app_name));
+                    topBar.textViewTitle.setText(getResources().getString(R.string.app_name));
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topBar.topRl.setBackgroundResource(R.color.white);
-                topBar.title.setText(getResources().getString(R.string.app_name));
+                topBar.textViewTitle.setText(getResources().getString(R.string.app_name));
 
                 localModeEnabled = 0;
             }
 
-            topBar.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_40)*minRatio);
-            topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector);
-            topBar.title.measure(0, 0);
-            int mWidth = topBar.title.getMeasuredWidth();
-            topBar.title.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
+            topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
+            topBar.textViewTitle.getPaint().setShader(Utils.textColorGradient(this, topBar.textViewTitle));
 
         } catch(Exception e){
             e.printStackTrace();

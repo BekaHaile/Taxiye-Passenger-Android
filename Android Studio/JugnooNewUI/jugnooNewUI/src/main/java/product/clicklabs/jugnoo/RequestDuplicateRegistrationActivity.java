@@ -67,7 +67,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         textViewRegisterNameValue = (TextView) findViewById(R.id.textViewRegisterNameValue); textViewRegisterNameValue.setTypeface(Fonts.mavenRegular(this));

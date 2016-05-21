@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -38,7 +37,7 @@ public class TopBar {
 	//Top RL
 	public RelativeLayout topRl;
 	public ImageView imageViewMenu, imageViewAppToggle, imageViewSearchIcon;
-	public TextView title;
+	public TextView textViewTitle;
 	public Button buttonCheckServer;
 	public ImageView imageViewHelp;
 	public ImageView imageViewBack, imageViewDelete;
@@ -55,7 +54,7 @@ public class TopBar {
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewAppToggle = (ImageView) drawerLayout.findViewById(R.id.imageViewAppToggle);
 		imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
-		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		textViewTitle = (TextView) drawerLayout.findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 
@@ -96,7 +95,7 @@ public class TopBar {
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
 			imageViewSearchIcon.setVisibility(View.GONE);
 
-			title.setText(activity.getResources().getString(R.string.fresh));
+			textViewTitle.setText(activity.getResources().getString(R.string.fresh));
 
 		} else if(activity instanceof HomeActivity) {
 			imageViewAppToggle.setImageResource(R.drawable.ic_fresh_topbar_selector);
@@ -105,7 +104,7 @@ public class TopBar {
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
 			imageViewSearchIcon.setVisibility(View.GONE);
 
-			title.setText(activity.getResources().getString(R.string.app_name));
+			textViewTitle.setText(activity.getResources().getString(R.string.app_name));
 		}
 
 		setupFreshUI();

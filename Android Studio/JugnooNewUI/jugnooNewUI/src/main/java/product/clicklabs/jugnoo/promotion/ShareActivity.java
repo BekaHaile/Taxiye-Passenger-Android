@@ -117,7 +117,7 @@ public class ShareActivity extends BaseFragmentActivity {
 
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		getLeaderboardCall();

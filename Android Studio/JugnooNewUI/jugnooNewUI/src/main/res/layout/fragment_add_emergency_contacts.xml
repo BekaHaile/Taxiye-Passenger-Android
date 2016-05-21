@@ -13,13 +13,8 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/emergency_contacts"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"
-            android:layout_centerInParent="true"
-            android:textAllCaps="true"
+            style="@style/title"
             />
 
         <ImageView

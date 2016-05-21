@@ -18,14 +18,8 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="@string/nl_otp_verification"
-            android:textColor="@color/white"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_size_40" />
+            style="@style/title" />
 
         <ImageView
             android:id="@+id/imageViewBack"

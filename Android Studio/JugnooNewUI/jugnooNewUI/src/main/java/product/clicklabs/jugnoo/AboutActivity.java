@@ -51,7 +51,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         relativeLayoutRateUs = (RelativeLayout) findViewById(R.id.relativeLayoutRateUs);

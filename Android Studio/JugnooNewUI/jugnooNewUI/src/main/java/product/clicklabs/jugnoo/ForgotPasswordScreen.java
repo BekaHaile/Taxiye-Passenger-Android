@@ -84,7 +84,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
         new ASSL(ForgotPasswordScreen.this, relative, 1134, 720, false);
 
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         textViewForgotPasswordHelp = (TextView) findViewById(R.id.textViewForgotPasswordHelp);

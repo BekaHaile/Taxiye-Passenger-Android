@@ -108,7 +108,7 @@ public class AddPaytmFragment extends Fragment {
 
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 
 		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenRegular(paymentActivity));

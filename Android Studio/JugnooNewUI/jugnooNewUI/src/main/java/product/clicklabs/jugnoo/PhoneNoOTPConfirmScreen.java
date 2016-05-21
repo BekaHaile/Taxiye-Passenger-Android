@@ -125,7 +125,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);

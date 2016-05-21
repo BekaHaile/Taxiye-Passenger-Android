@@ -119,7 +119,7 @@ public class PaytmRechargeFragment extends Fragment {
 //		setupUI(rootView.findViewById(R.id.relative));
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.mavenRegular(paymentActivity));

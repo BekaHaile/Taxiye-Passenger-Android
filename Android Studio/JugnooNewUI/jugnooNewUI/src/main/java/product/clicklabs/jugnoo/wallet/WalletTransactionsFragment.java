@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,12 +25,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.TransactionType;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -105,7 +104,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 
 		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
 

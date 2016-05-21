@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -78,7 +77,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 		new ASSL(ChangePhoneBeforeOTPActivity.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 
         textViewChangePhoneNoHelp = (TextView) findViewById(R.id.textViewChangePhoneNoHelp); textViewChangePhoneNoHelp.setTypeface(Fonts.mavenRegular(this));
         editTextNewPhoneNumber = (EditText) findViewById(R.id.editTextNewPhoneNumber); editTextNewPhoneNumber.setTypeface(Fonts.mavenMedium(this));

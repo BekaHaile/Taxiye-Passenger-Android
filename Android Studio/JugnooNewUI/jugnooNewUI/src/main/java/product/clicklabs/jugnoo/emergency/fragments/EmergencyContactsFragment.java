@@ -117,7 +117,7 @@ public class EmergencyContactsFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewEdit = (TextView) rootView.findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Fonts.mavenRegular(activity));
 

@@ -143,7 +143,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenRegular(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);

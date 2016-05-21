@@ -300,7 +300,7 @@
                             android:id="@+id/imageViewIRPaymentOptionCash"
                             android:layout_width="39px"
                             android:layout_height="20px"
-                            android:src="@drawable/ic_cash"
+                            android:src="@drawable/ic_cash_small"
                             android:tag="mwar"
                             android:visibility="visible" />
 

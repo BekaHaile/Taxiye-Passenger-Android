@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -116,7 +115,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-		textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle.setTypeface(Fonts.avenirNext(this));
 		textViewTitle.measure(0, 0);
 		int mWidth = textViewTitle.getMeasuredWidth();
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));

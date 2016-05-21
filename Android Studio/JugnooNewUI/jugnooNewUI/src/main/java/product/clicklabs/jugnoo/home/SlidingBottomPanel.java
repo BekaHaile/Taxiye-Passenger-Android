@@ -70,20 +70,20 @@ public class SlidingBottomPanel {
 
     private void initComponents(View view) {
         //SlidingUp Layout
-        ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenMedium(activity));
         textViewMinFareValue = (TextView) view.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
+        ((TextView) view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
         textViewOffersValue = (TextView) view.findViewById(R.id.textViewOffersValue);
-        textViewOffersValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewOffersValue.setTypeface(Fonts.mavenMedium(activity));
         textViewCashValue = (TextView) view.findViewById(R.id.textViewCashValue);
-        textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewCashValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
-        slidingUpPanelLayout.setPanelHeight((int) (108 * ASSL.Yscale()));
+        slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override

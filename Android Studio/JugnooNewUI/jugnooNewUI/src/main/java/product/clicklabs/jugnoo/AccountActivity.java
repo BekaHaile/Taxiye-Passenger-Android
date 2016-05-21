@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -97,7 +96,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);

@@ -15,14 +15,8 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="300px"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
             android:text="FARE ESTIMATE"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_40" />
+            style="@style/title" />
 
         <ImageView
             android:id="@+id/imageViewBack"

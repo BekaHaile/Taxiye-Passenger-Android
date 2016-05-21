@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Shader;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -106,7 +105,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         assl = new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 

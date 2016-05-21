@@ -48,7 +48,7 @@ public class MultipleAccountsActivity extends BaseActivity {
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);

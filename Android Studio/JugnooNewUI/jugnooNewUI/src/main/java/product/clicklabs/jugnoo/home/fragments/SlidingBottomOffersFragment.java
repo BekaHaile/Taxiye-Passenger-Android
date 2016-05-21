@@ -200,9 +200,9 @@ public class SlidingBottomOffersFragment extends Fragment {
                 linearLayoutPromotion1 = (RelativeLayout) itemView.findViewById(R.id.linearLayoutPromotion1);
                 radioPromotion1 = (ImageView)itemView.findViewById(R.id.radioPromotion1);
                 textViewPromotion1 = (TextView) itemView.findViewById(R.id.textViewPromotion1);
-                textViewPromotion1.setTypeface(Fonts.mavenLight(activity));
+                textViewPromotion1.setTypeface(Fonts.mavenMedium(activity));
                 textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);
-                textViewTNC.setTypeface(Fonts.mavenLight(activity));
+                textViewTNC.setTypeface(Fonts.mavenRegular(activity));
             }
         }
     }

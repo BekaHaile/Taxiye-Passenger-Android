@@ -478,8 +478,8 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         textViewBaseFair.setTypeface(Fonts.mavenMedium(this));
         textViewPerKM.setTypeface(Fonts.mavenMedium(this));
         textViewWait.setTypeface(Fonts.mavenMedium(this));
-        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewKMTxt)).setTypeface(Fonts.latoLight(this));
-        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewMinTxt)).setTypeface(Fonts.latoLight(this));
+        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewKMTxt)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewMinTxt)).setTypeface(Fonts.mavenRegular(this));
 
 
         linearLayoutInner.setOnClickListener(new View.OnClickListener() {

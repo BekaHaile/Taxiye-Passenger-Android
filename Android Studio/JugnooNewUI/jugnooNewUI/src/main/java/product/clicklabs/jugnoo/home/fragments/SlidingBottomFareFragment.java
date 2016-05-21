@@ -50,12 +50,12 @@ public class SlidingBottomFareFragment extends Fragment{
 
         relativeLayoutPriorityTip = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutPriorityTip);
         textViewPriorityTipValue = (TextView)rootView.findViewById(R.id.textViewPriorityTipValue);textViewPriorityTipValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView)rootView.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView)rootView.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView)rootView.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenRegular(activity));
+        ((TextView)rootView.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenRegular(activity));
         textViewKMValue = (TextView)rootView.findViewById(R.id.textViewKMValue);textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
         textViewMinValue = (TextView)rootView.findViewById(R.id.textViewMinValue);textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewFareEstimage = (TextView)rootView.findViewById(R.id.textViewFareEstimage);textViewFareEstimage.setTypeface(Fonts.mavenLight(activity));
-        textViewThreshold = (TextView)rootView.findViewById(R.id.textViewThreshold);textViewThreshold.setTypeface(Fonts.mavenLight(activity));
+        textViewFareEstimage = (TextView)rootView.findViewById(R.id.textViewFareEstimage);textViewFareEstimage.setTypeface(Fonts.mavenRegular(activity));
+        textViewThreshold = (TextView)rootView.findViewById(R.id.textViewThreshold);textViewThreshold.setTypeface(Fonts.mavenRegular(activity));
 
         update();
 

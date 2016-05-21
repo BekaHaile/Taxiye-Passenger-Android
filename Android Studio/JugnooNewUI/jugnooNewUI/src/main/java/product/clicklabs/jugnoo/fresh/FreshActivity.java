@@ -248,7 +248,7 @@ public class FreshActivity extends FragmentActivity {
 
 			topBar.imageViewAppToggle.setVisibility(View.VISIBLE);
 			topBar.imageViewSearchIcon.setVisibility(View.GONE);
-			topBar.title.setText(getResources().getString(R.string.fresh));
+			topBar.textViewTitle.setText(getResources().getString(R.string.fresh));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshCartItemsFragment){
@@ -269,7 +269,7 @@ public class FreshActivity extends FragmentActivity {
 			textViewCheckout.setVisibility(View.VISIBLE);
 			relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
-			topBar.title.setText(getResources().getString(R.string.my_cart));
+			topBar.textViewTitle.setText(getResources().getString(R.string.my_cart));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshCheckoutFragment){
@@ -279,7 +279,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
-			topBar.title.setText(getResources().getString(R.string.checkout));
+			topBar.textViewTitle.setText(getResources().getString(R.string.checkout));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshAddressFragment){
@@ -289,7 +289,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.VISIBLE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
-			topBar.title.setText(getResources().getString(R.string.address));
+			topBar.textViewTitle.setText(getResources().getString(R.string.address));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshPaymentFragment){
@@ -299,7 +299,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
-			topBar.title.setText(getResources().getString(R.string.payment));
+			topBar.textViewTitle.setText(getResources().getString(R.string.payment));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshOrderHistoryFragment){
@@ -309,7 +309,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
-			topBar.title.setText(getResources().getString(R.string.order_history));
+			topBar.textViewTitle.setText(getResources().getString(R.string.order_history));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshOrderSummaryFragment){
@@ -319,7 +319,7 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
-			topBar.title.setText(getResources().getString(R.string.order_summary));
+			topBar.textViewTitle.setText(getResources().getString(R.string.order_summary));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		} else if(fragment instanceof FreshSupportFragment){
@@ -329,14 +329,14 @@ public class FreshActivity extends FragmentActivity {
 			topBar.textViewAdd.setVisibility(View.GONE);
 			relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
-			topBar.title.setText(getResources().getString(R.string.support));
+			topBar.textViewTitle.setText(getResources().getString(R.string.support));
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 		}
 
-		topBar.title.measure(0, 0);
-		int mWidth = topBar.title.getMeasuredWidth();
-		topBar.title.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+		topBar.textViewTitle.measure(0, 0);
+		int mWidth = topBar.textViewTitle.getMeasuredWidth();
+		topBar.textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 	}
 
 

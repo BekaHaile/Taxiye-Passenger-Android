@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,7 +28,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyContactsList;
 import product.clicklabs.jugnoo.apis.ApiEmergencySendRideStatus;
@@ -40,6 +38,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -130,7 +129,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewSend = (TextView) rootView.findViewById(R.id.textViewSend); textViewSend.setTypeface(Fonts.mavenRegular(activity));
 

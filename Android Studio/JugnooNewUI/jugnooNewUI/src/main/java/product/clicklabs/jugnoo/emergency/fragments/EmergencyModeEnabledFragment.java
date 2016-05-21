@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
@@ -28,6 +26,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -108,7 +107,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
 		textViewEmergencyModeEnabledTitle = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledTitle);

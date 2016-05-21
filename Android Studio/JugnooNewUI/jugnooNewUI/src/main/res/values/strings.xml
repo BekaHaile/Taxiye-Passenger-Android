@@ -651,7 +651,7 @@
 
 	<string name="remove">Remove</string>
 	<string name="change">Change</string>
-	<string name="change_password">CHANGE PASSWORD</string>
+	<string name="change_password">Change Password</string>
 	<string name="verify">Verify</string>
 	<string name="apply">Apply</string>
 	<string name="request_otp">Request Otp</string>
@@ -879,5 +879,11 @@
 	<string name="offers_available">Offers Available</string>
 	<string name="no_offers_currently">No offers currently</string>
 	<string name="valid_until_format">Valid until\n%s</string>
+	<string name="name">Name</string>
+	<string name="email">Email</string>
+	<string name="edit_profile">Edit Profile</string>
+	<string name="old_password">Old Password</string>
+	<string name="new_password">New Password</string>
+	<string name="retype_password">Retype Password</string>
 
 </resources>

@@ -11,8 +11,8 @@
         android:gravity="center_vertical"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
-        android:layout_marginTop="10px"
-        android:layout_marginBottom="10px"
+        android:layout_marginTop="15px"
+        android:layout_marginBottom="15px"
         android:background="@drawable/background_white_rounded_bordered"
         android:visibility="visible"
         >
@@ -35,7 +35,7 @@
             android:layout_toLeftOf="@+id/textViewTNC"
             android:maxLines="2"
             android:layout_marginLeft="5px"
-            android:textSize="@dimen/text_size_40"
+            android:textSize="@dimen/text_size_30"
             android:textColor="@color/text_color"/>
 
         <TextView

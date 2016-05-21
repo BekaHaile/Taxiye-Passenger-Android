@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -100,7 +99,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
         topBar = (RelativeLayout) findViewById(R.id.topBar);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
