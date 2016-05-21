@@ -190,7 +190,16 @@
             android:layout_width="187px"
             android:layout_height="187px"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/auto_icon_r_selector"
+            android:src="@drawable/ic_auto_request_selector"
+            android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/imageViewSupplyType"
+            android:layout_width="103px"
+            android:layout_height="103px"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_pool_request_selector"
+            android:layout_marginLeft="45px"
             android:tag="mwar"/>
 
         <android.support.v7.widget.RecyclerView
@@ -199,6 +208,7 @@
             android:layout_height="108px"
             android:splitMotionEvents="false"
             android:layout_below="@+id/imageViewRideNow"
+            android:visibility="gone"
             />
 
     </RelativeLayout>

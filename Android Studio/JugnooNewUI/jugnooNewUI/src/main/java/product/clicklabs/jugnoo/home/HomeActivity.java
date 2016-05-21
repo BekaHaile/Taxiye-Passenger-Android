@@ -40,8 +40,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
@@ -217,7 +221,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     //Initial layout
     RelativeLayout initialLayout;
 
-	ImageView imageViewRideNow, imageViewInAppCampaign;
+	ImageView imageViewRideNow, imageViewInAppCampaign, imageViewSupplyType;
 	RelativeLayout relativeLayoutInitialSearchBar, relativeLayoutDestSearchBar;
 	TextView textViewInitialSearch, textViewDestSearch;
     ImageView imageViewDropCross;
@@ -504,6 +508,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         changeLocalityLayout.setVisibility(View.GONE);
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
+        imageViewSupplyType = (ImageView) findViewById(R.id.imageViewSupplyType);
         imageViewRotate = (ImageView) findViewById(R.id.imageViewRotate);
 
         imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
@@ -725,6 +730,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 			}
         });
+
+        imageViewSupplyType.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateSupplyTypeImage();
+            }
+        });
+        imageViewSupplyType.setVisibility(View.GONE);
 
 
 
@@ -6875,6 +6888,36 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void backFromCampaignAvailLoading(){
         relativeLayoutRequest.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
+    }
+
+
+    private long supplyTypeAnimTime = 1000;
+    private void animateSupplyTypeImage(){
+        float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+        Animation translate = new TranslateAnimation(0,
+                (((float)getResources().getDisplayMetrics().widthPixels)/2f - ((187f * minRatio)/2f) - (45f * minRatio)) * 0.66f, 0, 0);
+        translate.setDuration(supplyTypeAnimTime);
+        translate.setFillAfter(false);
+
+        Animation alpha = new AlphaAnimation(0.0f, 0.8f);
+        alpha.setDuration(supplyTypeAnimTime);
+        alpha.setFillAfter(false);
+
+        Animation scale = new ScaleAnimation(1.0f, 1.8f, 1.0f, 1.8f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+        scale.setDuration(supplyTypeAnimTime);
+        scale.setFillAfter(false);
+
+
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(translate);
+        animationSet.addAnimation(scale);
+        animationSet.addAnimation(alpha);
+        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        imageViewSupplyType.clearAnimation();
+        imageViewSupplyType.startAnimation(animationSet);
+
     }
 
 

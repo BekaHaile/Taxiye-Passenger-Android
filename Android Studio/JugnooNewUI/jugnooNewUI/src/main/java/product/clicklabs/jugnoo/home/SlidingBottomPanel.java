@@ -216,7 +216,7 @@ public class SlidingBottomPanel {
             recyclerViewVehicles.setVisibility(View.GONE);
             params.setMargins(0, 0, 0, 0);
         } else{
-            recyclerViewVehicles.setVisibility(View.VISIBLE);
+            recyclerViewVehicles.setVisibility(View.GONE);
             params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
         }
         imageViewExtraForSliding.setLayoutParams(params);
