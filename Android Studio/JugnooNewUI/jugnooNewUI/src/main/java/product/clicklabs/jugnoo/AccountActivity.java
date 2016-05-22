@@ -77,6 +77,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     Button buttonEditProfile;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
+    TextView textViewEmergencyContact;
     LinearLayout linearLayoutPasswordChange;
     RelativeLayout relativeLayoutOldPassword, relativeLayoutNewPassword, relativeLayoutRetypePassword;
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
@@ -119,7 +120,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
-        ((TextView) findViewById(R.id.textViewEmergencyContact)).setTypeface(Fonts.mavenMedium(this));
+        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordChange = (LinearLayout) findViewById(R.id.linearLayoutPasswordChange);
         imageViewChangePassword = (ImageView) findViewById(R.id.imageViewChangePassword);
         relativeLayoutOldPassword = (RelativeLayout) findViewById(R.id.relativeLayoutOldPassword);
@@ -134,6 +135,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword); buttonChangePassword.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordChange.setVisibility(View.GONE);
         imageViewChangePassword.setRotation(270f);
+
 
 
 
@@ -558,6 +560,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		HomeActivity.checkForAccessTokenChange(this);
 
 		reloadProfileAPI(this);
+        textViewEmergencyContact.setText(getResources()
+                .getString(Data.emergencyContactsList != null && Data.emergencyContactsList.size() > 0 ?
+                        R.string.emergency_contacts : R.string.add_emergency_contacts));
 
 		scrollView.scrollTo(0, 0);
 	}

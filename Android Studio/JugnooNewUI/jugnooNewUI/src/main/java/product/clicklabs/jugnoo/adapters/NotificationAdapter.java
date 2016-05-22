@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -24,12 +25,12 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
-import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -243,8 +244,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     activity.startActivity(intent);
                 }
             } else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == deepInt){
-                activity.startActivity(new Intent(activity, FreshActivity.class));
-                activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
             }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){

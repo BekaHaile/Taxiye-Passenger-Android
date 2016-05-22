@@ -896,6 +896,7 @@
 	<string name="retype_password_different_error">Passwords not matched</string>
 	<string name="new_password_same_error">New Password is same as the old one</string>
 	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
+	<string name="add_emergency_contacts">Add Emergency Contacts</string>
 
 
 </resources>

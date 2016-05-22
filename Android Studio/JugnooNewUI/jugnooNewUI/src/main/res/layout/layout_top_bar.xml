@@ -71,9 +71,9 @@
 
             <ImageView
                 android:id="@+id/imageViewAppToggle"
-                android:layout_width="78px"
-                android:layout_height="68px"
-                android:src="@drawable/ic_auto_white"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:src="@drawable/ic_fatafat_selector"
                 android:layout_gravity="center_vertical"
                 android:tag="mwar"/>
 

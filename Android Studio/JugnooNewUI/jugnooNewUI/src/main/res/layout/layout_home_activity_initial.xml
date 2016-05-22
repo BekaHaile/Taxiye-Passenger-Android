@@ -16,15 +16,16 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutSearchContainer"
             android:layout_width="wrap_content"
-            android:layout_height="200px">
+            android:layout_height="200px"
+            android:layout_marginTop="20px">
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBar"
                 android:layout_width="match_parent"
-                android:layout_height="106px"
+                android:layout_height="100px"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
-                android:layout_marginTop="73px"
+                android:layout_marginTop="80px"
                 android:background="@drawable/dropshadow_in_menu_item_selector_color"
                 android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
@@ -68,43 +69,42 @@
 
             </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutInitialSearchBar"
-            android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="20px"
-            android:layout_marginTop="28px"
-            android:background="@drawable/dropshadow_in_white"
-            android:layout_gravity="center_horizontal"
-            android:splitMotionEvents="false">
-
-            <ImageView
-                android:id="@+id/imageViewInitialSearchGPSIcon"
-                android:layout_width="16px"
-                android:layout_height="16px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="37px"
-                android:src="@drawable/circle_green"
-                android:tag="mwar" />
-
-            <TextView
-                android:id="@+id/textViewInitialSearch"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutInitialSearchBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="37px"
-                android:paddingRight="20px"
-                android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
-                android:background="@color/transparent"
-                android:gravity="center_vertical"
-                android:hint="@string/set_pickup_location"
-                android:singleLine="true"
-                android:textColor="@color/text_color"
-                android:textSize="30px" />
+                android:layout_height="100px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="20px"
+                android:background="@drawable/dropshadow_in_white"
+                android:layout_gravity="center_horizontal"
+                android:splitMotionEvents="false">
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/imageViewInitialSearchGPSIcon"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="37px"
+                    android:src="@drawable/circle_green"
+                    android:tag="mwar" />
 
+                <TextView
+                    android:id="@+id/textViewInitialSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="37px"
+                    android:paddingRight="20px"
+                    android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/set_pickup_location"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

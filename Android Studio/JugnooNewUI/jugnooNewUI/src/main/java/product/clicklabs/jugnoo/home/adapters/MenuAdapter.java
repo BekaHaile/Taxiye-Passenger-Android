@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -40,6 +41,7 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -140,7 +142,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_get_a_ride_selector);
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
-                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fresh_selector);
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_normal);
                     if(activity instanceof HomeActivity) {
                         if (1 != Data.freshAvailable) {
                             hideLayout(holder.relative);
@@ -309,8 +311,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
                             Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
                         }
-                        activity.startActivity(new Intent(activity, FreshActivity.class));
-                        activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+                        CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
                         FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
                     }
