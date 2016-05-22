@@ -47,7 +47,9 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="-30px"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -63,6 +65,7 @@
                 android:orientation="vertical"
                 android:background="@color/white"
                 android:visibility="visible"
+                android:animateLayoutChanges="true"
                 >
                 <RelativeLayout
                     android:id="@+id/relativeLayoutProfileImage"
@@ -89,7 +92,7 @@
                 <EditText
                     android:id="@+id/editTextUserName"
                     android:layout_width="390px"
-                    android:layout_height="80px"
+                    android:layout_height="70px"
                     android:background="@drawable/bg_white_orange_bb"
                     android:capitalize="words"
                     android:layout_marginTop="0px"
@@ -106,7 +109,7 @@
                 <EditText
                     android:id="@+id/editTextEmail"
                     android:layout_width="390px"
-                    android:layout_height="70px"
+                    android:layout_height="60px"
                     android:background="@drawable/bg_white_orange_bb"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
@@ -122,7 +125,7 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutPhone"
                     android:layout_width="390px"
-                    android:layout_height="70px"
+                    android:layout_height="60px"
                     android:orientation="horizontal"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
@@ -183,54 +186,6 @@
                 />
 
             <RelativeLayout
-                android:id="@+id/relativeLayoutEmailVerify"
-                android:layout_width="626px"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10px"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/imageViewOraneTriangle"
-                    android:layout_width="28px"
-                    android:layout_height="28px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="73px"
-                    android:src="@drawable/triangle_orange"/>
-
-                <RelativeLayout
-                    android:layout_width="616px"
-                    android:layout_height="58px"
-                    android:layout_marginTop="10px"
-                    android:background="@drawable/button_yellow_orange_normal">
-
-                    <TextView
-                        android:id="@+id/textViewEmailVerifyMessage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:gravity="center"
-                        android:text="Please verify the Address."
-                        android:textColor="@color/white"
-                        android:textSize="26px"/>
-
-                    <TextView
-                        android:id="@+id/textViewEmailVerify"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15px"
-                        android:gravity="center"
-                        android:text="VERIFY ME"
-                        android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="26px"/>
-
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/relativeLayoutJugnooJeanie"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/top_bar_height"
@@ -280,8 +235,9 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutChangePassword"
                 android:layout_width="match_parent"
-                android:layout_height="121px"
+                android:layout_height="110px"
                 android:background="@color/white"
+                android:animateLayoutChanges="true"
                 >
 
                 <TextView
@@ -321,7 +277,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutEmergencyContact"
                 android:layout_width="match_parent"
-                android:layout_height="121px"
+                android:layout_height="110px"
                 android:background="@color/white"
                 >
 
@@ -341,7 +297,6 @@
                     style="@style/forward_image"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="40px"
-                    android:rotation="270"
                     />
             </RelativeLayout>
             <View
@@ -359,7 +314,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutAddHome"
                 android:layout_width="match_parent"
-                android:layout_height="121px"
+                android:layout_height="110px"
                 android:background="@color/white">
 
                 <TextView
@@ -413,7 +368,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutAddWork"
                 android:layout_width="match_parent"
-                android:layout_height="121px"
+                android:layout_height="110px"
                 android:background="@color/white">
 
                 <TextView

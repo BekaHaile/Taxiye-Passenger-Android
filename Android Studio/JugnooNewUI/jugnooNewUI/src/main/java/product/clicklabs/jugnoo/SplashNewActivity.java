@@ -647,7 +647,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								email = Utils.retrievePhoneNumberTenChars(email);
 								if (!Utils.validPhoneNumber(email)) {
 									editTextEmail.requestFocus();
-									editTextEmail.setError(getResources().getString(R.string.nl_login_invalid_email_error));
+									editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
 								} else {
 									email = "+91" + email;
 									sendLoginValues(SplashNewActivity.this, email, password, true);

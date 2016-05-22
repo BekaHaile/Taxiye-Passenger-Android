@@ -4,12 +4,12 @@
 
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/theme_color"/>
+            <solid android:color="@color/theme_color_alpha"/>
         </shape>
     </item>
 
     <item
-        android:bottom="1dp"
+        android:bottom="0.75dp"
         android:drawable="@drawable/background_white"
         />
 

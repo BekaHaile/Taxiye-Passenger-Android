@@ -348,7 +348,7 @@
 	<string name="nl_login_google">Google</string>
 	<string name="nl_login_email_empty_error">Please enter email or phone number</string>
 	<string name="nl_login_empty_password_error">Please enter password</string>
-	<string name="nl_login_invalid_email_error">Please enter valid phone number</string>
+	<string name="invalid_phone_error">Please enter valid phone number</string>
 
 	<!-- NL Signup-->
 	<string name="nl_signup">Signup</string>
@@ -882,8 +882,20 @@
 	<string name="name">Name</string>
 	<string name="email">Email</string>
 	<string name="edit_profile">Edit Profile</string>
+	<string name="save_changes">Save Changes</string>
 	<string name="old_password">Old Password</string>
 	<string name="new_password">New Password</string>
 	<string name="retype_password">Retype Password</string>
+	<string name="username_empty_error">Username can\'t be empty</string>
+	<string name="email_empty_error">Email can\'t be empty</string>
+	<string name="phone_empty_error">Phone number can\'t be empty</string>
+	<string name="nothing_changed">Nothing changed</string>
+	<string name="old_password_empty_error">Please enter old password</string>
+	<string name="new_password_empty_error">Please enter new password</string>
+	<string name="retype_password_empty_error">Please retype new password</string>
+	<string name="retype_password_different_error">Passwords not matched</string>
+	<string name="new_password_same_error">New Password is same as the old one</string>
+	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
+
 
 </resources>
