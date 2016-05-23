@@ -34,7 +34,7 @@ public class Fonts {
 
     public static Typeface avenirNext(Context appContext) {											// accessing fonts functions
         if (avenirNext == null) {
-            avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_medium.ttf");
+            avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_next_demi.otf");
         }
         return avenirNext;
     }
