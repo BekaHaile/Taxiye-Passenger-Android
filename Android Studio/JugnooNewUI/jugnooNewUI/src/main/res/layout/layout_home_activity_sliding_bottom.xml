@@ -52,7 +52,9 @@
                     android:gravity="center"
                     android:text="200"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
+                    android:textSize="@dimen/text_size_30"
+                    android:textAllCaps="true"
+                    />
 
             </LinearLayout>
 

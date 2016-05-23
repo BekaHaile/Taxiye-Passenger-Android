@@ -320,7 +320,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
-    private final int SEARCH_FLIP_ANIMATION_TIME = 300;
+    private final int SEARCH_FLIP_ANIMATION_TIME = 200;
     private final float SEARCH_FLIP_ANIMATION_MARGIN = 20f;
 
     public static Location myLocation;
@@ -365,6 +365,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
 
     public static final float MAX_ZOOM = 15;
+    private static final int MAP_ANIMATE_DURATION = 300;
 
 	public static final double FIX_ZOOM_DIAGONAL = 408;
 
@@ -1793,7 +1794,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     zoomedForSearch = false;
                     lastSearchLatLng = null;
 					setCentrePinAccToGoogleMapPadding();
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM));
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                     mapTouched = true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2043,7 +2044,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void run() {
                                     if (map != null && Data.pickupLatLng != null) {
-                                        map.animateCamera(CameraUpdateFactory.newLatLng(Data.pickupLatLng));
+                                        map.animateCamera(CameraUpdateFactory.newLatLng(Data.pickupLatLng), MAP_ANIMATE_DURATION, null);
                                     }
                                 }
                             }, 1000);
@@ -3588,10 +3589,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setupFreshUI(){
         try{
             if(1 == Data.freshAvailable){
-                Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
+                /*Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
                 if(locD != null){
                     freshIntroDialog = locD;
-                }
+                }*/
             } else {
                 freshIntroCallback.notShown();
             }
@@ -3802,7 +3803,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                     pickupDropZoomed = true;
                                 }
                             } catch (Exception e) {
@@ -3849,10 +3850,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             try {
                                 if(finalFixedZoom){
-                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                                 }
                                 else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), 1000, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -3869,7 +3870,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             try {
 								if("".equalsIgnoreCase(Data.farAwayCity)) {
-									map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM));
+									map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
 								}
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -6576,7 +6577,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 progressBarInitialSearch.setVisibility(View.GONE);
                 if (map != null && searchResult != null) {
                     textViewInitialSearch.setText(searchResult.name);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), 500, null);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                     lastSearchLatLng = searchResult.latLng;
                     mapTouched = true;
 

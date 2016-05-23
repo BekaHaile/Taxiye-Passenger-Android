@@ -200,6 +200,12 @@ public class SearchListAdapter extends BaseAdapter{
                 holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
             }
 
+            if(autoCompleteSearchResults.get(position).address.equalsIgnoreCase("")){
+                holder.textViewSearchAddress.setVisibility(View.GONE);
+            }else {
+                holder.textViewSearchAddress.setVisibility(View.VISIBLE);
+            }
+
             if(position == getCount()-1){
                 holder.imageViewSep.setVisibility(View.GONE);
             } else{

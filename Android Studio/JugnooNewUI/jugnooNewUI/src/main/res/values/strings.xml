@@ -233,6 +233,7 @@
     <string name="check_internet_connection">Seems there is an issue with your internet connection. Please check and try again.</string>
 	<string name="share_your_code">Share your referral code</string>
 	<string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9100!</string>
+	<string name="fare_note">Note: This is just an estimate. Actual cost, time and distance may vary</string>
 
 
 
@@ -255,10 +256,10 @@
 		It is simply a tool to compare and reduce your commute costs.  </string>
 
 	<!-- Account Settings Strings -->
-	<string name="add_home">Add Home</string>
-	<string name="add_work">Add Work</string>
-	<string name="home">Home</string>
-	<string name="work">Work</string>
+	<string name="add_home">ADD HOME</string>
+	<string name="add_work">ADD WORK</string>
+	<string name="home">HOME</string>
+	<string name="work">WORK</string>
 
 
 	<!-- Search state strings -->

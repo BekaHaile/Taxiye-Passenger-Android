@@ -307,8 +307,8 @@
             android:gravity="center"
             android:paddingBottom="12px"
             android:paddingTop="12px"
-            android:text="Note: This is just an estimate. Actual cost, time and dist may vary"
-            android:textColor="@color/text_color_light"
+            android:text="@string/fare_note"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22"
 
             />

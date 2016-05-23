@@ -702,7 +702,7 @@ public class DialogPopup {
 		try {
 			dismissAlertPopup();
 
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_banner);
 
@@ -728,10 +728,10 @@ public class DialogPopup {
 
 			dialog.show();
 			new Handler().postDelayed(new Runnable() {
-
 				@Override
 				public void run() {
-					DialogPopup.dismissAlertPopup();
+					//DialogPopup.dismissAlertPopup();
+					dialog.dismiss();
 				}
 			}, timeToDismiss);
 		} catch (Exception e) {

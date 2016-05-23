@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_light_grey"
+    android:background="@color/menu_item_selector_color"
     android:orientation="vertical"
     >
 
@@ -98,6 +98,7 @@
                     android:layout_marginTop="0px"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
+                    android:textAllCaps="true"
                     android:hint="@string/name"
                     android:singleLine="true"
                     android:textColor="@color/text_color"
@@ -128,7 +129,7 @@
                     android:layout_height="60px"
                     android:orientation="horizontal"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
                     android:background="@drawable/bg_white_orange_bb"
                     >
 
@@ -149,14 +150,13 @@
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
                         android:layout_gravity="center_horizontal"
-                        android:gravity="center"
+                        android:gravity="left|center_vertical"
                         android:hint="Phone Number"
                         android:imeActionLabel="DONE"
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:paddingLeft="10px"
-                        android:paddingRight="20px"
+                        android:paddingLeft="5px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/black_text_alpha"
@@ -394,7 +394,7 @@
                     android:layout_height="50px"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginLeft="30px"
                     android:src="@drawable/ic_work"
                     android:tag="mwar"/>
 

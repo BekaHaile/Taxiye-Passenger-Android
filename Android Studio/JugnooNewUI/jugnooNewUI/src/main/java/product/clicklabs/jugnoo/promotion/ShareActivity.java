@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -110,7 +111,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		viewPager.setAdapter(promotionsFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		tabs.setTextSize((int)(Math.min(ASSL.Xscale(), ASSL.Yscale())*18));
+		tabs.setTextSize((int)(ASSL.Xscale()*24f));
 		tabs.setTextColorResource(R.color.text_color, R.color.text_color_light);
 		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.NORMAL);
 		tabs.setViewPager(viewPager);

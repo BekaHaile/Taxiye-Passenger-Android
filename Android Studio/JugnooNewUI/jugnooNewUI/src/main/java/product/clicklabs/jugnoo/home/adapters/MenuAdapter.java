@@ -110,6 +110,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 paramsP.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 holder.textViewValue.setLayoutParams(paramsP);
                 showLayout(holder.relative);
+
                 if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageDrawable(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal));
                     try {
@@ -142,7 +143,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_get_a_ride_selector);
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
-                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_normal);
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_menu_selector);
                     if(activity instanceof HomeActivity) {
                         if (1 != Data.freshAvailable) {
                             hideLayout(holder.relative);

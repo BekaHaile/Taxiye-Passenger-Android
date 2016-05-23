@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -498,8 +501,25 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+
 	}
 
+    private void setPasswordVisibility(EditText editText, ImageView imageView){
+        if(editText.length() > 0) {
+            if (editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                imageView.setImageResource(R.drawable.ic_password_show);
+            } else {
+                editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                imageView.setImageResource(R.drawable.ic_password_hide);
+            }
+            editText.setSelection(editText.length());
+        }
+    }
+
+    public void onClick(View view){
+        setPasswordVisibility((EditText)((ViewGroup)view.getParent()).getChildAt(0), (ImageView)view);
+    }
 
 
     public void setUserData(){
@@ -769,7 +789,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-			Log.i("access_token", "=" + Data.userData.accessToken);
+            Log.i("access_token", "=" + Data.userData.accessToken);
 
             RestClient.getApiServices().logoutUser(params, new Callback<SettleUserDebt>() {
                 @Override

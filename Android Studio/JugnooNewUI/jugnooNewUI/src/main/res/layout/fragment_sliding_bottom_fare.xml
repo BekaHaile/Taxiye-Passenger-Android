@@ -129,6 +129,7 @@
         android:layout_height="@dimen/nl_button_size"
         android:text="@string/get_fare_estimate"
         android:gravity="center"
+        android:textAllCaps="true"
         android:background="@drawable/background_white_rounded_bordered"
         android:layout_marginTop="10px"
         android:layout_marginLeft="27px"
