@@ -294,10 +294,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "game");
                 }
             } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))){
                 if(activity instanceof HomeActivity) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
                 } else if(activity instanceof FreshActivity){
                     activity.finish();
                     activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
@@ -324,6 +326,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Free rides");
 
             } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, PaymentActivity.class);
@@ -333,6 +336,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "wallet");
 
             } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
@@ -348,6 +352,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "inbox");
 
             }else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
@@ -363,6 +368,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         activity.startActivity(new Intent(activity, ShareActivity.class));
                         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "promotion");
                     } else {
                         DialogPopup.dialogNoInternet(activity,
                                 Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -393,7 +399,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
-
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
                 } else if(activity instanceof FreshActivity){
                     ((FreshActivity)activity).openOrderHistory();
                 }
@@ -401,6 +407,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(activity instanceof HomeActivity) {
                     activity.startActivity(new Intent(activity, SupportActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Support");
                 } else if(activity instanceof FreshActivity){
                     ((FreshActivity)activity).openSupport();
                 }
@@ -408,6 +415,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.startActivity(new Intent(activity, AboutActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
             }
         } catch (Exception e) {
             e.printStackTrace();

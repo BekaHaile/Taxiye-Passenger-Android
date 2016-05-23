@@ -5509,6 +5509,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRegionSelected().getRegionId()));
 
+
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
