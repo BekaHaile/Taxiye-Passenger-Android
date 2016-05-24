@@ -33,15 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/imageViewRotate"
-                    android:layout_width="77px"
-                    android:layout_height="77px"
-                    android:layout_marginLeft="5px"
-                    android:layout_marginTop="5px"
-                    android:src="@drawable/ic_pin_loader"
-                    android:tag="mwar"/>
-
                 <TextView
                     android:id="@+id/textViewCentrePinETA"
                     android:layout_width="86px"

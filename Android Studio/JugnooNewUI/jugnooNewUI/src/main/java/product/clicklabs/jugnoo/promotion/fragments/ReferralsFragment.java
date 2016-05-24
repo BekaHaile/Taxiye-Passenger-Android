@@ -21,7 +21,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
-import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -77,17 +76,18 @@ public class ReferralsFragment extends Fragment {
 
 		imageViewLogo = (ImageView) rootView.findViewById(R.id.imageViewLogo);
 		((TextView)rootView.findViewById(R.id.textViewShare)).setTypeface(Fonts.mavenRegular(activity));
-		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenRegular(activity));
-		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenRegular(activity));
+		textViewDesc = (TextView)rootView.findViewById(R.id.textViewDesc);textViewDesc.setTypeface(Fonts.mavenMedium(activity));
+		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenMedium(activity));
 
 		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenMedium(activity));
-		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenRegular(activity));
+		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenMedium(activity));
 
 		relativeLayoutReferSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferSingle);
 		relativeLayoutMultipleTab = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleTab);
 		linearLayoutLeaderBoard = (LinearLayout) rootView.findViewById(R.id.linearLayoutLeaderBoard);
+		((TextView)rootView.findViewById(R.id.textViewLeaderboard)).setTypeface(Fonts.mavenMedium(activity));
 		linearLayoutRefer = (LinearLayout)rootView.findViewById(R.id.linearLayoutRefer);
-		((TextView)rootView.findViewById(R.id.textViewReferDriver)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewReferDriver)).setTypeface(Fonts.mavenMedium(activity));
 
 
 

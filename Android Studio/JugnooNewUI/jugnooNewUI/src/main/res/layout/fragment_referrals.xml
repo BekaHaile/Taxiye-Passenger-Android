@@ -95,7 +95,7 @@
                 android:paddingRight="40px"
                 android:text="@string/free_ride_desc"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28" />
+                android:textSize="@dimen/text_size_30" />
 
             <TextView
                 android:id="@+id/textViewMoreInfo"

@@ -381,7 +381,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public boolean activityResumed = false;
     public static boolean rechargedOnce = false, feedbackSkipped = false;
-    private ImageView imageViewRotate;
 
     public ASSL assl;
 
@@ -511,7 +510,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
         imageViewSupplyType = (ImageView) findViewById(R.id.imageViewSupplyType);
-        imageViewRotate = (ImageView) findViewById(R.id.imageViewRotate);
 
         imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
         imageViewInAppCampaign.setVisibility(View.GONE);
@@ -687,9 +685,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         layoutParams.height = (int)(ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
-
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-        imageViewRotate.startAnimation(animation);
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override

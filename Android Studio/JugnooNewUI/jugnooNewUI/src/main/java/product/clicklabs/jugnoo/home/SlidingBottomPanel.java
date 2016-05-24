@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -88,17 +89,24 @@ public class SlidingBottomPanel {
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
+                Log.i("slideOffset", ">" + slideOffset);
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                if(activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
+                        && slideOffset < 1f){
+                    activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onPanelExpanded(View panel) {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
                 imageViewExtraForSliding.setVisibility(View.GONE);
+                activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
             }
 
             @Override

@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -117,9 +116,9 @@ public class ShareActivity extends BaseFragmentActivity {
 		viewPager.setAdapter(promotionsFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		tabs.setTextSize((int) (ASSL.Xscale() * 24f));
+		tabs.setTextSize((int) (ASSL.Xscale() * 32f));
 		tabs.setTextColorResource(R.color.text_color, R.color.text_color_light);
-		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.NORMAL);
+		tabs.setTypeface(Fonts.mavenMedium(this), Typeface.NORMAL);
 		tabs.setViewPager(viewPager);
 
 		relativeLayoutFragContainer = (RelativeLayout) findViewById(R.id.relativeLayoutFragContainer);
@@ -157,14 +156,14 @@ public class ShareActivity extends BaseFragmentActivity {
 
 			@Override
 			public void onPageSelected(int position) {
-				if(position == 0){
+				if (position == 0) {
 					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_INVITE_FRIENDS);
-				} else if(position == 1){
+				} else if (position == 1) {
 					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_OFFERS);
-				} else if(position == 2){
+				} else if (position == 2) {
 					FlurryEventLogger.event(ShareActivity.this, Data.userData.getReferralLeaderboardEnabled() == 1 ?
 							FlurryEventNames.WHO_CLICKED_ON_LEADERBOARD : FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
-				} else if(position == 3){
+				} else if (position == 3) {
 					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
 				}
 				Utils.hideSoftKeyboard(ShareActivity.this, imageViewBack);
@@ -172,6 +171,13 @@ public class ShareActivity extends BaseFragmentActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
+
+		relativeLayoutFragContainer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
 			}
 		});
