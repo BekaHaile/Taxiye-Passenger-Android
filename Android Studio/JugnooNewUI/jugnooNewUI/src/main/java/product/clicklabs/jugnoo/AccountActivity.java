@@ -4,19 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.method.PasswordTransformationMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -332,16 +331,26 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
-                if (linearLayoutPasswordChange.getVisibility() == View.GONE) {
-                    linearLayoutPasswordChange.setVisibility(View.VISIBLE);
-                    linearLayoutPasswordSave.setVisibility(View.VISIBLE);
-                    imageViewChangePassword.setVisibility(View.GONE);
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
-                } else {
-                    linearLayoutPasswordChange.setVisibility(View.GONE);
-                    imageViewChangePassword.setVisibility(View.VISIBLE);
-                    linearLayoutPasswordSave.setVisibility(View.GONE);
+                long delay = 0;
+                if(scrollView.getScrollY() != 0){
+                    scrollView.smoothScrollTo(0, 0);
+                    delay = 200;
                 }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (linearLayoutPasswordChange.getVisibility() == View.GONE) {
+                            linearLayoutPasswordChange.setVisibility(View.VISIBLE);
+                            linearLayoutPasswordSave.setVisibility(View.VISIBLE);
+                            imageViewChangePassword.setVisibility(View.GONE);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
+                        } else {
+                            linearLayoutPasswordChange.setVisibility(View.GONE);
+                            imageViewChangePassword.setVisibility(View.VISIBLE);
+                            linearLayoutPasswordSave.setVisibility(View.GONE);
+                        }
+                    }
+                }, delay);
             }
         });
 
