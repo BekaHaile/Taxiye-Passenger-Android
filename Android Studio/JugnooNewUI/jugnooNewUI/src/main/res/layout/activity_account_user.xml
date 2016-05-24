@@ -260,7 +260,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/stroke_color_light"
-                android:layout_marginTop="20px"
+                android:layout_marginTop="26px"
                 />
             <RelativeLayout
                 android:id="@+id/relativeLayoutChangePassword"
@@ -385,7 +385,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/stroke_color_light"
-                android:layout_marginTop="20px"
+                android:layout_marginTop="26px"
                 />
             <RelativeLayout
                 android:id="@+id/relativeLayoutAddHome"

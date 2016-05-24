@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             android:text="@string/emergency_mode_enabled"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="@dimen/text_size_32"
             style="@style/title"
             />
 

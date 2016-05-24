@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20px"
             android:paddingLeft="20px"
-            android:paddingRight="10px"
+            android:paddingRight="20px"
             android:paddingBottom="20px"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22"

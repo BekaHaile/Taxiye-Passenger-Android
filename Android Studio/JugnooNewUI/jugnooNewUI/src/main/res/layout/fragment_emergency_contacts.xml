@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             android:text="@string/emergency_contacts"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="@dimen/text_size_32"
             style="@style/title"
             />
 
@@ -33,7 +33,7 @@
             android:text="@string/edit"
             android:textAllCaps="true"
             android:textColor="@color/text_color_light_selector"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="@dimen/text_size_28"
             />
 
     </RelativeLayout>
@@ -171,7 +171,7 @@
             style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30px"
-            android:layout_marginTop="30px"
+            android:layout_marginTop="40px"
             android:text="@string/add_contacts"
             />
 
