@@ -122,7 +122,7 @@ public class EmergencyContactsFragment extends Fragment {
 		textViewEdit = (TextView) rootView.findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Fonts.mavenRegular(activity));
 
 		linearLayoutContactsList = (LinearLayout) rootView.findViewById(R.id.linearLayoutContactsList);
-		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenMedium(activity));
 		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
 		recyclerViewContacts.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());

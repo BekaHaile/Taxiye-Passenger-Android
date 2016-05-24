@@ -44,8 +44,8 @@
 
         <ImageView
             android:id="@+id/imageViewSave"
-            android:layout_width="21px"
-            android:layout_height="21px"
+            android:layout_width="24px"
+            android:layout_height="25px"
             android:layout_alignLeft="@+id/textViewAbout"
             android:layout_centerVertical="true"
             android:visibility="visible"
@@ -317,8 +317,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewPasswordSave"
-                        android:layout_width="21px"
-                        android:layout_height="21px"
+                        android:layout_width="24px"
+                        android:layout_height="24px"
                         android:layout_alignLeft="@+id/textViewAbout"
                         android:layout_centerVertical="true"
                         android:visibility="visible"

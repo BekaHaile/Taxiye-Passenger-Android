@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:splitMotionEvents="false" 
-            android:background="@color/white_light_grey"
+            android:background="@color/menu_item_selector_color"
             
             >
 
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -151,7 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -179,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
             
         </LinearLayout>

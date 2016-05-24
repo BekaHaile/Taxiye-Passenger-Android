@@ -119,7 +119,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewAdd = (TextView) rootView.findViewById(R.id.textViewAdd); textViewAdd.setTypeface(Fonts.mavenRegular(activity));
 
-		((TextView)rootView.findViewById(R.id.textViewAddContacts)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewAddContacts)).setTypeface(Fonts.mavenMedium(activity));
 
 		editTextContacts = (ContactsCompletionView) rootView.findViewById(R.id.editTextContacts);
 		editTextContacts.setTypeface(Fonts.mavenLight(activity));
