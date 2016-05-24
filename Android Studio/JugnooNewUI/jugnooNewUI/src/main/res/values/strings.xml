@@ -319,7 +319,7 @@
 	<string name="insert_sd_card">Please insert SD Card to use this app</string>
 
 	<!-- NL Home Screen -->
-	<string name="nl_min_fare">MIN FARE</string>
+	<string name="nl_min_fare">BASE FARE</string>
 	<string name="nl_offers">OFFERS</string>
 	<string name="nl_change_locality">CHANGE LOCALITY</string>
 	<string name="get_fare_estimate">Get Fare Estimate</string>
@@ -882,6 +882,7 @@
 	<string name="valid_until_format">Valid until\n%s</string>
 	<string name="name">Name</string>
 	<string name="email">Email</string>
+	<string name="save">Save</string>
 	<string name="edit_profile">Edit Profile</string>
 	<string name="save_changes">Save Changes</string>
 	<string name="old_password">Old Password</string>

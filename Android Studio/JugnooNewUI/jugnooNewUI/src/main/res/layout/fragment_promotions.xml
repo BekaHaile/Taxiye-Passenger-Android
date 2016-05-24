@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:splitMotionEvents="false"
-    >
+    android:splitMotionEvents="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,15 +19,13 @@
             android:layout_marginTop="84px"
             android:imeOptions="actionDone"
             android:text="@string/add_promo_code"
-            android:visibility="visible"
-            />
+            android:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutPromocode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/linearLayoutInner"
@@ -36,8 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="52px"
                 android:background="@drawable/dropshadow_in_menu_item_selector_color"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/editTextPromoCode"
@@ -57,13 +53,13 @@
                     android:textAllCaps="true"
                     android:textColor="@color/black_text"
                     android:textColorHint="@color/black_text_alpha"
-                    android:textSize="30px"/>
+                    android:textSize="30px" />
 
                 <ImageView
                     android:layout_width="400px"
                     android:layout_height="2px"
                     android:layout_gravity="center_horizontal"
-                    android:src="@color/theme_color"/>
+                    android:src="@color/theme_color" />
 
                 <Button
                     android:id="@+id/buttonApplyPromo"
@@ -72,14 +68,14 @@
                     android:layout_marginBottom="36px"
                     android:layout_marginTop="50px"
                     android:imeOptions="actionDone"
-                    android:text="@string/apply"
-                    />
+                    android:text="@string/apply" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageViewClose"
                 style="@style/cross_popup"
-                />
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
         </RelativeLayout>
     </RelativeLayout>
 
@@ -87,8 +83,7 @@
         android:id="@+id/relativeLayoutListTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
-        >
+        android:layout_marginTop="20px">
 
         <ImageView
             android:layout_width="match_parent"
@@ -97,7 +92,7 @@
             android:layout_marginLeft="40px"
             android:layout_marginRight="20px"
             android:layout_toLeftOf="@+id/textViewOffersAvailable"
-            android:src="@color/stroke_color_light"/>
+            android:src="@color/stroke_color_light" />
 
         <TextView
             android:id="@+id/textViewOffersAvailable"
@@ -107,7 +102,7 @@
             android:text="@string/offers_available"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"/>
+            android:textSize="@dimen/text_size_30" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -116,7 +111,7 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="40px"
             android:layout_toRightOf="@+id/textViewOffersAvailable"
-            android:src="@color/stroke_color_light"/>
+            android:src="@color/stroke_color_light" />
 
     </RelativeLayout>
 
@@ -126,26 +121,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40px"
         android:fadeScrollbars="true"
-        android:scrollbars="vertical"
-        />
+        android:scrollbars="vertical" />
 
     <LinearLayout
         android:id="@+id/linearLayoutNoOffers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="150px"
+        android:layout_marginTop="120px"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="241px"
             android:layout_height="342px"
             android:src="@drawable/ic_no_items"
-            android:tag="mwar"
-            />
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewNoOffers"
@@ -155,8 +147,7 @@
             android:layout_marginTop="20px"
             android:text="@string/no_offers_currently"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
-            />
+            android:textSize="@dimen/text_size_26" />
 
     </LinearLayout>
 

@@ -386,7 +386,7 @@ public class SlidingBottomPanel {
 
     private void checkForGoogleLogoVisibilityBeforeRide(){
         try{
-            float padding = 20;
+            float padding = 0;
             if(recyclerViewVehicles.getVisibility() == View.VISIBLE){
                 padding = padding + 110;
             }

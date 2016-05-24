@@ -67,7 +67,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	LinearLayout relative;
 
-	TextView textViewAbout;
+	private TextView textViewAbout, textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
 
 	ScrollView scrollView;
@@ -77,7 +77,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     ImageView imageViewProfileImage;
 	EditText editTextUserName, editTextEmail, editTextPhone;
     LinearLayout linearLayoutPhone;
-    Button buttonEditProfile;
+    ImageView imageViewEditProfile;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
     TextView textViewEmergencyContact;
@@ -85,26 +85,27 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     RelativeLayout relativeLayoutOldPassword, relativeLayoutNewPassword, relativeLayoutRetypePassword;
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
     ImageView imageViewChangePassword, imaveViewOldPasswordVisibility, imaveViewNewPasswordVisibility, imaveViewRetypePasswordVisibility;
-    Button buttonChangePassword;
 
     LinearLayout linearLayoutLogout;
 
 	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
 	TextView textViewAddHome, textViewAddWork, textViewJugnooJeanie;
+    private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
     private boolean setJeanieState;
     public static final int ADD_HOME = 2, ADD_WORK = 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
         textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Fonts.mavenMedium(this));
+        textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -117,8 +118,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenMedium(this));
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPhone = (LinearLayout) findViewById(R.id.linearLayoutPhone);
-        buttonEditProfile = (Button) findViewById(R.id.buttonEditProfile); buttonEditProfile.setTypeface(Fonts.mavenMedium(this));
+        imageViewEditProfile = (ImageView) findViewById(R.id.imageViewEditProfile);
         ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenMedium(this));
+        linearLayoutSave = (LinearLayout)findViewById(R.id.linearLayoutSave);
+        textViewPasswordSave = (TextView) findViewById(R.id.textViewPasswordSave); textViewPasswordSave.setTypeface(Fonts.mavenMedium(this));
+        linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
 
         relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
@@ -135,9 +139,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         imaveViewOldPasswordVisibility = (ImageView) findViewById(R.id.imaveViewOldPasswordVisibility);
         imaveViewNewPasswordVisibility = (ImageView) findViewById(R.id.imaveViewNewPasswordVisibility);
         imaveViewRetypePasswordVisibility = (ImageView) findViewById(R.id.imaveViewRetypePasswordVisibility);
-        buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword); buttonChangePassword.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordChange.setVisibility(View.GONE);
-        imageViewChangePassword.setRotation(270f);
+        //imageViewChangePassword.setRotation(270f);
 
 
 
@@ -180,6 +183,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
             }
         });
+
 
 
 
@@ -226,7 +230,14 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         });
 
-		buttonEditProfile.setOnClickListener(new View.OnClickListener() {
+        imageViewEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayoutSave.performClick();
+            }
+        });
+
+        linearLayoutSave.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -270,7 +281,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextPhone.setEnabled(true);
                         linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        buttonEditProfile.setText(getResources().getString(R.string.save_changes));
+                        //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
+                        imageViewEditProfile.setVisibility(View.GONE);
+                        linearLayoutSave.setVisibility(View.VISIBLE);
                         Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
                     }
                 } catch (Exception e) {
@@ -302,8 +315,15 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                buttonEditProfile.performClick();
+                imageViewEditProfile.performClick();
                 return true;
+            }
+        });
+
+        imageViewChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutChangePassword.performClick();
             }
         });
 
@@ -314,16 +334,18 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             public void onClick(View v) {
                 if (linearLayoutPasswordChange.getVisibility() == View.GONE) {
                     linearLayoutPasswordChange.setVisibility(View.VISIBLE);
-                    imageViewChangePassword.setRotation(90f);
+                    linearLayoutPasswordSave.setVisibility(View.VISIBLE);
+                    imageViewChangePassword.setVisibility(View.GONE);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
                 } else {
                     linearLayoutPasswordChange.setVisibility(View.GONE);
-                    imageViewChangePassword.setRotation(270f);
+                    imageViewChangePassword.setVisibility(View.VISIBLE);
+                    linearLayoutPasswordSave.setVisibility(View.GONE);
                 }
             }
         });
 
-        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
+        linearLayoutPasswordSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String oldPassword = editTextOldPassword.getText().toString().trim();
@@ -375,7 +397,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                buttonChangePassword.performClick();
+                linearLayoutPasswordSave.performClick();
                 return true;
             }
         });
@@ -527,7 +549,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			editTextUserName.setEnabled(false); editTextUserName.setBackgroundResource(R.drawable.background_white);
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
-            buttonEditProfile.setText(getResources().getString(R.string.edit_profile));
 
 			editTextUserName.setText(Data.userData.userName);
 			editTextEmail.setText(Data.userData.userEmail);
@@ -630,6 +651,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     Log.i(TAG, "updateUserProfile response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
+
                         JSONObject jObj = new JSONObject(responseStr);
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             int flag = jObj.getInt("flag");
@@ -637,6 +659,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 String error = jObj.getString("error");
                                 DialogPopup.dialogBanner(activity, error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                linearLayoutSave.setVisibility(View.GONE);
+                                imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
@@ -967,6 +991,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 String error = jObj.getString("error");
                                 DialogPopup.dialogBanner(activity, error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                linearLayoutPasswordSave.setVisibility(View.GONE);
+                                imageViewChangePassword.setVisibility(View.VISIBLE);
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
                                 DialogPopup.dialogBanner(activity, message);
                             } else {

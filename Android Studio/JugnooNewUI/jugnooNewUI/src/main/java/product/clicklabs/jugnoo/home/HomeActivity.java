@@ -1937,7 +1937,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
-                        initialMyLocationBtn.setVisibility(View.VISIBLE);
+                        checkForMyLocationButtonVisibility();
                         changeLocalityLayout.setVisibility(View.GONE);
 
                         cancelTimerRequestRide();
@@ -1982,7 +1982,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 						else{
 							relativeLayoutLocationError.setVisibility(View.GONE);
-							initialMyLocationBtn.setVisibility(View.VISIBLE);
+							checkForMyLocationButtonVisibility();
 							imageViewRideNow.setVisibility(View.VISIBLE);
 //							genieLayout.setVisibility(View.VISIBLE);
 							centreLocationRl.setVisibility(View.VISIBLE);
@@ -3674,7 +3674,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 initialMyLocationBtn.setVisibility(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
-                initialMyLocationBtn.setVisibility(View.VISIBLE);
+                checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
             }
         }
@@ -5368,7 +5368,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void locationGotNow(){
         textViewInitialSearch.setText("");
         relativeLayoutLocationError.setVisibility(View.GONE);
-        initialMyLocationBtn.setVisibility(View.VISIBLE);
+        checkForMyLocationButtonVisibility();
         imageViewRideNow.setVisibility(View.VISIBLE);
         centreLocationRl.setVisibility(View.VISIBLE);
     }

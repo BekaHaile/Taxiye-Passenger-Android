@@ -187,6 +187,7 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 			@Override
 			public void onClick(View v) {
 				Animation animation = AnimationUtils.loadAnimation(activity, R.anim.scale_out);
+				relativeLayoutPromocode.clearAnimation();
 				animation.setAnimationListener(new Animation.AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
