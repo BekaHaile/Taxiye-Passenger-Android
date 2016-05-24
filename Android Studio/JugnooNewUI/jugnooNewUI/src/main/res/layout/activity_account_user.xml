@@ -44,8 +44,8 @@
 
         <ImageView
             android:id="@+id/imageViewSave"
-            android:layout_width="27px"
-            android:layout_height="27px"
+            android:layout_width="21px"
+            android:layout_height="21px"
             android:layout_alignLeft="@+id/textViewAbout"
             android:layout_centerVertical="true"
             android:visibility="visible"
@@ -58,7 +58,7 @@
             android:layout_height="80px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginLeft="10px"
             android:gravity="center_vertical|right"
             android:text="@string/save"
             android:visibility="visible"
@@ -158,7 +158,7 @@
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/text_color_light"
                     android:textColorHint="@color/text_color_light"
                     android:textCursorDrawable="@null"
                     android:textSize="@dimen/text_size_28"
@@ -182,7 +182,7 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:text="+91"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_28"/>
 
 
@@ -200,7 +200,7 @@
                         android:maxLength="10"
                         android:paddingLeft="5px"
                         android:singleLine="true"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/text_color_light"
                         android:textColorHint="@color/black_text_alpha"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/text_size_28"
@@ -317,8 +317,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewPasswordSave"
-                        android:layout_width="27px"
-                        android:layout_height="27px"
+                        android:layout_width="21px"
+                        android:layout_height="21px"
                         android:layout_alignLeft="@+id/textViewAbout"
                         android:layout_centerVertical="true"
                         android:visibility="visible"
@@ -331,7 +331,7 @@
                         android:layout_height="80px"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="30px"
+                        android:layout_marginLeft="10px"
                         android:gravity="center_vertical|right"
                         android:text="@string/save"
                         android:visibility="visible"
@@ -374,11 +374,6 @@
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28"/>
 
-                <ImageView
-                    style="@style/forward_image"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="40px"
-                    />
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"

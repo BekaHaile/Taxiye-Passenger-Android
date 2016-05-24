@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +35,6 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 
 	private LinearLayout linearLayoutRoot;
 
-	private Button buttonLocal, buttonGlobal;
 	private TextView textViewDaily, textViewWeekly;
 	private RecyclerView recyclerViewLb;
 	private LeaderboardItemsAdapter leaderboardItemsAdapter;
@@ -45,6 +45,7 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 
 	private LBLocationType lbLocationType;
 	private LBTimeType lbTimeType;
+	private ImageView imageViewBack;
 
     @Override
     public void onStart() {
@@ -78,19 +79,17 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 			e.printStackTrace();
 		}
 
-		buttonLocal = (Button)rootView.findViewById(R.id.buttonLocal);
-		buttonLocal.setTypeface(Fonts.mavenRegular(activity));
-		buttonGlobal = (Button)rootView.findViewById(R.id.buttonGlobal);
-		buttonGlobal.setTypeface(Fonts.mavenRegular(activity));
+
 
 		textViewDaily = (TextView)rootView.findViewById(R.id.textViewDaily);
-		textViewDaily.setTypeface(Fonts.mavenRegular(activity));
+		textViewDaily.setTypeface(Fonts.mavenMedium(activity));
 		textViewWeekly = (TextView)rootView.findViewById(R.id.textViewWeekly);
-		textViewWeekly.setTypeface(Fonts.mavenRegular(activity));
+		textViewWeekly.setTypeface(Fonts.mavenMedium(activity));
+		imageViewBack = (ImageView)rootView.findViewById(R.id.imageViewBack);
 
-		((TextView)rootView.findViewById(R.id.textViewRank)).setTypeface(Fonts.mavenLight(activity));
-		((TextView)rootView.findViewById(R.id.textViewName)).setTypeface(Fonts.mavenLight(activity));
-		((TextView)rootView.findViewById(R.id.textViewNoOfDownloads)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewRank)).setTypeface(Fonts.mavenMedium(activity));
+		((TextView)rootView.findViewById(R.id.textViewName)).setTypeface(Fonts.mavenMedium(activity));
+		((TextView)rootView.findViewById(R.id.textViewNoOfDownloads)).setTypeface(Fonts.mavenMedium(activity));
 
 		recyclerViewLb = (RecyclerView)rootView.findViewById(R.id.recyclerViewLb);
 		recyclerViewLb.setLayoutManager(new LinearLayoutManager(activity));
@@ -101,21 +100,6 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 		leaderboardItemsAdapter = new LeaderboardItemsAdapter(leaderboardItems, activity, R.layout.list_item_lb_entry);
 		recyclerViewLb.setAdapter(leaderboardItemsAdapter);
 
-		buttonLocal.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Local");
-				updateList(LBLocationType.LOCAL, lbTimeType);
-			}
-		});
-
-		buttonGlobal.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "LeaderBoard", "Global");
-				updateList(LBLocationType.GLOBAL, lbTimeType);
-			}
-		});
 
 		textViewDaily.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -133,13 +117,15 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 			}
 		});
 
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.performBackPressed();
+			}
+		});
 
-		try {
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 
-		updateList(LBLocationType.LOCAL, LBTimeType.DAILY);
+		updateList(LBLocationType.GLOBAL, LBTimeType.DAILY);
 
 		return rootView;
 	}
@@ -155,23 +141,23 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 
 			if(LBTimeType.DAILY == lbTimeType){
 				if(this.lbTimeType != lbTimeType) {
-					textViewDaily.setBackgroundResource(R.color.menu_item_selector_color);
+					textViewDaily.setBackgroundResource(R.drawable.bg_white_theme_color_bb);
+					textViewDaily.setTextColor(getResources().getColor(R.color.theme_color));
+					textViewWeekly.setTextColor(getResources().getColor(R.color.text_color_light));
 					textViewWeekly.setBackgroundResource(R.color.white);
 				}
 			}
 			else if(LBTimeType.WEEKLY == lbTimeType){
 				if(this.lbTimeType != lbTimeType) {
 					textViewDaily.setBackgroundResource(R.color.white);
-					textViewWeekly.setBackgroundResource(R.color.menu_item_selector_color);
+					textViewWeekly.setBackgroundResource(R.drawable.bg_white_theme_color_bb);
+					textViewWeekly.setTextColor(getResources().getColor(R.color.theme_color));
+					textViewDaily.setTextColor(getResources().getColor(R.color.text_color_light));
 				}
 			}
 
 			if(LBLocationType.LOCAL == lbLocationType){
 				if(this.lbLocationType != lbLocationType){
-					buttonLocal.setBackgroundResource(R.drawable.nl_button_theme_normal);
-					buttonLocal.setTextColor(getResources().getColor(R.color.white));
-					buttonGlobal.setBackgroundResource(R.drawable.button_white_grey_theme_border_selector);
-					buttonGlobal.setTextColor(getResources().getColorStateList(R.color.text_color_theme_selector));
 				}
 				if(LBTimeType.DAILY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getLocal().getDaily().getRanklist());
@@ -186,10 +172,6 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 			}
 			else if(LBLocationType.GLOBAL == lbLocationType){
 				if(this.lbLocationType != lbLocationType) {
-					buttonLocal.setBackgroundResource(R.drawable.button_white_grey_theme_border_selector);
-					buttonLocal.setTextColor(getResources().getColorStateList(R.color.text_color_theme_selector));
-					buttonGlobal.setBackgroundResource(R.drawable.nl_button_theme_normal);
-					buttonGlobal.setTextColor(getResources().getColor(R.color.white));
 				}
 				if(LBTimeType.DAILY == lbTimeType){
 					leaderboardItems.addAll(activity.leaderboardResponse.getGlobal().getDaily().getRanklist());

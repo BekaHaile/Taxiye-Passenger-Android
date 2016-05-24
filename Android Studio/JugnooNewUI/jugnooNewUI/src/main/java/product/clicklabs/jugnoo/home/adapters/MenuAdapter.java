@@ -71,7 +71,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_profile_account, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 280);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 422);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
@@ -226,6 +226,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
+                holder.textViewViewPhone.setText(Data.userData.phoneNo);
+
                 Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
                     Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).into(holder.imageViewProfile);
@@ -448,13 +450,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ViewHeaderHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         public ImageView imageViewProfile;
-        public TextView textViewUserName, textViewViewAccount;
+        public TextView textViewUserName, textViewViewPhone;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
-            textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(context));
-            textViewViewAccount = (TextView) convertView.findViewById(R.id.textViewViewAccount); textViewViewAccount.setTypeface(Fonts.mavenMedium(context));
+            textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.avenirNext(context));
+            textViewViewPhone = (TextView) convertView.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.avenirNext(context));
         }
     }
 

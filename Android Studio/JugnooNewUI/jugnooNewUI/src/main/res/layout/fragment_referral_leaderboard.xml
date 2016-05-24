@@ -1,153 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:splitMotionEvents="false"
-    >
+    android:splitMotionEvents="false">
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutLocalGlobal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25px"
-        android:layout_marginBottom="30px"
-        >
-
-        <Button
-            android:id="@+id/buttonLocal"
-            android:layout_width="@dimen/share_lb_button_width"
-            android:layout_height="@dimen/share_lb_button_height"
-            android:layout_marginLeft="30px"
-            android:background="@drawable/button_white_grey_theme_border_selector"
-            android:text="@string/local_leaderboard"
-            android:textColor="@color/text_color_theme_selector"
-            android:textSize="@dimen/button_text_size" />
-
-        <Button
-            android:id="@+id/buttonGlobal"
-            android:layout_width="@dimen/share_lb_button_width"
-            android:layout_height="@dimen/share_lb_button_height"
-            android:layout_marginRight="30px"
-            android:background="@drawable/nl_button_theme_normal"
-            android:text="@string/global_leaderboard"
-            android:textColor="@color/white"
-            android:textSize="@dimen/button_text_size"
-            android:layout_alignParentRight="true"
-            />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutDailyWeekly"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/share_lb_text_view_layout_height"
-        >
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_alignParentTop="true"
-            android:src="@color/text_color_hint"/>
-
-        <TextView
-            android:id="@+id/textViewDaily"
-            android:layout_width="359px"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginTop="2px"
-            android:layout_marginBottom="2px"
-            android:text="@string/daily_leaderboard"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            android:background="@color/menu_item_selector_color"
-            />
-
-        <ImageView
-            android:layout_width="2px"
-            android:layout_height="match_parent"
-            android:src="@color/text_color_hint"
-            android:layout_toRightOf="@+id/textViewDaily"/>
-
-        <TextView
-            android:id="@+id/textViewWeekly"
-            android:layout_width="359px"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginTop="2px"
-            android:layout_marginBottom="2px"
-            android:text="@string/weekly_leaderboard"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            android:layout_alignParentRight="true"
-            android:background="@color/white"
-            />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_alignParentBottom="true"
-            android:src="@color/text_color_hint"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutListTitle"
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        >
-
-        <TextView
-            android:id="@+id/textViewRank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/lb_rank"
-            android:textColor="@color/text_color_light"
-            android:textSize="@dimen/text_size_30"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/text_size_32"
-            />
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/lb_name"
-            android:textColor="@color/text_color_light"
-            android:textSize="@dimen/text_size_32"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            />
-
-        <TextView
-            android:id="@+id/textViewNoOfDownloads"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/lb_no_downloads"
-            android:textColor="@color/text_color_light"
-            android:textSize="@dimen/text_size_32"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20px"
-            />
-
-    </RelativeLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@color/text_color_hint"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewLb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:fadeScrollbars="true"
-        />
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="50px"
+        android:background="@drawable/dropshadow_in_white">
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="70px"
+            android:layout_height="71px"
+            android:layout_alignParentRight="true"
+            android:layout_alignRight="@+id/scrollView"
+            android:layout_alignTop="@+id/scrollView"
+            android:padding="20px"
+            android:src="@drawable/ic_cross_grey_selector" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/imageViewBack"
+            android:orientation="vertical">
 
 
+            <RelativeLayout
+                android:id="@+id/relativeLayoutDailyWeekly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/share_lb_text_view_layout_height">
+
+
+                <TextView
+                    android:id="@+id/textViewDaily"
+                    android:layout_width="339px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2px"
+                    android:layout_marginTop="2px"
+                    android:background="@drawable/bg_white_theme_color_bb"
+                    android:gravity="center"
+                    android:text="@string/daily_leaderboard"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34" />
+
+
+                <TextView
+                    android:id="@+id/textViewWeekly"
+                    android:layout_width="339px"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="2px"
+                    android:layout_marginTop="2px"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="@string/weekly_leaderboard"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/text_color_hint" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutListTitle"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:background="@color/menu_item_selector_color">
+
+                <TextView
+                    android:id="@+id/textViewRank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/text_size_32"
+                    android:gravity="center"
+                    android:text="@string/lb_rank"
+                    android:textColor="@color/stroke_color_dark"
+                    android:textSize="@dimen/text_size_30" />
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/lb_name"
+                    android:textColor="@color/stroke_color_dark"
+                    android:textSize="@dimen/text_size_32" />
+
+                <TextView
+                    android:id="@+id/textViewNoOfDownloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/text_size_32"
+                    android:gravity="center"
+                    android:text="@string/lb_no_downloads"
+                    android:textColor="@color/stroke_color_dark"
+                    android:textSize="@dimen/text_size_32" />
+
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewLb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 </LinearLayout>

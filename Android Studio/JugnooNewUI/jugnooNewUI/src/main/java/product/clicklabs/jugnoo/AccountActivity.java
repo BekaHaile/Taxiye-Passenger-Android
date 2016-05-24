@@ -246,7 +246,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     editTextEmail.setError(null);
                     editTextPhone.setError(null);
                     if (editTextUserName.isEnabled()) {
-                        String nameChanged = editTextUserName.getText().toString().trim();
+                        String nameChanged = editTextUserName.getText().toString().trim().toUpperCase();
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
@@ -550,7 +550,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
 
-			editTextUserName.setText(Data.userData.userName);
+			editTextUserName.setText(Data.userData.userName.toUpperCase());
 			editTextEmail.setText(Data.userData.userEmail);
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 
@@ -664,7 +664,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 String message = jObj.getString("message");
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
-                                editTextUserName.setText(Data.userData.userName);
+                                editTextUserName.setText(Data.userData.userName.toUpperCase());
                                 editTextEmail.setText(Data.userData.userEmail);
                                 if(phoneUpdated) {
                                     Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);

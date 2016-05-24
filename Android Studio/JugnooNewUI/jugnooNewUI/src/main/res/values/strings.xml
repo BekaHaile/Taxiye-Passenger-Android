@@ -847,7 +847,7 @@
 	<string name="your_cart_is_empty">Your cart is empty</string>
 	<string name="search_items">Search Items</string>
 
-	<string name="refer_a_driver">Refer A Driver</string>
+	<string name="refer_a_driver">Refer a Driver</string>
 	<string name="came_across_auto_driver">Came across able auto rickshaw drivers\nwho aren\'t aware of Jugnoo yet?</string>
 	<string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
 	<string name="if_they_are_interested">If they are interested, do share their\ndetails with us.</string>
@@ -873,6 +873,7 @@
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
 	<string name="promotions">Promotions</string>
 	<string name="referrals">Referrals</string>
+	<string name="referrals_tab">REFER &amp; WIN</string>
 	<string name="leaderboard">Leaderboard</string>
 	<string name="activity">Activity</string>
 	<string name="enter_promo_code">Enter Promo code</string>

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayoutRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/relativeLayoutShare"
             android:layout_width="match_parent"
@@ -25,11 +24,10 @@
                 android:layout_height="283px"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30px"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_promotions_friend_refer"
                 android:tag="mlar"
-                android:visibility="visible"
-                android:scaleType="centerCrop"
-                />
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -41,7 +39,7 @@
                     android:layout_height="173px"
                     android:layout_marginLeft="30px"
                     android:layout_marginTop="15px"
-                    android:src="@drawable/free_rides_earn_dashed_line"/>
+                    android:src="@drawable/free_rides_earn_dashed_line" />
 
                 <TextView
                     android:id="@+id/textViewShare"
@@ -51,8 +49,7 @@
                     android:gravity="center"
                     android:text="@string/share_your_code"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36"
-                    />
+                    android:textSize="@dimen/text_size_36" />
 
                 <TextView
                     android:id="@+id/textViewCode"
@@ -64,31 +61,26 @@
                     android:gravity="center"
                     android:text="    "
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_50"
-                    />
+                    android:textSize="@dimen/text_size_50" />
 
                 <Button
                     android:id="@+id/buttonInvite"
                     style="@style/ButtonTheme"
+                    android:layout_below="@+id/textViewCode"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30px"
-                    android:layout_below="@+id/textViewCode"
-                    android:text="@string/invite_friends_caps"
-                    />
+                    android:text="@string/invite_friends_caps" />
 
                 <ImageView
                     android:layout_width="130px"
                     android:layout_height="173px"
-                    android:layout_marginRight="30px"
-                    android:scaleX="-1"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="30px"
                     android:layout_marginTop="15px"
-                    android:src="@drawable/free_rides_earn_dashed_line"/>
+                    android:scaleX="-1"
+                    android:src="@drawable/free_rides_earn_dashed_line" />
 
             </RelativeLayout>
-
-
-
 
 
             <TextView
@@ -103,8 +95,7 @@
                 android:paddingRight="40px"
                 android:text="@string/free_ride_desc"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28"
-                />
+                android:textSize="@dimen/text_size_28" />
 
             <TextView
                 android:id="@+id/textViewMoreInfo"
@@ -115,17 +106,14 @@
                 android:gravity="center"
                 android:text="More Info"
                 android:textColor="@color/text_color_theme_selector"
-                android:textSize="@dimen/text_size_36"
-                />
+                android:textSize="@dimen/text_size_36" />
 
             <ImageView
                 android:layout_width="164px"
                 android:layout_height="4px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="-2px"
-                android:background="@color/theme_color"
-                />
-
+                android:background="@color/theme_color" />
 
 
         </LinearLayout>
@@ -135,38 +123,123 @@
         android:id="@+id/relativeLayoutReferADriver"
         android:layout_width="wrap_content"
         android:layout_height="158px"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
 
-        <ImageView
+        <RelativeLayout
+            android:id="@+id/relativeLayoutMultipleTab"
             android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/stroke_color_light"
-            android:layout_above="@+id/textViewReferDriver"
-            />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
-        <TextView
-            android:id="@+id/textViewReferDriver"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_above="@+id/linearLayoutMultipleTab"
+                android:background="@color/stroke_color_light" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutMultipleTab"
+                android:layout_width="match_parent"
+                android:layout_height="95px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/menu_item_selector_color"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutLeaderBoard"
+                    android:layout_width="359px"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="33px"
+                        android:layout_height="32px"
+                        android:src="@drawable/leaderboard"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewLeaderboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="25px"
+                        android:textColor="@color/text_color"
+                        android:gravity="center"
+                        android:text="@string/leaderboard"
+                        android:textSize="@dimen/text_size_32" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="2px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20px"
+                    android:layout_marginTop="20px"
+                    android:src="@color/stroke_color_dark" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutRefer"
+                    android:layout_width="359px"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="33px"
+                        android:layout_height="37px"
+                        android:src="@drawable/driver"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewRefer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="25px"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        android:text="@string/refer_a_driver"
+                        android:textSize="@dimen/text_size_32" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutReferSingle"
             android:layout_width="match_parent"
-            android:layout_height="88px"
-            android:textColor="@color/text_color_light_selector"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_30"
-            android:text="@string/want_to_refer_a_driver"
-            android:textAllCaps="true"
-            android:background="@color/menu_item_selector_color"
-            android:layout_alignParentBottom="true"
-            />
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
-        <ImageView
-            android:layout_width="126px"
-            android:layout_height="126px"
-            android:background="@drawable/ic_promotions_driver_refer_selector"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30px"
-            android:tag="mwar"
-            />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_above="@+id/textViewReferDriver"
+                android:background="@color/stroke_color_light" />
 
+            <TextView
+                android:id="@+id/textViewReferDriver"
+                android:layout_width="match_parent"
+                android:layout_height="88px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/menu_item_selector_color"
+                android:gravity="center"
+                android:text="@string/want_to_refer_a_driver"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_30" />
+
+            <ImageView
+                android:layout_width="126px"
+                android:layout_height="126px"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30px"
+                android:background="@drawable/ic_promotions_driver_refer_selector"
+                android:tag="mwar" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

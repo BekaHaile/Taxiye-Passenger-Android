@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/relative"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="280px"
-                android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="585px"
+    android:layout_height="422px"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="224px"
-        android:orientation="horizontal"
-        android:background="@color/sliding_bottom_bg_color"
-        >
+        android:layout_height="366px"
+        android:gravity="center"
+        android:background="@drawable/background_priority_tip"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="148px"
-            android:layout_height="148px"
-            android:layout_marginLeft="48px"
-            android:background="@drawable/circle_grey"
-            android:tag="mwar"
-            android:layout_gravity="center_vertical"
-            >
+            android:layout_width="187px"
+            android:layout_height="187px"
+            android:layout_gravity="center_horizontal"
+            android:tag="mwar">
+
+            <ImageView
+                android:id="@+id/imageViewProfileImageBack"
+                android:layout_width="187px"
+                android:layout_height="187px"
+                android:src="@drawable/ic_profile_img_placeholder"
+                android:tag="mwar"/>
 
             <ImageView
                 android:id="@+id/imageViewProfile"
-                android:layout_width="144px"
-                android:layout_height="144px"
-                android:layout_centerInParent="true"
+                android:layout_width="160px"
+                android:layout_height="160px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10px"
                 android:tag="mwar"/>
         </RelativeLayout>
 
@@ -34,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30px"
+            android:layout_marginTop="20px"
             android:orientation="vertical">
 
             <TextView
@@ -42,33 +48,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="GaganDeep"
+                android:gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/view_account_name_color"
-                android:textSize="@dimen/text_size_32"/>
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_34" />
 
             <TextView
-                android:id="@+id/textViewViewAccount"
-                android:layout_width="wrap_content"
+                android:id="@+id/textViewViewPhone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10px"
                 android:singleLine="true"
+                android:gravity="center"
                 android:text="View Account"
-                android:textColor="@color/text_color_view_account_selector"
-                android:textSize="@dimen/text_size_28"/>
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30" />
         </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="76px"
+        android:layout_height="56px"
         android:layout_below="@+id/linearLayout"
-        android:background="@color/white"
-        />
+        android:background="@color/white" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/linearLayout"
-        android:src="@color/stroke_color_light"/>
+        android:src="@color/stroke_color_light" />
+
+    <ImageView
+        android:layout_width="19px"
+        android:layout_height="33px"
+        android:tag="mwar"
+        android:layout_marginRight="30px"
+        android:layout_marginTop="120px"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/back_arrow_white"/>
 
 </RelativeLayout>

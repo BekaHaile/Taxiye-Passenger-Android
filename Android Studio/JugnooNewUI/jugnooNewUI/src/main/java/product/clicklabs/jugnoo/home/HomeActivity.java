@@ -6326,11 +6326,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-
-
-
-
-
     private void uploadContactsApi(final boolean fromLogin){
         HashMap<String, String> params = new HashMap<>();
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {

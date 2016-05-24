@@ -20,12 +20,12 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 //		implements PagerSlidingTabStrip.CustomTabProvider {
 
 	private Context context;
-	private LayoutInflater inflater;
+//	private LayoutInflater inflater;
 
 	public PromotionsFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		this.context = context;
-		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -38,11 +38,6 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 				return new PromotionsFragment();
 
 			case 2:
-				if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1) {
-					return new ReferralLeaderboardFragment();
-				}
-
-			case 3:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {
 					return new ReferralActivityFragment();
 				}
@@ -54,9 +49,6 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 	@Override
 	public int getCount() {
 		int count = 2;
-		if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1){
-			count = count + 1;
-		}
 		if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1){
 			count = count + 1;
 		}
@@ -67,14 +59,10 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 	public CharSequence getPageTitle(int position) {
 		switch (position) {
 			case 0:
-				return context.getResources().getString(R.string.referrals).toUpperCase();
+				return context.getResources().getString(R.string.referrals_tab).toUpperCase();
 			case 1:
 				return context.getResources().getString(R.string.nl_offers).toUpperCase();
 			case 2:
-				if(Data.userData != null && Data.userData.getReferralLeaderboardEnabled() == 1) {
-					return context.getResources().getString(R.string.leaderboard).toUpperCase();
-				}
-			case 3:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {
 					return context.getResources().getString(R.string.activity).toUpperCase();
 				}

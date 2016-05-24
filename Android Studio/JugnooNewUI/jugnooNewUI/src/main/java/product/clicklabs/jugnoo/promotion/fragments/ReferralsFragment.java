@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
+import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -36,8 +38,8 @@ public class ReferralsFragment extends Fragment {
 	private ImageView imageViewLogo;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo;
 	private Button buttonInvite;
-	private RelativeLayout relativeLayoutReferADriver;
-
+	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab;
+	private LinearLayout linearLayoutLeaderBoard, linearLayoutRefer;
 	private View rootView;
     private ShareActivity activity;
 
@@ -81,8 +83,13 @@ public class ReferralsFragment extends Fragment {
 		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenMedium(activity));
 		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenRegular(activity));
 
-		relativeLayoutReferADriver = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferADriver);
+		relativeLayoutReferSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferSingle);
+		relativeLayoutMultipleTab = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleTab);
+		linearLayoutLeaderBoard = (LinearLayout) rootView.findViewById(R.id.linearLayoutLeaderBoard);
+		linearLayoutRefer = (LinearLayout)rootView.findViewById(R.id.linearLayoutRefer);
 		((TextView)rootView.findViewById(R.id.textViewReferDriver)).setTypeface(Fonts.mavenRegular(activity));
+
+
 
 		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -123,7 +130,21 @@ public class ReferralsFragment extends Fragment {
 			}
 		});
 
-		relativeLayoutReferADriver.setOnClickListener(new View.OnClickListener() {
+		linearLayoutLeaderBoard.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.openLeaderboardFragment();
+			}
+		});
+
+		linearLayoutRefer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				relativeLayoutReferSingle.performClick();
+			}
+		});
+
+		relativeLayoutReferSingle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getReferDriverDialog().show();
@@ -142,11 +163,18 @@ public class ReferralsFragment extends Fragment {
 			}
 			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
 
-			if(Data.userData.getcToDReferralEnabled() == 1){
-				relativeLayoutReferADriver.setVisibility(View.VISIBLE);
-			} else {
-				relativeLayoutReferADriver.setVisibility(View.GONE);
-			}
+
+				if(Data.userData != null) {
+					relativeLayoutMultipleTab.setVisibility(View.GONE);
+					relativeLayoutReferSingle.setVisibility(View.GONE);
+					if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() == 1) {
+						relativeLayoutMultipleTab.setVisibility(View.VISIBLE);
+					} else if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() != 1) {
+						//relativeLayoutReferSingle.setVisibility(View.VISIBLE);
+					} else if (Data.userData.getReferralLeaderboardEnabled() != 1 && Data.userData.getcToDReferralEnabled() == 1) {
+						relativeLayoutReferSingle.setVisibility(View.VISIBLE);
+					}
+				}
 
 		} catch(Exception e){
 			e.printStackTrace();

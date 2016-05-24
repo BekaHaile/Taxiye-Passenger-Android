@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,6 +59,9 @@ public class ShareActivity extends BaseFragmentActivity {
 	ViewPager viewPager;
 	PromotionsFragmentAdapter promotionsFragmentAdapter;
 	PagerSlidingTabStrip tabs;
+	RelativeLayout relativeLayoutFragContainer;
+	View viewGreyBG;
+
     private CallbackManager callbackManager;
 	public boolean fromDeepLink = false;
 
@@ -111,10 +117,21 @@ public class ShareActivity extends BaseFragmentActivity {
 		viewPager.setAdapter(promotionsFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		tabs.setTextSize((int)(ASSL.Xscale()*24f));
+		tabs.setTextSize((int) (ASSL.Xscale() * 24f));
 		tabs.setTextColorResource(R.color.text_color, R.color.text_color_light);
 		tabs.setTypeface(Fonts.mavenRegular(this), Typeface.NORMAL);
 		tabs.setViewPager(viewPager);
+
+		relativeLayoutFragContainer = (RelativeLayout) findViewById(R.id.relativeLayoutFragContainer);
+		relativeLayoutFragContainer.setVisibility(View.GONE);
+		viewGreyBG = findViewById(R.id.viewGreyBG);
+		viewGreyBG.setVisibility(View.GONE);
+		getSupportFragmentManager().beginTransaction()
+				.add(relativeLayoutFragContainer.getId(),
+						new ReferralLeaderboardFragment(),
+						ReferralLeaderboardFragment.class.getName())
+				.addToBackStack(ReferralLeaderboardFragment.class.getName())
+				.commitAllowingStateLoss();
 
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
@@ -128,7 +145,7 @@ public class ShareActivity extends BaseFragmentActivity {
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Back");
-				performbackPressed();
+				performBackPressed();
 			}
 		});
 
@@ -171,17 +188,20 @@ public class ShareActivity extends BaseFragmentActivity {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public void performbackPressed(){
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+
+	public void performBackPressed(){
+		if(relativeLayoutFragContainer.getVisibility() == View.VISIBLE){
+			closeLeaderboardFragment();
+		} else {
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+		}
 	}
 	
 	@Override
 	public void onBackPressed() {
-		performbackPressed();
-		super.onBackPressed();
+		performBackPressed();
 	}
 	
 	
@@ -216,7 +236,7 @@ public class ShareActivity extends BaseFragmentActivity {
 											if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 												Log.v("success at", "leaderboeard");
 												ShareActivity.this.leaderboardResponse = leaderboardResponse;
-												updateFragment(2);
+												updateLeaderboardFragment();
 											} else {
 												retryLeaderboardDialog(message);
 											}
@@ -261,13 +281,7 @@ public class ShareActivity extends BaseFragmentActivity {
 	public void updateFragment(int pos) {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + pos);
 		if (page != null) {
-			if(pos == 2 && Data.userData.getReferralLeaderboardEnabled() == 1){
-				((ReferralLeaderboardFragment) page).update();
-
-			} else if(pos == 2 && Data.userData.getReferralLeaderboardEnabled() != 1){
-				((ReferralActivityFragment) page).update();
-
-			} else if(pos == 3){
+			if(pos == 2){
 				((ReferralActivityFragment) page).update();
 			}
 		}
@@ -286,7 +300,7 @@ public class ShareActivity extends BaseFragmentActivity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						performbackPressed();
+						performBackPressed();
 					}
 				}, true, false);
 	}
@@ -310,7 +324,7 @@ public class ShareActivity extends BaseFragmentActivity {
 										if (!SplashNewActivity.checkIfTrivialAPIErrors(ShareActivity.this, jObj)) {
 											if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 												ShareActivity.this.leaderboardActivityResponse = leaderboardActivityResponse;
-												updateFragment(Data.userData.getReferralLeaderboardEnabled() == 1 ? 3 : 2);
+												updateFragment(2);
 												Log.v("success at", "leaderboeard");
 											} else {
 												DialogPopup.alertPopup(ShareActivity.this, "", message);
@@ -350,4 +364,60 @@ public class ShareActivity extends BaseFragmentActivity {
 			e.printStackTrace();
 		}
 	}
+
+	public void openLeaderboardFragment(){
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.bottom_in);
+		Animation alphaSlow = new AlphaAnimation(0.0f, 1.0f);
+		alphaSlow.setDuration(400);
+
+		relativeLayoutFragContainer.setVisibility(View.VISIBLE);
+		relativeLayoutFragContainer.clearAnimation();
+		viewGreyBG.setVisibility(View.VISIBLE);
+		viewGreyBG.clearAnimation();
+
+		relativeLayoutFragContainer.startAnimation(anim);
+		viewGreyBG.startAnimation(alphaSlow);
+
+	}
+
+	public void closeLeaderboardFragment(){
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.bottom_out);
+		anim.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				relativeLayoutFragContainer.setVisibility(View.GONE);
+				viewGreyBG.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+		Animation alphaSlow = new AlphaAnimation(1.0f, 0.0f);
+		alphaSlow.setDuration(400);
+
+		relativeLayoutFragContainer.clearAnimation();
+		viewGreyBG.clearAnimation();
+		relativeLayoutFragContainer.startAnimation(anim);
+		viewGreyBG.startAnimation(alphaSlow);
+
+	}
+
+	private void updateLeaderboardFragment(){
+		try {
+			Fragment page = getSupportFragmentManager().findFragmentByTag(ReferralLeaderboardFragment.class.getName());
+			if(page != null){
+                ((ReferralLeaderboardFragment)page).update();
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
