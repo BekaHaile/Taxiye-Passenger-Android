@@ -666,7 +666,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             int flag = jObj.getInt("flag");
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
-                                DialogPopup.dialogBanner(activity, error);
+                                DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 linearLayoutSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
@@ -681,7 +681,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                     activity.startActivity(intent);
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 } else{
-                                    DialogPopup.dialogBanner(activity, message);
+                                    DialogPopup.alertPopup(activity, "", message);
                                     reloadProfileAPI(activity);
                                 }
                             } else {
@@ -998,14 +998,14 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             int flag = jObj.getInt("flag");
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
-                                DialogPopup.dialogBanner(activity, error);
+                                DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 linearLayoutPasswordSave.setVisibility(View.GONE);
                                 imageViewChangePassword.setVisibility(View.VISIBLE);
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
-                                DialogPopup.dialogBanner(activity, message);
+                                DialogPopup.alertPopup(activity, "", message);
                             } else {
-                                DialogPopup.dialogBanner(activity, Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
                         }
                     } catch (Exception exception) {

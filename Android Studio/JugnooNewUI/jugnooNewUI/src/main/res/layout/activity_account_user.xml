@@ -20,13 +20,13 @@
 
         <ImageView
             android:id="@+id/imageViewEditProfile"
-            android:layout_width="67px"
-            android:layout_height="67px"
+            android:layout_width="77px"
+            android:layout_height="77px"
             android:layout_alignParentRight="true"
-            android:padding="20px"
+            android:padding="25px"
             android:tag="mwar"
             android:layout_centerVertical="true"
-            android:layout_marginRight="24px"
+            android:layout_marginRight="10px"
             android:visibility="visible"
             android:src="@drawable/ic_otp_edit_number_selector"/>
 
@@ -39,33 +39,33 @@
             android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="35px">
+            android:layout_marginRight="20px">
 
 
-        <ImageView
-            android:id="@+id/imageViewSave"
-            android:layout_width="24px"
-            android:layout_height="25px"
-            android:layout_alignLeft="@+id/textViewAbout"
-            android:layout_centerVertical="true"
-            android:visibility="visible"
-            android:src="@drawable/profile_save"
-            />
+            <ImageView
+                android:id="@+id/imageViewSave"
+                android:layout_width="24px"
+                android:layout_height="25px"
+                android:layout_alignLeft="@+id/textViewAbout"
+                android:layout_centerVertical="true"
+                android:visibility="visible"
+                android:src="@drawable/profile_save"
+                />
 
-        <TextView
-            android:id="@+id/textViewSave"
-            android:layout_width="wrap_content"
-            android:layout_height="80px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:gravity="center_vertical|right"
-            android:text="@string/save"
-            android:visibility="visible"
-            android:textAllCaps="true"
-            android:textColor="@color/text_color_theme_alpha_selector"
-            android:textSize="@dimen/text_size_28"
-            />
+            <TextView
+                android:id="@+id/textViewSave"
+                android:layout_width="wrap_content"
+                android:layout_height="80px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:gravity="center_vertical|right"
+                android:text="@string/save"
+                android:visibility="visible"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_theme_alpha_selector"
+                android:textSize="@dimen/text_size_28"
+                />
         </LinearLayout>
 
         <TextView
