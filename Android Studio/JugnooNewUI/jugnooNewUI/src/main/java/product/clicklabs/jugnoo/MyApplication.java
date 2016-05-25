@@ -86,7 +86,7 @@ public class MyApplication extends Application{
 	 */
 	public void trackScreenView(String screenName) {
 		Tracker t = getGoogleAnalyticsTracker();
-
+		t.enableAdvertisingIdCollection(true);
 		// Set screen name.
 		t.setScreenName(screenName);
 
@@ -98,7 +98,7 @@ public class MyApplication extends Application{
 
 	public void setGAUserId(String mUserId) {
 		Tracker t = getGoogleAnalyticsTracker();
-
+		t.enableAdvertisingIdCollection(true);
 		// Set screen name.
 		t.setClientId(mUserId);
 
@@ -136,7 +136,7 @@ public class MyApplication extends Application{
 	 */
 	public void trackEvent(String category, String action, String label) {
 		Tracker t = getGoogleAnalyticsTracker();
-
+		t.enableAdvertisingIdCollection(true);
 		// Build and send an Event.
 		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
 	}
@@ -171,6 +171,7 @@ public class MyApplication extends Application{
 		builder.setProductAction(productAction);
 
 		Tracker t = getGoogleAnalyticsTracker();
+		t.enableAdvertisingIdCollection(true);
 		t.setScreenName("transaction");
 		t.send(builder.build());
 

@@ -64,6 +64,8 @@ import com.facebook.FacebookSdk;
 import com.flurry.android.FlurryAgent;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -1887,7 +1889,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                                 "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
                         textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-                            ""+Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
+                                "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
 
                         imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
                         imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
@@ -1897,6 +1899,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
                         Log.d("RidePath DB", "Deleted");
+                        List<Product> productList = new ArrayList<>();
+                        Product product = new Product()
+                                .setCategory("Auto")
+                                .setId("0")
+                                .setName("Paytm")
+                                .setPrice(Data.endRideData.paidUsingPaytm);
+//                                                                .setPosition(4);
+                        productList.add(product);
+
+                        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
+                                .setTransactionId(Data.endRideData.engagementId)
+                                .setTransactionAffiliation("Auto")
+                                .setTransactionRevenue(Data.endRideData.fare);
+
+                        FlurryEventLogger.orderedProduct(productList, productAction);
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
