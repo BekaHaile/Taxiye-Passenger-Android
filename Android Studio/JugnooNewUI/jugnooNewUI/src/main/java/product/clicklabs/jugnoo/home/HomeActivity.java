@@ -3785,7 +3785,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 double distance = MapUtils.distance(Data.pickupLatLng, driverLatLng);
                 if (distance <= 15000) {
                     boundsBuilder.include(Data.pickupLatLng).include(driverLatLng);
-                    if(Data.dropLatLng != null){
+                    if(Data.dropLatLng != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                         boundsBuilder.include(Data.dropLatLng);
                     }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
@@ -4937,6 +4937,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             Log.i("in in herestartRideForCustomer  run class", "=");
                             initializeStartRideVariables();
+                            if(Data.dropLatLng != null) {
+                                pickupDropZoomed = false;
+                            }
                             passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                             switchPassengerScreen(passengerScreenMode);
                         }
@@ -6016,6 +6019,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         });
                         int currentUserStatus = 2;
+                        final PassengerScreenMode passengerScreenModeOld = passengerScreenMode;
                         String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
                                 currentUserStatus, createApiFindADriver(), Data.pickupLatLng);
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
@@ -6044,6 +6048,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         DialogPopup.dismissLoadingDialog();
                                     }
 									if(!placeAdded) {
+                                        if(PassengerScreenMode.P_IN_RIDE != passengerScreenModeOld
+                                            && PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+                                            && Data.dropLatLng != null) {
+                                            pickupDropZoomed = false;
+                                        }
 										startUIAfterGettingUserStatus();
 									}
                                 } catch (Exception e) {

@@ -228,12 +228,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
 
-                Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
-                    Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).into(holder.imageViewProfile);
+                    if(!"".equalsIgnoreCase(Data.userData.userImage)) {
+                        Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).into(holder.imageViewProfile);
+                    }
                 }
                 else{
-                    Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(holder.imageViewProfile);
+                    if(!"".equalsIgnoreCase(Data.userData.userImage)) {
+                        Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(holder.imageViewProfile);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

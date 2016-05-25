@@ -122,6 +122,16 @@ public class UserData {
 
 		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
 		this.referralActivityEnabled = referralActivityEnabled;
+
+		checkUserImage();
+	}
+
+	private void checkUserImage(){
+		if(userImage == null
+				|| userImage.contains("brand_images/user.png")){
+			userImage = "";
+		}
+		userImage.replace("http://graph.facebook", "https://graph.facebook");
 	}
 
 	public double getJugnooBalance() {
