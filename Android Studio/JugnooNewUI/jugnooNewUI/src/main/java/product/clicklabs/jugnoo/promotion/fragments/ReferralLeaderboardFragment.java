@@ -73,7 +73,7 @@ public class ReferralLeaderboardFragment extends Fragment implements FlurryEvent
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "LeaderBoard");
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Leaderboard");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

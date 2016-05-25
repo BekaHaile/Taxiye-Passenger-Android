@@ -904,6 +904,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 intentToShareActivity(false);
+                FlurryEventLogger.eventGA(ACTIVATION+SLASH+RETENTION, "ride start", "send invites");
             }
         });
 
@@ -1620,8 +1621,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, Data.priorityTipCategory,
                     new PriorityTipDialog.Callback() {
                         @Override
-                        public void onConfirmed() {
-                            FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "ok");
+                        public void onConfirmed(boolean confirmClicked) {
+                            if(confirmClicked) {
+                                FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "ok");
+                            }
                             Data.cSessionId = "";
                             Data.cEngagementId = "";
                             dropLocationSearchText = "";
@@ -1646,7 +1649,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
                                 map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
                                 NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
-                                FlurryEventLogger.eventGA(CAMPAIGNS, TAG, "request ride");
+                                FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, TAG, "request ride");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -5508,6 +5511,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRegionSelected().getRegionId()));
 
+                                //nameValuePairs.put("is_pooled", "1");
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 

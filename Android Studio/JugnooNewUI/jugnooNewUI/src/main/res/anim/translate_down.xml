@@ -4,7 +4,7 @@
     android:fillEnabled="true">
 
     <translate
-        android:duration="1000"
+        android:duration="500"
         android:fromYDelta="0%p"
         android:interpolator="@android:anim/linear_interpolator"
         android:repeatCount="infinite"

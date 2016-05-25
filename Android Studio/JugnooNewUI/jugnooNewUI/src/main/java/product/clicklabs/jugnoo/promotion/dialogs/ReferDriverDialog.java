@@ -190,7 +190,7 @@ public class ReferDriverDialog {
 									dismissDialog();
 								}
 							});
-							FlurryEventLogger.eventGA(Constants.REFERRAL, "Refer a driver", "Refer");
+							FlurryEventLogger.eventGA(Constants.REFERRAL, "Referrals", "Refer");
 						}else {
 							DialogPopup.alertPopupWithListener(activity, "", settleUserDebt.getMessage(), new View.OnClickListener() {
 								@Override

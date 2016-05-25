@@ -50,7 +50,7 @@ public class PriorityTipDialog {
             return showPriorityTipDialog(activity, fareFactor, priorityTipCategory);
         }
         else{
-            callback.onConfirmed();
+            callback.onConfirmed(false);
             return null;
         }
     }
@@ -160,7 +160,7 @@ public class PriorityTipDialog {
                     if (s.toString().equals(part2)) {
                         Log.v("code matched", "code matched");
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                        callback.onConfirmed();
+                        callback.onConfirmed(true);
                         dialog.dismiss();
                         Utils.hideSoftKeyboard(activity, editTextValue2);
                     } else {
@@ -183,7 +183,7 @@ public class PriorityTipDialog {
                 public void onClick(View view) {
                     if(AppStatus.getInstance(activity).isOnline(activity)) {
                         dialog.dismiss();
-                        callback.onConfirmed();
+                        callback.onConfirmed(true);
                     } else{
                         DialogPopup.dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE,
                                 Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
@@ -228,7 +228,7 @@ public class PriorityTipDialog {
 
 
     public interface Callback{
-        void onConfirmed();
+        void onConfirmed(boolean confirmClicked);
         void onCancelled();
     }
 

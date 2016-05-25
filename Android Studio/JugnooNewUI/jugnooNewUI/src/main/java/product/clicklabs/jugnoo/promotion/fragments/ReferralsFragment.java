@@ -68,7 +68,7 @@ public class ReferralsFragment extends Fragment {
 		try {
 			if(relativeLayoutRoot != null) {
 				new ASSL(activity, relativeLayoutRoot, 1134, 720, false);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Earn");
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "Referrals");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,7 +112,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if(AppStatus.getInstance(activity).isOnline(activity)) {
-					FlurryEventLogger.eventGA(Constants.REFERRAL, "rides", "invite friends");
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "Referrals", "invite friends");
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {
 						if(activity.fromDeepLink){
