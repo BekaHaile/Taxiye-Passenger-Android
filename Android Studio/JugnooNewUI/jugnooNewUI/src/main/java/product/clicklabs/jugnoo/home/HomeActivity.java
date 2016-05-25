@@ -5771,6 +5771,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
             firstTimeZoom = false;
             pickupDropZoomed = false;
+            dropLocationSearchText = "";
 
             slidingBottomPanel.setSelectedCoupon(null);
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
