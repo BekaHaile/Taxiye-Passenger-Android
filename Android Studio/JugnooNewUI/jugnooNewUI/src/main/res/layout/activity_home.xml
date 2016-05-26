@@ -74,11 +74,25 @@
                     android:layout_marginBottom="217px"
                     />
 
+
+
             </RelativeLayout>
 
             <include layout="@layout/layout_home_activity_sliding_bottom" />
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <ImageView
+            android:id="@+id/imageViewSurgeOverSlidingBottom"
+            android:layout_width="40px"
+            android:layout_height="40px"
+            android:tag="mwar"
+            android:src="@drawable/ic_surge_grey_white_bg"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="92px"
+            android:visibility="gone"
+            />
 
         <!-- Location error -->
         <include layout="@layout/layout_location_error" />

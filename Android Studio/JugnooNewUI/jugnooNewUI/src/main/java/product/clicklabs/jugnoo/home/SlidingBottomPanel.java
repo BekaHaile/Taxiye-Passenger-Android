@@ -54,7 +54,7 @@ public class SlidingBottomPanel {
     private final String TAG = SlidingBottomPanel.class.getSimpleName();
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
-    private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSlidingSurge;
+    private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSurgeOverSlidingBottom;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
 
     private PromoCoupon selectedCoupon = null;
@@ -71,7 +71,6 @@ public class SlidingBottomPanel {
 
     private void initComponents(View view) {
         //SlidingUp Layout
-        ((TextView) view.findViewById(R.id.textViewMinBase)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenMedium(activity));
         textViewMinFareValue = (TextView) view.findViewById(R.id.textViewMinFareValue);
         textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
@@ -82,7 +81,7 @@ public class SlidingBottomPanel {
         textViewCashValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
-        imageViewSlidingSurge = (ImageView)view.findViewById(R.id.imageViewSlidingSurge);
+        imageViewSurgeOverSlidingBottom = (ImageView)view.findViewById(R.id.imageViewSurgeOverSlidingBottom);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
@@ -97,26 +96,31 @@ public class SlidingBottomPanel {
                         && slideOffset < 1f){
                     activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                 }
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelExpanded(View panel) {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
                 imageViewExtraForSliding.setVisibility(View.GONE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelAnchored(View panel) {
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelHidden(View panel) {
+                setSurgeImageVisibility();
             }
         });
 
@@ -227,7 +231,8 @@ public class SlidingBottomPanel {
             params.setMargins(0, 0, 0, 0);
         } else{
             recyclerViewVehicles.setVisibility(View.GONE);
-            params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
+//            params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
+            params.setMargins(0, 0, 0, 0);
         }
         imageViewExtraForSliding.setLayoutParams(params);
     }
@@ -377,13 +382,23 @@ public class SlidingBottomPanel {
             }
             textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                     , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-            if(Data.userData.fareFactor > 1.0){
-                imageViewSlidingSurge.setVisibility(View.VISIBLE);
-            } else{
-                imageViewSlidingSurge.setVisibility(View.GONE);
-            }
+            setSurgeImageVisibility();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setSurgeImageVisibility(){
+        try {
+            if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
+                && Data.userData.fareFactor > 1.0){
+                imageViewSurgeOverSlidingBottom.setVisibility(View.VISIBLE);
+			} else{
+                imageViewSurgeOverSlidingBottom.setVisibility(View.GONE);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            imageViewSurgeOverSlidingBottom.setVisibility(View.GONE);
         }
     }
 

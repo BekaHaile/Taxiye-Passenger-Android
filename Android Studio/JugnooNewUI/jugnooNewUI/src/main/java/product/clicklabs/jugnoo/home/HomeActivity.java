@@ -830,13 +830,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        relativeLayoutRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }
-        });
-
 
 
 		//Location error layout
@@ -5527,8 +5520,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         .getRegionSelected().getVehicleType()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRegionSelected().getRegionId()));
-
-                                //nameValuePairs.put("is_pooled", "1");
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
