@@ -1391,7 +1391,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void checkForMyLocationButtonVisibility(){
         try{
             if(MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-                    map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK){
+                    map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK
+                    || map.getCameraPosition().zoom != MAX_ZOOM){
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                 customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
             } else{
@@ -1536,6 +1537,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
         mView.startAnimation(animation);
+    }
+
+    private void resetPickupDropFeilds(){
+        try{
+            Data.dropLatLng = null;
+            dropLocationSet = false;
+            dropLocationSearched = false;
+
+            textViewDestSearch.setText("");
+            imageViewDropCross.setVisibility(View.GONE);
+
+            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+            relativeLayoutDestSearchBar.clearAnimation();
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDestSearchBar.getLayoutParams();
+            params.topMargin = (int) (ASSL.Yscale() * 80f);
+            relativeLayoutDestSearchBar.setLayoutParams(params);
+
+            relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+            relativeLayoutInitialSearchBar.clearAnimation();
+            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutInitialSearchBar.getLayoutParams();
+            params1.topMargin = (int) (ASSL.Yscale() * 20f);
+            relativeLayoutInitialSearchBar.setLayoutParams(params1);
+
+            ((ViewGroup) relativeLayoutInitialSearchBar.getParent()).bringChildToFront(relativeLayoutInitialSearchBar);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void onClickSearchCancel(){
@@ -5787,10 +5815,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = null;
             Data.dropLatLng = null;
             dropLocationSet = false;
-            imageViewDropCross.performClick();
 
             Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
             setUserData();
+
+            resetPickupDropFeilds();
 
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);

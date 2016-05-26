@@ -79,11 +79,11 @@
 
             <ImageView
                 android:id="@+id/imageViewHelp"
-                android:layout_width="63px"
-                android:layout_height="52px"
-                android:layout_marginRight="10px"
-                android:layout_marginLeft="10px"
-                android:src="@drawable/ic_emergency_help"
+                android:layout_width="77px"
+                android:layout_height="77px"
+                android:padding="5px"
+                android:layout_marginLeft="5px"
+                android:src="@drawable/ic_emergency_help_selector"
                 android:layout_gravity="center_vertical"
                 android:tag="mwar"/>
 
