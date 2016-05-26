@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Shader;
 import android.os.Bundle;
@@ -27,34 +26,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GradientManager;
-import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
@@ -194,164 +181,119 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng) {
         try {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            if (sourceLatLng != null && destLatLng != null) {
-                                Response response = RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-                                        destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false);
-                                String result = new String(((TypedByteArray)response.getBody()).getBytes());
-                                Log.i("result", "=" + result);
-                                if (result != null) {
-                                    JSONObject jObj = new JSONObject(result);
-                                    final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                                    if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
+            new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
+                @Override
+                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
+                    try {
 
-                                        final String startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
-                                        final String endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
-
-                                        final String distanceText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text");
-                                        final String timeText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
-
-                                        final double distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
-                                        final double timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-
-                                        runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-                                                try {
-
-                                                    Fragment frag = getSupportFragmentManager()
-                                                            .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName());
-                                                    if(frag != null) {
-                                                        getSupportFragmentManager().beginTransaction()
-                                                                .remove(frag)
-                                                                .commit();
-                                                    }
-
-                                                    linearLayoutContainer.setVisibility(View.GONE);
-													relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
-
-
-                                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                                                    PolylineOptions polylineOptions = new PolylineOptions();
-                                                    polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
-                                                    for (int z = 0; z < list.size(); z++) {
-                                                        polylineOptions.add(list.get(z));
-                                                        builder.include(list.get(z));
-                                                    }
-
-                                                    final LatLngBounds latLngBounds = builder.build();
-
-                                                    mapLite.clear();
-                                                    mapLite.addPolyline(polylineOptions);
-
-
-                                                    MarkerOptions markerOptionsS = new MarkerOptions();
-                                                    markerOptionsS.title("Start");
-                                                    markerOptionsS.position(sourceLatLng);
-                                                    markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-                                                        assl, R.drawable.pin_ball_start)));
-                                                    mapLite.addMarker(markerOptionsS);
-
-                                                    MarkerOptions markerOptionsE = new MarkerOptions();
-                                                    markerOptionsE.title("Start");
-                                                    markerOptionsE.position(destLatLng);
-                                                    markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-                                                        assl, R.drawable.pin_ball_end)));
-                                                    mapLite.addMarker(markerOptionsE);
-
-
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            try {
-                                                                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                                                mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(minRatio*40)));
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    }, 500);
-
-
-                                                    textViewPickupLocation.setText(startAddress);
-                                                    String startAdd = textViewPickupLocation.getText().toString();
-                                                    if (startAdd.charAt(startAdd.length() - 1) == ',') {
-                                                        textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
-                                                    }
-
-                                                    textViewDropLocation.setText(endAddress);
-                                                    String endAdd = textViewDropLocation.getText().toString();
-                                                    if (endAdd.charAt(endAdd.length() - 1) == ',') {
-                                                        textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));
-                                                    }
-
-                                                    textViewEstimateTime.setText(timeText);
-                                                    textViewEstimateDistance.setText(distanceText);
-													textViewEstimateFare.setText("");
-													textViewConvenienceCharge.setText("");
-
-													getFareEstimate(FareEstimateActivity.this, sourceLatLng, distanceValue/1000, timeValue/60);
-
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                    DialogPopup.dismissLoadingDialog();
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-                                                FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
-                                                DialogPopup.alertPopup(FareEstimateActivity.this, "", "Fare could not be estimated between the selected pickup and drop location");
-                                                DialogPopup.dismissLoadingDialog();
-                                            }
-                                        });
-                                    }
-                                }
-								else{
-									runOnUiThread(new Runnable() {
-
-										@Override
-										public void run() {
-											DialogPopup.dismissLoadingDialog();
-										}
-									});
-								}
-                            }
-							else{
-								runOnUiThread(new Runnable() {
-
-									@Override
-									public void run() {
-										DialogPopup.dismissLoadingDialog();
-									}
-								});
-							}
-                        } catch (Exception e) {
-                            e.printStackTrace();
-							runOnUiThread(new Runnable() {
-
-								@Override
-								public void run() {
-									DialogPopup.dismissLoadingDialog();
-								}
-							});
+                        Fragment frag = getSupportFragmentManager()
+                                .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName());
+                        if(frag != null) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .remove(frag)
+                                    .commit();
                         }
 
+                        linearLayoutContainer.setVisibility(View.GONE);
+                        relativeLayoutFareEstimateDetails.setVisibility(View.VISIBLE);
+
+
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                        PolylineOptions polylineOptions = new PolylineOptions();
+                        polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+                        for (int z = 0; z < list.size(); z++) {
+                            polylineOptions.add(list.get(z));
+                            builder.include(list.get(z));
+                        }
+
+                        final LatLngBounds latLngBounds = builder.build();
+
+                        mapLite.clear();
+                        mapLite.addPolyline(polylineOptions);
+
+
+                        MarkerOptions markerOptionsS = new MarkerOptions();
+                        markerOptionsS.title("Start");
+                        markerOptionsS.position(sourceLatLng);
+                        markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
+                                assl, R.drawable.pin_ball_start)));
+                        mapLite.addMarker(markerOptionsS);
+
+                        MarkerOptions markerOptionsE = new MarkerOptions();
+                        markerOptionsE.title("Start");
+                        markerOptionsE.position(destLatLng);
+                        markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
+                                assl, R.drawable.pin_ball_end)));
+                        mapLite.addMarker(markerOptionsE);
+
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                                    mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int)(minRatio*40)));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 500);
+
+
+                        textViewPickupLocation.setText(startAddress);
+                        String startAdd = textViewPickupLocation.getText().toString();
+                        if (startAdd.charAt(startAdd.length() - 1) == ',') {
+                            textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
+                        }
+
+                        textViewDropLocation.setText(endAddress);
+                        String endAdd = textViewDropLocation.getText().toString();
+                        if (endAdd.charAt(endAdd.length() - 1) == ',') {
+                            textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));
+                        }
+
+                        textViewEstimateTime.setText(timeText);
+                        textViewEstimateDistance.setText(distanceText);
+                        textViewEstimateFare.setText("");
+                        textViewConvenienceCharge.setText("");
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DialogPopup.dismissLoadingDialog();
                     }
-                }).start();
-            } else {
-                DialogPopup.dismissLoadingDialog();
-                DialogPopup.alertPopup(FareEstimateActivity.this, "", Data.CHECK_INTERNET_MSG);
-            }
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
+                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
+                            getResources().getString(R.string.rupee) + "" + maxFare);
+
+                    if(convenienceCharge > 0){
+                        textViewConvenienceCharge.setText("Convenience Charges "
+                                +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                    }
+                    else{
+                        textViewConvenienceCharge.setText("");
+                    }
+                }
+
+                @Override
+                public void onNoRetry() {
+                    performBackPressed();
+                }
+
+                @Override
+                public void onRetry() {
+                }
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng);
+
         } catch (Exception e) {
             e.printStackTrace();
 			runOnUiThread(new Runnable() {
@@ -364,10 +306,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         }
     }
 
-
-	/**
+/*
+	*//**//**
 	 * ASync for calculating fare estimate from server
-	 */
+	 *//**//*
 	public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final double distanceValue, final double timeValue) {
 		if (!HomeActivity.checkIfUserDataNull(activity)) {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
@@ -430,23 +372,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 		} else{
             DialogPopup.dismissLoadingDialog();
         }
-	}
-
-	private void retryDialog(final Activity activity, String message, final LatLng sourceLatLng, final double distanceValue, final double timeValue){
-		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message, "Retry", "Cancel",
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getFareEstimate(activity, sourceLatLng, distanceValue, timeValue);
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        performBackPressed();
-                    }
-                }, false, false);
-	}
+	}*/
 
 
     public void performBackPressed() {

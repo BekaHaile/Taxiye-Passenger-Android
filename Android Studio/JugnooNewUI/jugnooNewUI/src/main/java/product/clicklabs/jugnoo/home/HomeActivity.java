@@ -310,7 +310,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
-    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp;
+    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool;
 
 
     // data variables declaration
@@ -516,6 +516,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
         imageViewInAppCampaign.setVisibility(View.GONE);
+        imageViewJugnooPool = (ImageView) findViewById(R.id.imageViewJugnooPool);
+        imageViewJugnooPool.setVisibility(View.GONE);
         relativeLayoutRequest = (RelativeLayout) findViewById(R.id.relativeLayoutRequest);
         relativeLayoutRequest.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
@@ -3619,6 +3621,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setServiceAvailablityUI(Data.farAwayCity);
                     setupFreshUI();
                     setupInAppCampaignUI();
+                    setJugnooPool();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -3666,6 +3669,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void setJugnooPool(){
+        if(Data.userData.getIsPoolEnabled() == 1){
+            imageViewJugnooPool.setVisibility(View.VISIBLE);
+        } else{
+            imageViewJugnooPool.setVisibility(View.GONE);
         }
     }
 
@@ -5554,6 +5565,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRegionSelected().getRegionId()));
 
+                                nameValuePairs.put("is_pooled", String.valueOf(Data.userData.getIsPoolEnabled()));
+
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
@@ -6655,6 +6668,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 dropLocationSet = true;
                 relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
                 imageViewDropCross.setVisibility(View.VISIBLE);
+
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){

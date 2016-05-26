@@ -27,6 +27,9 @@ public class FindADriverResponse {
     @SerializedName("priority_tip_category")
     @Expose
     private Integer priorityTipCategory;
+    @SerializedName("is_pool_enabled")
+    @Expose
+    private Integer isPoolEnabled;
     @SerializedName("far_away_city")
     @Expose
     private String farAwayCity;
@@ -122,6 +125,14 @@ public class FindADriverResponse {
      */
     public void setPriorityTipCategory(Integer priorityTipCategory) {
         this.priorityTipCategory = priorityTipCategory;
+    }
+
+    public Integer getIsPoolEnabled() {
+        return isPoolEnabled;
+    }
+
+    public void setIsPoolEnabled(Integer isPoolEnabled) {
+        this.isPoolEnabled = isPoolEnabled;
     }
 
     public String getFarAwayCity() {

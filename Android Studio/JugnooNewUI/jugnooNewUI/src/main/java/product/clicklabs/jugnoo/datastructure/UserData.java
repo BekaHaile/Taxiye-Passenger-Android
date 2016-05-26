@@ -40,6 +40,7 @@ public class UserData {
 	private String city, cityReg;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
+	private int isPoolEnabled;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -450,5 +451,13 @@ public class UserData {
 
 	public void setReferralActivityEnabled(int referralActivityEnabled) {
 		this.referralActivityEnabled = referralActivityEnabled;
+	}
+
+	public int getIsPoolEnabled() {
+		return isPoolEnabled;
+	}
+
+	public void setIsPoolEnabled(int isPoolEnabled) {
+		this.isPoolEnabled = isPoolEnabled;
 	}
 }
