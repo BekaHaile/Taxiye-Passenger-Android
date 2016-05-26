@@ -8,47 +8,13 @@ import android.content.Intent;
  */
 public class BaseActivity extends Activity {
 
-    public static final String GENIE_SERVICE = "com.jugnoo.genie.GENIE_SERVICE";
-
-    private static boolean activityFinished = false;
-    boolean newActivityStarted = false;
-
     @Override
     public void startActivity(Intent intent) {
 		try {
-			newActivityStarted = true;
 			super.startActivity(intent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-    @Override
-    protected void onPause() {
-
-        if (!newActivityStarted && !activityFinished) {
-//            startService(new Intent(GENIE_SERVICE));
-        }
-
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        newActivityStarted = false;
-        activityFinished = false;
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-//        stopService(new Intent(GENIE_SERVICE));
-        super.onResume();
-    }
-
-    @Override
-    public void finish() {
-        activityFinished = true;
-        super.finish();
-    }
 }

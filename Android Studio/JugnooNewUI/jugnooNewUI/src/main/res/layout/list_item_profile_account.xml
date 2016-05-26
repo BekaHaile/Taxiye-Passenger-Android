@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="585px"
+    android:layout_height="422px"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="366px"
+        android:gravity="center"
+        android:padding="-10px"
+        android:background="@drawable/background_menu_bar_theme"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="187px"
+            android:layout_height="187px"
+            android:layout_gravity="center_horizontal"
+            android:tag="mwar">
+
+            <ImageView
+                android:id="@+id/imageViewProfileImageBack"
+                android:layout_width="187px"
+                android:layout_height="187px"
+                android:src="@drawable/ic_profile_img_placeholder"
+                android:tag="mwar"/>
+
+            <ImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="160px"
+                android:layout_height="160px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10px"
+                android:tag="mwar"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20px"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GaganDeep"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_34" />
+
+            <TextView
+                android:id="@+id/textViewViewPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="View Account"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="56px"
+        android:layout_below="@+id/linearLayout"
+        android:background="@color/white" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/linearLayout"
+        android:src="@color/stroke_color_light" />
+
+    <ImageView
+        android:layout_width="19px"
+        android:layout_height="33px"
+        android:tag="mwar"
+        android:layout_marginRight="30px"
+        android:layout_marginTop="120px"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/back_arrow_white"/>
+
+</RelativeLayout>

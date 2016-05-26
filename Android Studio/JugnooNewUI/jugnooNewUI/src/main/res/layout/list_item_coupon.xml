@@ -1,67 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
     <RelativeLayout
-        android:layout_width="262px"
-        android:layout_height="254px"
-        android:background="@drawable/coupon_ticket"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:background="@drawable/background_sliding_botton_bg_color_dashed_rb"
         android:splitMotionEvents="false"
-        android:layout_marginLeft="27px"
-        android:layout_marginRight="27px"
-        android:layout_marginTop="27px"
-        android:layout_marginBottom="27px"
+        android:layout_marginLeft="28px"
+        android:layout_marginRight="28px"
+        android:layout_marginTop="14px"
+        android:layout_marginBottom="14px"
         >
 
         <TextView
             android:id="@+id/textViewCouponTitle"
-            android:layout_width="match_parent"
-            android:layout_height="110px"
-            android:layout_marginLeft="35px"
-            android:layout_marginRight="35px"
-            android:layout_marginTop="35px"
+            android:layout_width="464px"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="1 Free Ride\nbac\nabc\nabc"
-            android:textColor="@color/black_text"
-            android:textSize="26px"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_26"
             android:maxLines="3"
+            android:paddingLeft="10px"
+            android:paddingRight="10px"
             />
 
         <TextView
             android:id="@+id/textViewExpiryDate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_marginBottom="10px"
-            android:layout_marginLeft="35px"
-            android:layout_marginRight="35px"
-            android:layout_marginTop="40px"
             android:text="12:00 PM"
-            android:textColor="@color/grey_dark"
-            android:layout_below="@+id/textViewCouponTitle"
-            android:textSize="20px"
-            android:maxLines="2"
+            android:textColor="@color/text_color"
+            android:layout_toRightOf="@+id/textViewCouponTitle"
+            android:textSize="@dimen/text_size_20"
+            android:maxLines="3"
+            android:padding="10px"
             />
 
-        <TextView
-            android:id="@+id/textViewTNC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10px"
-            android:layout_marginRight="10px"
-            android:text="T&amp;C"
-            android:textColor="@color/black_text"
-            android:textSize="18px"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+        <ImageView
+            android:id="@+id/imageViewCut"
+            android:layout_width="18px"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/textViewCouponTitle"
+            android:layout_marginLeft="-9px"
+            android:src="@drawable/ic_promotions_offer_strip_scissor"
             />
-
-
 
     </RelativeLayout>
 

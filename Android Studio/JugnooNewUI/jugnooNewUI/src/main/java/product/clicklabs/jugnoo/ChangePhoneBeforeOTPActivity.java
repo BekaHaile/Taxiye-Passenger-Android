@@ -10,7 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -49,7 +49,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 	Button buttonChangePhoneNumber;
     private int linkedWallet;
 	
-	LinearLayout relative;
+	RelativeLayout relative;
 
 	@Override
 	protected void onStart() {
@@ -73,17 +73,21 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
             linkedWallet = getIntent().getIntExtra(LINKED_WALLET, 0);
         }
 		
-		relative = (LinearLayout) findViewById(R.id.relative);
+		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(ChangePhoneBeforeOTPActivity.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 
-        textViewChangePhoneNoHelp = (TextView) findViewById(R.id.textViewChangePhoneNoHelp); textViewChangePhoneNoHelp.setTypeface(Fonts.mavenLight(this));
-        editTextNewPhoneNumber = (EditText) findViewById(R.id.editTextNewPhoneNumber); editTextNewPhoneNumber.setTypeface(Fonts.latoRegular(this));
+        textViewChangePhoneNoHelp = (TextView) findViewById(R.id.textViewChangePhoneNoHelp); textViewChangePhoneNoHelp.setTypeface(Fonts.mavenRegular(this));
+        editTextNewPhoneNumber = (EditText) findViewById(R.id.editTextNewPhoneNumber); editTextNewPhoneNumber.setTypeface(Fonts.mavenMedium(this));
         buttonChangePhoneNumber = (Button) findViewById(R.id.buttonChangePhoneNumber); buttonChangePhoneNumber.setTypeface(Fonts.mavenRegular(this));
 
-        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.latoRegular(this));
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenMedium(this));
+
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			

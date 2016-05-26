@@ -1,13 +1,13 @@
 # Exclude the build directory
 build/*
-  
+ 
 # Exclude temp nibs and swap files
 *~.nib
 *.swp
-  
+ 
 # Exclude OS X folder attributes
 .DS_Store
-  
+ 
 # Exclude user-specific XCode 3 and 4 files
 *.mode1
 *.mode1v3
@@ -29,9 +29,9 @@ xcuserdata
 *.class
 
 # generated files
-*/bin/*
-*/gen/*
-*/build/*
+​*/bin/*​
+​*/gen/*​
+​*/build/*​
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -52,15 +52,15 @@ proguard/
 
 # Built application files
 /*/build/
- 
- 
+
+
 # Local configuration file (sdk path, etc)
 local.properties
- 
- 
+
+
 # Signing files
 .signing/
- 
+
 # User-specific configurations
 .idea/libraries/
 .idea/workspace.xml
@@ -74,7 +74,7 @@ local.properties
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 *.iml
- 
+
 # OS-specific files
 .DS_Store
 .DS_Store?

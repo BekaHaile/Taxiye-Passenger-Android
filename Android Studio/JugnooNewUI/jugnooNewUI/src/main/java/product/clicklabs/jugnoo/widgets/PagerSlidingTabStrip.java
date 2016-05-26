@@ -51,7 +51,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	}
 
 	public interface CustomTabProvider {
-		public View getCustomTabView(int position);
+		public View getCustomTabView(int position, boolean selected);
 	}
 
 	// @formatter:off
@@ -100,7 +100,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int tabTextColor = 0xffff8162;
 	private int tabTextColorUnSelected = Color.GRAY;
 //    private int tabTextColor = 0x99242424;
-//    private Typeface tabTypeface = Typeface.createFromAsset(getAssets(), "fonts/lato_regular.ttf");
     private Typeface tabTypeface = null;
 
     private int tabTypefaceStyle = Typeface.BOLD;
@@ -210,7 +209,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			if (pager.getAdapter() instanceof IconTabProvider) {
 				addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
 			} else if(pager.getAdapter() instanceof CustomTabProvider){
-				addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i));
+				addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i, i == pager.getCurrentItem()));
 			} else {
 				addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
 			}
@@ -236,6 +235,25 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			}
 		});
 
+	}
+
+	public void notifyTabs() {
+
+		tabsContainer.removeAllViews();
+
+		tabCount = pager.getAdapter().getCount();
+
+		for (int i = 0; i < tabCount; i++) {
+			if (pager.getAdapter() instanceof IconTabProvider) {
+				addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+			} else if (pager.getAdapter() instanceof CustomTabProvider) {
+				addTab(i, ((CustomTabProvider) pager.getAdapter()).getCustomTabView(i, i == pager.getCurrentItem()));
+			} else {
+				addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+			}
+		}
+
+		updateTabStyles(0);
 	}
 
 	private void addTextTab(final int position, String title) {
@@ -289,7 +307,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			if (v instanceof TextView) {
 
 				TextView tab = (TextView) v;
-				tab.setTextSize(TypedValue.COMPLEX_UNIT_PX,(int) (tabTextSize* ASSL.Yscale()));
+				tab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
 
 				if(i == selected) {
 					tab.setTextColor(tabTextColor);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
@@ -14,26 +14,16 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="PAYTM WALLET"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size" />
+            style="@style/title" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector" />
+            style="@style/back_image" />
 
         <TextView
             android:id="@+id/textViewTitleEdit"
@@ -44,14 +34,15 @@
             android:layout_marginRight="10px"
             android:padding="15px"
             android:text="EDIT"
-            android:textColor="@drawable/text_color_white_dark_selector"
+            android:textColor="@color/text_color_light_selector"
             android:textSize="30.6px" />
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -70,14 +61,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="192px"
                     android:gravity="center"
-                    android:background="@color/sliding_bottom_bg_color"
+                    android:background="@color/menu_item_selector_color"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/imageViewPaytmIcon"
-                        android:layout_width="167px"
-                        android:layout_height="53px"
-                        android:src="@drawable/ic_paytm_logo_big"
+                        android:layout_width="121px"
+                        android:layout_height="39px"
+                        android:src="@drawable/ic_paytm_big"
                         android:tag="mwar" />
 
                     <TextView
@@ -85,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30px"
-                        android:text="Add Cash to Paytm Wallet"
+                        android:text="@string/add_paytm_money_help_text"
                         android:visibility="visible"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
@@ -101,13 +92,13 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:background="@color/text_color_hint" />
+                        android:background="@color/stroke_color_light" />
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/text_color_hint" />
+                        android:background="@color/stroke_color_light" />
 
                     <TextView
                         android:id="@+id/textViewCurrentBalance"
@@ -115,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginLeft="50px"
                         android:gravity="center"
                         android:text="Current Balance"
                         android:textColor="@color/text_color"
@@ -146,85 +137,91 @@
                     android:splitMotionEvents="false"
                     android:visibility="visible">
 
-                    <LinearLayout
-                        android:layout_width="@dimen/screen_width"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40px"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="60px">
 
                         <ImageView
-                            android:layout_width="200px"
+                            android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="24px"
-                            android:layout_marginRight="14px"
-                            android:background="@color/text_color_hint" />
+                            android:layout_marginRight="24px"
+                            android:layout_marginLeft="38px"
+                            android:background="@color/stroke_color_light"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/textViewAddCash"
+                            />
 
                         <TextView
                             android:id="@+id/textViewAddCash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             android:text="@string/add_cash"
                             android:textColor="@color/grey_dark_more"
-                            android:textSize="36px" />
+                            android:textSize="@dimen/text_size_34"
+                            android:layout_centerInParent="true"/>
 
                         <ImageView
-                            android:layout_width="200px"
+                            android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="14px"
-                            android:layout_marginRight="34px"
-                            android:background="@color/text_color_hint" />
+                            android:layout_marginLeft="24px"
+                            android:layout_marginRight="38px"
+                            android:background="@color/stroke_color_light"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_toRightOf="@+id/textViewAddCash"
+                            />
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
                     <LinearLayout
-                        android:layout_width="@dimen/screen_width"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="40px"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        >
 
                         <Button
                             android:id="@+id/buttonAmount1"
-                            android:layout_width="176px"
-                            android:layout_height="74px"
+                            android:layout_width="192px"
+                            android:layout_height="82px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="50px"
-                            android:background="@drawable/background_wallet_border"
+                            android:background="@drawable/background_white_grey_theme_rb_selector"
                             android:gravity="center"
                             android:text="@string/first_amount"
-                            android:textColor="@color/text_color"
-                            android:textSize="30px" />
+                            android:textColor="@color/text_color_theme_color_selector"
+                            android:textSize="@dimen/text_size_32"
+                            android:layout_marginRight="34px"
+                            />
 
 
                         <Button
                             android:id="@+id/buttonAmount2"
-                            android:layout_width="176px"
-                            android:layout_height="74px"
+                            android:layout_width="192px"
+                            android:layout_height="82px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="50px"
-                            android:background="@drawable/background_wallet_border"
+                            android:background="@drawable/background_white_grey_theme_rb_selector"
                             android:gravity="center"
                             android:text="@string/middle_amount"
-                            android:textColor="@color/text_color"
-                            android:textSize="30px" />
+                            android:textColor="@color/text_color_theme_color_selector"
+                            android:textSize="@dimen/text_size_32"
+                            android:layout_marginRight="34px" />
 
 
                         <Button
                             android:id="@+id/buttonAmount3"
-                            android:layout_width="176px"
-                            android:layout_height="74px"
+                            android:layout_width="192px"
+                            android:layout_height="82px"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="45px"
-                            android:background="@drawable/background_wallet_border"
+                            android:background="@drawable/background_white_grey_theme_rb_selector"
                             android:gravity="center"
                             android:text="@string/last_amount"
-                            android:textColor="@color/text_color"
-                            android:textSize="30px" />
+                            android:textColor="@color/text_color_theme_color_selector"
+                            android:textSize="@dimen/text_size_32" />
 
 
                     </LinearLayout>
@@ -232,10 +229,10 @@
 
                     <EditText
                         android:id="@+id/editTextAmount"
-                        android:layout_width="400px"
+                        android:layout_width="410px"
                         android:layout_height="80px"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="50px"
+                        android:layout_marginTop="60px"
                         android:background="@color/transparent"
                         android:digits="0123456789"
                         android:ems="10"
@@ -246,12 +243,12 @@
                         android:paddingLeft="25px"
                         android:paddingRight="25px"
                         android:singleLine="true"
-                        android:textColor="@color/bg_grey_opaque"
-                        android:textColorHint="@color/black_text_alpha"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
                         android:textSize="@dimen/text_size_32" />
 
                     <ImageView
-                        android:layout_width="400px"
+                        android:layout_width="410px"
                         android:layout_height="2px"
                         android:layout_gravity="center_horizontal"
                         android:src="@color/theme_color"/>
@@ -260,7 +257,7 @@
                         android:id="@+id/buttonAddMoney"
                         style="@style/ButtonTheme"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="60px"
+                        android:layout_marginTop="66px"
                         android:text="@string/add_paytm_cash" />
 
                 </LinearLayout>
@@ -288,5 +285,10 @@
 
     </ScrollView>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down" />
 
-</LinearLayout>
+</RelativeLayout>

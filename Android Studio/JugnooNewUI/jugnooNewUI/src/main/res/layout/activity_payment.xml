@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/mainHomelayout"
+<LinearLayout
+    android:id="@+id/fragLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color">
-
-    </RelativeLayout>
-
-
-    <LinearLayout
-        android:id="@+id/fragLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-    </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

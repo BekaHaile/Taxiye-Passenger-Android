@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/sliding_bottom_bg_color"
     android:splitMotionEvents="false">
 
     <RelativeLayout
@@ -13,26 +13,17 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="RECENT TRANSACTIONS"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"/>
+            android:textSize="@dimen/text_size_36"
+            style="@style/title"/>
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            style="@style/back_image"/>
     </RelativeLayout>
 
     <!-- Transactions list rl-->
@@ -52,7 +43,7 @@
             android:dividerHeight="0px"
             android:listSelector="@drawable/background_transparent"
             android:splitMotionEvents="false"
-            >
+            android:visibility="visible">
         </ListView>
 
 
@@ -61,8 +52,38 @@
             android:layout_width="@dimen/jugnoo_anim_loading_width"
             android:layout_height="@dimen/jugnoo_anim_loading_height"
             android:layout_centerInParent="true"
-            android:background="@drawable/anim"
+            android:background="@drawable/auto_loading_frame_anim"
             android:layout_gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutNoItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            >
+            <ImageView
+                android:layout_width="241px"
+                android:layout_height="342px"
+                android:src="@drawable/ic_no_items"
+                android:tag="mwar"
+                />
+
+            <TextView
+                android:id="@+id/textViewNoItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="No Transactions Currently"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                android:layout_marginTop="30px"
+                />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 

@@ -34,6 +34,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
     String facebookPageId = "252184564966458";
 //    String facebookPageName = "ridejugnoo";
     String facebookPageName = "jugnoose";
+    private final String  TAG = "About";
 
     @Override
     protected void onResume() {
@@ -50,7 +51,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         relativeLayoutRateUs = (RelativeLayout) findViewById(R.id.relativeLayoutRateUs);
@@ -70,6 +71,10 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.mavenLight(this));
 
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+
 
         relativeLayoutRateUs.setOnClickListener(new View.OnClickListener() {
 
@@ -79,6 +84,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
                 startActivity(intent);
                 FlurryEventLogger.event(RATING_ON_PLAYSTORE_ABOUT);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
             }
         });
 
@@ -109,6 +115,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                     startActivity(intent);
                 }
                 FlurryEventLogger.event(LIKING_ON_FACEBOOK_ABOUT);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Facebook Like");
             }
         });
 
@@ -120,6 +127,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(TERMS_AND_CONDITIONS);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Terms and Condition");
             }
         });
 
@@ -131,6 +139,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(PRIVACY_POLICY);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Privacy Policy");
             }
         });
 
@@ -142,6 +151,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(ABOUT_JUGOO_AUTOS);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "About Jugnoo");
             }
         });
 
@@ -150,6 +160,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
                 performBackPressed();
             }
         });

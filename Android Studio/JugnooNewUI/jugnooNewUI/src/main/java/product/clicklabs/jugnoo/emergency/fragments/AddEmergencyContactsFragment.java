@@ -31,7 +31,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -41,11 +40,13 @@ import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -114,11 +115,11 @@ public class AddEmergencyContactsFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewAdd = (TextView) rootView.findViewById(R.id.textViewAdd); textViewAdd.setTypeface(Fonts.mavenRegular(activity));
 
-		((TextView)rootView.findViewById(R.id.textViewAddContacts)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewAddContacts)).setTypeface(Fonts.mavenMedium(activity));
 
 		editTextContacts = (ContactsCompletionView) rootView.findViewById(R.id.editTextContacts);
 		editTextContacts.setTypeface(Fonts.mavenLight(activity));
@@ -128,12 +129,15 @@ public class AddEmergencyContactsFragment extends Fragment {
 		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewContacts.setHasFixedSize(false);
 
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
+
 		contactBeans = new ArrayList<>();
 		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
 				new ContactsListAdapter.Callback() {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
 						if(contactBean.isSelected()){
+							FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "select contact");
 							editTextContacts.addObject(contactBean);
 						} else{
 							editTextContacts.removeObject(contactBean);
@@ -196,6 +200,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 				switch(v.getId()){
 
 					case R.id.imageViewBack:
+
 						performBackPressed();
 						break;
 
@@ -211,6 +216,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 								}
 							}
 							if(jsonArray.length() > 0) {
+								FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "add contact");
 								addEmergencyContactsAPI(activity, jsonArray.toString());
 							} else{
 								Toast.makeText(activity,
@@ -250,6 +256,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 	private void performBackPressed() {
 		Utils.hideSoftKeyboard(activity, editTextContacts);
 		if(activity instanceof EmergencyActivity){
+			FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "close");
 			((EmergencyActivity)activity).performBackPressed();
 		}
 	}

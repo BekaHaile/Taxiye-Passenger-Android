@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -39,8 +40,8 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
     ImageView imageViewBack;
     TextView textViewTitle;
-    private ImageView imageViewJugnooAnimation;
-    private AnimationDrawable jugnooAnimation;
+    private ProgressBar imageViewJugnooAnimation;
+    //private AnimationDrawable jugnooAnimation;
     TextView textViewInfo;
     WebView webview;
 
@@ -54,19 +55,23 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
         relative = (LinearLayout) findViewById(R.id.relative);
         new ASSL(HelpParticularActivity.this, relative, 1134, 720, false);
 
-        imageViewJugnooAnimation = (ImageView)findViewById(R.id.imageViewJugnooAnimation);
-        jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
+        imageViewJugnooAnimation = (ProgressBar)findViewById(R.id.imageViewJugnooAnimation);
+        //jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
 
         textViewInfo = (TextView) findViewById(R.id.textViewInfo);
-        textViewInfo.setTypeface(Fonts.latoRegular(this));
+        textViewInfo.setTypeface(Fonts.mavenMedium(this));
 
         webview = (WebView) findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setDatabaseEnabled(true);
+
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 
         //override the web client to open all links in the same webview
@@ -125,7 +130,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             loadingFinished = false;
             //SHOW LOADING IF IT ISNT ALREADY VISIBLE
             imageViewJugnooAnimation.setVisibility(View.VISIBLE);
-            jugnooAnimation.start();
+            //jugnooAnimation.start();
             Log.e("onPageStarted", "url="+url);
         }
 
@@ -138,7 +143,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             if(loadingFinished && !redirect && !apiCalling){
                 //HIDE LOADING IT HAS FINISHED
                 imageViewJugnooAnimation.setVisibility(View.GONE);
-                jugnooAnimation.stop();
+                //jugnooAnimation.stop();
             } else{
                 redirect = false;
             }
@@ -156,7 +161,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             textViewInfo.setText(data);
             webview.setVisibility(View.GONE);
             imageViewJugnooAnimation.setVisibility(View.GONE);
-            jugnooAnimation.stop();
+            //jugnooAnimation.stop();
         } else {
             textViewInfo.setVisibility(View.GONE);
             webview.setVisibility(View.VISIBLE);
@@ -181,7 +186,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                     apiCalling = true;
                     //                    DialogPopup.showLoadingDialog(activity, "Loading...");
                     imageViewJugnooAnimation.setVisibility(View.VISIBLE);
-                    jugnooAnimation.start();
+                    //jugnooAnimation.start();
                     textViewInfo.setVisibility(View.GONE);
                     webview.setVisibility(View.GONE);
                     loadHTMLContent("");
@@ -236,7 +241,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                                 Log.e(TAG, "getInformation error="+error.toString());
                                 apiCalling = false;
                                 imageViewJugnooAnimation.setVisibility(View.GONE);
-                                jugnooAnimation.stop();
+                                //jugnooAnimation.stop();
                                 openHelpData("Some error occured. Tap to retry.", true);
                                 //                                DialogPopup.dismissLoadingDialog();
                             } catch (Exception e) {

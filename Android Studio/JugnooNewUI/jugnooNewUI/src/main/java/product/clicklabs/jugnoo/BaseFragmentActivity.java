@@ -10,13 +10,9 @@ import android.support.v4.app.FragmentActivity;
  */
 public class BaseFragmentActivity extends FragmentActivity {
 
-    private static boolean activityFinished = false;
-    boolean newActivityStarted = false;
-
     @Override
     public void startActivity(Intent intent) {
 		try {
-			newActivityStarted = true;
 			super.startActivity(intent);
 		} catch(Exception e){
 			e.printStackTrace();
@@ -33,29 +29,5 @@ public class BaseFragmentActivity extends FragmentActivity {
 				e1.printStackTrace();
 			}
 		}
-    }
-
-    @Override
-    protected void onPause() {
-
-        if (!newActivityStarted && !activityFinished) {
-//            startService(new Intent(BaseActivity.GENIE_SERVICE));
-        }
-        newActivityStarted = false;
-
-        activityFinished = false;
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-//        stopService(new Intent(BaseActivity.GENIE_SERVICE));
-        super.onResume();
-    }
-
-    @Override
-    public void finish() {
-        activityFinished = true;
-        super.finish();
     }
 }

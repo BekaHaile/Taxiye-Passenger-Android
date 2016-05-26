@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutAddFav"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutAddHome"
+        android:layout_width="match_parent"
+        android:layout_height="110px"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textViewAddHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:layout_toLeftOf="@+id/imageViewEditHome"
+            android:layout_toRightOf="@+id/imageViewAddHome"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingRight="20px"
+            android:text="@string/add_home"
+            android:textColor="@color/text_color_light_selector"
+            android:textSize="28px" />
+
+        <ImageView
+            android:id="@+id/imageViewAddHome"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:src="@drawable/ic_home"
+            android:tag="mwar" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageViewSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/stroke_color_light" />
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutAddWork"
+        android:layout_width="match_parent"
+        android:layout_height="110px"
+        android:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/textViewAddWork"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:layout_toLeftOf="@+id/imageViewEditWork"
+            android:layout_toRightOf="@+id/imageViewAddWork"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingRight="20px"
+            android:text="@string/add_work"
+            android:textColor="@color/text_color_light_selector"
+            android:textSize="28px" />
+
+        <ImageView
+            android:id="@+id/imageViewAddWork"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:src="@drawable/ic_work"
+            android:tag="mwar" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -258,11 +258,11 @@ public class FreshPaymentFragment extends Fragment {
 
 			if(activity.getPaymentOption() == null
 					|| activity.getPaymentOption() == PaymentOption.CASH){
-				imageViewCashRadio.setImageResource(R.drawable.radio_selected_icon);
-				imageViewPaytmRadio.setImageResource(R.drawable.radio_unselected_icon);
+				imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
+				imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
 			} else{
-				imageViewCashRadio.setImageResource(R.drawable.radio_unselected_icon);
-				imageViewPaytmRadio.setImageResource(R.drawable.radio_selected_icon);
+				imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
+				imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

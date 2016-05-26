@@ -25,7 +25,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
     public static final  int MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 3;
     public static int EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 3;
 
-    RelativeLayout relative, relativeLayoutContainer;
+    RelativeLayout relativeLayoutContainer;
     int mode;
 
     @Override
@@ -51,12 +51,10 @@ public class EmergencyActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_emergency_mode);
-
-        relative = (RelativeLayout) findViewById(R.id.relative);
-        new ASSL(this, relative, 1134, 720, false);
+        setContentView(R.layout.activity_emergency);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+        new ASSL(this, relativeLayoutContainer, 1134, 720, false);
 
         mode = getIntent().getIntExtra(Constants.KEY_EMERGENCY_ACTIVITY_MODE,
                 EmergencyActivityMode.EMERGENCY_ACTIVATE.getOrdinal());
@@ -118,7 +116,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
 
     @Override
     protected void onDestroy() {
-        ASSL.closeActivity(relative);
+        ASSL.closeActivity(relativeLayoutContainer);
         System.gc();
         super.onDestroy();
     }

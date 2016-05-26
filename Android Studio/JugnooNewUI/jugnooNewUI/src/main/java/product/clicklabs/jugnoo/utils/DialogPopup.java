@@ -215,6 +215,14 @@ public class DialogPopup {
 		}
 	}
 
+	public static void dialogWithTitleAndDesc(Activity activity, String title, String message){
+		try {
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	public static void dialogNoInternet(Activity activity, String title, String message,
 										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface){
 		dialogNoInternet(activity, title, message, alertCallBackWithButtonsInterface, false);
@@ -281,7 +289,7 @@ public class DialogPopup {
 				}
 			});
 
-			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
+			dialog.findViewById(R.id.linearLayoutInner).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 
@@ -694,7 +702,7 @@ public class DialogPopup {
 		try {
 			dismissAlertPopup();
 
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_banner);
 
@@ -720,10 +728,10 @@ public class DialogPopup {
 
 			dialog.show();
 			new Handler().postDelayed(new Runnable() {
-
 				@Override
 				public void run() {
-					DialogPopup.dismissAlertPopup();
+					//DialogPopup.dismissAlertPopup();
+					dialog.dismiss();
 				}
 			}, timeToDismiss);
 		} catch (Exception e) {
@@ -766,7 +774,7 @@ public class DialogPopup {
             RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
             new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.anim);
+			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {
@@ -810,7 +818,7 @@ public class DialogPopup {
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.anim);
+			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {
@@ -869,7 +877,7 @@ public class DialogPopup {
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.anim);
+			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {

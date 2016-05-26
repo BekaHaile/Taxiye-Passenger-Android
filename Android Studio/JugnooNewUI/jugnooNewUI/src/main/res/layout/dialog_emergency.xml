@@ -41,7 +41,8 @@
             <TextView
                 android:id="@+id/textViewEnableEmergencyMode"
                 android:layout_width="match_parent"
-                android:layout_height="142px"
+                android:layout_height="100px"
+                android:layout_marginTop="20px"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_36"
                 android:gravity="center_vertical"
@@ -50,19 +51,10 @@
                 android:textAllCaps="true"
                 />
             
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:src="@color/text_color_hint"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                />
-
-
             <TextView
                 android:id="@+id/textViewSendRideStatus"
                 android:layout_width="match_parent"
-                android:layout_height="142px"
+                android:layout_height="100px"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_36"
                 android:gravity="center_vertical"
@@ -71,18 +63,11 @@
                 android:textAllCaps="true"
                 />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:src="@color/text_color_hint"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                />
-
             <TextView
                 android:id="@+id/textViewInAppCustomerSupport"
                 android:layout_width="match_parent"
-                android:layout_height="142px"
+                android:layout_height="100px"
+                android:layout_marginBottom="20px"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_36"
                 android:gravity="center_vertical"
@@ -99,17 +84,7 @@
 
     <ImageView
         android:id="@+id/imageViewClose"
-        android:layout_width="74px"
-        android:layout_height="74px"
-        android:layout_alignRight="@+id/linearLayoutInner"
-        android:layout_alignTop="@+id/linearLayoutInner"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingBottom="20px"
-        android:paddingLeft="20px"
-        android:layout_marginRight="-20px"
-        android:layout_marginTop="-20px"
-        android:src="@drawable/close_icon_selector"
-        android:tag="mwar"/>
+        style="@style/cross_popup"
+        />
 
 </RelativeLayout>

@@ -88,24 +88,24 @@ public class TutorialFragment extends Fragment {
             }
         });
         mPager.setAdapter(mPagerAdapter);
-        dotOneView.setBackgroundResource(R.drawable.circle_yellow);
+        dotOneView.setBackgroundResource(R.drawable.circle_theme);
 
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    dotOneView.setBackgroundResource(R.drawable.circle_yellow);
+                    dotOneView.setBackgroundResource(R.drawable.circle_theme);
                     dotTwoView.setBackgroundResource(R.drawable.circle_white);
                     dotThreeView.setBackgroundResource(R.drawable.circle_white);
                     skipTxt.setVisibility(View.GONE);
                 } else if (position == 1) {
                     //mainLayout.setClickable(true);
-                    dotTwoView.setBackgroundResource(R.drawable.circle_yellow);
+                    dotTwoView.setBackgroundResource(R.drawable.circle_theme);
                     dotOneView.setBackgroundResource(R.drawable.circle_white);
                     dotThreeView.setBackgroundResource(R.drawable.circle_white);
                     skipTxt.setVisibility(View.GONE);
                 } else if (position == 2){
-                    dotThreeView.setBackgroundResource(R.drawable.circle_yellow);
+                    dotThreeView.setBackgroundResource(R.drawable.circle_theme);
                     dotOneView.setBackgroundResource(R.drawable.circle_white);
                     dotTwoView.setBackgroundResource(R.drawable.circle_white);
                     skipTxt.setVisibility(View.GONE);

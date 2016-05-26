@@ -13,26 +13,17 @@
             android:id="@+id/topBar"
             android:layout_width="@dimen/screen_width"
             android:layout_height="@dimen/top_bar_height"
-            android:background="@drawable/nl_background_theme_color" >
+            android:background="@color/white" >
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:text="@string/about_caps"
-                android:textColor="@color/white"
-                android:textSize="@dimen/top_bar_title_text_size" />
+                style="@style/title" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="60.7px"
-                android:layout_height="76.9px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:padding="20px"
-                android:src="@drawable/back_white_selector" />
+                style="@style/back_image"
+                />
         </RelativeLayout>
 
         <ImageView
@@ -46,7 +37,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:splitMotionEvents="false" 
-            android:background="@color/white_light_grey"
+            android:background="@color/menu_item_selector_color"
             
             >
 
@@ -67,19 +58,16 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
+                    style="@style/forward_image"
+                    android:layout_marginRight="10px"
+                    />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -99,19 +87,15 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
+                    style="@style/forward_image"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -131,13 +115,9 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
+                    style="@style/forward_image"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -163,19 +143,15 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
+                    style="@style/forward_image"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
             
             <RelativeLayout
@@ -195,19 +171,15 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_width="13px"
-                    android:layout_height="26px"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="40px"
-                    android:src="@drawable/arrow_icon_selector"
-                    android:tag="mwar" />
+                    style="@style/forward_image"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
             
         </LinearLayout>

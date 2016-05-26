@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -78,9 +79,9 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 				.addOnConnectionFailedListener(this)
 				.build();
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
         buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(this));
-        editTextSearch = (EditText) findViewById(R.id.editTextSearch);editTextSearch.setTypeface(Fonts.latoRegular(this));
+        editTextSearch = (EditText) findViewById(R.id.editTextSearch);editTextSearch.setTypeface(Fonts.mavenMedium(this));
 
 
 
@@ -91,7 +92,9 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
 
-
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {

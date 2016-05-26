@@ -9,27 +9,18 @@
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@drawable/nl_background_theme_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/emergency_contacts"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"
-            android:layout_centerInParent="true"
-            android:textAllCaps="true"
+            style="@style/title"
+            android:textSize="@dimen/text_size_32"
             />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            style="@style/back_image"/>
 
         <TextView
             android:id="@+id/textViewAdd"
@@ -41,8 +32,8 @@
             android:padding="20px"
             android:text="@string/add"
             android:textAllCaps="true"
-            android:textColor="@drawable/text_color_white_alpha_selector"
-            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/text_color_light_selector"
+            android:textSize="@dimen/text_size_28"
             />
 
     </RelativeLayout>

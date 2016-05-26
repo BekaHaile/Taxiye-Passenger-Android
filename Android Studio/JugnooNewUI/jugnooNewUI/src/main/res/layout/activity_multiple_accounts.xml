@@ -17,29 +17,24 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
             android:splitMotionEvents="false"
-            android:background="@drawable/nl_background_theme_color"
+            android:background="@color/white"
             >
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:text="@string/nl_signup"
-                android:textColor="@color/white"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_size_34" />
+                style="@style/title" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="80.7px"
-                android:layout_height="96.9px"
-                android:layout_marginLeft="5px"
-                android:padding="30px"
-                android:src="@drawable/back_white_selector"
-                android:tag="mwar" />
+                style="@style/back_image" />
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@drawable/shadow_down"
+            />
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -145,13 +140,10 @@
                         android:textAllCaps="true"/>
 
                     <ImageView
-                        android:layout_width="13px"
-                        android:layout_height="26px"
+                        style="@style/forward_image"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="40px"
-                        android:src="@drawable/arrow_icon_selector"
-                        android:tag="mwar" />
+                        android:layout_marginRight="20px"
+                        />
 
                     <ImageView
                         android:layout_width="match_parent"

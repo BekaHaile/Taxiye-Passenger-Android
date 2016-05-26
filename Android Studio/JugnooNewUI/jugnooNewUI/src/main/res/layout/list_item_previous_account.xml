@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="80px"
+            android:layout_marginRight="70px"
             android:gravity="center"
             android:text="@string/nl_login"
             android:textColor="@color/text_color_light_selector"
@@ -71,13 +71,10 @@
             />
 
         <ImageView
-            android:layout_width="13px"
-            android:layout_height="26px"
+            style="@style/forward_image"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="40px"
-            android:src="@drawable/arrow_icon_selector"
-            android:tag="mwar" />
+            android:layout_marginRight="10px"
+            />
 
         <ImageView
             android:layout_width="match_parent"

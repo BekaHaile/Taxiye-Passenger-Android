@@ -473,13 +473,13 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
         textViewPerKM.setText(fairPerKM+"/");
         textViewWait.setText(fairPerMin+"/");
 
-        textViewJugnoo.setTypeface(Fonts.latoRegular(this));
-        textViewETA.setTypeface(Fonts.latoRegular(this));
-        textViewBaseFair.setTypeface(Fonts.latoRegular(this));
-        textViewPerKM.setTypeface(Fonts.latoRegular(this));
-        textViewWait.setTypeface(Fonts.latoRegular(this));
-        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewKMTxt)).setTypeface(Fonts.latoLight(this));
-        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewMinTxt)).setTypeface(Fonts.latoLight(this));
+        textViewJugnoo.setTypeface(Fonts.mavenMedium(this));
+        textViewETA.setTypeface(Fonts.mavenMedium(this));
+        textViewBaseFair.setTypeface(Fonts.mavenMedium(this));
+        textViewPerKM.setTypeface(Fonts.mavenMedium(this));
+        textViewWait.setTypeface(Fonts.mavenMedium(this));
+        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewKMTxt)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView)relativeLayoutJeaniePopup.findViewById(R.id.textViewMinTxt)).setTypeface(Fonts.mavenRegular(this));
 
 
         linearLayoutInner.setOnClickListener(new View.OnClickListener() {

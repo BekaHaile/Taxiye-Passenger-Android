@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
@@ -27,7 +26,9 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -49,7 +50,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 	private TextView textViewTitle;
 	private ImageView imageViewBack;
 
-	private TextView textViewEmergencyModeEnabledMessage;
+	private TextView textViewEmergencyModeEnabledTitle, textViewEmergencyModeEnabledMessage;
 	private Button buttonCallPolice, buttonCallEmergencyContact, buttonDisableEmergencyMode;
 	private LinearLayout linearLayoutDisableEmergencyMode;
 
@@ -106,9 +107,11 @@ public class EmergencyModeEnabledFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
+		textViewEmergencyModeEnabledTitle = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledTitle);
+		textViewEmergencyModeEnabledTitle.setTypeface(Fonts.mavenRegular(activity));
 		textViewEmergencyModeEnabledMessage = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledMessage);
 		textViewEmergencyModeEnabledMessage.setTypeface(Fonts.mavenRegular(activity));
 		((TextView)rootView.findViewById(R.id.textViewOr)).setTypeface(Fonts.mavenLight(activity));
@@ -120,6 +123,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonDisableEmergencyMode = (Button) rootView.findViewById(R.id.buttonDisableEmergencyMode);
 		buttonDisableEmergencyMode.setTypeface(Fonts.mavenRegular(activity));
 
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
+
 		linearLayoutDisableEmergencyMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutDisableEmergencyMode);
 
 
@@ -129,15 +134,18 @@ public class EmergencyModeEnabledFragment extends Fragment {
 				switch(v.getId()){
 
 					case R.id.imageViewBack:
+						FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "close");
 						performBackPressed();
 						break;
 
 					case R.id.buttonCallPolice:
+						FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "call police");
 						Utils.openCallIntent(activity, "100");
 						break;
 
 					case R.id.buttonCallEmergencyContact:
 						if(activity instanceof EmergencyActivity) {
+							FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "cal emergency contact");
 							new FragTransUtils().openEmergencyContactsOperationsFragment(activity,
 									((EmergencyActivity)activity).getContainer(), engagementId,
 									ContactsListAdapter.ListMode.CALL_CONTACTS);
@@ -145,6 +153,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 						break;
 
 					case R.id.buttonDisableEmergencyMode:
+						FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "disable emergency mode");
 						disableEmergencyMode();
 						break;
 

@@ -10,7 +10,7 @@
         android:id="@+id/relativeLayoutRank"
         android:layout_width="105px"
         android:layout_height="match_parent"
-        android:background="@color/grey_lb_list">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewRank"
@@ -43,16 +43,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="40px"
+        android:layout_marginRight="60px"
         android:gravity="center_vertical|right"
         android:text="100"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_34" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_alignParentBottom="true"
-        android:background="@color/text_color_hint" />
 
 </RelativeLayout>

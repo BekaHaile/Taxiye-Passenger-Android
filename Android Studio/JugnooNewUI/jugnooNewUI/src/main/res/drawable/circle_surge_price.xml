@@ -6,10 +6,4 @@
     <solid
         android:color="@color/text_color"/>
 
-    <stroke android:color="@color/text_color_hint"
-        android:width="2dp"/>
-
-    <size
-        android:width="120dp"
-        android:height="120dp"/>
 </shape>

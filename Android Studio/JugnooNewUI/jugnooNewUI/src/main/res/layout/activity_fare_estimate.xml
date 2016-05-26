@@ -1,6 +1,6 @@
 <LinearLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -11,46 +11,33 @@
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@drawable/nl_background_theme_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="FARE ESTIMATE"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            style="@style/title" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            style="@style/back_image" />
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 
     <LinearLayout
         android:id="@+id/linearLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible"
-        >
+        android:visibility="gone">
 
         <!-- Drop location layout -->
 
     </LinearLayout>
-
 
 
     <!-- fare estimate layout-->
@@ -58,25 +45,32 @@
         android:id="@+id/relativeLayoutFareEstimateDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/sliding_bottom_bg_color"
         android:gravity="center_horizontal"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
 
-        <fragment
-            android:id="@+id/mapLite"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="240px"
-            android:layout_margin="30px"
-            />
+        <RelativeLayout
+            android:id="@+id/relativeLayoutMapLite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="26px"
+            android:background="@drawable/background_white_bordered"
+            android:padding="2px">
+
+            <fragment
+                android:id="@+id/mapLite"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="240px" />
+        </RelativeLayout>
 
         <!-- start end locations -->
         <RelativeLayout
             android:id="@+id/relativeLayoutEndRideStartEndInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mapLite"
+            android:layout_below="@+id/relativeLayoutMapLite"
             android:layout_marginLeft="70px"
             android:layout_marginRight="70px"
             android:layout_marginTop="10px">
@@ -87,8 +81,7 @@
                 android:layout_height="44px"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/start_end_icon"
-                android:tag="mwar"
-                />
+                android:tag="mwar" />
 
             <LinearLayout
                 android:layout_width="280px"
@@ -105,7 +98,7 @@
                     android:gravity="center"
                     android:text="@string/start"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_28" />
 
                 <TextView
                     android:id="@+id/textViewPickupLocation"
@@ -118,8 +111,8 @@
                     android:gravity="center_horizontal"
                     android:maxLines="5"
                     android:text="Sector 37, Chandigarh\nIndia"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_24"/>
+                    android:textColor="@color/stroke_color_dark"
+                    android:textSize="@dimen/text_size_26" />
             </LinearLayout>
 
             <LinearLayout
@@ -138,7 +131,7 @@
                     android:gravity="center"
                     android:text="@string/end"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_28" />
 
                 <TextView
                     android:id="@+id/textViewDropLocation"
@@ -151,8 +144,8 @@
                     android:gravity="center_horizontal"
                     android:maxLines="5"
                     android:text="Sector 28, Chandigarh\nIndia"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_24"/>
+                    android:textColor="@color/stroke_color_dark"
+                    android:textSize="@dimen/text_size_26" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -161,22 +154,20 @@
         <!-- Estimate time and distance -->
         <LinearLayout
             android:id="@+id/linearLayoutTimeDistance"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeLayoutEndRideStartEndInfo"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="65px"
+            android:layout_marginRight="65px"
             android:layout_marginTop="40px"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10px"
-                android:layout_marginRight="10px"
-                android:background="@color/text_color_hint"
-                />
+                android:background="@color/stroke_color_light" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -184,11 +175,10 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="360px"
+                    android:layout_width="300px"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textViewEstimateDistanceText"
@@ -197,7 +187,7 @@
                         android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
                         android:text="@string/distance"
-                        android:textColor="@color/text_color_light"
+                        android:textColor="@color/stroke_color_dark"
                         android:textSize="@dimen/text_size_30"
 
                         />
@@ -206,29 +196,27 @@
                         android:id="@+id/textViewEstimateDistance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
                         android:layout_marginBottom="10px"
+                        android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
                         android:text="23 Km"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_32"
+                        android:textSize="@dimen/text_size_30"
 
                         />
                 </LinearLayout>
 
                 <ImageView
                     android:layout_width="2px"
-                    android:layout_height="90px"
+                    android:layout_height="76px"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/text_color_hint"
-                    />
+                    android:background="@color/stroke_color_light" />
 
                 <LinearLayout
-                    android:layout_width="360px"
+                    android:layout_width="300px"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textViewEstimateRideTimeText"
@@ -237,7 +225,7 @@
                         android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
                         android:text="@string/ride_time"
-                        android:textColor="@color/text_color_light"
+                        android:textColor="@color/stroke_color_dark"
                         android:textSize="@dimen/text_size_30"
 
                         />
@@ -246,12 +234,12 @@
                         android:id="@+id/textViewEstimateTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
                         android:layout_marginBottom="10px"
+                        android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
                         android:text="54 minutes"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_32"
+                        android:textSize="@dimen/text_size_30"
 
                         />
 
@@ -259,14 +247,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10px"
-                android:layout_marginRight="10px"
-                android:background="@color/text_color_hint"
-                />
+                android:background="@color/stroke_color_light" />
 
         </LinearLayout>
 
@@ -280,7 +266,7 @@
             android:gravity="center"
             android:text="Rs.100 - Rs.200"
             android:textColor="@color/text_color"
-            android:textSize="82px"
+            android:textSize="66px"
 
             />
 
@@ -288,39 +274,44 @@
             android:id="@+id/textViewConvenienceCharge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/textViewEstimateFareNote"
+            android:layout_above="@+id/buttonOk"
             android:layout_marginBottom="20px"
             android:gravity="center"
             android:text="Convenience charges Rs.10"
-            android:textColor="@color/text_color"
+            android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_26"
 
             />
 
+        <Button
+            android:id="@+id/buttonOk"
+            style="@style/ButtonTheme"
+            android:layout_above="@+id/textViewEstimateFareNote"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40px"
+            android:text="@string/ok" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:layout_above="@+id/textViewEstimateFareNote"
+            android:background="@drawable/shadow_up" />
 
         <TextView
             android:id="@+id/textViewEstimateFareNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/buttonOk"
-            android:layout_marginBottom="10px"
-            android:gravity="center"
-            android:text="Note: This is just an estimate.\nActual cost, time and distance may vary."
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_24"
-
-            />
-
-
-        <Button
-            android:id="@+id/buttonOk"
-            style="@style/ButtonTheme"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30px"
-            android:text="@string/ok"
-            />
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingBottom="12px"
+            android:paddingTop="12px"
+            android:text="@string/fare_note"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_22"
 
+            />
 
     </RelativeLayout>
 

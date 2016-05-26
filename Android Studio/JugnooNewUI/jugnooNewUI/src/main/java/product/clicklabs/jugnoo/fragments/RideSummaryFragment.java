@@ -149,8 +149,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
 
 		imageViewEndRideAutoIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideAutoIcon);
-		textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.mavenLight(activity));
-		textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
+		textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName); textViewEndRideDriverName.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber); textViewEndRideDriverCarNumber.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewEndRideStartLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartLocationValue); textViewEndRideStartLocationValue.setTypeface(Fonts.mavenLight(activity));
 		textViewEndRideEndLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndLocationValue); textViewEndRideEndLocationValue.setTypeface(Fonts.mavenLight(activity));
@@ -192,7 +192,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 		((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.mavenRegular(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenMedium(activity));
 
 		((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.mavenLight(activity));
@@ -200,11 +200,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity));
-		((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
-		((TextView) rootView.findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+		((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.mavenLight(activity));
 
 
 		buttonEndRideOk.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +216,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 							((RideTransactionsActivity)activity).getContainer(),
 							engagementId, endRideData, getRideSummaryResponse);
 					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
 				} else {
 					performBackPressed();
 				}
@@ -430,6 +431,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	public void performBackPressed() {
 		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).performBackPressed();
+			FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", "Back");
 		} else if(activity instanceof HomeActivity){
 			((HomeActivity)activity).onBackPressed();
 		} else if(activity instanceof SupportActivity){

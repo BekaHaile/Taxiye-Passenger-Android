@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
@@ -35,6 +37,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -105,22 +108,26 @@ public class AddPaytmFragment extends Fragment {
 
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 
-		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenLight(paymentActivity));
-		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenLight(paymentActivity));
-		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.mavenMedium(paymentActivity));
 
 		linearLayoutOTP = (LinearLayout) rootView.findViewById(R.id.linearLayoutOTP);
-		editTextOTP = (EditText) rootView.findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(paymentActivity));
+		editTextOTP = (EditText) rootView.findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		buttonRequestOTP = (Button) rootView.findViewById(R.id.buttonRequestOTP);	buttonRequestOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
-		buttonVerifyOTP = (Button) rootView.findViewById(R.id.buttonVerifyOTP);	buttonVerifyOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
-		buttonResendOTP = (Button) rootView.findViewById(R.id.buttonResendOTP);	buttonResendOTP.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonRequestOTP = (Button) rootView.findViewById(R.id.buttonRequestOTP);	buttonRequestOTP.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		buttonVerifyOTP = (Button) rootView.findViewById(R.id.buttonVerifyOTP);	buttonVerifyOTP.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		buttonResendOTP = (Button) rootView.findViewById(R.id.buttonResendOTP);	buttonResendOTP.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 
 		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -135,6 +142,7 @@ public class AddPaytmFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Request OTP");
 				generateOTP(false);
 			}
 		});

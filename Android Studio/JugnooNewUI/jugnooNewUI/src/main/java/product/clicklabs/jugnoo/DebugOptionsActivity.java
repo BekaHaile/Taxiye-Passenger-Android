@@ -23,6 +23,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class DebugOptionsActivity extends BaseActivity {
@@ -67,7 +68,7 @@ public class DebugOptionsActivity extends BaseActivity {
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
@@ -83,7 +84,7 @@ public class DebugOptionsActivity extends BaseActivity {
         ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.mavenLight(this));
 
-
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 
         relativeLayoutLive4012 = (RelativeLayout) findViewById(R.id.relativeLayoutLive4012);
@@ -105,7 +106,7 @@ public class DebugOptionsActivity extends BaseActivity {
 		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
 		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
 		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
-		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.latoRegular(this));
+		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.mavenMedium(this));
 
 
         buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.mavenRegular(this));

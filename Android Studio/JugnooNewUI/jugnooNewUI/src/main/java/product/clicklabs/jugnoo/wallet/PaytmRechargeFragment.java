@@ -1,22 +1,23 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -28,7 +29,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -58,7 +59,7 @@ public class PaytmRechargeFragment extends Fragment {
 
 	private final String TAG = PaytmRechargeFragment.class.getSimpleName();
 
-	LinearLayout relative;
+	RelativeLayout relative;
 
 	ImageView imageViewBack;
 	TextView textViewTitle, textViewTitleEdit;
@@ -110,7 +111,7 @@ public class PaytmRechargeFragment extends Fragment {
 		paymentActivity = (PaymentActivity) getActivity();
 
 
-		relative = (LinearLayout) rootView.findViewById(R.id.relative);
+		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		linearLayoutInner = (LinearLayout) rootView.findViewById(R.id.linearLayoutInner);
 
 		new ASSL(paymentActivity, relative, 1134, 720, false);
@@ -118,28 +119,28 @@ public class PaytmRechargeFragment extends Fragment {
 //		setupUI(rootView.findViewById(R.id.relative));
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.mavenLight(paymentActivity));
-		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		textViewAddCash = (TextView) rootView.findViewById(R.id.textViewAddCash); textViewAddCash.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewAddCash = (TextView) rootView.findViewById(R.id.textViewAddCash); textViewAddCash.setTypeface(Fonts.mavenMedium(paymentActivity));
 
-		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount);	editTextAmount.setTypeface(Fonts.mavenLight(paymentActivity));
+		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount);	editTextAmount.setTypeface(Fonts.mavenRegular(paymentActivity));
 		try {
 			editTextAmount.setText(paymentActivity.amountToPreFill);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		buttonAmount1 = (Button) rootView.findViewById(R.id.buttonAmount1);	buttonAmount1.setTypeface(Fonts.mavenLight(paymentActivity));
-		buttonAmount2 = (Button) rootView.findViewById(R.id.buttonAmount2);	buttonAmount2.setTypeface(Fonts.mavenLight(paymentActivity));
-		buttonAmount3 = (Button) rootView.findViewById(R.id.buttonAmount3);	buttonAmount3.setTypeface(Fonts.mavenLight(paymentActivity));
-		buttonAddMoney = (Button) rootView.findViewById(R.id.buttonAddMoney); buttonAddMoney.setTypeface(Fonts.mavenRegular(paymentActivity));
-		buttonRemoveWallet = (Button) rootView.findViewById(R.id.buttonRemoveWallet);	buttonRemoveWallet.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonAmount1 = (Button) rootView.findViewById(R.id.buttonAmount1);	buttonAmount1.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonAmount2 = (Button) rootView.findViewById(R.id.buttonAmount2);	buttonAmount2.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonAmount3 = (Button) rootView.findViewById(R.id.buttonAmount3);	buttonAmount3.setTypeface(Fonts.mavenRegular(paymentActivity));
+		buttonAddMoney = (Button) rootView.findViewById(R.id.buttonAddMoney); buttonAddMoney.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		buttonRemoveWallet = (Button) rootView.findViewById(R.id.buttonRemoveWallet);	buttonRemoveWallet.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 
 
 		scrolled = false;
@@ -147,12 +148,14 @@ public class PaytmRechargeFragment extends Fragment {
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, textViewTitle));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextAmount);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Back");
 				performBackPressed();
 			}
 		});
@@ -205,6 +208,7 @@ public class PaytmRechargeFragment extends Fragment {
 							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
 								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
+								FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Add Paytm Cash "+editTextAmount.getText().toString().trim());
 							}
 						}
 					}
@@ -221,8 +225,8 @@ public class PaytmRechargeFragment extends Fragment {
 				linearLayoutInner.setVisibility(View.GONE);
 				buttonRemoveWallet.setVisibility(View.VISIBLE);
 				textViewTitleEdit.setVisibility(View.GONE);
-				textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.white_light_grey));
 				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Edit");
 			}
 		});
 
@@ -248,6 +252,7 @@ public class PaytmRechargeFragment extends Fragment {
 						}, false, false);
 				}
 				FlurryEventLogger.event(paymentActivity, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Remove Wallet");
 			}
 		});
 
@@ -321,15 +326,15 @@ public class PaytmRechargeFragment extends Fragment {
 	}
 
 	private void setButtonBackground(Button selected){
-		buttonAmount1.setBackgroundResource(R.drawable.background_wallet_border);
-		buttonAmount2.setBackgroundResource(R.drawable.background_wallet_border);
-		buttonAmount3.setBackgroundResource(R.drawable.background_wallet_border);
-		buttonAmount1.setTextColor(getResources().getColor(R.color.text_color));
-		buttonAmount2.setTextColor(getResources().getColor(R.color.text_color));
-		buttonAmount3.setTextColor(getResources().getColor(R.color.text_color));
+		buttonAmount1.setBackgroundResource(R.drawable.background_white_grey_theme_rb_selector);
+		buttonAmount2.setBackgroundResource(R.drawable.background_white_grey_theme_rb_selector);
+		buttonAmount3.setBackgroundResource(R.drawable.background_white_grey_theme_rb_selector);
+		buttonAmount1.setTextColor(getResources().getColorStateList(R.color.text_color_theme_color_selector));
+		buttonAmount2.setTextColor(getResources().getColorStateList(R.color.text_color_theme_color_selector));
+		buttonAmount3.setTextColor(getResources().getColorStateList(R.color.text_color_theme_color_selector));
 
 		if(selected != null) {
-			selected.setBackgroundResource(R.drawable.button_white_grey_theme_border_selector);
+			selected.setBackgroundResource(R.drawable.background_white_theme_color_rounded_bordered);
 			selected.setTextColor(getResources().getColor(R.color.theme_color));
 		}
 	}
@@ -337,7 +342,8 @@ public class PaytmRechargeFragment extends Fragment {
 	private void updatePaytmBalance(){
 		try{
 			if(Data.userData != null){
-				textViewCurrentBalanceValue.setText(paymentActivity.getResources().getString(R.string.rupee)+" "+Data.userData.getPaytmBalanceStr());
+				textViewCurrentBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format),
+						Data.userData.getPaytmBalanceStr()));
 				textViewCurrentBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 			}
 		} catch(Exception e){
@@ -351,40 +357,6 @@ public class PaytmRechargeFragment extends Fragment {
 		updatePaytmBalance();
 	}
 
-	/**
-	 * Method used to hide keyboard if outside touched.
-	 *
-	 * @param view
-	 */
-	private void setupUI(View view) {
-		// Set up touch listener for non-text box views to hide keyboard.
-		if (!(view instanceof EditText)) {
-			view.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-
-					try {
-						if (paymentActivity.getCurrentFocus() != null) {
-							InputMethodManager inputMethodManager = (InputMethodManager) paymentActivity.getSystemService(paymentActivity.INPUT_METHOD_SERVICE);
-							inputMethodManager.hideSoftInputFromWindow(paymentActivity.getCurrentFocus().getWindowToken(), 0);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return false;
-				}
-
-			});
-		}
-		// If a layout container, iterate over children and seed recursion.
-		if (view instanceof ViewGroup) {
-			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-				View innerView = ((ViewGroup) view).getChildAt(i);
-				setupUI(innerView);
-			}
-		}
-	}
-
 
 	/**
 	 * Method used to remove fragment from stack
@@ -395,10 +367,9 @@ public class PaytmRechargeFragment extends Fragment {
 			linearLayoutInner.setVisibility(View.VISIBLE);
 			buttonRemoveWallet.setVisibility(View.GONE);
 			textViewTitleEdit.setVisibility(View.VISIBLE);
-			textViewAddCashHelp.setTextColor(paymentActivity.getResources().getColor(R.color.grey_dark_more));
 		} else {
 			paymentActivity.getSupportFragmentManager()
-					.popBackStack(PaytmRechargeFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+					.popBackStack(PaytmRechargeFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
 				paymentActivity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)

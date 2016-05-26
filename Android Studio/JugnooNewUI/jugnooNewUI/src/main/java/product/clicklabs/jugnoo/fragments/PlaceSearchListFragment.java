@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -45,7 +47,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	private EditText editTextSearch;
 	private ProgressWheel progressBarSearch;
-	private ImageView imageViewSearchCross;
+	private ImageView imageViewSearchCross, imageViewSearchGPSIcon;
 
 	private LinearLayout linearLayoutAddFav;
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
@@ -101,21 +103,14 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
-		editTextSearch.setTypeface(Fonts.latoRegular(activity));
+		editTextSearch.setTypeface(Fonts.mavenMedium(activity));
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
 		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
 
-
-		linearLayoutAddFav = (LinearLayout) rootView.findViewById(R.id.linearLayoutAddFav);
-		relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
-		relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
-		textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome);
-		textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
-		imageViewSep = (ImageView) rootView.findViewById(R.id.imageViewSep);
-
+		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {
 
@@ -132,8 +127,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				editTextSearch.setText("");
 			}
 		});
-
-		showSearchLayout();
 
 		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
 				new SearchListAdapter.SearchListActionsHandler() {
@@ -198,6 +191,20 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		listViewSearch.setAdapter(searchListAdapter);
 
+		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
+		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
+		ASSL.DoMagic(header);
+		listViewSearch.addHeaderView(header, null, false);
+
+		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
+		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
+		relativeLayoutAddWork = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddWork);
+		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
+		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
+		imageViewSep = (ImageView) header.findViewById(R.id.imageViewSep);
+
+		showSearchLayout();
+
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -223,7 +230,13 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		Bundle bundle = getArguments();
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
-		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
+		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
+		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
+			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
+		} else{
+			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
+		}
 		editTextSearch.setText(text);
 		editTextSearch.setHint(hint);
 		new Handler().post(new Runnable() {
@@ -234,6 +247,14 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				Utils.showSoftKeyboard(activity, editTextSearch);
 			}
 		});
+
+		ImageView imageViewShadow = (ImageView) rootView.findViewById(R.id.imageViewShadow);
+		if(activity instanceof HomeActivity){
+			imageViewShadow.setVisibility(View.VISIBLE);
+		} else {
+			imageViewShadow.setVisibility(View.GONE);
+		}
+
 
         return rootView;
 	}
@@ -256,13 +277,13 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		if(work.equalsIgnoreCase("")){
 			relativeLayoutAddWork.setVisibility(View.VISIBLE);
-			if(home.equalsIgnoreCase("")){
-				imageViewSep.setVisibility(View.VISIBLE);
-			} else{
-				imageViewSep.setVisibility(View.GONE);
-			}
 		}else{
 			relativeLayoutAddWork.setVisibility(View.GONE);
+		}
+
+		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
+			imageViewSep.setVisibility(View.VISIBLE);
+		} else{
 			imageViewSep.setVisibility(View.GONE);
 		}
 
@@ -339,6 +360,26 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 	public ProgressWheel getProgressBarSearch(){
 		return progressBarSearch;
+	}
+
+	public enum PlaceSearchMode {
+		PICKUP(1),
+		DROP(2)
+		;
+
+		private int ordinal;
+		PlaceSearchMode(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+
+		public void setOrdinal(int ordinal) {
+			this.ordinal = ordinal;
+		}
 	}
 
 }

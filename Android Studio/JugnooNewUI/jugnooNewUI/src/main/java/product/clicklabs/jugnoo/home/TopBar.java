@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,11 +12,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import product.clicklabs.jugnoo.AccessTokenGenerator;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -35,7 +38,7 @@ public class TopBar {
 	//Top RL
 	public RelativeLayout topRl;
 	public ImageView imageViewMenu, imageViewAppToggle, imageViewSearchIcon;
-	public TextView title;
+	public TextView textViewTitle;
 	public Button buttonCheckServer;
 	public ImageView imageViewHelp;
 	public ImageView imageViewBack, imageViewDelete;
@@ -52,11 +55,12 @@ public class TopBar {
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewAppToggle = (ImageView) drawerLayout.findViewById(R.id.imageViewAppToggle);
 		imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
-		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) drawerLayout.findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
+		imageViewBack.setVisibility(View.GONE);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 		textViewAdd = (TextView) drawerLayout.findViewById(R.id.textViewAdd); textViewAdd.setTypeface(Fonts.mavenRegular(activity));
 
@@ -86,22 +90,22 @@ public class TopBar {
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		if(activity instanceof FreshActivity){
 			imageViewHelp.setVisibility(View.GONE);
-			imageViewAppToggle.setImageResource(R.drawable.ic_auto_white);
+			imageViewAppToggle.setImageResource(R.drawable.ic_autos_topbar_selector);
 			paramsAppToggle.width = (int)(minRatio * 78f);
 			paramsAppToggle.height = (int)(minRatio * 68f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
 			imageViewSearchIcon.setVisibility(View.GONE);
 
-			title.setText(activity.getResources().getString(R.string.fresh));
+			textViewTitle.setText(activity.getResources().getString(R.string.fresh));
 
 		} else if(activity instanceof HomeActivity) {
-			imageViewAppToggle.setImageResource(R.drawable.ic_fresh_white);
-			paramsAppToggle.width = (int)(minRatio * 92f);
-			paramsAppToggle.height = (int)(minRatio * 66f);
+			imageViewAppToggle.setImageResource(R.drawable.ic_fatafat_selector);
+			paramsAppToggle.width = (int)(minRatio * 70f);
+			paramsAppToggle.height = (int)(minRatio * 70f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
 			imageViewSearchIcon.setVisibility(View.GONE);
 
-			title.setText(activity.getResources().getString(R.string.app_name));
+			textViewTitle.setText(activity.getResources().getString(R.string.app_name));
 		}
 
 		setupFreshUI();
@@ -119,6 +123,16 @@ public class TopBar {
 					drawerLayout.openDrawer(GravityCompat.START);
 					FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
+
+					try {
+						if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity)activity).passengerScreenMode) {
+							FlurryEventLogger.eventGA(Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Ride Start", "menu");
+						} else {
+							FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "menu");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					break;
 
 				case R.id.buttonCheckServer:
@@ -127,11 +141,24 @@ public class TopBar {
 				case R.id.imageViewHelp:
 					if(activity instanceof HomeActivity) {
 						((HomeActivity)activity).sosDialog(activity);
+						try {
+							if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity)activity).passengerScreenMode) {
+                                //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+                            } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity)activity).passengerScreenMode) {
+                                FlurryEventLogger.eventGA(Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Ride Start", "help");
+                            }
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
 					}
 					break;
 
 				case R.id.imageViewBack:
-					if(activity instanceof FreshActivity){
+					if(activity instanceof HomeActivity) {
+						((HomeActivity)activity).backFromSearchToInitial();
+					}
+					else if(activity instanceof FreshActivity){
 						((FreshActivity)activity).performBackPressed();
 					}
 					break;
@@ -161,9 +188,9 @@ public class TopBar {
 							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
 							Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
 						}
-						activity.startActivity(new Intent(activity, FreshActivity.class));
-						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+						CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
+						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "fresh");
 
 					}
 					break;

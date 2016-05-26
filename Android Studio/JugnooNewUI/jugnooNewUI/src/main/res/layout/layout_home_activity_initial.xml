@@ -7,62 +7,105 @@
     android:visibility="visible">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    <LinearLayout
         android:id="@+id/linearLayoutInitialSearchBarMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/transparent"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutInitialSearchBar"
-            android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:layout_gravity="center_horizontal"
-            android:splitMotionEvents="false">
+            android:id="@+id/relativeLayoutSearchContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="200px"
+            android:layout_marginTop="20px">
 
-            <ImageView
-                android:id="@+id/imageViewInitialSearchGPSIcon"
-                android:layout_width="33px"
-                android:layout_height="33px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
-                android:src="@drawable/search_icon"
-                android:tag="mwar" />
-
-            <TextView
-                android:id="@+id/textViewInitialSearch"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutDestSearchBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
+                android:layout_height="100px"
                 android:layout_marginLeft="20px"
-                android:padding="5px"
-                android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
-                android:layout_toLeftOf="@+id/progressBarInitialSearch"
-                android:background="@color/transparent"
-                android:gravity="center_vertical"
-                android:hint="@string/set_pickup_location"
-                android:singleLine="true"
-                android:textColor="@color/text_color"
-                android:textSize="30px" />
-
-            <product.clicklabs.jugnoo.utils.ProgressWheel
-                xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/progressBarInitialSearch"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="20px"
-                android:tag="mwar"
-                wheel:matProg_barColor="@color/theme_color"
-                wheel:matProg_barWidth="3dp"
-                wheel:matProg_fillRadius="true"
-                wheel:matProg_progressIndeterminate="true" />
+                android:layout_marginTop="80px"
+                android:background="@drawable/dropshadow_in_menu_item_selector_color"
+                android:layout_gravity="center_horizontal"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewDestSearchGPSIcon"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="37px"
+                    android:src="@drawable/circle_red"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewDestSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="37px"
+                    android:paddingRight="20px"
+                    android:layout_toRightOf="@+id/imageViewDestSearchGPSIcon"
+                    android:layout_toLeftOf="@+id/imageViewDropCross"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/assigning_state_edit_text_hint"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+                <ImageView
+                    android:id="@+id/imageViewDropCross"
+                    android:layout_width="70px"
+                    android:layout_height="70px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5px"
+                    android:padding="16px"
+                    android:src="@drawable/ic_cross_et_selector"
+                    android:tag="mwar" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutInitialSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="20px"
+                android:background="@drawable/dropshadow_in_white"
+                android:layout_gravity="center_horizontal"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewInitialSearchGPSIcon"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="37px"
+                    android:src="@drawable/circle_green"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewInitialSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="37px"
+                    android:paddingRight="20px"
+                    android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/set_pickup_location"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -79,8 +122,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="5px"
                 android:layout_marginTop="15px"
-                android:padding="20px"
-                android:src="@drawable/ic_cross_et"
+                android:padding="16px"
+                android:src="@drawable/ic_cross_et_selector"
                 android:tag="mwar" />
 
             <TextView
@@ -108,146 +151,69 @@
         </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/textViewInitialInstructions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@drawable/background_initial_instruction"
-            android:text="No drivers available"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30" />
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutInitialFareFactor"
-            android:layout_width="match_parent"
-            android:layout_height="55px"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/sliding_bottom_bg_color"
-            android:visibility="visible">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:src="@color/text_color_hint"/>
-
-            <ImageView
-                android:id="@+id/imageViewPriorityTip"
-                android:layout_width="34px"
-                android:layout_height="39px"
-                android:layout_marginLeft="30px"
-                android:layout_centerVertical="true"
-                android:src="@drawable/surge_icon_top"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/imageViewPriorityTip"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewCurrentFareFactor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:text="1.2x"
-                    android:textColor="@color/text_color"
-                    android:textSize="26px" />
-
-
-                <TextView
-                    android:id="@+id/textViewCurrentRatesInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:text="of standard rates applicable right now"
-                    android:textColor="@color/text_color"
-                    android:textSize="24px" />
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/shadow_down" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutRequest"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30px"
-        android:orientation="vertical"
         android:animateLayoutChanges="true"
-        
+        android:soundEffectsEnabled="false"
         >
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/imageViewInAppCampaign"
-                android:layout_width="111px"
-                android:layout_height="111px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
-                android:tag="mwar"
-                android:visibility="visible"
-                />
 
-            <Button
-                android:id="@+id/initialMyLocationBtn"
-                android:layout_width="83px"
-                android:layout_height="83px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="92px"
-                android:background="@drawable/mylocation_btn_selector"
-                android:tag="mwar" />
+        <ImageView
+            android:id="@+id/imageViewInAppCampaign"
+            android:layout_width="111px"
+            android:layout_height="111px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50px"
+            android:tag="mwar"
+            android:visibility="gone"
+            />
 
-            <ImageView
-                android:id="@+id/imageViewRideNow"
-                android:layout_width="187px"
-                android:layout_height="187px"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/auto_icon_r_selector"
-                android:tag="mwar" />
-        </RelativeLayout>
+        <Button
+            android:id="@+id/initialMyLocationBtn"
+            android:layout_width="121px"
+            android:layout_height="117px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            android:background="@drawable/mylocation_btn_selector"
+            android:tag="mwar"
+            android:visibility="visible"
+            />
 
+        <ImageView
+            android:id="@+id/imageViewRideNow"
+            android:layout_width="187px"
+            android:layout_height="187px"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_auto_request_selector"
+            android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/imageViewSupplyType"
+            android:layout_width="103px"
+            android:layout_height="103px"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_pool_request_selector"
+            android:layout_marginLeft="45px"
+            android:tag="mwar"
+            android:visibility="gone"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewVehicles"
-            android:layout_width="wrap_content"
-            android:layout_height="110px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:layout_marginTop="20px"
+            android:layout_width="match_parent"
+            android:layout_height="108px"
             android:splitMotionEvents="false"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_below="@+id/imageViewRideNow"
+            android:visibility="gone"
             />
 
-    </LinearLayout>
-
-
-
-
-
-
-
+    </RelativeLayout>
 
 
 

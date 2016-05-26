@@ -24,7 +24,7 @@
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
                 android:layout_alignParentRight="true"
-                android:textSize="@dimen/text_size_34"
+                android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color_light"/>
 
             <TextView
@@ -35,7 +35,7 @@
                 android:gravity="center_horizontal"
                 android:text="3"
                 android:layout_alignParentRight="true"
-                android:textSize="@dimen/text_size_40"
+                android:textSize="@dimen/text_size_38"
                 android:textColor="@color/text_color"/>
 
         </RelativeLayout>
@@ -64,7 +64,7 @@
                     android:tag="mwar"
                     android:layout_marginTop="12px"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/surge_icon_bottom"/>
+                    android:src="@drawable/ic_surge_white"/>
 
                 <TextView
                     android:id="@+id/textViewPriorityTipValue"
@@ -95,7 +95,7 @@
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
                 android:layout_alignParentLeft="true"
-                android:textSize="@dimen/text_size_34"
+                android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color_light"/>
 
             <TextView
@@ -106,7 +106,7 @@
                 android:gravity="center_horizontal"
                 android:text="3"
                 android:layout_alignParentLeft="true"
-                android:textSize="@dimen/text_size_40"
+                android:textSize="@dimen/text_size_38"
                 android:textColor="@color/text_color"/>
 
         </RelativeLayout>
@@ -127,12 +127,13 @@
         android:id="@+id/textViewFareEstimage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/nl_button_size"
-        android:text="@string/nl_get_fare_estimate"
+        android:text="@string/get_fare_estimate"
         android:gravity="center"
+        android:textAllCaps="true"
         android:background="@drawable/background_white_rounded_bordered"
         android:layout_marginTop="10px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:textSize="@dimen/text_size_40"
+        android:layout_marginLeft="27px"
+        android:layout_marginRight="27px"
+        android:textSize="@dimen/text_size_34"
         android:textColor="@color/text_color"/>
 </LinearLayout>

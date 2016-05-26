@@ -88,7 +88,7 @@
                 android:background="@drawable/background_transparent"
                 android:singleLine="true"
                 android:text="@string/upload_contact_no_thanks"
-                android:textColor="@drawable/text_color_grey_dark_light_selector"
+                android:textColor="@color/text_color_light_selector"
                 android:textSize="28px" />
 
 
