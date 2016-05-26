@@ -320,6 +320,8 @@
 
 	<!-- NL Home Screen -->
 	<string name="nl_min_fare">BASE FARE</string>
+	<string name="nl_min_base">BASE</string>
+	<string name="nl_min_only_fare">FARE</string>
 	<string name="nl_offers">OFFERS</string>
 	<string name="nl_change_locality">CHANGE LOCALITY</string>
 	<string name="get_fare_estimate">Get Fare Estimate</string>

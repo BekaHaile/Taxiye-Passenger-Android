@@ -54,7 +54,7 @@ public class SlidingBottomPanel {
     private final String TAG = SlidingBottomPanel.class.getSimpleName();
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
-    private ImageView imageViewPaymentOp, imageViewExtraForSliding;
+    private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSlidingSurge;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
 
     private PromoCoupon selectedCoupon = null;
@@ -71,6 +71,7 @@ public class SlidingBottomPanel {
 
     private void initComponents(View view) {
         //SlidingUp Layout
+        ((TextView) view.findViewById(R.id.textViewMinBase)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenMedium(activity));
         textViewMinFareValue = (TextView) view.findViewById(R.id.textViewMinFareValue);
         textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
@@ -81,6 +82,7 @@ public class SlidingBottomPanel {
         textViewCashValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
+        imageViewSlidingSurge = (ImageView)view.findViewById(R.id.imageViewSlidingSurge);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
@@ -375,6 +377,11 @@ public class SlidingBottomPanel {
             }
             textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                     , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+            if(Data.userData.fareFactor > 1.0){
+                imageViewSlidingSurge.setVisibility(View.VISIBLE);
+            } else{
+                imageViewSlidingSurge.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

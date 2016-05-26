@@ -19,20 +19,20 @@
             android:layout_marginTop="84px"
             android:imeOptions="actionDone"
             android:text="@string/add_promo_code"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutPromocode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/linearLayoutInner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="52px"
-                android:background="@drawable/dropshadow_in_menu_item_selector_color"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <EditText
@@ -75,6 +75,7 @@
                 android:id="@+id/imageViewClose"
                 style="@style/cross_popup"
                 android:focusable="false"
+                android:visibility="gone"
                 android:focusableInTouchMode="false"/>
         </RelativeLayout>
     </RelativeLayout>

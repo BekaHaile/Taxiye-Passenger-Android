@@ -1002,6 +1002,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 linearLayoutPasswordSave.setVisibility(View.GONE);
                                 imageViewChangePassword.setVisibility(View.VISIBLE);
+                                relativeLayoutChangePassword.performClick();
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
                                 DialogPopup.alertPopup(activity, "", message);
                             } else {

@@ -880,7 +880,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     } else {
                         FlurryEventLogger.event(REQUEST_CANCELLED_FINDING_DRIVER);
-                        FlurryEventLogger.eventGA(RETENTION + SLASH + ACTIVATION, "request ride", "cancel ride");
+                        FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "request ride", "cancel ride");
                         cancelCustomerRequestAsync(HomeActivity.this);
                     }
             }
@@ -906,7 +906,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 intentToShareActivity(false);
-                FlurryEventLogger.eventGA(ACTIVATION+SLASH+RETENTION, "ride start", "send invites");
+                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "ride start", "send invites");
             }
         });
 
@@ -919,7 +919,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
-                FlurryEventLogger.eventGA(RETENTION+SLASH+ACTIVATION, "accept ride", "cancel ride");
+                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
             }
         });
 
@@ -940,7 +940,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
 				} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
 					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
-                    FlurryEventLogger.eventGA(ACTIVATION+SLASH+RETENTION, "Ride Start", "add paytm wallet");
+                    FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "add paytm wallet");
 				}
 			}
 		});
@@ -953,7 +953,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					Utils.openCallIntent(HomeActivity.this, Data.assignedDriverInfo.phoneNumber);
 					if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
 						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
-                        FlurryEventLogger.eventGA(ACTIVATION + SLASH + RETENTION, "Ride Start", "Call Driver");
+                        FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "Call Driver");
 					}
 					else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
 						FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
@@ -4302,7 +4302,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     setDropLocationEngagedUI();
 
                                     getDropLocationPathAndDisplay(Data.pickupLatLng);
-                                    FlurryEventLogger.eventGA(ACTIVATION+SLASH+RETENTION, "ride start", "enter destination");
+                                    FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "ride start", "enter destination");
                                 }
 
                             } else {
@@ -5791,6 +5791,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             dropLocationSearchText = "";
 
             slidingBottomPanel.setSelectedCoupon(null);
+
+
+            Data.pickupLatLng = null;
+            Data.dropLatLng = null;
+            dropLocationSet = false;
+            imageViewDropCross.performClick();
+
+            Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+            setUserData();
+
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             new Handler().postDelayed(new Runnable() {
@@ -5800,12 +5810,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     callMapTouchedRefreshDrivers();
                 }
             }, 150);
-
-            Data.pickupLatLng = null;
-            Data.dropLatLng = null;
-            dropLocationSet = false;
-            Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-            setUserData();
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
