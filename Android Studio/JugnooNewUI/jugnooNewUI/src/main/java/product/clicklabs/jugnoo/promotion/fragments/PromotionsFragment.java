@@ -238,6 +238,14 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 		}
 	}
 
+	public void clearErrorForEditText(){
+		try {
+			editTextPromoCode.setError(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void getCouponsAndPromotions(final Activity activity) {
 		try {
 			if(!HomeActivity.checkIfUserDataNull(activity)) {

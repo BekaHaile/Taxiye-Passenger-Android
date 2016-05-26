@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -1898,9 +1899,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
 
+                        linearLayoutRideSummary.setLayoutTransition(null);
                         scrollViewRideSummary.scrollTo(0, 0);
                         ratingBarRSFeedback.setRating(0f);
                         setZeroRatingView();
+                        linearLayoutRideSummary.setLayoutTransition(new LayoutTransition());
 
                         editTextRSFeedback.setText("");
                         for(int i=0; i<Data.feedbackReasons.size(); i++){
@@ -1914,6 +1917,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
                         imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
+                        textViewThumbsUp.setVisibility(View.INVISIBLE);
+                        textViewThumbsDown.setVisibility(View.INVISIBLE);
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
 

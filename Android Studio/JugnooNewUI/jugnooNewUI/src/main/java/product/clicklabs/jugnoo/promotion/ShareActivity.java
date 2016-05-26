@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.promotion.adapters.PromotionsFragmentAdapter;
+import product.clicklabs.jugnoo.promotion.fragments.PromotionsFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -167,6 +168,7 @@ public class ShareActivity extends BaseFragmentActivity {
 					FlurryEventLogger.event(ShareActivity.this, FlurryEventNames.WHO_CLICKED_ON_ACTIVITY);
 				}
 				Utils.hideSoftKeyboard(ShareActivity.this, imageViewBack);
+				clearError();
 			}
 
 			@Override
@@ -290,6 +292,15 @@ public class ShareActivity extends BaseFragmentActivity {
 			if(pos == 2){
 				((ReferralActivityFragment) page).update();
 			}
+		}
+	}
+
+	public void clearError(){
+		try {
+			Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
+			((PromotionsFragment)page).clearErrorForEditText();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
