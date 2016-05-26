@@ -36,6 +36,7 @@ public interface Constants {
 
 	String KEY_SEARCH_FIELD_TEXT = "search_field_text";
 	String KEY_SEARCH_FIELD_HINT = "search_field_hint";
+	String KEY_SEARCH_MODE = "search_mode";
 
 	String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 
@@ -272,5 +273,28 @@ public interface Constants {
 	String KEY_FARE_VALUE = "fare_value";
 	String KEY_FARE_TO_PAY = "fare_to_pay";
 	String KEY_PAID_RIDE = "paid_ride";
+	String KEY_OP_DROP_LATITUDE = "op_drop_latitude";
+	String KEY_OP_DROP_LONGITUDE = "op_drop_longitude";
+
+	String KEY_REFERRAL_LEADERBOARD_ENABLED = "referral_leaderboard_enabled";
+	String KEY_REFERRAL_ACTIVITY_ENABLED = "referral_activity_enabled";
+	String KEY_CODE = "code";
+
+	String ACQUISITION = "Acquisition";
+	String CAMPAIGNS = "Campaigns";
+	String ACTIVATION = "Activation";
+	String REVENUE = "Revenue";
+	String RETENTION = "Retention";
+	String HELP = "Help";
+	String INFORMATIVE = "Informative";
+	String REFERRAL = "Referral";
+	String ISSUES = "Issues";
+	String SLASH = "/";
+
+	String KEY_UPDATED_USER_NAME = "updated_user_name";
+	String KEY_UPDATED_USER_EMAIL = "updated_user_email";
+	String KEY_UPDATED_PHONE_NO = "updated_phone_no";
+	String KEY_OLD_PASSWORD = "old_password";
+	String KEY_NEW_PASSWORD = "new_password";
 
 }

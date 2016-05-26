@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -42,8 +44,8 @@ import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
@@ -68,6 +70,7 @@ import retrofit.mime.TypedByteArray;
 public class JSONParser implements Constants {
 
     private final String TAG = JSONParser.class.getSimpleName();
+
 
     public JSONParser() {
 
@@ -222,6 +225,9 @@ public class JSONParser implements Constants {
         String city = userData.optString(KEY_CITY, "");
         String cityReg = userData.optString(KEY_CITY_REG, "");
 
+        int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
+        int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
+
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
@@ -232,7 +238,7 @@ public class JSONParser implements Constants {
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
-                city, cityReg);
+                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled);
 
     }
 
@@ -256,6 +262,8 @@ public class JSONParser implements Constants {
 
         parseFindDriverResp(loginResponse);
         parsePromoCoupons(loginResponse);
+        Data.menuInfoList = new ArrayList<>();
+        Data.menuInfoList.addAll(loginResponse.getLogin().getMenuInfoList());
 
 		if(loginResponse.getLogin().getSupportNumber() != null){
 			Config.saveSupportNumber(context, loginResponse.getLogin().getSupportNumber());
@@ -528,6 +536,7 @@ public class JSONParser implements Constants {
             Data.cDriverId = jDriverInfo.getString("id");
 
             Data.pickupLatLng = new LatLng(0, 0);
+            Data.dropLatLng = null;
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
@@ -552,7 +561,7 @@ public class JSONParser implements Constants {
 
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
-
+        List<Product> productList = new ArrayList<>();
 
 		double baseFare = initialBaseFare;
 		if (jLastRideData.has("base_fare")) {
@@ -630,6 +639,7 @@ public class JSONParser implements Constants {
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
+
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
@@ -647,11 +657,14 @@ public class JSONParser implements Constants {
 
 
 
-    public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver) {
+    public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver,
+                                LatLng latLng) {
         try {
             long startTime = System.currentTimeMillis();
             HashMap<String, String> nameValuePairs = new HashMap<>();
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
+            nameValuePairs.put(KEY_LATITUDE, String.valueOf(latLng.latitude));
+            nameValuePairs.put(KEY_LONGITUDE, String.valueOf(latLng.longitude));
             Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
@@ -720,12 +733,14 @@ public class JSONParser implements Constants {
 
                         sessionId = jObject1.getString("session_id");
                         double assigningLatitude = 0, assigningLongitude = 0;
-                        if (jObject1.has("latitude") && jObject1.has("longitude")) {
-                            assigningLatitude = jObject1.getDouble("latitude");
-                            assigningLongitude = jObject1.getDouble("longitude");
+                        if (jObject1.has(KEY_LATITUDE) && jObject1.has(KEY_LONGITUDE)) {
+                            assigningLatitude = jObject1.getDouble(KEY_LATITUDE);
+                            assigningLongitude = jObject1.getDouble(KEY_LONGITUDE);
                             Log.e("assigningLatitude,assigningLongitude ====@@@", "" + assigningLatitude + "," + assigningLongitude);
                         }
+
                         Data.pickupLatLng = new LatLng(assigningLatitude, assigningLongitude);
+                        parseDropLatLng(jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -751,9 +766,9 @@ public class JSONParser implements Constants {
                             pickupLongitude = jObject.getString("pickup_longitude");
 
                             try {
-                                if(jObject.has("op_drop_latitude") && jObject.has("op_drop_longitude")) {
-                                    dropLatitude = jObject.getDouble("op_drop_latitude");
-                                    dropLongitude = jObject.getDouble("op_drop_longitude");
+                                if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
+                                    dropLatitude = jObject.getDouble(KEY_OP_DROP_LATITUDE);
+                                    dropLongitude = jObject.getDouble(KEY_OP_DROP_LONGITUDE);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -973,6 +988,7 @@ public class JSONParser implements Constants {
             Data.feedbackReasons = new ArrayList<>();
         }
         try{
+            Data.feedbackReasons.clear();
             for(String resason : loginResponse.getBadRatingReasons()){
                 Data.feedbackReasons.add(new FeedbackReason(resason));
             }
@@ -1053,7 +1069,7 @@ public class JSONParser implements Constants {
                         JSONObject poData = promotionsData.getJSONObject(i);
 
                         PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
-                            poData.getString("terms_n_conds"), poData.getString("validity_text"));
+                            poData.getString("terms_n_conds"), poData.getString("validity_text"), poData.getString("end_on"));
 
                         promotionInfoList.add(promotionInfo);
                     }
@@ -1173,6 +1189,25 @@ public class JSONParser implements Constants {
             paytmRechargeInfo = null;
         }
         return paytmRechargeInfo;
+    }
+
+    public static void parseDropLatLng(JSONObject jObject1){
+        try {
+            if (jObject1.has(KEY_OP_DROP_LATITUDE) && jObject1.has(KEY_OP_DROP_LONGITUDE)) {
+                double dropLatitude = jObject1.getDouble(KEY_OP_DROP_LATITUDE);
+                double dropLongitude = jObject1.getDouble(KEY_OP_DROP_LONGITUDE);
+                if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
+                    Data.dropLatLng = null;
+                } else{
+                    Data.dropLatLng = new LatLng(dropLatitude, dropLongitude);
+                }
+			} else{
+                Data.dropLatLng = null;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            Data.dropLatLng = null;
+        }
     }
 
 

@@ -18,7 +18,7 @@
             android:layout_gravity="center_vertical">
 
             <RelativeLayout
-                android:id="@+id/innerRl"
+                android:id="@+id/linearLayoutInner"
                 android:layout_width="620px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -185,7 +185,7 @@
                         android:layout_marginTop="20px"
                         android:tag="mwar"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/surge_icon_bottom"/>
+                        android:src="@drawable/ic_surge_white"/>
 
                     <TextView
                         android:id="@+id/textViewTipValue"
@@ -213,17 +213,7 @@
 
             <ImageView
                 android:id="@+id/close"
-                android:layout_width="74px"
-                android:layout_height="74px"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20px"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:paddingBottom="20px"
-                android:paddingLeft="20px"
-                android:paddingRight="10px"
-                android:src="@drawable/close_icon_selector"
-                android:tag="mwar" />
+                style="@style/cross_popup" />
 
         </RelativeLayout>
 

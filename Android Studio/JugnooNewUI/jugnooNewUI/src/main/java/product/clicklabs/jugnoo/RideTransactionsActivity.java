@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -47,15 +48,19 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 		
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
-		imageViewBack.setOnClickListener(new OnClickListener() {
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
+		imageViewBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Back");
 				performBackPressed();
 			}
 		});
@@ -98,6 +103,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
+			FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Back");
 		} else {
 			super.onBackPressed();
 		}

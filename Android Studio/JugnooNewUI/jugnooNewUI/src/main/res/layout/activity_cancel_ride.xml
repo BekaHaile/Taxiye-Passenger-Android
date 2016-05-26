@@ -1,48 +1,35 @@
-<LinearLayout
+<RelativeLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    >
 
 
     <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@drawable/nl_background_theme_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="CANCEL RIDE"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            style="@style/title"/>
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            style="@style/back_image"/>
     </RelativeLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_below="@+id/topBar"
+        >
 
 
         <LinearLayout
@@ -59,17 +46,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="105px"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/sliding_bottom_bg_color"
+                android:background="@color/menu_item_selector_color"
                 android:gravity="center"
                 android:text="@string/i_want_to_cancel_my_ride_because"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/text_color_hint"
-                />
 
             <product.clicklabs.jugnoo.utils.NonScrollListView
                 android:id="@+id/listViewCancelOptions"
@@ -121,7 +102,7 @@
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="10px"
-                android:background="@drawable/edittext_background_white_yellow_border"
+                android:background="@drawable/background_white_rounded_bordered"
                 android:gravity="left"
                 android:hint="Please specify the reason"
                 android:maxLength="250"
@@ -182,4 +163,11 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topBar"
+        />
+
+</RelativeLayout>

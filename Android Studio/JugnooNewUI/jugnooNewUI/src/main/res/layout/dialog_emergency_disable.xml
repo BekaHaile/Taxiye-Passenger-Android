@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:splitMotionEvents="false">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="640px"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20px"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
+
+        <TextView
+            android:id="@+id/textHead"
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_menu_item_selector_tlrr"
+            android:gravity="center"
+            android:text="@string/everything_is_alright_caps"
+            android:textColor="@color/theme_green_color"
+            android:textSize="@dimen/text_size_42"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/stroke_color_light" />
+
+        <TextView
+            android:id="@+id/textMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="45px"
+            android:layout_marginTop="45px"
+            android:gravity="center"
+            android:paddingLeft="40px"
+            android:paddingRight="40px"
+            android:text="@string/you_have_disabled_jugnoo_emergency"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        style="@style/cross_popup" />
+
+</RelativeLayout>

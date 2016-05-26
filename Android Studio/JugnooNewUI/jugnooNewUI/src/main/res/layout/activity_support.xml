@@ -13,31 +13,19 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color"
+        android:background="@color/white"
         android:animateLayoutChanges="true"
         >
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="560px"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="SUPPORT"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size"
-            android:gravity="center"
+            style="@style/title"
             />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"/>
+            style="@style/back_image"/>
 
         <ImageView
             android:id="@+id/imageViewInvoice"

@@ -15,12 +15,13 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -78,33 +79,38 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		
-		textViewPromotion = (TextView) rootView.findViewById(R.id.textViewPromotion); textViewPromotion.setTypeface(Fonts.latoRegular(paymentActivity));
+		textViewPromotion = (TextView) rootView.findViewById(R.id.textViewPromotion); textViewPromotion.setTypeface(Fonts.mavenMedium(paymentActivity));
 
 		relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWallet);
-		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenLight(paymentActivity));
+		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewJugnooCashBalanceValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashBalanceValue);
 		textViewJugnooCashBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
-		textViewPaytmBalance = (TextView)rootView.findViewById(R.id.textViewPaytmBalance); textViewPaytmBalance.setTypeface(Fonts.mavenLight(paymentActivity));
+		textViewPaytmBalance = (TextView)rootView.findViewById(R.id.textViewPaytmBalance); textViewPaytmBalance.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewPaytmBalanceValue = (TextView) rootView.findViewById(R.id.textViewPaytmBalanceValue);
 		textViewPaytmBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 
 		relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
-		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenLight(paymentActivity));
+		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
 
 
 		textViewPromotion.setVisibility(View.GONE);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Back");
 				paymentActivity.finish();
 				paymentActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
@@ -123,6 +129,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
 					DialogPopup.alertPopupLeftOriented(paymentActivity, "", Data.userData.getJugnooCashTNC());
 					FlurryEventLogger.event(JUGNOO_CASH_CHECKED);
+					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Jugnoo Cash");
 				}
 			}
 		});
@@ -153,6 +160,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
 					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
+					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 				}
 			}
 		});
@@ -194,6 +202,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
 				FlurryEventLogger.event(RECENT_TRANSACTIONS);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "View Recent Transaction");
 			}
 		});
 

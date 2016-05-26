@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -116,12 +117,12 @@ public class EmergencyContactsFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewEdit = (TextView) rootView.findViewById(R.id.textViewEdit); textViewEdit.setTypeface(Fonts.mavenRegular(activity));
 
 		linearLayoutContactsList = (LinearLayout) rootView.findViewById(R.id.linearLayoutContactsList);
-		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewContacts)).setTypeface(Fonts.mavenMedium(activity));
 		recyclerViewContacts = (RecyclerView)rootView.findViewById(R.id.recyclerViewContacts);
 		recyclerViewContacts.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewContacts.setItemAnimator(new DefaultItemAnimator());
@@ -134,6 +135,8 @@ public class EmergencyContactsFragment extends Fragment {
 		textViewEdit.setVisibility(View.VISIBLE);
 		linearLayoutContactsList.setVisibility(View.VISIBLE);
 		linearLayoutNoContacts.setVisibility(View.GONE);
+
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 
 		buttonAddContact = (Button) rootView.findViewById(R.id.buttonAddContact);

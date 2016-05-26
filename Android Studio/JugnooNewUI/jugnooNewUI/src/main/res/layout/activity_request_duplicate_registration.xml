@@ -15,28 +15,17 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
             android:splitMotionEvents="false"
-            android:background="@drawable/nl_background_theme_color"
+            android:background="@color/white"
             >
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:text="@string/nl_signup_request_registration"
-                android:textColor="@color/white"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_size_34" />
+                style="@style/title" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                android:layout_width="80.7px"
-                android:layout_height="96.9px"
-                android:layout_marginLeft="5px"
-                android:padding="30px"
-                android:src="@drawable/back_white_selector"
-                android:tag="mwar" />
+                style="@style/back_image" />
         </RelativeLayout>
 
         <ImageView
@@ -170,7 +159,7 @@
                     android:layout_marginRight="30px"
                     android:layout_marginTop="40px"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/dropshadow_grey"
+                    android:background="@drawable/dropshadow_in_white"
                     android:gravity="left"
                     android:hint="@string/nl_signup_request_registration_you_have_already_format"
                     android:padding="25px"

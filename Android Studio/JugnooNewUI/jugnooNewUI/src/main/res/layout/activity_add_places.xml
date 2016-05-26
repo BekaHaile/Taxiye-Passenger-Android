@@ -15,26 +15,16 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color" >
+        android:background="@color/white" >
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="Edit Place"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size" />
+            style="@style/title" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector" />
+            style="@style/back_image"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -105,10 +95,10 @@
                 android:id="@+id/imageViewSearchCross"
                 android:layout_width="70px"
                 android:layout_height="70px"
-                android:padding="20px"
+                android:padding="16px"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5px"
-                android:src="@drawable/ic_cross_et"
+                android:src="@drawable/ic_cross_et_selector"
                 android:layout_alignParentRight="true"
                 android:tag="mwar"/>
             </LinearLayout>

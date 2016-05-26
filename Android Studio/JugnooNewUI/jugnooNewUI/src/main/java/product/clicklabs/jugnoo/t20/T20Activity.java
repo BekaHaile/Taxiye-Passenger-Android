@@ -2,11 +2,10 @@ package product.clicklabs.jugnoo.t20;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.t20.fragments.GamePredictWebViewFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -14,8 +13,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 
 
 public class T20Activity extends BaseFragmentActivity implements FlurryEventNames {
-
-	private RelativeLayout relative;
 
 	private LinearLayout linearLayoutContainer;
 
@@ -29,12 +26,10 @@ public class T20Activity extends BaseFragmentActivity implements FlurryEventName
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_t20);
-		
-		relative = (RelativeLayout) findViewById(R.id.relative);
-		new ASSL(this, relative, 1134, 720, false);
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
-		
+		new ASSL(this, linearLayoutContainer, 1134, 720, false);
+
 
 //		getSupportFragmentManager().beginTransaction()
 //				.add(linearLayoutContainer.getId(), new T20ScheduleFragment(),
@@ -90,7 +85,7 @@ public class T20Activity extends BaseFragmentActivity implements FlurryEventName
 
 	@Override
 	protected void onDestroy() {
-        ASSL.closeActivity(relative);
+        ASSL.closeActivity(linearLayoutContainer);
         System.gc();
 		super.onDestroy();
 	}

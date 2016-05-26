@@ -99,16 +99,20 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
         topBar = (RelativeLayout) findViewById(R.id.topBar);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         ratingBarFeedback = (RatingBar) findViewById(R.id.ratingBarFeedback);
         ratingBarFeedback.setRating(0);
         textViewRateText = (TextView) findViewById(R.id.textViewRateText);
-        textViewRateText.setTypeface(Fonts.latoRegular(this));
+        textViewRateText.setTypeface(Fonts.mavenMedium(this));
         textViewRateText.setText("");
 
-        textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.latoRegular(this));
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+
+        textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.mavenMedium(this));
         listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
 
         feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
@@ -124,17 +128,17 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
         listViewFeedbackReasons.setAdapter(feedbackReasonsAdapter);
 
         editTextFeedback = (EditText) findViewById(R.id.editTextFeedback);
-        editTextFeedback.setTypeface(Fonts.latoRegular(this));
+        editTextFeedback.setTypeface(Fonts.mavenMedium(this));
         buttonSubmitFeedback = (Button) findViewById(R.id.buttonSubmitFeedback);
         buttonSubmitFeedback.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutOtherError = (RelativeLayout) findViewById(R.id.relativeLayoutOtherError);
-        ((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.latoRegular(this));
+        ((TextView)findViewById(R.id.textViewOtherError)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutOtherError.setVisibility(View.GONE);
 
         relativeLayoutSkip = (RelativeLayout) findViewById(R.id.relativeLayoutSkip);
         textViewSkip = (TextView) findViewById(R.id.textViewSkip);
-        textViewSkip.setTypeface(Fonts.latoRegular(this));
+        textViewSkip.setTypeface(Fonts.mavenMedium(this));
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);

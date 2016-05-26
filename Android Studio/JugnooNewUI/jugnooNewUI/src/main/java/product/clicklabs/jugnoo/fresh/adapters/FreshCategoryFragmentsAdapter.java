@@ -70,11 +70,11 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 	}
 
 	@Override
-	public View getCustomTabView(int position) {
+	public View getCustomTabView(int position, boolean selected) {
 		View convertView = inflater.inflate(R.layout.tab_item_fresh_category, null);
 		ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
 		TextView textView = (TextView) convertView.findViewById(R.id.textView);
-		textView.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+		textView.setTypeface(Fonts.mavenRegular(context), selected ? Typeface.BOLD : Typeface.NORMAL);
 		textView.setText(categories.get(position).getCategoryName());
 		try{
 			Picasso.with(context).load(categories.get(position).getCategoryImage())

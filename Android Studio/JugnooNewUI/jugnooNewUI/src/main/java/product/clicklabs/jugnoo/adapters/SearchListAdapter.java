@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,8 +51,8 @@ public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress;
-        ImageView imageViewType;
-        LinearLayout relative;
+        ImageView imageViewType, imageViewSep;
+        RelativeLayout relative;
         int id;
     }
 
@@ -165,15 +165,16 @@ public class SearchListAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.list_item_search_item, null);
 
             holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
-            holder.textViewSearchName.setTypeface(Fonts.latoRegular(context));
+            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
-            holder.textViewSearchAddress.setTypeface(Fonts.latoRegular(context));
-            holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+            holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
+            holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
+            holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(ASSL.Yscale())*110));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 110));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -190,12 +191,25 @@ public class SearchListAdapter extends BaseAdapter{
 
             if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_HOME){
                 holder.imageViewType.setVisibility(View.VISIBLE);
-                holder.imageViewType.setImageResource(R.drawable.home);
+                holder.imageViewType.setImageResource(R.drawable.ic_home);
             } else if(autoCompleteSearchResults.get(position).name == SPLabels.ADD_WORK){
                 holder.imageViewType.setVisibility(View.VISIBLE);
-                holder.imageViewType.setImageResource(R.drawable.work);
+                holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
-                holder.imageViewType.setVisibility(View.GONE);
+                holder.imageViewType.setVisibility(View.VISIBLE);
+                holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+            }
+
+            if(autoCompleteSearchResults.get(position).address.equalsIgnoreCase("")){
+                holder.textViewSearchAddress.setVisibility(View.GONE);
+            }else {
+                holder.textViewSearchAddress.setVisibility(View.VISIBLE);
+            }
+
+            if(position == getCount()-1){
+                holder.imageViewSep.setVisibility(View.GONE);
+            } else{
+                holder.imageViewSep.setVisibility(View.VISIBLE);
             }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +259,6 @@ public class SearchListAdapter extends BaseAdapter{
     public void setShowSavedPlaces(boolean showSavedPlaces) {
         this.showSavedPlaces = showSavedPlaces;
     }
-
 
     private boolean refreshingAutoComplete = false;
 

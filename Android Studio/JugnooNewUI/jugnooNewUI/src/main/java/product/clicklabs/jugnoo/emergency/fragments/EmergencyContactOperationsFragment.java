@@ -26,8 +26,8 @@ import com.tokenautocomplete.FilteredArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyContactsList;
 import product.clicklabs.jugnoo.apis.ApiEmergencySendRideStatus;
@@ -38,8 +38,10 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -127,7 +129,7 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewSend = (TextView) rootView.findViewById(R.id.textViewSend); textViewSend.setTypeface(Fonts.mavenRegular(activity));
 
@@ -147,6 +149,8 @@ public class EmergencyContactOperationsFragment extends Fragment {
 		recyclerViewEmergencyContacts.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewEmergencyContacts.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewEmergencyContacts.setHasFixedSize(false);
+
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 		emergencyContactBeans = new ArrayList<>();
 		emergencyContactsListAdapter = new ContactsListAdapter(emergencyContactBeans, activity, R.layout.list_item_contact,
@@ -239,11 +243,17 @@ public class EmergencyContactOperationsFragment extends Fragment {
 				switch(v.getId()){
 
 					case R.id.imageViewBack:
+						if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
+							FlurryEventLogger.eventGA(Constants.HELP, "send ride status screen", "close");
+						}else{
+							FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "close");
+						}
 						performBackPressed();
 						break;
 
 					case R.id.textViewSend:
 						if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
+							FlurryEventLogger.eventGA(Constants.HELP, "send ride status screen", "send");
 							clickOnSend();
 						}
 						break;
@@ -303,7 +313,6 @@ public class EmergencyContactOperationsFragment extends Fragment {
 			textViewSend.setVisibility(View.GONE);
 			textViewTitle.setText(activity.getResources().getString(R.string.call_your_contacts));
 		}
-
 
 		return rootView;
 	}

@@ -82,9 +82,9 @@ public class FreshDeliverySlotsAdapter extends RecyclerView.Adapter<RecyclerView
                         + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime()));
                 if(activity.getSlotToSelect() == null
                         || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.radio_unselected_icon);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 } else{
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.radio_selected_icon);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 }
                 if(slot.isEnabled()){
                     ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(1.0f);

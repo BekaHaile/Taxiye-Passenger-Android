@@ -9,18 +9,18 @@
         android:id="@+id/topRl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@drawable/nl_background_theme_color"
+        android:background="@color/white"
         android:splitMotionEvents="false"
+        android:soundEffectsEnabled="false"
         >
 
         <ImageView
             android:id="@+id/imageViewMenu"
-            android:layout_width="83px"
+            android:layout_width="70px"
             android:layout_height="70px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/menu_icon_selector"
+            android:src="@drawable/ic_menu_selector"
             android:tag="mwar"/>
 
         <Button
@@ -30,29 +30,24 @@
             android:background="@drawable/background_transparent"
             android:layout_toRightOf="@+id/imageViewMenu"
             android:layout_marginLeft="50px"
+            android:soundEffectsEnabled="false"
             />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"
-            android:visibility="gone"
+            style="@style/back_image"
             />
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="540px"
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/app_name"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_40"/>
 
 
         <LinearLayout
@@ -60,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginRight="20px"
             android:orientation="horizontal"
             >
 
@@ -76,19 +71,19 @@
 
             <ImageView
                 android:id="@+id/imageViewAppToggle"
-                android:layout_width="78px"
-                android:layout_height="68px"
-                android:padding="15px"
-                android:src="@drawable/ic_auto_white"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:src="@drawable/ic_fatafat_selector"
                 android:layout_gravity="center_vertical"
                 android:tag="mwar"/>
 
             <ImageView
                 android:id="@+id/imageViewHelp"
-                android:layout_width="71px"
-                android:layout_height="71px"
-                android:layout_marginRight="10px"
-                android:src="@drawable/emergency_help_icon"
+                android:layout_width="77px"
+                android:layout_height="77px"
+                android:padding="5px"
+                android:layout_marginLeft="5px"
+                android:src="@drawable/ic_emergency_help_selector"
                 android:layout_gravity="center_vertical"
                 android:tag="mwar"/>
 
@@ -117,7 +112,7 @@
             android:padding="20px"
             android:text="@string/add"
             android:textAllCaps="true"
-            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_36"
             android:visibility="gone"
             />
@@ -127,7 +122,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="6px"
         android:layout_below="@+id/topRl"
         android:background="@drawable/shadow_down"
         />

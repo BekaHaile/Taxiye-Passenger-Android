@@ -20,7 +20,7 @@
     
     
      <style name="YellowRatingBarNew" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/rating_star_yellow_new_selector</item>
+        <item name="android:progressDrawable">@drawable/rating_star_theme_selector</item>
         <item name="android:minHeight">50dp</item>
         <item name="android:maxHeight">50dp</item>
     </style>
@@ -36,9 +36,19 @@
         <item name="@android:windowExitAnimation">@anim/fade_out</item>
     </style>
 
+    <style name="Animations.LoadingDialogScale">
+        <item name="@android:windowEnterAnimation">@anim/scale_in</item>
+        <item name="@android:windowExitAnimation">@anim/scale_out</item>
+    </style>
+
     <style name="Animations.TopInBottomOut">
         <item name="@android:windowEnterAnimation">@anim/top_in</item>
         <item name="@android:windowExitAnimation">@anim/top_out</item>
+    </style>
+
+    <style name="Animations.BottomInBottomOut">
+        <item name="@android:windowEnterAnimation">@anim/bottom_in</item>
+        <item name="@android:windowExitAnimation">@anim/bottom_out</item>
     </style>
 
     <style name="MyCustomTheme" parent="@android:style/Theme.Panel">
@@ -77,6 +87,52 @@
         <item name="android:background">@drawable/button_theme</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_size_38</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+
+    <style name="back_image">
+        <item name="android:layout_width">60.7px</item>
+        <item name="android:layout_height">76.9px</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">20px</item>
+        <item name="android:src">@drawable/ic_back_selector</item>
+        <item name="android:layout_marginLeft">10px</item>
+        <item name="android:tag">mwar</item>
+    </style>
+
+    <style name="forward_image">
+        <item name="android:layout_width">60.7px</item>
+        <item name="android:layout_height">76.9px</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">20px</item>
+        <item name="android:rotation">180</item>
+        <item name="android:src">@drawable/ic_back_selector</item>
+        <item name="android:tag">mwar</item>
+    </style>
+
+
+    <style name="cross_popup">
+        <item name="android:layout_width">73px</item>
+        <item name="android:layout_height">73px</item>
+        <item name="android:layout_alignRight">@+id/linearLayoutInner</item>
+        <item name="android:layout_alignTop">@+id/linearLayoutInner</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:src">@drawable/ic_cross_popup_selector</item>
+        <item name="android:tag">mwar</item>
+        <item name="android:paddingLeft">10px</item>
+        <item name="android:paddingBottom">10px</item>
+        <item name="android:layout_marginRight">-20px</item>
+        <item name="android:layout_marginTop">-20px</item>
+    </style>
+
+    <style name="title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textSize">@dimen/top_bar_title_text_size</item>
         <item name="android:textAllCaps">true</item>
     </style>
 

@@ -11,10 +11,10 @@
 
     <dimen name="top_bar_height">96px</dimen>
 
-    <dimen name="top_bar_title_text_size">34px</dimen>
+    <dimen name="top_bar_title_text_size">40px</dimen>
 
 
-    <dimen name="button_corner_radius">5dp</dimen>
+    <dimen name="button_corner_radius">3dp</dimen>
     <dimen name="button_corner_radius_more">7dp</dimen>
     <dimen name="wallet_button_corner_radius">2dp</dimen>
     <dimen name="image_bg_corner_radius">5dp</dimen>
@@ -142,8 +142,8 @@
 
     <!-- NL dimensions-->
     <dimen name="button_stroke_width">1dp</dimen>
-    <dimen name="nl_sliding_bottom_with_tabs">390px</dimen>
-    <dimen name="nl_sliding_bottom_without_tabs">272px</dimen>
+    <dimen name="nl_sliding_bottom_with_tabs">394px</dimen>
+    <dimen name="nl_sliding_bottom_without_tabs">276px</dimen>
     <dimen name="nl_button_size">87px</dimen>
 
     <!-- NL splash screen-->
@@ -156,6 +156,14 @@
     <dimen name="menu_text_margin_left">121px</dimen>
 
     <item name="radius" format="float" type="dimen">326</item>
+
+    <dimen name="dropshadow_width">0.5dp</dimen>
+    <dimen name="dropshadow_width_minus">0.5dp</dimen>
+
+    <dimen name="marker_eta_text_size">24px</dimen>
+    <dimen name="map_padding_assigning">112px</dimen>
+    <dimen name="map_padding_request_final">197px</dimen>
+    <dimen name="map_padding_request_final_extra">70px</dimen>
 
 
 </resources>

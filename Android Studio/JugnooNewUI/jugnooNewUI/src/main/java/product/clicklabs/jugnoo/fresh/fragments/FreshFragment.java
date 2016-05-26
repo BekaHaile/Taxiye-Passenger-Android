@@ -104,6 +104,7 @@ public class FreshFragment extends Fragment {
 			@Override
 			public void onPageSelected(int position) {
 				try {
+					tabs.notifyTabs();
 					if(activity.getProductsResponse() != null
 							&& activity.getProductsResponse().getCategories() != null){
 						NudgeClient.trackEventUserId(activity,

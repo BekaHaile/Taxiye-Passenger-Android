@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonAddPromoCode"
+            style="@style/ButtonTheme"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="84px"
+            android:layout_marginTop="84px"
+            android:imeOptions="actionDone"
+            android:text="@string/add_promo_code"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutPromocode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutInner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="52px"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editTextPromoCode"
+                    android:layout_width="400px"
+                    android:layout_height="80px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="36px"
+                    android:background="#0000"
+                    android:capitalize="characters"
+                    android:digits="@string/digits_characters_caps_numbers"
+                    android:gravity="center"
+                    android:hint="@string/enter_promo_code"
+                    android:inputType="textCapCharacters"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black_text"
+                    android:textColorHint="@color/black_text_alpha"
+                    android:textSize="30px" />
+
+                <ImageView
+                    android:layout_width="400px"
+                    android:layout_height="2px"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@color/theme_color" />
+
+                <Button
+                    android:id="@+id/buttonApplyPromo"
+                    style="@style/ButtonTheme"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="36px"
+                    android:layout_marginTop="50px"
+                    android:imeOptions="actionDone"
+                    android:text="@string/apply" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageViewClose"
+                style="@style/cross_popup"
+                android:focusable="false"
+                android:visibility="gone"
+                android:focusableInTouchMode="false"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutListTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20px">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="20px"
+            android:layout_toLeftOf="@+id/textViewOffersAvailable"
+            android:src="@color/stroke_color_light" />
+
+        <TextView
+            android:id="@+id/textViewOffersAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/offers_available"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="40px"
+            android:layout_toRightOf="@+id/textViewOffersAvailable"
+            android:src="@color/stroke_color_light" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewOffers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40px"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNoOffers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="120px"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="241px"
+            android:layout_height="342px"
+            android:src="@drawable/ic_no_items"
+            android:tag="mwar" />
+
+        <TextView
+            android:id="@+id/textViewNoOffers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20px"
+            android:text="@string/no_offers_currently"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_26" />
+
+    </LinearLayout>
+
+</LinearLayout>

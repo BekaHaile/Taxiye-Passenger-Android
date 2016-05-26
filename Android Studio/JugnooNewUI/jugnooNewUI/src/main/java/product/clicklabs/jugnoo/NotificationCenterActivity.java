@@ -57,7 +57,7 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         new ASSL(this, root, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -79,6 +79,9 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         });
         recyclerViewNotification.setAdapter(myNotificationAdapter);
 
+        textViewTitle.measure(0, 0);
+        int mWidth = textViewTitle.getMeasuredWidth();
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override

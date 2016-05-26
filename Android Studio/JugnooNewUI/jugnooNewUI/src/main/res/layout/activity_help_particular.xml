@@ -13,26 +13,16 @@
         android:layout_height="@dimen/top_bar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nl_background_theme_color" >
+        android:background="@color/white" >
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="HELP"
-            android:textColor="@color/white"
-            android:textSize="@dimen/top_bar_title_text_size" />
+            style="@style/title" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector" />
+            style="@style/back_image" />
     </RelativeLayout>
 
     <ImageView
@@ -64,13 +54,12 @@
             android:textColor="@color/black"
             android:textSize="@dimen/button_text_size" />
 
-        <ImageView
+        <ProgressBar
             android:id="@+id/imageViewJugnooAnimation"
-            android:layout_width="@dimen/jugnoo_anim_loading_width"
-            android:layout_height="@dimen/jugnoo_anim_loading_height"
-            android:layout_centerInParent="true"
-            android:background="@drawable/anim"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
 </LinearLayout>

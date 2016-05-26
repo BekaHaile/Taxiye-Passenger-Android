@@ -84,6 +84,7 @@
     <color name="red_alpha">#99F23A30</color>
     <color name="red_dark">#EA452F</color>
     <color name="red_dark_alpha">#99EA452F</color>
+    <color name="green">#57B943</color>
     
     
     
@@ -147,16 +148,19 @@
  <color name="white_20">#33FFFFFF</color>
 
  <!-- NEW LOOK COLORS -->
- <color name="theme_color">#FE8C5C</color>
- <color name="theme_color_pressed">#99fd8e59</color>
+ <color name="theme_color">#FD7945</color>
+    <color name="theme_color_start">#FC644F</color>
+    <color name="theme_color_end">#FF9339</color>
+ <color name="theme_color_pressed">#99F17B47</color>
+    <color name="theme_color_alpha">#99FD7945</color>
  <color name="jeanie_color">#FD9244</color>
     <color name="text_color_dark">#494958</color>
  <color name="text_color">#595968</color>
-    <color name="theme_green_color">#83CF49</color>
+    <color name="theme_green_color">#5DC647</color>
     <color name="theme_red_color">#F54646</color>
- <color name="text_color_light">#9D9D9D</color>
+ <color name="text_color_light">#A4A4A4</color>
  <color name="white_alpha_33">#33FFFFFF</color>
- <color name="sliding_bottom_bg_color">#F7F7F7</color>
+ <color name="sliding_bottom_bg_color">#F2F2F2</color>
  <color name="text_color_hint">#BCBCBC</color>
  <color name="nl_white_dark">#E0E0E0</color>
  <color name="menu_item_selector_color">#EEEEEE</color>
@@ -173,6 +177,12 @@
     <color name="rank_5">#D7D7D7</color>
     <color name="rank_6">#CBCBCB</color>
 
+    <color name="stroke_color_light">#CDCDCD</color>
+    <color name="stroke_color_dark">#858585</color>
+
+    <color name="view_account_text_color">#A5A5A5</color>
+    <color name="view_account_stroke_color">#B4B4B4</color>
+    <color name="view_account_name_color">#FF8162</color>
 
 
 

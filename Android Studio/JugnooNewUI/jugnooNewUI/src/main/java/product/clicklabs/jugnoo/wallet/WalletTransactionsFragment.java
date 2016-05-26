@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.wallet;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,12 +25,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.TransactionType;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -62,6 +61,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TransactionListAdapter transactionListAdapter;
 	RelativeLayout relativeLayoutShowMore;
 	TextView textViewShowMore;
+
+	LinearLayout linearLayoutNoItems;
 	
 	public double jugnooBalance = 0;
 	public int totalTransactions = 0, pageSize = 0;
@@ -103,7 +104,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		
 		
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 
 		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
 
@@ -112,14 +113,22 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
         ASSL.DoMagic(viewF);
 		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
-		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.latoLight(paymentActivity), Typeface.BOLD);
+		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.mavenRegular(paymentActivity));
 		relativeLayoutShowMore.setVisibility(View.GONE);
+
+		linearLayoutNoItems = (LinearLayout) rootView.findViewById(R.id.linearLayoutNoItems);
+		((TextView)rootView.findViewById(R.id.textViewNoItems)).setTypeface(Fonts.mavenRegular(paymentActivity));
+		linearLayoutNoItems.setVisibility(View.GONE);
 		
 		transactionListAdapter = new TransactionListAdapter(paymentActivity);
 		listViewTransactions.setAdapter(transactionListAdapter);
 
 		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
 		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -185,12 +194,15 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			transactionInfoList.clear();
 			transactionListAdapter.notifyDataSetChanged();
 			relativeLayoutShowMore.setVisibility(View.GONE);
+			linearLayoutNoItems.setVisibility(View.GONE);
 		}
 		else{
 			if(transactionInfoList.size() == 0){
+				linearLayoutNoItems.setVisibility(View.VISIBLE);
 				relativeLayoutShowMore.setVisibility(View.GONE);
 			}
 			else{
+				linearLayoutNoItems.setVisibility(View.GONE);
 				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
 			transactionListAdapter.notifyDataSetChanged();
@@ -234,11 +246,11 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				holder = new ViewHolderTransaction();
 				convertView = mInflater.inflate(R.layout.list_item_trans_naw, null);
 				
-				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenLight(context));
-				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenLight(context));
+				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenRegular(context));
+				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenRegular(context));
 				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 				
 				holder.relative.setTag(holder);

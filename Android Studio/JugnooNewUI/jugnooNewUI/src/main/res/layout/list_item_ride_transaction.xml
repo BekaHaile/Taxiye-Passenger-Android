@@ -182,13 +182,10 @@
             android:textSize="@dimen/text_size_28"/>
 
         <ImageView
-            android:layout_width="13px"
-            android:layout_height="26px"
+            style="@style/forward_image"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="40px"
-            android:src="@drawable/arrow_icon_selector"
-            android:tag="mwar"/>
+            android:layout_marginRight="20px"
+            />
 
     </RelativeLayout>
 
@@ -214,13 +211,9 @@
             android:tag="mwar"/>
 
         <ImageView
-            android:layout_width="13px"
-            android:layout_height="26px"
-            android:layout_gravity="center_vertical"
             android:layout_marginLeft="20px"
-            android:layout_marginRight="0px"
-            android:src="@drawable/arrow_icon_selector"
-            android:tag="mwar"/>
+            style="@style/forward_image"
+            />
 
 
     </LinearLayout>

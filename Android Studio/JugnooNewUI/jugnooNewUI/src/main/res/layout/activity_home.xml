@@ -29,7 +29,7 @@
                 <RelativeLayout
                     android:id="@+id/mapLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/screen_height"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
                     android:splitMotionEvents="false"
                     android:visibility="visible">
@@ -51,70 +51,7 @@
                     android:visibility="visible">
 
                     <!-- centre pin layout -->
-                    <RelativeLayout
-                        android:id="@+id/centreLocationRl"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:splitMotionEvents="false"
-                        android:visibility="gone">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_above="@+id/imageViewCenterPinMargin"
-                            android:splitMotionEvents="false">
-
-                            <RelativeLayout
-                                android:id="@+id/relativeLayoutCentrePin"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_above="@+id/centreLocationPivot"
-                                android:layout_centerHorizontal="true">
-
-                                <ImageView
-                                    android:id="@+id/centreLocationPin"
-                                    android:layout_width="77px"
-                                    android:layout_height="130px"
-                                    android:background="@drawable/ic_centre_pin_big"
-                                    android:tag="mwar" />
-
-                                <TextView
-                                    android:id="@+id/textViewCentrePinETA"
-                                    android:layout_width="77px"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8px"
-                                    android:gravity="center"
-                                    android:text="-"
-                                    android:textColor="@color/white"
-                                    android:textSize="28px" />
-
-                                <TextView
-                                    android:id="@+id/textViewCentrePinETAMin"
-                                    android:layout_width="77px"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/textViewCentrePinETA"
-                                    android:layout_marginTop="-6px"
-                                    android:gravity="center"
-                                    android:text="MIN"
-                                    android:textColor="@color/white"
-                                    android:textSize="22px" />
-
-                            </RelativeLayout>
-
-                            <ImageView
-                                android:id="@+id/centreLocationPivot"
-                                android:layout_width="1px"
-                                android:layout_height="1px"
-                                android:layout_centerInParent="true" />
-                        </RelativeLayout>
-
-                        <ImageView
-                            android:id="@+id/imageViewCenterPinMargin"
-                            android:layout_width="match_parent"
-                            android:layout_height="0px"
-                            android:layout_alignParentBottom="true" />
-
-                    </RelativeLayout>
+                    <include layout="@layout/layout_centre_pickup_pin" />
 
                     <!-- initial layout -->
                     <include layout="@layout/layout_home_activity_initial" />
@@ -132,7 +69,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
-                    android:visibility="gone"/>
+                    android:visibility="visible"
+                    android:soundEffectsEnabled="false"
+                    android:layout_marginBottom="217px"
+                    />
+
+
 
             </RelativeLayout>
 
@@ -140,80 +82,20 @@
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
+        <ImageView
+            android:id="@+id/imageViewSurgeOverSlidingBottom"
+            android:layout_width="40px"
+            android:layout_height="40px"
+            android:tag="mwar"
+            android:src="@drawable/ic_surge_grey_white_bg"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="92px"
+            android:visibility="gone"
+            />
+
         <!-- Location error -->
-        <RelativeLayout
-            android:id="@+id/relativeLayoutLocationError"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/top_bar_height"
-            android:background="@color/black_translucent_less"
-            android:visibility="gone">
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutLocationErrorSearchBar"
-                android:layout_width="match_parent"
-                android:layout_height="100px"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/white"
-                android:splitMotionEvents="false">
-
-                <ImageView
-                    android:id="@+id/imageViewLocationErrorSearchGPSIcon"
-                    android:layout_width="33px"
-                    android:layout_height="33px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/search_icon"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewLocationErrorSearch"
-                    android:layout_width="580px"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
-                    android:background="@color/transparent"
-                    android:hint="@string/set_pickup_location"
-                    android:singleLine="true"
-                    android:textColor="@color/black_text"
-                    android:textSize="30px" />
-
-            </RelativeLayout>
-
-
-            <ImageView
-                android:id="@+id/imageViewLocationErrorArrow"
-                android:layout_width="39px"
-                android:layout_height="230px"
-                android:layout_below="@+id/relativeLayoutLocationErrorSearchBar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="37px"
-                android:src="@drawable/curly_arrow"
-                android:tag="mwar" />
-
-            <ImageView
-                android:id="@+id/imageViewLocationErrorText"
-                android:layout_width="375px"
-                android:layout_height="146px"
-                android:layout_below="@+id/imageViewLocationErrorArrow"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="47px"
-                android:src="@drawable/mark_location_text"
-                android:tag="mwar" />
-
-
-            <ImageView
-                android:id="@+id/imageViewLocationError"
-                android:layout_width="110px"
-                android:layout_height="140px"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="150px"
-                android:src="@drawable/location_error_icon"
-                android:tag="mwar" />
-
-        </RelativeLayout>
+        <include layout="@layout/layout_location_error" />
 
         <!-- assigning layout -->
         <include layout="@layout/layout_home_activity_assigning" />
@@ -222,17 +104,7 @@
         <include layout="@layout/layout_home_activity_request_final" />
 
         <!-- end ride layout -->
-        <RelativeLayout
-            android:id="@+id/endRideReviewRl"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/top_bar_height"
-            android:splitMotionEvents="false"
-            android:visibility="gone">
-
-            <include layout="@layout/layout_ride_summary_new"></include>
-
-        </RelativeLayout>
+        <include layout="@layout/layout_ride_summary_new"/>
 
         <!-- search layout -->
         <RelativeLayout
@@ -252,14 +124,14 @@
             android:layout_width="match_parent"
             android:layout_height="350px"
             android:layout_alignParentBottom="true"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/buttonChangeLocalityMyLocation"
-                android:layout_width="83px"
-                android:layout_height="83px"
+                android:layout_width="121px"
+                android:layout_height="117px"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="92px"
+                android:layout_marginRight="60px"
                 android:background="@drawable/mylocation_btn_selector"
                 android:tag="mwar" />
 
@@ -294,74 +166,75 @@
 
         </RelativeLayout>
 
-
+        <!--Campaign Layout-->
         <RelativeLayout
             android:id="@+id/relativeLayoutInAppCampaignRequest"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:splitMotionEvents="false"
             android:layout_marginTop="@dimen/top_bar_height"
-            >
+            android:splitMotionEvents="false"
+            android:visibility="gone">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="224px"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:splitMotionEvents="false">
-
-            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/progressBarInAppCampaignRequest"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="10px"
-                android:layout_alignParentTop="true"
-                android:indeterminate="true"
-                android:paddingBottom="0px"
-                android:paddingTop="0px"
-                app:spb_colors="@array/gplus_colors"
-                app:spb_generate_background_with_colors="false"
-                app:spb_mirror_mode="true"
-                app:spb_progressiveStart_activated="true"
-                app:spb_progressiveStart_speed="1.5"
-                app:spb_progressiveStop_speed="3.4"
-                app:spb_reversed="true"
-                app:spb_sections_count="1"
-                app:spb_speed="2.2"
-                app:spb_stroke_separator_length="8px"
-                app:spb_stroke_width="10px" />
+                android:layout_height="224px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:splitMotionEvents="false"
+                >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="vertical">
+                <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+                    android:id="@+id/progressBarInAppCampaignRequest"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="10px"
+                    android:layout_alignParentTop="true"
+                    android:indeterminate="true"
+                    android:paddingBottom="0px"
+                    android:paddingTop="0px"
+                    app:spb_colors="@array/gplus_colors"
+                    app:spb_generate_background_with_colors="false"
+                    app:spb_mirror_mode="true"
+                    app:spb_progressiveStart_activated="true"
+                    app:spb_progressiveStart_speed="1.5"
+                    app:spb_progressiveStop_speed="3.4"
+                    app:spb_reversed="true"
+                    app:spb_sections_count="1"
+                    app:spb_speed="2.2"
+                    app:spb_stroke_separator_length="8px"
+                    app:spb_stroke_width="10px"/>
 
-                <TextView
-                    android:id="@+id/textViewInAppCampaignRequest"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="Finding a Jugnoo driver..."
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34" />
-
-
-                <Button
-                    android:id="@+id/buttonCancelInAppCampaignRequest"
-                    style="@style/ButtonTheme"
                     android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20px"
-                    android:text="@string/cancel" />
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/textViewInAppCampaignRequest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20px"
+                        android:layout_marginRight="20px"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="Finding a Jugnoo driver..."
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"/>
 
-        </RelativeLayout>
+
+                    <Button
+                        android:id="@+id/buttonCancelInAppCampaignRequest"
+                        style="@style/ButtonTheme"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20px"
+                        android:text="@string/cancel"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

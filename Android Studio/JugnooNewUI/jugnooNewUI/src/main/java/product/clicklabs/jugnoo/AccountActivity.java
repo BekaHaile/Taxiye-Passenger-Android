@@ -7,14 +7,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,9 +36,7 @@ import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
-import product.clicklabs.jugnoo.datastructure.EmailVerificationStatus;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.ProfileUpdateMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
@@ -63,123 +62,127 @@ import retrofit.mime.TypedByteArray;
 
 public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
-    private final String TAG = AccountActivity.class.getSimpleName();
+    private final String TAG = "View Account";
 
-	RelativeLayout relative;
+	LinearLayout relative;
 
-    RelativeLayout topBar;
-	TextView textViewTitle;
+	private TextView textViewAbout, textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
-
-	ImageView imageViewUserImageBlur, imageViewProfileImage;
 
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
 
+    ImageView imageViewProfileImage;
 	EditText editTextUserName, editTextEmail, editTextPhone;
-	ImageView imageViewEditName, imageViewEditEmail, imageViewEditPhoneNo, imageViewJugnooJeanie;
-	ImageView imageViewEmailVerifyStatus, imageViewEditHome, imageViewEditWork;
-	RelativeLayout relativeLayoutEmailVerify;
-	TextView textViewEmailVerifyMessage, textViewEmailVerify;
-	RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact, relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
-	TextView textViewChangePassword, textViewEmergencyContact, textViewAddHome, textViewAddWork, textViewJugnooJeanie;
+    LinearLayout linearLayoutPhone;
+    ImageView imageViewEditProfile;
+
+    RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
+    TextView textViewEmergencyContact;
+    LinearLayout linearLayoutPasswordChange;
+    RelativeLayout relativeLayoutOldPassword, relativeLayoutNewPassword, relativeLayoutRetypePassword;
+    EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
+    ImageView imageViewChangePassword, imaveViewOldPasswordVisibility, imaveViewNewPasswordVisibility, imaveViewRetypePasswordVisibility;
+
+    LinearLayout linearLayoutLogout;
+
+	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie;
+	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
+	TextView textViewAddHome, textViewAddWork, textViewJugnooJeanie;
+    private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
+
     private boolean setJeanieState;
     public static final int ADD_HOME = 2, ADD_WORK = 3;
-	Button buttonLogout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
 
-		relative = (RelativeLayout) findViewById(R.id.relative);
+		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+        textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Fonts.mavenMedium(this));
+        textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-
-		imageViewUserImageBlur = (ImageView) findViewById(R.id.imageViewUserImageBlur);
-		imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
-		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenLight(this));
-		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenLight(this));
-		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenLight(this));
+        imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
 
-        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenLight(this));
-        ((TextView)findViewById(R.id.textViewInfo)).setTypeface(Fonts.mavenRegular(this));
+		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenMedium(this));
+		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenMedium(this));
+		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenMedium(this));
+        linearLayoutPhone = (LinearLayout) findViewById(R.id.linearLayoutPhone);
+        imageViewEditProfile = (ImageView) findViewById(R.id.imageViewEditProfile);
+        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenMedium(this));
+        linearLayoutSave = (LinearLayout)findViewById(R.id.linearLayoutSave);
+        textViewPasswordSave = (TextView) findViewById(R.id.textViewPasswordSave); textViewPasswordSave.setTypeface(Fonts.mavenMedium(this));
+        linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
 
-		imageViewEditName = (ImageView) findViewById(R.id.imageViewEditName);
-		imageViewEditEmail = (ImageView) findViewById(R.id.imageViewEditEmail);
-		imageViewEditPhoneNo = (ImageView) findViewById(R.id.imageViewEditPhoneNo);
-        imageViewJugnooJeanie = (ImageView)findViewById(R.id.imageViewJugnooJeanie);
-
-
-		imageViewEmailVerifyStatus = (ImageView) findViewById(R.id.imageViewEmailVerifyStatus);
-		relativeLayoutEmailVerify = (RelativeLayout) findViewById(R.id.relativeLayoutEmailVerify);
-		textViewEmailVerifyMessage = (TextView) findViewById(R.id.textViewEmailVerifyMessage); textViewEmailVerifyMessage.setTypeface(Fonts.mavenLight(this));
-		textViewEmailVerify = (TextView) findViewById(R.id.textViewEmailVerify); textViewEmailVerify.setTypeface(Fonts.mavenLight(this));
-
-		relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
-		textViewChangePassword = (TextView) findViewById(R.id.textViewChangePassword); textViewChangePassword.setTypeface(Fonts.mavenLight(this));
-
+        relativeLayoutChangePassword = (RelativeLayout) findViewById(R.id.relativeLayoutChangePassword);
+        ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
-        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenLight(this));
+        textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenMedium(this));
+        linearLayoutPasswordChange = (LinearLayout) findViewById(R.id.linearLayoutPasswordChange);
+        imageViewChangePassword = (ImageView) findViewById(R.id.imageViewChangePassword);
+        relativeLayoutOldPassword = (RelativeLayout) findViewById(R.id.relativeLayoutOldPassword);
+        relativeLayoutNewPassword = (RelativeLayout) findViewById(R.id.relativeLayoutNewPassword);
+        relativeLayoutRetypePassword = (RelativeLayout) findViewById(R.id.relativeLayoutRetypePassword);
+        editTextOldPassword = (EditText) findViewById(R.id.editTextOldPassword); editTextOldPassword.setTypeface(Fonts.mavenMedium(this));
+        editTextNewPassword = (EditText) findViewById(R.id.editTextNewPassword); editTextNewPassword.setTypeface(Fonts.mavenMedium(this));
+        editTextRetypePassword = (EditText) findViewById(R.id.editTextRetypePassword); editTextRetypePassword.setTypeface(Fonts.mavenMedium(this));
+        imaveViewOldPasswordVisibility = (ImageView) findViewById(R.id.imaveViewOldPasswordVisibility);
+        imaveViewNewPasswordVisibility = (ImageView) findViewById(R.id.imaveViewNewPasswordVisibility);
+        imaveViewRetypePasswordVisibility = (ImageView) findViewById(R.id.imaveViewRetypePasswordVisibility);
+        linearLayoutPasswordChange.setVisibility(View.GONE);
+        //imageViewChangePassword.setRotation(270f);
+
+
+
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
         imageViewEditHome = (ImageView)findViewById(R.id.imageViewEditHome);
-		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenLight(this));
+		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutAddWork = (RelativeLayout) findViewById(R.id.relativeLayoutAddWork);
         imageViewEditWork = (ImageView)findViewById(R.id.imageViewEditWork);
-        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenLight(this));
-		//relativeLayoutAddFav.setVisibility(View.GONE);
+        textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
-        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.mavenLight(this));
+        textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.mavenMedium(this));
+        imageViewJugnooJeanie = (ImageView)findViewById(R.id.imageViewJugnooJeanie);
         relativeLayoutJugnooJeanie.setVisibility(View.GONE);
         if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
             relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
         }
 
-        topBar = (RelativeLayout) findViewById(R.id.topBar);
+        linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayoutLogout);
+        ((TextView)findViewById(R.id.textViewLogout)).setTypeface(Fonts.mavenMedium(this));
 
-
-
-		buttonLogout = (Button) findViewById(R.id.buttonLogout); buttonLogout.setTypeface(Fonts.mavenRegular(this));
-
-
-
-		setUserData(false);
+        setUserData();
         setSavePlaces();
-
-
-        linearLayoutMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dissmissEmailVerify();
-            }
-        });
-
-        topBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                linearLayoutMain.performClick();
-            }
-        });
-
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
                 performBackPressed();
-                dissmissEmailVerify();
             }
         });
+
+        textViewAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, AboutActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+            }
+        });
+
 
 
 
@@ -187,251 +190,261 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             @Override
             public void onClick(View v) {
                 if (isAccessibilitySettingsOn(getApplicationContext())) {
-                    if(Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false){
+                    if (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false) {
                         Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
                         imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-                    }else{
+                    } else {
                         Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
                         imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
                     }
-                }
-                else{
+                } else {
                     startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                     setJeanieState = true;
                 }
             }
         });
 
-
-        editTextUserName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                linearLayoutMain.performClick();
-            }
-        });
-        editTextPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                linearLayoutMain.performClick();
-            }
-        });
-
 		editTextUserName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextUserName.getTop());
+                if (v instanceof EditText) {
+                    ((EditText) v).setError(null);
                 }
-                editTextUserName.setError(null);
             }
         });
-
 		editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(hasFocus){
-					scrollView.smoothScrollTo(0, editTextEmail.getTop());
-				}
-				editTextEmail.setError(null);
-			}
-		});
-
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (v instanceof EditText) {
+                    ((EditText) v).setError(null);
+                }
+            }
+        });
 		editTextPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (v instanceof EditText) {
+                    ((EditText) v).setError(null);
+                }
+            }
+        });
 
+        imageViewEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayoutSave.performClick();
+            }
+        });
+
+        linearLayoutSave.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    editTextUserName.setError(null);
+                    editTextEmail.setError(null);
+                    editTextPhone.setError(null);
+                    if (editTextUserName.isEnabled()) {
+                        String nameChanged = editTextUserName.getText().toString().trim().toUpperCase();
+                        String emailChanged = editTextEmail.getText().toString().trim();
+                        String phoneNoChanged = editTextPhone.getText().toString().trim();
+                        phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
+                        if ("".equalsIgnoreCase(nameChanged)) {
+                            editTextUserName.requestFocus();
+                            editTextUserName.setError(getResources().getString(R.string.username_empty_error));
+                        } else if ("".equalsIgnoreCase(emailChanged)) {
+                            editTextEmail.requestFocus();
+                            editTextEmail.setError(getResources().getString(R.string.email_empty_error));
+                        } else if ("".equalsIgnoreCase(phoneNoChanged)) {
+                            editTextPhone.requestFocus();
+                            editTextPhone.setError(getResources().getString(R.string.phone_empty_error));
+                        } else if (!Utils.validPhoneNumber(phoneNoChanged)) {
+                            editTextPhone.requestFocus();
+                            editTextPhone.setError(getResources().getString(R.string.invalid_phone_error));
+                        } else if (Data.userData.userName.equalsIgnoreCase(nameChanged)
+                                && Data.userData.userEmail.equalsIgnoreCase(emailChanged)
+                                && Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
+                            editTextUserName.requestFocus();
+                            editTextUserName.setError(getResources().getString(R.string.nothing_changed));
+                        } else {
+                            updateUserProfileAPI(AccountActivity.this, nameChanged, emailChanged, "+91" + phoneNoChanged,
+                                    !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "edit phone number");
+                        }
+                    } else {
+                        editTextUserName.requestFocus();
+                        editTextUserName.setSelection(editTextUserName.getText().length());
+                        editTextUserName.setEnabled(true);
+                        editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        editTextEmail.setEnabled(true);
+                        editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        editTextPhone.setEnabled(true);
+                        linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
+                        imageViewEditProfile.setVisibility(View.GONE);
+                        linearLayoutSave.setVisibility(View.VISIBLE);
+                        Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextEmail.setSelection(editTextEmail.getText().length());
+                editTextEmail.requestFocus();
+                return true;
+            }
+        });
+
+        editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextPhone.setSelection(editTextPhone.getText().length());
+                editTextPhone.requestFocus();
+                return true;
+            }
+        });
+        editTextPhone.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                imageViewEditProfile.performClick();
+                return true;
+            }
+        });
+
+        imageViewChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutChangePassword.performClick();
+            }
+        });
+
+
+        relativeLayoutChangePassword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                long delay = 0;
+                if(scrollView.getScrollY() != 0){
+                    scrollView.smoothScrollTo(0, 0);
+                    delay = 200;
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (linearLayoutPasswordChange.getVisibility() == View.GONE) {
+                            linearLayoutPasswordChange.setVisibility(View.VISIBLE);
+                            linearLayoutPasswordSave.setVisibility(View.VISIBLE);
+                            imageViewChangePassword.setVisibility(View.GONE);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
+                        } else {
+                            linearLayoutPasswordChange.setVisibility(View.GONE);
+                            imageViewChangePassword.setVisibility(View.VISIBLE);
+                            linearLayoutPasswordSave.setVisibility(View.GONE);
+                        }
+                    }
+                }, delay);
+            }
+        });
+
+        linearLayoutPasswordSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String oldPassword = editTextOldPassword.getText().toString().trim();
+                String newPassword = editTextNewPassword.getText().toString().trim();
+                String retypeNewPassword = editTextRetypePassword.getText().toString().trim();
+                if ("".equalsIgnoreCase(oldPassword)) {
+                    editTextOldPassword.requestFocus();
+                    editTextOldPassword.setError(getResources().getString(R.string.old_password_empty_error));
+                } else if ("".equalsIgnoreCase(newPassword)) {
+                    editTextNewPassword.requestFocus();
+                    editTextNewPassword.setError(getResources().getString(R.string.new_password_empty_error));
+                } else if ("".equalsIgnoreCase(retypeNewPassword)) {
+                    editTextRetypePassword.requestFocus();
+                    editTextRetypePassword.setError(getResources().getString(R.string.retype_password_empty_error));
+                } else if (!newPassword.equalsIgnoreCase(retypeNewPassword)) {
+                    editTextRetypePassword.requestFocus();
+                    editTextRetypePassword.setError(getResources().getString(R.string.retype_password_different_error));
+                } else if (newPassword.equalsIgnoreCase(oldPassword)) {
+                    editTextNewPassword.requestFocus();
+                    editTextNewPassword.setError(getResources().getString(R.string.new_password_same_error));
+                } else if (newPassword.length() < 6) {
+                    editTextNewPassword.requestFocus();
+                    editTextNewPassword.setError(String.format(
+                            getResources().getString(R.string.new_password_length_error_format), 6));
+                } else {
+                    updateUserProfileChangePasswordAPI(AccountActivity.this, oldPassword, newPassword);
+                }
+            }
+        });
+
+        editTextOldPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextNewPassword.requestFocus();
+                return true;
+            }
+        });
+
+        editTextNewPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextRetypePassword.requestFocus();
+                return true;
+            }
+        });
+        editTextRetypePassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                linearLayoutPasswordSave.performClick();
+                return true;
+            }
+        });
+
+        editTextOldPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    scrollView.smoothScrollTo(0, editTextPhone.getTop());
+                    scrollView.smoothScrollTo(0, relativeLayoutChangePassword.getTop());
                 }
-                editTextPhone.setError(null);
-            }
-        });
-
-
-		imageViewEditName.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                editTextUserName.setError(null);
-                if (editTextUserName.isEnabled()) {
-                    String nameChanged = editTextUserName.getText().toString().trim();
-                    if ("".equalsIgnoreCase(nameChanged)) {
-                        editTextUserName.requestFocus();
-                        editTextUserName.setError("Username can't be empty");
-                    } else {
-                        if (Data.userData.userName.equalsIgnoreCase(nameChanged)) {
-                            editTextUserName.requestFocus();
-                            editTextUserName.setError("Changed Username is same as the previous one.");
-                        } else {
-                            imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
-                            updateUserProfileAPI(AccountActivity.this, nameChanged, ProfileUpdateMode.NAME);
-                        }
-                    }
-                } else {
-                    editTextUserName.requestFocus();
-                    editTextUserName.setEnabled(true);
-                    editTextUserName.setSelection(editTextUserName.getText().length());
-                    imageViewEditName.setImageResource(R.drawable.profile_save);
-                    Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
-
-                    editTextEmail.setEnabled(false);
-                    editTextPhone.setEnabled(false);
-                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
-                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
+                if (v instanceof EditText) {
+                    ((EditText) v).setError(null);
                 }
-                dissmissEmailVerify();
             }
         });
-
-		editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
-
+        editTextNewPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                imageViewEditName.performClick();
-                return true;
-            }
-        });
-
-
-
-		imageViewEditEmail.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                editTextEmail.setError(null);
-                imageViewEmailVerifyStatus.setVisibility(View.GONE);
-
-                if (editTextEmail.isEnabled()) {
-                    String emailChanged = editTextEmail.getText().toString().trim();
-                    if ("".equalsIgnoreCase(emailChanged)) {
-                        editTextEmail.requestFocus();
-                        editTextEmail.setError("Email can't be empty");
-                    } else {
-                        if (Data.userData.userEmail.equalsIgnoreCase(emailChanged)) {
-                            editTextEmail.requestFocus();
-                            editTextEmail.setError("Changed email is same as the previous one.");
-                        } else {
-                            imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
-                            updateUserProfileAPI(AccountActivity.this, emailChanged, ProfileUpdateMode.EMAIL);
-                        }
-                    }
-                } else {
-                    editTextEmail.requestFocus();
-                    editTextEmail.setEnabled(true);
-                    editTextEmail.setSelection(editTextEmail.getText().length());
-                    imageViewEditEmail.setImageResource(R.drawable.profile_save);
-                    Utils.showSoftKeyboard(AccountActivity.this, editTextEmail);
-
-                    editTextUserName.setEnabled(false);
-                    editTextPhone.setEnabled(false);
-                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
-                    imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    scrollView.smoothScrollTo(0, relativeLayoutChangePassword.getTop());
                 }
-                dissmissEmailVerify();
-            }
-        });
-
-		editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                imageViewEditEmail.performClick();
-                return true;
-            }
-        });
-
-
-		imageViewEditPhoneNo.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                editTextPhone.setError(null);
-                if (editTextPhone.isEnabled()) {
-                    String phoneNoChanged = editTextPhone.getText().toString().trim();
-                    if ("".equalsIgnoreCase(phoneNoChanged)) {
-                        editTextPhone.requestFocus();
-                        editTextPhone.setError("Phone number can't be empty");
-                    } else {
-                        phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
-                        if (Utils.validPhoneNumber(phoneNoChanged)) {
-                            phoneNoChanged = "+91" + phoneNoChanged;
-                            if (Data.userData.phoneNo.equalsIgnoreCase(phoneNoChanged)) {
-                                editTextPhone.requestFocus();
-                                editTextPhone.setError("Changed Phone number is same as the previous one.");
-                            } else {
-                                imageViewEditPhoneNo.setImageResource(R.drawable.edit_icon_selector);
-                                updateUserProfileAPI(AccountActivity.this, phoneNoChanged, ProfileUpdateMode.PHONE);
-                            }
-                        } else {
-                            editTextPhone.requestFocus();
-                            editTextPhone.setError("Please enter valid phone number");
-                        }
-                    }
-                } else {
-                    editTextPhone.requestFocus();
-                    editTextPhone.setEnabled(true);
-                    editTextPhone.setSelection(editTextPhone.getText().length());
-                    imageViewEditPhoneNo.setImageResource(R.drawable.profile_save);
-                    Utils.showSoftKeyboard(AccountActivity.this, editTextPhone);
-
-                    editTextUserName.setEnabled(false);
-                    editTextEmail.setEnabled(false);
-                    imageViewEditName.setImageResource(R.drawable.edit_icon_selector);
-                    imageViewEditEmail.setImageResource(R.drawable.edit_icon_selector);
+                if (v instanceof EditText) {
+                    ((EditText) v).setError(null);
                 }
-                dissmissEmailVerify();
             }
         });
-
-		editTextPhone.setOnEditorActionListener(new OnEditorActionListener() {
-
+        editTextRetypePassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                imageViewEditPhoneNo.performClick();
-                return true;
-            }
-        });
-
-		imageViewEmailVerifyStatus.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal()) {
-                    if (relativeLayoutEmailVerify.getVisibility() == View.GONE) {
-                        relativeLayoutEmailVerify.setVisibility(View.VISIBLE);
-                    } else {
-                        relativeLayoutEmailVerify.setVisibility(View.GONE);
-                    }
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    scrollView.smoothScrollTo(0, relativeLayoutChangePassword.getTop());
+                }
+                if (v instanceof EditText) {
+                    ((EditText) v).setError(null);
                 }
             }
         });
 
-
-
-		relativeLayoutEmailVerify.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if(EmailVerificationStatus.EMAIL_UNVERIFIED.getOrdinal() == Data.userData.emailVerificationStatus){
-					sendEmailVerifyLink(AccountActivity.this);
-				}
-				else if(EmailVerificationStatus.WRONG_EMAIL.getOrdinal() == Data.userData.emailVerificationStatus){
-					imageViewEditEmail.performClick();
-				}
-			}
-		});
-
-		relativeLayoutChangePassword.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(AccountActivity.this, ChangePasswordActivity.class));
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                dissmissEmailVerify();
-			}
-		});
 
         relativeLayoutEmergencyContact.setOnClickListener(new View.OnClickListener() {
 
@@ -442,8 +455,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                         EmergencyActivity.EmergencyActivityMode.EMERGENCY_CONTACTS.getOrdinal());
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                dissmissEmailVerify();
                 FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_EMERGENCY_CONTACTS);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Emergency contacts");
             }
         });
 
@@ -456,11 +469,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivityForResult(intent, ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
-
-                /*startActivity(new Intent(AccountActivity.this, AddPlaceActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                dissmissEmailVerify();
-                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);*/
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Home");
             }
         });
 
@@ -473,11 +482,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivityForResult(intent, ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
-
-                /*startActivity(new Intent(AccountActivity.this, AddFavouritePlaces.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                dissmissEmailVerify();
-                FlurryEventLogger.event(FAVORITE_LOCATION_TO_BE_ADDED);*/
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Work");
             }
         });
 
@@ -496,12 +501,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         });
 
 
-		buttonLogout.setOnClickListener(new View.OnClickListener() {
+		linearLayoutLogout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "", "Are you sure you want to logout?", "Logout", "Cancel",
+                DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this, "",
+                        getResources().getString(R.string.are_you_sure_you_want_to_logout),
+                        getResources().getString(R.string.logout), getResources().getString(R.string.cancel),
                         new View.OnClickListener() {
 
                             @Override
@@ -517,7 +523,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             }
                         },
                         true, false);
-                dissmissEmailVerify();
 
             }
         });
@@ -527,70 +532,40 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+
 	}
 
+    private void setPasswordVisibility(EditText editText, ImageView imageView){
+        if(editText.length() > 0) {
+            if (editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                imageView.setImageResource(R.drawable.ic_password_show);
+            } else {
+                editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                imageView.setImageResource(R.drawable.ic_password_hide);
+            }
+            editText.setSelection(editText.length());
+        }
+    }
 
-    public void dissmissEmailVerify() {
+    public void onClick(View view){
+        setPasswordVisibility((EditText)((ViewGroup)view.getParent()).getChildAt(0), (ImageView)view);
+    }
+
+
+    public void setUserData(){
 		try {
-			if (Data.userData.emailVerificationStatus != EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() && relativeLayoutEmailVerify.getVisibility() == View.VISIBLE) {
-				relativeLayoutEmailVerify.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+			editTextUserName.setEnabled(false); editTextUserName.setBackgroundResource(R.drawable.background_white);
+            editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
+            editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
 
-
-
-    public void setUserData(boolean refreshed){
-		try {
-			editTextUserName.setEnabled(false);
-			editTextEmail.setEnabled(false);
-			editTextPhone.setEnabled(false);
-
-			editTextUserName.setText(Data.userData.userName);
+			editTextUserName.setText(Data.userData.userName.toUpperCase());
 			editTextEmail.setText(Data.userData.userEmail);
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
-
-			if(EmailVerificationStatus.EMAIL_UNVERIFIED.getOrdinal() == Data.userData.emailVerificationStatus){
-				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
-				imageViewEmailVerifyStatus.setImageResource(R.drawable.warning_icon);
-
-				relativeLayoutEmailVerify.setVisibility(View.GONE);
-				textViewEmailVerifyMessage.setText("Please verify the Address.");
-				textViewEmailVerify.setText("VERIFY ME");
-			}
-			else if(EmailVerificationStatus.WRONG_EMAIL.getOrdinal() == Data.userData.emailVerificationStatus){
-				imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
-				imageViewEmailVerifyStatus.setImageResource(R.drawable.alert_icon);
-
-				relativeLayoutEmailVerify.setVisibility(View.GONE);
-				textViewEmailVerifyMessage.setText("Please enter a valid Address.");
-				textViewEmailVerify.setText("CHANGE");
-			}
-			else{
-				if(refreshed){
-					imageViewEmailVerifyStatus.setVisibility(View.VISIBLE);
-					imageViewEmailVerifyStatus.setImageResource(R.drawable.ok_icon);
-					new Handler().postDelayed(new Runnable() {
-
-						@Override
-						public void run() {
-							imageViewEmailVerifyStatus.setVisibility(View.GONE);
-						}
-					}, 4000);
-				}
-				else{
-					imageViewEmailVerifyStatus.setVisibility(View.GONE);
-				}
-				relativeLayoutEmailVerify.setVisibility(View.GONE);
-			}
-
 
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
 					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfileImage);
-					//Picasso.with(this).load(Data.userData.userImage).transform(new BlurTransform()).into(imageViewUserImageBlur);
 				}
 			} catch(Exception e){
 				e.printStackTrace();
@@ -635,6 +610,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		HomeActivity.checkForAccessTokenChange(this);
 
 		reloadProfileAPI(this);
+        textViewEmergencyContact.setText(getResources()
+                .getString(Data.emergencyContactsList != null && Data.emergencyContactsList.size() > 0 ?
+                        R.string.emergency_contacts : R.string.add_emergency_contacts));
 
 		scrollView.scrollTo(0, 0);
 	}
@@ -659,26 +637,21 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 
-	public void updateUserProfileAPI(final Activity activity, final String updatedField, final ProfileUpdateMode profileUpdateMode) {
+	public void updateUserProfileAPI(final Activity activity, final String updatedName,
+                                     final String updatedEmail, final String updatedPhone,
+                                     final boolean phoneUpdated) {
 		if(AppStatus.getInstance(activity).isOnline(activity)) {
 
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put("client_id", Config.getClientId());
-			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", "1");
-
-			if(ProfileUpdateMode.EMAIL.getOrdinal() == profileUpdateMode.getOrdinal()){
-				params.put("updated_user_email", updatedField);
-			}
-			else if(ProfileUpdateMode.PHONE.getOrdinal() == profileUpdateMode.getOrdinal()){
-				params.put("updated_phone_no", updatedField);
-			}
-			else{
-				params.put("updated_user_name", updatedField);
-			}
+			params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+            params.put(Constants.KEY_UPDATED_USER_NAME, updatedName);
+            params.put(Constants.KEY_UPDATED_USER_EMAIL, updatedEmail);
+            params.put(Constants.KEY_UPDATED_PHONE_NO, updatedPhone);
 
             RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
@@ -687,28 +660,29 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     Log.i(TAG, "updateUserProfile response = " + responseStr);
                     DialogPopup.dismissLoadingDialog();
                     try {
+
                         JSONObject jObj = new JSONObject(responseStr);
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             int flag = jObj.getInt("flag");
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
-                                DialogPopup.dialogBanner(activity, error);
+                                DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                linearLayoutSave.setVisibility(View.GONE);
+                                imageViewEditProfile.setVisibility(View.VISIBLE);
                                 String message = jObj.getString("message");
-                                if (ProfileUpdateMode.EMAIL.getOrdinal() == profileUpdateMode.getOrdinal()) {
-                                    DialogPopup.dialogBanner(activity, message);
-                                    editTextEmail.setEnabled(false);
-                                    reloadProfileAPI(activity);
-                                } else if (ProfileUpdateMode.PHONE.getOrdinal() == profileUpdateMode.getOrdinal()) {
+                                Data.userData.userName = updatedName;
+                                Data.userData.userEmail = updatedEmail;
+                                editTextUserName.setText(Data.userData.userName.toUpperCase());
+                                editTextEmail.setText(Data.userData.userEmail);
+                                if(phoneUpdated) {
                                     Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);
-                                    intent.putExtra("phone_no_verify", updatedField);
+                                    intent.putExtra("phone_no_verify", updatedPhone);
                                     activity.startActivity(intent);
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                } else {
-                                    DialogPopup.dialogBanner(activity, message);
-                                    Data.userData.userName = updatedField;
-                                    editTextUserName.setEnabled(false);
-                                    editTextUserName.setText(Data.userData.userName);
+                                } else{
+                                    DialogPopup.alertPopup(activity, "", message);
+                                    reloadProfileAPI(activity);
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -742,9 +716,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put("client_id", Config.getClientId());
-                params.put("access_token", Data.userData.accessToken);
-                params.put("is_access_token_new", "1");
+                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
                 RestClient.getApiServices().reloadMyProfile(params, new Callback<SettleUserDebt>() {
                     @Override
@@ -765,18 +739,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                     Data.userData.userName = userName;
                                     Data.userData.phoneNo = phoneNo;
                                     Data.userData.userEmail = email;
-
-                                    boolean refresh = false;
-
-                                    if (EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() != Data.userData.emailVerificationStatus
-                                            && EmailVerificationStatus.EMAIL_VERIFIED.getOrdinal() == emailVerificationStatus) {
-                                        refresh = true;
-                                    }
-
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
 
-
-                                    setUserData(refresh);
+                                    setUserData();
                                 }
                             }
                         } catch (Exception exception) {
@@ -802,9 +767,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
 			HashMap<String, String> params = new HashMap<>();
-			params.put("client_id", Config.getClientId());
-			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", "1");
+            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
             RestClient.getApiServices().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
                 @Override
@@ -853,28 +818,27 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
 
 			HashMap<String, String> params = new HashMap<>();
-			params.put("access_token", Data.userData.accessToken);
-			params.put("is_access_token_new", "1");
-			params.put("client_id", Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-			Log.i("access_token", "=" + Data.userData.accessToken);
+            Log.i("access_token", "=" + Data.userData.accessToken);
 
             RestClient.getApiServices().logoutUser(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     Log.v(TAG, "logoutUser response = " + responseStr);
 
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
 
-                        if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             int flag = jObj.getInt("flag");
-                            if(ApiResponseFlags.AUTH_LOGOUT_FAILURE.getOrdinal() == flag){
+                            if (ApiResponseFlags.AUTH_LOGOUT_FAILURE.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
-                            }
-                            else if(ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag){
+                            } else if (ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag) {
 
                                 try {
                                     PicassoTools.clearCache(Picasso.with(activity));
@@ -897,12 +861,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
                                 Branch.getInstance(activity).logout();
-                            }
-                            else{
+                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Logout");
+                            } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
                         }
-                    }  catch (Exception exception) {
+                    } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
@@ -911,7 +875,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e(TAG, "logoutUser error="+error.toString());
+                    Log.e(TAG, "logoutUser error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
                     DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
@@ -1007,6 +971,63 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         } else if (resultCode == RESULT_CANCELED) {
             setSavePlaces();
         }
+    }
+
+
+    public void updateUserProfileChangePasswordAPI(final Activity activity, final String oldPassword, final String newPassword) {
+        if(AppStatus.getInstance(activity).isOnline(activity)) {
+
+            DialogPopup.showLoadingDialog(activity, "Updating...");
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+            params.put(Constants.KEY_OLD_PASSWORD, oldPassword);
+            params.put(Constants.KEY_NEW_PASSWORD, newPassword);
+
+            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt settleUserDebt, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "updateUserProfile response = " + responseStr);
+                    DialogPopup.dismissLoadingDialog();
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            int flag = jObj.getInt("flag");
+                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
+                                String error = jObj.getString("error");
+                                DialogPopup.alertPopup(activity, "", error);
+                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                linearLayoutPasswordSave.setVisibility(View.GONE);
+                                imageViewChangePassword.setVisibility(View.VISIBLE);
+                                relativeLayoutChangePassword.performClick();
+                                String message = jObj.getString(Constants.KEY_MESSAGE);
+                                DialogPopup.alertPopup(activity, "", message);
+                            } else {
+                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "updateUserProfile error=" + error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                }
+            });
+        }
+        else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
+
     }
 
 }

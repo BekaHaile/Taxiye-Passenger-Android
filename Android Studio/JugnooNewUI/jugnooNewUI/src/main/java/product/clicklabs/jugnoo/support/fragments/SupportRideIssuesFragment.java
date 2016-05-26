@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
@@ -136,6 +137,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 									endRideData.getRideDate(),
 									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
 						}
+						FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", item.getText());
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);

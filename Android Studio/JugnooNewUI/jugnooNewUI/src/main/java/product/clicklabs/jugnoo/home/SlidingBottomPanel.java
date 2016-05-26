@@ -16,21 +16,20 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.fragments.SlidingBottomCashFragment;
-import product.clicklabs.jugnoo.fragments.SlidingBottomFareFragment;
-import product.clicklabs.jugnoo.fragments.SlidingBottomOffersFragment;
+import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
+import product.clicklabs.jugnoo.home.fragments.SlidingBottomCashFragment;
+import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
+import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -38,6 +37,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -54,12 +54,11 @@ public class SlidingBottomPanel {
     private final String TAG = SlidingBottomPanel.class.getSimpleName();
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
-    private ImageView imageViewPaymentOp, imageViewExtraForSliding;
+    private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSurgeOverSlidingBottom;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
+
     private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
-    private ArrayList<PromoCoupon> promoCoupons;
-
     private Region regionSelected = null;
 
     private RecyclerView recyclerViewVehicles;
@@ -72,51 +71,62 @@ public class SlidingBottomPanel {
 
     private void initComponents(View view) {
         //SlidingUp Layout
-        ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) view.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenMedium(activity));
         textViewMinFareValue = (TextView) view.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenLight(activity));
+        textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
+        ((TextView) view.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
         textViewOffersValue = (TextView) view.findViewById(R.id.textViewOffersValue);
-        textViewOffersValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewOffersValue.setTypeface(Fonts.mavenMedium(activity));
         textViewCashValue = (TextView) view.findViewById(R.id.textViewCashValue);
-        textViewCashValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewCashValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
+        imageViewSurgeOverSlidingBottom = (ImageView)view.findViewById(R.id.imageViewSurgeOverSlidingBottom);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
-        slidingUpPanelLayout.setPanelHeight((int) (108 * ASSL.Yscale()));
+        slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
+                Log.i("slideOffset", ">" + slideOffset);
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                if(activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
+                        && slideOffset < 1f){
+                    activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                }
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelExpanded(View panel) {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
                 imageViewExtraForSliding.setVisibility(View.GONE);
+                activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelAnchored(View panel) {
+                setSurgeImageVisibility();
             }
 
             @Override
             public void onPanelHidden(View panel) {
+                setSurgeImageVisibility();
             }
         });
 
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
         tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
-
         slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager());
         viewPager.setAdapter(slidingBottomFragmentAdapter);
         tabs.setViewPager(viewPager);
@@ -129,8 +139,6 @@ public class SlidingBottomPanel {
             }
         });
 
-        update(null);
-
         recyclerViewVehicles = (RecyclerView) view.findViewById(R.id.recyclerViewVehicles);
         recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
                 LinearLayoutManager.HORIZONTAL, false));
@@ -139,7 +147,20 @@ public class SlidingBottomPanel {
         vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.regions);
         recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
 
+        update();
+
+        view.findViewById(R.id.linearLayoutCash).setOnClickListener(slideOnClickListener);
+        view.findViewById(R.id.linearLayoutFare).setOnClickListener(slideOnClickListener);
+        view.findViewById(R.id.linearLayoutOffers).setOnClickListener(slideOnClickListener);
+
     }
+
+    private View.OnClickListener slideOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            slideOnClick(v);
+        }
+    };
 
     public void slideOnClick(View view) {
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -178,86 +199,24 @@ public class SlidingBottomPanel {
         }
     }
 
-    public void update(ArrayList<PromoCoupon> promoCoupons) {
+    public void update() {
         try {
-            this.promoCoupons = promoCoupons;
-
-            if (promoCoupons != null) {
-				if(selectedCoupon == null) {
-					if (promoCoupons.size() > 0) {
-						selectedCoupon = noSelectionCoupon;
-                        try {
-                            JSONObject map = new JSONObject();
-                            JSONArray coups = new JSONArray();
-                            JSONArray coupsP = new JSONArray();
-                            for(PromoCoupon pc : promoCoupons){
-                                if(isPaytmCoupon(pc)){
-                                    coupsP.put(pc.getTitle());
-                                } else{
-                                    coups.put(pc.getTitle());
-                                }
-                            }
-                            map.put(Constants.KEY_COUPONS, coups.toString());
-                            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
-
-                            if(coupsP.length() > 0) {
-                                map.put(Constants.KEY_COUPONS, coupsP.toString());
-                                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-					} else {
-						selectedCoupon = new CouponInfo(0, "");
-						textViewOffersValue.setText("-");
-                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
-					}
-				}
-				if (promoCoupons.size() > 0) {
-					textViewOffersValue.setText(String.valueOf(promoCoupons.size()));
-					textViewOffersValue.setVisibility(View.VISIBLE);
-				} else{
-					textViewOffersValue.setText("-");
+            if (Data.promoCoupons != null) {
+                if (Data.promoCoupons.size() > 0) {
+                    textViewOffersValue.setText(String.valueOf(Data.promoCoupons.size()));
+                    nudgeCouponsEvent();
+                } else {
+                    textViewOffersValue.setText("-");
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
                 }
-
-            } else {
-				textViewOffersValue.setText("-");
-			}
-
-            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
-				((SlidingBottomOffersFragment) frag).setOfferAdapter(promoCoupons);
-				((SlidingBottomOffersFragment) frag).update(promoCoupons);
-			}
-            updatePaymentOption();
-
-            if(Data.regions.size() > 1){
-                boolean matched = false;
-                for (int i=0; i<Data.regions.size(); i++) {
-                    if(Data.regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())
-                            && Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
-                        regionSelected = Data.regions.get(i);
-                        matched = true;
-                        break;
-                    }
-                }
-                if(!matched){
-                    regionSelected = Data.regions.get(0);
-                }
-                vehiclesTabAdapter.notifyDataSetChanged();
-                setRecyclerViewVehiclesVisiblity(View.VISIBLE);
-
-            } else if(Data.regions.size() > 0){
-                activity.setVehicleTypeSelected(0);
-                regionSelected = Data.regions.get(0);
-                setRecyclerViewVehiclesVisiblity(View.GONE);
-
+                initSelectedCoupon();
             } else{
-                activity.forceFarAwayCity();
+                textViewOffersValue.setText("-");
             }
-
+            updatePreferredPaymentOptionUI();
+            updateRegionsUI();
             updateFareStructureUI();
-
+            updateCouponsFrag();
             checkForGoogleLogoVisibilityBeforeRide();
         } catch (Exception e) {
             e.printStackTrace();
@@ -271,32 +230,31 @@ public class SlidingBottomPanel {
             recyclerViewVehicles.setVisibility(View.GONE);
             params.setMargins(0, 0, 0, 0);
         } else{
-            recyclerViewVehicles.setVisibility(View.VISIBLE);
-            params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
+            recyclerViewVehicles.setVisibility(View.GONE);
+//            params.setMargins(0, 0, 0, (int)(140f * ASSL.Yscale()));
+            params.setMargins(0, 0, 0, 0);
         }
         imageViewExtraForSliding.setLayoutParams(params);
     }
 
     public void updatePaymentOption() {
         try {
-            if(Data.userData.getPaytmError() == 1){
-				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-            }
+            Data.pickupPaymentOption = (Data.userData.paytmEnabled == 1
+                    && Data.userData.getPaytmError() != 1
+                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
+                    && PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption)
+                    ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentOp.setImageResource(R.drawable.paytm_home_icon);
+                imageViewPaymentOp.setImageResource(R.drawable.ic_paytm_small);
                 textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
-			} else {
-				imageViewPaymentOp.setImageResource(R.drawable.cash_home_icon);
-				textViewCashValue.setText(activity.getResources().getString(R.string.cash));
-			}
+            } else {
+                imageViewPaymentOp.setImageResource(R.drawable.ic_cash_small);
+                textViewCashValue.setText(activity.getResources().getString(R.string.cash));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<PromoCoupon> getPromoCoupons() {
-        return promoCoupons;
     }
 
     public SlidingUpPanelLayout getSlidingUpPanelLayout() {
@@ -308,8 +266,8 @@ public class SlidingBottomPanel {
     }
 
     public void setSelectedCoupon(int position) {
-        if (position > -1 && position < promoCoupons.size()) {
-            selectedCoupon = promoCoupons.get(position);
+        if (position > -1 && position < Data.promoCoupons.size()) {
+            selectedCoupon = Data.promoCoupons.get(position);
         } else {
             selectedCoupon = noSelectionCoupon;
         }
@@ -413,17 +371,44 @@ public class SlidingBottomPanel {
                 break;
             }
         }
-        updateFareFrag();
+        updateFareFactorUI();
     }
 
-    private void updateFareFrag(){
+    public void updateFareFactorUI() {
         try {
             Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
             if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
-				((SlidingBottomFareFragment) frag1).update();
-			}
+                ((SlidingBottomFareFragment) frag1).update();
+            }
             textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-					, Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+            setSurgeImageVisibility();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setSurgeImageVisibility(){
+        try {
+            if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
+                && Data.userData.fareFactor > 1.0){
+                imageViewSurgeOverSlidingBottom.setVisibility(View.VISIBLE);
+			} else{
+                imageViewSurgeOverSlidingBottom.setVisibility(View.GONE);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            imageViewSurgeOverSlidingBottom.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateCouponsFrag(){
+        try {
+            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
+            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
+				((SlidingBottomOffersFragment) frag).setOfferAdapter();
+				((SlidingBottomOffersFragment) frag).update();
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -431,7 +416,7 @@ public class SlidingBottomPanel {
 
     private void checkForGoogleLogoVisibilityBeforeRide(){
         try{
-            float padding = 20;
+            float padding = 0;
             if(recyclerViewVehicles.getVisibility() == View.VISIBLE){
                 padding = padding + 110;
             }
@@ -448,5 +433,87 @@ public class SlidingBottomPanel {
         }
         return false;
     }
+
+
+
+
+
+
+
+
+
+    public void updateRegionsUI(){
+        try{
+            if(Data.regions.size() > 1){
+                boolean matched = false;
+                for (int i=0; i<Data.regions.size(); i++) {
+                    if(Data.regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())
+                            && Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
+                        regionSelected = Data.regions.get(i);
+                        matched = true;
+                        break;
+                    }
+                }
+                if(!matched){
+                    regionSelected = Data.regions.get(0);
+                }
+                vehiclesTabAdapter.notifyDataSetChanged();
+                setRecyclerViewVehiclesVisiblity(View.VISIBLE);
+
+            } else if(Data.regions.size() > 0){
+                activity.setVehicleTypeSelected(0);
+                regionSelected = Data.regions.get(0);
+                setRecyclerViewVehiclesVisiblity(View.GONE);
+
+            } else{
+                activity.forceFarAwayCity();
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    private void nudgeCouponsEvent(){
+        try {
+            JSONObject map = new JSONObject();
+            JSONArray coups = new JSONArray();
+            JSONArray coupsP = new JSONArray();
+            for(PromoCoupon pc : Data.promoCoupons){
+                if(isPaytmCoupon(pc)){
+                    coupsP.put(pc.getTitle());
+                } else{
+                    coups.put(pc.getTitle());
+                }
+            }
+            map.put(Constants.KEY_COUPONS, coups.toString());
+            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+
+            if(coupsP.length() > 0) {
+                map.put(Constants.KEY_COUPONS, coupsP.toString());
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initSelectedCoupon(){
+        try {
+            if(selectedCoupon == null) {
+                if (Data.promoCoupons.size() > 0) {
+                    selectedCoupon = noSelectionCoupon;
+                } else {
+                    selectedCoupon = new CouponInfo(0, "");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

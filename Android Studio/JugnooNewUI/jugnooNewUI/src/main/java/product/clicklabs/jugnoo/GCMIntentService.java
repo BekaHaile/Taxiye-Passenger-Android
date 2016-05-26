@@ -215,7 +215,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 			builder.setWhen(when);
 
 			if(eta != null){
-				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_yellow_size);
+				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_theme_size);
 				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
 			} else{
 				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
@@ -447,6 +447,9 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							} else if (AccessTokenGenerator.FATAFAT_CLIENT_ID.equalsIgnoreCase(clientId)) {
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
 										AccessTokenGenerator.FATAFAT_PACKAGE, playSound);
+							} else if (AccessTokenGenerator.FATAFAT_FRESH_CLIENT_ID.equalsIgnoreCase(clientId)) {
+								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
+										AccessTokenGenerator.FATAFAT_FRESH_PACKAGE, playSound);
 							} else {
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
 										AccessTokenGenerator.AUTOS_PACKAGE, playSound);
@@ -664,7 +667,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		final TextView textView1 = new TextView(context);
 		textView1.setText(text);
 		textView1.setTextSize(fontSize);
-		textView1.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
+		textView1.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 
 		final Rect boundsText1 = new Rect();
 
@@ -676,7 +679,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 		final TextView textView2 = new TextView(context);
 		textView2.setText("min");
 		textView2.setTextSize(fontSize-4);
-		textView2.setTypeface(Fonts.latoRegular(context), Typeface.BOLD);
+		textView2.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 
 		final Rect boundsText2 = new Rect();
 

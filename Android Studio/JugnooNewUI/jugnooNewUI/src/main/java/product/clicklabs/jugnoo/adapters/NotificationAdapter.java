@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,21 +16,21 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.PromotionsActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.ShareActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
-import product.clicklabs.jugnoo.fresh.FreshActivity;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -205,7 +204,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else if(AppLinkIndex.PROMOTIONS.getOrdinal() == deepInt){
                 if(AppStatus.getInstance(activity).isOnline(activity)) {
-                    intent.setClass(activity, PromotionsActivity.class);
+                    intent.setClass(activity, ShareActivity.class);
                     activity.startActivity(intent);
                 } else {
                     DialogPopup.dialogNoInternet(activity,
@@ -245,8 +244,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     activity.startActivity(intent);
                 }
             } else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == deepInt){
-                activity.startActivity(new Intent(activity, FreshActivity.class));
-                activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
+                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
             }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
@@ -266,7 +264,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             linearLayoutNotificationImage = (LinearLayout) itemView.findViewById(R.id.linearLayoutNotificationImage);
             imageViewNotification = (ImageView)itemView.findViewById(R.id.imageViewNotification);
             textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
-            textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+            textViewTitle.setTypeface(Fonts.avenirNext(activity));
             textViewTitle.setSingleLine(true);
             textViewTime = (TextView) itemView.findViewById(R.id.textViewTime);
             textViewTime.setTypeface(Fonts.mavenLight(activity));

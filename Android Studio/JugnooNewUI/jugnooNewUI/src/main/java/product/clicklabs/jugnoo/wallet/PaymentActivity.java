@@ -33,7 +33,7 @@ public class PaymentActivity extends BaseFragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-		new ASSL(this, (ViewGroup) findViewById(R.id.mainHomelayout), 1134, 720, false);
+		new ASSL(this, (ViewGroup) findViewById(R.id.fragLayout), 1134, 720, false);
 
 		addPaymentPathInt = getIntent()
 				.getIntExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());

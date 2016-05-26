@@ -142,10 +142,15 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (endRideData != null && getRideSummaryResponse != null) {
-					new TransactionUtils().openRideIssuesFragment(activity,
-							activity.getContainer(),
-							Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse);
+				try {
+					if (endRideData != null && getRideSummaryResponse != null) {
+                        new TransactionUtils().openRideIssuesFragment(activity,
+                                activity.getContainer(),
+                                Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse);
+                        FlurryEventLogger.eventGA(ISSUES, "Customer Support", "Issue with Ride");
+                    }
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
 				}
 			}
 		});

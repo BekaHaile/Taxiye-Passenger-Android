@@ -71,10 +71,10 @@
                 android:id="@+id/imageViewSearchCross"
                 android:layout_width="70px"
                 android:layout_height="70px"
-                android:padding="20px"
-                android:src="@drawable/ic_cross_et"
+                android:padding="16px"
+                android:src="@drawable/ic_cross_et_selector"
                 android:tag="mwar"
-                android:visibility="gone"
+                android:visibility="visible"
 
                 />
         </LinearLayout>

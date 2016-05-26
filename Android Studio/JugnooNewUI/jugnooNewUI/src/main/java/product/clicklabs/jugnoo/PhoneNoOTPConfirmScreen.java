@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -59,7 +60,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	TextView textViewOr;
 
 
-	LinearLayout relative;
+	RelativeLayout relative;
 
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
@@ -120,11 +121,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 		Utils.enableSMSReceiver(this);
 		
-		relative = (LinearLayout) findViewById(R.id.relative);
+		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
 		
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(this));
+		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
 
 		((TextView)findViewById(R.id.otpHelpText)).setTypeface(Fonts.mavenLight(this));
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -137,7 +138,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenLight(this));
 		imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
 
-		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.latoRegular(this));
+		editTextOTP = (EditText) findViewById(R.id.editTextOTP); editTextOTP.setTypeface(Fonts.mavenMedium(this));
 
 		buttonVerify = (Button) findViewById(R.id.buttonVerify); buttonVerify.setTypeface(Fonts.mavenRegular(this));
 		buttonOtpViaCall = (Button) findViewById(R.id.buttonOtpViaCall); buttonOtpViaCall.setTypeface(Fonts.mavenRegular(this));
@@ -149,6 +150,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+
+		textViewTitle.measure(0, 0);
+		int mWidth = textViewTitle.getMeasuredWidth();
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
 
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -272,7 +277,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				buttonOtpViaCall.setVisibility(View.GONE);
 			}
 			if(linearLayoutGiveAMissedCall.getVisibility() == View.VISIBLE
-					|| buttonOtpViaCall.getVisibility() == View.VISIBLE){
+					&& buttonOtpViaCall.getVisibility() == View.VISIBLE){
 				textViewOr.setVisibility(View.VISIBLE);
 			} else{
 				textViewOr.setVisibility(View.GONE);

@@ -40,7 +40,7 @@ public class CustomInfoWindow implements InfoWindowAdapter {
 
 	void render(Marker marker, View view) {
 
-		TextView title = (TextView) view.findViewById(R.id.title);
+		TextView title = (TextView) view.findViewById(R.id.textViewTitle);
 		title.setText("" + titleStr);
 
 		TextView snippet = (TextView) view.findViewById(R.id.snippet);

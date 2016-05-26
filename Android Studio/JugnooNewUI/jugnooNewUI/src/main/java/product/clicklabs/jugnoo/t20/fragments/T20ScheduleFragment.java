@@ -84,7 +84,7 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
 			e.printStackTrace();
 		}
 
-		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		imageViewInfo = (ImageView) rootView.findViewById(R.id.imageViewInfo);
 
