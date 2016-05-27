@@ -189,8 +189,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 				});
 
-		listViewSearch.setAdapter(searchListAdapter);
-
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 		ASSL.DoMagic(header);
@@ -202,6 +200,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
 		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
 		imageViewSep = (ImageView) header.findViewById(R.id.imageViewSep);
+
+		listViewSearch.setAdapter(searchListAdapter);
 
 		showSearchLayout();
 
