@@ -285,6 +285,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 }
 
                 @Override
+                public void onPoolSuccess(int fare, int rideDistance, String rideDistanceUnit, int rideTime, String rideTimeUnit, int poolFareId) {
+
+                }
+
+                @Override
                 public void onNoRetry() {
                     performBackPressed();
                 }
@@ -292,7 +297,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 @Override
                 public void onRetry() {
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0);
 
         } catch (Exception e) {
             e.printStackTrace();

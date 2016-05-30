@@ -231,6 +231,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		Bundle bundle = getArguments();
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
 		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
+
 		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
 		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
 			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);

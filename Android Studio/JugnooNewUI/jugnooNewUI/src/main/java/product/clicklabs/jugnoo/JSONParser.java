@@ -294,6 +294,7 @@ public class JSONParser implements Constants {
         }
 
         try {
+            FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
                     Data.userData.userEmail, Data.userData.phoneNo,
                     Data.userData.getCity(), Data.userData.getCityReg());
@@ -309,6 +310,7 @@ public class JSONParser implements Constants {
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
             NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1373,7 +1373,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
 						accessTokenDataParseAsync(activity, response, loginResponse);
-						FlurryEventLogger.setGAUserId(Data.userData.getUserId());
+
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						Editor editor = pref1.edit();
 						editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
