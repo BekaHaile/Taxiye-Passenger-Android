@@ -68,6 +68,7 @@
 	<string name="last_name">Last Name</string>
 	<string name="phone_number">Phone Number</string>
 	<string name="confirm_password">Confirm Password</string>
+	<string name="confirm_ride">Confirm Ride</string>
 	
 	<string name="confirmation_code">Confirmation Code</string>
 	<string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
@@ -186,6 +187,7 @@
 	<string name="check_all">Check All</string>
 	<string name="uncheck_all">Uncheck All</string>
 	<string name="ride_request_text">GET A RIDE</string>
+	<string name="for_one_person">for one person will be</string>
 
 
     <!-- wallet screen-->

@@ -148,6 +148,7 @@ import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
+import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -6455,7 +6456,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onPoolSuccess(int fare, int rideDistance, String rideDistanceUnit, int rideTime, String rideTimeUnit, final int poolFareId) {
                 Log.v("Pool Fare value is ","--> "+fare);
                 // show popup here...
-                DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Pool Price", "Your Fare will be "+fare, "Confirm", "Cancel",
+                /*DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Pool Price", "Your Fare will be "+fare, "Confirm", "Cancel",
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -6470,7 +6471,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 poolMarkerEnd.remove();
                                 initialMyLocationBtn.performClick();
                             }
-                        }, true, true);
+                        }, true, true);*/
+
+                new PoolFareDialog(HomeActivity.this, new PoolFareDialog.Callback() {
+                    @Override
+                    public void onDialogDismiss() {
+                        poolPolyline.remove();
+                        poolMarkerStart.remove();
+                        poolMarkerEnd.remove();
+                        initialMyLocationBtn.performClick();
+                    }
+
+                    @Override
+                    public void onConfirmed() {
+                        jugnooPoolFareId = poolFareId;
+                        finalRequestRideTimerStart();
+                    }
+                }).showPoolFareDialog(fare);
 
             }
         }).getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng, 1);
