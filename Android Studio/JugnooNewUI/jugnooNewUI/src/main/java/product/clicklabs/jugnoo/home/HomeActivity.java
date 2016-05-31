@@ -861,8 +861,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewJugnooPool.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            if(Data.dropLatLng != null){
                 isPoolRequest = 1;
-                fareEstimateForPool();
+                requestRideClick();
+            } else{
+                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
+
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                if(index == 1 && Data.dropLatLng == null) {
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+                }
+                if(Data.dropLatLng == null){
+                    Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
+                    textViewDestSearch.startAnimation(shake);
+                }
+            }
             }
         });
 
@@ -1662,33 +1678,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(confirmClicked) {
                                 FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "ok");
                             }
-                            Data.cSessionId = "";
-                            Data.cEngagementId = "";
-                            dropLocationSearchText = "";
-
-                            if (Data.pickupLatLng == null) {
-                                Data.pickupLatLng = map.getCameraPosition().target;
-                            }
-                            double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                            if (distance > MAP_PAN_DISTANCE_CHECK) {
-                                switchRequestRideUI();
-                                startTimerRequestRide();
-                            } else {
-                                checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
-                            }
-                            if (Data.TRANSFER_FROM_JEANIE == 1) {
-                                FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
-                                Data.TRANSFER_FROM_JEANIE = 0;
-                            }
-
-                            try {
-                                JSONObject map = new JSONObject();
-                                map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
-                                map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
-                                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
-                                FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, TAG, "request ride");
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if(isPoolRequest == 1){
+                                // Pool request
+                                fareEstimateForPool();
+                            } else{
+                                finalRequestRideTimerStart();
                             }
                         }
 
@@ -1706,6 +1700,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private void finalRequestRideTimerStart(){
+        try {
+        Data.cSessionId = "";
+        Data.cEngagementId = "";
+        dropLocationSearchText = "";
+
+        if (Data.pickupLatLng == null) {
+            Data.pickupLatLng = map.getCameraPosition().target;
+        }
+        double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+        if (distance > MAP_PAN_DISTANCE_CHECK) {
+            switchRequestRideUI();
+            startTimerRequestRide();
+        } else {
+            checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+        }
+        if (Data.TRANSFER_FROM_JEANIE == 1) {
+            FlurryEventLogger.event(JUGNOO_STICKY_RIDE_CONFIRMATION);
+            Data.TRANSFER_FROM_JEANIE = 0;
+        }
+
+
+            JSONObject map = new JSONObject();
+            map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
+            map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
+            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
+            FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, TAG, "request ride");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void requestRideClick(){
         try{
@@ -6433,7 +6458,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             @Override
                             public void onClick(View v) {
                                 jugnooPoolFareId = poolFareId;
-                                requestRideClick();
+                                finalRequestRideTimerStart();
                             }
                         }, new OnClickListener() {
                             @Override
