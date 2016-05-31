@@ -177,11 +177,10 @@
 
         <ImageView
             android:id="@+id/imageViewJugnooPool"
-            android:layout_width="106px"
-            android:layout_height="106px"
+            android:layout_width="157px"
+            android:layout_height="157px"
             android:layout_centerVertical="true"
             android:src="@drawable/pool_1"
-            android:tag="mwar"
             android:visibility="gone"
             android:layout_marginLeft="50px"/>
 

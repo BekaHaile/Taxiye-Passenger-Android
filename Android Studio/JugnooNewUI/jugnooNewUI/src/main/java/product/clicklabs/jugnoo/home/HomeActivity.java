@@ -59,6 +59,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -3710,6 +3711,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setJugnooPool(){
         if(Data.userData.getIsPoolEnabled() == 1){
+            Glide.with(HomeActivity.this).load(R.drawable.pool_gif_1).placeholder(R.drawable.pool_1).into(imageViewJugnooPool);
             imageViewJugnooPool.setVisibility(View.VISIBLE);
         } else{
             imageViewJugnooPool.setVisibility(View.GONE);
