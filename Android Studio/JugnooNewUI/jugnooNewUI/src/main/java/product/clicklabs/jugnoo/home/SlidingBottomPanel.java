@@ -55,7 +55,7 @@ public class SlidingBottomPanel {
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSurgeOverSlidingBottom;
-    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
+    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue, textViewPoolInfo1, textViewPoolInfo2;
 
     private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
@@ -63,9 +63,12 @@ public class SlidingBottomPanel {
 
     private RecyclerView recyclerViewVehicles;
     private VehiclesTabAdapter vehiclesTabAdapter;
+    private RelativeLayout relativeLayoutPoolInfoBar;
+    private View view;
 
     public SlidingBottomPanel(HomeActivity activity, View view) {
         this.activity = activity;
+        this.view = view;
         initComponents(view);
     }
 
@@ -82,10 +85,15 @@ public class SlidingBottomPanel {
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
         imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
         imageViewSurgeOverSlidingBottom = (ImageView)view.findViewById(R.id.imageViewSurgeOverSlidingBottom);
+        relativeLayoutPoolInfoBar = (RelativeLayout)view.findViewById(R.id.relativeLayoutPoolInfoBar);
+        textViewPoolInfo1 = (TextView)view.findViewById(R.id.textViewPoolInfo1);
+        textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
+        textViewPoolInfo2 = (TextView)view.findViewById(R.id.textViewPoolInfo2);
+        textViewPoolInfo2.setTypeface(Fonts.avenirNext(activity));
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
-        slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+        updateSlidingBottomHeight();
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -218,10 +226,23 @@ public class SlidingBottomPanel {
             updateFareStructureUI();
             updateCouponsFrag();
             checkForGoogleLogoVisibilityBeforeRide();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void updateSlidingBottomHeight(){
+        if(Data.userData.getIsPoolEnabled() == 1) {
+            //slidingUpPanelLayout.setPanelHeight((int) (182 * ASSL.Yscale()));
+            //relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+            slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+            relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+        } else{
+            slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+            relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+        }
     }
 
     public void setRecyclerViewVehiclesVisiblity(int visiblity){

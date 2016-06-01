@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20px"
-            android:background="@drawable/background_sliding_botton_bg_color_dashed_rb"
+            android:background="@drawable/background_pool_fare_dialog_bg_color_dashed_rb"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:splitMotionEvents="false">

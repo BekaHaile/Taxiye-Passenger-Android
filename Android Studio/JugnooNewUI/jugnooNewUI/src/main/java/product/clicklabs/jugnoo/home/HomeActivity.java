@@ -147,6 +147,7 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
+import product.clicklabs.jugnoo.home.dialogs.JugnooPoolTutorial;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
@@ -1356,6 +1357,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 
         }
+
+
+        new JugnooPoolTutorial(HomeActivity.this, new JugnooPoolTutorial.Callback() {
+            @Override
+            public void onContinueClicked() {
+
+            }
+
+            @Override
+            public void onMayBeLaterClicked() {
+
+            }
+
+            @Override
+            public void onDialogDismiss() {
+
+            }
+
+            @Override
+            public void notShown() {
+
+            }
+        }).show();
 
 
 //        genieLayout = new GenieLayout(this);
@@ -3711,11 +3735,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void setJugnooPool(){
-        if(Data.userData.getIsPoolEnabled() == 1){
-            Glide.with(HomeActivity.this).load(R.drawable.pool_gif_1).placeholder(R.drawable.pool_1).into(imageViewJugnooPool);
-            imageViewJugnooPool.setVisibility(View.VISIBLE);
-        } else{
-            imageViewJugnooPool.setVisibility(View.GONE);
+        try {
+            if(Data.userData.getIsPoolEnabled() == 1){
+                //Glide.with(HomeActivity.this).load(R.drawable.pool_gif_1).placeholder(R.drawable.pool_1).into(imageViewJugnooPool);
+                imageViewJugnooPool.setBackgroundResource(R.drawable.pool_icon_frame_anim);
+                imageViewJugnooPool.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        AnimationDrawable frameAnimation =
+                                (AnimationDrawable) imageViewJugnooPool.getBackground();
+                        frameAnimation.start();
+                    }
+                });
+                imageViewJugnooPool.setVisibility(View.VISIBLE);
+            } else{
+                imageViewJugnooPool.setVisibility(View.GONE);
+            }
+            slidingBottomPanel.updateSlidingBottomHeight();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

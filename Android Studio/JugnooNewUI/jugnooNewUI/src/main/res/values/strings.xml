@@ -775,6 +775,9 @@
 	<string name="ride_cancelled_by_driver">Driver has cancelled the ride. Please try again. Apologies for inconvenience!</string>
 
 	<string name="enter_your_destination">Enter your destination</string>
+	<string name="cool_to_pool">Its cool to pool</string>
+	<string name="share_the_journey">Share the journey split the fare</string>
+	<string name="riding_alone">Riding Alone? Try Jugnoo Pool</string>
 
 
 	<string name="recharge">Recharge</string>
@@ -830,6 +833,7 @@
 	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
 	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
 	<string name="continue_text">Continue</string>
+	<string name="try_now">Try Now</string>
 	<string name="order_status">Order Status:</string>
 	<string name="id">ID:</string>
 	<string name="order_date">Order Date:</string>
