@@ -20,8 +20,8 @@ import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -152,13 +152,13 @@ public class FreshAddressFragment extends Fragment {
 			relativeLayoutHome.setVisibility(View.VISIBLE);
 			textViewHome.setTextColor(getResources().getColor(R.color.text_color_hint));
 			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-			AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
-			String s = getResources().getString(R.string.home)+" \n" + searchResult.address;
+			SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+			String s = getResources().getString(R.string.home)+" \n" + searchResult.getAddress();
 			SpannableString ss1 = new SpannableString(s);
 			ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
 			ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
 			textViewHome.setText(ss1);
-			homeAddress = searchResult.address;
+			homeAddress = searchResult.getAddress();
 		} else{
 			relativeLayoutHome.setVisibility(View.GONE);
 			homeAddress = "";
@@ -168,13 +168,13 @@ public class FreshAddressFragment extends Fragment {
 			relativeLayoutWork.setVisibility(View.VISIBLE);
 			textViewWork.setTextColor(getResources().getColor(R.color.text_color_hint));
 			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-			AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
-			String s = getResources().getString(R.string.work)+" \n" + searchResult.address;
+			SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+			String s = getResources().getString(R.string.work)+" \n" + searchResult.getAddress();
 			SpannableString ss1 = new SpannableString(s);
 			ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
 			ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
 			textViewWork.setText(ss1);
-			workAddress = searchResult.address;
+			workAddress = searchResult.getAddress();
 		} else{
 			relativeLayoutWork.setVisibility(View.GONE);
 			workAddress = "";

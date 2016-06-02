@@ -59,7 +59,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -96,7 +95,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -128,7 +126,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -737,9 +734,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         // Customer initial layout events
         imageViewRideNow.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
+                /*String message = "For complete peace of mind please enter the destination so we can provide driver turn by turn navigation";
+                Toast toast = Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT);
+                TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
+                if( v != null) tv.setGravity(Gravity.CENTER);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();*/
+
                 isPoolRequest = 0;
                 requestRideClick();
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -1514,7 +1517,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = params.topMargin + (int)(ASSL.Yscale()*SEARCH_FLIP_ANIMATION_MARGIN);
+                params.topMargin = params.topMargin + ((int)(ASSL.Yscale()*SEARCH_FLIP_ANIMATION_MARGIN));
                 mView.setLayoutParams(params);
                 if(callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
@@ -3481,7 +3484,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(resultCode==RESULT_OK) {
                 if (requestCode == ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
-                    AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+                    SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
                     if(searchResult != null){
                         placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
@@ -3490,7 +3493,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 } else if (requestCode == ADD_WORK) {
                     String strResult = data.getStringExtra("PLACE");
-                    AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+                    SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
                     if(searchResult != null) {
                         placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
@@ -6843,7 +6846,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     @Override
-    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+    public void onPlaceClick(SearchResult autoCompleteSearchResult) {
 
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){

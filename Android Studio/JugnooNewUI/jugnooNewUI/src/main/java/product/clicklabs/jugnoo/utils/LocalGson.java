@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 
 /**
@@ -11,23 +10,23 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
  */
 public class LocalGson {
 
-	public AutoCompleteSearchResult getAutoCompleteSearchResultFromJSON(String jsonStr){
+	public SearchResult getAutoCompleteSearchResultFromJSON(String jsonStr){
 		try {
 			JSONObject json = new JSONObject(jsonStr);
-			return new AutoCompleteSearchResult(json.optString("name", ""), json.optString("address", ""),
+			return new SearchResult(json.optString("name", ""), json.optString("address", ""),
 					json.optString("placeId", ""));
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return new AutoCompleteSearchResult("", "", "");
+			return new SearchResult("", "", "");
 		}
 	}
 
-	public String getJSONFromAutoCompleteSearchResult(AutoCompleteSearchResult result){
+	public String getJSONFromAutoCompleteSearchResult(SearchResult result){
 		try {
 			JSONObject json = new JSONObject();
-			json.put("address", result.address);
-			json.put("name", result.name);
-			json.put("placeId", result.placeId);
+			json.put("address", result.getAddress());
+			json.put("name", result.getName());
+			json.put("placeId", result.getPlaceId());
 			return json.toString();
 		} catch (JSONException e) {
 			e.printStackTrace();

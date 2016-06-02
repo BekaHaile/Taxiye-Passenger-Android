@@ -35,9 +35,9 @@ import java.util.HashMap;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -932,8 +932,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
-            String s = getResources().getString(R.string.home)+" \n" + searchResult.address;
+            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            String s = getResources().getString(R.string.home)+" \n" + searchResult.getAddress();
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
@@ -948,8 +948,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
             String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
-            String s = getResources().getString(R.string.work)+" \n" + searchResult.address;
+            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+            String s = getResources().getString(R.string.work)+" \n" + searchResult.getAddress();
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color

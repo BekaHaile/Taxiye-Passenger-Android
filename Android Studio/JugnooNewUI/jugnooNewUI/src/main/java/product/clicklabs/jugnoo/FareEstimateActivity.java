@@ -30,7 +30,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -438,7 +437,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     }
 
     @Override
-    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+    public void onPlaceClick(SearchResult autoCompleteSearchResult) {
 
     }
 

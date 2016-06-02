@@ -22,6 +22,9 @@ public class SearchResult implements Serializable{
 	@SerializedName("time")
 	@Expose
 	private long time;
+	@SerializedName("placeId")
+	@Expose
+	private String placeId;
 	
 	public SearchResult(String name, String address, LatLng latLng){
 		this.name = name;
@@ -29,6 +32,26 @@ public class SearchResult implements Serializable{
 		this.latLng = latLng;
 		this.thirdPartyAttributions = null;
 		time = System.currentTimeMillis();
+	}
+
+	public SearchResult(String name, String address, String placeId){
+		this.name = name;
+		this.address = address;
+		this.placeId = placeId;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		try{
+			if(((SearchResult)o).name.equalsIgnoreCase(this.name)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		} catch(Exception e){
+			return false;
+		}
 	}
 
 	public String getName() {
@@ -70,5 +93,12 @@ public class SearchResult implements Serializable{
 	public CharSequence getThirdPartyAttributions(){
 		return thirdPartyAttributions;
 	}
-	
+
+	public String getPlaceId() {
+		return placeId;
+	}
+
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
 }

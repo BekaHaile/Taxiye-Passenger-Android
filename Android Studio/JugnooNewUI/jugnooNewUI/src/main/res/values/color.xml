@@ -164,6 +164,7 @@
  <color name="text_color_hint">#BCBCBC</color>
  <color name="nl_white_dark">#E0E0E0</color>
  <color name="menu_item_selector_color">#EEEEEE</color>
+    <color name="ride_history_item_text_color">#0EB2CE</color>
 
 
  <color name="red_google">#CF5D3A</color>

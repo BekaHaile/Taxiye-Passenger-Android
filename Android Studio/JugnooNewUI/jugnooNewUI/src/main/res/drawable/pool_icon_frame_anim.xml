@@ -5,9 +5,9 @@
                 android:layout_height="match_parent"
                 android:oneshot="false">
 
-    <item android:drawable="@drawable/pool_icon_1" android:duration="250"/>
-    <item android:drawable="@drawable/pool_icon_2" android:duration="250"/>
-    <item android:drawable="@drawable/pool_icon_3" android:duration="250"/>
+    <item android:drawable="@drawable/pool_icon_1" android:duration="500"/>
+    <item android:drawable="@drawable/pool_icon_2" android:duration="500"/>
+    <item android:drawable="@drawable/pool_icon_3" android:duration="500"/>
 
 </animation-list>
 

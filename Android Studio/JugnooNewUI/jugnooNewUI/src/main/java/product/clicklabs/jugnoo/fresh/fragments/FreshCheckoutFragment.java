@@ -26,9 +26,9 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.fresh.FreshDeliverySlotsDialog;
 import product.clicklabs.jugnoo.fresh.adapters.FreshDeliverySlotsAdapter;
@@ -224,8 +224,8 @@ public class FreshCheckoutFragment extends Fragment {
 	private void checkForHomeWorkAddress(String address){
 		if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
 			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-			AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
-			if(address.equalsIgnoreCase(searchResult.address)){
+			SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+			if(address.equalsIgnoreCase(searchResult.getAddress())){
 				textViewAddAddress.setText(activity.getResources().getString(R.string.home));
 				return;
 			} else{
@@ -237,8 +237,8 @@ public class FreshCheckoutFragment extends Fragment {
 
 		if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
 			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-			AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
-			if(address.equalsIgnoreCase(searchResult.address)){
+			SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+			if(address.equalsIgnoreCase(searchResult.getAddress())){
 				textViewAddAddress.setText(activity.getResources().getString(R.string.work));
 			} else{
 				textViewAddAddress.setText(activity.getResources().getString(R.string.address));
