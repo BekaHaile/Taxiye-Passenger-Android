@@ -297,4 +297,6 @@ public interface Constants {
 	String KEY_OLD_PASSWORD = "old_password";
 	String KEY_NEW_PASSWORD = "new_password";
 
+	String POOL_INTRO_SHOW = "pool_intro_show";
+
 }

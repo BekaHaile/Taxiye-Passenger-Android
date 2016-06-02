@@ -235,10 +235,10 @@ public class SlidingBottomPanel {
 
     public void updateSlidingBottomHeight(){
         if(Data.userData.getIsPoolEnabled() == 1) {
-            //slidingUpPanelLayout.setPanelHeight((int) (182 * ASSL.Yscale()));
-            //relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
-            slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
-            relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+            slidingUpPanelLayout.setPanelHeight((int) (182 * ASSL.Yscale()));
+            relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+            //slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+            //relativeLayoutPoolInfoBar.setVisibility(View.GONE);
         } else{
             slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
             relativeLayoutPoolInfoBar.setVisibility(View.GONE);
@@ -455,14 +455,6 @@ public class SlidingBottomPanel {
         return false;
     }
 
-
-
-
-
-
-
-
-
     public void updateRegionsUI(){
         try{
             if(Data.regions.size() > 1){
@@ -493,9 +485,6 @@ public class SlidingBottomPanel {
             e.printStackTrace();
         }
     }
-
-
-
 
     private void nudgeCouponsEvent(){
         try {

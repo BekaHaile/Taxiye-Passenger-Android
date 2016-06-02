@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 
 /**
  * Created by shankar on 2/12/16.
@@ -33,5 +34,6 @@ public class LocalGson {
 			return "";
 		}
 	}
+
 
 }

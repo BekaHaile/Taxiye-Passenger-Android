@@ -48,7 +48,7 @@ public class JugnooPoolTutorial {
 
     public Dialog show() {
         try {
-            if(Prefs.with(activity).getInt(Constants.SP_FRESH_INTRO_SHOWN, 0) == 1) {
+            if(Prefs.with(activity).getInt(Constants.POOL_INTRO_SHOW, 0) == 0) {
                 dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
                 dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
                 dialog.setContentView(R.layout.dialog_pool_intro);
@@ -118,7 +118,7 @@ public class JugnooPoolTutorial {
                 });
 
                 dialog.show();
-                Prefs.with(activity).save(Constants.SP_FRESH_INTRO_SHOWN, 1);
+                Prefs.with(activity).save(Constants.POOL_INTRO_SHOW, 1);
             } else{
                 callback.notShown();
             }

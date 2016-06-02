@@ -155,7 +155,6 @@ public class JSONParser implements Constants {
                     }else {
                         Prefs.with(context).save(SPLabels.ADD_HOME, "");
                     }
-
                 }
             }
         }

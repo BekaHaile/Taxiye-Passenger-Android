@@ -24,7 +24,10 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -32,6 +35,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -111,7 +115,19 @@ public class SearchListAdapter extends BaseAdapter{
                     else{
                         autoCompleteSearchResultsForSearch.clear();
                         addFavoriteLocations("");
+
+                        if(context instanceof HomeActivity){
+                            String json = Prefs.with(context).getString(SPLabels.LAST_PICK_UP, "");
+                            Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
+                            ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
+                            for(int i=0; i<lastPickUp.size(); i++){
+                                //autoCompleteSearchResultsForSearch.add(i, );
+                            }
+
+                        }
+
                         setResults(autoCompleteSearchResultsForSearch);
+
                     }
                 }
             });
