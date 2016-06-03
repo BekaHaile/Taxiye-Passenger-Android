@@ -37,7 +37,7 @@ public class UserData {
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	private PaytmRechargeInfo paytmRechargeInfo = null;
-	private String city, cityReg;
+	private String city, cityReg, destinationHelpText;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
@@ -54,7 +54,7 @@ public class UserData {
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
-					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled){
+					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -123,6 +123,7 @@ public class UserData {
 
 		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
 		this.referralActivityEnabled = referralActivityEnabled;
+		this.destinationHelpText = destinationHelpText;
 
 		checkUserImage();
 	}
@@ -459,5 +460,13 @@ public class UserData {
 
 	public void setIsPoolEnabled(int isPoolEnabled) {
 		this.isPoolEnabled = isPoolEnabled;
+	}
+
+	public String getDestinationHelpText() {
+		return destinationHelpText;
+	}
+
+	public void setDestinationHelpText(String destinationHelpText) {
+		this.destinationHelpText = destinationHelpText;
 	}
 }

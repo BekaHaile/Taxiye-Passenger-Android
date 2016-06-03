@@ -258,8 +258,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewFindingDriver;
     Button initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent;
-    RelativeLayout relativeLayoutAssigningDropLocationClick;
-    TextView textViewAssigningDropLocationClick;
+    private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp;
+    private TextView textViewAssigningDropLocationClick, textViewDestHelp;
     ProgressWheel progressBarAssigningDropLocation;
     ImageView imageViewAssigningDropLocationEdit;
 	boolean cancelTouchHold = false, placeAdded;
@@ -578,6 +578,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
         relativeLayoutAssigningDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationClick);
+        relativeLayoutDestinationHelp = (RelativeLayout) findViewById(R.id.relativeLayoutDestinationHelp);
+        textViewDestHelp = (TextView) findViewById(R.id.textViewDestHelp);textViewDestHelp.setTypeface(Fonts.mavenRegular(this));
         textViewAssigningDropLocationClick = (TextView)findViewById(R.id.textViewAssigningDropLocationClick);
         textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
         progressBarAssigningDropLocation = (ProgressWheel)findViewById(R.id.progressBarAssigningDropLocation);
@@ -927,6 +929,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutAssigningDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                relativeLayoutDestinationHelp.setVisibility(View.GONE);
                 initDropLocationSearchUI(false);
             }
         });
@@ -2785,13 +2788,36 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Data.dropLatLng == null){
 				if ("".equalsIgnoreCase(Data.cSessionId)) {
 					relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
+                    relativeLayoutDestinationHelp.setVisibility(View.GONE);
 				}
 				else{
 					if(relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
-						relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+
+                        relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
 						try {
 							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+                            topInAnimation.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                    relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    relativeLayoutAssigningDropLocationClick.clearAnimation();
+                                    if(Data.userData != null && (!Data.userData.getDestinationHelpText().equalsIgnoreCase(""))){
+                                        textViewDestHelp.setText(Data.userData.getDestinationHelpText());
+                                        relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
 							relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -2802,6 +2828,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
 			}
 			else{
+                relativeLayoutDestinationHelp.setVisibility(View.GONE);
 				if(relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
 					relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
 					try {

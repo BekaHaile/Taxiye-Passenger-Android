@@ -197,6 +197,7 @@ public class JSONParser implements Constants {
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
+        String destinationHelpText = userData.optString("destination_help_text", "");
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -237,7 +238,7 @@ public class JSONParser implements Constants {
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
-                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled);
+                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText);
 
     }
 
