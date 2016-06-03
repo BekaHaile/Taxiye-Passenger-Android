@@ -243,10 +243,15 @@ public class SearchListAdapter extends BaseAdapter{
 						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
 						SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
                         Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
-						if (!"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
+						if (autoCompleteSearchResult.getPlaceId() != null
+                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
 							searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
 							getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
-						}
+						} else{
+                            searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                            searchListActionsHandler.onPlaceSearchPre();
+                            searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                        }
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

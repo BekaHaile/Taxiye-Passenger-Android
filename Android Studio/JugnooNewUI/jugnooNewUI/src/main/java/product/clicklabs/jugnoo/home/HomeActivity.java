@@ -81,6 +81,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
@@ -1795,15 +1796,47 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private ArrayList<SearchResult> fetchLastLocations(String fromList){
+        ArrayList<SearchResult> lastLocationSavedList = null;
+
+        try {
+            String json = Prefs.with(HomeActivity.this).getString(fromList, "");
+            Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
+            lastLocationSavedList = new Gson().fromJson(json, type);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(lastLocationSavedList == null){
+            lastLocationSavedList = new ArrayList<>();
+        }
+        return lastLocationSavedList;
+    }
+
     private void requestRideClick(){
         try{
             onRequestRideTap();
-            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
-            if(lastPickUp.size() > 3){
-                lastPickUp.remove(3);
-            }
-            Log.v("size of last pickup", "---> " + lastPickUp.size());
 
+            lastPickUp.clear();
+            lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
+            if (lastPickUp.size() == 0) {
+                lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
+            } else {
+                boolean isSame = false;
+                for (int i = 0; i < lastPickUp.size(); i++) {
+                    if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())) {
+                        isSame = true;
+                        break;
+                    }
+                }
+                if (!isSame) {
+                    lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
+                }
+                if (lastPickUp.size() > 3) {
+                    lastPickUp.remove(3);
+                }
+                Log.v("size of last pickup", "---> " + lastPickUp.size());
+            }
             String tempPickup = new Gson().toJson(lastPickUp);
             Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
 
@@ -6924,16 +6957,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
                 imageViewDropCross.setVisibility(View.VISIBLE);
 
+                // Save Last 3 Destination...
+                lastDestination.clear();
+                lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
+                if (lastDestination.size() == 0) {
+                    lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
+                } else {
+                    boolean isSame = false;
+                    for (int i = 0; i < lastDestination.size(); i++) {
+                        if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())) {
+                            isSame = true;
+                            break;
+                        }
+                    }
+                    if (!isSame) {
+                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
+                    }
+                    if (lastDestination.size() > 3) {
+                        lastDestination.remove(3);
+                    }
+                    Log.v("size of last Destination", "---> " + lastDestination.size());
+                }
+                String tempDest = new Gson().toJson(lastDestination);
+                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);
+
+                // Save Entered Destination for 30 min or till Ride End...
                 String strResult = new Gson().toJson(searchResult, SearchResult.class);
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, strResult);
-                lastDestination.add(searchResult);
+
+                /*lastDestination.add(searchResult);
                 lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
                 if(lastDestination.size() > 3){
                     lastDestination.remove(3);
                 }
                 Log.v("size of last Destination", "---> " + lastDestination.size());
                 String tempDest = new Gson().toJson(lastDestination);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);
+                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);*/
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
