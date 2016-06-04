@@ -167,9 +167,14 @@ public class PaymentActivity extends BaseFragmentActivity{
 					public void onNoRetry(View view) {
 
 					}
+
+					@Override
+					public void paytmDisabled() {
+
+					}
 				});
 			}
-			apiPaytmCheckBalance.getBalance(Data.userData.paytmEnabled, true);
+			apiPaytmCheckBalance.getBalance(1, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

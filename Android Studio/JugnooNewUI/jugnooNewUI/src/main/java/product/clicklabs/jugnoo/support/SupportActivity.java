@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
@@ -50,6 +51,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		imageViewInvoice = (ImageView) findViewById(R.id.imageViewInvoice);
 
+		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		imageViewBack.setOnClickListener(new OnClickListener() {

@@ -151,9 +151,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {

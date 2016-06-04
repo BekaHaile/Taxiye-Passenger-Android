@@ -864,6 +864,7 @@
 	<string name="refer">Refer</string>
 
 	<string name="inbox">Inbox</string>
+	<string name="play">Play</string>
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="base_fare_colon">Base Fare:</string>

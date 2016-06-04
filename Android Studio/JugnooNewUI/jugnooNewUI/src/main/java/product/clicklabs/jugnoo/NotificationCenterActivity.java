@@ -79,9 +79,8 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         });
         recyclerViewNotification.setAdapter(myNotificationAdapter);
 
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override

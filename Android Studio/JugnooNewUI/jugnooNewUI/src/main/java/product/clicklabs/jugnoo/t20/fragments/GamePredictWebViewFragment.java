@@ -17,19 +17,24 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 @SuppressLint("ValidFragment")
 public class GamePredictWebViewFragment extends Fragment implements FlurryEventNames, Constants {
@@ -39,10 +44,11 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 	private RelativeLayout relative;
 
 	private WebView webView;
-	private ImageView imageViewProgressBar;
+	private ImageView imageViewProgressBar, imageViewBack;
 
 	private View rootView;
-    private FragmentActivity activity;
+    private T20Activity activity;
+	private TextView textViewTitle;
 
     @Override
     public void onStart() {
@@ -63,7 +69,7 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
         rootView = inflater.inflate(R.layout.fragment_game_predict_webview, container, false);
 
 		try {
-			activity = getActivity();
+			activity = (T20Activity) getActivity();
 
 			relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 			try {
@@ -73,6 +79,12 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+			textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle);
+			textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
+			textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_PLAY);
+			textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
+			imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
 			webView = (WebView) rootView.findViewById(R.id.webView);
 			webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -98,6 +110,13 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 			webView.setWebViewClient(new MyAppWebViewClient());
 
 //			webView.loadUrl(Data.userData.getGamePredictUrl());
+
+			imageViewBack.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					activity.performBackPressed();
+				}
+			});
 
 			if(!HomeActivity.checkIfUserDataNull(activity)) {
 				StringBuilder sb = new StringBuilder();

@@ -91,9 +91,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
 
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {

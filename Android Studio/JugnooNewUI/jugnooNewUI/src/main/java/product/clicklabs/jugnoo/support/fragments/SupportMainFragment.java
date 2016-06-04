@@ -24,6 +24,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
@@ -97,7 +98,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
         rootView = inflater.inflate(R.layout.fragment_support_main, container, false);
 
         activity = (SupportActivity) getActivity();
-		activity.setTitle(activity.getResources().getString(R.string.support_main_title));
+		activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
@@ -170,7 +171,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
-			activity.setTitle(activity.getResources().getString(R.string.support_main_title));
+			activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 		}
 	}
 

@@ -53,9 +53,8 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_HISTORY);
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		imageViewBack.setOnClickListener(new OnClickListener() {
 			@Override

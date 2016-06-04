@@ -692,17 +692,6 @@ public class Utils {
 		return shader;
 	}
 
-	public static Shader textColorGradient(Context context, int mWidth){
-		Shader shader;
-		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
-		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
-				context.getResources().getColor(R.color.theme_color_start),
-				context.getResources().getColor(R.color.theme_color_end), tile_mode);
-		shader = lin_grad;
-
-		return shader;
-	}
-
 	public static StateListDrawable getSelector(Context context, int normalState, int pressedState){
 		StateListDrawable stateListDrawable = new StateListDrawable();
 		stateListDrawable.addState(new int[]{android.R.attr.state_pressed},

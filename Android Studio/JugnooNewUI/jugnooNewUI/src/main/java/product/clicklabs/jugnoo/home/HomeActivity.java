@@ -1142,6 +1142,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     rating, feedbackStr, feedbackReasons);
                             FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
                             FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "submit feedback");
+                            flurryEventGAForTransaction();
                             FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "rating " + rating);
                             if (feedbackStr.length() > 0) {
                                 FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
@@ -1160,7 +1161,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 skipFeedbackForCustomerAsync(HomeActivity.this, Data.cEngagementId);
                 FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
-                FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "ride completed", "skip");
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
+                flurryEventGAForTransaction();
             }
         });
 
@@ -1458,6 +1460,41 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+    }
+
+    private void flurryEventGAForTransaction(){
+
+        List<Product> productList = new ArrayList<>();
+
+        Product product = new Product()
+                .setCategory("Auto")
+                .setId("0")
+                .setName("Paytm")
+                .setPrice(Data.endRideData.paidUsingPaytm);
+
+        Product product1 = new Product()
+                .setCategory("Auto")
+                .setId("1")
+                .setName("JC")
+                .setPrice(Data.endRideData.paidUsingWallet);
+
+        Product product2 = new Product()
+                .setCategory("Auto")
+                .setId("2")
+                .setName("Cash")
+                .setPrice(Data.endRideData.toPay);
+//                                                                .setPosition(4);
+        productList.add(product);
+        productList.add(product1);
+        productList.add(product2);
+
+
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
+                .setTransactionId(Data.endRideData.engagementId)
+                .setTransactionAffiliation("Auto")
+                .setTransactionRevenue(Data.endRideData.finalFare);
+
+        FlurryEventLogger.orderedProduct(productList, productAction);
     }
 
     private void setEnteredDestination(){
@@ -2076,21 +2113,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
                         Log.d("RidePath DB", "Deleted");
-                        List<Product> productList = new ArrayList<>();
-                        Product product = new Product()
-                                .setCategory("Auto")
-                                .setId("0")
-                                .setName("Paytm")
-                                .setPrice(Data.endRideData.paidUsingPaytm);
-//                                                                .setPosition(4);
-                        productList.add(product);
 
-                        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
-                                .setTransactionId(Data.endRideData.engagementId)
-                                .setTransactionAffiliation("Auto")
-                                .setTransactionRevenue(Data.endRideData.fare);
-
-                        FlurryEventLogger.orderedProduct(productList, productAction);
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
@@ -6670,7 +6693,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					public void onSuccess() {
                         Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
                         setUserData();
-					}
+                        try {
+                            JSONObject params = new JSONObject();
+                            params.put(KEY_PAYTM_BALANCE, Data.userData.getPaytmBalance());
+                            params.put(KEY_JUGNOO_BALANCE, Data.userData.getJugnooBalance());
+                            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_INITIAL_BALANCE, params);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
 					@Override
 					public void onFailure() {
@@ -6695,7 +6726,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					@Override
 					public void onNoRetry(View view) {
 					}
-				});
+
+                    @Override
+                    public void paytmDisabled() {
+                        try {
+                            JSONObject params = new JSONObject();
+                            params.put(KEY_JUGNOO_BALANCE, Data.userData.getJugnooBalance());
+                            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_INITIAL_BALANCE, params);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 			}
             long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
             long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;

@@ -40,6 +40,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GradientManager;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -145,9 +146,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         ((TextView)findViewById(R.id.textViewEstimateRideTimeText)).setTypeface(Fonts.mavenLight(this));
 
         // Get the TextView width and height in pixels
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         imageViewBack.setOnClickListener(new OnClickListener() {
 
@@ -271,6 +270,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                 @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
+
+                    NudgeClient.trackEventUserId(FareEstimateActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
                     textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
                             getResources().getString(R.string.rupee) + "" + maxFare);
 
@@ -309,74 +310,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 			});
         }
     }
-
-/*
-	*//**//**
-	 * ASync for calculating fare estimate from server
-	 *//**//*
-	public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final double distanceValue, final double timeValue) {
-		if (!HomeActivity.checkIfUserDataNull(activity)) {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
-				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("start_latitude", "" + sourceLatLng.latitude);
-				params.put("start_longitude", "" + sourceLatLng.longitude);
-				params.put("ride_distance", "" + distanceValue);
-				params.put("ride_time", "" + timeValue);
-
-                RestClient.getApiServices().getFareEstimate(params, new Callback<SettleUserDebt>() {
-                    @Override
-                    public void success(SettleUserDebt settleUserDebt, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.e(TAG, "getFareEstimate response = " + responseStr);
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt("flag");
-                                String message = JSONParser.getServerMessage(jObj);
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    String minFare = jObj.getString("min_fare");
-                                    String maxFare = jObj.getString("max_fare");
-                                    double convenienceCharge = jObj.optDouble("convenience_charge", 0);
-
-                                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
-                                            getResources().getString(R.string.rupee) + "" + maxFare);
-
-                                    if(convenienceCharge > 0){
-                                        textViewConvenienceCharge.setText("Convenience Charges "
-                                                +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
-                                    }
-                                    else{
-                                        textViewConvenienceCharge.setText("");
-                                    }
-                                } else {
-                                    retryDialog(activity, message, sourceLatLng, distanceValue, timeValue);
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, distanceValue, timeValue);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "getFareEstimate error="+error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, distanceValue, timeValue);
-                    }
-                });
-
-			} else {
-				retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, distanceValue, timeValue);
-                DialogPopup.dismissLoadingDialog();
-			}
-		} else{
-            DialogPopup.dismissLoadingDialog();
-        }
-	}*/
 
 
     public void performBackPressed() {

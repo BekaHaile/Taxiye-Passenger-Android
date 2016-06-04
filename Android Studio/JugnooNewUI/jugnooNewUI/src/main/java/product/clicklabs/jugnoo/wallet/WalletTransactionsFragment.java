@@ -126,9 +126,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
 		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 

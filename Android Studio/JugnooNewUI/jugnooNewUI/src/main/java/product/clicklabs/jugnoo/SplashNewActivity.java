@@ -1975,7 +1975,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login");
+									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL);
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
@@ -2559,6 +2559,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
+			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2683,7 +2686,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
-
+			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2795,7 +2800,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
-
+			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");

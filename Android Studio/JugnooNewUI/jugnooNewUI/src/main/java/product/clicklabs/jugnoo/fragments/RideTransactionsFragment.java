@@ -27,6 +27,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FeedbackActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -202,7 +203,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 	private void setActivityTitle(){
 		if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
+			((RideTransactionsActivity)activity).setTitle(MyApplication.getInstance().ACTIVITY_NAME_HISTORY);
 		} else if(activity instanceof SupportActivity){
 			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
 		}

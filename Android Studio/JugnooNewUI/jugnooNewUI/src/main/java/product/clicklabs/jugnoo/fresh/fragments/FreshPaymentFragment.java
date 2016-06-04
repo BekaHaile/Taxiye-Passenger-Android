@@ -208,6 +208,11 @@ public class FreshPaymentFragment extends Fragment {
 				public void onNoRetry(View view) {
 
 				}
+
+				@Override
+				public void paytmDisabled() {
+
+				}
 			});
 		}
 		return apiPaytmCheckBalance;
