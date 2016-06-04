@@ -18,7 +18,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -88,23 +87,13 @@ public class TopBar {
 
 		LinearLayout.LayoutParams paramsAppToggle = (LinearLayout.LayoutParams) imageViewAppToggle.getLayoutParams();
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-		if(activity instanceof FreshActivity){
-			imageViewHelp.setVisibility(View.GONE);
-			imageViewAppToggle.setImageResource(R.drawable.ic_autos_topbar_selector);
-			paramsAppToggle.width = (int)(minRatio * 78f);
-			paramsAppToggle.height = (int)(minRatio * 68f);
-			imageViewAppToggle.setLayoutParams(paramsAppToggle);
-			imageViewSearchIcon.setVisibility(View.GONE);
 
-			textViewTitle.setText(activity.getResources().getString(R.string.fresh));
-
-		} else if(activity instanceof HomeActivity) {
+		if(activity instanceof HomeActivity) {
 			imageViewAppToggle.setImageResource(R.drawable.ic_fatafat_selector);
 			paramsAppToggle.width = (int)(minRatio * 70f);
 			paramsAppToggle.height = (int)(minRatio * 70f);
 			imageViewAppToggle.setLayoutParams(paramsAppToggle);
 			imageViewSearchIcon.setVisibility(View.GONE);
-
 			textViewTitle.setText(activity.getResources().getString(R.string.app_name));
 		}
 
@@ -158,30 +147,16 @@ public class TopBar {
 					if(activity instanceof HomeActivity) {
 						((HomeActivity)activity).backFromSearchToInitial();
 					}
-					else if(activity instanceof FreshActivity){
-						((FreshActivity)activity).performBackPressed();
-					}
 					break;
 
 				case R.id.imageViewDelete:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).deleteCart();
-					}
 					break;
 
 				case R.id.textViewAdd:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).addAddress();
-					}
 					break;
 
 				case R.id.imageViewAppToggle:
-					if(activity instanceof FreshActivity){
-						activity.finish();
-						activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
-						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_BACK_TO_JUGNOO, null);
-
-					} else if(activity instanceof HomeActivity) {
+					if(activity instanceof HomeActivity) {
 						if (((HomeActivity)activity).map != null
 								&& ((HomeActivity)activity).mapStateListener != null
 								&& ((HomeActivity)activity).mapStateListener.isMapSettled()) {
@@ -196,9 +171,7 @@ public class TopBar {
 					break;
 
 				case R.id.imageViewSearchIcon:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).openSearch();
-					}
+
 					break;
 
 			}

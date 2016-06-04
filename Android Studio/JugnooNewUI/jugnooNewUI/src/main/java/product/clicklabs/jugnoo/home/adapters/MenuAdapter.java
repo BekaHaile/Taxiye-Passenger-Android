@@ -33,7 +33,6 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.fresh.FreshActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -188,9 +187,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
-                    if(activity instanceof FreshActivity){
-                        holder.textViewMenu.setText(activity.getResources().getString(R.string.order_history));
-                    }
+
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_refer_a_driver_selector);
                     try {
@@ -306,9 +303,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(activity instanceof HomeActivity) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
-                } else if(activity instanceof FreshActivity){
-                    activity.finish();
-                    activity.overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
                 }
             } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
@@ -323,8 +317,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
                         FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
                     }
-                } else if(activity instanceof FreshActivity){
-                    ((FreshActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
                 }
             } else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, ShareActivity.class);
@@ -348,9 +340,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 LatLng currLatLng = null;
                 if(activity instanceof HomeActivity){
                     currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
-                } else if(activity instanceof FreshActivity){
-                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                 }
+
                 if(currLatLng != null){
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
@@ -364,8 +355,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 LatLng currLatLng = null;
                 if(activity instanceof HomeActivity){
                     currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
-                } else if(activity instanceof FreshActivity){
-                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                 }
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
@@ -406,16 +395,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
-                } else if(activity instanceof FreshActivity){
-                    ((FreshActivity)activity).openOrderHistory();
                 }
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
                     activity.startActivity(new Intent(activity, SupportActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Support");
-                } else if(activity instanceof FreshActivity){
-                    ((FreshActivity)activity).openSupport();
                 }
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));

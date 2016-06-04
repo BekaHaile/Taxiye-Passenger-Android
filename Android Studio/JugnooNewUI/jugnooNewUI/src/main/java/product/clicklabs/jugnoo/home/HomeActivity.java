@@ -147,7 +147,6 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
-import product.clicklabs.jugnoo.fresh.FreshIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.JugnooPoolTutorial;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
@@ -3833,8 +3832,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(locD != null){
                     freshIntroDialog = locD;
                 }*/
-            } else {
-                freshIntroCallback.notShown();
             }
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
@@ -3890,36 +3887,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
-
-    private FreshIntroDialog.Callback freshIntroCallback = new FreshIntroDialog.Callback() {
-
-        @Override
-        public void onContinueClicked() {
-            menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_FRESH.getTag());
-        }
-
-        @Override
-        public void onMayBeLaterClicked() {
-            callT20AndReferAllDialog(passengerScreenMode);
-        }
-
-        @Override
-        public void notShown() {
-            if(1 == Data.freshAvailable){
-                if(freshIntroDialog == null){
-                    callT20AndReferAllDialog(passengerScreenMode);
-                }
-            } else {
-                callT20AndReferAllDialog(passengerScreenMode);
-            }
-        }
-
-        @Override
-        public void onDialogDismiss() {
-            freshIntroDialog = null;
-        }
-    };
 
 
 	//Our service is not available in this area
