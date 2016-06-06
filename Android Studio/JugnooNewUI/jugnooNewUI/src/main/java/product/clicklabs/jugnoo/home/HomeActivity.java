@@ -147,6 +147,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.JugnooPoolTutorial;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
@@ -311,7 +312,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
-    private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp;
+    private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation;
 
     private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
@@ -616,6 +617,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
         textViewDriverRating.setTypeface(Fonts.mavenLight(this));
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
+        textViewCancellation = (TextView) findViewById(R.id.textViewCancellation); textViewCancellation.setTypeface(Fonts.mavenRegular(this));
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
@@ -955,10 +957,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
+                new CancellationChargesDialog(HomeActivity.this, new CancellationChargesDialog.Callback() {
+                    @Override
+                    public void onDialogDismiss() {
+
+                    }
+
+                    @Override
+                    public void onYes() {
+
+                    }
+
+                    @Override
+                    public void onNo() {
+
+                    }
+                }).showCancellationChargesDialog();
+                /*startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
-                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
+                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");*/
             }
         });
 

@@ -182,12 +182,15 @@
 	<string name="server_error">Server error. Please try again later.</string>
 	<string name="server_not_responding">Oops!! Server not responding. Please try again later.</string>
 	<string name="check_internet_message">Check your internet connection.</string>
+	<string name="cancellation_charges_may_apply">Cancellation charges may apply*</string>
 	
 	
 	<string name="check_all">Check All</string>
 	<string name="uncheck_all">Uncheck All</string>
 	<string name="ride_request_text">GET A RIDE</string>
 	<string name="for_one_person">for one person will be</string>
+	<string name="your_driver_is_on_his_way">Your Driver is on his way.</string>
+	<string name="continue_with_cancellation">Continue with cancellation?</string>
 
 
     <!-- wallet screen-->
