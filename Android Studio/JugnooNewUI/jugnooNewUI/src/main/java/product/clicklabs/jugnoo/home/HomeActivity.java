@@ -1505,14 +1505,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(minutes < 30){
                 Data.dropLatLng = temp.getLatLng();
                 if(Data.dropLatLng != null){
+                    if(textViewDestSearch.getText().toString().isEmpty()){
+                        translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                        translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+                    }
+
                     textViewDestSearch.setText(temp.getName());
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 
                     dropLocationSet = true;
                     relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
                     imageViewDropCross.setVisibility(View.VISIBLE);
-                    translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
-                    translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+
+                    /*translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                    translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);*/
                 }
             } else{
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
@@ -1557,7 +1563,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = params.topMargin + ((int)(ASSL.Yscale()*SEARCH_FLIP_ANIMATION_MARGIN));
+                params.topMargin = ((int)(ASSL.Yscale()*100f));
                 mView.setLayoutParams(params);
                 if(callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
@@ -1593,7 +1599,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin - (int) (ASSL.Yscale() * SEARCH_FLIP_ANIMATION_MARGIN);
+                params.topMargin = (int) (ASSL.Yscale() * 80f);
                 mView.setLayoutParams(params);
             }
 
@@ -1625,7 +1631,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin - (int) (ASSL.Yscale() * SEARCH_FLIP_ANIMATION_MARGIN);
+                params.topMargin = (int) (ASSL.Yscale() * 0f);
                 mView.setLayoutParams(params);
                 if(callNextAnim) {
                     translateViewTopBottom(mView, viewExchange);
@@ -1660,7 +1666,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
-                params.topMargin = params.topMargin + (int) (ASSL.Yscale() * SEARCH_FLIP_ANIMATION_MARGIN);
+                params.topMargin = (int) (ASSL.Yscale() * 20f);
                 mView.setLayoutParams(params);
             }
 
@@ -1856,33 +1862,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try{
             onRequestRideTap();
 
-            lastPickUp.clear();
-            lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
-            if (lastPickUp.size() == 0) {
-                lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
-            } else {
-                boolean isSame = false;
-                for (int i = 0; i < lastPickUp.size(); i++) {
-                    if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())) {
-                        isSame = true;
-                        break;
+            if(!textViewInitialSearch.getText().toString().equalsIgnoreCase("")) {
+                lastPickUp.clear();
+                lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
+                if (lastPickUp.size() == 0) {
+                    if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
+                            (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
+                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
                     }
+                } else {
+                    boolean isSame = false;
+                    for (int i = 0; i < lastPickUp.size(); i++) {
+                        if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())) {
+                            isSame = true;
+                            break;
+                        }
+                    }
+                    if (!isSame) {
+                        if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
+                                (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
+                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
+                        }
+                    }
+                    if (lastPickUp.size() > 3) {
+                        lastPickUp.remove(3);
+                    }
+                    Log.v("size of last pickup", "---> " + lastPickUp.size());
                 }
-                if (!isSame) {
-                    lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.pickupLatLng));
-                }
-                if (lastPickUp.size() > 3) {
-                    lastPickUp.remove(3);
-                }
-                Log.v("size of last pickup", "---> " + lastPickUp.size());
-            }
-            String tempPickup = new Gson().toJson(lastPickUp);
-            Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
+                String tempPickup = new Gson().toJson(lastPickUp);
+                Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
 
-            String json = Prefs.with(HomeActivity.this).getString(SPLabels.LAST_PICK_UP, "");
-            Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
-            ArrayList<SearchResult> arrayList = new Gson().fromJson(json, type);
-            Log.v("size of saved last pickup", "---> " + arrayList.get(0).getName());
+                String json = Prefs.with(HomeActivity.this).getString(SPLabels.LAST_PICK_UP, "");
+                Type type = new TypeToken<ArrayList<SearchResult>>() {
+                }.getType();
+                ArrayList<SearchResult> arrayList = new Gson().fromJson(json, type);
+                Log.v("size of saved last pickup", "---> " + arrayList.get(0).getName());
+            }
 
         } catch(Exception e){
             e.printStackTrace();
@@ -2142,7 +2157,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						try{ map.clear(); } catch(Exception e){ e.printStackTrace(); }
 
 
-
+                        setEnteredDestination();
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -2862,9 +2877,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
 				setDropLocationMarker();
 				imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-				if(textViewAssigningDropLocationClick.getText().length() == 0){
-					getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
-				}
+                getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -2882,9 +2895,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         else{
             setDropLocationMarker();
             imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
-            if(textViewFinalDropLocationClick.getText().length() == 0){
-                getAddress(Data.dropLatLng, textViewFinalDropLocationClick, progressBarFinalDropLocation);
-            }
+            getAddress(Data.dropLatLng, textViewFinalDropLocationClick, progressBarFinalDropLocation);
         }
     }
 
@@ -6928,7 +6939,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switchPassengerScreen(passengerScreenMode);
             }
             else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
-                textViewDestSearch.setText(autoCompleteSearchResult.getName());
+                //textViewDestSearch.setText(autoCompleteSearchResult.getName());
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
@@ -6994,32 +7005,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 imageViewDropCross.setVisibility(View.VISIBLE);
 
                 // Save Last 3 Destination...
-                lastDestination.clear();
-                lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
-                if (lastDestination.size() == 0) {
-                    lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
-                } else {
-                    boolean isSame = false;
-                    for (int i = 0; i < lastDestination.size(); i++) {
-                        if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())) {
-                            isSame = true;
-                            break;
-                        }
-                    }
-                    if (!isSame) {
-                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
-                    }
-                    if (lastDestination.size() > 3) {
-                        lastDestination.remove(3);
-                    }
-                    Log.v("size of last Destination", "---> " + lastDestination.size());
-                }
-                String tempDest = new Gson().toJson(lastDestination);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);
-
-                // Save Entered Destination for 30 min or till Ride End...
-                String strResult = new Gson().toJson(searchResult, SearchResult.class);
-                Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, strResult);
+                saveLastDestinations(searchResult);
 
                 /*lastDestination.add(searchResult);
                 lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
@@ -7032,6 +7018,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+            saveLastDestinations(searchResult);
             sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
                     getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch());
             FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
@@ -7039,6 +7026,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            saveLastDestinations(searchResult);
             sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
                     getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch());
             FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
@@ -7087,6 +7075,48 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         });
+    }
+
+    private void saveLastDestinations(SearchResult searchResult){
+        try {
+            if(!searchResult.getName().equalsIgnoreCase("")) {
+                lastDestination.clear();
+                lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
+                if (lastDestination.size() == 0) {
+                    if ((!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.home))) &&
+                            (!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.work)))) {
+                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
+                    }
+                } else {
+                    boolean isSame = false;
+                    for (int i = 0; i < lastDestination.size(); i++) {
+                        if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())) {
+                            isSame = true;
+                            break;
+                        }
+                    }
+                    if (!isSame) {
+                        if ((!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.home))) &&
+                                (!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.work)))) {
+                            lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
+                        }
+                    }
+                    if (lastDestination.size() > 3) {
+                        lastDestination.remove(3);
+                    }
+                    Log.v("size of last Destination", "---> " + lastDestination.size());
+                }
+                String tempDest = new Gson().toJson(lastDestination);
+                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);
+
+                // Save Entered Destination for 30 min or till Ride End...
+                String strResult = new Gson().toJson(searchResult, SearchResult.class);
+                Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, strResult);
+                setEnteredDestination();
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void openPaytmRechargeDialog(){

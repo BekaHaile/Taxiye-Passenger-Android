@@ -20,15 +20,15 @@
 
         <ImageView
             android:id="@+id/imageViewEditProfile"
-            android:layout_width="77px"
-            android:layout_height="77px"
+            android:layout_width="60px"
+            android:layout_height="60px"
             android:layout_alignParentRight="true"
-            android:padding="25px"
+            android:padding="15px"
             android:tag="mwar"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginRight="20px"
             android:visibility="visible"
-            android:src="@drawable/ic_otp_edit_number_selector"/>
+            android:src="@drawable/edit_icon_selector"/>
 
         <LinearLayout
             android:id="@+id/linearLayoutSave"
@@ -293,15 +293,15 @@
 
                 <ImageView
                     android:id="@+id/imageViewChangePassword"
-                    android:layout_width="67px"
-                    android:layout_height="67px"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
                     android:layout_alignParentRight="true"
-                    android:padding="20px"
+                    android:padding="15px"
                     android:tag="mwar"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="24px"
+                    android:layout_marginRight="20px"
                     android:visibility="visible"
-                    android:src="@drawable/ic_otp_edit_number_selector"/>
+                    android:src="@drawable/edit_icon_selector"/>
 
                 <LinearLayout
                     android:id="@+id/linearLayoutPasswordSave"
@@ -430,7 +430,7 @@
                     android:padding="15px"
                     android:src="@drawable/edit_icon_selector"
                     android:tag="mwar"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
                 <View
                     android:layout_width="match_parent"
