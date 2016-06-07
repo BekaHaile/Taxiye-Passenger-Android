@@ -958,9 +958,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if ((System.currentTimeMillis() < (DateOperations.getMilliseconds(DateOperations.utcToLocal(Data.assignedDriverInfo.getRideAcceptedTime()))
-                            + Data.assignedDriverInfo.getCancellationTimeOffset()))) {
-
+                    if ((!Data.assignedDriverInfo.getCancelRideThrashHoldTime().equalsIgnoreCase("")) &&
+                            (System.currentTimeMillis() > (DateOperations.getMilliseconds(DateOperations.utcToLocal(Data.assignedDriverInfo.getCancelRideThrashHoldTime()))))) {
                         new CancellationChargesDialog(HomeActivity.this, new CancellationChargesDialog.Callback() {
                             @Override
                             public void onDialogDismiss() {
@@ -5356,13 +5355,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			Data.userData.fareFactor = fareFactor;
 			double fareFixed = 0;
-            String rideAcceptedTime = "";
-            long cancellationTimeOffset = 0;
+            String cancelRideThrashHoldTime = "";
             try{
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
-                JSONObject cancellationDetailsObj = jObj.optJSONObject("cancellation_detail");
-                rideAcceptedTime = cancellationDetailsObj.optString("ride_accepted_time");
-                cancellationTimeOffset = cancellationDetailsObj.optLong("cancellation_timeoffset");
+                cancelRideThrashHoldTime = jObj.optString("cancel_ride_threshold_time", "");
+
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -5375,7 +5372,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
-                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, rideAcceptedTime, cancellationTimeOffset);
+                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime);
 
 			if(inRide){
 				initializeStartRideVariables();

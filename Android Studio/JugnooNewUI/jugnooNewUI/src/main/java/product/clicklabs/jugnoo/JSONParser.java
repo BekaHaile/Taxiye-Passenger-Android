@@ -714,7 +714,7 @@ public class JSONParser implements Constants {
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
-            String rideAcceptedTime = "";
+            String cancelRideThrashHoldTime = "";
             long cancellationTimeOffset = 0;
 
 
@@ -811,9 +811,7 @@ public class JSONParser implements Constants {
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
                             try{
-                                JSONObject cancellationDetailsObj = jObject.optJSONObject("cancellation_detail");
-                                rideAcceptedTime = cancellationDetailsObj.optString("ride_accepted_time", "");
-                                cancellationTimeOffset = cancellationDetailsObj.optLong("cancellation_timeoffset", 0);
+                                cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -872,7 +870,7 @@ public class JSONParser implements Constants {
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, rideAcceptedTime, cancellationTimeOffset);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime);
 
                 Data.userData.fareFactor = fareFactor;
 
