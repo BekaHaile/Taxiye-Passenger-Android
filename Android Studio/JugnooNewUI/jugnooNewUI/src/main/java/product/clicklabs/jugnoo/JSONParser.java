@@ -198,6 +198,8 @@ public class JSONParser implements Constants {
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
         String destinationHelpText = userData.optString("destination_help_text", "");
+        String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", context.getResources().getString(R.string.your_driver_is_on_his_way));
+        String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", context.getResources().getString(R.string.continue_with_cancellation));
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -238,7 +240,8 @@ public class JSONParser implements Constants {
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
-                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText);
+                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
+                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2);
 
     }
 
@@ -711,6 +714,8 @@ public class JSONParser implements Constants {
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
+            String rideAcceptedTime = "";
+            long cancellationTimeOffset = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -804,6 +809,14 @@ public class JSONParser implements Constants {
 
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+
+                            try{
+                                JSONObject cancellationDetailsObj = jObject.optJSONObject("cancellation_detail");
+                                rideAcceptedTime = cancellationDetailsObj.optString("ride_accepted_time", "");
+                                cancellationTimeOffset = cancellationDetailsObj.optLong("cancellation_timeoffset", 0);
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -855,9 +868,11 @@ public class JSONParser implements Constants {
                 double dLongitude = Double.parseDouble(longitude);
 
 
+
+
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, rideAcceptedTime, cancellationTimeOffset);
 
                 Data.userData.fareFactor = fareFactor;
 

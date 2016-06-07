@@ -212,7 +212,7 @@ public class SlidingBottomPanel {
             if (Data.promoCoupons != null) {
                 if (Data.promoCoupons.size() > 0) {
                     textViewOffersValue.setText(String.valueOf(Data.promoCoupons.size()));
-                    nudgeCouponsEvent();
+
                 } else {
                     textViewOffersValue.setText("-");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
@@ -486,7 +486,7 @@ public class SlidingBottomPanel {
         }
     }
 
-    private void nudgeCouponsEvent(){
+    public void nudgeCouponsEvent(){
         try {
             JSONObject map = new JSONObject();
             JSONArray coups = new JSONArray();

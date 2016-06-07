@@ -420,6 +420,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
 						}
 						notificationManager(this, title, message1, playSound);
+						NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_CANCELLED_BY_DRIVER, null);
 
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag
 							|| PushFlags.WAITING_ENDED.getOrdinal() == flag) {

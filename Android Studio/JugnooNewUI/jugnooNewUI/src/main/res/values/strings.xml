@@ -191,6 +191,8 @@
 	<string name="for_one_person">for one person will be</string>
 	<string name="your_driver_is_on_his_way">Your Driver is on his way.</string>
 	<string name="continue_with_cancellation">Continue with cancellation?</string>
+	<string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
+	<string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
 
 
     <!-- wallet screen-->

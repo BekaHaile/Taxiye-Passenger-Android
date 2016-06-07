@@ -200,6 +200,10 @@ public interface Constants {
 
 	String KEY_JUGNOO_BALANCE = "jugnoo_balance";
 	String KEY_PAYTM_BALANCE = "paytm_balance";
+	String KEY_PAID_USING_PAYTM = "paid_using_paytm";
+	String KEY_PAID_USING_JUGNOO_CASH = "paid_using_jugnoo_cash";
+	String KEY_PAID_USING_CASH = "paid_using_cash";
+	String KEY_TOTAL_FARE = "total_fare";
 
 	String SP_INSTALL_REFERRER_CONTENT = "sp_install_referrer_content";
 	String KEY_REFERRER = "referrer";

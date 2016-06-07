@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,25 +17,25 @@ import product.clicklabs.jugnoo.utils.Fonts;
 /**
  * Created by Ankit on 5/2/16.
  */
-public class CancellationChargesDialog {
+public class ServiceUnavailableDialog {
 
-	private final String TAG = CancellationChargesDialog.class.getSimpleName();
+	private final String TAG = ServiceUnavailableDialog.class.getSimpleName();
 	private Activity activity;
 	private Callback callback;
 	private Dialog dialog = null;
 
-	public CancellationChargesDialog(Activity activity, Callback callback) {
+	public ServiceUnavailableDialog(Activity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
 	}
 
 
 
-	public Dialog showCancellationChargesDialog(String line1Text, String line2Text) {
+	public Dialog showServiceUnavailableDialog() {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
-			dialog.setContentView(R.layout.dialog_cancellation_charges);
+			dialog.setContentView(R.layout.dialog_service_unavailable);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
 			new ASSL(activity, relative, 1134, 720, false);
@@ -48,20 +47,12 @@ public class CancellationChargesDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			TextView textViewCancelRide = (TextView) dialog.findViewById(R.id.textViewCancelRide);
-			textViewCancelRide.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
-			TextView textViewOnHisWay = (TextView) dialog.findViewById(R.id.textViewOnHisWay);
-			textViewOnHisWay.setTypeface(Fonts.mavenRegular(activity));
-			TextView textViewContinue = (TextView) dialog.findViewById(R.id.textViewContinue);
-			textViewContinue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+			TextView textViewCancelledRides = (TextView) dialog.findViewById(R.id.textViewCancelledRides);
+			textViewCancelledRides.setTypeface(Fonts.mavenMedium(activity));
+			TextView textViewResume = (TextView) dialog.findViewById(R.id.textViewResume);
+			textViewResume.setTypeface(Fonts.mavenRegular(activity));
 			Button buttonYes = (Button)dialog.findViewById(R.id.buttonYes);
 			buttonYes.setTypeface(Fonts.mavenMedium(activity));
-			Button buttonNo = (Button)dialog.findViewById(R.id.buttonNo);
-			buttonNo.setTypeface(Fonts.mavenMedium(activity));
-			TextView textViewCancellation = (TextView) dialog.findViewById(R.id.textViewCancellation);
-			textViewCancellation.setTypeface(Fonts.mavenRegular(activity));
-			textViewOnHisWay.setText(line1Text);
-			textViewContinue.setText(line2Text);
 
 
 
@@ -69,17 +60,10 @@ public class CancellationChargesDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					callback.onYes();
+					callback.onOk();
 				}
 			});
 
-			buttonNo.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-					callback.onNo();
-				}
-			});
 
 			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -114,8 +98,7 @@ public class CancellationChargesDialog {
 
 	public interface Callback{
 		void onDialogDismiss();
-		void onYes();
-		void onNo();
+		void onOk();
 	}
 
 }

@@ -154,6 +154,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
+import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
@@ -954,29 +955,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         // customer request final layout events
         buttonCancelRide.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                new CancellationChargesDialog(HomeActivity.this, new CancellationChargesDialog.Callback() {
-                    @Override
-                    public void onDialogDismiss() {
+                try {
+                    if ((System.currentTimeMillis() < (DateOperations.getMilliseconds(DateOperations.utcToLocal(Data.assignedDriverInfo.getRideAcceptedTime()))
+                            + Data.assignedDriverInfo.getCancellationTimeOffset()))) {
 
+                        new CancellationChargesDialog(HomeActivity.this, new CancellationChargesDialog.Callback() {
+                            @Override
+                            public void onDialogDismiss() {
+
+                            }
+
+                            @Override
+                            public void onYes() {
+                                startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
+                                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
+                            }
+
+                            @Override
+                            public void onNo() {
+
+                            }
+                        }).showCancellationChargesDialog(Data.userData.getCancellationChargesPopupTextLine1(), Data.userData.getCancellationChargesPopupTextLine2());
+                    } else {
+                        startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
+                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
                     }
-
-                    @Override
-                    public void onYes() {
-
-                    }
-
-                    @Override
-                    public void onNo() {
-
-                    }
-                }).showCancellationChargesDialog();
-                /*startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
-                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(RIDE_CANCELLED_NOT_COMPLETE);
+                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "cancel ride");
+                }
             }
         });
 
@@ -1468,15 +1484,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.put(KEY_LATITUDE, Data.latitude);
             map.put(KEY_LONGITUDE, Data.longitude);
             NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN, map);
+
+            slidingBottomPanel.nudgeCouponsEvent();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
 		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+    }
+
+    private void showServiceUnavailableDialog(){
+        new ServiceUnavailableDialog(HomeActivity.this, new ServiceUnavailableDialog.Callback() {
+            @Override
+            public void onDialogDismiss() {
+
+            }
+
+            @Override
+            public void onOk() {
+
+            }
+        }).showServiceUnavailableDialog();
     }
 
     private void flurryEventGAForTransaction(){
@@ -2397,7 +2430,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             if(Data.dropLatLng != null) {
                                 setDropLocationMarker();
-                                setPickupToDropPath();
                             }
                         }
 
@@ -2931,11 +2963,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void setPickupToDropPath(){
-        if(pathToDropLocationPolylineOptions != null) {
-            if (pathToDropLocationPolyline != null) {
-                pathToDropLocationPolyline.remove();
+        if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+            if (pathToDropLocationPolylineOptions != null) {
+                if (pathToDropLocationPolyline != null) {
+                    pathToDropLocationPolyline.remove();
+                }
+                pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
             }
-            pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
         }
     }
 
@@ -5322,8 +5356,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 			Data.userData.fareFactor = fareFactor;
 			double fareFixed = 0;
+            String rideAcceptedTime = "";
+            long cancellationTimeOffset = 0;
             try{
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
+                JSONObject cancellationDetailsObj = jObj.optJSONObject("cancellation_detail");
+                rideAcceptedTime = cancellationDetailsObj.optString("ride_accepted_time");
+                cancellationTimeOffset = cancellationDetailsObj.optLong("cancellation_timeoffset");
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -5333,9 +5372,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
-                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet);
+                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, rideAcceptedTime, cancellationTimeOffset);
 
 			if(inRide){
 				initializeStartRideVariables();
@@ -6800,7 +6840,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    private void skipFeedbackForCustomerAsync(final Activity activity, String engagementId) {
+    private void skipFeedbackForCustomerAsync(final Activity activity, final String engagementId) {
         try {
             final HashMap<String, String> params = new HashMap<>();
             params.put("access_token", Data.userData.accessToken);
@@ -6810,6 +6850,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     Log.i(TAG, "skipRatingByCustomer response = " + response);
+                    try {
+                        JSONObject map = new JSONObject();
+                        map.put(KEY_ENGAGEMENT_ID, engagementId);
+                        map.put(KEY_TOTAL_FARE, Data.endRideData.getTripTotal());
+                        map.put(KEY_PAID_USING_PAYTM, Data.endRideData.paidUsingPaytm);
+                        map.put(KEY_PAID_USING_JUGNOO_CASH, Data.endRideData.paidUsingWallet);
+                        map.put(KEY_PAID_USING_CASH, Data.endRideData.toPay);
+                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_FEEDBACK, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -6868,6 +6919,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         JSONObject map = new JSONObject();
                                         map.put(KEY_ENGAGEMENT_ID, engagementId);
                                         map.put(KEY_GIVEN_RATING, givenRating);
+                                        map.put(KEY_TOTAL_FARE, Data.endRideData.getTripTotal());
+                                        map.put(KEY_PAID_USING_PAYTM, Data.endRideData.paidUsingPaytm);
+                                        map.put(KEY_PAID_USING_JUGNOO_CASH, Data.endRideData.paidUsingWallet);
+                                        map.put(KEY_PAID_USING_CASH, Data.endRideData.toPay);
                                         NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_FEEDBACK, map);
                                     } catch (Exception e) {
                                         e.printStackTrace();

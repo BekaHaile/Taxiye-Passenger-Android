@@ -347,8 +347,6 @@ public class LoginResponse {
 		@Expose
 		private List<MenuInfo> menuInfoList;
 
-
-
 		@SerializedName("campaigns")
 		@Expose
 		private Campaigns campaigns;
@@ -496,5 +494,6 @@ public class LoginResponse {
 		public void setIsPoolEnabled(Integer isPoolEnabled) {
 			this.isPoolEnabled = isPoolEnabled;
 		}
+
 	}
 }

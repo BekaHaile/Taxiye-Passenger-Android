@@ -17,7 +17,7 @@ public class DriverInfo {
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String promoName = Data.NO_PROMO_APPLIED;
+	public String promoName = Data.NO_PROMO_APPLIED, rideAcceptedTime;
 	private String eta = "10";
 	private double fareFixed;
 	private int preferredPaymentMode;
@@ -28,6 +28,7 @@ public class DriverInfo {
 	private int vehicleType;
 	private ArrayList<Integer> regionIds = new ArrayList<>();
 	private VehicleIconSet vehicleIconSet;
+	private long cancellationTimeOffset;
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -55,7 +56,7 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude,
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
-					  int vehicleType, String iconSet){
+					  int vehicleType, String iconSet, String rideAcceptedTime, long cancellationTimeOffset){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -76,6 +77,8 @@ public class DriverInfo {
 		this.scheduleT20 = scheduleT20;
 		this.vehicleType = vehicleType;
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
+		this.rideAcceptedTime = rideAcceptedTime;
+		this.cancellationTimeOffset = cancellationTimeOffset;
 	}
 
 	//for last ride data
@@ -169,5 +172,22 @@ public class DriverInfo {
 
 	public void setRegionIds(ArrayList<Integer> regionIds) {
 		this.regionIds = regionIds;
+	}
+
+
+	public long getCancellationTimeOffset() {
+		return cancellationTimeOffset;
+	}
+
+	public void setCancellationTimeOffset(long cancellationTimeOffset) {
+		this.cancellationTimeOffset = cancellationTimeOffset;
+	}
+
+	public String getRideAcceptedTime() {
+		return rideAcceptedTime;
+	}
+
+	public void setRideAcceptedTime(String rideAcceptedTime) {
+		this.rideAcceptedTime = rideAcceptedTime;
 	}
 }

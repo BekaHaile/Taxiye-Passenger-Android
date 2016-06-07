@@ -41,6 +41,7 @@ public class UserData {
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
+	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -54,7 +55,8 @@ public class UserData {
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
-					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText){
+					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
+					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -124,6 +126,8 @@ public class UserData {
 		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
 		this.referralActivityEnabled = referralActivityEnabled;
 		this.destinationHelpText = destinationHelpText;
+		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
+		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
 
 		checkUserImage();
 	}
@@ -468,5 +472,21 @@ public class UserData {
 
 	public void setDestinationHelpText(String destinationHelpText) {
 		this.destinationHelpText = destinationHelpText;
+	}
+
+	public String getCancellationChargesPopupTextLine2() {
+		return cancellationChargesPopupTextLine2;
+	}
+
+	public void setCancellationChargesPopupTextLine2(String cancellationChargesPopupTextLine2) {
+		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
+	}
+
+	public String getCancellationChargesPopupTextLine1() {
+		return cancellationChargesPopupTextLine1;
+	}
+
+	public void setCancellationChargesPopupTextLine1(String cancellationChargesPopupTextLine1) {
+		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
 	}
 }
