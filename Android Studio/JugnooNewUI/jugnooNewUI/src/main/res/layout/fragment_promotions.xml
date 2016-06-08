@@ -5,7 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:splitMotionEvents="false">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:text="@string/promotions"
+            style="@style/title"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -83,8 +107,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutListTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20px">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="match_parent"
@@ -119,10 +142,40 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewOffers"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="415px"
         android:layout_marginTop="40px"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="155px">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_above="@+id/textViewFreeRides"
+            android:src="@color/stroke_color_light"/>
+
+        <TextView
+            android:id="@+id/textViewFreeRides"
+            android:layout_width="match_parent"
+            android:layout_height="95px"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:background="@color/menu_item_selector_color"
+            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/text_color"
+            android:text="@string/want_free_rides"/>
+
+        <ImageView
+            android:layout_width="128px"
+            android:layout_height="128px"
+            android:src="@drawable/free_rides_promotions"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50px"
+            android:tag="mwar"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutNoOffers"

@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -173,7 +174,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
                     }
-                } else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                } else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_promotion_selector);
                     try {
                         if(Data.userData.numCouponsAvaliable > 0) {
@@ -201,6 +202,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
+                } else{
+                    hideLayout(holder.relative);
                 }
 
                 holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -351,7 +354,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "inbox");
 
-            }else if(MenuInfoTags.PROMOTIONS.getTag().equalsIgnoreCase(tag)){
+            }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)){
                 LatLng currLatLng = null;
                 if(activity instanceof HomeActivity){
                     currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
@@ -360,7 +363,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
                     if(AppStatus.getInstance(activity).isOnline(activity)) {
-                        activity.startActivity(new Intent(activity, ShareActivity.class));
+                        activity.startActivity(new Intent(activity, PromotionActivity.class));
                         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "promotion");
