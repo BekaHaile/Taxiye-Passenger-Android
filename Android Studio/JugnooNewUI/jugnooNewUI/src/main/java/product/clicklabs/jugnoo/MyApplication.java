@@ -34,6 +34,7 @@ public class MyApplication extends Application{
 	public String ACTIVITY_NAME_INBOX= "INBOX";
 	public String ACTIVITY_NAME_PROMOTIONS = "PROMOTIONS";
 	public String ACTIVITY_NAME_HISTORY = "HISTORY";
+	public String ACTIVITY_NAME_OFFERS = "PROMOTIONS";
 	public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
 	public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
 	public String ACTIVITY_NAME_ABOUT = "ABOUT";

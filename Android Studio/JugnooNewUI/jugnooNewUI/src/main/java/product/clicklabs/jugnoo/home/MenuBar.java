@@ -73,7 +73,9 @@ public class MenuBar {
                     MyApplication.getInstance().ACTIVITY_NAME_INBOX = Data.menuInfoList.get(i).getName();
                 } else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.PROMOTIONS.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS = Data.menuInfoList.get(i).getName();
-                } else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
+                }else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
+					MyApplication.getInstance().ACTIVITY_NAME_OFFERS = Data.menuInfoList.get(i).getName();
+				} else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_HISTORY = Data.menuInfoList.get(i).getName();
                 } else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.REFER_A_DRIVER.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_REFER_A_DRIVER = Data.menuInfoList.get(i).getName();

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.promotion;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,6 +49,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -103,7 +105,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
-        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS);
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_OFFERS);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +138,17 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
         promotionsAdapter = new PromotionsAdapter(PromotionActivity.this, promoCoupons);
         recyclerViewOffers.setAdapter(promotionsAdapter);
+
+        textViewFreeRides.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PromotionActivity.this, ShareActivity.class);
+                intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                NudgeClient.trackEventUserId(PromotionActivity.this, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
+            }
+        });
 
 
         buttonAddPromoCode.setOnClickListener(new View.OnClickListener() {
