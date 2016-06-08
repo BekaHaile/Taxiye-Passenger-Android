@@ -122,7 +122,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					@Override
 					public void onClick(int position, RideInfo rideInfo) {
 						try {
-							if (0 == rideInfo.isCancelledRide) {
+							Log.v("Ride Amount is ","---> "+rideInfo.amount);
+							if (rideInfo.amount > 0) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
 									if(activity instanceof RideTransactionsActivity){
 										((RideTransactionsActivity)activity).openRideSummaryFragment(rideInfo.engagementId);

@@ -2560,6 +2560,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
 				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			} else{
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
 			}
 
 			if (Utils.isDeviceRooted()) {
@@ -2687,6 +2689,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
 				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}else{
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
 			}
 
 			if (Utils.isDeviceRooted()) {
@@ -2801,6 +2805,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
 			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
 				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}else{
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
 			}
 
 			if (Utils.isDeviceRooted()) {

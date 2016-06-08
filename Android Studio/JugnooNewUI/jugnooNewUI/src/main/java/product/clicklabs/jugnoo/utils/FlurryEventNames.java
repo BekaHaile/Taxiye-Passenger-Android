@@ -318,6 +318,7 @@ public interface FlurryEventNames {
             NUDGE_FRESH_ORDER_PLACED = "fresh_order_placed",
             NUDGE_FRESH_BACK_TO_JUGNOO = "fresh_back_to_jugnoo",
     NUDGE_SIGNUP_WITH_PAYTM = "signUp_with_paytm",
+    NUDGE_SIGNUP_WITHOUT_PAYTM = "signUp_without_paytm",
     NUDGE_LOGIN_APP_SOURCE = "login_app_source",
     NUDGE_INITIAL_BALANCE = "initial_balance",
             NUDGE_RIDE_CANCELLED_BY_DRIVER = "ride_cancelled_by_driver"

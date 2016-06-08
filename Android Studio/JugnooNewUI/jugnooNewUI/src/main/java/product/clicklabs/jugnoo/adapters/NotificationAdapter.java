@@ -272,9 +272,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewTitle.setTypeface(Fonts.avenirNext(activity));
             textViewTitle.setSingleLine(true);
             textViewTime = (TextView) itemView.findViewById(R.id.textViewTime);
-            textViewTime.setTypeface(Fonts.mavenLight(activity));
+            textViewTime.setTypeface(Fonts.mavenMedium(activity));
             textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
-            textViewDescription.setTypeface(Fonts.mavenLight(activity));
+            textViewDescription.setTypeface(Fonts.mavenMedium(activity));
             textViewDescription.setSingleLine(true);
         }
     }
