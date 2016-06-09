@@ -145,7 +145,7 @@ public class TopBar {
 
 				case R.id.imageViewBack:
 					if(activity instanceof HomeActivity) {
-						((HomeActivity)activity).backFromSearchToInitial();
+						((HomeActivity)activity).performBackpressed();
 					}
 					break;
 
@@ -166,7 +166,6 @@ public class TopBar {
 						CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
 						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "fresh");
-
 					}
 					break;
 
@@ -208,4 +207,29 @@ public class TopBar {
 			e.printStackTrace();
 		}
 	}
+
+
+	public void setTopBarState(boolean defaultState, String title){
+		imageViewMenu.setVisibility(View.VISIBLE);
+		if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL
+				|| HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH
+				|| HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING){
+			imageViewHelp.setVisibility(View.GONE);
+			imageViewAppToggle.setVisibility(View.VISIBLE);
+		} else{
+			imageViewHelp.setVisibility(View.VISIBLE);
+			imageViewAppToggle.setVisibility(View.GONE);
+		}
+		imageViewBack.setVisibility(View.GONE);
+		textViewTitle.setText(activity.getResources().getString(R.string.app_name));
+
+		if(!defaultState){
+			imageViewMenu.setVisibility(View.GONE);
+			imageViewHelp.setVisibility(View.GONE);
+			imageViewAppToggle.setVisibility(View.GONE);
+			imageViewBack.setVisibility(View.VISIBLE);
+			textViewTitle.setText(title);
+		}
+	}
+
 }

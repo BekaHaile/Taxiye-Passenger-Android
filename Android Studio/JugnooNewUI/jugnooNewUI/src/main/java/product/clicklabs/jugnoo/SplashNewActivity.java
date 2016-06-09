@@ -141,7 +141,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0, linkedWallet = 0;
+	int clickCount = 0, linkedWallet = 0, showPaytm = 0;
 
 	private State state = State.SPLASH_LS;
 
@@ -535,7 +535,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					if(isBranchLinkNotClicked()) {
-						linkedWallet = 1;
+						linkedWallet = 0;
 						FlurryEventLogger.event(SIGNUP);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1346,6 +1346,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				changeUIState(State.SPLASH_LS);
+				getAllowedAuthChannels(SplashNewActivity.this);
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
@@ -1392,6 +1393,45 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			exception.printStackTrace();
 			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			DialogPopup.dismissLoadingDialog();
+		}
+	}
+
+	public void getAllowedAuthChannels(Activity activity){
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+			DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+			HashMap<String, String> params = new HashMap<>();
+
+			RestClient.getApiServices().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					DialogPopup.dismissLoadingDialog();
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "Auth channel response = " + responseStr);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						showPaytm = jObj.optJSONObject("signup").optInt("PAYTM");
+						int showFacebook = jObj.optJSONObject("signup").optInt("FACEBOOK");
+						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
+						if(showPaytm == 1){
+							linearLayoutAddPatym.setVisibility(View.VISIBLE);
+							linkedWallet = 1;
+						} else{
+							linearLayoutAddPatym.setVisibility(View.GONE);
+						}
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+				}
+			});
+
+		} else {
+			changeUIState(State.SPLASH_NO_NET);
 		}
 	}
 

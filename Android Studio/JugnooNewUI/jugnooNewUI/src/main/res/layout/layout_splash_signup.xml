@@ -285,6 +285,7 @@ android:visibility="visible">
         android:layout_marginRight="30px"
         android:background="@drawable/background_white_shadow"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

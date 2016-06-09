@@ -1,7 +1,12 @@
 package product.clicklabs.jugnoo.promotion.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
@@ -28,13 +37,14 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class ReferralsFragment extends Fragment {
 
 	private RelativeLayout relativeLayoutRoot;
 
-	private ImageView imageViewLogo;
+	private ImageView imageViewLogo, imageViewMore, imageViewFbMessanger, imageViewWhatsapp, imageViewMessage, imageViewEmail;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo;
 	private Button buttonInvite;
 	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab;
@@ -88,8 +98,22 @@ public class ReferralsFragment extends Fragment {
 		((TextView)rootView.findViewById(R.id.textViewLeaderboard)).setTypeface(Fonts.mavenMedium(activity));
 		linearLayoutRefer = (LinearLayout)rootView.findViewById(R.id.linearLayoutRefer);
 		((TextView)rootView.findViewById(R.id.textViewReferDriver)).setTypeface(Fonts.mavenMedium(activity));
+		imageViewMore = (ImageView) rootView.findViewById(R.id.imageViewMore);
+		imageViewFbMessanger = (ImageView) rootView.findViewById(R.id.imageViewFbMessanger);
+		imageViewWhatsapp = (ImageView) rootView.findViewById(R.id.imageViewWhatsapp);
+		imageViewMessage = (ImageView) rootView.findViewById(R.id.imageViewMessage);
+		imageViewEmail = (ImageView) rootView.findViewById(R.id.imageViewEmail);
 
-
+		ArrayList<AppPackage> appPackages = new ArrayList<>();
+		appPackages.add(new AppPackage(0, "com.whatsapp"));
+		Utils.checkAppsArrayInstall(activity, appPackages);
+		if (appPackages.get(0).getInstalled() == 1) {
+			imageViewWhatsapp.setVisibility(View.VISIBLE);
+			imageViewEmail.setVisibility(View.GONE);
+		} else{
+			imageViewEmail.setVisibility(View.VISIBLE);
+			imageViewWhatsapp.setVisibility(View.GONE);
+		}
 
 		textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -130,6 +154,41 @@ public class ReferralsFragment extends Fragment {
 			}
 		});
 
+		imageViewMore.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				buttonInvite.performClick();
+			}
+		});
+
+		imageViewFbMessanger.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReferralActions.shareToFacebook(activity, true, activity.getCallbackManager());
+			}
+		});
+
+		imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReferralActions.shareToWhatsapp(activity);
+			}
+		});
+
+		imageViewMessage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReferralActions.sendSMSIntent(activity);
+			}
+		});
+
+		imageViewEmail.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReferralActions.openMailIntent(activity);
+			}
+		});
+
 		linearLayoutLeaderBoard.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -153,7 +212,19 @@ public class ReferralsFragment extends Fragment {
 
 		try {
 			textViewCode.setText(Data.userData.referralCode);
-			textViewDesc.setText(Data.referralMessages.referralShortMessage);
+			textViewDesc.setText(Data.referralMessages.referralShortMessage+ "Details");
+
+			SpannableString ss = new SpannableString(Data.referralMessages.referralShortMessage+" Details");
+			ClickableSpan clickableSpan = new ClickableSpan() {
+				@Override
+				public void onClick(View textView) {
+					textViewMoreInfo.performClick();
+				}
+			};
+			ss.setSpan(clickableSpan, (textViewDesc.getText().length()-6), textViewDesc.getText().length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+			textViewDesc.setText(ss);
+			textViewDesc.setMovementMethod(LinkMovementMethod.getInstance());
 
 			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
 				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())

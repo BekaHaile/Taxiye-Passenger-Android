@@ -66,7 +66,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	LinearLayout relative;
 
-	private TextView textViewAbout, textViewSave, textViewPasswordSave;
+	private TextView textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
 
 	ScrollView scrollView;
@@ -85,7 +85,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
     ImageView imageViewChangePassword, imaveViewOldPasswordVisibility, imaveViewNewPasswordVisibility, imaveViewRetypePasswordVisibility;
 
-    LinearLayout linearLayoutLogout;
+    LinearLayout linearLayoutLogout, linearLayoutAbout;
 
 	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
@@ -103,7 +103,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-        textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Fonts.mavenMedium(this));
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
@@ -161,6 +160,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
         linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayoutLogout);
         ((TextView)findViewById(R.id.textViewLogout)).setTypeface(Fonts.mavenMedium(this));
+        linearLayoutAbout = (LinearLayout) findViewById(R.id.linearLayoutAbout);
+        ((TextView)findViewById(R.id.textViewAbout)).setTypeface(Fonts.mavenMedium(this));
 
         setUserData();
         setSavePlaces();
@@ -174,7 +175,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             }
         });
 
-        textViewAbout.setOnClickListener(new View.OnClickListener() {
+        linearLayoutAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AboutActivity.class));

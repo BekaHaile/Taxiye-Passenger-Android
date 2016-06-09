@@ -198,6 +198,7 @@ public class JSONParser implements Constants {
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
         String destinationHelpText = userData.optString("destination_help_text", "");
+        String rideSummaryBadText = userData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
         String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", context.getResources().getString(R.string.your_driver_is_on_his_way));
         String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", context.getResources().getString(R.string.continue_with_cancellation));
 
@@ -241,7 +242,7 @@ public class JSONParser implements Constants {
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
-                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2);
+                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText);
 
     }
 

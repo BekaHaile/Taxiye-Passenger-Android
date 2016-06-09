@@ -110,8 +110,8 @@
 	<string name="invite_friends">Invite Friends</string>
 	<string name="invite_friends_caps">INVITE FRIENDS</string>
 	<string name="about">About</string>
-	<string name="great">Great!</string>
-	<string name="bad">Bad!</string>
+	<string name="great">Great :)</string>
+	<string name="bad">Bad :(</string>
 	<string name="support">Support</string>
 	<string name="sos">SOS</string>
 	<string name="language_preferences">Language Preferences</string>
@@ -193,6 +193,7 @@
 	<string name="continue_with_cancellation">Continue with cancellation?</string>
 	<string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
 	<string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
+	<string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
 
 
     <!-- wallet screen-->
@@ -252,6 +253,7 @@
 	<string name="upload_contact_yes">Yes</string>
 	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
+	<string name="thanks_for_riding_with_jugnoo">Thanks for riding with Jugnoo</string>
 
 
 	<!-- Jugnoo Jeanie Strings-->
@@ -281,10 +283,12 @@
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">How was your ride ?</string>
 	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
+	<string name="go_to_support">Go to Support</string>
 	<string name="skip">Skip</string>
 	<string name="star_required">* Required</string>
 	<string name="leave_a_comment">Leave a comment</string>
 	<string name="what_could_we_improve">What could we improve?</string>
+	<string name="we_will_look_into_the_matter">We will look into the matter!</string>
 	<string name="rupees_value_format">\u20B9%s</string>
 	<string name="rupees_value_format_without_space">\u20B9%s</string>
 	<string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
@@ -915,6 +919,9 @@
 	<string name="new_password_same_error">New Password is same as the old one</string>
 	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
 	<string name="add_emergency_contacts">Add Emergency Contacts</string>
+
+	<string name="receipt">Receipt</string>
+	<string name="feedback">Feedback</string>
 
 
 </resources>

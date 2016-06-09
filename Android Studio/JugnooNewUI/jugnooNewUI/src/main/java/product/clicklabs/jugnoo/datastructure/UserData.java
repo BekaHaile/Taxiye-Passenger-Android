@@ -41,7 +41,7 @@ public class UserData {
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
-	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2;
+	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -56,7 +56,7 @@ public class UserData {
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
-					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2){
+					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -128,6 +128,7 @@ public class UserData {
 		this.destinationHelpText = destinationHelpText;
 		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
 		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
+		this.rideSummaryBadText = rideSummaryBadText;
 
 		checkUserImage();
 	}
@@ -488,5 +489,13 @@ public class UserData {
 
 	public void setCancellationChargesPopupTextLine1(String cancellationChargesPopupTextLine1) {
 		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
+	}
+
+	public String getRideSummaryBadText() {
+		return rideSummaryBadText;
+	}
+
+	public void setRideSummaryBadText(String rideSummaryBadText) {
+		this.rideSummaryBadText = rideSummaryBadText;
 	}
 }

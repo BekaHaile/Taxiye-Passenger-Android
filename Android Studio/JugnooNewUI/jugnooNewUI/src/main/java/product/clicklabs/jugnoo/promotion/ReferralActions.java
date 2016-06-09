@@ -13,11 +13,13 @@ import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.promotion.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -29,6 +31,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -37,25 +40,38 @@ import product.clicklabs.jugnoo.utils.Prefs;
 public class ReferralActions {
 
     public static FacebookLoginHelper facebookLoginHelper;
-    public static void shareToFacebook(final Activity activity, CallbackManager callbackManager){
+    public static void shareToFacebook(final Activity activity, final boolean isMessenger, CallbackManager callbackManager){
         facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
             @Override
             public void facebookLoginDone(FacebookUserData facebookUserData) {
                 try {
                     if(Data.userData != null){
+                        String channel = isMessenger ? BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK_MESSENGER : BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK;
+                        String channelLinkSP = isMessenger ? SPLabels.BRANCH_FACEBOOK_MESSENGER_LINK : SPLabels.BRANCH_FACEBOOK_LINK;
                         new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                             @Override
                             public void onBranchLinkCreated(String link) {
                                 if(Data.userData != null) {
-                                    facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-                                            Data.referralMessages.fbShareCaption,
-                                            Data.referralMessages.fbShareDescription,
-                                            link,
-                                            Data.userData.jugnooFbBanner);
+                                    ArrayList<AppPackage> appPackages = new ArrayList<>();
+                                    appPackages.add(new AppPackage(0, "com.facebook.orca"));
+                                    Utils.checkAppsArrayInstall(activity, appPackages);
+                                    if (isMessenger && appPackages.get(0).getInstalled() == 1) {
+                                        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                                        intent.setPackage("com.facebook.orca");
+                                        intent.setType("text/plain");
+                                        intent.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link);
+                                        activity.startActivity(intent);
+                                    } else {
 
-                                    //30.707810, 76.761957
-                                    // ?pickup_lat=30.707810&pickup_lng=76.761957
-                                    //http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
+                                        facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+                                                Data.referralMessages.fbShareCaption,
+                                                Data.referralMessages.fbShareDescription,
+                                                link,
+                                                Data.userData.jugnooFbBanner);
+                                        //30.707810, 76.761957
+                                        // ?pickup_lat=30.707810&pickup_lng=76.761957
+                                        //http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
+                                    }
                                 }
                             }
 
@@ -63,8 +79,8 @@ public class ReferralActions {
                             public void onBranchError(String error) {
                                 Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
                             }
-                        }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK,
-                                SPLabels.BRANCH_FACEBOOK_LINK,
+                        }).getBranchLinkForChannel(channel,
+                                channelLinkSP,
                                 Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
                                 Data.referralMessages.fbShareDescription, Data.userData.jugnooFbBanner,
                                 Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
