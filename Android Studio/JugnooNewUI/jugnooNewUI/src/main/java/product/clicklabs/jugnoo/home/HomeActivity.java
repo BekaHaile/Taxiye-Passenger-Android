@@ -2168,8 +2168,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             Data.feedbackReasons.get(i).checked = false;
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
-                        textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-                                "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
+                        textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare)));
                         textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
                                 "" + Utils.getMoneyDecimalFormat().format(Data.endRideData.toPay)));
 
@@ -5378,9 +5377,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			Data.userData.fareFactor = fareFactor;
 			double fareFixed = 0;
             String cancelRideThrashHoldTime = "";
+            int cancellationCharges = 0;
             try{
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
                 cancelRideThrashHoldTime = jObj.optString("cancel_ride_threshold_time", "");
+                cancellationCharges = jObj.optInt("cancellation_charge", 0);
 
             } catch(Exception e){
                 e.printStackTrace();
@@ -5394,7 +5395,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
-                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime);
+                    fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
+                    cancellationCharges);
 
 			if(inRide){
 				initializeStartRideVariables();

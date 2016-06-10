@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="visible"
+    android:visibility="gone"
     android:animateLayoutChanges="true"
     >
 
@@ -286,6 +286,7 @@
                         android:id="@+id/linearLayoutIRPaymentOption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -441,6 +442,7 @@
             android:layout_width="128px"
             android:layout_height="132px"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="10px"
             android:layout_marginRight="50px"
             android:tag="mwar"
             android:background="@drawable/ic_ride_call_selector"/>

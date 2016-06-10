@@ -11,7 +11,7 @@
             android:id="@+id/linearLayoutInner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20px"
+            android:layout_margin="40px"
             android:background="@drawable/background_white_rounded"
             android:orientation="vertical"
             android:layout_centerVertical="true"
@@ -39,9 +39,11 @@
 
             <TextView
                 android:id="@+id/textViewOnHisWay"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:paddingRight="20px"
+                android:paddingLeft="20px"
                 android:layout_marginTop="50px"
                 android:text="@string/your_driver_is_on_his_way"
                 android:textColor="@color/text_color"
@@ -49,8 +51,10 @@
 
             <TextView
                 android:id="@+id/textViewContinue"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingRight="20px"
+                android:paddingLeft="20px"
                 android:gravity="center"
                 android:layout_marginTop="30px"
                 android:text="@string/continue_with_cancellation"

@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by Ankit on 5/2/16.
@@ -60,8 +63,10 @@ public class CancellationChargesDialog {
 			buttonNo.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewCancellation = (TextView) dialog.findViewById(R.id.textViewCancellation);
 			textViewCancellation.setTypeface(Fonts.mavenRegular(activity));
-			textViewOnHisWay.setText(line1Text);
-			textViewContinue.setText(line2Text);
+
+
+			textViewOnHisWay.setText(replaceStringWithAmount(line1Text));
+			textViewContinue.setText(replaceStringWithAmount(line2Text));
 
 
 
@@ -109,6 +114,23 @@ public class CancellationChargesDialog {
 			return null;
 		}
 		return dialog;
+	}
+
+	private String replaceStringWithAmount(String text){
+		String finalStr = "";
+		//String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.endRideData.finalFare))
+		try {
+			if(text.contains("{amount}") && (Data.assignedDriverInfo.getCancellationCharges() > 0)){
+                finalStr = text.replace("{amount}", (String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+						"" + Data.assignedDriverInfo.getCancellationCharges())));
+            } else{
+				finalStr = text;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			finalStr = text;
+		}
+		return finalStr;
 	}
 
 

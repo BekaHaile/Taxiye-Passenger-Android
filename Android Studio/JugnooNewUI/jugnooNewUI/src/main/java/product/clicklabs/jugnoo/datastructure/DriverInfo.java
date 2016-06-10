@@ -25,7 +25,7 @@ public class DriverInfo {
 
 	private Schedule scheduleT20;
 
-	private int vehicleType;
+	private int vehicleType, cancellationCharges;
 	private ArrayList<Integer> regionIds = new ArrayList<>();
 	private VehicleIconSet vehicleIconSet;
 	
@@ -55,7 +55,7 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude,
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
-					  int vehicleType, String iconSet, String cancelRideThrashHoldTime){
+					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -77,6 +77,7 @@ public class DriverInfo {
 		this.vehicleType = vehicleType;
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 		this.cancelRideThrashHoldTime = cancelRideThrashHoldTime;
+		this.cancellationCharges = cancellationCharges;
 	}
 
 	//for last ride data
@@ -178,5 +179,13 @@ public class DriverInfo {
 
 	public void setCancelRideThrashHoldTime(String cancelRideThrashHoldTime) {
 		this.cancelRideThrashHoldTime = cancelRideThrashHoldTime;
+	}
+
+	public int getCancellationCharges() {
+		return cancellationCharges;
+	}
+
+	public void setCancellationCharges(int cancellationCharges) {
+		this.cancellationCharges = cancellationCharges;
 	}
 }
