@@ -5914,7 +5914,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 }
 												if ("".equalsIgnoreCase(Data.cSessionId)) {
 													BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_REQUEST_RIDE, true);
-                                                    FbEvents.logEvent(HomeActivity.this, FB_EVENT_REQUEST_RIDE, true);
+                                                    FbEvents.logEvent(HomeActivity.this, FB_EVENT_REQUEST_RIDE);
                                                     // Ride Requested
                                                     // Google Android in-app conversion tracking snippet
                                                     // Add this code to the event you'd like to track in your app.
@@ -6132,7 +6132,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
             BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
-            FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED, true);
+            FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED);
 
             // Ride Completion
             // Google Android in-app conversion tracking snippet

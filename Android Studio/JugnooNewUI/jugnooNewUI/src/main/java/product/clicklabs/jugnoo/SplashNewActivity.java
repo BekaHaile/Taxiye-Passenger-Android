@@ -3054,8 +3054,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									Database.getInstance(activity).insertEmail(email);
 									Database.getInstance(activity).close();
 									loginDataFetched = true;
-									BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-									FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
 								}
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");

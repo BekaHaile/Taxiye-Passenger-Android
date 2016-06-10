@@ -55,8 +55,10 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -309,7 +311,8 @@ public class JSONParser implements Constants {
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
                 nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
                         Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
-
+                BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
+                FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));

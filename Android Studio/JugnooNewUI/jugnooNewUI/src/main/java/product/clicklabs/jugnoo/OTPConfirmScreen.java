@@ -665,8 +665,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
 										Database.getInstance(OTPConfirmScreen.this).close();
 										loginDataFetched = true;
-										BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-										FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -769,8 +767,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
 										Database.getInstance(OTPConfirmScreen.this).close();
-										BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-										FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -869,7 +865,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
 										Database.getInstance(OTPConfirmScreen.this).close();
-										BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
