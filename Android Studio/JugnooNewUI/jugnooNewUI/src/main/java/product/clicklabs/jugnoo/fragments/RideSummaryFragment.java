@@ -214,7 +214,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				if(activity instanceof RideTransactionsActivity){
 					new TransactionUtils().openRideIssuesFragment(activity,
 							((RideTransactionsActivity)activity).getContainer(),
-							engagementId, endRideData, getRideSummaryResponse);
+							engagementId, endRideData, getRideSummaryResponse, 0);
 					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
 					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
 				} else {

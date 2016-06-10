@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.home.fragments;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -95,6 +97,8 @@ public class BadFeedbackFragment extends Fragment implements FlurryEventNames, C
                 int rating = 1;
                 activity.submitFeedbackToDriverAsync(activity, Data.cEngagementId, Data.cDriverId,
                         rating, "", "");
+                activity.startActivity(new Intent(activity, SupportActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
 

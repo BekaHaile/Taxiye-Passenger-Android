@@ -217,8 +217,7 @@
                     android:layout_height="290px"
                     android:layout_marginLeft="50px"
                     android:layout_marginRight="20px"
-                    android:rotation="180"
-                    android:src="@drawable/ic_thumbs_down"
+                    android:src="@drawable/ic_thumbs_up"
                     android:tag="mwar"/>
 
 

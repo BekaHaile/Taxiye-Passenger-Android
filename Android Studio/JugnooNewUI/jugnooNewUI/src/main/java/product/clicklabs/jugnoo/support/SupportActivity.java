@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.support;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -9,12 +11,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
+import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -30,6 +36,9 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private ImageView imageViewBack, imageViewInvoice;
 	
 	private LinearLayout linearLayoutContainer;
+	public int fromBadFeedback = 0;
+	private EndRideData endRideData;
+	private GetRideSummaryResponse getRideSummaryResponse;
 
 	@Override
 	protected void onResume() {
@@ -44,6 +53,10 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
+
+		if(getIntent().hasExtra("FromBad")){
+			fromBadFeedback = getIntent().getExtras().getInt("FromBad");
+		}
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
 		
@@ -62,11 +75,14 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			}
 		});
 
-
-		getSupportFragmentManager().beginTransaction()
-				.add(linearLayoutContainer.getId(), new SupportMainFragment(), SupportMainFragment.class.getName())
-				.addToBackStack(SupportMainFragment.class.getName())
-				.commitAllowingStateLoss();
+		if(fromBadFeedback == 0) {
+			getSupportFragmentManager().beginTransaction()
+					.add(linearLayoutContainer.getId(), new SupportMainFragment(), SupportMainFragment.class.getName())
+					.addToBackStack(SupportMainFragment.class.getName())
+					.commitAllowingStateLoss();
+		} else{
+			getRideSummaryAPI(this);
+		}
 
 
 		FlurryEventLogger.event(SUPPORT_MAIN_OPENED);
@@ -75,7 +91,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	
 	public void performBackPressed(){
 		Utils.hideSoftKeyboard(this, linearLayoutContainer);
-		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1
+				|| (getSupportFragmentManager().getBackStackEntryCount() == 2 && fromBadFeedback == 1)) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		} else {
@@ -107,6 +124,14 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return linearLayoutContainer;
 	}
 
+	public SupportMainFragment getSupportMainFragment(){
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag(SupportMainFragment.class.getName());
+		if(fragment instanceof SupportMainFragment){
+			return (SupportMainFragment) fragment;
+		}
+		return null;
+	}
+
 	public void openRideSummaryFragment(EndRideData endRideData){
 		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
 			getSupportFragmentManager().beginTransaction()
@@ -121,6 +146,19 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		}
 	}
 
+	public void openSupportRideIssuesFragment(){
+		try {
+			if (endRideData != null && getRideSummaryResponse != null) {
+				new TransactionUtils().openRideIssuesFragment(this,
+						getContainer(),
+						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback);
+				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	
 	@Override
@@ -129,5 +167,59 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
         System.gc();
 		super.onDestroy();
 	}
-	
+
+	public void getRideSummaryAPI(final Activity activity) {
+		try {
+			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.fixedFare,
+					new ApiGetRideSummary.Callback() {
+						@Override
+						public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+							SupportActivity.this.endRideData = endRideData;
+							SupportActivity.this.getRideSummaryResponse = getRideSummaryResponse;
+
+							if(fromBadFeedback == 1){
+								openSupportRideIssuesFragment();
+							} else{
+								getSupportMainFragment().updateSuccess();
+							}
+						}
+
+						@Override
+						public boolean onActionFailed(String message) {
+							if(fromBadFeedback != 1) {
+								getSupportMainFragment().updateFail();
+							}
+							return false;
+						}
+
+						@Override
+						public void onFailure() {
+							if(fromBadFeedback != 1) {
+								getSupportMainFragment().updateFail();
+							}
+						}
+
+						@Override
+						public void onRetry(View view) {
+							getRideSummaryAPI(activity);
+						}
+
+						@Override
+						public void onNoRetry(View view) {
+
+						}
+					}).getRideSummaryAPI();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public int getFromBadFeedback() {
+		return fromBadFeedback;
+	}
+
+	public EndRideData getEndRideData() {
+		return endRideData;
+	}
 }

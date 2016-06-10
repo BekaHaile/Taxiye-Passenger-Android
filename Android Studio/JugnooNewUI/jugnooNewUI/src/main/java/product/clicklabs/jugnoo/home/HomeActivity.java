@@ -335,6 +335,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     static long previousWaitTime = 0, previousRideTime = 0;
     private final int SEARCH_FLIP_ANIMATION_TIME = 200;
     private final float SEARCH_FLIP_ANIMATION_MARGIN = 20f;
+    public final int DESTINATION_PERSISTENCE_TIME = 2;
 
     public static Location myLocation;
 
@@ -383,7 +384,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	public static final double FIX_ZOOM_DIAGONAL = 408;
 
 	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
-    public final int DESTINATION_PERSISTENCE_TIME = 2;
 
 
     private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
@@ -417,6 +417,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private Marker poolMarkerStart, poolMarkerEnd;
     private ArrayList<SearchResult> lastPickUp = new ArrayList<SearchResult>();
     private ArrayList<SearchResult> lastDestination = new ArrayList<SearchResult>();
+    private long thumbsUpGifStartTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1224,11 +1225,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //textViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
 
                 //setZeroRatingView();
-                rating = 5;
-                submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
-                        rating, "", "");
-                relativeLayoutGreat.setVisibility(View.VISIBLE);
-                Glide.with(HomeActivity.this).load(R.drawable.android_thumbs_up).asGif().placeholder(R.drawable.ic_thumbs_down).into(imageViewThumbsUpGif);
+                if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+                    thumbsUpGifStartTime = System.currentTimeMillis();
+                    rating = 5;
+                    submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+                            rating, "", "");
+                    relativeLayoutGreat.setVisibility(View.VISIBLE);
+                    Glide.with(HomeActivity.this).load(R.drawable.android_thumbs_up).asGif().placeholder(R.drawable.ic_thumbs_up).into(imageViewThumbsUpGif);
+                }
             }
         });
 
@@ -1236,7 +1240,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 rating = 1;
-                linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
+                //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
+                submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+                        rating, "", "");
+                Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                intent.putExtra("FromBad", 1);
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 //imageViewThumbsUp.clearAnimation();
                 //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                 //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
@@ -6908,7 +6918,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                //DialogPopup.showLoadingDialog(activity, "Loading...");
 
                 HashMap<String, String> params = new HashMap<>();
 
@@ -6927,14 +6937,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "rateTheDriver response = " + responseStr);
                         DialogPopup.dismissLoadingDialog();
+
+
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             int flag = jObj.getInt("flag");
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
-                                    try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
-                                    afterRideFeedbackSubmitted(givenRating, false);
+                                    if(givenRating > 1) {
+                                        Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                    }
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            relativeLayoutGreat.setVisibility(View.GONE);
+                                            try {
+                                                Data.driverInfos.clear();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            afterRideFeedbackSubmitted(givenRating, false);
+                                        }
+                                    }, 3000);
+                                    //}, System.currentTimeMillis() - thumbsUpGifStartTime > 10000 ? 10000: System.currentTimeMillis() - thumbsUpGifStartTime);
                                     try {
                                         JSONObject map = new JSONObject();
                                         map.put(KEY_ENGAGEMENT_ID, engagementId);
@@ -6944,20 +6969,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         map.put(KEY_PAID_USING_JUGNOO_CASH, Data.endRideData.paidUsingWallet);
                                         map.put(KEY_PAID_USING_CASH, Data.endRideData.toPay);
                                         NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_FEEDBACK, map);
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        relativeLayoutGreat.setVisibility(View.GONE);
                                     }
                                     try {
                                         Data.driverInfos.clear();
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        relativeLayoutGreat.setVisibility(View.GONE);
                                     }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    relativeLayoutGreat.setVisibility(View.GONE);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
+                            relativeLayoutGreat.setVisibility(View.GONE);
                             DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                         }
                     }
@@ -6965,6 +6995,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void failure(RetrofitError error) {
                         Log.e(TAG, "rateTheDriver error="+error.toString());
+                        relativeLayoutGreat.setVisibility(View.GONE);
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                     }

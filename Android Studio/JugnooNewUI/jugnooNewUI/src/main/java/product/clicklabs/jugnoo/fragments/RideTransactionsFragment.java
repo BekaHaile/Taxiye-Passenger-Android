@@ -130,7 +130,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									} else if(activity instanceof SupportActivity){
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null);
+												rideInfo.engagementId, null, null, 0);
 									}
 									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 								} else {
