@@ -24,6 +24,9 @@ public class FindADriverResponse {
     @SerializedName("fare_factor")
     @Expose
     private Double fareFactor;
+    @SerializedName("driver_fare_factor")
+    @Expose
+    private Double driverFareFactor;
     @SerializedName("priority_tip_category")
     @Expose
     private Integer priorityTipCategory;
@@ -214,4 +217,11 @@ public class FindADriverResponse {
         this.freshAvailable = freshAvailable;
     }
 
+    public Double getDriverFareFactor() {
+        return driverFareFactor;
+    }
+
+    public void setDriverFareFactor(Double driverFareFactor) {
+        this.driverFareFactor = driverFareFactor;
+    }
 }

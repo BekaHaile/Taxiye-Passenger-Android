@@ -82,6 +82,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 					.commitAllowingStateLoss();
 		} else{
 			getRideSummaryAPI(this);
+			setTitle(getResources().getString(R.string.support_ride_issues_title));
 		}
 
 
@@ -91,8 +92,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	
 	public void performBackPressed(){
 		Utils.hideSoftKeyboard(this, linearLayoutContainer);
-		if (getSupportFragmentManager().getBackStackEntryCount() == 1
-				|| (getSupportFragmentManager().getBackStackEntryCount() == 2 && fromBadFeedback == 1)) {
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		} else {

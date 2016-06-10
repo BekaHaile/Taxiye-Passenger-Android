@@ -359,10 +359,11 @@
         
         <ImageView
             android:id="@+id/imageViewThumbsUpGif"
-            android:layout_width="600px"
-            android:layout_height="545px"
+            android:layout_width="620px"
+            android:layout_height="563px"
             android:layout_centerInParent="true"
-            android:src="@drawable/android_thumbs_up"/>
+            android:src="@drawable/android_thumbs_up"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

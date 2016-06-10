@@ -60,6 +60,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -82,7 +83,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
@@ -335,7 +335,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     static long previousWaitTime = 0, previousRideTime = 0;
     private final int SEARCH_FLIP_ANIMATION_TIME = 200;
     private final float SEARCH_FLIP_ANIMATION_MARGIN = 20f;
-    public final int DESTINATION_PERSISTENCE_TIME = 2;
+    public final int DESTINATION_PERSISTENCE_TIME = 30; // in minutes
 
     public static Location myLocation;
 
@@ -1231,7 +1231,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
                             rating, "", "");
                     relativeLayoutGreat.setVisibility(View.VISIBLE);
-                    Glide.with(HomeActivity.this).load(R.drawable.android_thumbs_up).asGif().placeholder(R.drawable.ic_thumbs_up).into(imageViewThumbsUpGif);
+                    GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
+                    Glide.with(HomeActivity.this)
+                            .load(R.drawable.android_thumbs_up)
+                            .placeholder(R.drawable.ic_thumbs_up)
+                            .into(imageViewTarget);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageViewThumbsUpGif.setImageResource(R.drawable.thankyou_last_frame);
+                        }
+                    }, 3000);
+
                 }
             }
         });
@@ -5821,6 +5832,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if ("".equalsIgnoreCase(Data.cSessionId)) {
                                     nameValuePairs.put("duplicate_flag", "0");
                                     nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(Data.userData.fareFactor));
+                                    nameValuePairs.put(KEY_DRIVER_FARE_FACTOR, String.valueOf(Data.userData.getDriverFareFactor()));
+
                                     if (myLocation != null && myLocation.hasAccuracy()) {
                                         nameValuePairs.put("location_accuracy", "" + myLocation.getAccuracy());
                                     }
@@ -6947,6 +6960,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if(givenRating > 1) {
                                         Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                     }
+
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {

@@ -25,7 +25,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -142,7 +141,7 @@ public class SearchListAdapter extends BaseAdapter{
         this.searchResults.clear();
         this.searchResults.addAll(autoCompleteSearchResults);
         try {
-            if(context instanceof HomeActivity){
+            if(context instanceof HomeActivity && editTextForSearch.getText().length() == 0){
                 String json;
                 if(SearchListAdapter.this.searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
                     json = Prefs.with(context).getString(SPLabels.LAST_DESTINATION, "");

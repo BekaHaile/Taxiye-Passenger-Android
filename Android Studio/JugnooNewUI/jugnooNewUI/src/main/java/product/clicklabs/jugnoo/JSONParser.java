@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.google.android.gms.analytics.ecommerce.Product;
-import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -364,6 +363,11 @@ public class JSONParser implements Constants {
 			}
             if(loginResponse.getLogin().getFareFactor() != null) {
                 Data.userData.fareFactor = loginResponse.getLogin().getFareFactor();
+            }
+            if(loginResponse.getLogin().getDriverFareFactor() != null) {
+                Data.userData.setDriverFareFactor(loginResponse.getLogin().getDriverFareFactor());
+            } else{
+                Data.userData.setDriverFareFactor(1);
             }
             if (loginResponse.getLogin().getFarAwayCity() == null) {
 				Data.farAwayCity = "";

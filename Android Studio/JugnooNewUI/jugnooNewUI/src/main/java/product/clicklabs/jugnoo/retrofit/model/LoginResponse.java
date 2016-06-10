@@ -334,6 +334,9 @@ public class LoginResponse {
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
+		@SerializedName("driver_fare_factor")
+		@Expose
+		private Double driverFareFactor;
 		@SerializedName("regions")
 		@Expose
 		private List<Region> regions = new ArrayList<>();
@@ -495,5 +498,12 @@ public class LoginResponse {
 			this.isPoolEnabled = isPoolEnabled;
 		}
 
+		public Double getDriverFareFactor() {
+			return driverFareFactor;
+		}
+
+		public void setDriverFareFactor(Double driverFareFactor) {
+			this.driverFareFactor = driverFareFactor;
+		}
 	}
 }

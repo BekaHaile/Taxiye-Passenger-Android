@@ -123,6 +123,11 @@ public class ApiFindADriver {
 			if(findADriverResponse.getFareFactor() != null) {
 				Data.userData.fareFactor = findADriverResponse.getFareFactor();
 			}
+			if(findADriverResponse.getDriverFareFactor() != null) {
+				Data.userData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
+			} else{
+				Data.userData.setDriverFareFactor(1);
+			}
 			Data.farAwayCity = "";
 			if (findADriverResponse.getFarAwayCity() == null) {
 				Data.farAwayCity = "";

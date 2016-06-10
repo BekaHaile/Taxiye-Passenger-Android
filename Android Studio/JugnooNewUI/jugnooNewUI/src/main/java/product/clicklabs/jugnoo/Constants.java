@@ -303,6 +303,8 @@ public interface Constants {
 
 	String POOL_INTRO_SHOW = "pool_intro_show";
 
+	String KEY_DRIVER_FARE_FACTOR = "driver_fare_factor";
+
 
 
 

@@ -93,12 +93,12 @@ public class TransactionUtils {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-					.add(container.getId(),
-							new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
-							SupportRideIssuesFragment.class.getName())
+			fragmentTransaction.add(container.getId(),
+					new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
+					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0){
+				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 				fragmentTransaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
 			}

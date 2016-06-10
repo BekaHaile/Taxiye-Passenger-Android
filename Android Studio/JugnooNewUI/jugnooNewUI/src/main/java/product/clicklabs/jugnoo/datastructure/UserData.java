@@ -42,6 +42,7 @@ public class UserData {
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText;
+	private double driverFareFactor;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -129,6 +130,7 @@ public class UserData {
 		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
 		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
 		this.rideSummaryBadText = rideSummaryBadText;
+		this.driverFareFactor = 1;
 
 		checkUserImage();
 	}
@@ -497,5 +499,13 @@ public class UserData {
 
 	public void setRideSummaryBadText(String rideSummaryBadText) {
 		this.rideSummaryBadText = rideSummaryBadText;
+	}
+
+	public double getDriverFareFactor() {
+		return driverFareFactor;
+	}
+
+	public void setDriverFareFactor(double driverFareFactor) {
+		this.driverFareFactor = driverFareFactor;
 	}
 }

@@ -15,13 +15,12 @@ import java.text.DecimalFormat;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -79,15 +78,33 @@ public class SlidingBottomFareFragment extends Fragment{
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
             textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
-            if(Data.fareStructure.thresholdDistance > 1.0){
-                textViewThreshold.setVisibility(View.VISIBLE);
-                DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                textViewThreshold.setText(String.format(activity.getResources()
-                        .getString(R.string.fare_threshold_distance_message_format),
-                        decimalFormat.format(Data.fareStructure.thresholdDistance)));
-            } else{
-                textViewThreshold.setVisibility(View.GONE);
+
+            String convenienceThresholdText = "";
+            if(Data.fareStructure.convenienceCharge > 0){
+                convenienceThresholdText = activity.getResources().getString(R.string.convenience_charge_rupees_format,
+                        Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
             }
+
+            if(Data.fareStructure.thresholdDistance > 1.0){
+                DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                if("".equalsIgnoreCase(convenienceThresholdText)){
+                    convenienceThresholdText = String.format(activity.getResources()
+                                    .getString(R.string.fare_threshold_distance_message_format),
+                            decimalFormat.format(Data.fareStructure.thresholdDistance));
+                } else{
+                    convenienceThresholdText = convenienceThresholdText + "\n" + String.format(activity.getResources()
+                                    .getString(R.string.fare_threshold_distance_message_format),
+                            decimalFormat.format(Data.fareStructure.thresholdDistance));
+                }
+            }
+
+            textViewThreshold.setVisibility(View.GONE);
+            if(!"".equalsIgnoreCase(convenienceThresholdText)){
+                textViewThreshold.setVisibility(View.VISIBLE);
+                textViewThreshold.setText(convenienceThresholdText);
+            }
+
+
             if(Data.userData.fareFactor > 1.0){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
                 textViewPriorityTipValue.setText(Data.userData.fareFactor+"X");
