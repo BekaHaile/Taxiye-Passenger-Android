@@ -44,6 +44,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
@@ -1248,7 +1249,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 		super.onPause();
 
-		AppEventsLogger.deactivateApp(this);
 	}
 
 	@Override

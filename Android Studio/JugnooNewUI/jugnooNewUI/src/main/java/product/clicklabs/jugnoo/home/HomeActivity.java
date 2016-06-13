@@ -64,6 +64,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -95,8 +96,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -6153,6 +6156,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             BranchMetricsUtils.logEvent(HomeActivity.this, BRANCH_EVENT_RIDE_COMPLETED, true);
             FbEvents.logEvent(HomeActivity.this, FB_EVENT_RIDE_COMPLETED);
+            try {
+                AppEventsLogger.newLogger(this).logPurchase(BigDecimal.valueOf(Data.endRideData.toPay), Currency.getInstance("INR"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             // Ride Completion
             // Google Android in-app conversion tracking snippet

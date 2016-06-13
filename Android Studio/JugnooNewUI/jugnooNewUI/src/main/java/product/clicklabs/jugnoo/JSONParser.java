@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -315,6 +316,7 @@ public class JSONParser implements Constants {
                         Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
+                FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));

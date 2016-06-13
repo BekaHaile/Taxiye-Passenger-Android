@@ -172,10 +172,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             public void onClick(View v) {
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
                 if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
+                    if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
+                        relativeLayoutChangePassword.performClick();
+                    }
                     setUserData();
                     imageViewEditProfile.setVisibility(View.VISIBLE);
                     linearLayoutSave.setVisibility(View.GONE);
-                    relativeLayoutChangePassword.performClick();
                 } else{
                     performBackPressed();
                 }
