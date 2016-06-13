@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="gone"
+    android:visibility="visible"
     android:animateLayoutChanges="true"
     >
 
@@ -286,7 +286,7 @@
                         android:id="@+id/linearLayoutIRPaymentOption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
+                        android:layout_marginTop="15px"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -430,7 +430,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_color"
                         android:text="@string/send_invites_2"
-                        android:layout_marginLeft="20px"
+                        android:layout_marginLeft="15px"
                         android:textSize="@dimen/text_size_26"/>
                 </LinearLayout>
 

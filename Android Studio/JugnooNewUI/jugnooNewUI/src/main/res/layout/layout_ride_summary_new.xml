@@ -360,9 +360,9 @@
         <ImageView
             android:id="@+id/imageViewThumbsUpGif"
             android:layout_width="620px"
-            android:layout_height="563px"
+            android:layout_height="969px"
             android:layout_centerInParent="true"
-            android:src="@drawable/android_thumbs_up"
+            android:src="@drawable/ic_thumbs_up"
             />
     </RelativeLayout>
 

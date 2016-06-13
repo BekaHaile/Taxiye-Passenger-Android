@@ -202,6 +202,8 @@ public class JSONParser implements Constants {
         String rideSummaryBadText = userData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
         String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", context.getResources().getString(R.string.your_driver_is_on_his_way));
         String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", context.getResources().getString(R.string.continue_with_cancellation));
+        String inRideSendInviteTextBold = userData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
+        String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -243,7 +245,8 @@ public class JSONParser implements Constants {
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
-                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText);
+                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
+                inRideSendInviteTextBold, inRideSendInviteTextNormal);
 
     }
 

@@ -207,6 +207,16 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		listViewSearch.setAdapter(searchListAdapter);
 
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(editTextSearch.getText().length() == 0) {
+					editTextSearch.setText(" ");
+					editTextSearch.setText("");
+				}
+			}
+		},500);
+
 		showSearchLayout();
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {

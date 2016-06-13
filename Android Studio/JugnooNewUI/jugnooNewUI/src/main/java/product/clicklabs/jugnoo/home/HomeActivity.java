@@ -710,6 +710,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
 
+        if(Data.userData != null){
+            textViewSendInvites.setText(Data.userData.getInRideSendInviteTextBold());
+            textViewSendInvites2.setText(Data.userData.getInRideSendInviteTextNormal());
+        }
+
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -1235,12 +1240,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
                     Glide.with(HomeActivity.this)
                             .load(R.drawable.android_thumbs_up)
-                            .placeholder(R.drawable.ic_thumbs_up)
+                            .placeholder(R.drawable.great_place_holder)
+                            //.fitCenter()
                             .into(imageViewTarget);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            imageViewThumbsUpGif.setImageResource(R.drawable.thankyou_last_frame);
+                            imageViewThumbsUpGif.setImageResource(0);
                         }
                     }, 3000);
 
@@ -1435,7 +1441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-        if(Data.userData.getIsPoolEnabled() == 1) {
+        /*if(Data.userData.getIsPoolEnabled() == 1) {
             new JugnooPoolTutorial(HomeActivity.this, new JugnooPoolTutorial.Callback() {
                 @Override
                 public void onContinueClicked() {
@@ -1457,7 +1463,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 }
             }).show();
-        }
+        }*/
 
 
 //        genieLayout = new GenieLayout(this);

@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
@@ -120,13 +121,25 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         } else if(!"".equalsIgnoreCase(Data.userData.getGamePredictIconUrl())){
                             icon = Data.userData.getGamePredictIconUrl();
                         }
-                        if(!"".equalsIgnoreCase(icon)){
-                            Picasso.with(activity)
-                                    .load(icon)
-                                    .placeholder(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
-                                    .error(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
-                                    .into(holder.imageViewMenuIcon);
+
+                        if(menuInfo.getIconNormal() != null && menuInfo.getIconHighlighted() != null) {
+                            new SelectorBitmapLoader(activity).loadSelector(holder.imageViewMenuIcon, menuInfo.getIconNormal(), menuInfo.getIconHighlighted(),
+                                    new SelectorBitmapLoader.Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+                                    });
+                        } else{
+                            if(!"".equalsIgnoreCase(icon)){
+                                Picasso.with(activity)
+                                        .load(icon)
+                                        .placeholder(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
+                                        .error(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
+                                        .into(holder.imageViewMenuIcon);
+                            }
                         }
+
                         holder.textViewMenu.setText(Data.userData.getGamePredictName());
                         if(!"".equalsIgnoreCase(Data.userData.getGamePredictNew())){
                             holder.textViewNew.setText(Data.userData.getGamePredictNew());

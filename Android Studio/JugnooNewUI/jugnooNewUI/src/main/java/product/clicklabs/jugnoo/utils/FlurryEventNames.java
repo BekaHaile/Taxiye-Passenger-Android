@@ -153,6 +153,7 @@ public interface FlurryEventNames {
 			;
 
     String FB_EVENT_REQUEST_RIDE = "request_ride",
+            FB_EVENT_RIDE_STARTED = "ride_started",
         FB_EVENT_RIDE_COMPLETED = "ride_completed",
 		FB_EVENT_REGISTRATION = "registration"
 

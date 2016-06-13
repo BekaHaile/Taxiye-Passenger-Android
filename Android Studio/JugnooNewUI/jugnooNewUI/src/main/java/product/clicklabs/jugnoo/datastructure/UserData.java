@@ -37,7 +37,7 @@ public class UserData {
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	private PaytmRechargeInfo paytmRechargeInfo = null;
-	private String city, cityReg, destinationHelpText;
+	private String city, cityReg, destinationHelpText, inRideSendInviteTextBold, inRideSendInviteTextNormal;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
@@ -57,7 +57,8 @@ public class UserData {
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
-					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText){
+					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
+					String inRideSendInviteTextBold, String inRideSendInviteTextNormal){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -131,6 +132,8 @@ public class UserData {
 		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
 		this.rideSummaryBadText = rideSummaryBadText;
 		this.driverFareFactor = 1;
+		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
+		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
 
 		checkUserImage();
 	}
@@ -507,5 +510,21 @@ public class UserData {
 
 	public void setDriverFareFactor(double driverFareFactor) {
 		this.driverFareFactor = driverFareFactor;
+	}
+
+	public String getInRideSendInviteTextNormal() {
+		return inRideSendInviteTextNormal;
+	}
+
+	public void setInRideSendInviteTextNormal(String inRideSendInviteTextNormal) {
+		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
+	}
+
+	public String getInRideSendInviteTextBold() {
+		return inRideSendInviteTextBold;
+	}
+
+	public void setInRideSendInviteTextBold(String inRideSendInviteTextBold) {
+		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
 	}
 }

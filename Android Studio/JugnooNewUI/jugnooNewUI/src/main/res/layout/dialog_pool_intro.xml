@@ -169,6 +169,7 @@
             android:layout_height="80px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20px"
+            android:textSize="@dimen/text_size_28"
             android:gravity="center"
             android:text="@string/fresh_may_be_later"
             android:textColor="@color/text_color_light_selector" />
