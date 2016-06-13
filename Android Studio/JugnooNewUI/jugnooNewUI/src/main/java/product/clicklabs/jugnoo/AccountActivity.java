@@ -171,7 +171,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
-                performBackPressed();
+                if (editTextUserName.isEnabled()) {
+                    setUserData();
+                    imageViewEditProfile.setVisibility(View.VISIBLE);
+                    linearLayoutSave.setVisibility(View.GONE);
+                } else{
+                    performBackPressed();
+                }
             }
         });
 

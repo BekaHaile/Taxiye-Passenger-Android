@@ -842,6 +842,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 imageViewDropCross.setVisibility(View.GONE);
                 translateViewBottomTop(relativeLayoutDestSearchBar, false);
                 translateViewTopBottom(relativeLayoutInitialSearchBar, true);
+                Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
             }
         });
 
