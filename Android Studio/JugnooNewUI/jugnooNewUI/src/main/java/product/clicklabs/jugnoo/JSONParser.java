@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.analytics.ecommerce.Product;
-import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -55,8 +55,10 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
+import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -155,7 +157,6 @@ public class JSONParser implements Constants {
                     }else {
                         Prefs.with(context).save(SPLabels.ADD_HOME, "");
                     }
-
                 }
             }
         }
@@ -198,6 +199,12 @@ public class JSONParser implements Constants {
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
+        String destinationHelpText = userData.optString("destination_help_text", "");
+        String rideSummaryBadText = userData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
+        String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", "");
+        String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", "");
+        String inRideSendInviteTextBold = userData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
+        String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -238,7 +245,9 @@ public class JSONParser implements Constants {
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
-                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled);
+                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
+                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
+                inRideSendInviteTextBold, inRideSendInviteTextNormal);
 
     }
 
@@ -294,6 +303,7 @@ public class JSONParser implements Constants {
         }
 
         try {
+            FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
                     Data.userData.userEmail, Data.userData.phoneNo,
                     Data.userData.getCity(), Data.userData.getCityReg());
@@ -304,11 +314,14 @@ public class JSONParser implements Constants {
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
                 nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
                         Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
-
+                BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
+                FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
+                FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
             NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -356,6 +369,11 @@ public class JSONParser implements Constants {
             if(loginResponse.getLogin().getFareFactor() != null) {
                 Data.userData.fareFactor = loginResponse.getLogin().getFareFactor();
             }
+            if(loginResponse.getLogin().getDriverFareFactor() != null) {
+                Data.userData.setDriverFareFactor(loginResponse.getLogin().getDriverFareFactor());
+            } else{
+                Data.userData.setDriverFareFactor(1);
+            }
             if (loginResponse.getLogin().getFarAwayCity() == null) {
 				Data.farAwayCity = "";
 			} else {
@@ -367,7 +385,7 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
-
+            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled()==null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
             Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
@@ -709,6 +727,9 @@ public class JSONParser implements Constants {
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
+            String cancelRideThrashHoldTime = "";
+            int cancellationCharges = 0;
+            long cancellationTimeOffset = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -802,6 +823,13 @@ public class JSONParser implements Constants {
 
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+
+                            try{
+                                cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
+                                cancellationCharges = jObject.optInt("cancellation_charge", 0);
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(jObject1);
@@ -853,9 +881,11 @@ public class JSONParser implements Constants {
                 double dLongitude = Double.parseDouble(longitude);
 
 
+
+
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges);
 
                 Data.userData.fareFactor = fareFactor;
 

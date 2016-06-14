@@ -56,8 +56,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewEndRideDriverIcon"
-                        android:layout_width="38px"
-                        android:layout_height="44px"
+                        android:layout_width="39px"
+                        android:layout_height="43px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="42px"
                         android:layout_marginRight="10px"
@@ -86,8 +86,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewEndRideAutoIcon"
-                        android:layout_width="65px"
-                        android:layout_height="46px"
+                        android:layout_width="41px"
+                        android:layout_height="33px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15px"
                         android:src="@drawable/ic_auto_invoice"

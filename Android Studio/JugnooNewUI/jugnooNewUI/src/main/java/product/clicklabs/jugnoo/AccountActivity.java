@@ -35,9 +35,9 @@ import java.util.HashMap;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -66,7 +66,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	LinearLayout relative;
 
-	private TextView textViewAbout, textViewSave, textViewPasswordSave;
+	private TextView textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
 
 	ScrollView scrollView;
@@ -85,7 +85,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
     ImageView imageViewChangePassword, imaveViewOldPasswordVisibility, imaveViewNewPasswordVisibility, imaveViewRetypePasswordVisibility;
 
-    LinearLayout linearLayoutLogout;
+    LinearLayout linearLayoutLogout, linearLayoutAbout;
 
 	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
@@ -103,7 +103,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-        textViewAbout = (TextView) findViewById(R.id.textViewAbout); textViewAbout.setTypeface(Fonts.mavenMedium(this));
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
@@ -161,6 +160,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
         linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayoutLogout);
         ((TextView)findViewById(R.id.textViewLogout)).setTypeface(Fonts.mavenMedium(this));
+        linearLayoutAbout = (LinearLayout) findViewById(R.id.linearLayoutAbout);
+        ((TextView)findViewById(R.id.textViewAbout)).setTypeface(Fonts.mavenMedium(this));
 
         setUserData();
         setSavePlaces();
@@ -170,11 +171,23 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
-                performBackPressed();
+                if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
+                    if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
+                        relativeLayoutChangePassword.performClick();
+                    }
+                    setUserData();
+                    imageViewEditProfile.setVisibility(View.VISIBLE);
+                    linearLayoutSave.setVisibility(View.GONE);
+                    editTextUserName.setError(null);
+                    editTextEmail.setError(null);
+                    editTextPhone.setError(null);
+                } else{
+                    performBackPressed();
+                }
             }
         });
 
-        textViewAbout.setOnClickListener(new View.OnClickListener() {
+        linearLayoutAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AboutActivity.class));
@@ -932,8 +945,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
-            String s = getResources().getString(R.string.home)+" \n" + searchResult.address;
+            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            String s = getResources().getString(R.string.home)+" \n" + searchResult.getAddress();
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
@@ -948,8 +961,8 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
             String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
-            String s = getResources().getString(R.string.work)+" \n" + searchResult.address;
+            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+            String s = getResources().getString(R.string.work)+" \n" + searchResult.getAddress();
             SpannableString ss1 = new SpannableString(s);
             ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
             ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color

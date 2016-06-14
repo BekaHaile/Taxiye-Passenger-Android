@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="product.clicklabs.jugnoo"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="227"
-          android:versionName="2.2.7">
+          android:versionCode="228"
+          android:versionName="2.2.8">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -159,6 +159,11 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".promotion.PromotionActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".HelpParticularActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
@@ -245,11 +250,6 @@
         </activity>
         <activity
             android:name=".t20.T20Activity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".fresh.FreshActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>

@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -134,8 +135,9 @@ public class ShareActivity extends BaseFragmentActivity {
 				.commitAllowingStateLoss();
 
 
-		imageViewBack = (ImageView) findViewById(R.id.imageViewBack); 
+		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
+		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES);
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		getLeaderboardCall();

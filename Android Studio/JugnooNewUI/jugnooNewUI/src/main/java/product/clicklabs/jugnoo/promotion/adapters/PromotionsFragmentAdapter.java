@@ -52,7 +52,7 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 		if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1){
 			count = count + 1;
 		}
-		return count;
+		return 1;
 	}
 
 	@Override

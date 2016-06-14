@@ -203,6 +203,10 @@ public interface ApiService {
     @GET("/get_ongoing_ride_path")
     Response getOngoingRidePath(@QueryMap Map<String, String> params);
 
+    @GET("/allowed_auth_channels")
+    void getAllowedAuthChannels(@QueryMap Map<String, String> params,
+                                         Callback<SettleUserDebt> callback);
+
     @FormUrlEncoded
     @POST("/emergency/alert")
     void emergencyAlert(@FieldMap Map<String, String> params,

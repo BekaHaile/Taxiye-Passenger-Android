@@ -20,12 +20,20 @@ public class MenuInfo {
     @SerializedName("icon")
     @Expose
     private String icon;
+    @SerializedName("icon_highlighted")
+    @Expose
+    private String iconHighlighted;
+    @SerializedName("icon_normal")
+    @Expose
+    private String iconNormal;
 
-    public MenuInfo(String tag, String name, int isNew, String icon){
+    public MenuInfo(String tag, String name, int isNew, String icon, String iconHighlighted, String iconNormal){
         this.tag = tag;
         this.name = name;
         this.isNew = isNew;
         this.icon = icon;
+        this.iconHighlighted = iconHighlighted;
+        this.iconNormal = iconNormal;
     }
 
     public String getTag() {
@@ -58,5 +66,21 @@ public class MenuInfo {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getIconHighlighted() {
+        return iconHighlighted;
+    }
+
+    public void setIconHighlighted(String iconHighlighted) {
+        this.iconHighlighted = iconHighlighted;
+    }
+
+    public String getIconNormal() {
+        return iconNormal;
+    }
+
+    public void setIconNormal(String iconNormal) {
+        this.iconNormal = iconNormal;
     }
 }

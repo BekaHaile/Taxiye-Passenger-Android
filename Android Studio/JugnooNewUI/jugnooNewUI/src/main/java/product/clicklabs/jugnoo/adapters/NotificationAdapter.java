@@ -109,15 +109,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             try {
                 if (notification.getNotificationImage().equalsIgnoreCase("")) {
                     holder.linearLayoutNotificationImage.setVisibility(View.GONE);
-                    if (notification.isExpanded()) {
+                    holder.textViewTitle.setSingleLine(false);
+                    holder.textViewDescription.setSingleLine(false);
+                    /*if (notification.isExpanded()) {
                         holder.textViewTitle.setSingleLine(false);
                         holder.textViewDescription.setSingleLine(false);
                     } else {
                         holder.textViewTitle.setSingleLine(true);
                         holder.textViewDescription.setSingleLine(true);
-                    }
+                    }*/
                 } else {
-                    if (notification.isExpanded()) {
+                    holder.linearLayoutNotificationImage.setVisibility(View.VISIBLE);
+                    holder.textViewTitle.setSingleLine(false);
+                    holder.textViewDescription.setSingleLine(false);
+                    /*if (notification.isExpanded()) {
                         holder.linearLayoutNotificationImage.setVisibility(View.VISIBLE);
                         holder.textViewTitle.setSingleLine(false);
                         holder.textViewDescription.setSingleLine(false);
@@ -125,7 +130,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         holder.linearLayoutNotificationImage.setVisibility(View.GONE);
                         holder.textViewTitle.setSingleLine(true);
                         holder.textViewDescription.setSingleLine(true);
-                    }
+                    }*/
 
                     //Picasso.with(activity).load(notification.getNotificationImage()).into(holder.notificationImage);
                     //Picasso.with(activity).load(notification.getNotificationImage()).transform(new CircleTransform()).into(holder.notificationImage);
@@ -267,9 +272,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewTitle.setTypeface(Fonts.avenirNext(activity));
             textViewTitle.setSingleLine(true);
             textViewTime = (TextView) itemView.findViewById(R.id.textViewTime);
-            textViewTime.setTypeface(Fonts.mavenLight(activity));
+            textViewTime.setTypeface(Fonts.mavenMedium(activity));
             textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
-            textViewDescription.setTypeface(Fonts.mavenLight(activity));
+            textViewDescription.setTypeface(Fonts.mavenMedium(activity));
             textViewDescription.setSingleLine(true);
         }
     }

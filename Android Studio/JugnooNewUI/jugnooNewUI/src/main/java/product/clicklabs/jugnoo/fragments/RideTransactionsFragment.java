@@ -27,6 +27,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FeedbackActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -121,14 +122,15 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					@Override
 					public void onClick(int position, RideInfo rideInfo) {
 						try {
-							if (0 == rideInfo.isCancelledRide) {
+							Log.v("Ride Amount is ","---> "+rideInfo.amount);
+							if (rideInfo.amount > 0) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
 									if(activity instanceof RideTransactionsActivity){
 										((RideTransactionsActivity)activity).openRideSummaryFragment(rideInfo.engagementId);
 									} else if(activity instanceof SupportActivity){
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null);
+												rideInfo.engagementId, null, null, 0);
 									}
 									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 								} else {
@@ -202,7 +204,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 	private void setActivityTitle(){
 		if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
+			((RideTransactionsActivity)activity).setTitle(MyApplication.getInstance().ACTIVITY_NAME_HISTORY);
 		} else if(activity instanceof SupportActivity){
 			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
 		}

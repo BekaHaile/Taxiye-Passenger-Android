@@ -68,6 +68,7 @@
 	<string name="last_name">Last Name</string>
 	<string name="phone_number">Phone Number</string>
 	<string name="confirm_password">Confirm Password</string>
+	<string name="confirm_ride">Confirm Ride</string>
 	
 	<string name="confirmation_code">Confirmation Code</string>
 	<string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
@@ -109,8 +110,8 @@
 	<string name="invite_friends">Invite Friends</string>
 	<string name="invite_friends_caps">INVITE FRIENDS</string>
 	<string name="about">About</string>
-	<string name="great">Great!</string>
-	<string name="bad">Bad!</string>
+	<string name="great">Great :)</string>
+	<string name="bad">Bad :(</string>
 	<string name="support">Support</string>
 	<string name="sos">SOS</string>
 	<string name="language_preferences">Language Preferences</string>
@@ -181,11 +182,18 @@
 	<string name="server_error">Server error. Please try again later.</string>
 	<string name="server_not_responding">Oops!! Server not responding. Please try again later.</string>
 	<string name="check_internet_message">Check your internet connection.</string>
+	<string name="cancellation_charges_may_apply">Cancellation charges may apply*</string>
 	
 	
 	<string name="check_all">Check All</string>
 	<string name="uncheck_all">Uncheck All</string>
 	<string name="ride_request_text">GET A RIDE</string>
+	<string name="for_one_person">for one person will be</string>
+	<string name="your_driver_is_on_his_way">Your Driver is on his way.</string>
+	<string name="continue_with_cancellation">Continue with cancellation?</string>
+	<string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
+	<string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
+	<string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
 
 
     <!-- wallet screen-->
@@ -245,6 +253,7 @@
 	<string name="upload_contact_yes">Yes</string>
 	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
+	<string name="thanks_for_riding_with_jugnoo">Thanks for riding with Jugnoo</string>
 
 
 	<!-- Jugnoo Jeanie Strings-->
@@ -274,10 +283,12 @@
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">How was your ride ?</string>
 	<string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
+	<string name="go_to_support">Go to Support</string>
 	<string name="skip">Skip</string>
 	<string name="star_required">* Required</string>
 	<string name="leave_a_comment">Leave a comment</string>
 	<string name="what_could_we_improve">What could we improve?</string>
+	<string name="we_will_look_into_the_matter">We will look into the matter!</string>
 	<string name="rupees_value_format">\u20B9%s</string>
 	<string name="rupees_value_format_without_space">\u20B9%s</string>
 	<string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
@@ -773,6 +784,9 @@
 	<string name="ride_cancelled_by_driver">Driver has cancelled the ride. Please try again. Apologies for inconvenience!</string>
 
 	<string name="enter_your_destination">Enter your destination</string>
+	<string name="cool_to_pool">Its cool to pool</string>
+	<string name="share_the_journey">Share the journey split the fare</string>
+	<string name="riding_alone">Riding Alone? Try Jugnoo Pool</string>
 
 
 	<string name="recharge">Recharge</string>
@@ -828,6 +842,7 @@
 	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
 	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
 	<string name="continue_text">Continue</string>
+	<string name="try_now">Try Now</string>
 	<string name="order_status">Order Status:</string>
 	<string name="id">ID:</string>
 	<string name="order_date">Order Date:</string>
@@ -856,8 +871,10 @@
 	<string name="name_of_driver">Name of Driver</string>
 	<string name="contact_number">Contact Number</string>
 	<string name="refer">Refer</string>
+	<string name="want_free_rides">Want Free Rides ?</string>
 
 	<string name="inbox">Inbox</string>
+	<string name="play">Play</string>
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="base_fare_colon">Base Fare:</string>
@@ -902,6 +919,9 @@
 	<string name="new_password_same_error">New Password is same as the old one</string>
 	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
 	<string name="add_emergency_contacts">Add Emergency Contacts</string>
+
+	<string name="receipt">Receipt</string>
+	<string name="feedback">Feedback</string>
 
 
 </resources>

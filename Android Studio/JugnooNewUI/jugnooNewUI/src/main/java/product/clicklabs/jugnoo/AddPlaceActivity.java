@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -92,9 +91,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
         textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
 
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +118,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             }
         });
 
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient, 0,
                 new SearchListAdapter.SearchListActionsHandler() {
 
                     @Override
@@ -145,35 +142,35 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                     }
 
                     @Override
-                    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                    public void onPlaceClick(SearchResult autoCompleteSearchResult) {
                         String strResult = new LocalGson().getJSONFromAutoCompleteSearchResult(autoCompleteSearchResult);
 
                         if(placeName.equalsIgnoreCase("HOME")){
                             String savedWorkStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_WORK, "");
                             boolean removeOther = false;
                             if(!"".equalsIgnoreCase(savedWorkStr)){
-                                AutoCompleteSearchResult savedWork = new LocalGson().getAutoCompleteSearchResultFromJSON(savedWorkStr);
+                                SearchResult savedWork = new LocalGson().getAutoCompleteSearchResultFromJSON(savedWorkStr);
                                 if(savedWork.getPlaceId().equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())){
                                     removeOther = true;
                                 }
                             }
-                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, TYPE_HOME, strResult, removeOther);
+                            addPlacesApi(autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId(), TYPE_HOME, strResult, removeOther);
                         }
                         else if(placeName.equalsIgnoreCase("WORK")){
                             String savedHomeStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_HOME, "");
                             boolean removeOther = false;
                             if(!"".equalsIgnoreCase(savedHomeStr)){
-                                AutoCompleteSearchResult savedHome = new LocalGson().getAutoCompleteSearchResultFromJSON(savedHomeStr);
+                                SearchResult savedHome = new LocalGson().getAutoCompleteSearchResultFromJSON(savedHomeStr);
                                 if(savedHome.getPlaceId().equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())){
                                     removeOther = true;
                                 }
                             }
-                            addPlacesApi(autoCompleteSearchResult.address, autoCompleteSearchResult.placeId, TYPE_WORK, strResult, removeOther);
+                            addPlacesApi(autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId(), TYPE_WORK, strResult, removeOther);
                         }
 
                         Log.v("onPlaceClick result ", "---> " + strResult);
 
-                        editTextSearch.setText(autoCompleteSearchResult.name + ", " + autoCompleteSearchResult.address);
+                        editTextSearch.setText(autoCompleteSearchResult.getName() + ", " + autoCompleteSearchResult.getAddress());
 
                     }
 
@@ -220,8 +217,8 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             editTextSearch.setHint("Enter " + placeName.toLowerCase() + " location");
 
             if(!getIntent().getStringExtra("address").equalsIgnoreCase("")){
-                AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(getIntent().getStringExtra("address"));
-                editTextSearch.setText(searchResult.name);
+                SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(getIntent().getStringExtra("address"));
+                editTextSearch.setText(searchResult.getName());
 				editTextSearch.setSelection(editTextSearch.getText().length());
                 buttonRemove.setVisibility(View.VISIBLE);
             }else {

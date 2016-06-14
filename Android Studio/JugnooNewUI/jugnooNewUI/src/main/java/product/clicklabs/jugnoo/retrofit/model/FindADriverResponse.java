@@ -24,9 +24,15 @@ public class FindADriverResponse {
     @SerializedName("fare_factor")
     @Expose
     private Double fareFactor;
+    @SerializedName("driver_fare_factor")
+    @Expose
+    private Double driverFareFactor;
     @SerializedName("priority_tip_category")
     @Expose
     private Integer priorityTipCategory;
+    @SerializedName("is_pool_enabled")
+    @Expose
+    private Integer isPoolEnabled;
     @SerializedName("far_away_city")
     @Expose
     private String farAwayCity;
@@ -124,6 +130,14 @@ public class FindADriverResponse {
         this.priorityTipCategory = priorityTipCategory;
     }
 
+    public Integer getIsPoolEnabled() {
+        return isPoolEnabled;
+    }
+
+    public void setIsPoolEnabled(Integer isPoolEnabled) {
+        this.isPoolEnabled = isPoolEnabled;
+    }
+
     public String getFarAwayCity() {
         return farAwayCity;
     }
@@ -203,4 +217,11 @@ public class FindADriverResponse {
         this.freshAvailable = freshAvailable;
     }
 
+    public Double getDriverFareFactor() {
+        return driverFareFactor;
+    }
+
+    public void setDriverFareFactor(Double driverFareFactor) {
+        this.driverFareFactor = driverFareFactor;
+    }
 }

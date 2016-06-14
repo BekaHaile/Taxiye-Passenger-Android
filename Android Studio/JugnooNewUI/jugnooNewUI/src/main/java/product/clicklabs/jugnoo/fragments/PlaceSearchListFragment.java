@@ -26,7 +26,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AutoCompleteSearchResult;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -128,7 +127,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			}
 		});
 
-		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+		Bundle bundle = getArguments();
+		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
+		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
+		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+
+		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient, searchMode,
 				new SearchListAdapter.SearchListActionsHandler() {
 
 					@Override
@@ -161,7 +165,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					}
 
 					@Override
-					public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+					public void onPlaceClick(SearchResult autoCompleteSearchResult) {
 						searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
 					}
 
@@ -203,6 +207,16 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		listViewSearch.setAdapter(searchListAdapter);
 
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(editTextSearch.getText().length() == 0) {
+					editTextSearch.setText(" ");
+					editTextSearch.setText("");
+				}
+			}
+		},500);
+
 		showSearchLayout();
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
@@ -228,10 +242,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		});
 
 
-		Bundle bundle = getArguments();
-		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
-		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
-		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+
+
 		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
 			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
 		} else{
@@ -332,7 +344,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			if(resultCode == Activity.RESULT_OK) {
 				if (requestCode == ADD_HOME) {
 					String strResult = data.getStringExtra("PLACE");
-					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+					SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
 					if(searchResult != null){
 						Prefs.with(activity).save(SPLabels.ADD_HOME, strResult);
 						showSearchLayout();
@@ -342,7 +354,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 				} else if (requestCode == ADD_WORK) {
 					String strResult = data.getStringExtra("PLACE");
-					AutoCompleteSearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+					SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
 					if(searchResult != null) {
 						Prefs.with(activity).save(SPLabels.ADD_WORK, strResult);
 						showSearchLayout();

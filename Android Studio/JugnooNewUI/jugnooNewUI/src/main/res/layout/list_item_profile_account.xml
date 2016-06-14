@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="585px"
-    android:layout_height="422px"
+    android:layout_height="370px"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="366px"
+        android:layout_height="312px"
         android:gravity="center"
         android:padding="-10px"
         android:background="@drawable/background_menu_bar_theme"
@@ -61,6 +61,7 @@
                 android:layout_marginTop="10px"
                 android:singleLine="true"
                 android:gravity="center"
+                android:visibility="gone"
                 android:text="View Account"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_30" />
