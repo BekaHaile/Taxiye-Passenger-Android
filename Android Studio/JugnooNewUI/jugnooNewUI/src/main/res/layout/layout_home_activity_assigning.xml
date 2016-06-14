@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/assigningLayout"
-    android:layout_marginTop="@dimen/top_bar_height"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
+    android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+
 
     <RelativeLayout
         android:id="@+id/linearLayoutAssigningButtons"
         android:layout_width="match_parent"
         android:layout_height="224px"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/textViewCancellation"
         android:background="@color/white"
         android:splitMotionEvents="false">
 
@@ -60,9 +67,9 @@
                 android:id="@+id/findDriverJugnooAnimation"
                 android:layout_width="@dimen/jugnoo_anim_loading_width"
                 android:layout_height="@dimen/jugnoo_anim_loading_height"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20px"
-                android:background="@drawable/auto_loading_frame_anim"
-                android:layout_gravity="center_horizontal"/>
+                android:background="@drawable/auto_loading_frame_anim" />
 
             <Button
                 android:id="@+id/initialCancelRideBtn"
@@ -76,14 +83,26 @@
 
     </RelativeLayout>
 
+        <TextView
+            android:id="@+id/textViewCancellation"
+            android:layout_width="match_parent"
+            android:layout_height="60px"
+            android:background="@color/menu_item_selector_color"
+            android:gravity="center"
+            android:text="@string/cancellation_charges_may_apply"
+            android:textSize="@dimen/text_size_26"
+            android:textColor="@color/stroke_color_dark"/>
+
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/relativeLayoutAssigningDropLocationClick"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:layout_marginTop="20px"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
+        android:layout_marginTop="20px"
         android:background="@drawable/dropshadow_in_white"
         android:splitMotionEvents="false">
 
@@ -94,7 +113,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="37px"
             android:src="@drawable/circle_red"
-            android:tag="mwar"/>
+            android:tag="mwar" />
 
         <TextView
             android:id="@+id/textViewAssigningDropLocationClick"
@@ -107,12 +126,11 @@
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/enter_your_destination"
+            android:paddingRight="20px"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textCursorDrawable="@null"
-            android:textSize="30px"
-            android:paddingRight="20px"
-            />
+            android:textSize="30px" />
 
         <LinearLayout
             android:id="@+id/linearLayoutAssigningDropLocationEditProgress"
@@ -122,12 +140,11 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <product.clicklabs.jugnoo.utils.ProgressWheel
-                android:id="@+id/progressBarAssigningDropLocation"
                 xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progressBarAssigningDropLocation"
                 android:layout_width="70px"
                 android:layout_height="70px"
                 android:tag="mwar"
@@ -135,8 +152,7 @@
                 wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_barWidth="3dp"
                 wheel:matProg_fillRadius="true"
-                wheel:matProg_progressIndeterminate="true"
-                />
+                wheel:matProg_progressIndeterminate="true" />
 
             <ImageView
                 android:id="@+id/imageViewAssigningDropLocationEdit"
@@ -145,13 +161,45 @@
                 android:padding="15px"
                 android:src="@drawable/edit_icon_selector"
                 android:tag="mwar"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
         </LinearLayout>
 
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutDestinationHelp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15px"
+        android:layout_marginLeft="50px"
+        android:layout_marginRight="50px"
+        android:visibility="gone"
+        android:layout_below="@+id/relativeLayoutAssigningDropLocationClick">
+
+        <ImageView
+            android:id="@+id/imageViewDestHelp"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_marginLeft="50px"
+            android:layout_marginTop="-30px"
+            android:tag="mwar"
+            android:background="@drawable/triangle_help_text"
+            android:rotation="0" />
+
+        <TextView
+            android:id="@+id/textViewDestHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageViewDestHelp"
+            android:background="@drawable/background_black_80_r"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_30"
+            android:padding="15px"
+            android:text="For complete peace of mind please enter the destination so we can provide him turn by turn navigation"/>
+    </RelativeLayout>
+
 
 
 

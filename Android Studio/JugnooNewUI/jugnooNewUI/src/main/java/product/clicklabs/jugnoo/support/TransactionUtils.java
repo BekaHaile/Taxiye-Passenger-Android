@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.support;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import product.clicklabs.jugnoo.Constants;
@@ -87,17 +89,20 @@ public class TransactionUtils {
 
 
 	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
-									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, int fromBadFeedback) {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
-			activity.getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-					.add(container.getId(),
-							new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
-							SupportRideIssuesFragment.class.getName())
-					.addToBackStack(SupportRideIssuesFragment.class.getName())
-					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
+			FragmentManager fragmentManager = activity.getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.add(container.getId(),
+					new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
+					SupportRideIssuesFragment.class.getName())
+					.addToBackStack(SupportRideIssuesFragment.class.getName());
+			if(fromBadFeedback == 0){
+				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+				fragmentTransaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+			}
+			fragmentTransaction.commitAllowingStateLoss();
 			FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_WITH_RECENT_RIDE);
 		}
 	}

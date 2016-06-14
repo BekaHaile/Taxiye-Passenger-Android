@@ -44,6 +44,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
@@ -141,7 +142,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0, linkedWallet = 0;
+	int clickCount = 0, linkedWallet = 1, showPaytm = 0;
 
 	private State state = State.SPLASH_LS;
 
@@ -299,7 +300,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 
 		RestClient.setupRestClient();
-		RestClient.setupFreshApiRestClient();
 	}
 
 	@Override
@@ -536,7 +536,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					if(isBranchLinkNotClicked()) {
-						linkedWallet = 1;
+						if(showPaytm == 1){
+							linearLayoutAddPatym.setVisibility(View.VISIBLE);
+							linkedWallet = 1;
+						} else{
+							linearLayoutAddPatym.setVisibility(View.GONE);
+							linkedWallet = 0;
+						}
 						FlurryEventLogger.event(SIGNUP);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1249,7 +1255,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 		super.onPause();
 
-		AppEventsLogger.deactivateApp(this);
 	}
 
 	@Override
@@ -1347,6 +1352,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				changeUIState(State.SPLASH_LS);
+				getAllowedAuthChannels(SplashNewActivity.this);
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
@@ -1373,7 +1379,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
 						accessTokenDataParseAsync(activity, response, loginResponse);
-						FlurryEventLogger.setGAUserId(Data.userData.getUserId());
+
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
 						Editor editor = pref1.edit();
 						editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
@@ -1393,6 +1399,47 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			exception.printStackTrace();
 			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 			DialogPopup.dismissLoadingDialog();
+		}
+	}
+
+	public void getAllowedAuthChannels(Activity activity){
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+
+			DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+			HashMap<String, String> params = new HashMap<>();
+
+			RestClient.getApiServices().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt settleUserDebt, Response response) {
+					DialogPopup.dismissLoadingDialog();
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "Auth channel response = " + responseStr);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+						showPaytm = jObj.optJSONObject("signup").optInt("PAYTM");
+						int showFacebook = jObj.optJSONObject("signup").optInt("FACEBOOK");
+						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
+						if(showPaytm == 1){
+							linearLayoutAddPatym.setVisibility(View.VISIBLE);
+							linkedWallet = 1;
+							imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
+						} else{
+							linearLayoutAddPatym.setVisibility(View.GONE);
+							linkedWallet = 0;
+						}
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+				}
+			});
+
+		} else {
+			changeUIState(State.SPLASH_NO_NET);
 		}
 	}
 
@@ -1975,7 +2022,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login");
+									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL);
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
@@ -2559,6 +2606,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
+			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			} else{
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2683,7 +2735,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
-
+			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}else{
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2795,7 +2851,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("client_id", Config.getClientId());
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
-
+			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
+			}else{
+				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -3002,8 +3062,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									Database.getInstance(activity).insertEmail(email);
 									Database.getInstance(activity).close();
 									loginDataFetched = true;
-									BranchMetricsUtils.logEvent(activity, BRANCH_EVENT_REGISTRATION, false);
-									FbEvents.logEvent(activity, FB_EVENT_REGISTRATION, false);
 								}
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");

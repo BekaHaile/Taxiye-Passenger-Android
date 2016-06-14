@@ -85,9 +85,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 
         ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenMedium(this));
 
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 			

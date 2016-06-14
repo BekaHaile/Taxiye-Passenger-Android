@@ -28,6 +28,16 @@ public class MyApplication extends Application{
 			.getSimpleName();
 
 	private static MyApplication mInstance;
+	public String ACTIVITY_NAME_PLAY = "GAME";
+	public String ACTIVITY_NAME_FREE_RIDES = "FREE RIDES";
+	public String ACTIVITY_NAME_WALLET = "WALLET";
+	public String ACTIVITY_NAME_INBOX= "INBOX";
+	public String ACTIVITY_NAME_PROMOTIONS = "PROMOTIONS";
+	public String ACTIVITY_NAME_HISTORY = "HISTORY";
+	public String ACTIVITY_NAME_OFFERS = "PROMOTIONS";
+	public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
+	public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
+	public String ACTIVITY_NAME_ABOUT = "ABOUT";
 
 	@Override
 	public void onCreate() {

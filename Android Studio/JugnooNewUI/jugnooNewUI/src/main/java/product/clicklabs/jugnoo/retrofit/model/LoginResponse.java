@@ -334,17 +334,21 @@ public class LoginResponse {
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
+		@SerializedName("driver_fare_factor")
+		@Expose
+		private Double driverFareFactor;
 		@SerializedName("regions")
 		@Expose
 		private List<Region> regions = new ArrayList<>();
 		@SerializedName("fresh_available")
 		@Expose
 		private Integer freshAvailable;
+		@SerializedName("is_pool_enabled")
+		@Expose
+		private Integer isPoolEnabled;
 		@SerializedName("menu")
 		@Expose
 		private List<MenuInfo> menuInfoList;
-
-
 
 		@SerializedName("campaigns")
 		@Expose
@@ -484,6 +488,22 @@ public class LoginResponse {
 
 		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
 			this.menuInfoList = menuInfoList;
+		}
+
+		public Integer getIsPoolEnabled() {
+			return isPoolEnabled;
+		}
+
+		public void setIsPoolEnabled(Integer isPoolEnabled) {
+			this.isPoolEnabled = isPoolEnabled;
+		}
+
+		public Double getDriverFareFactor() {
+			return driverFareFactor;
+		}
+
+		public void setDriverFareFactor(Double driverFareFactor) {
+			this.driverFareFactor = driverFareFactor;
 		}
 	}
 }

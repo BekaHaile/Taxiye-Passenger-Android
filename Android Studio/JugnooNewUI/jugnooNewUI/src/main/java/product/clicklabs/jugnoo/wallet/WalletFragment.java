@@ -18,6 +18,7 @@ import com.flurry.android.FlurryAgent;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
@@ -101,9 +102,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 		textViewPromotion.setVisibility(View.GONE);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, mWidth));
+		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_WALLET);
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {

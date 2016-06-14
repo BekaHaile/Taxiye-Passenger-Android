@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutInner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20px"
+            android:background="@drawable/background_white_rounded"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:splitMotionEvents="false">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="230px"
+                android:background="@drawable/bg_menu_item_selector_tlrr">
+
+            <ImageView
+                android:layout_width="293px"
+                android:layout_height="196px"
+                android:tag="mwar"
+                android:src="@drawable/service_unavilable"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:tag="mwar"
+                android:src="@color/text_color_light"/>
+
+            <TextView
+                android:id="@+id/textViewCancelledRides"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="50px"
+                android:text="@string/cancelled_too_many_rides"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_36" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:tag="mwar"
+                android:layout_marginLeft="100px"
+                android:layout_marginRight="100px"
+                android:layout_marginTop="40px"
+                android:src="@color/text_color_light"/>
+
+            <TextView
+                android:id="@+id/textViewResume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="30px"
+                android:text="@string/resume_after_24_hours"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_36" />
+
+
+            <Button
+                android:id="@+id/buttonYes"
+                style="@style/ButtonTheme"
+                android:layout_marginTop="40px"
+                android:layout_marginBottom="40px"
+                android:text="@string/ok"
+                />
+
+
+
+
+        </LinearLayout>
+
+
+</RelativeLayout>

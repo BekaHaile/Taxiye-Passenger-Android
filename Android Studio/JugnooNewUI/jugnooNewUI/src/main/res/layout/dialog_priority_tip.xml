@@ -213,7 +213,15 @@
 
             <ImageView
                 android:id="@+id/close"
-                style="@style/cross_popup" />
+                android:layout_width="73px"
+                android:layout_height="73px"
+                android:src="@drawable/ic_cross_popup_selector"
+                android:tag="mwar"
+                android:paddingLeft="10px"
+                android:paddingBottom="10px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="-5px"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
 

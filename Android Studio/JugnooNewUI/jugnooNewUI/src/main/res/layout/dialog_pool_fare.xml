@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="40px"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutInner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20px"
+            android:background="@drawable/background_pool_fare_dialog_bg_color_dashed_rb"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:splitMotionEvents="false">
+
+
+            <TextView
+                android:id="@+id/textViewTotalFare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="46px"
+                android:gravity="center"
+                android:text="@string/total_fare"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_68" />
+
+            <TextView
+                android:id="@+id/textViewForOnePerson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/for_one_person"
+                android:textColor="@color/stroke_color_dark"
+                android:textSize="@dimen/text_size_32" />
+
+            <TextView
+                android:id="@+id/textViewValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="20px"
+                android:gravity="center"
+                android:text="20"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_120" />
+
+            <Button
+                android:id="@+id/buttonConfirm"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30px"
+                android:layout_marginTop="20px"
+                android:text="@string/confirm_ride"
+                />
+
+            <TextView
+                android:id="@+id/textViewCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textAllCaps="true"
+                android:layout_marginBottom="40px"
+                android:textColor="@color/text_color_theme_alpha_selector"
+                android:textSize="@dimen/text_size_32" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

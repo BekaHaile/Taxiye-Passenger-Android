@@ -87,6 +87,7 @@ public class ReferDriverDialog {
 			buttonRefer.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Utils.hideSoftKeyboard(activity, editTextName);
 					if ((!editTextName.getText().toString().isEmpty()) && (!editTextPhone.getText().toString().isEmpty())) {
 						if ((editTextPhone.getText().toString().length() == 10)) {
 							referDriver();

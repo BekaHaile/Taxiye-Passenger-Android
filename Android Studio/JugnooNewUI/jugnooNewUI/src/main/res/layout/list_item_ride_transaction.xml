@@ -3,7 +3,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="@dimen/screen_width"
                 android:layout_height="wrap_content"
-                android:background="@color/sliding_bottom_bg_color"
+                android:background="@color/menu_item_selector_color"
                 android:splitMotionEvents="false">
 
     <LinearLayout
@@ -56,7 +56,7 @@
                 android:layout_marginRight="30px"
                 android:layout_toRightOf="@+id/textViewId"
                 android:text="1234"
-                android:textColor="@color/text_color"
+                android:textColor="@color/ride_history_item_text_color"
                 android:textSize="@dimen/text_size_26"/>
         </RelativeLayout>
 
@@ -150,7 +150,7 @@
                 android:layout_marginLeft="5px"
                 android:layout_toRightOf="@+id/textViewDetailsValue"
                 android:text="Cancelled"
-                android:textColor="@color/text_color"
+                android:textColor="@color/red"
                 android:textSize="26px"
                 android:visibility="gone"
                 />
@@ -229,6 +229,6 @@
         android:singleLine="true"
         android:text="@string/rupee_0"
         android:textColor="@color/theme_color"
-        android:textSize="@dimen/text_size_28"/>
+        android:textSize="@dimen/text_size_34"/>
 
 </RelativeLayout>

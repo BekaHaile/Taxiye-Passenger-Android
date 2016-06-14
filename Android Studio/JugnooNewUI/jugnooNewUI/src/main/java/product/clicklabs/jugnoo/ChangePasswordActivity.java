@@ -91,9 +91,7 @@ public class ChangePasswordActivity extends BaseActivity {
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
-		textViewTitle.measure(0, 0);
-		int mWidth = textViewTitle.getMeasuredWidth();
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 		
 		
 		buttonChangePassword.setOnClickListener(new View.OnClickListener() {

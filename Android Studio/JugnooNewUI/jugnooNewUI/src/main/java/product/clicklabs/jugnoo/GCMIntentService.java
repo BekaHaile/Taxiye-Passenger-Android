@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.utils.CallActivity;
+import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -400,6 +401,8 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							e.printStackTrace();
 						}
 
+						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
+
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
@@ -420,6 +423,7 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
 						}
 						notificationManager(this, title, message1, playSound);
+						NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_CANCELLED_BY_DRIVER, null);
 
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag
 							|| PushFlags.WAITING_ENDED.getOrdinal() == flag) {

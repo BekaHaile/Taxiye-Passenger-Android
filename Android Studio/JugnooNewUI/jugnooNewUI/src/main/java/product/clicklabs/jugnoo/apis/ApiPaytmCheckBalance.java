@@ -87,6 +87,8 @@ public class ApiPaytmCheckBalance {
 				} else {
 					retryDialog(DialogErrorType.NO_NET);
 				}
+			} else{
+				callback.paytmDisabled();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,6 +124,7 @@ public class ApiPaytmCheckBalance {
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);
+		void paytmDisabled();
 	}
 
 

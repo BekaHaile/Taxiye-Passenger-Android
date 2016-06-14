@@ -390,6 +390,11 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 										public void onNoRetry(View view) {
 
 										}
+
+										@Override
+										public void paytmDisabled() {
+
+										}
 									}).getBalance(Data.userData.paytmEnabled, false);
 
 								} else {

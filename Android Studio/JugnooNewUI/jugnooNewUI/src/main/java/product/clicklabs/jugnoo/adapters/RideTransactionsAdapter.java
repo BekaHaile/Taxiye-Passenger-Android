@@ -194,19 +194,19 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
             textViewPickupAt = (TextView) convertView.findViewById(R.id.textViewPickupAt); textViewPickupAt.setTypeface(Fonts.mavenLight(context));
-            ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenLight(context));
-            textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); textViewIdValue.setTypeface(Fonts.mavenLight(context));
-            textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); textViewFrom.setTypeface(Fonts.mavenLight(context));
-            textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue); textViewFromValue.setTypeface(Fonts.mavenLight(context));
-            textViewTo = (TextView) convertView.findViewById(R.id.textViewTo); textViewTo.setTypeface(Fonts.mavenLight(context));
-            textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); textViewToValue.setTypeface(Fonts.mavenLight(context));
-            textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.mavenLight(context));
-            textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); textViewDetailsValue.setTypeface(Fonts.mavenLight(context));
+            ((TextView)convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenMedium(context));
+            textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); textViewIdValue.setTypeface(Fonts.mavenMedium(context));
+            textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); textViewFrom.setTypeface(Fonts.mavenMedium(context));
+            textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue); textViewFromValue.setTypeface(Fonts.mavenRegular(context));
+            textViewTo = (TextView) convertView.findViewById(R.id.textViewTo); textViewTo.setTypeface(Fonts.mavenMedium(context));
+            textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); textViewToValue.setTypeface(Fonts.mavenRegular(context));
+            textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.mavenMedium(context));
+            textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); textViewDetailsValue.setTypeface(Fonts.mavenRegular(context));
             textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount);
-            textViewAmount.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            textViewAmount.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
             textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide); textViewRateRide.setTypeface(Fonts.mavenLight(context));
             textViewRideCancelled = (TextView) convertView.findViewById(R.id.textViewRideCancelled);
-            textViewRideCancelled.setTypeface(Fonts.mavenLight(context), Typeface.BOLD);
+            textViewRideCancelled.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
 
 
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);

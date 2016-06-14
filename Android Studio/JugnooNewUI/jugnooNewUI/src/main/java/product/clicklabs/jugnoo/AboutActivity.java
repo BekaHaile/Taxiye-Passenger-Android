@@ -71,10 +71,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.mavenLight(this));
 
-        textViewTitle.measure(0, 0);
-        int mWidth = textViewTitle.getMeasuredWidth();
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, mWidth));
-
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_ABOUT);
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         relativeLayoutRateUs.setOnClickListener(new View.OnClickListener() {
 

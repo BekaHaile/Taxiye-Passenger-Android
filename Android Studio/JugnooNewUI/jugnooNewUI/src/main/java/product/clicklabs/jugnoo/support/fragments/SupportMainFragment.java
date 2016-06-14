@@ -24,6 +24,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
@@ -71,8 +72,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
     private SupportActivity activity;
 
 	private int showPanelCalled = 0, getRideSummaryCalled = 0;
-	private EndRideData endRideData;
-	private GetRideSummaryResponse getRideSummaryResponse;
 
 	public SupportMainFragment(){}
 
@@ -97,7 +96,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
         rootView = inflater.inflate(R.layout.fragment_support_main, container, false);
 
         activity = (SupportActivity) getActivity();
-		activity.setTitle(activity.getResources().getString(R.string.support_main_title));
+		activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
@@ -142,22 +141,13 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				try {
-					if (endRideData != null && getRideSummaryResponse != null) {
-                        new TransactionUtils().openRideIssuesFragment(activity,
-                                activity.getContainer(),
-                                Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse);
-                        FlurryEventLogger.eventGA(ISSUES, "Customer Support", "Issue with Ride");
-                    }
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
+				activity.openSupportRideIssuesFragment();
 			}
 		});
 
 		linearLayoutRideShortInfo.setVisibility(View.GONE);
 		recyclerViewSupportFaq.setVisibility(View.GONE);
-		getRideSummaryAPI(activity);
+		activity.getRideSummaryAPI(activity);
 		showPanel();
 
 		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
@@ -170,7 +160,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
-			activity.setTitle(activity.getResources().getString(R.string.support_main_title));
+			activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 		}
 	}
 
@@ -241,46 +231,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	}
 
 
-	public void getRideSummaryAPI(final Activity activity) {
-		try {
-			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.fixedFare,
-					new ApiGetRideSummary.Callback() {
-						@Override
-						public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
-							SupportMainFragment.this.endRideData = endRideData;
-							SupportMainFragment.this.getRideSummaryResponse = getRideSummaryResponse;
-							setRideData();
-							linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-							getRideSummaryCalled = 1;
-						}
-
-						@Override
-						public boolean onActionFailed(String message) {
-							linearLayoutRideShortInfo.setVisibility(View.GONE);
-							getRideSummaryCalled = 1;
-							return false;
-						}
-
-						@Override
-						public void onFailure() {
-							getRideSummaryCalled = -1;
-							linearLayoutRideShortInfo.setVisibility(View.GONE);
-						}
-
-						@Override
-						public void onRetry(View view) {
-							hitRetry();
-						}
-
-						@Override
-						public void onNoRetry(View view) {
-
-						}
-					}).getRideSummaryAPI();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){
 		DialogPopup.dialogNoInternet(activity,
@@ -308,7 +258,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			showPanel();
 		}
 		if(getRideSummaryCalled != 1){
-			getRideSummaryAPI(activity);
+			activity.getRideSummaryAPI(activity);
 		}
 	}
 
@@ -318,6 +268,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private void setRideData(){
 		try{
+			EndRideData endRideData = activity.getEndRideData();
 			if(endRideData != null){
 				textViewDriverName.setText(endRideData.driverName);
 				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
@@ -349,5 +300,15 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	}
 
 
+	public void updateSuccess(){
+		setRideData();
+		linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+		getRideSummaryCalled = 1;
+	}
+
+	public void updateFail(){
+		linearLayoutRideShortInfo.setVisibility(View.GONE);
+		getRideSummaryCalled = 1;
+	}
 
 }
