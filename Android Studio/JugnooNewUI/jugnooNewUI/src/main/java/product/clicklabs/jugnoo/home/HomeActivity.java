@@ -749,6 +749,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        if(Data.userData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
+            textViewCancellation.setVisibility(View.GONE);
+        }
+
         setEnteredDestination();
 
 

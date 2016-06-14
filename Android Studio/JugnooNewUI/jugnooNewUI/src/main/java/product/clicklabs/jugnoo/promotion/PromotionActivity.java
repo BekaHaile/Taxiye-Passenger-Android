@@ -71,7 +71,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     private LinearLayout linearLayoutNoOffers, relative;
     private RecyclerView recyclerViewOffers;
     private PromotionsAdapter promotionsAdapter;
-    private ImageView imageViewBack;
+    private ImageView imageViewBack, imageViewFreeRideAuto;
     private TextView textViewTitle, textViewFreeRides;
 
 
@@ -125,6 +125,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
         editTextPromoCode.setTypeface(Fonts.mavenRegular(this));
         imageViewClose = (ImageView) findViewById(R.id.imageViewClose);
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
+        imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
         relativeLayoutListTitle = (RelativeLayout) findViewById(R.id.relativeLayoutListTitle);
         ((TextView) findViewById(R.id.textViewOffersAvailable)).setTypeface(Fonts.mavenRegular(this));
@@ -174,6 +175,13 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                     editTextPromoCode.requestFocus();
                     editTextPromoCode.setError("Code can't be empty");
                 }
+            }
+        });
+
+        imageViewFreeRideAuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textViewFreeRides.performClick();
             }
         });
 

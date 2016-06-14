@@ -162,13 +162,15 @@
             android:layout_width="match_parent"
             android:layout_height="95px"
             android:layout_alignParentBottom="true"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="180px"
             android:background="@color/menu_item_selector_color"
             android:textSize="@dimen/text_size_36"
             android:textColor="@color/text_color"
             android:text="@string/want_free_rides"/>
 
         <ImageView
+            android:id="@+id/imageViewFreeRideAuto"
             android:layout_width="128px"
             android:layout_height="128px"
             android:src="@drawable/free_rides_promotions"

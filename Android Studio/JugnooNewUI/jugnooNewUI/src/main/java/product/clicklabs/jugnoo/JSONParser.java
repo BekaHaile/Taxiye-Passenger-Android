@@ -201,8 +201,8 @@ public class JSONParser implements Constants {
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
         String destinationHelpText = userData.optString("destination_help_text", "");
         String rideSummaryBadText = userData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
-        String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", context.getResources().getString(R.string.your_driver_is_on_his_way));
-        String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", context.getResources().getString(R.string.continue_with_cancellation));
+        String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", "");
+        String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", "");
         String inRideSendInviteTextBold = userData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
         String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
 
