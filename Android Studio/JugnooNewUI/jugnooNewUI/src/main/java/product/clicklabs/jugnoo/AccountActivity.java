@@ -178,6 +178,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                     setUserData();
                     imageViewEditProfile.setVisibility(View.VISIBLE);
                     linearLayoutSave.setVisibility(View.GONE);
+                    editTextUserName.setError(null);
+                    editTextEmail.setError(null);
+                    editTextPhone.setError(null);
                 } else{
                     performBackPressed();
                 }

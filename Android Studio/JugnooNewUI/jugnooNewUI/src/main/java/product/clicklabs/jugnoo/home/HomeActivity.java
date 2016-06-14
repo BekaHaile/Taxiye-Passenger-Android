@@ -3389,6 +3389,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onResume();
 
         try {
+            Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
             if (!checkIfUserDataNull(HomeActivity.this)) {
                 setUserData();
 

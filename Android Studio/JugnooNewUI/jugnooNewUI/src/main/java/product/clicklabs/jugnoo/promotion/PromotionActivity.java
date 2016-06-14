@@ -168,7 +168,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 FlurryEventLogger.event(PromotionActivity.this, ENTERED_PROMO_CODE);
                 String promoCode = editTextPromoCode.getText().toString().trim();
                 if (promoCode.length() > 0) {
-                    //applyPromoCodeAPI(activity, promoCode);
+                    applyPromoCodeAPI(PromotionActivity.this, promoCode);
                     FlurryEventLogger.event(PromotionActivity.this, CLICKS_ON_APPLY);
                 } else {
                     editTextPromoCode.requestFocus();
