@@ -125,20 +125,35 @@ public class ReferralActions {
             new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-                    PackageManager pm = activity.getPackageManager();
+//                    PackageManager pm = activity.getPackageManager();
                     try {
-                        Intent waIntent = new Intent(Intent.ACTION_SEND);
-                        waIntent.setType("text/plain");
-                        String text = Data.referralMessages.referralSharingMessage;
+//                        Intent waIntent = new Intent(Intent.ACTION_SEND);
+//                        waIntent.setType("text/plain");
+//                        String text = Data.referralMessages.referralSharingMessage;
+//
+//                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+//                        Log.d("info", "=" + info);
+//                        waIntent.setPackage("com.whatsapp");
+//
+//                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n"
+//                                + link);
+//                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
 
-                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-                        Log.d("info", "=" + info);
-                        waIntent.setPackage("com.whatsapp");
 
-                        waIntent.putExtra(Intent.EXTRA_TEXT, text + "\n"
-                                + link);
-                        activity.startActivity(Intent.createChooser(waIntent, "Share with"));
-                    } catch (PackageManager.NameNotFoundException e) {
+                        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(intent, 0);
+                        for(ResolveInfo info : activities){
+                            if(info.activityInfo.packageName.contains("com.whatsapp")){
+                                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+                                intent.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+                                        + link);
+                                activity.startActivity(intent);
+                                break;
+                            }
+                        }
+
+                    } catch (Exception e) {
                         Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -262,7 +277,7 @@ public class ReferralActions {
                 if (info.activityInfo.packageName.contains("com.facebook.katana")) {
                     shareToFacebookBasic(activity, callbackManager, link);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
-                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "Facebook");
+                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Facebook");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_FACEBOOK, null);
                 }
 				else if(info.activityInfo.packageName.contains("com.google.android.gm")
@@ -276,7 +291,7 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
-                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "Gmail");
+                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Gmail");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_EMAIL, null);
 				}
 				else if(info.activityInfo.packageName.contains("com.whatsapp")){
@@ -286,7 +301,7 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
-                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "WhatsApp");
+                    FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "WhatsApp");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_WHATSAPP, null);
 				}
 				else {
@@ -301,11 +316,11 @@ public class ReferralActions {
                     } else if(info.activityInfo.packageName.contains("com.android.mms")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_SMS, null);
-                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "SMS");
+                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "SMS");
                     } else{
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_OTHER, null);
-                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up ", "Other");
+                        FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Other");
                     }
                 }
             }

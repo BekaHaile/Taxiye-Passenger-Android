@@ -67,8 +67,8 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     private EditText editTextPromoCode;
     private ImageView imageViewClose;
 
-    private RelativeLayout relativeLayoutListTitle;
-    private LinearLayout linearLayoutNoOffers, relative;
+    private RelativeLayout relativeLayoutListTitle, relative;
+    private LinearLayout linearLayoutNoOffers;
     private RecyclerView recyclerViewOffers;
     private PromotionsAdapter promotionsAdapter;
     private ImageView imageViewBack, imageViewFreeRideAuto;
@@ -100,7 +100,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_promotions);
-        relative = (LinearLayout) findViewById(R.id.linearLayoutRoot);
+        relative = (RelativeLayout) findViewById(R.id.linearLayoutRoot);
         new ASSL(PromotionActivity.this, relative, 1134, 720, false);
 
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);

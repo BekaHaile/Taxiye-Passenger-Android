@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="1134px"
     android:orientation="vertical"
     android:background="@color/white"
     android:splitMotionEvents="false">
@@ -29,11 +29,14 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
+        android:layout_below="@+id/topBar"
         android:background="@drawable/shadow_down" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutPromoParent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="102px">
 
         <Button
             android:id="@+id/buttonAddPromoCode"
@@ -107,7 +110,8 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutListTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayoutPromoParent">
 
         <ImageView
             android:layout_width="match_parent"
@@ -144,12 +148,15 @@
         android:layout_width="match_parent"
         android:layout_height="415px"
         android:layout_marginTop="40px"
+        android:visibility="gone"
+        android:layout_below="@+id/relativeLayoutListTitle"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="155px">
+        android:layout_height="155px"
+        android:layout_alignParentBottom="true">
 
         <ImageView
             android:layout_width="match_parent"
@@ -184,7 +191,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="120px"
+        android:layout_marginTop="60px"
+        android:layout_below="@+id/relativeLayoutListTitle"
+        android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:visibility="visible">
@@ -207,4 +216,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

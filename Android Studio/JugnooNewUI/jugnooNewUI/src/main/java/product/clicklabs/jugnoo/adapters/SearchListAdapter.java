@@ -266,8 +266,10 @@ public class SearchListAdapter extends BaseAdapter{
     @Override
     public synchronized void notifyDataSetChanged() {
         if (searchResults.size() > 1) {
-            if (searchResults.contains(new SearchResult("No results found", "", ""))) {
-                searchResults.remove(searchResults.indexOf(new SearchResult("No results found", "", "")));
+            if (searchResults.contains(new SearchResult(context.getResources()
+                    .getString(R.string.no_results_found), "", ""))) {
+                searchResults.remove(searchResults.indexOf(new SearchResult(context.getResources()
+                        .getString(R.string.no_results_found), "", "")));
             }
         }
 
@@ -340,7 +342,7 @@ public class SearchListAdapter extends BaseAdapter{
 		((Activity) context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (searchResultsForSearch.size() == 0) {
+				if ((searchResultsForSearch.size()) == 0 && (editTextForSearch.getText().toString().trim().length() > 0)) {
                     if(AppStatus.getInstance(context).isOnline(context)) {
                         searchResultsForSearch.add(new SearchResult(context.getResources()
                                 .getString(R.string.no_results_found), "", ""));

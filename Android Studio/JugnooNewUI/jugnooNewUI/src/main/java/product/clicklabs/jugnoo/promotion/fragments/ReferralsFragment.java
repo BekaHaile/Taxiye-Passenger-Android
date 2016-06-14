@@ -136,7 +136,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if(AppStatus.getInstance(activity).isOnline(activity)) {
-					FlurryEventLogger.eventGA(Constants.REFERRAL, "Referrals", "invite friends");
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "invite friends");
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {
 						if(activity.fromDeepLink){
@@ -158,6 +158,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				buttonInvite.performClick();
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Others");
 			}
 		});
 
@@ -165,6 +166,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.shareToFacebook(activity, true, activity.getCallbackManager());
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Facebook");
 			}
 		});
 
@@ -172,6 +174,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.shareToWhatsapp(activity);
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Whatsapp");
 			}
 		});
 
@@ -179,6 +182,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.sendSMSIntent(activity);
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Message");
 			}
 		});
 
@@ -186,6 +190,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.openMailIntent(activity);
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Email");
 			}
 		});
 

@@ -142,7 +142,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	int debugState = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
-	int clickCount = 0, linkedWallet = 0, showPaytm = 0;
+	int clickCount = 0, linkedWallet = 1, showPaytm = 0;
 
 	private State state = State.SPLASH_LS;
 
@@ -536,7 +536,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					if(isBranchLinkNotClicked()) {
-						linkedWallet = 0;
+						if(showPaytm == 1){
+							linearLayoutAddPatym.setVisibility(View.VISIBLE);
+							linkedWallet = 1;
+						} else{
+							linearLayoutAddPatym.setVisibility(View.GONE);
+							linkedWallet = 0;
+						}
 						FlurryEventLogger.event(SIGNUP);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1416,8 +1422,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						if(showPaytm == 1){
 							linearLayoutAddPatym.setVisibility(View.VISIBLE);
 							linkedWallet = 1;
+							imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
 						} else{
 							linearLayoutAddPatym.setVisibility(View.GONE);
+							linkedWallet = 0;
 						}
 					}catch (Exception e){
 						e.printStackTrace();

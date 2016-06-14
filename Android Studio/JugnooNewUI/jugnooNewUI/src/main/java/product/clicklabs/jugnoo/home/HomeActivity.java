@@ -1251,7 +1251,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            imageViewThumbsUpGif.setImageResource(0);
+                            imageViewThumbsUpGif.setImageDrawable(null);
                         }
                     }, 3000);
 
