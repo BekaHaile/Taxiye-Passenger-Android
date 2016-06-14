@@ -749,9 +749,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        if(Data.userData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
-            textViewCancellation.setVisibility(View.GONE);
-        }
+
 
         setEnteredDestination();
 
@@ -1491,6 +1489,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             startUIAfterGettingUserStatus();
+
+            if(Data.userData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
+                textViewCancellation.setVisibility(View.GONE);
+            }
 
             if(Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();

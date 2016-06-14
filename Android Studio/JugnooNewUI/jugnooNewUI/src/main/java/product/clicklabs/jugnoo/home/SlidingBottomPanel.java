@@ -234,14 +234,18 @@ public class SlidingBottomPanel {
     }
 
     public void updateSlidingBottomHeight(){
-        if(Data.userData.getIsPoolEnabled() == 1) {
-            slidingUpPanelLayout.setPanelHeight((int) (182 * ASSL.Yscale()));
-            relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
-            //slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
-            //relativeLayoutPoolInfoBar.setVisibility(View.GONE);
-        } else{
-            slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
-            relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+        try {
+            if(Data.userData.getIsPoolEnabled() == 1) {
+                slidingUpPanelLayout.setPanelHeight((int) (182 * ASSL.Yscale()));
+                relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+                //slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+                //relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+            } else{
+                slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+                relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
