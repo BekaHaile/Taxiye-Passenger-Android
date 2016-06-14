@@ -2183,8 +2183,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     currentLocationMarker.remove();
                 }
 
-                try {pickupLocationMarker.remove();} catch (Exception e) {}
-                try {driverLocationMarker.remove();} catch (Exception e) {}
+                try {pickupLocationMarker.remove();} catch (Exception e) {e.printStackTrace();}
+                try {driverLocationMarker.remove();} catch (Exception e) {e.printStackTrace();}
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
@@ -2920,13 +2920,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private void updateInRideAddPaytmButtonText(){
 		try{
             if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
-				buttonAddPaytmCash.setText("Add Paytm Cash");
+				buttonAddPaytmCash.setText(getResources().getString(R.string.add_paytm_cash));
 			}
 			else{
-				buttonAddPaytmCash.setText("Add Paytm Wallet");
+				buttonAddPaytmCash.setText(getResources().getString(R.string.nl_add_paytm_wallet));
 			}
 		} catch(Exception e){
-			buttonAddPaytmCash.setText("Add Paytm Wallet");
+			buttonAddPaytmCash.setText(getResources().getString(R.string.nl_add_paytm_wallet));
 		}
 	}
 
@@ -6977,9 +6977,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             int flag = jObj.getInt("flag");
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    if(givenRating > 1) {
-                                        Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
-                                    }
 
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
@@ -7097,7 +7094,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switchPassengerScreen(passengerScreenMode);
             }
             else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
-                //textViewDestSearch.setText(autoCompleteSearchResult.getName());
+                textViewDestSearch.setText(autoCompleteSearchResult.getName());
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
