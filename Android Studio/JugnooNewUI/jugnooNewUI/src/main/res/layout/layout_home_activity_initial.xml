@@ -175,14 +175,7 @@
             android:visibility="gone"
             />
 
-        <ImageView
-            android:id="@+id/imageViewJugnooPool"
-            android:layout_width="111px"
-            android:layout_height="111px"
-            android:tag="mwar"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:layout_marginLeft="50px"/>
+
 
         <Button
             android:id="@+id/initialMyLocationBtn"
@@ -203,6 +196,26 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_auto_request_selector"
             android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/imageViewJugnooPoolExtra"
+            android:layout_width="101px"
+            android:layout_height="101px"
+            android:tag="mwar"
+            android:src="@drawable/pool_icon_3"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_marginLeft="55px"/>
+
+        <ImageView
+            android:id="@+id/imageViewJugnooPool"
+            android:layout_width="111px"
+            android:layout_height="111px"
+            android:tag="mwar"
+            android:src="@drawable/pool_icon_3"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_marginLeft="50px"/>
 
         <ImageView
             android:id="@+id/imageViewSupplyType"

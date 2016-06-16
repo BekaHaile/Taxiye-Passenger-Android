@@ -93,7 +93,7 @@ public class SlidingBottomPanel {
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
-        updateSlidingBottomHeight();
+        updateSlidingBottomHeight(0);
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -233,9 +233,9 @@ public class SlidingBottomPanel {
 
     }
 
-    public void updateSlidingBottomHeight(){
+    public void updateSlidingBottomHeight(int isPoolSelected){
         try {
-            if(Data.userData.getIsPoolEnabled() == 1) {
+            if(isPoolSelected == 1) {
                 slidingUpPanelLayout.setPanelHeight((int) (182 * ASSL.Yscale()));
                 relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
                 //slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
