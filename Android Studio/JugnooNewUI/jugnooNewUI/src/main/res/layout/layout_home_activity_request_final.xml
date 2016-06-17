@@ -4,18 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
-    android:splitMotionEvents="false"
-    android:visibility="gone"
     android:animateLayoutChanges="true"
-    >
+    android:splitMotionEvents="false"
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:layout_marginTop="20px"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
+        android:layout_marginTop="20px"
         android:background="@drawable/dropshadow_in_white"
         android:splitMotionEvents="false">
 
@@ -39,12 +38,11 @@
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/enter_your_destination"
+            android:paddingRight="20px"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textCursorDrawable="@null"
-            android:textSize="30px"
-            android:paddingRight="20px"
-            />
+            android:textSize="30px" />
 
         <LinearLayout
             android:id="@+id/linearLayoutFinalDropLocationEditProgress"
@@ -91,7 +89,7 @@
         android:layout_marginRight="45px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
 
     <!-- drive info layout-->
@@ -106,40 +104,38 @@
             android:id="@+id/linearLayoutInRideDriverInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="80px"
-            >
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="4px"
-                android:src="@drawable/shadow_up"
-                />
+                android:src="@drawable/shadow_up" />
 
             <!-- promo name fare factor layout-->
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideInfo"
                 android:layout_width="match_parent"
                 android:layout_height="83px"
-                android:visibility="visible"
                 android:background="@color/white"
-                >
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/imageViewPromo"
                     android:layout_width="30px"
                     android:layout_height="29px"
-                    android:layout_marginLeft="30px"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"
-                    android:src="@drawable/ic_gift"/>
+                    android:layout_marginLeft="30px"
+                    android:src="@drawable/ic_gift"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewInRidePromoName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/imageViewPromo"
                     android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/imageViewPromo"
                     android:gravity="center_vertical"
                     android:maxLines="2"
                     android:padding="10px"
@@ -150,17 +146,16 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:src="@color/stroke_color_light"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginLeft="25px"
                     android:layout_marginRight="25px"
-                    android:layout_alignParentBottom="true"/>
+                    android:src="@color/stroke_color_light" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="207px"
-                android:background="@color/white"
-                >
+                android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/imageViewInRideDriver"
@@ -169,7 +164,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
                     android:layout_marginTop="5px"
-                    android:tag="mwar"/>
+                    android:tag="mwar" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutDriverRating"
@@ -178,8 +173,7 @@
                     android:layout_alignBottom="@+id/imageViewInRideDriver"
                     android:layout_marginBottom="-20px"
                     android:layout_marginLeft="55px"
-                    android:background="@drawable/background_white_bordered"
-                    >
+                    android:background="@drawable/background_white_bordered">
 
                     <ImageView
                         android:layout_width="24px"
@@ -188,31 +182,30 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="8px"
                         android:src="@drawable/ic_star_orange_small"
-                        android:tag="mwar"/>
+                        android:tag="mwar" />
 
                     <ImageView
                         android:layout_width="2px"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
-                        android:src="@color/text_color_light"/>
+                        android:src="@color/text_color_light" />
 
                     <LinearLayout
                         android:layout_width="40px"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:layout_marginLeft="2px"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/textViewDriverRating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2px"
                             android:gravity="center"
                             android:text="3.4"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_22"
-                            android:layout_marginTop="2px"
-                            />
+                            android:textSize="@dimen/text_size_22" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -328,8 +321,8 @@
                         android:gravity="center"
                         android:text="Rs. 0100"
                         android:textColor="@color/text_color"
-                        android:visibility="visible"
-                        android:textSize="@dimen/text_size_32" />
+                        android:textSize="@dimen/text_size_32"
+                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/linearLayoutSurgeContainer"
@@ -338,8 +331,7 @@
                         android:layout_marginTop="10px"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:visibility="visible"
-                        >
+                        android:visibility="visible">
 
                         <ImageView
                             android:layout_width="30px"
@@ -351,9 +343,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
+                            android:layout_marginLeft="10px"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:layout_marginLeft="10px"
                             android:text="1.0x"
                             android:textColor="@color/text_color"
                             android:textSize="28px"
@@ -365,12 +357,48 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/relativeLayoutPoolSharing"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:background="@color/white">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:src="@color/text_color_light" />
+
+                <ImageView
+                    android:id="@+id/imageViewPoolSharing"
+                    android:layout_width="67px"
+                    android:layout_height="33px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50px"
+                    android:src="@drawable/ic_invoice_pool"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewFellowRider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/imageViewPoolSharing"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:text="@string/sharing_your_ride_with"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="89px"
-                android:orientation="vertical"
                 android:background="@color/white"
+                android:orientation="vertical"
                 android:splitMotionEvents="false">
 
                 <ImageView
@@ -409,11 +437,10 @@
                     android:id="@+id/linearLayoutSendInvites"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/menu_item_selector_color"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:visibility="visible"
-                    android:background="@color/menu_item_selector_color"
-                    >
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/textViewSendInvites"
@@ -421,17 +448,17 @@
                         android:layout_height="wrap_content"
                         android:text="@string/send_invites"
                         android:textAllCaps="true"
-                        android:textSize="@dimen/text_size_26"
-                        android:textColor="@color/theme_color"/>
+                        android:textColor="@color/theme_color"
+                        android:textSize="@dimen/text_size_26" />
 
                     <TextView
                         android:id="@+id/textViewSendInvites2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_color"
-                        android:text="@string/send_invites_2"
                         android:layout_marginLeft="15px"
-                        android:textSize="@dimen/text_size_26"/>
+                        android:text="@string/send_invites_2"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -442,10 +469,10 @@
             android:layout_width="128px"
             android:layout_height="132px"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10px"
             android:layout_marginRight="50px"
-            android:tag="mwar"
-            android:background="@drawable/ic_ride_call_selector"/>
+            android:layout_marginTop="10px"
+            android:background="@drawable/ic_ride_call_selector"
+            android:tag="mwar" />
     </RelativeLayout>
 
     <!-- drop location layout-->

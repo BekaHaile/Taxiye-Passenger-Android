@@ -267,7 +267,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent;
     private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp;
-    private TextView textViewAssigningDropLocationClick, textViewDestHelp;
+    private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;
     ImageView imageViewAssigningDropLocationEdit;
 	boolean cancelTouchHold = false, placeAdded;
@@ -295,7 +295,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     //Search Layout
-    RelativeLayout relativeLayoutSearchContainer, relativeLayoutSearch;
+    RelativeLayout relativeLayoutSearchContainer, relativeLayoutSearch, relativeLayoutPoolSharing;
 
 
 
@@ -564,7 +564,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		textViewGoogleAttrText = (TextView) findViewById(R.id.textViewGoogleAttrText);
         textViewGoogleAttrText.setTypeface(Fonts.mavenMedium(this));
 		relativeLayoutGoogleAttr.setVisibility(View.GONE);
-
+        relativeLayoutPoolSharing = (RelativeLayout) findViewById(R.id.relativeLayoutPoolSharing);
+        textViewFellowRider = (TextView) findViewById(R.id.textViewFellowRider); textViewFellowRider.setTypeface(Fonts.mavenMedium(this));
 
 
 
@@ -2464,6 +2465,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
                         topBar.imageViewAppToggle.setVisibility(View.GONE);
 
+                        if(Data.assignedDriverInfo.getIsPooledRide() == 1){
+                            relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
+                        } else{
+                            relativeLayoutPoolSharing.setVisibility(View.GONE);
+                        }
+
 //                        genieLayout.setVisibility(View.GONE);
 
                         break;
@@ -2614,9 +2621,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 openPaytmRechargeDialog();
 
-                if(PassengerScreenMode.P_INITIAL != mode) {
+                showReferAllDialog();
                     callT20AndReferAllDialog(mode);
-                }
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
 
@@ -2634,12 +2640,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         t20Ops.openDialog(this, Data.cEngagementId, mode, new T20Dialog.T20DialogCallback() {
             @Override
             public void onDismiss() {
-                showReferAllDialog();
             }
 
             @Override
             public void notShown() {
-                showReferAllDialog();
             }
         });
     }
@@ -3254,7 +3258,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void onClick(View view) {
                                     if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "yes");
-                                        DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                        //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
                                         syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
@@ -3333,7 +3337,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void onClick(View view) {
                                     if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "yes");
-                                        DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                        //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Data.userData.contactSaved = 1;
                                         Data.userData.setReferAllStatusLogin(1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -3407,8 +3411,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -3632,9 +3634,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 			}
 		}
 	}
-
-
-
 
 
 	private void openDeepLink(){
@@ -4614,11 +4613,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
     }
 
-
-
-
-
-
     public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
@@ -5383,6 +5377,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    @Override
+    public void onUpdatePoolRideStatus(JSONObject jsonObject){
+        try {
+            final String poolRideStatusString = jsonObject.optString("log", getResources().getString(R.string.sharing_your_ride_with));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textViewFellowRider.setText(poolRideStatusString);
+                }
+            });
+            Data.assignedDriverInfo.setPoolRideStatusString(poolRideStatusString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onCancelCompleted() {
@@ -5452,6 +5462,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 			int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
+            int isPooledRIde = jObj.optInt("is_pooled", 0);
 
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
@@ -5461,7 +5472,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges);
+                    cancellationCharges, isPooledRIde, "");
 
 			if(inRide){
 				initializeStartRideVariables();
