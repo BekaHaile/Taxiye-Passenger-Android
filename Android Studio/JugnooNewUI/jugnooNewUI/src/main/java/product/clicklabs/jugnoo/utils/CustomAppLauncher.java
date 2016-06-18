@@ -7,8 +7,6 @@ import android.net.Uri;
 
 public class CustomAppLauncher {
 
-	//product.clicklabs.postmygreetings
-	
 	public static void launchApp(Context activity, String packageName){
 		try {
 			Intent intent;

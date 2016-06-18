@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +17,7 @@ import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.WebActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -23,6 +25,7 @@ import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 
 /**
@@ -163,7 +166,18 @@ public class TopBar {
 							Data.latitude = ((HomeActivity)activity).map.getCameraPosition().target.latitude;
 							Data.longitude = ((HomeActivity)activity).map.getCameraPosition().target.longitude;
 						}
-						CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+						try {
+							if(!Data.userData.getFatafatUrlLink().trim().equalsIgnoreCase("")) {
+								Log.v("fatafat url link", "---> " + Data.userData.getFatafatUrlLink());
+								activity.startActivity(new Intent(activity, WebActivity.class));
+								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            } else{
+								CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+                            }
+						} catch (Exception e) {
+							e.printStackTrace();
+							CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+						}
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
 						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "fresh");
 					}

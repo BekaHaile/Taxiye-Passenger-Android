@@ -17,10 +17,10 @@ public class DriverInfo {
 	public LatLng latLng;
 	public int freeRide;
 	
-	public String promoName = Data.NO_PROMO_APPLIED, cancelRideThrashHoldTime;
+	public String promoName = Data.NO_PROMO_APPLIED, cancelRideThrashHoldTime, poolRideStatusString;
 	private String eta = "10";
 	private double fareFixed;
-	private int preferredPaymentMode;
+	private int preferredPaymentMode, isPooledRide;
 	private double bearing;
 
 	private Schedule scheduleT20;
@@ -55,7 +55,8 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude,
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
-					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges){
+					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
+					  String poolRideStatusString){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -78,6 +79,8 @@ public class DriverInfo {
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 		this.cancelRideThrashHoldTime = cancelRideThrashHoldTime;
 		this.cancellationCharges = cancellationCharges;
+		this.isPooledRide = isPooledRide;
+		this.poolRideStatusString = poolRideStatusString;
 	}
 
 	//for last ride data
@@ -187,5 +190,21 @@ public class DriverInfo {
 
 	public void setCancellationCharges(int cancellationCharges) {
 		this.cancellationCharges = cancellationCharges;
+	}
+
+	public int getIsPooledRide() {
+		return isPooledRide;
+	}
+
+	public void setIsPooledRide(int isPooledRide) {
+		this.isPooledRide = isPooledRide;
+	}
+
+	public String getPoolRideStatusString() {
+		return poolRideStatusString;
+	}
+
+	public void setPoolRideStatusString(String poolRideStatusString) {
+		this.poolRideStatusString = poolRideStatusString;
 	}
 }

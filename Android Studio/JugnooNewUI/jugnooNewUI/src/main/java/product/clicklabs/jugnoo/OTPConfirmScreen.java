@@ -669,7 +669,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
-								} else {
+								} else if (ApiResponseFlags.AUTH_ALREADY_VERIFIED.getOrdinal() == flag) {
+									String error = jObj.getString("error");
+									DialogPopup.alertPopup(activity, "", error);
+								}else {
 									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}
 								DialogPopup.dismissLoadingDialog();
