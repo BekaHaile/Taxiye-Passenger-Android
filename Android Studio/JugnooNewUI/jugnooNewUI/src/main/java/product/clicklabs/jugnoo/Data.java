@@ -276,6 +276,10 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);
 			Prefs.with(context).remove(SPLabels.BRANCH_FALLBACK_URL);
 
+			Prefs.with(context).remove(SPLabels.ENTERED_DESTINATION);
+			Prefs.with(context).remove(SPLabels.LAST_PICK_UP);
+			Prefs.with(context).remove(SPLabels.LAST_DESTINATION);
+
 			Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
 
 			Prefs.with(context).remove(Constants.KEY_SP_T20_WC_SCHEDULE_VERSION);

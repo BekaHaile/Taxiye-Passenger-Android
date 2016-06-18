@@ -1080,6 +1080,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				linearLayoutLogin.setVisibility(View.GONE);
 				linearLayoutSignup.setVisibility(View.VISIBLE);
+				getAllowedAuthChannels(SplashNewActivity.this);
 				break;
 
 		}
@@ -2606,6 +2607,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("device_token", Data.getDeviceToken());
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("reg_wallet_type", String.valueOf(linkedWallet));
+
 			if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
 				NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
 			} else{

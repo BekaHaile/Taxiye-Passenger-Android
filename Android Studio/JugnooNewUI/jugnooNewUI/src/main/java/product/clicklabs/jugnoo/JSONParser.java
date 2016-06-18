@@ -205,6 +205,7 @@ public class JSONParser implements Constants {
         String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", "");
         String inRideSendInviteTextBold = userData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
         String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
+            String fatafatUrlLink = userData.optString("fatafat_url_link", "");
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -247,7 +248,7 @@ public class JSONParser implements Constants {
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
-                inRideSendInviteTextBold, inRideSendInviteTextNormal);
+                inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink);
 
     }
 
@@ -728,7 +729,7 @@ public class JSONParser implements Constants {
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
             String cancelRideThrashHoldTime = "";
-            int cancellationCharges = 0;
+            int cancellationCharges = 0, isPooledRide = 0;
             long cancellationTimeOffset = 0;
 
 
@@ -827,6 +828,7 @@ public class JSONParser implements Constants {
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
                                 cancellationCharges = jObject.optInt("cancellation_charge", 0);
+                                isPooledRide = jObject.optInt("is_pooled", 0);
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -885,7 +887,8 @@ public class JSONParser implements Constants {
 
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
-                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges);
+                        fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
+                        isPooledRide, "");
 
                 Data.userData.fareFactor = fareFactor;
 

@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.WebActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -46,6 +47,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
@@ -329,7 +331,18 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
                             Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
                         }
-                        CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+                        try {
+                            if(!Data.userData.getFatafatUrlLink().trim().equalsIgnoreCase("")) {
+                                Log.v("fatafat url link", "---> " + Data.userData.getFatafatUrlLink());
+                                activity.startActivity(new Intent(activity, WebActivity.class));
+                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            } else{
+                                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+                        }
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
                         FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
                     }

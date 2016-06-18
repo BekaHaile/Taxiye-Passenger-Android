@@ -41,7 +41,7 @@ public class UserData {
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
-	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText;
+	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink;
 	private double driverFareFactor;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -58,7 +58,7 @@ public class UserData {
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
-					String inRideSendInviteTextBold, String inRideSendInviteTextNormal){
+					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -134,6 +134,7 @@ public class UserData {
 		this.driverFareFactor = 1;
 		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
 		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
+		this.fatafatUrlLink = fatafatUrlLink;
 
 		checkUserImage();
 	}
@@ -526,5 +527,13 @@ public class UserData {
 
 	public void setInRideSendInviteTextBold(String inRideSendInviteTextBold) {
 		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
+	}
+
+	public String getFatafatUrlLink() {
+		return fatafatUrlLink;
+	}
+
+	public void setFatafatUrlLink(String fatafatUrlLink) {
+		this.fatafatUrlLink = fatafatUrlLink;
 	}
 }

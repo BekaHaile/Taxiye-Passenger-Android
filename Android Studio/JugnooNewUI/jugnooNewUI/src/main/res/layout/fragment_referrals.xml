@@ -7,7 +7,8 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/relativeLayoutReferADriver">
 
         <LinearLayout
             android:id="@+id/relativeLayoutShare"
@@ -133,15 +134,13 @@
                 android:layout_marginTop="70px"
                 android:text="@string/invite_friends_caps" />
 
-
             <TextView
                 android:id="@+id/textViewDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="50px"
+                android:layout_marginTop="30px"
                 android:gravity="center"
-                android:maxLines="2"
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
                 android:textColorLink="@color/theme_color"

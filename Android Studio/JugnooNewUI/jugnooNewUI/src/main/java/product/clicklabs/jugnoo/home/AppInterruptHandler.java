@@ -35,4 +35,6 @@ public interface AppInterruptHandler {
 	void onShowDialogPush();
 
 	void onDisplayMessagePushReceived();
+
+	void onUpdatePoolRideStatus(JSONObject jsonObject);
 }
