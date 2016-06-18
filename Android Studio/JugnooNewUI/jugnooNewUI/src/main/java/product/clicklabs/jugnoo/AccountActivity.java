@@ -170,20 +170,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
-                if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
-                    if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
-                        relativeLayoutChangePassword.performClick();
-                    }
-                    setUserData();
-                    imageViewEditProfile.setVisibility(View.VISIBLE);
-                    linearLayoutSave.setVisibility(View.GONE);
-                    editTextUserName.setError(null);
-                    editTextEmail.setError(null);
-                    editTextPhone.setError(null);
-                } else{
-                    performBackPressed();
-                }
+                performBackPressed();
             }
         });
 
@@ -541,8 +528,6 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         });
 
 
-
-
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
@@ -591,8 +576,21 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 
 	public void performBackPressed(){
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
+        if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
+            if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
+                relativeLayoutChangePassword.performClick();
+            }
+            setUserData();
+            imageViewEditProfile.setVisibility(View.VISIBLE);
+            linearLayoutSave.setVisibility(View.GONE);
+            editTextUserName.setError(null);
+            editTextEmail.setError(null);
+            editTextPhone.setError(null);
+        } else{
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
 	}
 
 

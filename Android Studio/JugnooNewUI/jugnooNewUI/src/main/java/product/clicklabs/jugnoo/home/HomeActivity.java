@@ -2211,8 +2211,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     currentLocationMarker.remove();
                 }
 
-                try {pickupLocationMarker.remove();} catch (Exception e) {e.printStackTrace();}
-                try {driverLocationMarker.remove();} catch (Exception e) {e.printStackTrace();}
+                try {pickupLocationMarker.remove();} catch (Exception e) {}
+                try {driverLocationMarker.remove();} catch (Exception e) {}
 
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.endRideData != null) {
