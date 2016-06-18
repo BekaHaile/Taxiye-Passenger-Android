@@ -10,9 +10,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,7 +65,7 @@ public class WebActivity extends BaseActivity {
         });
         webView.setWebViewClient(new MyAppWebViewClient());
         try {
-            webView.loadUrl("https://www.jugnoo.in");
+            webView.loadUrl(Data.userData.getFatafatUrlLink());
         } catch (Exception e) {
             e.printStackTrace();
         }
