@@ -388,7 +388,7 @@
                     android:layout_marginLeft="20px"
                     android:layout_toRightOf="@+id/imageViewPoolSharing"
                     android:paddingRight="20px"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:text="@string/sharing_your_ride_with"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30" />

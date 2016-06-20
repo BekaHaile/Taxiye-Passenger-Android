@@ -1091,7 +1091,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                initDropLocationSearchUI(true);
+                if(Data.assignedDriverInfo.getIsPooledRide() != 1) {
+                    initDropLocationSearchUI(true);
+                }
             }
         });
 
@@ -2465,10 +2467,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
                         topBar.imageViewAppToggle.setVisibility(View.GONE);
 
-                        if(Data.assignedDriverInfo.getIsPooledRide() == 1){
-                            relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
-                        } else{
-                            relativeLayoutPoolSharing.setVisibility(View.GONE);
+                        try {
+                            if(Data.assignedDriverInfo.getIsPooledRide() == 1){
+                                relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
+                                imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+                            } else{
+                                relativeLayoutPoolSharing.setVisibility(View.GONE);
+                                imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
+                            }
+                            setPoolRideStatus(Data.assignedDriverInfo.getPoolRideStatusString(), Data.assignedDriverInfo.getFellowRiders());
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
 //                        genieLayout.setVisibility(View.GONE);
@@ -2535,6 +2544,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
                         topBar.imageViewAppToggle.setVisibility(View.GONE);
 
+                        try {
+                            if(Data.assignedDriverInfo.getIsPooledRide() == 1){
+                                relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
+                                imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+                            } else{
+                                relativeLayoutPoolSharing.setVisibility(View.GONE);
+                                imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
+                            }
+                            setPoolRideStatus(Data.assignedDriverInfo.getPoolRideStatusString(), Data.assignedDriverInfo.getFellowRiders());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
 //                        genieLayout.setVisibility(View.GONE);
 
                         break;
@@ -2583,6 +2605,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
                         topBar.imageViewAppToggle.setVisibility(View.GONE);
+
+                        try {
+                            if(Data.assignedDriverInfo.getIsPooledRide() == 1){
+                                relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
+                                imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+                            } else{
+                                relativeLayoutPoolSharing.setVisibility(View.GONE);
+                                imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
+                            }
+                            setPoolRideStatus(Data.assignedDriverInfo.getPoolRideStatusString(), Data.assignedDriverInfo.getFellowRiders());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -5377,20 +5412,50 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
     @Override
     public void onUpdatePoolRideStatus(JSONObject jsonObject){
         try {
-            final String poolRideStatusString = jsonObject.optString("log", getResources().getString(R.string.sharing_your_ride_with));
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textViewFellowRider.setText(poolRideStatusString);
+            final String poolRideStatusString = jsonObject.optString("message", getResources().getString(R.string.sharing_your_ride_with));
+            ArrayList<String> fellowRiders = new ArrayList<>();
+            JSONArray userNames = jsonObject.optJSONArray("user_names");
+            if(userNames != null) {
+                for (int i = 0; i < userNames.length(); i++) {
+                    fellowRiders.add(userNames.getJSONObject(i).optString("user_name"));
                 }
-            });
+            }
+            setPoolRideStatus(poolRideStatusString, fellowRiders);
             Data.assignedDriverInfo.setPoolRideStatusString(poolRideStatusString);
+            Data.assignedDriverInfo.setFellowRiders(fellowRiders);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    StringBuilder sb;
+    private void setPoolRideStatus(String message, ArrayList<String> userNames){
+        sb  = new StringBuilder();
+        sb.append(message);
+        if(userNames != null) {
+            for (int i = 0; i < userNames.size(); i++) {
+                sb.append(userNames.get(i));
+                break;
+            }
+            if (userNames.size() > 1) {
+                if (userNames.size() == 2) {
+                    sb.append(" and " + (userNames.size() - 1) + " other.");
+                } else {
+                    sb.append(" and " + (userNames.size() - 1) + " others.");
+                }
+            }
+        }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewFellowRider.setText(sb);
+            }
+        });
     }
 
 
@@ -5403,7 +5468,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj, boolean inRide) {
         try {
             cancelTimerRequestRide();
-
+            ArrayList<String> fellowRiders = new ArrayList<>();
             Data.cSessionId = jObj.getString("session_id");
             Data.cEngagementId = jObj.getString("engagement_id");
             Data.cDriverId = jObj.getString("driver_id");
@@ -5472,7 +5537,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "");
+                    cancellationCharges, isPooledRIde, "", fellowRiders);
 
 			if(inRide){
 				initializeStartRideVariables();

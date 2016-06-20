@@ -728,9 +728,10 @@ public class JSONParser implements Constants {
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
-            String cancelRideThrashHoldTime = "";
+            String cancelRideThrashHoldTime = "", poolStatusString = "";
             int cancellationCharges = 0, isPooledRide = 0;
             long cancellationTimeOffset = 0;
+            ArrayList<String> fellowRiders = new ArrayList<>();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -829,6 +830,14 @@ public class JSONParser implements Constants {
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
                                 cancellationCharges = jObject.optInt("cancellation_charge", 0);
                                 isPooledRide = jObject.optInt("is_pooled", 0);
+                                JSONObject poolData = jObject.optJSONObject("pool_data");
+                                if(poolData != null) {
+                                    poolStatusString = poolData.optString("message", context.getResources().getString(R.string.sharing_your_ride_with));
+                                    JSONArray userNames = poolData.optJSONArray("user_names");
+                                    for (int i = 0; i < userNames.length(); i++) {
+                                        fellowRiders.add(userNames.getJSONObject(i).optString("user_name"));
+                                    }
+                                }
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -888,7 +897,7 @@ public class JSONParser implements Constants {
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, "");
+                        isPooledRide, poolStatusString, fellowRiders);
 
                 Data.userData.fareFactor = fareFactor;
 
