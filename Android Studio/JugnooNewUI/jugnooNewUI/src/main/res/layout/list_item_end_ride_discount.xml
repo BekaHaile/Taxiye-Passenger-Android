@@ -9,7 +9,7 @@
         android:id="@+id/textViewDiscount"
         android:layout_width="300px"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60px"
+        android:layout_marginLeft="30px"
         android:gravity="center_vertical"
         android:text="- Discount"
         android:textColor="@color/text_color_light"

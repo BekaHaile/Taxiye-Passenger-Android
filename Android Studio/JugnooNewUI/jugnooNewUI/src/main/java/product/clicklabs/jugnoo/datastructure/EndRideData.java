@@ -125,4 +125,12 @@ public class EndRideData {
 	public void setIsPooled(int isPooled) {
 		this.isPooled = isPooled;
 	}
+
+	public ArrayList<DiscountType> getDiscountTypes() {
+		return discountTypes;
+	}
+
+	public void setDiscountTypes(ArrayList<DiscountType> discountTypes) {
+		this.discountTypes = discountTypes;
+	}
 }

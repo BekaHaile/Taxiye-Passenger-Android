@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -608,7 +609,7 @@ public class JSONParser implements Constants {
 			JSONArray jDiscountsArr =  jLastRideData.getJSONArray("discount");
 			for(int i=0; i<jDiscountsArr.length(); i++){
 				DiscountType discountType = new DiscountType(jDiscountsArr.getJSONObject(i).getString("key"),
-						jDiscountsArr.getJSONObject(i).getDouble("value"));
+						jDiscountsArr.getJSONObject(i).getDouble("value"), 0);
 				if(discountType.value > 0) {
 					discountTypes.add(discountType);
 					discount = discount + discountType.value;
@@ -624,7 +625,17 @@ public class JSONParser implements Constants {
 			discountTypes.clear();
 		}
 
-		String driverName = "", driverCarNumber = "", driverImage = "";
+        try {
+            JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
+            for(int i=0; i<additionalChargesJson.length(); i++){
+                JSONObject obj = additionalChargesJson.getJSONObject(i);
+                discountTypes.add(new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String driverName = "", driverCarNumber = "", driverImage = "";
 		if(jLastRideData.has("driver_name")){
 			driverName = jLastRideData.getString("driver_name");
 		}
@@ -658,6 +669,9 @@ public class JSONParser implements Constants {
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+
+
+
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,

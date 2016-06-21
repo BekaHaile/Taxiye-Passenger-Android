@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -41,6 +42,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -327,7 +329,13 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					imageViewEndRideDriverIcon.setLayoutParams(params);
 				}
 
-				if(endRideData.discountTypes.size() > 1){
+				listViewEndRideDiscounts.setVisibility(View.VISIBLE);
+				endRideDiscountsAdapter.setList(endRideData.discountTypes);
+				textViewEndRideDiscount.setText("Discounts");
+				textViewEndRideDiscountValue.setVisibility(View.GONE);
+				relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+
+				/*if(endRideData.discountTypes.size() > 1){
 					listViewEndRideDiscounts.setVisibility(View.VISIBLE);
 					endRideDiscountsAdapter.setList(endRideData.discountTypes);
 					textViewEndRideDiscount.setText("Discounts");
@@ -351,7 +359,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					} else{
 						relativeLayoutEndRideDiscount.setVisibility(View.GONE);
 					}
-				}
+				}*/
 
 				textViewEndRideFinalFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.finalFare)));
 
