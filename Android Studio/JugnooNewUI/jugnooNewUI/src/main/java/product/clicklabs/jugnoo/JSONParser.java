@@ -635,6 +635,7 @@ public class JSONParser implements Constants {
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
         driverImage = jLastRideData.optString("driver_image", "");
+        int isPooled = jLastRideData.optInt("is_pooled");
 
         double rideTime = -1;
 		if(jLastRideData.has("ride_time")){
@@ -671,7 +672,7 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber, tripTotal, vehicleType, iconSet);
+                rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled);
 	}
 
 

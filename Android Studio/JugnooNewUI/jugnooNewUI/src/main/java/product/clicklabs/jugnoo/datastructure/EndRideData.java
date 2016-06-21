@@ -17,7 +17,7 @@ public class EndRideData {
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	private String rideDate, phoneNumber, tripTotal;
-	private int vehicleType;
+	private int vehicleType, isPooled;
 	private VehicleIconSet vehicleIconSet;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
@@ -25,7 +25,7 @@ public class EndRideData {
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
-					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet){
+					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
@@ -69,6 +69,7 @@ public class EndRideData {
 		this.tripTotal = tripTotal;
 		this.vehicleType = vehicleType;
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
+		this.isPooled = isPooled;
 	}
 
 
@@ -115,5 +116,13 @@ public class EndRideData {
 
 	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
 		this.vehicleIconSet = vehicleIconSet;
+	}
+
+	public int getIsPooled() {
+		return isPooled;
+	}
+
+	public void setIsPooled(int isPooled) {
+		this.isPooled = isPooled;
 	}
 }

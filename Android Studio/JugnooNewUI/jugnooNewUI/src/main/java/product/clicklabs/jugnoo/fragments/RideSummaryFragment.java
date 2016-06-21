@@ -58,7 +58,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	RelativeLayout relativeLayoutRideSummary;
 	ScrollView scrollViewEndRide;
 
-	ImageView imageViewEndRideAutoIcon;
+	ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
 			relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
@@ -177,6 +177,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
 		linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
 		relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
+		imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
 
 		textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
@@ -311,6 +312,19 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					textViewEndRideConvenienceChargeValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.convenienceCharge)));
 				} else{
 					relativeLayoutConvenienceCharge.setVisibility(View.GONE);
+				}
+
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewEndRideDriverIcon.getLayoutParams();
+				if(endRideData.getIsPooled() == 1){
+					imageViewEndRideDriverIcon.setImageResource(R.drawable.ic_invoice_pool);
+					params.width = (int)(ASSL.Xscale() * 67);
+					params.height = (int)(ASSL.Xscale() * 37);
+					imageViewEndRideDriverIcon.setLayoutParams(params);
+				} else{
+					imageViewEndRideDriverIcon.setImageResource(R.drawable.driver_icon_end_ride);
+					params.width = (int)(ASSL.Xscale() * 39);
+					params.height = (int)(ASSL.Xscale() * 43);
+					imageViewEndRideDriverIcon.setLayoutParams(params);
 				}
 
 				if(endRideData.discountTypes.size() > 1){
