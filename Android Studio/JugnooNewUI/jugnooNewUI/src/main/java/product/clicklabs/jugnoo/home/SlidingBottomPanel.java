@@ -241,7 +241,7 @@ public class SlidingBottomPanel {
                 //slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
                 //relativeLayoutPoolInfoBar.setVisibility(View.GONE);
             } else{
-                slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+                slidingUpPanelLayout.setPanelHeight((int) (118 * ASSL.Yscale()));
                 relativeLayoutPoolInfoBar.setVisibility(View.GONE);
             }
         } catch (Exception e) {
