@@ -329,11 +329,24 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					imageViewEndRideDriverIcon.setLayoutParams(params);
 				}
 
-				listViewEndRideDiscounts.setVisibility(View.VISIBLE);
-				endRideDiscountsAdapter.setList(endRideData.discountTypes);
-				textViewEndRideDiscount.setText("Discounts");
-				textViewEndRideDiscountValue.setVisibility(View.GONE);
-				relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+				if(endRideData.discountTypes.size() > 0) {
+					listViewEndRideDiscounts.setVisibility(View.VISIBLE);
+					endRideDiscountsAdapter.setList(endRideData.discountTypes);
+					textViewEndRideDiscountValue.setVisibility(View.GONE);
+					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+					textViewEndRideDiscount.setVisibility(View.GONE);
+
+					for(int i=0; i<endRideData.discountTypes.size(); i++){
+						if(endRideData.discountTypes.get(i).getReferenceId() == 0){
+							textViewEndRideDiscount.setVisibility(View.VISIBLE);
+							textViewEndRideDiscount.setText("Discounts");
+							break;
+						}
+					}
+				} else{
+					relativeLayoutEndRideDiscount.setVisibility(View.GONE);
+				}
+
 
 				/*if(endRideData.discountTypes.size() > 1){
 					listViewEndRideDiscounts.setVisibility(View.VISIBLE);

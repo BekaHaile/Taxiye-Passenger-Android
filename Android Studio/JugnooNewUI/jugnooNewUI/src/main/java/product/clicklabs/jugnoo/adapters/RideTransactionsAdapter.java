@@ -94,6 +94,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                             + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
                 }
                 holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+                holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.theme_color));
 
                 if (1 != rideInfo.isRatedBefore) {
                     holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
@@ -106,6 +107,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             } else {
                 holder.textViewDetailsValue.setText(rideInfo.date + ",");
                 holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+                holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.red));
                 holder.relativeLayoutRateRide.setVisibility(View.GONE);
                 holder.linearLayoutRideReceipt.setVisibility(View.GONE);
                 holder.textViewRideCancelled.setVisibility(View.VISIBLE);

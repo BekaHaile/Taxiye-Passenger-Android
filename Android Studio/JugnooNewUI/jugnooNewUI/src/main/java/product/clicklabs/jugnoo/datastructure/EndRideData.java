@@ -12,7 +12,7 @@ public class EndRideData {
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
-		distance, rideTime, waitTime, baseFare, fareFactor, finalFare;
+		distance, rideTime, waitTime, baseFare, fareFactor, finalFare, sumAdditionalCharges;
 	public double paidUsingPaytm;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
@@ -25,7 +25,8 @@ public class EndRideData {
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
-					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled){
+					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
+					   double sumAdditionalCharges){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
@@ -61,8 +62,9 @@ public class EndRideData {
 		if(this.waitingChargesApplicable == 0 && this.waitTime > 0){
 			this.waitingChargesApplicable = 1;
 		}
+		this.sumAdditionalCharges = sumAdditionalCharges;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount;
+		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount + this.sumAdditionalCharges;
 
 		this.rideDate = rideDate;
 		this.phoneNumber = phoneNumber;

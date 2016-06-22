@@ -625,11 +625,13 @@ public class JSONParser implements Constants {
 			discountTypes.clear();
 		}
 
+        double sumAdditionalCharges = 0;
         try {
             JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
             for(int i=0; i<additionalChargesJson.length(); i++){
                 JSONObject obj = additionalChargesJson.getJSONObject(i);
                 discountTypes.add(new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id")));
+                sumAdditionalCharges = sumAdditionalCharges + obj.optDouble("amount");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -686,7 +688,8 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled);
+                rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
+                sumAdditionalCharges);
 	}
 
 
