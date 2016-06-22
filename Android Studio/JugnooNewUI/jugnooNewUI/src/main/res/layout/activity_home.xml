@@ -78,9 +78,21 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/layout_home_activity_sliding_bottom" />
+            <include layout="@layout/layout_home_activity_sliding_bottom_v4" />
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <ImageView
+            android:id="@+id/imageViewPriorityTip"
+            android:layout_width="29px"
+            android:layout_height="34px"
+            android:tag="mwar"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_surge_grey"
+            android:layout_marginBottom="90px"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/imageViewSurgeOverSlidingBottom"

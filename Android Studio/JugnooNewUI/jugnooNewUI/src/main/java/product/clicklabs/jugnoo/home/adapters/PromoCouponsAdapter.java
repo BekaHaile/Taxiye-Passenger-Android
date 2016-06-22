@@ -51,8 +51,8 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(activity.getSlidingBottomPanel().getSelectedCoupon() != null &&
-				activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id){
+		if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
+				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -85,10 +85,10 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 				try {
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id) {
-						activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+					if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id) {
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					} else {
-						activity.getSlidingBottomPanel().setSelectedCoupon(position);
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}
 					notifyDataSetChanged();

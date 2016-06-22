@@ -200,7 +200,7 @@ public class RequestRideOptionsFragment extends Fragment {
         }
     }
 
-    public void updatePaymentOptionInDialog(){
+    public void updatePreferredPaymentOptionUI(){
         try{
             if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
                 getPaymentOptionDialog().updatePreferredPaymentOptionUI();
@@ -298,7 +298,7 @@ public class RequestRideOptionsFragment extends Fragment {
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }
-        activity.getSlidingBottomPanel().updateFareFactorUI();
+        activity.getSlidingBottomPanel().updateFareFactorUI(Data.regions.size());
     }
 
     public void initSelectedCoupon(){

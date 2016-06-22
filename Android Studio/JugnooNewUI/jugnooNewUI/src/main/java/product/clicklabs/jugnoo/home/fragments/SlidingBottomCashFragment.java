@@ -116,7 +116,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                 });
                     }
                     else{
-                        activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
+                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().openPaymentActivityInCaseOfPaytmNotAdded();
                     }
                 }
                 break;
@@ -201,7 +201,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm);
 			}
-            activity.getSlidingBottomPanel().updatePaymentOption();
+            activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
         } catch (Exception e) {
             e.printStackTrace();
         }

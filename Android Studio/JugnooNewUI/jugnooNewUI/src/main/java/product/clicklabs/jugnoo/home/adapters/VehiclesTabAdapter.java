@@ -33,7 +33,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 108);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 118);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);
@@ -47,13 +47,15 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
 
-        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRegionSelected().getVehicleType())
-                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRegionSelected().getRegionId());
+        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
+                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId());
 
         if(selected){
             holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
+            holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
         } else{
             holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
+            holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
         }
 
         holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +81,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     }
 
     private int getItemWidth(){
-        int width = (int)((720f / getItemCount()) * ASSL.Xscale());
+        int width = (int)((720f / (getItemCount() > 4 ? 4 : getItemCount())) * ASSL.Xscale());
         int minWidth = (int) (100f * ASSL.Xscale());
         return width >= minWidth ? width : minWidth;
     }
@@ -88,13 +90,15 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         public ImageView imageViewSep;
+        public View imageViewSelected;
         public TextView textViewVehicleName;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
+            imageViewSelected = (View) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
-            textViewVehicleName.setTypeface(Fonts.mavenRegular(activity));
+            textViewVehicleName.setTypeface(Fonts.mavenMedium(activity));
         }
     }
 }

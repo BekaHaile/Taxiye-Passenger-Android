@@ -145,7 +145,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 								});
 					}
 					else{
-						activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().openPaymentActivityInCaseOfPaytmNotAdded();
 					}
 				}
 				break;
@@ -168,7 +168,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm);
 			}
-            activity.getSlidingBottomPanel().updatePaymentOption();
+            activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 			dialog.dismiss();
 		} catch (Exception e) {
 			e.printStackTrace();

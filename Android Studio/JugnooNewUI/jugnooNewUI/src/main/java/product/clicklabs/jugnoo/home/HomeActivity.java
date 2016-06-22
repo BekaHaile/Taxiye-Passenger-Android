@@ -413,7 +413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     CallbackManager callbackManager;
     public final int ADD_HOME = 2, ADD_WORK = 3;
     private String dropLocationSearchText = "";
-    private SlidingBottomPanel slidingBottomPanel;
+    private SlidingBottomPanelV4 slidingBottomPanel;
 
     private T20Ops t20Ops = new T20Ops();
     private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
@@ -497,7 +497,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //Swipe menu
         menuBar = new MenuBar(this, drawerLayout);
 
-        slidingBottomPanel = new SlidingBottomPanel(HomeActivity.this, drawerLayout);
+        slidingBottomPanel = new SlidingBottomPanelV4(HomeActivity.this, drawerLayout);
 
 
 
@@ -2033,7 +2033,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
                     FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
-                    boolean proceed = slidingBottomPanel.displayAlertAndCheckForSelectedPaytmCoupon();
+                    boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
                     if(proceed) {
                         boolean callRequestRide = true;
                         if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
@@ -2072,7 +2072,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             callRequestRide = true;
                         }
                         if (callRequestRide) {
-                            promoCouponSelectedForRide = slidingBottomPanel.getSelectedCoupon();
+                            promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
                             callAnAutoPopup(HomeActivity.this);
 
                             Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
@@ -2180,7 +2180,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
 
-            slidingBottomPanel.updatePreferredPaymentOptionUI();
+            slidingBottomPanel.getRequestRideOptionsFragment().updatePreferredPaymentOptionUI();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2385,7 +2385,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.position(Data.pickupLatLng);
                             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                                     .getTextBitmap(HomeActivity.this, assl,
-                                            slidingBottomPanel.getRegionSelected().getEta(),
+                                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                                             getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
 
                             pickupLocationMarker = map.addMarker(markerOptions);
@@ -2704,7 +2704,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    public SlidingBottomPanel getSlidingBottomPanel(){
+    public SlidingBottomPanelV4 getSlidingBottomPanel(){
         return slidingBottomPanel;
     }
 
@@ -3934,7 +3934,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private ApiFindADriver createApiFindADriver(){
         if(apiFindADriver == null) {
-            apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getRegionSelected(),
+            apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(),
                     new ApiFindADriver.Callback() {
                 @Override
                 public void onPre() {
@@ -3973,7 +3973,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ApiFindADriver apiFindADriver = null;
     private void findDriversETACall(){
         createApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo,
-                slidingBottomPanel.getRegionSelected());
+                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
     }
 
     private void findADriverFinishing(){
@@ -3985,7 +3985,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             try {
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                    showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
+                    showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -4147,7 +4147,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             markerOptions.position(latLng);
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                     .getTextBitmap(HomeActivity.this, assl,
-                            slidingBottomPanel.getRegionSelected().getEta(),
+                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                             getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
             currentLocationMarker = map.addMarker(markerOptions);
         } catch (Exception e) {
@@ -5269,9 +5269,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private int getFilteredDrivers(){
         int driversCount = 0;
         for(DriverInfo driverInfo : Data.driverInfos){
-            if(slidingBottomPanel.getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
-                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRegionSelected().getRegionId())){
+                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())){
                 driversCount++;
             }
         }
@@ -5972,9 +5972,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 								nameValuePairs.put("preferred_payment_mode", "" + Data.pickupPaymentOption);
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
-                                        .getRegionSelected().getVehicleType()));
+                                        .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
-                                        .getRegionSelected().getRegionId()));
+                                        .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
 
                                 nameValuePairs.put("is_pooled", String.valueOf(isPoolRequest));
                                 if(isPoolRequest == 1){
@@ -6240,7 +6240,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             pickupDropZoomed = false;
             dropLocationSearchText = "";
 
-            slidingBottomPanel.setSelectedCoupon(null);
+            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
 
 
             Data.pickupLatLng = null;
@@ -6912,7 +6912,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         try {
                             JSONParser.setPaytmErrorCase();
                             setUserData();
-                            slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
+                            slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -6920,7 +6920,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void onFinish() {
-                        slidingBottomPanel.setPaytmLoadingVisiblity(View.GONE);
+                        slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                     }
 
                     @Override
@@ -7424,17 +7424,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void setVehicleTypeSelected(int position) {
-        int oldVehicleType = slidingBottomPanel.getRegionSelected().getVehicleType();
-        int oldRegionId = slidingBottomPanel.getRegionSelected().getRegionId();
-        slidingBottomPanel.setRegionSelected(position);
-        if(!slidingBottomPanel.getRegionSelected().getVehicleType().equals(oldVehicleType)
-                || !slidingBottomPanel.getRegionSelected().getRegionId().equals(oldRegionId)) {
-            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRegionSelected()
+        int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
+        slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
+        if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
+                || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
             imageViewRideNow.startAnimation(getBounceScale());
-            showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRegionSelected());
+            showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
         } else if(Data.regions.size() == 1) {
-            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRegionSelected()
+            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         }
     }
@@ -7701,7 +7701,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                slidingBottomPanel.updateSlidingBottomHeight(isPoolSelected);
+//                slidingBottomPanel.getRequestRideOptionsFragment().updateSlidingBottomHeight(isPoolSelected);
             }
 
             @Override
