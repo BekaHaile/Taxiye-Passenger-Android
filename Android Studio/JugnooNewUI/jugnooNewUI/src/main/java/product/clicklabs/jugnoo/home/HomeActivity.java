@@ -385,6 +385,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
+    public static final double MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE = 50; // in meters
 
     public static final float MAX_ZOOM = 15;
     private static final int MAP_ANIMATE_DURATION = 300;
@@ -804,33 +805,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                        if(Data.dropLatLng != null){
-                            //requestRideClick();
-                            confirmedScreenOpened = true;
-                            passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                            switchPassengerScreen(passengerScreenMode);
-                        } else{
-                        textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                        textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
-
-                        ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                        int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                        if(index == 1 && Data.dropLatLng == null) {
-                            translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                            translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                        }
-                        if(Data.dropLatLng == null){
-                            Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
-                            textViewDestSearch.startAnimation(shake);
-                        }
-                    }
+                double distance = MapUtils.distance(getApiFindADriver().getRefreshLatLng(),
+                        map.getCameraPosition().target);
+                if(distance > MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE){
+                    Data.pickupLatLng = map.getCameraPosition().target;
+                    findDriversETACall(true);
                 } else {
-                    //requestRideClick();
-                    confirmedScreenOpened = true;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
-                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    imageViewRideNowPoolCheck();
                 }
 			}
         });
@@ -1911,7 +1892,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     HomeActivity.this.hasWindowFocus()) {
                     Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
-                        findDriversETACall();
+                        findDriversETACall(false);
                     }
                 }
             }
@@ -3984,7 +3965,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-    private ApiFindADriver createApiFindADriver(){
+    private ApiFindADriver getApiFindADriver(){
         if(apiFindADriver == null) {
             apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(),
                     new ApiFindADriver.Callback() {
@@ -4017,15 +3998,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
                 }
-            });
+
+                        @Override
+                        public void continueRequestRide() {
+                            imageViewRideNowPoolCheck();
+                        }
+
+                        @Override
+                        public void stopRequestRide() {
+                            Toast.makeText(HomeActivity.this, getResources().getString(R.string.fares_updated),
+                                    Toast.LENGTH_LONG).show();
+                            Animation anim = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.rotate_shake);
+                            imageViewRideNow.startAnimation(anim);
+                        }
+                    });
         }
         return apiFindADriver;
     }
 
     private ApiFindADriver apiFindADriver = null;
-    private void findDriversETACall(){
-        createApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo,
-                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+    private void findDriversETACall(boolean beforeRequestRide){
+        getApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo,
+                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide);
     }
 
     private void findADriverFinishing(){
@@ -5910,7 +5904,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     editor.commit();
 
 					if (myLocation != null) {
-                        findDriversETACall();
+                        findDriversETACall(false);
 					}
                 }
             } else if (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL) {
@@ -6557,10 +6551,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         int currentUserStatus = 2;
                         final PassengerScreenMode passengerScreenModeOld = passengerScreenMode;
                         String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                currentUserStatus, createApiFindADriver(), Data.pickupLatLng);
+                                currentUserStatus, getApiFindADriver(), Data.pickupLatLng);
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
                             String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                    currentUserStatus, createApiFindADriver(), Data.pickupLatLng);
+                                    currentUserStatus, getApiFindADriver(), Data.pickupLatLng);
                             if (resp1.contains(Constants.SERVER_TIMEOUT)) {
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -7814,5 +7808,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+    public void imageViewRideNowPoolCheck(){
+        if(getSlidingBottomPanel().getRequestRideOptionsFragment()
+                .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+            if(Data.dropLatLng != null){
+                //requestRideClick();
+                confirmedScreenOpened = true;
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
+            } else{
+                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
+
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                if(index == 1 && Data.dropLatLng == null) {
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+                }
+                if(Data.dropLatLng == null){
+                    Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
+                    textViewDestSearch.startAnimation(shake);
+                }
+            }
+        } else {
+            //requestRideClick();
+            confirmedScreenOpened = true;
+            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            switchPassengerScreen(passengerScreenMode);
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+    }
 
 }
