@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -39,6 +40,7 @@ public class ApiFindADriver {
 	private Activity activity;
 	private Callback callback;
 	private Region regionSelected;
+	private LatLng refreshLatLng;
 
 	public ApiFindADriver(Activity activity, Region regionSelected, Callback callback){
 		this.activity = activity;
@@ -46,8 +48,8 @@ public class ApiFindADriver {
 		this.callback = callback;
 	}
 
-	public void hit(String accessToken, LatLng latLng, final int showAllDrivers, int showDriverInfo,
-					Region regionSelected){
+	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
+					Region regionSelected, final boolean beforeRequestRide){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
@@ -77,10 +79,23 @@ public class ApiFindADriver {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_FIND_A_DRIVER, startTime);
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.e(TAG, "findADriverCall response=" + resp);
+
+						double fareFactorOld = Data.userData.fareFactor;
 						parseFindADriverResponse(findADriverResponse);
+
+						refreshLatLng = latLng;
 						if(callback != null) {
 							callback.onComplete();
 						}
+
+						if(beforeRequestRide){
+							if(Utils.compareDouble(fareFactorOld, Data.userData.fareFactor) != 0){
+								callback.stopRequestRide();
+							} else{
+								callback.continueRequestRide();
+							}
+						}
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -228,11 +243,21 @@ public class ApiFindADriver {
 		}
 	}
 
+	public LatLng getRefreshLatLng() {
+		return refreshLatLng;
+	}
+
+	public void setRefreshLatLng(LatLng refreshLatLng) {
+		this.refreshLatLng = refreshLatLng;
+	}
+
 
 	public interface Callback{
 		void onPre();
 		void onFailure();
 		void onComplete();
+		void continueRequestRide();
+		void stopRequestRide();
 	}
 
 }
