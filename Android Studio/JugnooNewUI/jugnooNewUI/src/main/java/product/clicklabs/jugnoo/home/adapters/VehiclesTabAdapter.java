@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
 
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> {
 
@@ -51,13 +55,26 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
                 && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId());
 
-        if(selected){
-            holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-            holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
-        } else{
-            holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
-            holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
+        try {
+            if(selected){
+                holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
+                holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+                Picasso.with(activity)
+                        .load(region.getImages().getTabHighlighted())
+                        .placeholder(R.drawable.ic_supply_placeholder)
+                        .into(holder.imageViewTab);
+            } else{
+                holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
+                holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                Picasso.with(activity)
+                        .load(region.getImages().getTabNormal())
+                        .placeholder(R.drawable.ic_supply_placeholder)
+                        .into(holder.imageViewTab);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,16 +105,17 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        public ImageView imageViewSep;
+        public ImageView imageViewSep, imageViewTab;
         public View imageViewSelected;
         public TextView textViewVehicleName;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
+            imageViewTab = (ImageView) itemView.findViewById(R.id.imageViewTab);
             imageViewSelected = (View) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
-            textViewVehicleName.setTypeface(Fonts.mavenMedium(activity));
+            textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         }
     }
 }

@@ -218,6 +218,7 @@ public interface Constants {
 	String KEY_ICON_SET = "icon_set";
 
 	int VEHICLE_AUTO = 1;
+	int POOL_RIDE = 2;
 
 	String KEY_GIVEN_RATING = "given_rating";
 	String KEY_COUPONS = "coupons";

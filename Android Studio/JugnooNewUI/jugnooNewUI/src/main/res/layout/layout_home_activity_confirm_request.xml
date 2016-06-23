@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/confirmRequestLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/top_bar_height"
+    android:animateLayoutChanges="true"
+    android:splitMotionEvents="false"
+    android:visibility="visible">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutConfirmOption"
+            android:layout_width="match_parent"
+            android:layout_height="200px"
+            android:layout_below="@+id/recyclerViewVehicles"
+            android:layout_marginBottom="30px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="30px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100px">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutPaymentModeMS"
+                    android:layout_width="330px"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageViewPaymentModeMS"
+                        android:layout_width="68px"
+                        android:layout_height="22px"
+                        android:src="@drawable/ic_cash_small"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewPaymentModeValueMS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10px"
+                        android:gravity="center"
+                        android:text="200"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="-1dp"
+                    android:src="@color/text_color_hint" />
+
+
+
+
+                <TextView
+                    android:id="@+id/textViewOffers"
+                    android:layout_width="330px"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/nl_offers"
+                    android:textAllCaps="true"
+                    android:clickable="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:layout_marginTop="-1dp"
+                android:background="@color/text_color_hint" />
+
+            <TextView
+                android:id="@+id/textVieGetFareEstimateMS"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-1dp"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
+                android:gravity="center"
+                android:text="@string/get_fare_estimate"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
+
+        </LinearLayout>
+
+        <Button
+            style="@style/ButtonThemeBig"
+            android:layout_below="@+id/linearLayoutConfirmOption"
+            android:layout_centerHorizontal="true"
+            android:text="@string/confirm_request"
+            android:layout_marginBottom="30px"/>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

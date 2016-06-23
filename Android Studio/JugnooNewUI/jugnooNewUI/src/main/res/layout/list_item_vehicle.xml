@@ -13,9 +13,10 @@
         android:gravity="center">
 
     <ImageView
-        android:layout_width="51px"
-        android:layout_height="37px"
-        android:src="@drawable/ic_auto_multiple"
+        android:id="@+id/imageViewTab"
+        android:layout_width="81px"
+        android:layout_height="62px"
+        android:src="@drawable/ic_supply_placeholder"
         android:tag="mwar"
         android:layout_centerHorizontal="true"/>
 
@@ -28,7 +29,7 @@
         android:text="@string/auto"
         android:textAllCaps="true"
         android:textColor="@color/text_color_theme_color_selector"
-        android:textSize="@dimen/text_size_26" />
+        android:textSize="@dimen/text_size_18" />
 
     </LinearLayout>
 

@@ -18,12 +18,21 @@ public class Region {
 	@SerializedName("region_id")
 	@Expose
 	private Integer regionId;
+	@SerializedName("ride_type")
+	@Expose
+	private Integer rideType;
+	@SerializedName("max_people")
+	@Expose
+	private Integer maxPeople;
 	@SerializedName("region_name")
 	@Expose
 	private String regionName;
 	@SerializedName("icon_set")
 	@Expose
 	private String iconSet;
+	@SerializedName("images")
+	@Expose
+	private Images images;
 
 	private VehicleIconSet vehicleIconSet;
 
@@ -41,6 +50,80 @@ public class Region {
 		this.vehicleIconSet = VehicleIconSet.ORANGE_AUTO;
 		this.eta = "-";
 		this.fareStructure = JSONParser.getFareStructure();
+		this.rideType = 0;
+		this.maxPeople = 3;
+	}
+
+	public class Images {
+
+		@SerializedName("tab_normal")
+		@Expose
+		private String tabNormal;
+		@SerializedName("tab_highlighted")
+		@Expose
+		private String tabHighlighted;
+		@SerializedName("ride_now_normal")
+		@Expose
+		private String rideNowNormal;
+		@SerializedName("ride_now_highlighted")
+		@Expose
+		private String rideNowHighlighted;
+
+		/**
+		 * @return The tabNormal
+		 */
+		public String getTabNormal() {
+			return tabNormal;
+		}
+
+		/**
+		 * @param tabNormal The tab_normal
+		 */
+		public void setTabNormal(String tabNormal) {
+			this.tabNormal = tabNormal;
+		}
+
+		/**
+		 * @return The tabHighlighted
+		 */
+		public String getTabHighlighted() {
+			return tabHighlighted;
+		}
+
+		/**
+		 * @param tabHighlighted The tab_highlighted
+		 */
+		public void setTabHighlighted(String tabHighlighted) {
+			this.tabHighlighted = tabHighlighted;
+		}
+
+		/**
+		 * @return The rideNowNormal
+		 */
+		public String getRideNowNormal() {
+			return rideNowNormal;
+		}
+
+		/**
+		 * @param rideNowNormal The ride_now_normal
+		 */
+		public void setRideNowNormal(String rideNowNormal) {
+			this.rideNowNormal = rideNowNormal;
+		}
+
+		/**
+		 * @return The rideNowHighlighted
+		 */
+		public String getRideNowHighlighted() {
+			return rideNowHighlighted;
+		}
+
+		/**
+		 * @param rideNowHighlighted The ride_now_highlighted
+		 */
+		public void setRideNowHighlighted(String rideNowHighlighted) {
+			this.rideNowHighlighted = rideNowHighlighted;
+		}
 	}
 
 
@@ -102,5 +185,29 @@ public class Region {
 
 	public void setRegionId(Integer regionId) {
 		this.regionId = regionId;
+	}
+
+	public Integer getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(Integer rideType) {
+		this.rideType = rideType;
+	}
+
+	public Images getImages() {
+		return images;
+	}
+
+	public void setImages(Images images) {
+		this.images = images;
+	}
+
+	public Integer getMaxPeople() {
+		return maxPeople;
+	}
+
+	public void setMaxPeople(Integer maxPeople) {
+		this.maxPeople = maxPeople;
 	}
 }

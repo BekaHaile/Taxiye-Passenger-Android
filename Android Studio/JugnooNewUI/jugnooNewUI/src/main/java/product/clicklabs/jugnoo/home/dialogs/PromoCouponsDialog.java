@@ -60,7 +60,7 @@ public class PromoCouponsDialog {
 				public void onCouponSelected() {
 				}
 			});
-			activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+//			activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerViewPromoCoupons.getLayoutParams();
 			params.height = Data.promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())

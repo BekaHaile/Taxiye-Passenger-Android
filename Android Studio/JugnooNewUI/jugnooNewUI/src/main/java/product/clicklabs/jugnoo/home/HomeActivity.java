@@ -113,6 +113,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database;
 import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
@@ -154,7 +155,6 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
-import product.clicklabs.jugnoo.home.dialogs.JugnooPoolTutorial;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
@@ -163,6 +163,7 @@ import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -198,6 +199,7 @@ import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -266,7 +268,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     TextView textViewFindingDriver;
     Button initialCancelRideBtn;
     RelativeLayout relativeLayoutAssigningDropLocationParent;
-    private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp;
+    private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmRequest;
     private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;
     ImageView imageViewAssigningDropLocationEdit;
@@ -282,7 +284,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewFinalDropLocationEdit;
     ProgressWheel progressBarFinalDropLocation;
     Button customerInRideMyLocationBtn;
-	LinearLayout linearLayoutInRideDriverInfo;
+	LinearLayout linearLayoutInRideDriverInfo, linearLayoutOfferConfirm;
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
     RelativeLayout relativeLayoutDriverRating;
@@ -290,7 +292,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat;
 	LinearLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue;
-	ImageView imageViewIRPaymentOptionPaytm, imageViewIRPaymentOptionCash, imageViewThumbsUpGif;
+	ImageView imageViewIRPaymentOptionPaytm, imageViewIRPaymentOptionCash, imageViewThumbsUpGif, imageViewOfferConfirm;
 
 
 
@@ -311,7 +313,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ScrollView scrollViewRideSummary;
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
-    LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites;
+    LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
 
     RatingBar ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
@@ -320,11 +322,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
-    private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation;
-
+    private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation,
+            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm;
     private RelativeLayout changeLocalityLayout;
     private AnimationDrawable jugnooAnimation;
-    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool, imageViewJugnooPoolExtra;
+    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool, imageViewJugnooPoolExtra,
+            imageViewPaymentModeConfirm;
+    private Button buttonConfirmRequest;
 
 
     // data variables declaration
@@ -403,9 +407,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public ASSL assl;
 
 
-    private int showAllDrivers = 0, showDriverInfo = 0, rating = 0, isPoolRequest = 0, jugnooPoolFareId = 0, isPoolSelected = 0;
+    private int showAllDrivers = 0, showDriverInfo = 0, rating = 0, jugnooPoolFareId = 0;
 
-    private boolean intentFired = false, dropLocationSearched = false;
+    private boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened;
 
 	private GoogleApiClient mGoogleApiClient;
 
@@ -566,7 +570,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		relativeLayoutGoogleAttr.setVisibility(View.GONE);
         relativeLayoutPoolSharing = (RelativeLayout) findViewById(R.id.relativeLayoutPoolSharing);
         textViewFellowRider = (TextView) findViewById(R.id.textViewFellowRider); textViewFellowRider.setTypeface(Fonts.mavenMedium(this));
-
+        relativeLayoutConfirmRequest  = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmRequest);
+        relativeLayoutConfirmRequest.setVisibility(View.GONE);
+        buttonConfirmRequest = (Button) findViewById(R.id.buttonConfirmRequest);
+        buttonConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        linearLayoutPaymentModeConfirm = (LinearLayout) findViewById(R.id.linearLayoutPaymentModeConfirm);
+        imageViewPaymentModeConfirm = (ImageView) findViewById(R.id.imageViewPaymentModeConfirm);
+        textViewPaymentModeValueConfirm = (TextView) findViewById(R.id.textViewPaymentModeValueConfirm);
+        textViewPaymentModeValueConfirm.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewOffersConfirm = (TextView) findViewById(R.id.textViewOffersConfirm);
+        textViewOffersConfirm.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textVieGetFareEstimateConfirm = (TextView) findViewById(R.id.textVieGetFareEstimateConfirm);
+        textVieGetFareEstimateConfirm.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        imageViewOfferConfirm = (ImageView) findViewById(R.id.imageViewOfferConfirm);
+        imageViewOfferConfirm.setVisibility(View.GONE);
+        linearLayoutOfferConfirm = (LinearLayout) findViewById(R.id.linearLayoutOfferConfirm);
 
 
 
@@ -753,7 +771,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, FareEstimateActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
+                FlurryEventLogger.event(HomeActivity.this, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
+                NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
+            }
+        });
 
+        linearLayoutOfferConfirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show();
+            }
+        });
+
+        linearLayoutPaymentModeConfirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show();
+            }
+        });
 
         setEnteredDestination();
 
@@ -762,10 +804,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isPoolSelected == 1) {
+                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
                         if(Data.dropLatLng != null){
-                            isPoolRequest = 1;
-                            requestRideClick();
+                            //requestRideClick();
+                            confirmedScreenOpened = true;
+                            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                            switchPassengerScreen(passengerScreenMode);
                         } else{
                         textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                         textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
@@ -782,11 +826,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }
                 } else {
-                    isPoolRequest = 0;
-                    requestRideClick();
+                    //requestRideClick();
+                    confirmedScreenOpened = true;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
 			}
+        });
+
+        buttonConfirmRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmedScreenOpened = false;
+                requestRideClick();
+            }
         });
 
         imageViewSupplyType.setOnClickListener(new OnClickListener() {
@@ -912,7 +966,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        imageViewJugnooPool.setOnClickListener(new OnClickListener() {
+        /*imageViewJugnooPool.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isPoolSelected == 0){
@@ -923,26 +977,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     imageViewJugnooPoolExtra.setImageResource(R.drawable.ic_auto_small);
                 }
                 animateSupplyTypeImage(imageViewJugnooPool);
-            /*if(Data.dropLatLng != null){
-                isPoolRequest = 1;
-                requestRideClick();
-            } else{
-                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
-
-                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                if(index == 1 && Data.dropLatLng == null) {
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                }
-                if(Data.dropLatLng == null){
-                    Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
-                    textViewDestSearch.startAnimation(shake);
-                }
-            }*/
             }
-        });
+        });*/
 
 
         // Assigning layout events
@@ -1568,6 +1604,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
+
     private void showServiceUnavailableDialog(){
         new ServiceUnavailableDialog(HomeActivity.this, new ServiceUnavailableDialog.Callback() {
             @Override
@@ -1908,7 +1945,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(confirmClicked) {
                                 FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "ok");
                             }
-                            if(isPoolRequest == 1){
+                            if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                                 // Pool request
                                 fareEstimateForPool();
                             } else{
@@ -2260,6 +2297,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
+                relativeLayoutConfirmRequest.setVisibility(View.GONE);
 
                 switch (mode) {
 
@@ -2341,6 +2379,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         findADriverFinishing();
                         setGoogleMapPadding(0);
+
+                        relativeLayoutRequest.setVisibility(View.VISIBLE);
+                        if(confirmedScreenOpened){
+                            relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
+                            relativeLayoutRequest.setVisibility(View.GONE);
+                            topBar.imageViewMenu.setVisibility(View.GONE);
+                            topBar.imageViewBack.setVisibility(View.VISIBLE);
+                            updateConfirmedStatePaymentUI();
+                            updateConfirmedStateCoupon();
+                        }
 
                         break;
 
@@ -3875,6 +3923,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             else{
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                } else if(confirmedScreenOpened){
+                    confirmedScreenOpened = false;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
                 }
                 else{
                     Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
@@ -5976,8 +6028,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
 
-                                nameValuePairs.put("is_pooled", String.valueOf(isPoolRequest));
-                                if(isPoolRequest == 1){
+                                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                                     nameValuePairs.put("pool_fare_id", ""+jugnooPoolFareId);
                                 }
 
@@ -6468,6 +6519,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 topBar.textViewTitle.setText(getResources().getString(R.string.app_name));
+                if(confirmedScreenOpened){
+                    topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
+                }
 
                 localModeEnabled = 0;
             }
@@ -7433,8 +7487,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else {
             if (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
                     || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
-                imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                        .getVehicleIconSet().getRequestSelector(this));
+                new SelectorBitmapLoader(HomeActivity.this).loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
+                                getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
+                        getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+                        });
+                /*imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                        .getVehicleIconSet().getRequestSelector(this));*/
                 imageViewRideNow.startAnimation(getBounceScale());
                 showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
             } else{
@@ -7674,7 +7736,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (isPoolSelected == 1) {
+                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
                     imageViewRideNow.setImageResource(R.drawable.ic_pool_request_selector);
                     imageViewJugnooPool.setImageResource(R.drawable.ic_auto_small);
                     imageViewJugnooPoolExtra.setImageResource(R.drawable.ic_auto_small);
@@ -7717,6 +7779,39 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             }
         });
+    }
+
+    public void updateConfirmedStatePaymentUI(){
+        try {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewPaymentModeConfirm.getLayoutParams();
+            if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
+                imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_paytm_small);
+                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
+                textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
+                                .getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getPaytmBalanceStr()));
+                textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
+                                .getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getPaytmBalanceStr()));
+            }
+            else{
+                imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_cash_small);
+                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
+                textViewPaymentModeValueConfirm.setText(HomeActivity.this.getResources().getString(R.string.cash));
+            }
+            imageViewPaymentModeConfirm.setLayoutParams(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateConfirmedStateCoupon(){
+        promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+        if(promoCouponSelectedForRide.id > 0){
+            imageViewOfferConfirm.setVisibility(View.VISIBLE);
+        } else{
+            imageViewOfferConfirm.setVisibility(View.GONE);
+        }
     }
 
 

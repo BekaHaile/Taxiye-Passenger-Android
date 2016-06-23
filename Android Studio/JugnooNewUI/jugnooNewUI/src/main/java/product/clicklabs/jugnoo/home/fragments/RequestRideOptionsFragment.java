@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,6 +30,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
+import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -51,20 +53,20 @@ public class RequestRideOptionsFragment extends Fragment {
     private LinearLayout linearLayoutSlidingBottom;
 
     private LinearLayout linearLayoutOptionsSingleSupply, linearLayoutPaymentMode;
-    private ImageView imageViewPaymentMode;
+    private ImageView imageViewPaymentMode, imageViewPaymentModeMS;
     private TextView textViewPaymentModeValue;
 
 
     private LinearLayout linearLayoutFare;
     private TextView textViewMinFareValue;
 
-    private LinearLayout linearLayoutFareEstimate;
+    private LinearLayout linearLayoutFareEstimate, linearLayoutPaymentModeMS;
 
     private RelativeLayout relativeLayoutMultipleSupplyMain;
     private RecyclerView recyclerViewVehicles;
-    private LinearLayout linearLayoutPaymentModeMS, linearLayoutMinFareMS;
-    private ImageView imageViewPaymentModeMS;
-    private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS;
+    private LinearLayout linearLayoutMinFareMS;
+    private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
+            textViewMaxPeople, textViewOffers;
     private RelativeLayout relativeLayoutPriorityTipMS;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -107,15 +109,22 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
-        textViewPaymentModeValueMS.setTypeface(Fonts.mavenRegular(activity));
+        textViewPaymentModeValueMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
-        ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.mavenRegular(activity));
+        ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewMinFareMSValue = (TextView) rootView.findViewById(R.id.textViewMinFareMSValue);
-        textViewMinFareMSValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewMinFareMSValue.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewMaxPeople = (TextView) rootView.findViewById(R.id.textViewMaxPeople);
+        textViewMaxPeople.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewOffers = (TextView) rootView.findViewById(R.id.textViewOffers);
+        textViewOffers.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+
+        textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
+        textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
-        textVieGetFareEstimateMS.setTypeface(Fonts.mavenRegular(activity));
+        textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
         textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
         textViewPriorityTipValueMS.setTypeface(Fonts.mavenRegular(activity));
@@ -137,6 +146,7 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutPaymentModeMS.setOnClickListener(onClickListenerRequestOptions);
         linearLayoutMinFareMS.setOnClickListener(onClickListenerRequestOptions);
         textVieGetFareEstimateMS.setOnClickListener(onClickListenerRequestOptions);
+        textViewOffers.setOnClickListener(onClickListenerRequestOptions);
 
 
         return rootView;
@@ -146,7 +156,7 @@ public class RequestRideOptionsFragment extends Fragment {
     View.OnClickListener onClickListenerRequestOptions = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
+            if(v.getId() == R.id.linearLayoutPaymentMode){
                 getPaymentOptionDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
@@ -162,9 +172,33 @@ public class RequestRideOptionsFragment extends Fragment {
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
+            } else if(v.getId() == R.id.textViewOffers){
+                getPromoCouponsDialog().show();
+                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
+                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
+
             }
         }
     };
+
+    public PromoCouponsDialog promoCouponsDialog;
+    public PromoCouponsDialog getPromoCouponsDialog(){
+        if(promoCouponsDialog == null){
+            promoCouponsDialog = new PromoCouponsDialog(activity, new PromoCouponsDialog.Callback() {
+                @Override
+                public void onCouponApplied() {
+                    //onRequestRideTap();
+                    activity.updateConfirmedStateCoupon();
+                }
+
+                @Override
+                public void onSkipped() {
+                    //onRequestRideTap();
+                }
+            });
+        }
+        return promoCouponsDialog;
+    }
 
 
     public void updatePaymentOption() {
@@ -287,6 +321,7 @@ public class RequestRideOptionsFragment extends Fragment {
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         textViewMinFareMSValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+        textViewMaxPeople.setText(getResources().getString(R.string.max_people)+getRegionSelected().getMaxPeople());
         updateFareFactorUI();
     }
 
@@ -414,13 +449,18 @@ public class RequestRideOptionsFragment extends Fragment {
         return fareDetailsDialog;
     }
 
-    private PaymentOptionDialog paymentOptionDialog;
-    private PaymentOptionDialog getPaymentOptionDialog(){
+    public PaymentOptionDialog paymentOptionDialog;
+    public PaymentOptionDialog getPaymentOptionDialog(){
         if(paymentOptionDialog == null){
             paymentOptionDialog = new PaymentOptionDialog(activity, new PaymentOptionDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
 
+                }
+
+                @Override
+                public void onPaymentModeUpdated() {
+                    activity.updateConfirmedStatePaymentUI();
                 }
             });
         }

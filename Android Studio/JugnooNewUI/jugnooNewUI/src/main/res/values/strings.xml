@@ -69,6 +69,7 @@
 	<string name="phone_number">Phone Number</string>
 	<string name="confirm_password">Confirm Password</string>
 	<string name="confirm_ride">Confirm Ride</string>
+	<string name="confirm_request">Confirm Request</string>
 	
 	<string name="confirmation_code">Confirmation Code</string>
 	<string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
@@ -923,6 +924,8 @@
 
 	<string name="receipt">Receipt</string>
 	<string name="feedback">Feedback</string>
+	<string name="confirmation">Confirmation</string>
+	<string name="max_people">MAX PEOPLE:</string>
 
 
 </resources>
