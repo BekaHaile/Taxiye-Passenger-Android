@@ -130,7 +130,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewVehicles"
             android:layout_width="match_parent"
-            android:layout_height="118px"
+            android:layout_height="125px"
             android:splitMotionEvents="false"
             />
 
