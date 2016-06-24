@@ -86,8 +86,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewEndRideAutoIcon"
-                        android:layout_width="41px"
-                        android:layout_height="33px"
+                        android:layout_width="72px"
+                        android:layout_height="51px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15px"
                         android:src="@drawable/ic_auto_invoice"

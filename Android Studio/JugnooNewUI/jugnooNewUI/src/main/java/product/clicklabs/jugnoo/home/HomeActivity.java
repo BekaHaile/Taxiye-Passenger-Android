@@ -2389,6 +2389,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         relativeLayoutInitialSearchBar.setEnabled(true);
                         if(confirmedScreenOpened){
                             firstTimeZoom = false;
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
                             relativeLayoutRequest.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
@@ -7824,10 +7825,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_paytm_small);
                 params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
                 textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format),
+                                .getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
                 textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format),
+                                .getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
             }
             else{

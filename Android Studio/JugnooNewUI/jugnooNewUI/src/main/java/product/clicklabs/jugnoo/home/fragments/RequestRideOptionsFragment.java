@@ -157,6 +157,13 @@ public class RequestRideOptionsFragment extends Fragment {
         textViewOffers.setOnClickListener(onClickListenerRequestOptions);
         textViewOffersMode.setOnClickListener(onClickListenerRequestOptions);
 
+        relativeLayoutMultipleSupplyMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         return rootView;
     }
