@@ -66,7 +66,7 @@ public class RequestRideOptionsFragment extends Fragment {
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers;
+            textViewMaxPeople, textViewOffers, textViewOffersMode;
     private RelativeLayout relativeLayoutPriorityTipMS;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -98,18 +98,21 @@ public class RequestRideOptionsFragment extends Fragment {
         textViewPaymentModeValue.setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
-        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenRegular(activity));
+        ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenMedium(activity));
         textViewMinFareValue = (TextView) rootView.findViewById(R.id.textViewMinFareValue);
-        textViewMinFareValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewMinFareValue.setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
-        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenRegular(activity));
+        ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenMedium(activity));
 
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
         textViewPaymentModeValueMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewOffersMode = (TextView) rootView.findViewById(R.id.textViewOffersMode);
+        textViewOffersMode.setTypeface(Fonts.mavenMedium(activity));
+        textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
         ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -147,6 +150,7 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutMinFareMS.setOnClickListener(onClickListenerRequestOptions);
         textVieGetFareEstimateMS.setOnClickListener(onClickListenerRequestOptions);
         textViewOffers.setOnClickListener(onClickListenerRequestOptions);
+        textViewOffersMode.setOnClickListener(onClickListenerRequestOptions);
 
 
         return rootView;
@@ -172,11 +176,10 @@ public class RequestRideOptionsFragment extends Fragment {
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
-            } else if(v.getId() == R.id.textViewOffers){
+            } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
                 getPromoCouponsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
-
             }
         }
     };
