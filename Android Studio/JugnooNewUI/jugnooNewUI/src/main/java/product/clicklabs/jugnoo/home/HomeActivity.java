@@ -168,6 +168,7 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -329,6 +330,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool, imageViewJugnooPoolExtra,
             imageViewPaymentModeConfirm;
     private Button buttonConfirmRequest;
+    private ImageView imageViewFreezeMap;
 
 
     // data variables declaration
@@ -536,6 +538,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewRideNow = (ImageView) findViewById(R.id.imageViewRideNow);
         imageViewSupplyType = (ImageView) findViewById(R.id.imageViewSupplyType);
+        imageViewFreezeMap = (ImageView) findViewById(R.id.viewFreezeMap);
 
         imageViewInAppCampaign = (ImageView) findViewById(R.id.imageViewInAppCampaign);
         imageViewInAppCampaign.setVisibility(View.GONE);
@@ -739,7 +742,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(Data.userData != null){
             textViewSendInvites.setText(Data.userData.getInRideSendInviteTextBold());
             textViewSendInvites2.setText(Data.userData.getInRideSendInviteTextNormal());
+            if(Data.userData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
+                textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+            } else{
+                textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+            }
         }
+
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -798,6 +807,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        relativeLayoutConfirmRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         setEnteredDestination();
 
 
@@ -814,6 +830,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     imageViewRideNowPoolCheck();
                 }
 			}
+        });
+
+        imageViewFreezeMap.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
         });
 
         buttonConfirmRequest.setOnClickListener(new OnClickListener() {
@@ -2324,7 +2347,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.GONE);
 
 
-						if(!firstTimeZoom){
+						if(!firstTimeZoom && !confirmedScreenOpened){
 							if(Data.pickupLatLng != null){
 								zoomToCurrentLocationWithOneDriver(Data.pickupLatLng);
 							}
@@ -2362,11 +2385,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setGoogleMapPadding(0);
 
                         relativeLayoutRequest.setVisibility(View.VISIBLE);
+                        imageViewFreezeMap.setVisibility(View.GONE);
+                        relativeLayoutInitialSearchBar.setEnabled(true);
                         if(confirmedScreenOpened){
+                            firstTimeZoom = false;
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
                             relativeLayoutRequest.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
+                            imageViewFreezeMap.setVisibility(View.VISIBLE);
+                            relativeLayoutInitialSearchBar.setEnabled(false);
+                            map.animateCamera(CameraUpdateFactory.zoomBy(2f));
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
                         }
@@ -2437,6 +2466,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
+
+                        try {
+                            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
+                                relativeLayoutAssigningDropLocationClick.setEnabled(false);
+                            } else{
+                                imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
+                                relativeLayoutAssigningDropLocationClick.setEnabled(true);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -4123,7 +4164,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 && relativeLayoutLocationError.getVisibility() == View.GONE) {
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
 
@@ -7493,6 +7533,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .getVehicleIconSet().getRequestSelector(this));*/
                 imageViewRideNow.startAnimation(getBounceScale());
                 showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+                textViewDestSearch.setText("");
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
             } else{
                 if(getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
@@ -7782,10 +7824,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_paytm_small);
                 params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
                 textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
+                                .getString(R.string.rupees_value_format),
                         Data.userData.getPaytmBalanceStr()));
                 textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
+                                .getString(R.string.rupees_value_format),
                         Data.userData.getPaytmBalanceStr()));
             }
             else{
@@ -7818,6 +7860,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
             } else{
+                if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
                 textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 

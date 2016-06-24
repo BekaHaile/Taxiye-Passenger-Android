@@ -39,6 +39,13 @@
                         class="product.clicklabs.jugnoo.utils.TouchableMapFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
+
+                    <ImageView
+                        android:id="@+id/viewFreezeMap"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        android:background="@color/transparent"/>
                 </RelativeLayout>
 
                 <!-- passenger main layout -->
@@ -115,13 +122,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@color/white">
 
             <LinearLayout
                 android:id="@+id/linearLayoutConfirmOption"
                 android:layout_width="match_parent"
-                android:layout_height="200px"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/recyclerViewVehicles"
                 android:layout_marginBottom="30px"
                 android:layout_marginLeft="30px"
@@ -217,6 +224,7 @@
                     android:layout_marginTop="-1dp"
                     android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:text="@string/get_fare_estimate"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"

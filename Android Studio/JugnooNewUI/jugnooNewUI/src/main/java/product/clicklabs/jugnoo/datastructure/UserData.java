@@ -31,7 +31,7 @@ public class UserData {
 
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
-	private String publicAccessToken;
+	private String publicAccessToken, confirmScreenFareEstimateEnable;
 
 	private int gamePredictEnable, cToDReferralEnabled;
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
@@ -58,7 +58,7 @@ public class UserData {
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
-					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink){
+					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -135,6 +135,7 @@ public class UserData {
 		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
 		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
 		this.fatafatUrlLink = fatafatUrlLink;
+		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
 
 		checkUserImage();
 	}
@@ -535,5 +536,13 @@ public class UserData {
 
 	public void setFatafatUrlLink(String fatafatUrlLink) {
 		this.fatafatUrlLink = fatafatUrlLink;
+	}
+
+	public String getConfirmScreenFareEstimateEnable() {
+		return confirmScreenFareEstimateEnable;
+	}
+
+	public void setConfirmScreenFareEstimateEnable(String confirmScreenFareEstimateEnable) {
+		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
 	}
 }

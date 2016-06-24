@@ -13,6 +13,8 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
+import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.NudgeClient;
@@ -43,7 +45,7 @@ public class SlidingBottomPanelV4 {
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (280 * ASSL.Yscale()));
-        slidingUpPanelLayout.setPanelHeight((int) (125 * ASSL.Yscale()));
+        updatePannelHeight();
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -84,6 +86,7 @@ public class SlidingBottomPanelV4 {
 
     public void update() {
         try {
+            updatePannelHeight();
             if (Data.promoCoupons != null) {
                 if (Data.promoCoupons.size() > 0) {
                     nudgeCouponsEvent();
@@ -95,6 +98,7 @@ public class SlidingBottomPanelV4 {
             requestRideOptionsFragment.updatePaymentOption();
             requestRideOptionsFragment.updateRegionsUI();
             requestRideOptionsFragment.updateFareStructureUI();
+            requestRideOptionsFragment.getPromoCouponsDialog().notifyCoupons();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,6 +109,25 @@ public class SlidingBottomPanelV4 {
         return slidingUpPanelLayout;
     }
 
+    public void updatePannelHeight(){
+        try {
+            for(Region region : Data.regions){
+                if(region.getRideType() == RideTypeValue.POOL.getOrdinal()){
+                    slidingUpPanelLayout.setPanelHeight((int) (195 * ASSL.Yscale()));
+                    try {
+                        getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+            }
+            slidingUpPanelLayout.setPanelHeight((int) (125 * ASSL.Yscale()));
+            getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void nudgeCouponsEvent(){
         try {

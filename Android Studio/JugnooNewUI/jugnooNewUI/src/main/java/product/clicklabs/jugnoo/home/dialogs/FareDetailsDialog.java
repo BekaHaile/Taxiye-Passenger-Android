@@ -49,11 +49,11 @@ public class FareDetailsDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			((TextView) dialog.findViewById(R.id.textViewFareDetails)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+			((TextView) dialog.findViewById(R.id.textViewFareDetails)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 			TextView textViewMinimumFare = (TextView) dialog.findViewById(R.id.textViewMinimumFare);
-			textViewMinimumFare.setTypeface(Fonts.mavenLight(activity));
-			((TextView) dialog.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenLight(activity));
-			((TextView) dialog.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenRegular(activity));
+			textViewMinimumFare.setTypeface(Fonts.mavenMedium(activity));
+			((TextView) dialog.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenMedium(activity));
+			((TextView) dialog.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewKMValue = (TextView) dialog.findViewById(R.id.textViewKMValue);
 			textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
 			TextView textViewMinValue = (TextView) dialog.findViewById(R.id.textViewMinValue);
@@ -66,6 +66,7 @@ public class FareDetailsDialog {
 			RelativeLayout relativeLayoutPriorityTip = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPriorityTip);
 			TextView textViewPriorityTipValue = (TextView) dialog.findViewById(R.id.textViewPriorityTipValue);
 			textViewPriorityTipValue.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+
 
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			imageViewClose.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +97,7 @@ public class FareDetailsDialog {
 				}
 			});
 
-			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.minimum_fare_rupee_format),
+			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.base_fare_rupee_format),
 					Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare))));
 			textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
 					Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));

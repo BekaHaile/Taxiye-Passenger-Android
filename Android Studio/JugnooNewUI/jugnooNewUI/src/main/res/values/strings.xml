@@ -881,6 +881,7 @@
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="base_fare_colon">Base Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
+	<string name="base_fare_rupee_format">BASE FARE : \u20B9<b>%s</b></string>
 
 
 	<string name="format_x">%s x</string>
@@ -927,6 +928,7 @@
 	<string name="confirmation">Confirmation</string>
 	<string name="max_people">MAX PEOPLE:</string>
 	<string name="fares_updated">Fares updated try again</string>
+	<string name="no_current_offers">No Current Offers</string>
 
 
 </resources>

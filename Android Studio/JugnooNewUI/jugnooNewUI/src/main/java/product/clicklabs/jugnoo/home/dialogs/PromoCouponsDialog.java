@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -72,8 +74,38 @@ public class PromoCouponsDialog {
 			buttonSkip.setTypeface(Fonts.mavenRegular(activity));
 			Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
 			buttonContinue.setTypeface(Fonts.mavenRegular(activity));
+			RelativeLayout relativeLayoutOfferImage = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutOfferImage);
+			RelativeLayout relativeLayoutBottomButtons = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutBottomButtons);
+			ImageView imageViewWhoops = (ImageView) dialog.findViewById(R.id.imageViewWhoops);
+			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
+			TextView textViewNoCurrentOffers = (TextView) dialog.findViewById(R.id.textViewNoCurrentOffers);
+
+			if(Data.promoCoupons.size() > 0){
+				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
+				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
+				relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
+				imageViewWhoops.setVisibility(View.GONE);
+				imageViewClose.setVisibility(View.GONE);
+				textViewNoCurrentOffers.setVisibility(View.GONE);
+			} else{
+				relativeLayoutOfferImage.setVisibility(View.GONE);
+				recyclerViewPromoCoupons.setVisibility(View.GONE);
+				relativeLayoutBottomButtons.setVisibility(View.GONE);
+				imageViewWhoops.setVisibility(View.VISIBLE);
+				imageViewClose.setVisibility(View.VISIBLE);
+				textViewNoCurrentOffers.setVisibility(View.VISIBLE);
+			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+					dialog.dismiss();
+					callback.onSkipped();
+				}
+			});
+
+			imageViewClose.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
@@ -95,6 +127,16 @@ public class PromoCouponsDialog {
 			e.printStackTrace();
 		}
 		return this;
+	}
+
+	public void notifyCoupons(){
+		try {
+			if(promoCouponsAdapter != null) {
+				promoCouponsAdapter.notifyDataSetChanged();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 

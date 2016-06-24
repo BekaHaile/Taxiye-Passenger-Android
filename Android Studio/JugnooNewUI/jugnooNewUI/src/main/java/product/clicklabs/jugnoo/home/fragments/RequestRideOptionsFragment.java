@@ -67,7 +67,7 @@ public class RequestRideOptionsFragment extends Fragment {
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
             textViewMaxPeople, textViewOffers, textViewOffersMode;
-    private RelativeLayout relativeLayoutPriorityTipMS;
+    private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
 
@@ -77,6 +77,10 @@ public class RequestRideOptionsFragment extends Fragment {
 
 
     public RequestRideOptionsFragment(){}
+
+    public RelativeLayout getRelativeLayoutPoolInfoBar() {
+        return relativeLayoutPoolInfoBar;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,6 +109,7 @@ public class RequestRideOptionsFragment extends Fragment {
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
         ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenMedium(activity));
 
+        relativeLayoutPoolInfoBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPoolInfoBar);
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
