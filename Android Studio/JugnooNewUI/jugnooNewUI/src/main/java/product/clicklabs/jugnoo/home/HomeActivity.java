@@ -3906,11 +3906,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public void backFromSearchToInitial(){
 		try {
+            Utils.hideSoftKeyboard(this, textViewInitialSearch);
 			textViewInitialSearch.setText("");
 			passengerScreenMode = PassengerScreenMode.P_INITIAL;
 			switchPassengerScreen(passengerScreenMode);
 			FlurryEventLogger.event(PICKUP_LOCATION_NOT_SET);
-            Utils.hideSoftKeyboard(this, textViewInitialSearch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -4167,7 +4167,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
                 textViewChangeLocality.setText(farAwayCity);
-
+                relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
