@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -649,7 +648,7 @@ public class JSONParser implements Constants {
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
         driverImage = jLastRideData.optString("driver_image", "");
-        int isPooled = jLastRideData.optInt("is_pooled");
+        int isPooled = jLastRideData.optInt(KEY_IS_POOLED);
 
         double rideTime = -1;
 		if(jLastRideData.has("ride_time")){
@@ -848,7 +847,7 @@ public class JSONParser implements Constants {
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
                                 cancellationCharges = jObject.optInt("cancellation_charge", 0);
-                                isPooledRide = jObject.optInt("is_pooled", 0);
+                                isPooledRide = jObject.optInt(KEY_IS_POOLED, 0);
                                 JSONObject poolData = jObject.optJSONObject("pool_data");
                                 if(poolData != null) {
                                     poolStatusString = poolData.optString("message", context.getResources().getString(R.string.sharing_your_ride_with));

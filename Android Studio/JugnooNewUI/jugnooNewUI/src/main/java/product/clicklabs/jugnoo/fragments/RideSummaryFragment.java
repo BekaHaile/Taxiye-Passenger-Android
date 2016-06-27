@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -42,7 +41,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -316,17 +314,12 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					relativeLayoutConvenienceCharge.setVisibility(View.GONE);
 				}
 
-				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewEndRideDriverIcon.getLayoutParams();
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewEndRideAutoIcon.getLayoutParams();
 				if(endRideData.getIsPooled() == 1){
-					imageViewEndRideDriverIcon.setImageResource(R.drawable.ic_invoice_pool);
+					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_invoice_pool);
 					params.width = (int)(ASSL.Xscale() * 67);
 					params.height = (int)(ASSL.Xscale() * 37);
-					imageViewEndRideDriverIcon.setLayoutParams(params);
-				} else{
-					imageViewEndRideDriverIcon.setImageResource(R.drawable.driver_icon_end_ride);
-					params.width = (int)(ASSL.Xscale() * 39);
-					params.height = (int)(ASSL.Xscale() * 43);
-					imageViewEndRideDriverIcon.setLayoutParams(params);
+					imageViewEndRideAutoIcon.setLayoutParams(params);
 				}
 
 				if(endRideData.discountTypes.size() > 0) {
