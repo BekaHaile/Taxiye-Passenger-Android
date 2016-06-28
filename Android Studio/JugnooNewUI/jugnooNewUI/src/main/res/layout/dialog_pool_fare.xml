@@ -54,11 +54,21 @@
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="20px"
-                android:layout_marginBottom="20px"
                 android:gravity="center"
                 android:text="20"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_120" />
+
+            <TextView
+                android:id="@+id/textViewTNC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+                android:textColor="@color/stroke_color_dark"
+                android:textSize="@dimen/text_size_24" />
 
             <Button
                 android:id="@+id/buttonConfirm"

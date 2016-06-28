@@ -62,8 +62,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
 			relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
-	LinearLayout linearLayoutEndRideTime;
-	RelativeLayout relativeLayoutEndRideWaitTime;
+	LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
+	RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
 	NonScrollListView listViewEndRideDiscounts;
 	TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountValue,
@@ -145,6 +145,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 			}
 		}
 
+		relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
 		relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
 
@@ -178,6 +179,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
 		relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
 		imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
+		linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
+		relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
 
 		textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
@@ -298,7 +301,16 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				textViewEndRideStartTimeValue.setText(endRideData.pickupTime);
 				textViewEndRideEndTimeValue.setText(endRideData.dropTime);
 
-				textViewEndRideFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				if(endRideData.fare > 0) {
+					relativeLayoutFare.setVisibility(View.VISIBLE);
+					linearLayoutRideDetail.setVisibility(View.VISIBLE);
+					relativeLayoutFinalFare.setVisibility(View.VISIBLE);
+					textViewEndRideFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				} else{
+					relativeLayoutFare.setVisibility(View.GONE);
+					linearLayoutRideDetail.setVisibility(View.GONE);
+					relativeLayoutFinalFare.setVisibility(View.GONE);
+				}
 
 				if(Utils.compareDouble(endRideData.luggageCharge, 0) > 0){
 					relativeLayoutLuggageCharge.setVisibility(View.VISIBLE);

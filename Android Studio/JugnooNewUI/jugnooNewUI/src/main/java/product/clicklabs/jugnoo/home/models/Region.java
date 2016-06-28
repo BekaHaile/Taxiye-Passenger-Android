@@ -33,6 +33,9 @@ public class Region {
 	@SerializedName("images")
 	@Expose
 	private Images images;
+	@SerializedName("offer_texts")
+	@Expose
+	private OfferTexts offerTexts;
 
 	private VehicleIconSet vehicleIconSet;
 
@@ -52,6 +55,53 @@ public class Region {
 		this.fareStructure = JSONParser.getFareStructure();
 		this.rideType = 0;
 		this.maxPeople = 3;
+	}
+
+	public class OfferTexts {
+
+		@SerializedName("text1")
+		@Expose
+		private String text1;
+		@SerializedName("text2")
+		@Expose
+		private String text2;
+
+		/**
+		 *
+		 * @return
+		 * The text1
+		 */
+		public String getText1() {
+			return text1;
+		}
+
+		/**
+		 *
+		 * @param text1
+		 * The text1
+		 */
+		public void setText1(String text1) {
+			this.text1 = text1;
+		}
+
+		/**
+		 *
+		 * @return
+		 * The text2
+		 */
+		public String getText2() {
+			return text2;
+		}
+
+		/**
+		 *
+		 * @param text2
+		 * The text2
+		 */
+		public void setText2(String text2) {
+			this.text2 = text2;
+		}
+
 	}
 
 	public class Images {
@@ -209,5 +259,13 @@ public class Region {
 
 	public void setMaxPeople(Integer maxPeople) {
 		this.maxPeople = maxPeople;
+	}
+
+	public OfferTexts getOfferTexts() {
+		return offerTexts;
+	}
+
+	public void setOfferTexts(OfferTexts offerTexts) {
+		this.offerTexts = offerTexts;
 	}
 }

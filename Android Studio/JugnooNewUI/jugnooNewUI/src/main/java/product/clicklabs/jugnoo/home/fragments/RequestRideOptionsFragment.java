@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -66,7 +67,7 @@ public class RequestRideOptionsFragment extends Fragment {
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers, textViewOffersMode;
+            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2;
     private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -127,6 +128,10 @@ public class RequestRideOptionsFragment extends Fragment {
         textViewMaxPeople.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewOffers = (TextView) rootView.findViewById(R.id.textViewOffers);
         textViewOffers.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewPoolInfo1 = (TextView) rootView.findViewById(R.id.textViewPoolInfo1);
+        textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
+        textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
+        textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity));
 
         textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
         textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
@@ -223,6 +228,21 @@ public class RequestRideOptionsFragment extends Fragment {
         return promoCouponsDialog;
     }
 
+    public void updatePoolInfoText(){
+        try {
+            for(Region region : Data.regions){
+                if(region.getRideType() == RideTypeValue.POOL.getOrdinal()){
+                    textViewPoolInfo1.setText(getRegionSelected().getOfferTexts().getText1());
+                    textViewPoolInfo2.setText(getRegionSelected().getOfferTexts().getText2());
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void updatePaymentOption() {
         try {
@@ -297,12 +317,11 @@ public class RequestRideOptionsFragment extends Fragment {
                 }
                 vehiclesTabAdapter.notifyDataSetChanged();
                 updateSupplyUI(Data.regions.size());
-
+                updatePoolInfoText();
             } else if(Data.regions.size() > 0){
                 activity.setVehicleTypeSelected(0);
                 regionSelected = Data.regions.get(0);
                 updateSupplyUI(Data.regions.size());
-
             } else{
                 activity.forceFarAwayCity();
             }

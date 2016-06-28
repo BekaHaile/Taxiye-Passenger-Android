@@ -84,7 +84,7 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
                             .getString(R.string.rupees_minus_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(discountType.value)));
         } else{
-            holder.textViewDiscount.setText(discountType.getName()+"("+discountType.getReferenceId()+")");
+            holder.textViewDiscount.setText(discountType.getName());
             holder.textViewDiscountValue.setText(String.format(context.getResources()
                             .getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(discountType.value)));

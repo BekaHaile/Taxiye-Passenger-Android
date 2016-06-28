@@ -32,7 +32,7 @@ public class PoolFareDialog {
 
 
 
-	public Dialog showPoolFareDialog(double fare) {
+	public Dialog showPoolFareDialog(double fare, String text) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
@@ -58,6 +58,15 @@ public class PoolFareDialog {
 			buttonConfirm.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewCancel = (TextView) dialog.findViewById(R.id.textViewCancel);
 			textViewCancel.setTypeface(Fonts.mavenRegular(activity));
+			TextView textViewTNC = (TextView)dialog.findViewById(R.id.textViewTNC);
+			textViewTNC.setTypeface(Fonts.mavenRegular(activity));
+
+			if(!text.equalsIgnoreCase("")){
+				textViewTNC.setVisibility(View.VISIBLE);
+				textViewTNC.setText(text);
+			} else{
+				textViewTNC.setVisibility(View.GONE);
+			}
 
 			textViewValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(fare)));
 

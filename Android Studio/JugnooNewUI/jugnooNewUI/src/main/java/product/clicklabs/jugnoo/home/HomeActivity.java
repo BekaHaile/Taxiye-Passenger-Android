@@ -6924,7 +6924,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
                                       double rideTime, String rideTimeUnit, final int poolFareId,
-                                      double convenienceCharge) {
+                                      double convenienceCharge, String text) {
                 Log.v("Pool Fare value is ","--> "+fare);
                 new PoolFareDialog(HomeActivity.this, new PoolFareDialog.Callback() {
                     @Override
@@ -6940,7 +6940,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         jugnooPoolFareId = poolFareId;
                         finalRequestRideTimerStart();
                     }
-                }).showPoolFareDialog(fare);
+                }).showPoolFareDialog(fare, text);
 
             }
         }).getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng, 1);
@@ -7526,6 +7526,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.setText("");
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
+                slidingBottomPanel.getRequestRideOptionsFragment().updatePoolInfoText();
             } else{
                 if(getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);

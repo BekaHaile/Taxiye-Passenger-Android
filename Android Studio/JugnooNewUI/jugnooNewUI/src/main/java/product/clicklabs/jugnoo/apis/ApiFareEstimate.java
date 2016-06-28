@@ -106,7 +106,8 @@ public class ApiFareEstimate {
         void onNoRetry();
         void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge);
         void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
-                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge);
+                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
+                           String text);
     }
 
     /**
@@ -141,7 +142,7 @@ public class ApiFareEstimate {
                                         callback.onPoolSuccess(jObj.optDouble("fare", 0), jObj.optDouble("ride_distance", 0),
                                                 jObj.optString("ride_distance_unit"), jObj.optDouble("ride_time", 0),
                                                 jObj.optString("ride_time_unit"), jObj.optInt("pool_fare_id", 0),
-                                                jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0));
+                                                jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0), jObj.optString("text", ""));
                                     } else{
                                         String minFare = jObj.getString("min_fare");
                                         String maxFare = jObj.getString("max_fare");

@@ -161,6 +161,7 @@
 
                         <!-- fare -->
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutFare"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14px">
@@ -291,6 +292,7 @@
 
                         <!-- discounted fare -->
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutFinalFare"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6px">
@@ -420,6 +422,7 @@
 
                     <!-- ride details -->
                     <LinearLayout
+                        android:id="@+id/linearLayoutRideDetail"
                         android:layout_width="match_parent"
                         android:layout_height="100px"
                         android:layout_gravity="center_horizontal"
