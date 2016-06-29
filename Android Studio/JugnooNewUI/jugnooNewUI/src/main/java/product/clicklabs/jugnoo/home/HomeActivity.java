@@ -245,7 +245,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	TextView textViewInitialSearch, textViewDestSearch;
     ImageView imageViewDropCross;
 	ProgressWheel progressBarInitialSearch;
-    Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation;
+    Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation, confirmMyLocationBtn;
     RelativeLayout relativeLayoutRequest;
     RelativeLayout relativeLayoutInAppCampaignRequest;
     TextView textViewInAppCampaignRequest;
@@ -528,6 +528,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
 
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
+        confirmMyLocationBtn = (Button) findViewById(R.id.confirmMyLocationBtn);
         changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn);
         changeLocalityBtn.setTypeface(Fonts.mavenRegular(this));
 
@@ -1505,6 +1506,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             initialMyLocationBtn.setOnClickListener(mapMyLocationClick);
+            confirmMyLocationBtn.setOnClickListener(mapMyLocationClick);
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
 
