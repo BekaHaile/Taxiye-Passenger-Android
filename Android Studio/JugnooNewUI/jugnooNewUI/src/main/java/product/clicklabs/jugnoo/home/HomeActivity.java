@@ -2393,7 +2393,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             relativeLayoutInitialSearchBar.setEnabled(false);
-                            map.animateCamera(CameraUpdateFactory.zoomBy(2f));
+                            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                            //map.animateCamera(CameraUpdateFactory.zoomBy(2f));
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
                         }
@@ -7845,11 +7846,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
+    int shakeAnim = 0;
     public void imageViewRideNowPoolCheck(){
         if(getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
             if(Data.dropLatLng != null){
                 //requestRideClick();
+                shakeAnim = 0;
                 confirmedScreenOpened = true;
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
@@ -7869,6 +7872,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(Data.dropLatLng == null){
                     Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
                     textViewDestSearch.startAnimation(shake);
+                    shakeAnim++;
+                    if(shakeAnim > 3){
+                        //shakeAnim = 0;
+                        Log.v("show popup", "show popup");
+                        DialogPopup.alertPopup(HomeActivity.this, "", "Please fill the destination first.");
+                    }
                 }
             }
         } else {

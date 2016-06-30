@@ -49,8 +49,8 @@ public class PromoCouponsDialog {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 
 			recyclerViewPromoCoupons = (RecyclerView) dialog.findViewById(R.id.recyclerViewPromoCoupons);
 			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
@@ -119,6 +119,13 @@ public class PromoCouponsDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onCouponApplied();
+				}
+			});
+
+			relative.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
 				}
 			});
 

@@ -149,8 +149,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View v) {
                     try {
                         int position = (int) v.getTag();
-                        notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
-                        notifyItemChanged(position);
+                        /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
+                        notifyItemChanged(position);*/
+                        openDeepLink(notificationList.get(position).getDeepIndex());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -194,9 +195,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position == notificationList.size();
     }
 
-    private void openDeepLink(String deepLink){
+    private void openDeepLink(int deepInt){
         try{
-            int deepInt = Integer.parseInt(deepLink);
+            //int deepInt = Integer.parseInt(deepLink);
             Intent intent = new Intent();
             if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
                 intent.setClass(activity, ShareActivity.class);

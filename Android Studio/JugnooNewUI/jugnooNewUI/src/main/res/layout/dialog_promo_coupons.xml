@@ -82,7 +82,6 @@
                 android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
                 android:textSize="@dimen/text_size_34"
                 android:text="@string/skip"
-                android:layout_alignParentRight="true"
                 />
 
             <Button
@@ -93,6 +92,7 @@
                 android:background="@drawable/bg_transparent_menu_item_selector_color_blr_selector"
                 android:textSize="@dimen/text_size_34"
                 android:text="@string/continue_text"
+                android:layout_alignParentRight="true"
                 />
             
             <View

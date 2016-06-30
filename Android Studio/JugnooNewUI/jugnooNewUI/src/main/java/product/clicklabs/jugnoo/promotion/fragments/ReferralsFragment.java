@@ -174,7 +174,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.shareToWhatsapp(activity);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Whatsapp");
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
 			}
 		});
 
