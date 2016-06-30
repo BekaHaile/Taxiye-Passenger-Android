@@ -12,11 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
@@ -56,6 +58,7 @@ public class PromoCouponsDialog {
 			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
 			recyclerViewPromoCoupons.setItemAnimator(new DefaultItemAnimator());
 			recyclerViewPromoCoupons.setHasFixedSize(false);
+			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
 
 			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override

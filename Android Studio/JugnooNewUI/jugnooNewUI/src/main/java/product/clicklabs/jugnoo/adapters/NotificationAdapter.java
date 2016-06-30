@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -152,6 +153,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemChanged(position);*/
                         openDeepLink(notificationList.get(position).getDeepIndex());
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

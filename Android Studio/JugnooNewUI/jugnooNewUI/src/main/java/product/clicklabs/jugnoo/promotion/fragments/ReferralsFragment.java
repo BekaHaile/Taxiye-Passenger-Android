@@ -120,7 +120,7 @@ public class ReferralsFragment extends Fragment {
 			public void onClick(View view) {
 				try {
 					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
-					FlurryEventLogger.eventGA(Constants.REFERRAL, "rides", "more info");
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
 					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
@@ -198,6 +198,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				activity.openLeaderboardFragment();
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Leaderboard");
 			}
 		});
 
@@ -211,6 +212,7 @@ public class ReferralsFragment extends Fragment {
 		relativeLayoutReferSingle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Refer a Driver");
 				getReferDriverDialog().show();
 			}
 		});

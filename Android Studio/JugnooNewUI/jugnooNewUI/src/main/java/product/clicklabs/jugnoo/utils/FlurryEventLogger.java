@@ -25,6 +25,10 @@ public class FlurryEventLogger {
 		try{ MyApplication.getInstance().trackEvent(category, action, label);} catch(Exception e){e.printStackTrace();}
 	}
 
+	public static void eventGA(String category, String action, String label, long value){
+		try{ MyApplication.getInstance().trackEvent(category, action, label, value);} catch(Exception e){e.printStackTrace();}
+	}
+
 	public static void event(String eventName, Map<String, String> map){
 		try{ FlurryAgent.logEvent(eventName, map); } catch(Exception e){ e.printStackTrace(); }
 		//try{ MyApplication.getInstance().trackEvent("App Analytics", eventName, eventName, map);} catch(Exception e){e.printStackTrace();}

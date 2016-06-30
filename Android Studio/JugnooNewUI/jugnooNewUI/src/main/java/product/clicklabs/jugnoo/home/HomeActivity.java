@@ -796,6 +796,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(HomeActivity.this, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "get fare estimate");
             }
         });
 
@@ -811,6 +812,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show();
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "b_payment_mode");
             }
         });
 
@@ -842,6 +844,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 requestRideClick();
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "request ride l2");
             }
         });
 
@@ -1030,7 +1033,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 intentToShareActivity(false);
-                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "ride start", "send invites");
+                FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "send invites");
             }
         });
 
@@ -1092,6 +1095,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
 					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "add paytm wallet");
 				} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
 					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
                     FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "add paytm wallet");
@@ -1131,6 +1135,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 if(Data.assignedDriverInfo.getIsPooledRide() != 1) {
                     initDropLocationSearchUI(true);
+                    if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "enter destination");
+                    } else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Ride Start", "enter destination");
+                    }
+
                 }
             }
         });
@@ -1996,7 +2006,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.put(KEY_LATITUDE, Data.pickupLatLng.latitude);
             map.put(KEY_LONGITUDE, Data.pickupLatLng.longitude);
             NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_REQUEST_RIDE, map);
-            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -7856,6 +7865,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 confirmedScreenOpened = true;
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
             } else{
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -7886,6 +7897,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 "+
+                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
         }
     }
 

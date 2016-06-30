@@ -158,6 +158,21 @@ public class MyApplication extends Application{
 		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
 	}
 
+	/**
+	 *
+	 * @param category
+	 * @param action
+	 * @param label
+	 * @param value
+	 */
+	public void trackEvent(String category, String action, String label, long value) {
+		Tracker t = getGoogleAnalyticsTracker();
+		t.enableAdvertisingIdCollection(true);
+		// Build and send an Event.
+		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+	}
+
+
 	/***
 	 * Tracking event
 	 *

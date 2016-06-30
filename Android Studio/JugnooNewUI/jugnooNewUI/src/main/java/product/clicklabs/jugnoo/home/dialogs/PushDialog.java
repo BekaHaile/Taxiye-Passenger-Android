@@ -16,7 +16,9 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -54,6 +56,7 @@ public class PushDialog {
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_push);
+				FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", String.valueOf(HomeActivity.passengerScreenMode));
 
 				RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
 				new ASSL(activity, relative, 1134, 720, false);
@@ -103,6 +106,7 @@ public class PushDialog {
 						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
 								Constants.EMPTY_JSON_OBJECT);
 						dialog.dismiss();
+						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				});
 

@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -47,7 +48,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
  * Created by Shankar on 1/8/16.
  */
 @SuppressLint("ValidFragment")
-public class RequestRideOptionsFragment extends Fragment {
+public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     private View rootView;
     private HomeActivity activity;
@@ -186,6 +187,7 @@ public class RequestRideOptionsFragment extends Fragment {
                 getFareDetailsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
@@ -201,6 +203,7 @@ public class RequestRideOptionsFragment extends Fragment {
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
                 getPromoCouponsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
