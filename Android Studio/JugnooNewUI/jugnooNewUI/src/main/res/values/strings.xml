@@ -281,6 +281,7 @@
 
 	<!-- Ride Summary New Strings -->
 	<string name="total_fare">TOTAL FARE</string>
+	<string name="total_fare_colon">TOTAL FARE: </string>
 	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">How was your ride ?</string>
@@ -297,6 +298,8 @@
 	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
+	<string name="two_hifen">--</string>
+	<string name="includes_priority_tip">Includes Priority Tip | Offer applicable to be applied at the end of the ride</string>
 
 
 	<!-- Add Places -->
@@ -880,6 +883,7 @@
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="base_fare_colon">Base Fare:</string>
+	<string name="fixed_fare_colon">Fixed Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
 	<string name="base_fare_rupee_format">BASE FARE : \u20B9<b>%s</b></string>
 
@@ -892,6 +896,7 @@
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
 	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9%s</string>
 	<string name="base_fare">Base Fare</string>
+	<string name="fixed_fare">Fixed Fare</string>
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
 	<string name="promotions">Promotions</string>
 	<string name="referrals">Referrals</string>
@@ -922,6 +927,8 @@
 	<string name="new_password_same_error">New Password is same as the old one</string>
 	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
 	<string name="add_emergency_contacts">Add Emergency Contacts</string>
+	<string name="tell_us_destination">Tell us your destination and check the total fare on next screen.</string>
+	<string name="you_cannot_change_location">You cannot change the drop location during ride.</string>
 
 	<string name="receipt">Receipt</string>
 	<string name="feedback">Feedback</string>

@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
@@ -31,6 +33,8 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
+import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
+import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
@@ -68,7 +72,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2;
+            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2, textViewMinFareMS;
     private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -122,7 +126,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
-        ((TextView) rootView.findViewById(R.id.textViewMinFareMS)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
+        textViewMinFareMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewMinFareMSValue = (TextView) rootView.findViewById(R.id.textViewMinFareMSValue);
         textViewMinFareMSValue.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewMaxPeople = (TextView) rootView.findViewById(R.id.textViewMaxPeople);
@@ -182,12 +187,16 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 getPaymentOptionDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
-
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
-                getFareDetailsDialog().show();
+                if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                    getPoolDestinationDialog().show();
+                } else{
+                    getFareDetailsDialog().show();
+                }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
+
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
@@ -234,16 +243,29 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void updatePoolInfoText(){
         try {
             for(Region region : Data.regions){
-                if(region.getRideType() == RideTypeValue.POOL.getOrdinal()){
+                if(region.getRideType() == RideTypeValue.POOL.getOrdinal() && (!getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
+                    relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
                     textViewPoolInfo1.setText(getRegionSelected().getOfferTexts().getText1());
                     textViewPoolInfo2.setText(getRegionSelected().getOfferTexts().getText2());
                     return;
+                } else{
+                    relativeLayoutPoolInfoBar.setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public void updateBottomMultipleView(int rideType){
+        if(rideType == RideTypeValue.POOL.getOrdinal()){
+            textVieGetFareEstimateMS.setVisibility(View.GONE);
+            textViewMinFareMS.setText(activity.getResources().getString(R.string.fixed_fare_colon));
+            textViewMinFareMSValue.setText(activity.getResources().getString(R.string.two_hifen));
+        } else{
+            textVieGetFareEstimateMS.setVisibility(View.VISIBLE);
+            textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
+        }
     }
 
 
@@ -366,8 +388,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
         textViewMinFareMSValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
                 , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-        textViewMaxPeople.setText(getResources().getString(R.string.max_people)+getRegionSelected().getMaxPeople());
+        textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
         updateFareFactorUI();
+        updateBottomMultipleView(getRegionSelected().getRideType());
     }
 
     public void updateFareFactorUI(){
@@ -396,23 +419,27 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
     public PromoCoupon getSelectedCoupon() {
+        initSelectedCoupon();
         return selectedCoupon;
     }
 
     public void setSelectedCoupon(int position) {
+        PromoCoupon promoCoupon;
         if (position > -1 && position < Data.promoCoupons.size()) {
-            selectedCoupon = Data.promoCoupons.get(position);
+            promoCoupon = Data.promoCoupons.get(position);
         } else {
-            selectedCoupon = noSelectionCoupon;
+            promoCoupon = noSelectionCoupon;
         }
-        displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+        if(displayAlertAndCheckForSelectedPaytmCoupon(promoCoupon)){
+            selectedCoupon = promoCoupon;
+        }
     }
 
     public void setSelectedCoupon(PromoCoupon promoCoupon){
         selectedCoupon = promoCoupon;
     }
 
-    private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
+    public boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
         try {
             if (isPaytmCoupon(promoCoupon)) {
                 if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
@@ -492,6 +519,27 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             });
         }
         return fareDetailsDialog;
+    }
+
+    private PoolDestinationDialog poolDestinaionDialog;
+    private PoolDestinationDialog getPoolDestinationDialog(){
+        if(poolDestinaionDialog == null){
+            poolDestinaionDialog = new PoolDestinationDialog(activity, new PoolDestinationDialog.Callback() {
+
+                @Override
+                public void onEnterDestination() {
+                    if(Data.dropLatLng != null){
+                        activity.openConfirmRequestView();
+                    } else{
+                        if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+                            activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                            activity.imageViewRideNowPoolCheck();
+                        }
+                    }
+                }
+            });
+        }
+        return poolDestinaionDialog;
     }
 
     public PaymentOptionDialog paymentOptionDialog;

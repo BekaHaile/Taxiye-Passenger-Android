@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:layout_margin="40px"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_menu_item_selector_tlrr">
+
+            <ImageView
+                android:layout_width="550px"
+                android:layout_height="177px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30px"
+                android:src="@drawable/destination"
+                android:tag="mwar"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_color"
+            />
+
+        <TextView
+            android:id="@+id/textViewDestination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="46px"
+            android:layout_marginBottom="46px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:gravity="center"
+            android:text="@string/tell_us_destination"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            />
+
+        <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="46px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:gravity="center"
+            android:text="@string/you_cannot_change_location"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            />
+
+        <Button
+            android:id="@+id/buttonEnterDestination"
+            style="@style/ButtonTheme"
+            android:layout_marginBottom="40px"
+            android:text="@string/assigning_state_edit_text_hint"/>
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        style="@style/cross_popup"
+        />
+
+
+</RelativeLayout>

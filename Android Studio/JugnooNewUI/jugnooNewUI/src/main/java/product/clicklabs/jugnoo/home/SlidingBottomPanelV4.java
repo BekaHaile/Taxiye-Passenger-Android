@@ -51,16 +51,22 @@ public class SlidingBottomPanelV4 {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                if(activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
+                        && slideOffset < 1f){
+                    activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onPanelExpanded(View panel) {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
+                activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
                 imageViewExtraForSliding.setVisibility(View.GONE);
+                activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
             }
 
             @Override

@@ -138,6 +138,7 @@
     <dimen name="text_size_22">22px</dimen>
     <dimen name="text_size_20">20px</dimen>
     <dimen name="text_size_18">18px</dimen>
+    <dimen name="text_size_15">15px</dimen>
 
 
 

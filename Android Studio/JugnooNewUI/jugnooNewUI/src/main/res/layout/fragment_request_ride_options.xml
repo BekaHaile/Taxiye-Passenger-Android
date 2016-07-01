@@ -184,11 +184,16 @@
             android:layout_below="@+id/recyclerViewVehicles"
             android:src="@color/text_color_light" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:layout_below="@+id/recyclerViewVehicles"
+            android:gravity="center_vertical">
+
         <LinearLayout
             android:id="@+id/linearLayoutOptionsMultipleSupply"
             android:layout_width="match_parent"
-            android:layout_height="200px"
-            android:layout_below="@+id/recyclerViewVehicles"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="20px"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
@@ -296,11 +301,13 @@
                 android:gravity="center"
                 android:text="@string/get_fare_estimate"
                 android:textAllCaps="true"
+                android:visibility="visible"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_26" />
 
         </LinearLayout>
 
+        <!-- Surge view circle -->
         <RelativeLayout
             android:id="@+id/relativeLayoutPriorityTipMS"
             android:layout_width="94px"
@@ -308,7 +315,7 @@
             android:layout_alignTop="@+id/linearLayoutOptionsMultipleSupply"
             android:layout_centerHorizontal="true"
             android:visibility="visible"
-            android:layout_marginTop="0px"
+            android:layout_marginTop="-10px"
             android:background="@drawable/circle_surge_price"
             android:tag="mwar">
 
@@ -344,6 +351,8 @@
             android:text="MAX PEOPLE: 3"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_24" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="@drawable/white_alpha_gradient_up"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <Button
         android:id="@+id/confirmMyLocationBtn"
@@ -20,11 +19,17 @@
         android:visibility="visible"
         />
 
+    <RelativeLayout
+        android:id="@+id/relativeLayoutConfirmBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/confirmMyLocationBtn"
+        android:background="@drawable/white_alpha_gradient_up">
+
     <LinearLayout
         android:id="@+id/linearLayoutConfirmOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/confirmMyLocationBtn"
         android:layout_marginBottom="30px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
@@ -123,7 +128,46 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_26"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutTotalFare"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_marginTop="-1dp"
+            android:gravity="center"
+            android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector">
+
+            <TextView
+            android:id="@+id/textViewTotalFare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/total_fare_colon"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_26"
             android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/textViewIncludes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_below="@+id/textViewTotalFare"
+                android:text="@string/includes_priority_tip"
+                android:textAllCaps="true"
+                android:layout_marginTop="7px"
+                android:paddingRight="5px"
+                android:paddingLeft="5px"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_15"
+                android:visibility="visible"/>
+
+
+        </RelativeLayout>
+
+
 
 
     </LinearLayout>
@@ -135,6 +179,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30px"
         android:text="@string/confirm_request"/>
-
+    </RelativeLayout>
 
 </RelativeLayout>
