@@ -27,7 +27,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="80px"
-                android:background="@drawable/dropshadow_in_menu_item_selector_color"
+                android:background="@drawable/bg_menu_item_selector_color_r"
                 android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
 
@@ -77,7 +77,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="20px"
-                android:background="@drawable/dropshadow_in_white"
+                android:background="@drawable/background_white_rounded_bordered"
                 android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
 

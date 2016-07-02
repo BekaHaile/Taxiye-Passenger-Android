@@ -156,6 +156,7 @@ import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
+import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
@@ -1691,7 +1692,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 
                     dropLocationSet = true;
-                    relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+                    relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                     imageViewDropCross.setVisibility(View.VISIBLE);
 
                     /*translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
@@ -1740,7 +1741,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = ((int)(ASSL.Yscale()*100f));
+                params.topMargin = ((int)(ASSL.Yscale()*98f));
                 mView.setLayoutParams(params);
                 if(callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
@@ -1770,9 +1771,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (viewExchange) {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_white);
+                    mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1837,9 +1838,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (viewExchange) {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_white);
+                    mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1864,13 +1865,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewDestSearch.setText("");
             imageViewDropCross.setVisibility(View.GONE);
 
-            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
             relativeLayoutDestSearchBar.clearAnimation();
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDestSearchBar.getLayoutParams();
             params.topMargin = (int) (ASSL.Yscale() * 80f);
             relativeLayoutDestSearchBar.setLayoutParams(params);
 
-            relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+            relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
             relativeLayoutInitialSearchBar.clearAnimation();
             RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutInitialSearchBar.getLayoutParams();
             params1.topMargin = (int) (ASSL.Yscale() * 20f);
@@ -5346,7 +5347,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                         if (distance > MAP_PAN_DISTANCE_CHECK) {
                             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "different pickup location popup");
-                            textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
+                            textMessage.setText("The pickup location you have set is different from your current location. Are you sure this is your pickup location?");
                             dialog.show();
                         } else {
                             if (getFilteredDrivers() == 0) {
@@ -7315,7 +7316,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 Data.dropLatLng = searchResult.getLatLng();
                 dropLocationSet = true;
-                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 imageViewDropCross.setVisibility(View.VISIBLE);
 
                 // Save Last 3 Destination...
@@ -7325,14 +7326,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 switchPassengerScreen(passengerScreenMode);
 
-                /*lastDestination.add(searchResult);
-                lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
-                if(lastDestination.size() > 3){
-                    lastDestination.remove(3);
-                }
-                Log.v("size of last Destination", "---> " + lastDestination.size());
-                String tempDest = new Gson().toJson(lastDestination);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);*/
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
@@ -7870,7 +7863,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.startAnimation(shake);
                     shakeAnim++;
                     if(shakeAnim > 3){
-                        DialogPopup.alertPopup(HomeActivity.this, "", "Please fill the destination first.");
+                        new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
+                            @Override
+                            public void onEnterDestination() {
+
+                            }
+                        }).show();
                     }
                 }
             }

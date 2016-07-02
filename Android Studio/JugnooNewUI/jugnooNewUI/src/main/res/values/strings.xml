@@ -63,7 +63,8 @@
 	<string name="refresh">REFRESH</string>
 	
 	<string name="ok">OK</string>
-	
+	<string name="okay">OKAY</string>
+
 	<string name="first_name">First Name</string>
 	<string name="last_name">Last Name</string>
 	<string name="phone_number">Phone Number</string>
@@ -927,8 +928,9 @@
 	<string name="new_password_same_error">New Password is same as the old one</string>
 	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
 	<string name="add_emergency_contacts">Add Emergency Contacts</string>
-	<string name="tell_us_destination">Tell us your destination and check the total fare on next screen.</string>
-	<string name="you_cannot_change_location">You cannot change the drop location during ride.</string>
+	<string name="pool_rides_offer_guaranteed_fares">Pool rides offer guaranteed fares. Check your fare on next screen before confirming the ride</string>
+	<string name="please_provide_pickup_and_dest">Please provide pickup and destination location to generate your guaranteed fare.</string>
+	<string name="you_will_not_change_dest">* You will not be able to change destination during the ride.</string>
 
 	<string name="receipt">Receipt</string>
 	<string name="feedback">Feedback</string>
