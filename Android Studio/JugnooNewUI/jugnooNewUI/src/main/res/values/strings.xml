@@ -936,6 +936,10 @@
 	<string name="max_people">MAX PEOPLE:</string>
 	<string name="fares_updated">Fares updated try again</string>
 	<string name="no_current_offers">No Current Offers</string>
+	<string name="mobikwik_wallet">MobiKwik Wallet</string>
+	<string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
+	<string name="paytm_colon">Paytm:</string>
+	<string name="mobikwik_colon">MobiKwik:</string>
 
 
 </resources>

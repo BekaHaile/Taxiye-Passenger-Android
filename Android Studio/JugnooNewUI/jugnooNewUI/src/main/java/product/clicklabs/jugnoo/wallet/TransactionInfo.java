@@ -7,8 +7,10 @@ public class TransactionInfo {
 	public String transactionText;
 	public double amount;
 	public int paytm;
+	private int mobikwik;
 	
-	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText, double amount, int paytm){
+	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
+						   double amount, int paytm, int mobikwik){
 		this.transactionId = transactionId;
 		this.transactionType = transactionType;
 		this.time = time;
@@ -16,6 +18,7 @@ public class TransactionInfo {
 		this.transactionText = transactionText;
 		this.amount = amount;
 		this.paytm = paytm;
+		this.mobikwik = mobikwik;
 	}
 	
 	@Override
@@ -31,5 +34,8 @@ public class TransactionInfo {
 			return false;
 		}
 	}
-	
+
+	public int getMobikwik() {
+		return mobikwik;
+	}
 }

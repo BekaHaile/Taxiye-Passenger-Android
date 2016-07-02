@@ -1,18 +1,17 @@
-package product.clicklabs.jugnoo.wallet;
+package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,12 +23,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.TransactionType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -41,6 +40,9 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.TransactionInfo;
+import product.clicklabs.jugnoo.wallet.adapters.WalletTransactionsAdapter;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -57,10 +59,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	TextView textViewTitle;
 
 	//Transactions List vars
-	ListView listViewTransactions;
-	TransactionListAdapter transactionListAdapter;
-	RelativeLayout relativeLayoutShowMore;
-	TextView textViewShowMore;
+	RecyclerView recyclerViewWalletTransactions;
+	WalletTransactionsAdapter walletTransactionsAdapter;
 
 	LinearLayout linearLayoutNoItems;
 	
@@ -101,27 +101,28 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		new ASSL(paymentActivity, relative, 1134, 720, false);
-		
-		
+
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 
-		listViewTransactions = (ListView) rootView.findViewById(R.id.listViewTransactions);
-
-		LinearLayout viewF = (LinearLayout) paymentActivity.getLayoutInflater().inflate(R.layout.list_item_show_more, null);
-		listViewTransactions.addFooterView(viewF);
-		viewF.setLayoutParams(new ListView.LayoutParams(720, LayoutParams.WRAP_CONTENT));
-        ASSL.DoMagic(viewF);
-		relativeLayoutShowMore = (RelativeLayout) viewF.findViewById(R.id.relativeLayoutShowMore);
-		textViewShowMore = (TextView) viewF.findViewById(R.id.textViewShowMore); textViewShowMore.setTypeface(Fonts.mavenRegular(paymentActivity));
-		relativeLayoutShowMore.setVisibility(View.GONE);
+		recyclerViewWalletTransactions = (RecyclerView) rootView.findViewById(R.id.recyclerViewWalletTransactions);
+		recyclerViewWalletTransactions.setLayoutManager(new LinearLayoutManager(paymentActivity));
+		recyclerViewWalletTransactions.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewWalletTransactions.setHasFixedSize(false);
 
 		linearLayoutNoItems = (LinearLayout) rootView.findViewById(R.id.linearLayoutNoItems);
 		((TextView)rootView.findViewById(R.id.textViewNoItems)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		linearLayoutNoItems.setVisibility(View.GONE);
-		
-		transactionListAdapter = new TransactionListAdapter(paymentActivity);
-		listViewTransactions.setAdapter(transactionListAdapter);
+
+		walletTransactionsAdapter = new WalletTransactionsAdapter(paymentActivity, transactionInfoList,
+				totalTransactions, new WalletTransactionsAdapter.Callback() {
+			@Override
+			public void onShowMoreClick() {
+				getTransactionInfoAsync(paymentActivity);
+				FlurryEventLogger.event(RECENT_TRANSACTION_LOOK_UP);
+			}
+		});
+		recyclerViewWalletTransactions.setAdapter(walletTransactionsAdapter);
 
 		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
 		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
@@ -136,17 +137,6 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
             }
         });
 
-
-		
-		relativeLayoutShowMore.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				getTransactionInfoAsync(paymentActivity);
-                FlurryEventLogger.event(RECENT_TRANSACTION_LOOK_UP);
-			}
-		});
-		
 
 		
 		jugnooBalance = 0;
@@ -190,121 +180,115 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 					}, false, false);
 			
 			transactionInfoList.clear();
-			transactionListAdapter.notifyDataSetChanged();
-			relativeLayoutShowMore.setVisibility(View.GONE);
+			walletTransactionsAdapter.notifyList(totalTransactions);
 			linearLayoutNoItems.setVisibility(View.GONE);
-		}
-		else{
+		} else{
 			if(transactionInfoList.size() == 0){
 				linearLayoutNoItems.setVisibility(View.VISIBLE);
-				relativeLayoutShowMore.setVisibility(View.GONE);
-			}
-			else{
+			} else{
 				linearLayoutNoItems.setVisibility(View.GONE);
-				relativeLayoutShowMore.setVisibility(View.VISIBLE);
 			}
-			transactionListAdapter.notifyDataSetChanged();
+			walletTransactionsAdapter.notifyList(totalTransactions);
 		}
 	}
 	
 	
-	class ViewHolderTransaction {
-		TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime, textViewTransactionType, textViewTransactionMode;
-		LinearLayout relative;
-		int id;
-	}
-
-	class TransactionListAdapter extends BaseAdapter {
-		LayoutInflater mInflater;
-		ViewHolderTransaction holder;
-		Context context;
-		public TransactionListAdapter(Context context) {
-			this.context = context;
-			this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		}
-
-		@Override
-		public int getCount() {
-			return transactionInfoList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				holder = new ViewHolderTransaction();
-				convertView = mInflater.inflate(R.layout.list_item_trans_naw, null);
-				
-				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenRegular(context));
-				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context));
-				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenRegular(context));
-				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenRegular(context));
-				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenRegular(context));
-				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
-				
-				holder.relative.setTag(holder);
-				
-				holder.relative.setLayoutParams(new ListView.LayoutParams(720, 156));
-				ASSL.DoMagic(holder.relative);
-				
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolderTransaction) convertView.getTag();
-			}
-			
-			holder.id = position;
-			
-			TransactionInfo transactionInfo = transactionInfoList.get(position);
-			
-			holder.textViewTransactionDate.setText(transactionInfo.date);
-
-			holder.textViewTransactionAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
-			holder.textViewTransactionTime.setText(transactionInfo.time);
-			holder.textViewTransactionType.setText(transactionInfo.transactionText);
-			
-			if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
-				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.green_transaction_type));
-			}
-			else{
-				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.grey_dark));
-			}
-
-			if(transactionInfo.paytm == 1){
-				holder.textViewTransactionMode.setVisibility(View.VISIBLE);
-			}
-			else{
-				holder.textViewTransactionMode.setVisibility(View.GONE);
-			}
-			
-			return convertView;
-		}
-		
-		@Override
-		public void notifyDataSetChanged() {
-			super.notifyDataSetChanged();
-			if(totalTransactions > transactionInfoList.size()){
-				relativeLayoutShowMore.setVisibility(View.VISIBLE);
-			}
-			else{
-				relativeLayoutShowMore.setVisibility(View.GONE);
-			}
-		}
-
-	}
+//	class ViewHolderTransaction {
+//		TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime, textViewTransactionType, textViewTransactionMode;
+//		LinearLayout relative;
+//		int id;
+//	}
+//
+//	class TransactionListAdapter extends BaseAdapter {
+//		LayoutInflater mInflater;
+//		ViewHolderTransaction holder;
+//		Context context;
+//		public TransactionListAdapter(Context context) {
+//			this.context = context;
+//			this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//		}
+//
+//		@Override
+//		public int getCount() {
+//			return transactionInfoList.size();
+//		}
+//
+//		@Override
+//		public Object getItem(int position) {
+//			return position;
+//		}
+//
+//		@Override
+//		public long getItemId(int position) {
+//			return position;
+//		}
+//
+//		@Override
+//		public View getView(final int position, View convertView, ViewGroup parent) {
+//			if (convertView == null) {
+//				holder = new ViewHolderTransaction();
+//				convertView = mInflater.inflate(R.layout.list_item_wallet_transactions, null);
+//
+//				holder.textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); holder.textViewTransactionDate.setTypeface(Fonts.mavenRegular(context));
+//				holder.textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); holder.textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context));
+//				holder.textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); holder.textViewTransactionTime.setTypeface(Fonts.mavenRegular(context));
+//				holder.textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); holder.textViewTransactionType.setTypeface(Fonts.mavenRegular(context));
+//				holder.textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); holder.textViewTransactionMode.setTypeface(Fonts.mavenRegular(context));
+//				holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
+//
+//				holder.relative.setTag(holder);
+//
+//				holder.relative.setLayoutParams(new ListView.LayoutParams(720, 156));
+//				ASSL.DoMagic(holder.relative);
+//
+//				convertView.setTag(holder);
+//			} else {
+//				holder = (ViewHolderTransaction) convertView.getTag();
+//			}
+//
+//			holder.id = position;
+//
+//			TransactionInfo transactionInfo = transactionInfoList.get(position);
+//
+//			holder.textViewTransactionDate.setText(transactionInfo.date);
+//
+//			holder.textViewTransactionAmount.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
+//			holder.textViewTransactionTime.setText(transactionInfo.time);
+//			holder.textViewTransactionType.setText(transactionInfo.transactionText);
+//
+//			if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
+//				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.green_transaction_type));
+//			}
+//			else{
+//				holder.textViewTransactionType.setTextColor(getResources().getColor(R.color.grey_dark));
+//			}
+//
+//			if(transactionInfo.paytm == 1){
+//				holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+//			}
+//			else{
+//				holder.textViewTransactionMode.setVisibility(View.GONE);
+//			}
+//
+//			return convertView;
+//		}
+//
+//		@Override
+//		public void notifyDataSetChanged() {
+//			super.notifyDataSetChanged();
+//			if(totalTransactions > transactionInfoList.size()){
+//				relativeLayoutShowMore.setVisibility(View.VISIBLE);
+//			}
+//			else{
+//				relativeLayoutShowMore.setVisibility(View.GONE);
+//			}
+//		}
+//
+//	}
 
 	
 	
 	public void getTransactionInfoAsync(final Activity activity) {
-		relativeLayoutShowMore.setVisibility(View.GONE);
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			imageViewJugnooAnimation.setVisibility(View.VISIBLE);
 			jugnooAnimation.start();
@@ -363,6 +347,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 										JSONObject jTransactionI = jTransactions.getJSONObject(i);
 
 										int paytm = jTransactionI.optInt("paytm", 0);
+										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 
 										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
 												jTransactionI.getInt("txn_type"),
@@ -370,7 +355,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 												jTransactionI.getString("txn_date"),
 												jTransactionI.getString("txn_text"),
 												jTransactionI.getDouble("amount"),
-												paytm));
+												paytm, mobikwik));
 									}
 
 									if (Data.userData != null) {

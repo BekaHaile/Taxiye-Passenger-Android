@@ -237,6 +237,9 @@ public class JSONParser implements Constants {
         int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
         int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
 
+        int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
+        double mobikwikBalance = userData.optDouble(KEY_MOBIKWIK_BALANCE, 0d);
+
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable, paytmEnabled,
@@ -249,7 +252,8 @@ public class JSONParser implements Constants {
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
-                inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable);
+                inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
+                mobikwikEnabled, mobikwikBalance);
 
     }
 

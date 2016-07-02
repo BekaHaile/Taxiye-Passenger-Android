@@ -9,7 +9,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
 	public int emailVerificationStatus;
-	private double jugnooBalance, paytmBalance, totalWalletBalance;
+	private double jugnooBalance, paytmBalance;
 	public int numCouponsAvaliable;
 	public double fareFactor;
 	public int showJugnooJeanie;
@@ -44,6 +44,9 @@ public class UserData {
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink;
 	private double driverFareFactor;
 
+	private int mobikwikEnabled;
+	private double mobikwikBalance;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
 					String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
@@ -58,7 +61,8 @@ public class UserData {
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
-					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable){
+					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
+					int mobikwikEnabled, double mobikwikBalance){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -88,11 +92,9 @@ public class UserData {
 
 		if(1 == this.paytmEnabled) {
 			this.paytmStatus = "";
-		}
-		else{
+		} else{
 			this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
 		}
-		setTotalWalletBalance();
 
 		this.branchDesktopUrl = branchDesktopUrl;
 		this.branchAndroidUrl = branchAndroidUrl;
@@ -138,6 +140,9 @@ public class UserData {
 		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
 
 		checkUserImage();
+
+		this.mobikwikEnabled = mobikwikEnabled;
+		this.mobikwikBalance = mobikwikBalance;
 	}
 
 	private void checkUserImage(){
@@ -154,7 +159,6 @@ public class UserData {
 
 	public void setJugnooBalance(double jugnooBalance) {
 		this.jugnooBalance = jugnooBalance;
-		setTotalWalletBalance();
 	}
 
 	public double getPaytmBalance(){
@@ -162,9 +166,9 @@ public class UserData {
 	}
 
 	public String getPaytmBalanceStr(){
-		if(this.paytmError == 1){
+		if(this.paytmError == 1 || getPaytmStatus().equalsIgnoreCase("")){
 			return "--";
-		} else{
+		} else {
 			return Utils.getMoneyDecimalFormat().format(getPaytmBalance());
 		}
 	}
@@ -179,15 +183,17 @@ public class UserData {
 
 	public void setPaytmBalance(double paytmBalance) {
 		this.paytmBalance = paytmBalance;
-		setTotalWalletBalance();
 	}
 
 	public double getTotalWalletBalance() {
-		return totalWalletBalance;
-	}
-
-	private void setTotalWalletBalance() {
-		this.totalWalletBalance = this.jugnooBalance + this.paytmBalance;
+		double walletTotal = 0;
+		if(paytmEnabled == 1){
+			walletTotal = walletTotal + paytmBalance;
+		}
+		if(mobikwikEnabled == 1){
+			walletTotal = walletTotal + mobikwikBalance;
+		}
+		return jugnooBalance + walletTotal;
 	}
 
 	public String getPaytmStatus() {
@@ -263,31 +269,21 @@ public class UserData {
 
 
 	public int getPaytmBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.theme_green_color);
-		if(getPaytmBalance() < 0){
-			color = context.getResources().getColor(R.color.theme_red_color);
+		if(getPaytmBalance() < 0 || getPaytmError() == 1){
+			return context.getResources().getColor(R.color.theme_red_color);
+		} else{
+			return context.getResources().getColor(R.color.theme_green_color);
 		}
-		if(getPaytmError() == 1){
-			color = context.getResources().getColor(R.color.theme_red_color);
-		}
-		return color;
 	}
 
 	public int getJugnooBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.theme_green_color);
 		if(getJugnooBalance() < 0){
-			color = context.getResources().getColor(R.color.theme_red_color);
+			return context.getResources().getColor(R.color.theme_red_color);
+		} else{
+			return context.getResources().getColor(R.color.theme_green_color);
 		}
-		return color;
 	}
 
-	public int getTotalBalanceColor(Context context){
-		int color = context.getResources().getColor(R.color.theme_green_color);
-		if(getTotalWalletBalance() < 0){
-			color = context.getResources().getColor(R.color.theme_red_color);
-		}
-		return color;
-	}
 
 
 	public String getInAppSupportPanelVersion() {
@@ -544,5 +540,37 @@ public class UserData {
 
 	public void setConfirmScreenFareEstimateEnable(String confirmScreenFareEstimateEnable) {
 		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
+	}
+
+	public int getMobikwikEnabled() {
+		return mobikwikEnabled;
+	}
+
+	public void setMobikwikEnabled(int mobikwikEnabled) {
+		this.mobikwikEnabled = mobikwikEnabled;
+	}
+
+	public double getMobikwikBalance() {
+		return mobikwikBalance;
+	}
+
+	public String getMobikwikBalanceStr(){
+		if(mobikwikEnabled != 1 || mobikwikBalance < 0){
+			return "--";
+		} else {
+			return Utils.getMoneyDecimalFormat().format(mobikwikBalance);
+		}
+	}
+
+	public void setMobikwikBalance(double mobikwikBalance) {
+		this.mobikwikBalance = mobikwikBalance;
+	}
+
+	public int getMobikwikBalanceColor(Context context){
+		if(getMobikwikBalance() < 0){
+			return context.getResources().getColor(R.color.theme_red_color);
+		} else{
+			return context.getResources().getColor(R.color.theme_green_color);
+		}
 	}
 }

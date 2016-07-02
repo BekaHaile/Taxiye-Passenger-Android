@@ -311,6 +311,7 @@ public interface Constants {
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
 
 
-
-
+	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
+	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
+	String KEY_MOBIKWIK = "mobikwik";
 }

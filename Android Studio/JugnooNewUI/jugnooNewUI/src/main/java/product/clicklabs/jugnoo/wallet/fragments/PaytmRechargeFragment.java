@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.wallet;
+package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
@@ -49,6 +49,8 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.PaytmRechargeWebViewActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

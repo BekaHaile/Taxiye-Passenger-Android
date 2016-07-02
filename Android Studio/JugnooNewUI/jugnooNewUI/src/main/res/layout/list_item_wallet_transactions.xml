@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="6px"
-                android:text="Paytm:"
+                android:text="@string/mobikwik_colon"
                 android:textColor="@color/blue_light"
                 android:textSize="@dimen/text_size_28"
                 android:layout_toLeftOf="@+id/textViewTransactionType"

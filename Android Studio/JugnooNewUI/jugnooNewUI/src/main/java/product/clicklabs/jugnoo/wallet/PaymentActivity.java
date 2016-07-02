@@ -15,6 +15,9 @@ import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
+import product.clicklabs.jugnoo.wallet.fragments.PaytmRechargeFragment;
+import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
 
 
 /**
@@ -55,8 +58,8 @@ public class PaymentActivity extends BaseFragmentActivity{
 		}
 		else if(AddPaymentPath.ADD_PAYTM.getOrdinal() == addPaymentPathInt){
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
-					.addToBackStack(AddPaytmFragment.class.getName())
+					.add(R.id.fragLayout, new AddWalletFragment(), AddWalletFragment.class.getName())
+					.addToBackStack(AddWalletFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
 
@@ -76,26 +79,6 @@ public class PaymentActivity extends BaseFragmentActivity{
 			} else {
 				goBack();
 			}
-
-//			if(AddPaymentPath.WALLET.getOrdinal() == addPaymentPathInt){
-//				goBack();
-//			}
-//			else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
-//				Fragment fragment = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
-//				if (fragment != null && fragment.isVisible() && fragment instanceof PaytmRechargeFragment) {
-//					((PaytmRechargeFragment) fragment).performBackPressed();
-//				} else{
-//					goBack();
-//				}
-//			}
-//			else if(AddPaymentPath.ADD_PAYTM.getOrdinal() == addPaymentPathInt){
-//				Fragment fragment = getSupportFragmentManager().findFragmentByTag(AddPaytmFragment.class.getName());
-//				if (fragment != null && fragment.isVisible() && fragment instanceof AddPaytmFragment) {
-//					((AddPaytmFragment) fragment).performBackPressed();
-//				} else{
-//					goBack();
-//				}
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			super.onBackPressed();
@@ -190,10 +173,10 @@ public class PaymentActivity extends BaseFragmentActivity{
 					((PaytmRechargeFragment) currFrag).performBackPressed();
 				}
 			}
-			else if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())){
-				currFrag = getSupportFragmentManager().findFragmentByTag(AddPaytmFragment.class.getName());
+			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
+				currFrag = getSupportFragmentManager().findFragmentByTag(AddWalletFragment.class.getName());
 				if(currFrag != null){
-					((AddPaytmFragment) currFrag).performBackPressed();
+					((AddWalletFragment) currFrag).performBackPressed();
 				}
 			}
 			currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());

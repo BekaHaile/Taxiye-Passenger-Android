@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.wallet;
+package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -42,15 +42,16 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class AddPaytmFragment extends Fragment {
+public class AddWalletFragment extends Fragment {
 
-	private final String TAG = AddPaytmFragment.class.getSimpleName();
+	private final String TAG = AddWalletFragment.class.getSimpleName();
 
 	RelativeLayout relative;
 
@@ -274,7 +275,7 @@ public class AddPaytmFragment extends Fragment {
 	 */
 	public void performBackPressed() {
 		paymentActivity.getSupportFragmentManager()
-				.popBackStack(AddPaytmFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+				.popBackStack(AddWalletFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
 		if(AddPaymentPath.ADD_PAYTM.getOrdinal() == paymentActivity.addPaymentPathInt){
 			paymentActivity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -393,7 +394,7 @@ public class AddPaytmFragment extends Fragment {
 									Data.userData.paytmEnabled = 1;
 
 									Prefs.with(paymentActivity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-									paymentActivity.performGetBalanceSuccess(AddPaytmFragment.class.getName());
+									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
 							}
 
