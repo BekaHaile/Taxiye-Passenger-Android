@@ -118,7 +118,8 @@ public class SlidingBottomPanelV4 {
     public void updatePannelHeight(){
         try {
             for(Region region : Data.regions){
-                if(region.getRideType() == RideTypeValue.POOL.getOrdinal()){
+                if(region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
+                        (!region.getOfferTexts().getText1().equalsIgnoreCase(""))){
                     slidingUpPanelLayout.setPanelHeight((int) (195 * ASSL.Yscale()));
                     try {
                         getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.VISIBLE);

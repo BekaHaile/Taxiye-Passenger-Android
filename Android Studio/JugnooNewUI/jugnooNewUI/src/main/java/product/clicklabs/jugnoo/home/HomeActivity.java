@@ -6931,7 +6931,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (latLngBoundsBuilderPool != null) {
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 160)),
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 280)),
                                 MAP_ANIMATE_DURATION, null);
                     }
                 } catch (Exception e) {
