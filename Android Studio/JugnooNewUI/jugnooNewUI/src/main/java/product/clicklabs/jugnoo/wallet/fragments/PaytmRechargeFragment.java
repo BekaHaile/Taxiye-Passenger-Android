@@ -32,10 +32,10 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -107,18 +107,15 @@ public class PaytmRechargeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
-
-		Data.paytmPaymentState = PaytmPaymentState.INIT;
-
 		paymentActivity = (PaymentActivity) getActivity();
+
+		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
 
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		linearLayoutInner = (LinearLayout) rootView.findViewById(R.id.linearLayoutInner);
 
 		new ASSL(paymentActivity, relative, 1134, 720, false);
-
-//		setupUI(rootView.findViewById(R.id.relative));
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
@@ -372,7 +369,7 @@ public class PaytmRechargeFragment extends Fragment {
 		} else {
 			paymentActivity.getSupportFragmentManager()
 					.popBackStack(PaytmRechargeFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
+			if(PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal() == paymentActivity.paymentActivityPathInt){
 				paymentActivity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
@@ -526,7 +523,7 @@ public class PaytmRechargeFragment extends Fragment {
 	private int rechargeRequestCode = 1;
 
 	private void openWebView(String jsonData) {
-		Data.paytmPaymentState = PaytmPaymentState.INIT;
+		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
 		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
 		intent.putExtra(Constants.POST_DATA, jsonData);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -537,25 +534,22 @@ public class PaytmRechargeFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == rechargeRequestCode) {
-			if(resultCode == PaytmPaymentState.SUCCESS.getOrdinal()){
-				Data.paytmPaymentState = PaytmPaymentState.SUCCESS;
+			if(resultCode == WalletAddMoneyState.SUCCESS.getOrdinal()){
+				paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.SUCCESS);
 			}
-			else if (resultCode == PaytmPaymentState.FAILURE.getOrdinal()) {
-				Data.paytmPaymentState = PaytmPaymentState.FAILURE;
+			else if (resultCode == WalletAddMoneyState.FAILURE.getOrdinal()) {
+				paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.FAILURE);
 			}
 			else{
 				DialogPopup.dialogBanner(paymentActivity, "Transaction cancelled");
 			}
 
 			try{
-				if(Data.paytmPaymentState == PaytmPaymentState.SUCCESS) {
-					if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
-						HomeActivity.rechargedOnce = true;
-					}
+				if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.SUCCESS) {
 					DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
 					paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
 				}
-				else if(Data.paytmPaymentState == PaytmPaymentState.FAILURE){
+				else if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.FAILURE){
 					DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
 				}
 			} catch(Exception e){

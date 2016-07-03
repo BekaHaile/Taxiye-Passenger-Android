@@ -423,7 +423,7 @@
                     />
 
                 <Button
-                    android:id="@+id/buttonAddPaytmCash"
+                    android:id="@+id/buttonAddMoneyToWallet"
                     android:layout_width="359px"
                     android:layout_height="match_parent"
                     android:background="@color/menu_item_selector_color"

@@ -130,6 +130,7 @@ public interface FlurryEventNames {
 			RIDE_SUMMARY_CHECKED_LATER =	"Ride summary checked later",
 			CASH_SELECTED_WHEN_REQUESTING =	"cash selected when requesting",
 			PAYTM_SELECTED_WHEN_REQUESTING =	"Paytm selected when requesting",
+                    MOBIKWIK_SELECTED_WHEN_REQUESTING =	"Mobikwik selected when requesting",
 
 	GENERIC_FACEBOOK = "Generic Facebook share",
 	GENERIC_EMAIL = "Generic Email share",

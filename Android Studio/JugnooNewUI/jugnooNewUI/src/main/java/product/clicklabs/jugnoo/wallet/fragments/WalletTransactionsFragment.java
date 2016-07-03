@@ -41,7 +41,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.TransactionInfo;
+import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import product.clicklabs.jugnoo.wallet.adapters.WalletTransactionsAdapter;
 import retrofit.Callback;
 import retrofit.RetrofitError;

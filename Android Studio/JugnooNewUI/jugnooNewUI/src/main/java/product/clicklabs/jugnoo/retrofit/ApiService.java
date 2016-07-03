@@ -411,4 +411,15 @@ public interface ApiService {
     void cancelCampaign(@FieldMap Map<String, String> params,
                        Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/mobikwik/request_otp")
+    void mobikwikRequestOtp(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/login_with_otp")
+    void mobikwikLoginWithOtp(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+
 }

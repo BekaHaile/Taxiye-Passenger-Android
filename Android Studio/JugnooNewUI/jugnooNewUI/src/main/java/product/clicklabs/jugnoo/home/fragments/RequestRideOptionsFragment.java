@@ -24,9 +24,8 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -34,7 +33,6 @@ import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
-import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
@@ -479,7 +477,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void openPaymentActivityInCaseOfPaytmNotAdded() {
         if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
             Intent intent = new Intent(activity, PaymentActivity.class);
-            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
             activity.startActivity(intent);
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);

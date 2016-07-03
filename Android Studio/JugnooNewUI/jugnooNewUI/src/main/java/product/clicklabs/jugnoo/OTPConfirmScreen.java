@@ -47,10 +47,8 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -149,7 +147,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
-		imageViewPaytmIcon = (ImageView) findViewById(R.id.imageViewPaytmIcon);
+		imageViewPaytmIcon = (ImageView) findViewById(R.id.imageViewWalletIcon);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenRegular(this));

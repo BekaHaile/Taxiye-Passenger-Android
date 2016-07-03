@@ -543,7 +543,11 @@ public class UserData {
 	}
 
 	public int getMobikwikEnabled() {
-		return mobikwikEnabled;
+		if(mobikwikBalance > -1) {
+			return mobikwikEnabled;
+		} else{
+			return 0;
+		}
 	}
 
 	public void setMobikwikEnabled(int mobikwikEnabled) {

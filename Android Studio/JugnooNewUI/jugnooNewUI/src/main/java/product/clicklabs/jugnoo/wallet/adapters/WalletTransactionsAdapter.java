@@ -12,11 +12,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.TransactionType;
+import product.clicklabs.jugnoo.wallet.models.TransactionType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.TransactionInfo;
+import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 
 
 public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

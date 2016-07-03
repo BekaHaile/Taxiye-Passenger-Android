@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.WalletType;
 
 
 public class WalletFragment extends Fragment implements FlurryEventNames {
@@ -151,7 +152,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					} else {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new AddWalletFragment(), AddWalletFragment.class.getName())
+								.add(R.id.fragLayout, new AddWalletFragment(WalletType.PAYTM.getOrdinal()), AddWalletFragment.class.getName())
 								.addToBackStack(AddWalletFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
@@ -167,7 +168,30 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		relativeLayoutMobikwik.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
+					if(Data.userData.getMobikwikEnabled() == 1) {
+						paymentActivity.getSupportFragmentManager().beginTransaction()
+								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+								.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
+								.addToBackStack(PaytmRechargeFragment.class.getName())
+								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+								.commit();
+						FlurryEventLogger.event(PAYTM_WALLET_OPENED);
+						FlurryEventLogger.event(paymentActivity, CLICKS_ON_PAYTM_WALLET);
+					} else {
+						paymentActivity.getSupportFragmentManager().beginTransaction()
+								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+								.add(R.id.fragLayout, new AddWalletFragment(WalletType.MOBIKWIK.getOrdinal()), AddWalletFragment.class.getName())
+								.addToBackStack(AddWalletFragment.class.getName())
+								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+								.commit();
+						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
+					}
+					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
+					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
+				}
 			}
 		});
 
@@ -219,7 +243,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
 						|| Data.userData.getPaytmStatus().equalsIgnoreCase("")){
-					textViewPaytmBalance.setText(getResources().getString(R.string.nl_paytm_wallet));
+					textViewPaytmBalance.setText(getResources().getString(R.string.paytm_wallet));
 					textViewPaytmBalanceValue.setVisibility(View.VISIBLE);
 					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources()
 							.getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
@@ -262,18 +286,5 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
         ASSL.closeActivity(relative);
         System.gc();
 	}
-
-
-    public void updateStatus(String status, String amountValue) {
-        try {
-			String payment = status;
-			if ("success".equalsIgnoreCase(payment)) {
-				String amount = amountValue;
-				new DialogPopup().dialogBanner(paymentActivity, "Payment successful, Added Rs. " + amount);
-			}
-		} catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
 }

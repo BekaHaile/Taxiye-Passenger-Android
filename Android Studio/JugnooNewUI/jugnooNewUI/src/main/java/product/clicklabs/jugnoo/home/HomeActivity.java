@@ -130,7 +130,7 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -203,6 +203,7 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.wallet.models.WalletType;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -287,7 +288,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
     RelativeLayout relativeLayoutDriverRating;
-    Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
+    Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
 	LinearLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue;
@@ -402,7 +403,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public boolean activityResumed = false;
-    public static boolean rechargedOnce = false, feedbackSkipped = false;
+    public static boolean feedbackSkipped = false;
 
     public ASSL assl;
 
@@ -473,7 +474,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
 
         activityResumed = false;
-        rechargedOnce = false;
         dropLocationSearched = false;
 
         loggedOut = false;
@@ -657,8 +657,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
-		buttonAddPaytmCash = (Button) findViewById(R.id.buttonAddPaytmCash);
-		buttonAddPaytmCash.setTypeface(Fonts.mavenRegular(this));
+		buttonAddMoneyToWallet = (Button) findViewById(R.id.buttonAddMoneyToWallet);
+		buttonAddMoneyToWallet.setTypeface(Fonts.mavenRegular(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
         buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
 
@@ -1084,28 +1084,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        buttonAddPaytmCash.setOnClickListener(new OnClickListener() {
+        buttonAddMoneyToWallet.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
-                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                    if(PaymentOption.PAYTM.getOrdinal() == Data.assignedDriverInfo.getPreferredPaymentMode()) {
+                        if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
+                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                        } else {
+                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                        }
+                        intent.putExtra(KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+                    }
+                    else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.assignedDriverInfo.getPreferredPaymentMode()) {
+                        if (Data.userData.getMobikwikEnabled() == 1) {
+                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                        } else {
+                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                        }
+                        intent.putExtra(KEY_WALLET_TYPE, WalletType.MOBIKWIK.getOrdinal());
+                    }
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+						FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+						FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "add paytm wallet");
+					} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+						FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
+						FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Ride Start", "add paytm wallet");
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                else{
-                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-                }
-                startActivity(intent);
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
-                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "add paytm wallet");
-				} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
-                    FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "add paytm wallet");
-				}
-			}
-		});
+            }
+        });
 
         buttonCallDriver.setOnClickListener(new OnClickListener() {
 
@@ -1616,7 +1630,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+		Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
@@ -2042,6 +2056,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
                         if(proceed) {
                             boolean callRequestRide = true;
+                            View.OnClickListener onClickListener = new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
+                                    if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
+                                        if (Data.userData.paytmEnabled == 1) {
+                                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                                        } else {
+                                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                                        }
+                                        intent.putExtra(KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+                                    }
+                                    else if (Data.pickupPaymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
+                                        if (Data.userData.getMobikwikEnabled() == 1) {
+                                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                                        } else {
+                                            intent.putExtra(KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                                        }
+                                        intent.putExtra(KEY_WALLET_TYPE, WalletType.MOBIKWIK.getOrdinal());
+                                    }
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                }
+                            };
+
                             if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
                                 if (Data.userData.getPaytmBalance() > 0) {
                                     callRequestRide = true;
@@ -2055,24 +2094,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     } else{
                                         DialogPopup.alertPopupWithListener(HomeActivity.this, "",
                                                 getResources().getString(R.string.paytm_no_cash),
-                                                new OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                                                        if(Data.userData.paytmEnabled == 1) {
-                                                            intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-                                                        } else {
-                                                            intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-                                                        }
-                                                        startActivity(intent);
-                                                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                                    }
-                                                });
+                                                onClickListener);
                                     }
                                 }
                                 FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
                                 FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "paytm");
-                            } else {
+                            }
+                            else if (Data.pickupPaymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
+                                if (Data.userData.getMobikwikBalance() > 0) {
+                                    callRequestRide = true;
+                                    if (Data.fareStructure != null && Data.userData.getMobikwikBalance() < Data.fareStructure.fixedFare) {
+                                        DialogPopup.dialogBanner(HomeActivity.this, getResources().getString(R.string.mobikwik_low_cash));
+                                    }
+                                } else {
+                                    callRequestRide = false;
+                                    if(Data.userData.getMobikwikBalance() < 0){
+                                        DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.mobikwik_error_select_cash));
+                                    } else{
+                                        DialogPopup.alertPopupWithListener(HomeActivity.this, "",
+                                                getResources().getString(R.string.mobikwik_no_cash),
+                                                onClickListener);
+                                    }
+                                }
+                                FlurryEventLogger.event(MOBIKWIK_SELECTED_WHEN_REQUESTING);
+                                FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "mobikwik");
+                            }
+                            else {
                                 FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
                                 FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "cash");
                                 callRequestRide = true;
@@ -2542,7 +2589,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
-                        buttonAddPaytmCash.setVisibility(View.GONE);
+                        buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
                         checkForGoogleLogoVisibilityInRide();
@@ -2608,7 +2655,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
-                        buttonAddPaytmCash.setVisibility(View.GONE);
+                        buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
                         checkForGoogleLogoVisibilityInRide();
@@ -2670,7 +2717,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 
                         buttonCancelRide.setVisibility(View.GONE);
-                        buttonAddPaytmCash.setVisibility(View.GONE);
+                        buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.VISIBLE);
                         updateInRideAddPaytmButtonText();
                         checkForGoogleLogoVisibilityInRide();
@@ -3055,14 +3102,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void updateInRideAddPaytmButtonText(){
 		try{
-            if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
-				buttonAddPaytmCash.setText(getResources().getString(R.string.add_paytm_cash));
-			}
-			else{
-				buttonAddPaytmCash.setText(getResources().getString(R.string.nl_add_paytm_wallet));
-			}
+            if(PaymentOption.PAYTM.getOrdinal() == Data.assignedDriverInfo.getPreferredPaymentMode()) {
+                if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
+                    buttonAddMoneyToWallet.setText(getResources().getString(R.string.add_paytm_cash));
+                } else {
+                    buttonAddMoneyToWallet.setText(getResources().getString(R.string.nl_add_paytm_wallet));
+                }
+            } else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.assignedDriverInfo.getPreferredPaymentMode()){
+                if (Data.userData.getMobikwikEnabled() == 1) {
+                    buttonAddMoneyToWallet.setText(getResources().getString(R.string.add_mobikwik_cash));
+                } else {
+                    buttonAddMoneyToWallet.setText(getResources().getString(R.string.add_mobikwik_wallet));
+                }
+            }
 		} catch(Exception e){
-			buttonAddPaytmCash.setText(getResources().getString(R.string.nl_add_paytm_wallet));
+			buttonAddMoneyToWallet.setText(getResources().getString(R.string.add_wallet));
 		}
 	}
 
@@ -6381,7 +6435,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             @Override
                             public void onClick(View v) {
-//                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
                                 HomeActivity.this.startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                             }
@@ -7000,7 +7053,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 });
 			}
-            long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+            long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
             long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
             if(lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
                 apiPaytmCheckBalance.getBalance(Data.userData.paytmEnabled, false);
@@ -7452,7 +7505,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onOk() {
                                 if(Data.userData != null) {
                                     Data.userData.setPaytmRechargeInfo(null);
-                                    Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME,
+                                    Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                             (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
                                     getPaytmBalance(HomeActivity.this);
                                 }

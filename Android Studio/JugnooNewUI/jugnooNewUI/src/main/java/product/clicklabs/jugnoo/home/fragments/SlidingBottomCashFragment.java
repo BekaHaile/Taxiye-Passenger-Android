@@ -15,7 +15,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -106,9 +106,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                     public void onClick(View v) {
                                         Intent intent = new Intent(activity, PaymentActivity.class);
                                         if(Data.userData.paytmEnabled == 1) {
-                                            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                                            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
                                         } else {
-                                            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                                            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
                                         }
                                         activity.startActivity(intent);
                                         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -159,7 +159,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
             if(Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
-                textViewPaytm.setText(activity.getResources().getString(R.string.nl_paytm_wallet));
+                textViewPaytm.setText(activity.getResources().getString(R.string.paytm_wallet));
             }
             else{
                 textViewPaytmValue.setVisibility(View.GONE);

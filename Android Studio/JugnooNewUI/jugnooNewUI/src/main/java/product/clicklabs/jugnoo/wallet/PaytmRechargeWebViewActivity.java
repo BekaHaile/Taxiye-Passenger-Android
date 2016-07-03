@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 import product.clicklabs.jugnoo.utils.Log;
 
 public class PaytmRechargeWebViewActivity extends FragmentActivity {
@@ -179,11 +179,11 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 			Log.e("url", "=" + url);
 			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
 				Intent returnIntent = new Intent();
-				setResult(PaytmPaymentState.SUCCESS.getOrdinal(), returnIntent);
+				setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
 				finish();
 			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
 				Intent returnIntent = new Intent();
-				setResult(PaytmPaymentState.FAILURE.getOrdinal(), returnIntent);
+				setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
 				finish();
 			}
 		} catch (Exception e) {

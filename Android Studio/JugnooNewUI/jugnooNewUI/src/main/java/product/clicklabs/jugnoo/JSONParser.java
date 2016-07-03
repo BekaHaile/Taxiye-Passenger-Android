@@ -1185,7 +1185,7 @@ public class JSONParser implements Constants {
 						Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
 						Data.userData.setPaytmBalance(0);
 					}
-					Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+					Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 				}
 			}
 		} catch (Exception e) {

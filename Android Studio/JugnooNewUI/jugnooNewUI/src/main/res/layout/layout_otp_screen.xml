@@ -30,7 +30,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageViewPaytmIcon"
+                    android:id="@+id/imageViewWalletIcon"
                     android:layout_marginTop="30px"
                     android:visibility="gone"
                     android:layout_width="121px"

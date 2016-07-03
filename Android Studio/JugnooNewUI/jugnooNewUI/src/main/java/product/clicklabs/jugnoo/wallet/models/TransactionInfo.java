@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.wallet;
+package product.clicklabs.jugnoo.wallet.models;
 
 public class TransactionInfo {
 	

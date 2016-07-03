@@ -70,7 +70,7 @@
                     android:id="@+id/textViewPaytm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/nl_paytm_wallet"
+                    android:text="@string/paytm_wallet"
                     android:layout_marginLeft="28px"
                     android:textSize="@dimen/text_size_34"
                     android:textColor="@color/text_color"/>

@@ -32,7 +32,7 @@
 
 
                 <ImageView
-                    android:id="@+id/imageViewPaytmIcon"
+                    android:id="@+id/imageViewWalletIcon"
                     android:layout_width="111px"
                     android:layout_height="35px"
                     android:src="@drawable/ic_paytm_big"

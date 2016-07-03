@@ -50,7 +50,7 @@ public interface Constants {
 	String KEY_FORGOT_LOGIN_EMAIL = "forgot_login_email";
 	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
 	String KEY_BACK_FROM_OTP = "back_from_otp";
-	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+	String KEY_PAYMENT_ACTIVITY_PATH = "paymentActivityPath";
 	String KEY_PAYMENT_RECHARGE_VALUE = "payment_recharge_value";
 
 	String POST_DATA = "post_data";
@@ -314,4 +314,8 @@ public interface Constants {
 	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
 	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
 	String KEY_MOBIKWIK = "mobikwik";
+
+	String KEY_BALANCE = "balance";
+	String KEY_WALLET_TYPE = "wallet_type";
+
 }

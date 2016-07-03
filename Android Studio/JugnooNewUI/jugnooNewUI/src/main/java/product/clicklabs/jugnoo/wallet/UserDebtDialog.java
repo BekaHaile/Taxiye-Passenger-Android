@@ -14,7 +14,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -67,20 +67,20 @@ public class UserDebtDialog {
 							}
 							else{
 								Intent intent = new Intent(activity, PaymentActivity.class);
-								intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+								intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
 								activity.startActivity(intent);
 								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 								FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
 							}
 						} else if(userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)){
 							Intent intent = new Intent(activity, PaymentActivity.class);
-							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+							intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
 							activity.startActivity(intent);
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
 						} else{
 							Intent intent = new Intent(activity, PaymentActivity.class);
-							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+							intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
 							activity.startActivity(intent);
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);

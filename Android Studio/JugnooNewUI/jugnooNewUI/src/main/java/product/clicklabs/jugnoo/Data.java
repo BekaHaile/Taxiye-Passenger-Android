@@ -17,7 +17,6 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -144,8 +143,6 @@ public class Data {
 	
 	public static LocationFetcher locationFetcher;
 
-	public static PaytmPaymentState paytmPaymentState;
-	
 
 	public static final String DEVICE_TYPE = "0";
 	public static String deviceToken = "", country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
@@ -267,7 +264,7 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
 			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACTS_ERROR);
-			Prefs.with(context).remove(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME);
+			Prefs.with(context).remove(SPLabels.CHECK_BALANCE_LAST_TIME);
 			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE);
 			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA);
 
