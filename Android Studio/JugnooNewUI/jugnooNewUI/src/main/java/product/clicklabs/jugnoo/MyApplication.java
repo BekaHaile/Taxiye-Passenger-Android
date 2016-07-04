@@ -20,6 +20,7 @@ import java.util.Map;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 
 /**
  * Created by socomo20 on 8/22/15.
@@ -213,5 +214,15 @@ public class MyApplication extends Application{
 
 
 	}
+
+
+	private WalletCore walletCore;
+	public WalletCore getWalletCore(){
+		if(walletCore == null){
+			walletCore = new WalletCore(this);
+		}
+		return walletCore;
+	}
+
 
 }

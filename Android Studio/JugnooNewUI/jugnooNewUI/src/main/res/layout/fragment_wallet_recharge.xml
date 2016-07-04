@@ -270,7 +270,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="200px"
                 android:background="@drawable/button_theme"
-                android:text="REMOVE WALLET"
+                android:text="@string/remove_wallet"
+                android:textAllCaps="true"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/button_text_size"
                 android:visibility="gone" />

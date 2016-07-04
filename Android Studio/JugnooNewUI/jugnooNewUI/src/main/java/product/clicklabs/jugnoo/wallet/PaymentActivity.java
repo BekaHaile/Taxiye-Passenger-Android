@@ -12,7 +12,7 @@ import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
-import product.clicklabs.jugnoo.wallet.fragments.PaytmRechargeFragment;
+import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
@@ -50,9 +50,10 @@ public class PaymentActivity extends BaseFragmentActivity{
 			if(getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)){
 				amountToPreFill = getIntent().getStringExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE);
 			}
+			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
-					.addToBackStack(PaytmRechargeFragment.class.getName())
+					.add(R.id.fragLayout, new WalletRechargeFragment(walletType), WalletRechargeFragment.class.getName())
+					.addToBackStack(WalletRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
 		else if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivityPathInt){
@@ -70,12 +71,12 @@ public class PaymentActivity extends BaseFragmentActivity{
     @Override
     public void onBackPressed() {
 		try {
-			Fragment fragment = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(WalletRechargeFragment.class.getName());
 			if (fragment != null
 					&& fragment.isVisible()
-					&& fragment instanceof PaytmRechargeFragment
-					&& ((PaytmRechargeFragment)fragment).getButtonRemoveWalletVisiblity() == View.VISIBLE) {
-				((PaytmRechargeFragment) fragment).performBackPressed();
+					&& fragment instanceof WalletRechargeFragment
+					&& ((WalletRechargeFragment)fragment).getButtonRemoveWalletVisiblity() == View.VISIBLE) {
+				((WalletRechargeFragment) fragment).performBackPressed();
 			} else {
 				goBack();
 			}
@@ -166,11 +167,11 @@ public class PaymentActivity extends BaseFragmentActivity{
 	public void performGetBalanceSuccess(String fragName){
 		try {
 			Fragment currFrag = null;
-			if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
-				currFrag = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+			if(fragName.equalsIgnoreCase(WalletRechargeFragment.class.getName())) {
+				currFrag = getSupportFragmentManager().findFragmentByTag(WalletRechargeFragment.class.getName());
 				if(currFrag != null){
-					((PaytmRechargeFragment) currFrag).onResume();
-					((PaytmRechargeFragment) currFrag).performBackPressed();
+					((WalletRechargeFragment) currFrag).onResume();
+					((WalletRechargeFragment) currFrag).performBackPressed();
 				}
 			}
 			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){

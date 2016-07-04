@@ -142,8 +142,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
-								.addToBackStack(PaytmRechargeFragment.class.getName())
+								.add(R.id.fragLayout, new WalletRechargeFragment(WalletType.PAYTM.getOrdinal()), WalletRechargeFragment.class.getName())
+								.addToBackStack(WalletRechargeFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 								.commit();
@@ -172,8 +172,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					if(Data.userData.getMobikwikEnabled() == 1) {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
-								.addToBackStack(PaytmRechargeFragment.class.getName())
+								.add(R.id.fragLayout, new WalletRechargeFragment(WalletType.MOBIKWIK.getOrdinal()), WalletRechargeFragment.class.getName())
+								.addToBackStack(WalletRechargeFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 								.commit();

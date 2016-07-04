@@ -412,7 +412,7 @@ public interface ApiService {
                        Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/mobikwik/request_otp")
+    @POST("/mobikwik/generate_otp")
     void mobikwikRequestOtp(@FieldMap Map<String, String> params,
                          Callback<SettleUserDebt> callback);
 
@@ -421,5 +421,14 @@ public interface ApiService {
     void mobikwikLoginWithOtp(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/mobikwik/delete_wallet")
+    void mobikwikDeleteWallet(@FieldMap Map<String, String> params,
+                          Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/add_money")
+    void mobikwikAddMoney(@FieldMap Map<String, String> params,
+                       Callback<SettleUserDebt> callback);
 
 }

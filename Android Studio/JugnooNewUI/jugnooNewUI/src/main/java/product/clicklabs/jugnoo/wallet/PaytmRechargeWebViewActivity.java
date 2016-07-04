@@ -7,7 +7,6 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -21,14 +20,22 @@ import android.widget.Toast;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
+import product.clicklabs.jugnoo.wallet.models.WalletType;
 
 public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
     private WebView webView;
     boolean cancelTransaction = false;
     private ProgressBar progressBar;
+    int walletType;
+
+    private final String PAYTM_SUCCESS_URL = "https://jugnoo.in/paytm/wallet/success.php";
+    private final String PAYTM_FAILURE_URL = "https://jugnoo.in/paytm/wallet/failure.php";
+
+    private final String MOBIKWIK_SUCCESS_URL = "https://jugnoo.in/mobikwik/wallet/success.php";
+    private final String MOBIKWIK_FAILURE_URL = "https://jugnoo.in/mobikwik/wallet/failure.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +60,29 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
 
-        webView.setWebChromeClient(new WebChromeClient() {});
+        webView.setWebChromeClient(new WebChromeClient() {
+        });
         webView.setWebViewClient(new MyAppWebViewClient());
 
-        String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
+        walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+
         try {
-			loadHTMLContent(postDataQuery);
-        } catch(Exception e) {
+            if(walletType == WalletType.PAYTM.getOrdinal()){
+				String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
+				try {
+					loadHTMLContent(postDataQuery);
+				} catch(Exception e) {
+					Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
+					loadHTMLContent(postDataQuery);
+				}
+			}
+			else if(walletType == WalletType.MOBIKWIK.getOrdinal()){
+				String url = getIntent().getStringExtra(Constants.KEY_URL);
+				webView.loadUrl(url);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
             Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
-			loadHTMLContent(postDataQuery);
         }
     }
 
@@ -75,25 +96,17 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
 	@Override
     public void onBackPressed() {
-        boolean disableBack = false;
-        if(cancelTransaction){
+        if (cancelTransaction) {
             cancelTransaction = false;
-			Intent returnIntent = new Intent();
-			setResult(-1, returnIntent);
-			finish();
+            Intent returnIntent = new Intent();
+            setResult(-1, returnIntent);
+            finish();
             return;
-        }
-        try {
-            Bundle bundle = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).metaData;
-            disableBack = bundle.containsKey("payu_disable_back") && bundle.getBoolean("payu_disable_back");
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if(!disableBack) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);;
+        } else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setCancelable(false);
-            alertDialog.setMessage("Do you really want to cancel the transaction ?");
-            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            alertDialog.setMessage(getResources().getString(R.string.wallet_abort_transaction_alert));
+            alertDialog.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     cancelTransaction = true;
@@ -101,7 +114,7 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
                     onBackPressed();
                 }
             });
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            alertDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -139,21 +152,9 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-
             if (webView.getProgress() > 50) {
                 progressBar.setVisibility(View.GONE);
             }
-
-//			if(url.equalsIgnoreCase("https://test.jugnoo.in:7000/paytm/wallet/add_money_cb")){
-//				Toast.makeText(PaymentWebViewActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
-//				new Handler().postDelayed(new Runnable() {
-//
-//					@Override
-//					public void run() {
-//						finish();
-//					}
-//				}, 3000);
-//			}
         }
 
 
@@ -174,18 +175,29 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 
 	private void urlRedirectionCallback(String url){
 		try {
-			//https://jugnoo.in/paytm/wallet/success.php
-			//https://jugnoo.in/paytm/wallet/failure.php
 			Log.e("url", "=" + url);
-			if("https://jugnoo.in/paytm/wallet/success.php".equalsIgnoreCase(url)){
-				Intent returnIntent = new Intent();
-				setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
-				finish();
-			} else if("https://jugnoo.in/paytm/wallet/failure.php".equalsIgnoreCase(url)){
-				Intent returnIntent = new Intent();
-				setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
-				finish();
-			}
+
+            if(walletType == WalletType.PAYTM.getOrdinal()) {
+                if (PAYTM_SUCCESS_URL.equalsIgnoreCase(url)) {
+                    Intent returnIntent = new Intent();
+                    setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
+                    finish();
+                } else if (PAYTM_FAILURE_URL.equalsIgnoreCase(url)) {
+                    Intent returnIntent = new Intent();
+                    setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
+                    finish();
+                }
+            } else if(walletType == WalletType.MOBIKWIK.getOrdinal()){
+                if (MOBIKWIK_SUCCESS_URL.equalsIgnoreCase(url)) {
+                    Intent returnIntent = new Intent();
+                    setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
+                    finish();
+                } else if (MOBIKWIK_FAILURE_URL.equalsIgnoreCase(url)) {
+                    Intent returnIntent = new Intent();
+                    setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
+                    finish();
+                }
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

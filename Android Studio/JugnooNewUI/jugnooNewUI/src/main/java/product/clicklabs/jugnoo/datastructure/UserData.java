@@ -577,4 +577,11 @@ public class UserData {
 			return context.getResources().getColor(R.color.theme_green_color);
 		}
 	}
+
+	public void deleteMobikwik(){
+		this.mobikwikBalance = 0;
+		this.mobikwikEnabled = 0;
+	}
+
+
 }

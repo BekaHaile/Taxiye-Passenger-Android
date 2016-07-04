@@ -219,6 +219,7 @@ public interface FlurryEventNames {
             CLICKS_ON_WALLET = "clicks_on_wallet",
             CLICKS_ON_PAYTM_WALLET = "clicks_on_paytm_wallet",
             CLICKS_ON_REMOVE_WALLET = "clicks_on_remove_wallet",
+            CLICKS_ON_REMOVE_WALLET_MOBIKWIK = "clicks_on_remove_wallet_mobikwik",
             WHO_VISITED_T20_WORLD_CUP_SCREEN = "who_visited_T20_World_Cup_screen";
     
 
@@ -278,6 +279,7 @@ public interface FlurryEventNames {
 
     String NUDGE_PAYTM_COUPON_AVAILABLE = "paytm_coupon_available",
             NUDGE_PAYTM_WALLET_REMOVED = "paytm_wallet_removed",
+            NUDGE_MOBIKWIK_WALLET_REMOVED = "mobikwik_wallet_removed",
             NUDGE_INVITE_VIA_FACEBOOK = "invite_via_facebook",
             NUDGE_INVITE_VIA_WHATSAPP = "invite_via_whatsapp",
             NUDGE_INVITE_VIA_TWITTER = "invite_via_twitter",
@@ -303,7 +305,9 @@ public interface FlurryEventNames {
     NUDGE_WALLET_CLICKED = "wallet_clicked",
     NUDGE_PAYTM_WALLET_CLICKED = "paytm_wallet_clicked",
     NUDGE_ADD_MONEY_CLICKED = "add_money_clicked",
+            NUDGE_MOBIKWIK_ADD_MONEY_CLICKED = "mobikwik_add_money_clicked",
     NUDGE_EDIT_PAYTM_CLICKED = "edit_paytm_clicked",
+            NUDGE_EDIT_MOBIKWIK_CLICKED = "edit_mobikwik_clicked",
             NUDGE_FRESH_CATEGORY_CLICKED_FORMAT = "fresh_category_%s_clicked",
             NUDGE_FRESH_CART_CLICKED = "fresh_cart_clicked",
             NUDGE_FRESH_ITEMS_IN_CART = "fresh_items_in_cart",

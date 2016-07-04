@@ -666,7 +666,7 @@
     <string name="call_number">call_number</string>
 
 
-	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
+	<string name="wallet_remove_alert">Are you sure you want to remove this payment method?</string>
 
 	<string name="remove">Remove</string>
 	<string name="change">Change</string>
@@ -949,6 +949,11 @@
 	<string name="mobikwik_low_cash">Your MobiKwik cash is low</string>
 	<string name="mobikwik_error_select_cash">We are not able to connect to MobiKwik, Please select payment method as Cash</string>
 	<string name="mobikwik_no_cash">You do not have MobiKwik cash, Please select payment method as Cash</string>
+	<string name="remove_wallet">Remove Wallet</string>
+	<string name="wallet_abort_transaction_alert">Do you really want to cancel the transaction ?</string>
+	<string name="transaction_cancelled">Transaction cancelled</string>
+	<string name="transaction_successful">Transaction Successful</string>
+	<string name="transaction_failed">Transaction failed</string>
 
 
 </resources>
