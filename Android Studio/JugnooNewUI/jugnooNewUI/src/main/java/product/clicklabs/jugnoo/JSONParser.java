@@ -742,7 +742,7 @@ public class JSONParser implements Constants {
                     pickupLatitude = "", pickupLongitude = "";
             int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
-            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
+            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0, bearing = 0.0;
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
@@ -849,6 +849,7 @@ public class JSONParser implements Constants {
                                 cancellationCharges = jObject.optInt("cancellation_charge", 0);
                                 isPooledRide = jObject.optInt(KEY_IS_POOLED, 0);
                                 JSONObject poolData = jObject.optJSONObject("pool_data");
+                                bearing = jObject.optDouble("bearing");
                                 if(poolData != null) {
                                     poolStatusString = poolData.optString("message", context.getResources().getString(R.string.sharing_your_ride_with));
                                     JSONArray userNames = poolData.optJSONArray("user_names");
@@ -915,7 +916,7 @@ public class JSONParser implements Constants {
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders);
+                        isPooledRide, poolStatusString, fellowRiders, bearing);
 
                 Data.userData.fareFactor = fareFactor;
 

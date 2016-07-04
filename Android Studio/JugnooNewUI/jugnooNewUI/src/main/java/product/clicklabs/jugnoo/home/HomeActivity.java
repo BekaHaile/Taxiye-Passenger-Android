@@ -2532,6 +2532,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
+                            driverLocationMarker.setRotation((float)Data.assignedDriverInfo.getBearing());
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -4227,6 +4228,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
         markerOptions1.position(driverInfo.latLng);
+        //markerOptions1.rotation((float)driverInfo.getBearing());
         markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                 .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
@@ -4884,6 +4886,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     int flag = jObj.getInt("flag");
                                     if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
                                         final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble("latitude"), jObj.getDouble("longitude"));
+
                                         String eta = "5";
                                         if (jObj.has("eta")) {
                                             eta = jObj.getString("eta");
@@ -4898,10 +4901,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             @Override
                                             public void run() {
                                                 try {
+                                                    //double bearing = jObj.optDouble("bearing", driverLocationMarker.getRotation());
                                                     if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                                         if (map != null) {
                                                             if (HomeActivity.this.hasWindowFocus()) {
 //                                                                driverLocationMarker.setPosition(driverCurrentLatLng);
+                                                                driverLocationMarker.setRotation(driverLocationMarker.getRotation());
                                                                 MarkerAnimation.animateMarkerToICS(driverLocationMarker,
                                                                         driverCurrentLatLng, new LatLngInterpolator.Spherical());
                                                                 updateDriverETAText(passengerScreenMode);
@@ -5617,7 +5622,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
             JSONParser.parseDropLatLng(jObj);
 
-			double fareFactor = 1.0;
+			double fareFactor = 1.0, bearing = 0.0;
 			if (jObj.has("fare_factor")) {
 				fareFactor = jObj.getDouble("fare_factor");
 			}
@@ -5629,6 +5634,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
                 cancelRideThrashHoldTime = jObj.optString("cancel_ride_threshold_time", "");
                 cancellationCharges = jObj.optInt("cancellation_charge", 0);
+                bearing = jObj.optDouble("bearing", 0);
 
             } catch(Exception e){
                 e.printStackTrace();
@@ -5644,7 +5650,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders);
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing);
 
 			if(inRide){
 				initializeStartRideVariables();

@@ -19,6 +19,9 @@ import android.view.animation.Interpolator;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +87,7 @@ public class MarkerAnimation {
 
         try {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 150
-					|| MapUtils.distance(marker.getPosition(), finalPosition) > 20000){
+					|| MapUtils.distance(marker.getPosition(), finalPosition) > 1000){
 				List<LatLng> list = new ArrayList<>();
 				list.add(finalPosition);
 				animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
@@ -146,12 +149,18 @@ public class MarkerAnimation {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (result != null) {
-                final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-                animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
+            try {
+                if (result != null) {
+                    JSONObject jObj = new JSONObject(result);
+                    double totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
+                    final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+                    animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
+                }
+                getDirectionsAsyncs.remove(0);
+                checkAndExecute();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            getDirectionsAsyncs.remove(0);
-            checkAndExecute();
 
         }
     }
