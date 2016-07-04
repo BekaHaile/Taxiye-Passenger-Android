@@ -1928,7 +1928,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (UserMode.PASSENGER == userMode &&
                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                     map != null &&
-                    HomeActivity.this.hasWindowFocus()) {
+                    HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation()) {
                     Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
                         findDriversETACall(false);
@@ -2411,6 +2411,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(isPoolRideAtConfirmation()) {
                                 centreLocationRl.setVisibility(View.GONE);
                                 fareEstimateForPool();
+                            } else{
+
                             }
                             relativeLayoutRequest.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
@@ -2463,17 +2465,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl,
-                                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+                            if(confirmedScreenOpened &&
+                                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal())){
+                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                        .getTextAssignBitmap(HomeActivity.this, assl,
+                                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                                getResources().getDimensionPixelSize(R.dimen.text_size_22))));
+                            }else{
+                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                        .getTextBitmap(HomeActivity.this, assl,
+                                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                                getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+                            }
+
 
                             pickupLocationMarker = map.addMarker(markerOptions);
 							new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                                        poolPathZoomAtConfirm();
+                                        //poolPathZoomAtConfirm();
                                     } else {
                                         if (map != null && Data.pickupLatLng != null) {
                                             map.animateCamera(CameraUpdateFactory.newLatLng(Data.pickupLatLng), MAP_ANIMATE_DURATION, null);
