@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
@@ -120,13 +120,13 @@ public class PaymentActivity extends BaseFragmentActivity{
 	}
 
 
-	private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
+	private ApiFetchWalletBalance apiFetchWalletBalance = null;
 	private String fragName = "Refresh";
 	public void getBalance(String fragName) {
 		try {
 			this.fragName = fragName;
-			if(apiPaytmCheckBalance == null){
-				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
+			if(apiFetchWalletBalance == null){
+				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
 					@Override
 					public void onSuccess() {
 						performGetBalanceSuccess(PaymentActivity.this.fragName);
@@ -151,14 +151,9 @@ public class PaymentActivity extends BaseFragmentActivity{
 					public void onNoRetry(View view) {
 
 					}
-
-					@Override
-					public void paytmDisabled() {
-
-					}
 				});
 			}
-			apiPaytmCheckBalance.getBalance(1, true);
+			apiFetchWalletBalance.getBalance(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

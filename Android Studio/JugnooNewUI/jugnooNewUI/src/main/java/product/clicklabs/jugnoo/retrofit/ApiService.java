@@ -143,11 +143,6 @@ public interface ApiService {
     Response requestRide(@FieldMap Map<String, String> params);
 
 
-    @FormUrlEncoded
-    @POST("/paytm/check_balance")
-    void paytmCheckBalance(@FieldMap Map<String, String> params,
-                           Callback<SettleUserDebt> callback);
-
 
     @FormUrlEncoded
     @POST("/get_driver_current_location")
@@ -422,13 +417,18 @@ public interface ApiService {
                            Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/mobikwik/delete_wallet")
-    void mobikwikDeleteWallet(@FieldMap Map<String, String> params,
-                          Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
     @POST("/mobikwik/add_money")
     void mobikwikAddMoney(@FieldMap Map<String, String> params,
                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_wallet_balance")
+    void fetchWalletBalance(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/unlink")
+    void mobikwikUnlink(@FieldMap Map<String, String> params,
+                            Callback<SettleUserDebt> callback);
 
 }

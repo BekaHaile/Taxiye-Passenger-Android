@@ -2,19 +2,19 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
-import product.clicklabs.jugnoo.Data;
+import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
 	public int emailVerificationStatus;
-	private double jugnooBalance, paytmBalance;
+	private double jugnooBalance;
 	public int numCouponsAvaliable;
 	public double fareFactor;
 	public int showJugnooJeanie;
-	private String paytmStatus;
-	public int paytmEnabled, paytmError;
 	public int contactSaved;
     public String referAllText, referAllTitle;
 	private int referAllStatusLogin;
@@ -44,12 +44,15 @@ public class UserData {
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink;
 	private double driverFareFactor;
 
+	private int paytmEnabled;
+	private double paytmBalance;
+
 	private int mobikwikEnabled;
 	private double mobikwikBalance;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
-					String jugnooFbBanner, int numCouponsAvaliable, int paytmEnabled,
+					String jugnooFbBanner, int numCouponsAvaliable,
 					int contactSaved, String referAllText, String referAllTitle,
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
@@ -62,6 +65,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
+					int paytmEnabled, double paytmBalance,
 					int mobikwikEnabled, double mobikwikBalance){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
@@ -78,9 +82,6 @@ public class UserData {
 		
 		this.jugnooFbBanner = jugnooFbBanner;
 		this.numCouponsAvaliable = numCouponsAvaliable;
-		this.paytmBalance = 0;
-		this.paytmEnabled = paytmEnabled;
-		this.paytmError = 0;
 		this.contactSaved = contactSaved;
         this.referAllText = referAllText;
 		this.referAllTitle = referAllTitle;
@@ -89,12 +90,6 @@ public class UserData {
 		this.promoMessage = promoMessage;
 
 		this.showJugnooJeanie = showJugnooJeanie;
-
-		if(1 == this.paytmEnabled) {
-			this.paytmStatus = "";
-		} else{
-			this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
-		}
 
 		this.branchDesktopUrl = branchDesktopUrl;
 		this.branchAndroidUrl = branchAndroidUrl;
@@ -141,6 +136,9 @@ public class UserData {
 
 		checkUserImage();
 
+		this.paytmEnabled = paytmEnabled;
+		this.paytmBalance = paytmBalance;
+
 		this.mobikwikEnabled = mobikwikEnabled;
 		this.mobikwikBalance = mobikwikBalance;
 	}
@@ -150,7 +148,7 @@ public class UserData {
 				|| userImage.contains("brand_images/user.png")){
 			userImage = "";
 		}
-		userImage.replace("http://graph.facebook", "https://graph.facebook");
+		userImage = userImage.replace("http://graph.facebook", "https://graph.facebook");
 	}
 
 	public double getJugnooBalance() {
@@ -166,19 +164,11 @@ public class UserData {
 	}
 
 	public String getPaytmBalanceStr(){
-		if(this.paytmError == 1 || getPaytmStatus().equalsIgnoreCase("")){
+		if(paytmBalance < 0){
 			return "--";
 		} else {
-			return Utils.getMoneyDecimalFormat().format(getPaytmBalance());
+			return Utils.getMoneyDecimalFormat().format(paytmBalance);
 		}
-	}
-
-	public void setPaytmError(int paytmError){
-		this.paytmError = paytmError;
-	}
-
-	public int getPaytmError(){
-		return paytmError;
 	}
 
 	public void setPaytmBalance(double paytmBalance) {
@@ -187,21 +177,13 @@ public class UserData {
 
 	public double getTotalWalletBalance() {
 		double walletTotal = 0;
-		if(paytmEnabled == 1){
+		if(paytmEnabled == 1 && paytmBalance > -1){
 			walletTotal = walletTotal + paytmBalance;
 		}
-		if(mobikwikEnabled == 1){
+		if(mobikwikEnabled == 1 && mobikwikBalance > -1){
 			walletTotal = walletTotal + mobikwikBalance;
 		}
 		return jugnooBalance + walletTotal;
-	}
-
-	public String getPaytmStatus() {
-		return paytmStatus;
-	}
-
-	public void setPaytmStatus(String paytmStatus) {
-		this.paytmStatus = paytmStatus;
 	}
 
 	public int getPromoSuccess() {
@@ -214,9 +196,7 @@ public class UserData {
 
 	public void deletePaytm(){
 		this.paytmEnabled = 0;
-		setPaytmBalance(0);
-		this.paytmError = 0;
-		this.paytmStatus = Data.PAYTM_STATUS_INACTIVE;
+		this.paytmBalance = 0;
 	}
 
 	public String getBranchDesktopUrl() {
@@ -269,7 +249,7 @@ public class UserData {
 
 
 	public int getPaytmBalanceColor(Context context){
-		if(getPaytmBalance() < 0 || getPaytmError() == 1){
+		if(paytmBalance < 0){
 			return context.getResources().getColor(R.color.theme_red_color);
 		} else{
 			return context.getResources().getColor(R.color.theme_green_color);
@@ -277,7 +257,7 @@ public class UserData {
 	}
 
 	public int getJugnooBalanceColor(Context context){
-		if(getJugnooBalance() < 0){
+		if(jugnooBalance < 0){
 			return context.getResources().getColor(R.color.theme_red_color);
 		} else{
 			return context.getResources().getColor(R.color.theme_green_color);
@@ -543,11 +523,7 @@ public class UserData {
 	}
 
 	public int getMobikwikEnabled() {
-		if(mobikwikBalance > -1) {
-			return mobikwikEnabled;
-		} else{
-			return 0;
-		}
+		return mobikwikEnabled;
 	}
 
 	public void setMobikwikEnabled(int mobikwikEnabled) {
@@ -583,5 +559,28 @@ public class UserData {
 		this.mobikwikEnabled = 0;
 	}
 
+
+	public int getPaytmEnabled() {
+		return paytmEnabled;
+	}
+
+	public void setPaytmEnabled(int paytmEnabled) {
+		this.paytmEnabled = paytmEnabled;
+	}
+
+	public void updateWalletBalances(JSONObject jObj){
+		setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE, getJugnooBalance()));
+		if(jObj.has(Constants.KEY_PAYTM_BALANCE)){
+			setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance()));
+		} else{
+			deletePaytm();
+		}
+
+		if(jObj.has(Constants.KEY_MOBIKWIK_BALANCE)){
+			setMobikwikBalance(jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance()));
+		} else{
+			deleteMobikwik();
+		}
+	}
 
 }

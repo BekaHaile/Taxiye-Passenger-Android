@@ -139,7 +139,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			@Override
 			public void onClick(View v) {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-					if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+					if(Data.userData.getPaytmEnabled() == 1) {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 								.add(R.id.fragLayout, new WalletRechargeFragment(WalletType.PAYTM.getOrdinal()), WalletRechargeFragment.class.getName())
@@ -241,8 +241,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
 				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
 
-				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
-						|| Data.userData.getPaytmStatus().equalsIgnoreCase("")){
+				if(Data.userData.getPaytmEnabled() == 1){
 					textViewPaytmBalance.setText(getResources().getString(R.string.paytm_wallet));
 					textViewPaytmBalanceValue.setVisibility(View.VISIBLE);
 					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources()

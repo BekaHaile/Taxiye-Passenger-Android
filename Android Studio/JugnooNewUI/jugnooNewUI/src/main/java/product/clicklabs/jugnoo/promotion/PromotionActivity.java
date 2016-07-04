@@ -33,7 +33,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -406,7 +406,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                     getCouponsAndPromotions(activity);
                                     FlurryEventLogger.event(PROMO_CODE_APPLIED);
 
-                                    new ApiPaytmCheckBalance(activity, new ApiPaytmCheckBalance.Callback() {
+                                    new ApiFetchWalletBalance(activity, new ApiFetchWalletBalance.Callback() {
                                         @Override
                                         public void onSuccess() {
 
@@ -432,11 +432,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
 
                                         }
 
-                                        @Override
-                                        public void paytmDisabled() {
-
-                                        }
-                                    }).getBalance(Data.userData.paytmEnabled, false);
+                                    }).getBalance(false);
 
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.WalletType;
 
 /**
  * Created by shankar on 5/2/16.
@@ -124,22 +125,18 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         setSelectedPaymentOptionUI(Data.pickupPaymentOption);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
                         callback.onPaymentModeUpdated();
-                    } else if(Data.userData.getPaytmError() == 1){
+                    } else if(Data.userData.getPaytmBalance() < 0){
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                     } else{
-                        if(Data.userData.paytmEnabled == 1
-                                && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+                        if(Data.userData.getPaytmEnabled() == 1) {
                             DialogPopup.alertPopupWithListener(activity, "",
                                     activity.getResources().getString(R.string.paytm_no_cash),
                                     new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             Intent intent = new Intent(activity, PaymentActivity.class);
-                                            if(Data.userData.paytmEnabled == 1) {
-                                                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-                                            } else {
-                                                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-                                            }
+											intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+											intent.putExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
                                             activity.startActivity(intent);
                                             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                         }
@@ -193,12 +190,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		try{
 			int preferredPaymentOption = Data.pickupPaymentOption;
 			if(PaymentOption.PAYTM.getOrdinal() == preferredPaymentOption){
-				if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > -1){
 					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-					progressBarPaytm.setVisibility(View.GONE);
-				}
-				else if(Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)){
-					Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 					progressBarPaytm.setVisibility(View.GONE);
 				}
 				else{
@@ -214,7 +207,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			textViewPaytmValue.setText(String.format(activity.getResources()
 					.getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
 
-			if(Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
+			if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > -1){
 				textViewPaytmValue.setVisibility(View.VISIBLE);
 				textViewPaytm.setText(activity.getResources().getString(R.string.paytm_wallet));
 			}
@@ -223,7 +216,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 				textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
 			}
 
-			if(Data.userData.getPaytmError() == 1){
+			if(Data.userData.getPaytmBalance() < 0){
 				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 				relativeLayoutPaytm.setVisibility(View.GONE);
 			}

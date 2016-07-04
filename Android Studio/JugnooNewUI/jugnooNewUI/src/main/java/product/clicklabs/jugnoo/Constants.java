@@ -318,5 +318,7 @@ public interface Constants {
 	String KEY_BALANCE = "balance";
 	String KEY_WALLET_TYPE = "wallet_type";
 	String KEY_AMOUNT = "amount";
+	String KEY_ADD_MONEY_URL = "add_money_url";
+	String KEY_PAYTM_ENABLED = "paytm_enabled";
 
 }

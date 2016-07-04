@@ -23,6 +23,7 @@ import java.util.Locale;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -269,32 +270,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updatePaymentOption() {
         try {
-            Data.pickupPaymentOption = (Data.userData.paytmEnabled == 1
-                    && Data.userData.getPaytmError() != 1
-                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
-                    && PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption)
-                    ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
-
-
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewPaymentModeMS.getLayoutParams();
-            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentMode.setImageResource(R.drawable.ic_paytm_small);
-                imageViewPaymentModeMS.setImageResource(R.drawable.ic_paytm_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
-                textViewPaymentModeValue.setText(String.format(activity.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-                textViewPaymentModeValueMS.setText(String.format(activity.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-            } else {
-                imageViewPaymentMode.setImageResource(R.drawable.ic_cash_small);
-                imageViewPaymentModeMS.setImageResource(R.drawable.ic_cash_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
-                textViewPaymentModeValue.setText(activity.getResources().getString(R.string.cash));
-                textViewPaymentModeValueMS.setText(activity.getResources().getString(R.string.cash));
-            }
-            imageViewPaymentModeMS.setLayoutParams(params);
+            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
+            int smallIcon = MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption);
+            imageViewPaymentMode.setImageResource(smallIcon);
+            imageViewPaymentModeMS.setImageResource(smallIcon);
+            String balanceText = MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption);
+            textViewPaymentModeValue.setText(balanceText);
+            textViewPaymentModeValueMS.setText(balanceText);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -452,7 +435,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                         public void onClick(View v) {
                         }
                     };
-                    if (Data.userData.paytmEnabled == 1) {
+                    if (Data.userData.getPaytmEnabled() == 1) {
                         DialogPopup.alertPopupWithListener(activity, "",
                                 activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
                                 onClickListenerCancel);
@@ -475,7 +458,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
     public void openPaymentActivityInCaseOfPaytmNotAdded() {
-        if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+        if (Data.userData.getPaytmEnabled() != 1) {
             Intent intent = new Intent(activity, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
             activity.startActivity(intent);

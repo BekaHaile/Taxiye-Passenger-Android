@@ -142,7 +142,7 @@ public class AddWalletFragment extends Fragment {
 		}
 		else if(openWalletType == WalletType.MOBIKWIK.getOrdinal()){
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
-			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
+			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
 		}
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
@@ -403,13 +403,12 @@ public class AddWalletFragment extends Fragment {
 								if (Data.userData != null && openWalletType == WalletType.PAYTM.getOrdinal()) {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, 0);
 									Data.userData.setPaytmBalance(balance);
-									Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
-									Data.userData.paytmEnabled = 1;
+									Data.userData.setPaytmEnabled(1);
 
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
-							} else if (ApiResponseFlags.MOBIKWIK_LOGGED_IN.getOrdinal() == flag) {
+							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								if (Data.userData != null && openWalletType == WalletType.MOBIKWIK.getOrdinal()) {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, 0);
 									Data.userData.setMobikwikBalance(balance);

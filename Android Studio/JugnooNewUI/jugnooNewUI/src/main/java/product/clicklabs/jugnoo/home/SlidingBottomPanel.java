@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -265,11 +266,7 @@ public class SlidingBottomPanel {
 
     public void updatePaymentOption() {
         try {
-            Data.pickupPaymentOption = (Data.userData.paytmEnabled == 1
-                    && Data.userData.getPaytmError() != 1
-                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
-                    && PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption)
-                    ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
+            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore().getPaymentOptionAccAvailability(Data.pickupPaymentOption);
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
                 imageViewPaymentOp.setImageResource(R.drawable.ic_paytm_small);
                 textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
@@ -337,7 +334,7 @@ public class SlidingBottomPanel {
                         public void onClick(View v) {
                         }
                     };
-                    if (Data.userData.paytmEnabled == 1) {
+                    if (Data.userData.getPaytmEnabled() == 1) {
                         DialogPopup.alertPopupWithListener(activity, "",
                                 activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
                                 onClickListenerCancel);
@@ -360,7 +357,7 @@ public class SlidingBottomPanel {
     }
 
     public void openPaymentActivityInCaseOfPaytmNotAdded() {
-        if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+        if (Data.userData.getPaytmEnabled() != 1) {
             Intent intent = new Intent(activity, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
             intent.putExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());

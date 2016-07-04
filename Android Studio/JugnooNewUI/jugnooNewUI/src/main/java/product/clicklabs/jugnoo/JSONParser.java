@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -121,7 +120,7 @@ public class JSONParser implements Constants {
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
 
-		int paytmEnabled = userData.optInt("paytm_enabled", 0);
+
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
         String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
@@ -237,12 +236,16 @@ public class JSONParser implements Constants {
         int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
         int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
 
+
+        int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
+        double paytmBalance = userData.optDouble(KEY_PAYTM_BALANCE, 0d);
+
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
         double mobikwikBalance = userData.optDouble(KEY_MOBIKWIK_BALANCE, 0d);
 
         return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, paytmEnabled,
+                jugnooFbBanner, numCouponsAvailable,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
@@ -253,6 +256,7 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
+                paytmEnabled, paytmBalance,
                 mobikwikEnabled, mobikwikBalance);
 
     }
@@ -1167,43 +1171,6 @@ public class JSONParser implements Constants {
 
 
 
-
-	public static void parsePaytmBalanceStatus(Activity activity, JSONObject jObj){
-		try {
-			if (Data.userData != null) {
-				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
-					setPaytmErrorCase();
-				} else {
-					Data.userData.setPaytmError(0);
-					String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
-					if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-						String balance = jObj.optString("WALLETBALANCE", "0");
-						Data.userData.setPaytmBalance(Double.parseDouble(balance));
-						Data.userData.setPaytmStatus(paytmStatus);
-					} else {
-						Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
-						Data.userData.setPaytmBalance(0);
-					}
-					Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void setPaytmErrorCase(){
-		try {
-			if (Data.userData != null) {
-				Data.userData.setPaytmError(1);
-				Data.userData.setPaytmBalance(0);
-				Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 

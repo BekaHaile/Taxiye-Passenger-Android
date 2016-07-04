@@ -159,7 +159,7 @@ public class WalletRechargeFragment extends Fragment {
 		}
 		else if(openWalletType == WalletType.MOBIKWIK.getOrdinal()){
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
-			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
+			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
 			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_mobikwik_cash));
 		}
 
@@ -454,7 +454,7 @@ public class WalletRechargeFragment extends Fragment {
 								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 								String message = JSONParser.getServerMessage(jObj);
 								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-									String url = jObj.optString(Constants.KEY_URL, "");
+									String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
 									openWebView(url, openWalletType);
 								} else{
 									DialogPopup.alertPopup(paymentActivity, "", message);
@@ -547,7 +547,7 @@ public class WalletRechargeFragment extends Fragment {
 					RestClient.getApiServices().paytmDeletePaytm(params, callback);
 				}
 				else if(openWalletType == WalletType.MOBIKWIK.getOrdinal()){
-					RestClient.getApiServices().mobikwikDeleteWallet(params, callback);
+					RestClient.getApiServices().mobikwikUnlink(params, callback);
 				}
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
