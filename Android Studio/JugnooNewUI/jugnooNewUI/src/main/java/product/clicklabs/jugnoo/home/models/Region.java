@@ -30,6 +30,15 @@ public class Region {
 	@SerializedName("icon_set")
 	@Expose
 	private String iconSet;
+	@SerializedName("customer_fare_factor")
+	@Expose
+	private Double customerFareFactor;
+	@SerializedName("driver_fare_factor")
+	@Expose
+	private Double driverFareFactor;
+	@SerializedName("priority_tip_category")
+	@Expose
+	private Integer priorityTipCategory;
 	@SerializedName("images")
 	@Expose
 	private Images images;
@@ -55,6 +64,9 @@ public class Region {
 		this.fareStructure = JSONParser.getFareStructure();
 		this.rideType = 0;
 		this.maxPeople = 3;
+		this.customerFareFactor = 1.0;
+		this.driverFareFactor = 1.0;
+		this.priorityTipCategory = 0;
 	}
 
 	public class OfferTexts {
@@ -267,5 +279,29 @@ public class Region {
 
 	public void setOfferTexts(OfferTexts offerTexts) {
 		this.offerTexts = offerTexts;
+	}
+
+	public Double getCustomerFareFactor() {
+		return customerFareFactor;
+	}
+
+	public void setCustomerFareFactor(Double customerFareFactor) {
+		this.customerFareFactor = customerFareFactor;
+	}
+
+	public Integer getPriorityTipCategory() {
+		return priorityTipCategory;
+	}
+
+	public void setPriorityTipCategory(Integer priorityTipCategory) {
+		this.priorityTipCategory = priorityTipCategory;
+	}
+
+	public Double getDriverFareFactor() {
+		return driverFareFactor;
+	}
+
+	public void setDriverFareFactor(Double driverFareFactor) {
+		this.driverFareFactor = driverFareFactor;
 	}
 }

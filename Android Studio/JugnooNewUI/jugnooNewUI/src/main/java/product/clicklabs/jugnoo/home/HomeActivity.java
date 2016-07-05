@@ -1959,7 +1959,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
             if(!isPoolRideAtConfirmation()) {
-                new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, Data.priorityTipCategory,
+                double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
+                int priorityTipCategory = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getPriorityTipCategory();
+                new PriorityTipDialog(HomeActivity.this, fareFactor, priorityTipCategory,
                         new PriorityTipDialog.Callback() {
                             @Override
                             public void onConfirmed(boolean confirmClicked) {
@@ -6033,9 +6035,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
                                 if ("".equalsIgnoreCase(Data.cSessionId)) {
+                                    double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
+                                    double driverFareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDriverFareFactor();
+                                    Log.v("fare factor in request", "--> "+fareFactor);
+
                                     nameValuePairs.put("duplicate_flag", "0");
-                                    nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(Data.userData.fareFactor));
-                                    nameValuePairs.put(KEY_DRIVER_FARE_FACTOR, String.valueOf(Data.userData.getDriverFareFactor()));
+                                    nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(fareFactor));
+                                    nameValuePairs.put(KEY_DRIVER_FARE_FACTOR, String.valueOf(driverFareFactor));
 
                                     if (myLocation != null && myLocation.hasAccuracy()) {
                                         nameValuePairs.put("location_accuracy", "" + myLocation.getAccuracy());
