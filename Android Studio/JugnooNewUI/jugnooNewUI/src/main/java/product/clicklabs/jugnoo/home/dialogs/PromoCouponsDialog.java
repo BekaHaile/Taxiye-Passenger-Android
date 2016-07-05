@@ -33,6 +33,7 @@ public class PromoCouponsDialog {
 
 	private RecyclerView recyclerViewPromoCoupons;
 	private PromoCouponsAdapter promoCouponsAdapter;
+	private Button buttonContinue;
 
 	public PromoCouponsDialog(HomeActivity activity, Callback callback) {
 		this.activity = activity;
@@ -75,13 +76,15 @@ public class PromoCouponsDialog {
 
 			Button buttonSkip = (Button) dialog.findViewById(R.id.buttonSkip);
 			buttonSkip.setTypeface(Fonts.mavenRegular(activity));
-			Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
+			buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
 			buttonContinue.setTypeface(Fonts.mavenRegular(activity));
 			RelativeLayout relativeLayoutOfferImage = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutOfferImage);
 			RelativeLayout relativeLayoutBottomButtons = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutBottomButtons);
 			ImageView imageViewWhoops = (ImageView) dialog.findViewById(R.id.imageViewWhoops);
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			TextView textViewNoCurrentOffers = (TextView) dialog.findViewById(R.id.textViewNoCurrentOffers);
+
+			setContinueButton();
 
 			if(Data.promoCoupons.size() > 0){
 				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
@@ -137,6 +140,18 @@ public class PromoCouponsDialog {
 			e.printStackTrace();
 		}
 		return this;
+	}
+
+	public void setContinueButton(){
+		if(buttonContinue != null) {
+			if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id != -1) {
+				buttonContinue.setEnabled(true);
+				buttonContinue.setAlpha(1.0f);
+			} else {
+				buttonContinue.setEnabled(false);
+				buttonContinue.setAlpha(0.5f);
+			}
+		}
 	}
 
 	public void notifyCoupons(){

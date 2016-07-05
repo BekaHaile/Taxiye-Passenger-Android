@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_marginBottom="200px"
                     android:soundEffectsEnabled="false"
                     />
@@ -82,13 +82,13 @@
 
         <ImageView
             android:id="@+id/imageViewPriorityTip"
-            android:layout_width="29px"
-            android:layout_height="34px"
+            android:layout_width="40px"
+            android:layout_height="39px"
             android:tag="mwar"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:src="@drawable/ic_surge_grey"
-            android:layout_marginBottom="110px"
+            android:layout_marginBottom="106px"
             android:visibility="gone"
             />
 

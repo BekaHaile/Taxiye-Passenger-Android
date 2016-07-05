@@ -252,7 +252,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonCancelInAppCampaignRequest;
 
 	RelativeLayout relativeLayoutGoogleAttr;
-	ImageView imageViewGoogleAttrCross;
+	ImageView imageViewGoogleAttrCross, imageViewConfirmDropLocationEdit;
 	TextView textViewGoogleAttrText;
 
 
@@ -284,10 +284,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewFinalDropLocationEdit;
     ProgressWheel progressBarFinalDropLocation;
     Button customerInRideMyLocationBtn;
-	LinearLayout linearLayoutInRideDriverInfo, linearLayoutOfferConfirm;
+	LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
-    RelativeLayout relativeLayoutDriverRating;
+    RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
     Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
 	LinearLayout relativeLayoutIRPaymentOption;
@@ -562,6 +562,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewDropCross.setVisibility(View.GONE);
         relativeLayoutGreat = (RelativeLayout)findViewById(R.id.relativeLayoutGreat);
         imageViewThumbsUpGif = (ImageView)findViewById(R.id.imageViewThumbsUpGif);
+        imageViewConfirmDropLocationEdit = (ImageView)findViewById(R.id.imageViewConfirmDropLocationEdit);
 
 		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
 		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
@@ -586,7 +587,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textVieGetFareEstimateConfirm.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         imageViewOfferConfirm = (ImageView) findViewById(R.id.imageViewOfferConfirm);
         imageViewOfferConfirm.setVisibility(View.GONE);
-        linearLayoutOfferConfirm = (LinearLayout) findViewById(R.id.linearLayoutOfferConfirm);
+        relativeLayoutOfferConfirm = (RelativeLayout) findViewById(R.id.linearLayoutOfferConfirm);
 
 
 
@@ -802,7 +803,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        linearLayoutOfferConfirm.setOnClickListener(new OnClickListener() {
+        relativeLayoutOfferConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
@@ -1510,7 +1511,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             refresh = true;
                         }
                     }
-                    if(!isPoolRideAtConfirmation()) {
+                    if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                         if (refresh && mapTouched) {
                             callMapTouchedRefreshDrivers();
                         }
@@ -1928,7 +1929,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (UserMode.PASSENGER == userMode &&
                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                     map != null &&
-                    HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation()) {
+                    HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                     Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
                         findDriversETACall(false);
@@ -2184,7 +2185,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     OnClickListener mapMyLocationClick = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(isPoolRideAtConfirmation()){
+            if(isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()){
                 poolPathZoomAtConfirm();
                 return;
             }
@@ -2401,25 +2402,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 
                         checkForFareAvailablity();
-
                         findADriverFinishing();
                         setGoogleMapPadding(0);
 
                         relativeLayoutRequest.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setEnabled(true);
+                        imageViewConfirmDropLocationEdit.setVisibility(View.GONE);
                         if(confirmedScreenOpened){
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
                             if(isPoolRideAtConfirmation()) {
                                 centreLocationRl.setVisibility(View.GONE);
+                                imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
                                 fareEstimateForPool();
-                            } else{
-
+                            } else if(isNormalRideWithDropAtConfirmation()){
+                                centreLocationRl.setVisibility(View.GONE);
+                                imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
+                                fareEstimateForPool();
                             }
                             relativeLayoutRequest.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             relativeLayoutInitialSearchBar.setEnabled(false);
+                            imageViewDropCross.setVisibility(View.GONE);
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
                             updateConfirmedStateFare();
@@ -2467,8 +2472,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
-                            if(confirmedScreenOpened &&
-                                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal())){
+                            if((confirmedScreenOpened &&
+                                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()))
+                                    || Data.dropLatLng != null){
                                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                                         .getTextAssignBitmap(HomeActivity.this, assl,
                                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
@@ -3551,7 +3557,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if (!feedbackSkipped && !placeAdded
                                 && PassengerScreenMode.P_RIDE_END != passengerScreenMode
                                 && PassengerScreenMode.P_SEARCH != passengerScreenMode
-                                && !isPoolRideAtConfirmation()) {
+                                && !isPoolRideAtConfirmation()
+                                && !isNormalRideWithDropAtConfirmation()) {
                             mapTouched = false;
                             callAndHandleStateRestoreAPI(false);
                         }
@@ -6037,7 +6044,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if ("".equalsIgnoreCase(Data.cSessionId)) {
                                     double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
                                     double driverFareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDriverFareFactor();
-                                    Log.v("fare factor in request", "--> "+fareFactor);
 
                                     nameValuePairs.put("duplicate_flag", "0");
                                     nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(fareFactor));
@@ -6850,6 +6856,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void fareEstimateForPool(){
         if(Data.dropLatLng != null){
+            int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
+            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? true : false;
         new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
             @Override
             public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
@@ -6869,8 +6877,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 MarkerOptions poolMarkerOptionStart = new MarkerOptions();
                 poolMarkerOptionStart.title("Start");
                 poolMarkerOptionStart.position(Data.pickupLatLng);
-                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
-                        assl, R.drawable.pin_ball_start)));
+//                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
+//                        assl, R.drawable.pin_ball_start)));
+                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                        .getTextAssignBitmap(HomeActivity.this, assl,
+                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                getResources().getDimensionPixelSize(R.dimen.text_size_22))));
                 map.addMarker(poolMarkerOptionStart);
 
                 MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
@@ -6911,26 +6923,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Log.v("Pool Fare value is ", "--> " + fare);
                 jugnooPoolFareId = poolFareId;
                 poolFareSuccess = true;
-                /*new PoolFareDialog(HomeActivity.this, new PoolFareDialog.Callback() {
-                    @Override
-                    public void onDialogDismiss() {
-                        poolPolyline.remove();
-                        poolMarkerStart.remove();
-                        poolMarkerEnd.remove();
-                        initialMyLocationBtn.performClick();
-                    }
-
-                    @Override
-                    public void onConfirmed() {
-                        jugnooPoolFareId = poolFareId;
-                        finalRequestRideTimerStart();
-                    }
-                }).showPoolFareDialog(fare, text);*/
 
                 textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon)+" "+
-                    String.format(getResources().getString(R.string.rupees_value_format_without_space), fare));
+                    String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
+
+                textViewIncludes.setText(text);
             }
-        }).getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng, 1);
+        }).getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng, isPooled, callFareEstimate);
         } else{
             textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
@@ -7858,6 +7857,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     int shakeAnim = 0;
+
+    public void setShakeAnim(int shakeAnim) {
+        this.shakeAnim = shakeAnim;
+    }
+
     public void imageViewRideNowPoolCheck(){
         if(getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
@@ -7889,7 +7893,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
                             @Override
                             public void onEnterDestination() {
-
+                                placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+                                setServiceAvailablityUI("");
+                                passengerScreenMode = PassengerScreenMode.P_SEARCH;
+                                switchPassengerScreen(passengerScreenMode);
                             }
                         }).show();
                     }
@@ -7916,5 +7923,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 && confirmedScreenOpened
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal();
     }
+
+    private boolean isNormalRideWithDropAtConfirmation(){
+        return PassengerScreenMode.P_INITIAL == passengerScreenMode
+                && confirmedScreenOpened
+                && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
+                && Data.dropLatLng != null;
+    }
+
 
 }

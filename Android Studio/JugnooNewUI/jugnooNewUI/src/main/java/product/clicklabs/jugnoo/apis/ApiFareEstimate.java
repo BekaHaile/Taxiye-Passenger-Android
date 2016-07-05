@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -44,7 +45,7 @@ public class ApiFareEstimate {
         this.callback = callback;
     }
 
-    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled) {
+    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate) {
         try {
             if (AppStatus.getInstance(context).isOnline(context)) {
                 if (sourceLatLng != null && destLatLng != null) {
@@ -70,7 +71,11 @@ public class ApiFareEstimate {
                                             distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                             timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
                                             callback.onSuccess(list, startAddress, endAddress, distanceText, timeText, distanceValue, timeValue);
-                                            getFareEstimate((Activity) context, sourceLatLng, destLatLng, distanceValue/1000d, timeValue/60d, isPooled);
+                                            if(callFareEstimate) {
+                                                getFareEstimate((Activity) context, sourceLatLng, destLatLng, distanceValue / 1000d, timeValue / 60d, isPooled);
+                                            } else{
+                                                DialogPopup.dismissLoadingDialog();
+                                            }
                                         } else {
                                             FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
                                             DialogPopup.alertPopup((Activity) context, "", "Fare could not be estimated between the selected pickup and drop location");

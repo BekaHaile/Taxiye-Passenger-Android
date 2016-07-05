@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -24,11 +25,11 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class FareDetailsDialog {
 
 	private final String TAG = FareDetailsDialog.class.getSimpleName();
-	private Activity activity;
+	private HomeActivity activity;
 	private Callback callback;
 	private Dialog dialog = null;
 
-	public FareDetailsDialog(Activity activity, Callback callback) {
+	public FareDetailsDialog(HomeActivity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
 	}
@@ -112,11 +113,11 @@ public class FareDetailsDialog {
 			} else{
 				textViewThresholdDistance.setVisibility(View.GONE);
 			}
-
-			if(Data.userData.fareFactor > 1.0){
+			double fareFactor = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
+			if(fareFactor > 1.0){
 				relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
 				textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x),
-						Utils.getMoneyDecimalFormat().format(Data.userData.fareFactor)));
+						Utils.getMoneyDecimalFormat().format(fareFactor)));
 			} else{
 				relativeLayoutPriorityTip.setVisibility(View.GONE);
 			}

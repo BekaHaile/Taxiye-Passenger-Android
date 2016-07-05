@@ -50,9 +50,15 @@ public class PoolDestinationDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			((TextView) dialog.findViewById(R.id.textViewDestination)).setTypeface(Fonts.mavenRegular(activity));
-			((TextView) dialog.findViewById(R.id.textViewLocation)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
-			((TextView) dialog.findViewById(R.id.textViewNotAble)).setTypeface(Fonts.mavenRegular(activity));
+			TextView textViewDestination = (TextView) dialog.findViewById(R.id.textViewDestination);textViewDestination.setTypeface(Fonts.mavenRegular(activity));
+			TextView textViewLocation = (TextView) dialog.findViewById(R.id.textViewLocation); textViewLocation.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+			TextView textViewNotAble = (TextView) dialog.findViewById(R.id.textViewNotAble);textViewNotAble.setTypeface(Fonts.mavenRegular(activity));
+
+			if(Data.userData != null) {
+				textViewDestination.setText(Data.userData.getPoolDestinationPopupText1());
+				textViewLocation.setText(Data.userData.getPoolDestinationPopupText2());
+				textViewNotAble.setText(Data.userData.getPoolDestinationPopupText3());
+			}
 
 			Button buttonEnterDestination = (Button) dialog.findViewById(R.id.buttonEnterDestination);
 			buttonEnterDestination.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);

@@ -330,7 +330,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 @Override
                 public void onRetry() {
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -137,7 +137,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewPoolInfo1 = (TextView) rootView.findViewById(R.id.textViewPoolInfo1);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
         textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
-        textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity));
+        textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
         textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
         textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
@@ -266,6 +266,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             textVieGetFareEstimateMS.setVisibility(View.VISIBLE);
             textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
         }
+        updateFareFactorUI();
     }
 
 
@@ -394,10 +395,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
     public void updateFareFactorUI(){
-        if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
+        double fareFactor = getRegionSelected().getCustomerFareFactor();
+        if (fareFactor > 1 || fareFactor < 1) {
             relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
             textViewPriorityTipValueMS.setText(String.format(activity.getResources().getString(R.string.format_x)
-                            , Utils.getMoneyDecimalFormat().format(Data.userData.fareFactor)));
+                            , Utils.getMoneyDecimalFormat().format(fareFactor)));
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }
@@ -533,6 +535,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                     } else{
                         if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                             activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                            activity.setShakeAnim(0);
                             activity.imageViewRideNowPoolCheck();
                         }
                     }
