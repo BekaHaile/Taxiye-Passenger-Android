@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -31,7 +32,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.WalletType;
 
 
 public class WalletFragment extends Fragment implements FlurryEventNames {
@@ -142,7 +142,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					if(Data.userData.getPaytmEnabled() == 1) {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new WalletRechargeFragment(WalletType.PAYTM.getOrdinal()), WalletRechargeFragment.class.getName())
+								.add(R.id.fragLayout, new WalletRechargeFragment(PaymentOption.PAYTM.getOrdinal()), WalletRechargeFragment.class.getName())
 								.addToBackStack(WalletRechargeFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
@@ -152,7 +152,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					} else {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new AddWalletFragment(WalletType.PAYTM.getOrdinal()), AddWalletFragment.class.getName())
+								.add(R.id.fragLayout, new AddWalletFragment(PaymentOption.PAYTM.getOrdinal()), AddWalletFragment.class.getName())
 								.addToBackStack(AddWalletFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
@@ -172,7 +172,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					if(Data.userData.getMobikwikEnabled() == 1) {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new WalletRechargeFragment(WalletType.MOBIKWIK.getOrdinal()), WalletRechargeFragment.class.getName())
+								.add(R.id.fragLayout, new WalletRechargeFragment(PaymentOption.MOBIKWIK.getOrdinal()), WalletRechargeFragment.class.getName())
 								.addToBackStack(WalletRechargeFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
@@ -182,7 +182,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					} else {
 						paymentActivity.getSupportFragmentManager().beginTransaction()
 								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new AddWalletFragment(WalletType.MOBIKWIK.getOrdinal()), AddWalletFragment.class.getName())
+								.add(R.id.fragLayout, new AddWalletFragment(PaymentOption.MOBIKWIK.getOrdinal()), AddWalletFragment.class.getName())
 								.addToBackStack(AddWalletFragment.class.getName())
 								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))

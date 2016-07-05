@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -47,10 +48,9 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.PaytmRechargeWebViewActivity;
+import product.clicklabs.jugnoo.wallet.WalletRechargeWebViewActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
-import product.clicklabs.jugnoo.wallet.models.WalletType;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -152,12 +152,12 @@ public class WalletRechargeFragment extends Fragment {
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 
 
-		if(openWalletType == WalletType.PAYTM.getOrdinal()){
+		if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.paytm_wallet));
 			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
 			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_paytm_cash));
 		}
-		else if(openWalletType == WalletType.MOBIKWIK.getOrdinal()){
+		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
 			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
 			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_mobikwik_cash));
@@ -418,7 +418,7 @@ public class WalletRechargeFragment extends Fragment {
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 				params.put(Constants.KEY_AMOUNT, amount);
 
-				if(openWalletType == WalletType.PAYTM.getOrdinal()) {
+				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 					RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
 						@Override
 						public void success(String settleUserDebt, Response response) {
@@ -442,7 +442,7 @@ public class WalletRechargeFragment extends Fragment {
 							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 						}
 					});
-				} else if(openWalletType == WalletType.MOBIKWIK.getOrdinal()){
+				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikAddMoney(params, new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -543,10 +543,10 @@ public class WalletRechargeFragment extends Fragment {
 					}
 				};
 
-				if(openWalletType == WalletType.PAYTM.getOrdinal()) {
+				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 					RestClient.getApiServices().paytmDeletePaytm(params, callback);
 				}
-				else if(openWalletType == WalletType.MOBIKWIK.getOrdinal()){
+				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikUnlink(params, callback);
 				}
 			} else{
@@ -578,11 +578,11 @@ public class WalletRechargeFragment extends Fragment {
 
 	private void openWebView(String data, int walletType) {
 		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
-		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
-		if(walletType == WalletType.PAYTM.getOrdinal()) {
+		Intent intent = new Intent(paymentActivity, WalletRechargeWebViewActivity.class);
+		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
 			intent.putExtra(Constants.POST_DATA, data);
 		}
-		else if(walletType == WalletType.MOBIKWIK.getOrdinal()) {
+		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
 			intent.putExtra(Constants.KEY_URL, data);
 		}
 		intent.putExtra(Constants.KEY_WALLET_TYPE, walletType);

@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,15 +15,11 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Locale;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
@@ -33,7 +28,6 @@ import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -41,8 +35,6 @@ import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerVie
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.WalletType;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
@@ -266,15 +258,12 @@ public class SlidingBottomPanel {
 
     public void updatePaymentOption() {
         try {
-            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore().getPaymentOptionAccAvailability(Data.pickupPaymentOption);
-            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentOp.setImageResource(R.drawable.ic_paytm_small);
-                textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-            } else {
-                imageViewPaymentOp.setImageResource(R.drawable.ic_cash_small);
-                textViewCashValue.setText(activity.getResources().getString(R.string.cash));
-            }
+            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
+            imageViewPaymentOp.setImageResource(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionIconSmall(Data.pickupPaymentOption));
+            textViewCashValue.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionBalanceText(Data.pickupPaymentOption));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -294,7 +283,8 @@ public class SlidingBottomPanel {
         } else {
             selectedCoupon = noSelectionCoupon;
         }
-        displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+        MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+                Data.pickupPaymentOption, selectedCoupon);
     }
 
     public void setSelectedCoupon(PromoCoupon promoCoupon){
@@ -315,56 +305,9 @@ public class SlidingBottomPanel {
         }
     }
 
-    public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
-        return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
-    }
-
-    private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
-        try {
-            if (isPaytmCoupon(promoCoupon)) {
-                if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
-                    View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            openPaymentActivityInCaseOfPaytmNotAdded();
-                        }
-                    };
-                    View.OnClickListener onClickListenerCancel = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    };
-                    if (Data.userData.getPaytmEnabled() == 1) {
-                        DialogPopup.alertPopupWithListener(activity, "",
-                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
-                                onClickListenerCancel);
-                    } else {
-                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
-                                activity.getResources().getString(R.string.ok),
-                                activity.getResources().getString(R.string.cancel),
-                                onClickListenerPaymentOption,
-                                onClickListenerCancel,
-                                true, false);
-                    }
-                    return false;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public void openPaymentActivityInCaseOfPaytmNotAdded() {
-        if (Data.userData.getPaytmEnabled() != 1) {
-            Intent intent = new Intent(activity, PaymentActivity.class);
-            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-            intent.putExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
-            activity.startActivity(intent);
-            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
-        }
+    public boolean displayAlertAndCheckForSelectedWalletCoupon() {
+        return MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+                Data.pickupPaymentOption, selectedCoupon);
     }
 
 
@@ -450,14 +393,6 @@ public class SlidingBottomPanel {
         }
     }
 
-    private boolean isPaytmCoupon(PromoCoupon pc){
-        if(pc.getTitle().toLowerCase(Locale.ENGLISH)
-                .contains(activity.getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
-            return true;
-        }
-        return false;
-    }
-
     public void updateRegionsUI(){
         try{
             if(Data.regions.size() > 1){
@@ -495,11 +430,7 @@ public class SlidingBottomPanel {
             JSONArray coups = new JSONArray();
             JSONArray coupsP = new JSONArray();
             for(PromoCoupon pc : Data.promoCoupons){
-                if(isPaytmCoupon(pc)){
-                    coupsP.put(pc.getTitle());
-                } else{
-                    coups.put(pc.getTitle());
-                }
+                coups.put(pc.getTitle());
             }
             map.put(Constants.KEY_COUPONS, coups.toString());
             NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);

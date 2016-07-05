@@ -20,11 +20,11 @@ import android.widget.Toast;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
-import product.clicklabs.jugnoo.wallet.models.WalletType;
 
-public class PaytmRechargeWebViewActivity extends FragmentActivity {
+public class WalletRechargeWebViewActivity extends FragmentActivity {
 
     private WebView webView;
     boolean cancelTransaction = false;
@@ -64,10 +64,10 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
         });
         webView.setWebViewClient(new MyAppWebViewClient());
 
-        walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+        walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 
         try {
-            if(walletType == WalletType.PAYTM.getOrdinal()){
+            if(walletType == PaymentOption.PAYTM.getOrdinal()){
 				String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
 				try {
 					loadHTMLContent(postDataQuery);
@@ -76,7 +76,7 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 					loadHTMLContent(postDataQuery);
 				}
 			}
-			else if(walletType == WalletType.MOBIKWIK.getOrdinal()){
+			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 				String url = getIntent().getStringExtra(Constants.KEY_URL);
 				webView.loadUrl(url);
 			}
@@ -177,7 +177,7 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
 		try {
 			Log.e("url", "=" + url);
 
-            if(walletType == WalletType.PAYTM.getOrdinal()) {
+            if(walletType == PaymentOption.PAYTM.getOrdinal()) {
                 if (PAYTM_SUCCESS_URL.equalsIgnoreCase(url)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
@@ -187,7 +187,7 @@ public class PaytmRechargeWebViewActivity extends FragmentActivity {
                     setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
                     finish();
                 }
-            } else if(walletType == WalletType.MOBIKWIK.getOrdinal()){
+            } else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
                 if (MOBIKWIK_SUCCESS_URL.equalsIgnoreCase(url)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);

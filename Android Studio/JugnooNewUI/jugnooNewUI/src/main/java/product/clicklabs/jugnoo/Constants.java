@@ -313,12 +313,14 @@ public interface Constants {
 
 	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
 	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
+	String KEY_PAYTM = "paytm";
 	String KEY_MOBIKWIK = "mobikwik";
-
 	String KEY_BALANCE = "balance";
 	String KEY_WALLET_TYPE = "wallet_type";
 	String KEY_AMOUNT = "amount";
 	String KEY_ADD_MONEY_URL = "add_money_url";
 	String KEY_PAYTM_ENABLED = "paytm_enabled";
+	String KEY_WALLET_BALANCE = "wallet_balance";
+	String KEY_PAID_USING_MOBIKWIK = "paid_using_mobikwik";
 
 }

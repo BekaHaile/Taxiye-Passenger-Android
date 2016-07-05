@@ -9,14 +9,14 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
-import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
+import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
-import product.clicklabs.jugnoo.wallet.models.WalletType;
 
 
 /**
@@ -50,14 +50,14 @@ public class PaymentActivity extends BaseFragmentActivity{
 			if(getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)){
 				amountToPreFill = getIntent().getStringExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE);
 			}
-			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragLayout, new WalletRechargeFragment(walletType), WalletRechargeFragment.class.getName())
 					.addToBackStack(WalletRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
 		else if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivityPathInt){
-			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragLayout, new AddWalletFragment(walletType), AddWalletFragment.class.getName())
 					.addToBackStack(AddWalletFragment.class.getName())

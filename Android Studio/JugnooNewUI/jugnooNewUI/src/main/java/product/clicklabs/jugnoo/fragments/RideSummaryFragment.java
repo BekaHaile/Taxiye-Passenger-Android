@@ -61,13 +61,15 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-			relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
+			relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
+			relativeLayoutPaidUsingMobikwik;
 	LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
 	RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
 	NonScrollListView listViewEndRideDiscounts;
 	TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountValue,
-			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
+			textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
+			textViewEndRideMobikwikValue, textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
 			textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue;
 	TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
 	Button buttonEndRideOk;
@@ -115,7 +117,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_ride_summary, container, false);
+		rootView = inflater.inflate(R.layout.fragment_ride_summary, container, false);
 
         activity = getActivity();
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
@@ -163,6 +165,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue); textViewEndRideFinalFareValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue); textViewEndRideJugnooCashValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRidePaytmValue = (TextView) rootView.findViewById(R.id.textViewEndRidePaytmValue); textViewEndRidePaytmValue.setTypeface(Fonts.mavenRegular(activity));
+		textViewEndRideMobikwikValue = (TextView) rootView.findViewById(R.id.textViewEndRideMobikwikValue); textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue); textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue); textViewEndRideBaseFareValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideDistanceValue = (TextView) rootView.findViewById(R.id.textViewEndRideDistanceValue); textViewEndRideDistanceValue.setTypeface(Fonts.mavenRegular(activity));
@@ -176,6 +179,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		relativeLayoutEndRideDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideDiscount);
 		relativeLayoutPaidUsingJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
 		relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
+		relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
 		linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
 		relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
 		imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
@@ -204,6 +208,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
+		((TextView) rootView.findViewById(R.id.textViewEndRideMobikwik)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 		((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity));
 		((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity));
@@ -389,9 +394,19 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				}
 				if(Utils.compareDouble(endRideData.paidUsingPaytm, 0) > 0){
 					relativeLayoutPaidUsingPaytm.setVisibility(View.VISIBLE);
-					textViewEndRidePaytmValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.paidUsingPaytm)));
+					textViewEndRidePaytmValue.setText(String.format(getResources()
+							.getString(R.string.rupees_value_format_without_space),
+							Utils.getMoneyDecimalFormat().format(endRideData.paidUsingPaytm)));
 				} else{
 					relativeLayoutPaidUsingPaytm.setVisibility(View.GONE);
+				}
+				if(Utils.compareDouble(endRideData.paidUsingMobikwik, 0) > 0){
+					relativeLayoutPaidUsingMobikwik.setVisibility(View.VISIBLE);
+					textViewEndRideMobikwikValue.setText(String.format(getResources()
+									.getString(R.string.rupees_value_format_without_space),
+							Utils.getMoneyDecimalFormat().format(endRideData.paidUsingMobikwik)));
+				} else{
+					relativeLayoutPaidUsingMobikwik.setVisibility(View.GONE);
 				}
 
 				textViewEndRideToBePaidValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.toPay)));

@@ -13,10 +13,9 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -25,7 +24,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.WalletType;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -106,14 +105,13 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                     public void onClick(View v) {
                                         Intent intent = new Intent(activity, PaymentActivity.class);
                                         intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-                                        intent.putExtra(Constants.KEY_WALLET_TYPE, WalletType.PAYTM.getOrdinal());
+                                        intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
                                         activity.startActivity(intent);
                                         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                     }
                                 });
                     }
                     else{
-                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().openPaymentActivityInCaseOfPaytmNotAdded();
                     }
                 }
                 break;
@@ -194,7 +192,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm);
 			}
-            activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
         } catch (Exception e) {
             e.printStackTrace();
         }

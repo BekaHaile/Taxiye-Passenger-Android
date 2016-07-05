@@ -10,7 +10,9 @@ import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -101,7 +103,6 @@ public class SlidingBottomPanelV4 {
                 }
                 requestRideOptionsFragment.initSelectedCoupon();
             }
-            requestRideOptionsFragment.updatePaymentOption();
             requestRideOptionsFragment.updateRegionsUI();
             requestRideOptionsFragment.updateFareStructureUI();
             requestRideOptionsFragment.getPromoCouponsDialog().notifyCoupons();
@@ -142,7 +143,8 @@ public class SlidingBottomPanelV4 {
             JSONArray coups = new JSONArray();
             JSONArray coupsP = new JSONArray();
             for(PromoCoupon pc : Data.promoCoupons){
-                if(requestRideOptionsFragment.isPaytmCoupon(pc)){
+                if(PaymentOption.PAYTM.getOrdinal() == MyApplication.getInstance().getWalletCore()
+                        .couponOfWhichWallet(pc)){
                     coupsP.put(pc.getTitle());
                 } else{
                     coups.put(pc.getTitle());

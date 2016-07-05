@@ -11,23 +11,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.Locale;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
@@ -38,14 +33,12 @@ import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
 /**
  * Created by Shankar on 1/8/16.
@@ -57,21 +50,16 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private HomeActivity activity;
     private LinearLayout linearLayoutSlidingBottom;
 
-    private LinearLayout linearLayoutOptionsSingleSupply, linearLayoutPaymentMode;
-    private ImageView imageViewPaymentMode, imageViewPaymentModeMS;
-    private TextView textViewPaymentModeValue;
-
-
+    private LinearLayout linearLayoutOptionsSingleSupply;
     private LinearLayout linearLayoutFare;
     private TextView textViewMinFareValue;
-
-    private LinearLayout linearLayoutFareEstimate, linearLayoutPaymentModeMS;
+    private LinearLayout linearLayoutFareEstimate;
 
     private RelativeLayout relativeLayoutMultipleSupplyMain;
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
-    private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2, textViewMinFareMS;
+    private TextView textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
+            textViewMaxPeople, textViewOffersMS, textViewOffers, textViewPoolInfo1, textViewPoolInfo2, textViewMinFareMS;
     private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -101,10 +89,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         }
 
         linearLayoutOptionsSingleSupply = (LinearLayout) rootView.findViewById(R.id.linearLayoutOptionsSingleSupply);
-        linearLayoutPaymentMode = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentMode);
-        imageViewPaymentMode = (ImageView) rootView.findViewById(R.id.imageViewPaymentMode);
-        textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
-        textViewPaymentModeValue.setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutFare = (LinearLayout) rootView.findViewById(R.id.linearLayoutFare);
         ((TextView) rootView.findViewById(R.id.textViewMinFare)).setTypeface(Fonts.mavenMedium(activity));
@@ -116,13 +100,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
         relativeLayoutPoolInfoBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPoolInfoBar);
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
-        linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
-        imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
-        textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
-        textViewPaymentModeValueMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
-        textViewOffersMode = (TextView) rootView.findViewById(R.id.textViewOffersMode);
-        textViewOffersMode.setTypeface(Fonts.mavenMedium(activity));
-        textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
+        textViewOffers = (TextView) rootView.findViewById(R.id.textViewOffers);
+        textViewOffers.setTypeface(Fonts.mavenMedium(activity));
+        textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
         textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
@@ -131,14 +111,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewMinFareMSValue.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewMaxPeople = (TextView) rootView.findViewById(R.id.textViewMaxPeople);
         textViewMaxPeople.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
-        textViewOffers = (TextView) rootView.findViewById(R.id.textViewOffers);
-        textViewOffers.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewOffersMS = (TextView) rootView.findViewById(R.id.textViewOffersMS);
+        textViewOffersMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewPoolInfo1 = (TextView) rootView.findViewById(R.id.textViewPoolInfo1);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
         textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
         textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity));
 
-        textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
+        textViewOffersMS.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
         textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
@@ -157,15 +137,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
 
 
-        linearLayoutPaymentMode.setOnClickListener(onClickListenerRequestOptions);
         linearLayoutFare.setOnClickListener(onClickListenerRequestOptions);
         linearLayoutFareEstimate.setOnClickListener(onClickListenerRequestOptions);
 
-        linearLayoutPaymentModeMS.setOnClickListener(onClickListenerRequestOptions);
         linearLayoutMinFareMS.setOnClickListener(onClickListenerRequestOptions);
         textVieGetFareEstimateMS.setOnClickListener(onClickListenerRequestOptions);
+        textViewOffersMS.setOnClickListener(onClickListenerRequestOptions);
         textViewOffers.setOnClickListener(onClickListenerRequestOptions);
-        textViewOffersMode.setOnClickListener(onClickListenerRequestOptions);
 
         relativeLayoutMultipleSupplyMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,12 +160,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     View.OnClickListener onClickListenerRequestOptions = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v.getId() == R.id.linearLayoutPaymentMode){
-                getPaymentOptionDialog().show();
-                FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
-            } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
+            if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                     getPoolDestinationDialog().show();
                 } else{
@@ -212,7 +185,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
-            } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
+            }
+            else if(v.getId() == R.id.textViewOffersMS || v.getId() == R.id.textViewOffers){
                 getPromoCouponsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
@@ -268,35 +242,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
 
-    public void updatePaymentOption() {
-        try {
-            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
-            int smallIcon = MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption);
-            imageViewPaymentMode.setImageResource(smallIcon);
-            imageViewPaymentModeMS.setImageResource(smallIcon);
-            String balanceText = MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption);
-            textViewPaymentModeValue.setText(balanceText);
-            textViewPaymentModeValueMS.setText(balanceText);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void updatePreferredPaymentOptionUI(){
         try{
             if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
                 getPaymentOptionDialog().updatePreferredPaymentOptionUI();
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void setPaytmLoadingVisiblity(int visiblity){
-        try{
-            if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
-                getPaymentOptionDialog().setPaytmLoadingVisiblity(visiblity);
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -411,7 +360,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } else {
             promoCoupon = noSelectionCoupon;
         }
-        if(displayAlertAndCheckForSelectedPaytmCoupon(promoCoupon)){
+        if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+                Data.pickupPaymentOption, promoCoupon)){
             selectedCoupon = promoCoupon;
         }
     }
@@ -420,63 +370,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         selectedCoupon = promoCoupon;
     }
 
-    public boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
-        try {
-            if (isPaytmCoupon(promoCoupon)) {
-                if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
-                    View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            openPaymentActivityInCaseOfPaytmNotAdded();
-                        }
-                    };
-                    View.OnClickListener onClickListenerCancel = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    };
-                    if (Data.userData.getPaytmEnabled() == 1) {
-                        DialogPopup.alertPopupWithListener(activity, "",
-                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
-                                onClickListenerCancel);
-                    } else {
-                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
-                                activity.getResources().getString(R.string.ok),
-                                activity.getResources().getString(R.string.cancel),
-                                onClickListenerPaymentOption,
-                                onClickListenerCancel,
-                                true, false);
-                    }
-                    return false;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public void openPaymentActivityInCaseOfPaytmNotAdded() {
-        if (Data.userData.getPaytmEnabled() != 1) {
-            Intent intent = new Intent(activity, PaymentActivity.class);
-            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-            activity.startActivity(intent);
-            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
-        }
-    }
-
-    public boolean isPaytmCoupon(PromoCoupon pc){
-        if(pc.getTitle().toLowerCase(Locale.ENGLISH)
-                .contains(activity.getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
-        return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+    public boolean displayAlertAndCheckForSelectedWalletCoupon() {
+        return MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+                Data.pickupPaymentOption, selectedCoupon);
     }
 
     public void setRegionSelected(int position) {

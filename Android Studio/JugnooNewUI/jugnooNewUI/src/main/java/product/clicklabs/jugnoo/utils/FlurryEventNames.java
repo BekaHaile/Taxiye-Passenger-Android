@@ -296,6 +296,7 @@ public interface FlurryEventNames {
     NUDGE_FARE_ESTIMATE_CLICKED = "fare_estimate_clicked",
     NUDGE_PAYMENT_TAB_CLICKED = "payment_tab_clicked",
     NUDGE_PAYTM_METHOD_SELECTED = "paytm_method_selected",
+            NUDGE_MOBIKWIK_METHOD_SELECTED = "mobikwik_method_selected",
     NUDGE_CASH_METHOD_SELECTED = "cash_method_selected",
     NUDGE_JUGNOO_FRESH_CLICKED = "jugnoo_fresh_clicked",
     NUDGE_JUGNOO_FRESH_ORDER_PLACED = "jugnoo_fresh_order_placed",

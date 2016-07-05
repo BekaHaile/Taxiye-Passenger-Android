@@ -65,8 +65,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
-					int paytmEnabled, double paytmBalance,
-					int mobikwikEnabled, double mobikwikBalance){
+					int paytmEnabled, int mobikwikEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -137,10 +136,7 @@ public class UserData {
 		checkUserImage();
 
 		this.paytmEnabled = paytmEnabled;
-		this.paytmBalance = paytmBalance;
-
 		this.mobikwikEnabled = mobikwikEnabled;
-		this.mobikwikBalance = mobikwikBalance;
 	}
 
 	private void checkUserImage(){
@@ -164,7 +160,7 @@ public class UserData {
 	}
 
 	public String getPaytmBalanceStr(){
-		if(paytmBalance < 0){
+		if(paytmEnabled != 1 || paytmBalance < 0){
 			return "--";
 		} else {
 			return Utils.getMoneyDecimalFormat().format(paytmBalance);

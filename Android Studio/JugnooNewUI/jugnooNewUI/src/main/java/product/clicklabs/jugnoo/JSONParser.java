@@ -238,12 +238,9 @@ public class JSONParser implements Constants {
 
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
-        double paytmBalance = userData.optDouble(KEY_PAYTM_BALANCE, 0d);
-
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
-        double mobikwikBalance = userData.optDouble(KEY_MOBIKWIK_BALANCE, 0d);
 
-        return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
+        UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable,
                 contactSaved, referAllText, referAllTitle,
@@ -256,8 +253,11 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
-                paytmEnabled, paytmBalance,
-                mobikwikEnabled, mobikwikBalance);
+                paytmEnabled, mobikwikEnabled);
+
+        userDataObj.updateWalletBalances(userData.getJSONObject(KEY_WALLET_BALANCE));
+
+        return userDataObj;
 
     }
 
@@ -395,7 +395,7 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
-            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled()==null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
+            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled() == null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
             Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
@@ -669,7 +669,7 @@ public class JSONParser implements Constants {
 		}
 
 		int waitingChargesApplicable = jLastRideData.optInt("waiting_charges_applicable", 0);
-		double paidUsingPaytm = jLastRideData.optDouble("paid_using_paytm", 0);
+		double paidUsingPaytm = jLastRideData.optDouble(KEY_PAID_USING_PAYTM, 0);
 
         engagementId = jLastRideData.optString(KEY_ENGAGEMENT_ID, "0");
 
@@ -681,7 +681,7 @@ public class JSONParser implements Constants {
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
 
-
+        double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
@@ -697,7 +697,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges);
+                sumAdditionalCharges, paidUsingMobikwik);
 	}
 
 
@@ -1240,7 +1240,5 @@ public class JSONParser implements Constants {
             Data.dropLatLng = null;
         }
     }
-
-
 
 }

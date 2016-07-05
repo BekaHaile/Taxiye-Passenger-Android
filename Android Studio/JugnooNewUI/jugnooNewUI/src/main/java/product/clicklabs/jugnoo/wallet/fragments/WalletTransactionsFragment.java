@@ -346,7 +346,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 									for (int i = 0; i < jTransactions.length(); i++) {
 										JSONObject jTransactionI = jTransactions.getJSONObject(i);
 
-										int paytm = jTransactionI.optInt("paytm", 0);
+										int paytm = jTransactionI.optInt(Constants.KEY_PAYTM, 0);
 										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 
 										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),

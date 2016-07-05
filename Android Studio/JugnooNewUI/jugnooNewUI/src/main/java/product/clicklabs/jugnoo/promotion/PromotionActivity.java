@@ -433,15 +433,10 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                         }
 
                                     }).getBalance(false);
-
+                                    Data.userData.updateWalletBalances(jObj);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
-
-                                Data.userData.setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE,
-                                        Data.userData.getJugnooBalance()));
-                                Data.userData.setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE,
-                                        Data.userData.getPaytmBalance()));
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);

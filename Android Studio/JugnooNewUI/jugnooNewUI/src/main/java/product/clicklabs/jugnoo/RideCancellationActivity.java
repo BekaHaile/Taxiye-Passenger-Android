@@ -459,11 +459,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								} else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
-
-									Data.userData.setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE,
-											Data.userData.getJugnooBalance()));
-									Data.userData.setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE,
-											Data.userData.getPaytmBalance()));
+									Data.userData.updateWalletBalances(jObj);
 
 									if (HomeActivity.appInterruptHandler != null) {
 										HomeActivity.appInterruptHandler.onCancelCompleted();

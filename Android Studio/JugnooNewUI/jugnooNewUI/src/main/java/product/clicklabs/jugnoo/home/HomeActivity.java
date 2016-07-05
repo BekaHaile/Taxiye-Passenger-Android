@@ -288,9 +288,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutDriverRating;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
-	LinearLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue;
-	ImageView imageViewIRPaymentOptionPaytm, imageViewIRPaymentOptionCash, imageViewThumbsUpGif, imageViewOfferConfirm;
+	ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
 
 
 
@@ -390,7 +389,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final double FIX_ZOOM_DIAGONAL = 408;
 
-	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
+	public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
 
     private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
@@ -663,11 +662,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
 
 
-		relativeLayoutIRPaymentOption = (LinearLayout) findViewById(R.id.relativeLayoutIRPaymentOption);
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.mavenRegular(this));
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
-		imageViewIRPaymentOptionPaytm = (ImageView) findViewById(R.id.imageViewIRPaymentOptionPaytm);
-		imageViewIRPaymentOptionCash = (ImageView) findViewById(R.id.imageViewIRPaymentOptionCash);
+        imageViewIRPaymentOption = (ImageView) findViewById(R.id.imageViewIRPaymentOption);
 
         linearLayoutSendInvites = (LinearLayout) findViewById(R.id.linearLayoutSendInvites);
         textViewSendInvites = (TextView) findViewById(R.id.textViewSendInvites); textViewSendInvites.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -1613,7 +1610,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-		Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+//		Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
@@ -2036,7 +2033,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
                         FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
-                        boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
+                        boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedWalletCoupon();
                         if(proceed) {
 
                             boolean callRequestRide = MyApplication.getInstance().getWalletCore()
@@ -2200,7 +2197,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             menuBar.setUserData();
             topBar.setUserData();
 
-            updateInRideAddPaytmButtonText();
+            updateInRideAddMoneyToWalletButtonText();
 			setPaymentOptionInRide();
 
             slidingBottomPanel.getRequestRideOptionsFragment().updatePreferredPaymentOptionUI();
@@ -2638,7 +2635,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.VISIBLE);
-                        updateInRideAddPaytmButtonText();
+                        updateInRideAddMoneyToWalletButtonText();
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
@@ -3019,7 +3016,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return (BadFeedbackFragment) frag;
     }
 
-	private void updateInRideAddPaytmButtonText(){
+	private void updateInRideAddMoneyToWalletButtonText(){
 		MyApplication.getInstance().getWalletCore().addMoneyToWalletTextDuringRide(Data.assignedDriverInfo.getPreferredPaymentMode());
 	}
 
@@ -3215,27 +3212,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void setPaymentOptionInRide(){
 		try{
-			if(Data.assignedDriverInfo.getPreferredPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
-				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
-				imageViewIRPaymentOptionPaytm.setVisibility(View.VISIBLE);
-				imageViewIRPaymentOptionCash.setVisibility(View.GONE);
-				textViewIRPaymentOption.setText(getResources().getString(R.string.paytm));
-                textViewIRPaymentOption.setVisibility(View.GONE);
-				textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
-				textViewIRPaymentOptionValue.setText(String.format(getResources()
-                        .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
-                textViewIRPaymentOptionValue.setTextColor(Data.userData.getPaytmBalanceColor(this));
-			}
-			else{
-				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
-				imageViewIRPaymentOptionPaytm.setVisibility(View.GONE);
-				imageViewIRPaymentOptionCash.setVisibility(View.VISIBLE);
+            imageViewIRPaymentOption.setImageResource(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionIconSmall(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            textViewIRPaymentOption.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionName(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionBalanceText(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            textViewIRPaymentOptionValue.setTextColor(MyApplication.getInstance().getWalletCore()
+                    .getWalletBalanceColor(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            if(PaymentOption.CASH.getOrdinal() == Data.assignedDriverInfo.getPreferredPaymentMode()){
                 textViewIRPaymentOption.setVisibility(View.VISIBLE);
-				textViewIRPaymentOption.setText(getResources().getString(R.string.cash));
-				textViewIRPaymentOptionValue.setVisibility(View.GONE);
-			}
-		} catch(Exception e){
-		}
+                textViewIRPaymentOptionValue.setVisibility(View.GONE);
+            } else {
+                textViewIRPaymentOption.setVisibility(View.GONE);
+                textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
+            }
+		} catch(Exception e){}
 	}
 
 
@@ -3531,7 +3523,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 openDeepLink();
                 performDeepLinkRequest();
 
-                getPaytmBalance(this);
+                fetchWalletBalance(this);
 
 
                 String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");
@@ -4656,10 +4648,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
 
-                                    Data.userData.setJugnooBalance(jObj.optDouble(KEY_JUGNOO_BALANCE,
-                                            Data.userData.getJugnooBalance()));
-                                    Data.userData.setPaytmBalance(jObj.optDouble(KEY_PAYTM_BALANCE,
-                                            Data.userData.getPaytmBalance()));
+                                    Data.userData.updateWalletBalances(jObj);
 
                                     Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 
@@ -6902,7 +6891,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private ApiFetchWalletBalance apiFetchWalletBalance = null;
-	private void getPaytmBalance(final Activity activity) {
+	private void fetchWalletBalance(final Activity activity) {
         try {
             if(apiFetchWalletBalance == null){
 				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
@@ -6944,9 +6933,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					}
                 });
 			}
-            long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
-            long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
-            if(lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
+            long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+            long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
+            if(lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
                 apiFetchWalletBalance.getBalance(false);
             }
         } catch (Exception e) {
@@ -7397,8 +7386,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if(Data.userData != null) {
                                     Data.userData.setPaytmRechargeInfo(null);
                                     Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
-                                            (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
-                                    getPaytmBalance(HomeActivity.this);
+                                            (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+                                    fetchWalletBalance(HomeActivity.this);
                                 }
                             }
 
@@ -7739,23 +7728,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void updateConfirmedStatePaymentUI(){
         try {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewPaymentModeConfirm.getLayoutParams();
-            if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
-                imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_paytm_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
-                textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-                textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-            }
-            else{
-                imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_cash_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
-                textViewPaymentModeValueConfirm.setText(HomeActivity.this.getResources().getString(R.string.cash));
-            }
-            imageViewPaymentModeConfirm.setLayoutParams(params);
+            imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionIconSmall(Data.pickupPaymentOption));
+            textViewPaymentModeValueConfirm.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionBalanceText(Data.pickupPaymentOption));
         } catch (Exception e) {
             e.printStackTrace();
         }
