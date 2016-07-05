@@ -155,6 +155,7 @@ import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
+import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
@@ -1685,7 +1686,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 
                     dropLocationSet = true;
-                    relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+                    relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                     imageViewDropCross.setVisibility(View.VISIBLE);
 
                     /*translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
@@ -1734,7 +1735,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = ((int)(ASSL.Yscale()*100f));
+                params.topMargin = ((int)(ASSL.Yscale()*98f));
                 mView.setLayoutParams(params);
                 if(callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
@@ -1764,9 +1765,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (viewExchange) {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_white);
+                    mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1831,9 +1832,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (viewExchange) {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_white);
+                    mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1858,13 +1859,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewDestSearch.setText("");
             imageViewDropCross.setVisibility(View.GONE);
 
-            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.dropshadow_in_menu_item_selector_color);
+            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
             relativeLayoutDestSearchBar.clearAnimation();
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDestSearchBar.getLayoutParams();
             params.topMargin = (int) (ASSL.Yscale() * 80f);
             relativeLayoutDestSearchBar.setLayoutParams(params);
 
-            relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+            relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
             relativeLayoutInitialSearchBar.clearAnimation();
             RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutInitialSearchBar.getLayoutParams();
             params1.topMargin = (int) (ASSL.Yscale() * 20f);
@@ -1921,7 +1922,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (UserMode.PASSENGER == userMode &&
                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                     map != null &&
-                    HomeActivity.this.hasWindowFocus()) {
+                    HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation()) {
                     Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
                         findDriversETACall(false);
@@ -1952,7 +1953,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
             if(!isPoolRideAtConfirmation()) {
-                new PriorityTipDialog(HomeActivity.this, Data.userData.fareFactor, Data.priorityTipCategory,
+                double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
+                int priorityTipCategory = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getPriorityTipCategory();
+                new PriorityTipDialog(HomeActivity.this, fareFactor, priorityTipCategory,
                         new PriorityTipDialog.Callback() {
                             @Override
                             public void onConfirmed(boolean confirmClicked) {
@@ -2373,6 +2376,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(isPoolRideAtConfirmation()) {
                                 centreLocationRl.setVisibility(View.GONE);
                                 fareEstimateForPool();
+                            } else{
+
                             }
                             relativeLayoutRequest.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
@@ -2425,17 +2430,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
-                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl,
-                                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+                            if(confirmedScreenOpened &&
+                                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal())){
+                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                        .getTextAssignBitmap(HomeActivity.this, assl,
+                                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                                getResources().getDimensionPixelSize(R.dimen.text_size_22))));
+                            }else{
+                                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                        .getTextBitmap(HomeActivity.this, assl,
+                                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                                getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+                            }
+
 
                             pickupLocationMarker = map.addMarker(markerOptions);
 							new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                                        poolPathZoomAtConfirm();
+                                        //poolPathZoomAtConfirm();
                                     } else {
                                         if (map != null && Data.pickupLatLng != null) {
                                             map.animateCamera(CameraUpdateFactory.newLatLng(Data.pickupLatLng), MAP_ANIMATE_DURATION, null);
@@ -2483,6 +2497,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
+                            driverLocationMarker.setRotation((float)Data.assignedDriverInfo.getBearing());
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -4164,6 +4179,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
         markerOptions1.position(driverInfo.latLng);
+        //markerOptions1.rotation((float)driverInfo.getBearing());
         markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                 .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
@@ -4818,6 +4834,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     int flag = jObj.getInt("flag");
                                     if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
                                         final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble("latitude"), jObj.getDouble("longitude"));
+
                                         String eta = "5";
                                         if (jObj.has("eta")) {
                                             eta = jObj.getString("eta");
@@ -4832,10 +4849,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             @Override
                                             public void run() {
                                                 try {
+                                                    //double bearing = jObj.optDouble("bearing", driverLocationMarker.getRotation());
                                                     if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                                         if (map != null) {
                                                             if (HomeActivity.this.hasWindowFocus()) {
 //                                                                driverLocationMarker.setPosition(driverCurrentLatLng);
+                                                                driverLocationMarker.setRotation(driverLocationMarker.getRotation());
                                                                 MarkerAnimation.animateMarkerToICS(driverLocationMarker,
                                                                         driverCurrentLatLng, new LatLngInterpolator.Spherical());
                                                                 updateDriverETAText(passengerScreenMode);
@@ -5292,7 +5311,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                         if (distance > MAP_PAN_DISTANCE_CHECK) {
                             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "different pickup location popup");
-                            textMessage.setText("The pickup location you have set is different from your current location. Are you sure you want an auto at this pickup location?");
+                            textMessage.setText("The pickup location you have set is different from your current location. Are you sure this is your pickup location?");
                             dialog.show();
                         } else {
                             if (getFilteredDrivers() == 0) {
@@ -5551,7 +5570,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
             JSONParser.parseDropLatLng(jObj);
 
-			double fareFactor = 1.0;
+			double fareFactor = 1.0, bearing = 0.0;
 			if (jObj.has("fare_factor")) {
 				fareFactor = jObj.getDouble("fare_factor");
 			}
@@ -5563,6 +5582,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
                 cancelRideThrashHoldTime = jObj.optString("cancel_ride_threshold_time", "");
                 cancellationCharges = jObj.optInt("cancellation_charge", 0);
+                bearing = jObj.optDouble("bearing", 0);
 
             } catch(Exception e){
                 e.printStackTrace();
@@ -5578,7 +5598,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, latitude, longitude, userName,
                 driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders);
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing);
 
 			if(inRide){
 				initializeStartRideVariables();
@@ -5961,9 +5981,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
                                 if ("".equalsIgnoreCase(Data.cSessionId)) {
+                                    double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
+                                    double driverFareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDriverFareFactor();
+                                    Log.v("fare factor in request", "--> "+fareFactor);
+
                                     nameValuePairs.put("duplicate_flag", "0");
-                                    nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(Data.userData.fareFactor));
-                                    nameValuePairs.put(KEY_DRIVER_FARE_FACTOR, String.valueOf(Data.userData.getDriverFareFactor()));
+                                    nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(fareFactor));
+                                    nameValuePairs.put(KEY_DRIVER_FARE_FACTOR, String.valueOf(driverFareFactor));
 
                                     if (myLocation != null && myLocation.hasAccuracy()) {
                                         nameValuePairs.put("location_accuracy", "" + myLocation.getAccuracy());
@@ -7248,7 +7272,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 Data.dropLatLng = searchResult.getLatLng();
                 dropLocationSet = true;
-                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.dropshadow_in_white);
+                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 imageViewDropCross.setVisibility(View.VISIBLE);
 
                 // Save Last 3 Destination...
@@ -7258,14 +7282,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 switchPassengerScreen(passengerScreenMode);
 
-                /*lastDestination.add(searchResult);
-                lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
-                if(lastDestination.size() > 3){
-                    lastDestination.remove(3);
-                }
-                Log.v("size of last Destination", "---> " + lastDestination.size());
-                String tempDest = new Gson().toJson(lastDestination);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);*/
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
@@ -7790,7 +7806,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.startAnimation(shake);
                     shakeAnim++;
                     if(shakeAnim > 3){
-                        DialogPopup.alertPopup(HomeActivity.this, "", "Please fill the destination first.");
+                        new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
+                            @Override
+                            public void onEnterDestination() {
+
+                            }
+                        }).show();
                     }
                 }
             }

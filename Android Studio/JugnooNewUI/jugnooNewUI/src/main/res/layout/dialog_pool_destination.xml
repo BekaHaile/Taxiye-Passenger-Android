@@ -48,9 +48,9 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
-            android:text="@string/tell_us_destination"
+            android:text="@string/pool_rides_offer_guaranteed_fares"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
+            android:textSize="@dimen/text_size_28"
             />
 
         <TextView
@@ -63,16 +63,31 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
-            android:text="@string/you_cannot_change_location"
+            android:text="@string/please_provide_pickup_and_dest"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
+            android:textSize="@dimen/text_size_28"
+            />
+
+        <TextView
+            android:id="@+id/textViewNotAble"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="46px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:gravity="center"
+            android:text="@string/you_will_not_change_dest"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_24"
             />
 
         <Button
             android:id="@+id/buttonEnterDestination"
             style="@style/ButtonTheme"
             android:layout_marginBottom="40px"
-            android:text="@string/assigning_state_edit_text_hint"/>
+            android:text="@string/okay"/>
 
 
     </LinearLayout>

@@ -55,6 +55,12 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
                 && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId());
 
+        if(region.getCustomerFareFactor() > 1.0){
+            holder.imageViewMultipleSurge.setVisibility(View.VISIBLE);
+        } else{
+            holder.imageViewMultipleSurge.setVisibility(View.GONE);
+        }
+
         try {
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
@@ -105,7 +111,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        public ImageView imageViewSep, imageViewTab;
+        public ImageView imageViewSep, imageViewTab, imageViewMultipleSurge;
         public View imageViewSelected;
         public TextView textViewVehicleName;
         public ViewHolder(View itemView, Activity activity) {
@@ -113,6 +119,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
             imageViewTab = (ImageView) itemView.findViewById(R.id.imageViewTab);
+            imageViewMultipleSurge = (ImageView) itemView.findViewById(R.id.imageViewMultipleSurge);
             imageViewSelected = (View) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
             textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);

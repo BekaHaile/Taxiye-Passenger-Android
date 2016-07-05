@@ -41,9 +41,9 @@
                     android:id="@+id/rl1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7px"
-                    android:layout_marginLeft="7px"
-                    android:layout_marginRight="7px"
+                    android:layout_marginBottom="0px"
+                    android:layout_marginLeft="0px"
+                    android:layout_marginRight="0px"
                     android:layout_marginTop="126px"
                     android:background="@drawable/button_white_br"
                     android:orientation="vertical"
@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="180px"
+                        android:layout_marginTop="140px"
                         android:gravity="center"
                         android:paddingLeft="40px"
                         android:paddingRight="40px"
@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textHead"
-                        android:layout_marginBottom="50px"
+                        android:layout_marginBottom="30px"
                         android:layout_marginTop="30px"
                         android:orientation="vertical"
                         android:visibility="gone">
@@ -169,8 +169,8 @@
 
 
                 <LinearLayout
-                    android:layout_width="198px"
-                    android:layout_height="198px"
+                    android:layout_width="170px"
+                    android:layout_height="170px"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="77px"
                     android:background="@drawable/circle_priority_tip"
@@ -182,7 +182,7 @@
                         android:id="@+id/imageViewPriorityTip"
                         android:layout_width="27px"
                         android:layout_height="32px"
-                        android:layout_marginTop="20px"
+                        android:layout_marginTop="10px"
                         android:tag="mwar"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_surge_white"/>
@@ -196,7 +196,7 @@
                         android:singleLine="true"
                         android:text="1.25X"
                         android:textColor="#FFB552"
-                        android:textSize="58px" />
+                        android:textSize="@dimen/text_size_46" />
 
                     <TextView
                         android:id="@+id/textViewNormalFair"

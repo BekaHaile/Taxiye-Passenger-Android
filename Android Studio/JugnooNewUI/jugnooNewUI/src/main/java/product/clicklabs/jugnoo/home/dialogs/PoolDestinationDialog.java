@@ -52,6 +52,7 @@ public class PoolDestinationDialog {
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			((TextView) dialog.findViewById(R.id.textViewDestination)).setTypeface(Fonts.mavenRegular(activity));
 			((TextView) dialog.findViewById(R.id.textViewLocation)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+			((TextView) dialog.findViewById(R.id.textViewNotAble)).setTypeface(Fonts.mavenRegular(activity));
 
 			Button buttonEnterDestination = (Button) dialog.findViewById(R.id.buttonEnterDestination);
 			buttonEnterDestination.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);

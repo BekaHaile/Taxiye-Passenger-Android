@@ -31,11 +31,14 @@ public class SlidingBottomPanelV4 {
     private ImageView imageViewExtraForSliding;
     private RequestRideOptionsFragment requestRideOptionsFragment;
     private ImageView imageViewPriorityTip;
+    private int heightWithBar, heightWithourBar;
 
     private final String TAG = SlidingBottomPanelV4.class.getSimpleName();
 
     public SlidingBottomPanelV4(HomeActivity activity, View view) {
         this.activity = activity;
+        heightWithBar = (int) (195 * ASSL.Yscale());
+        heightWithourBar = (int) (125 * ASSL.Yscale());
         initComponents(view);
     }
 
@@ -121,7 +124,7 @@ public class SlidingBottomPanelV4 {
             for(Region region : Data.regions){
                 if(region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
                         (!region.getOfferTexts().getText1().equalsIgnoreCase(""))){
-                    slidingUpPanelLayout.setPanelHeight((int) (195 * ASSL.Yscale()));
+                    slidingUpPanelLayout.setPanelHeight(heightWithBar);
                     try {
                         getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.VISIBLE);
                     } catch (Exception e) {
@@ -130,7 +133,7 @@ public class SlidingBottomPanelV4 {
                     return;
                 }
             }
-            slidingUpPanelLayout.setPanelHeight((int) (125 * ASSL.Yscale()));
+            slidingUpPanelLayout.setPanelHeight(heightWithourBar);
             getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
