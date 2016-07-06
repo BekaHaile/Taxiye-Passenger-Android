@@ -6937,7 +6937,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					public void onFailure() {
                         try {
                             setUserData();
-                            slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -6945,7 +6944,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void onFinish() {
-                        slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                     }
 
                     @Override
