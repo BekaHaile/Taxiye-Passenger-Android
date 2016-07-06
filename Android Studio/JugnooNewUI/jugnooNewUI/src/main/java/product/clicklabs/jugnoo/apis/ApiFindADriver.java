@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -36,11 +37,15 @@ import retrofit.mime.TypedByteArray;
 public class ApiFindADriver {
 
 	private final String TAG = ApiFindADriver.class.getSimpleName();
+	private final double MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE = 50; // in meters
+	private final long MIN_TIME_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE = 2 * 60 * 1000; // in millis
+
 
 	private Activity activity;
 	private Callback callback;
 	private Region regionSelected;
 	private LatLng refreshLatLng;
+	private long refreshTime;
 
 	public ApiFindADriver(Activity activity, Region regionSelected, Callback callback){
 		this.activity = activity;
@@ -49,7 +54,7 @@ public class ApiFindADriver {
 	}
 
 	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
-					Region regionSelected, final boolean beforeRequestRide){
+					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
@@ -84,20 +89,24 @@ public class ApiFindADriver {
 						parseFindADriverResponse(findADriverResponse);
 
 						refreshLatLng = latLng;
-						if(callback != null) {
-							callback.onComplete();
+						refreshTime = System.currentTimeMillis();
+						if(callback != null && !confirmedScreenOpened) {
+							callback.onCompleteFindADriver();
 						}
 
 						if(beforeRequestRide){
 							if(Utils.compareDouble(fareFactorOld, Data.userData.fareFactor) != 0){
-								callback.stopRequestRide();
+								callback.stopRequestRide(confirmedScreenOpened);
 							} else{
-								callback.continueRequestRide();
+								callback.continueRequestRide(confirmedScreenOpened);
 							}
 						}
 
 					} catch (Exception e) {
 						e.printStackTrace();
+					}
+					if(callback != null) {
+						callback.onFinish();
 					}
 				}
 
@@ -106,6 +115,7 @@ public class ApiFindADriver {
 					Log.e(TAG, "findADriverCall error=" + error.toString());
 					if(callback != null) {
 						callback.onFailure();
+						callback.onFinish();
 					}
 				}
 			});
@@ -243,21 +253,21 @@ public class ApiFindADriver {
 		}
 	}
 
-	public LatLng getRefreshLatLng() {
-		return refreshLatLng;
-	}
-
-	public void setRefreshLatLng(LatLng refreshLatLng) {
-		this.refreshLatLng = refreshLatLng;
+	public boolean findADriverNeeded(LatLng pickupLatLng){
+		double distance = MapUtils.distance(refreshLatLng, pickupLatLng);
+		long timeDiff = System.currentTimeMillis() - refreshTime;
+		return (distance > MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE
+				|| timeDiff > MIN_TIME_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE);
 	}
 
 
 	public interface Callback{
 		void onPre();
 		void onFailure();
-		void onComplete();
-		void continueRequestRide();
-		void stopRequestRide();
+		void onCompleteFindADriver();
+		void continueRequestRide(boolean confirmedScreenOpened);
+		void stopRequestRide(boolean confirmedScreenOpened);
+		void onFinish();
 	}
 
 }

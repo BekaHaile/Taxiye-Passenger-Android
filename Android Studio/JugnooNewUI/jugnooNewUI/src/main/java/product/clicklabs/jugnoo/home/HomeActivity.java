@@ -385,7 +385,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE = 50; // in meters
 
     public static final float MAX_ZOOM = 15;
     private static final int MAP_ANIMATE_DURATION = 300;
@@ -833,10 +832,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 Data.pickupLatLng = map.getCameraPosition().target;
-                double distance = MapUtils.distance(getApiFindADriver().getRefreshLatLng(),
-                        Data.pickupLatLng);
-                if(distance > MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE){
-                    findDriversETACall(true);
+                if(getApiFindADriver().findADriverNeeded(Data.pickupLatLng)){
+                    findDriversETACall(true, false);
                 } else {
                     imageViewRideNowPoolCheck();
                 }
@@ -847,9 +844,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    requestRideClick();
-                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION,
-                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "request ride l2");
+                    if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()){
+                        Data.pickupLatLng = map.getCameraPosition().target;
+                    }
+                    if(getApiFindADriver().findADriverNeeded(Data.pickupLatLng)){
+                        findDriversETACall(true, true);
+                    } else {
+                        requestRideClick();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1932,7 +1934,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                     Data.pickupLatLng = map.getCameraPosition().target;
                     if (!dontCallRefreshDriver && Data.pickupLatLng != null) {
-                        findDriversETACall(false);
+                        findDriversETACall(false, false);
                     }
                 }
             }
@@ -2160,6 +2162,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Log.v("size of saved last pickup", "---> " + arrayList.get(0).getName());
             }
 
+            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION,
+                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "request ride l2");
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -2411,11 +2415,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if(confirmedScreenOpened){
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
-                            if(isPoolRideAtConfirmation()) {
-                                centreLocationRl.setVisibility(View.GONE);
-                                imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
-                                fareEstimateForPool();
-                            } else if(isNormalRideWithDropAtConfirmation()){
+                            if(isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
                                 centreLocationRl.setVisibility(View.GONE);
                                 imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
                                 fareEstimateForPool();
@@ -4044,6 +4044,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onPre() {
                     progressBarInitialSearch.setVisibility(View.VISIBLE);
                     imageViewRideNow.setEnabled(false);
+                    buttonConfirmRequest.setEnabled(false);
                     try {
                         promoCouponSelectedForRide = null;
                         if (userMode == UserMode.PASSENGER) {
@@ -4055,9 +4056,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onComplete() {
-                    progressBarInitialSearch.setVisibility(View.GONE);
-                    imageViewRideNow.setEnabled(true);
+                public void onCompleteFindADriver() {
                     findADriverFinishing();
                 }
 
@@ -4075,16 +4074,33 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                         @Override
-                        public void continueRequestRide() {
-                            imageViewRideNowPoolCheck();
+                        public void continueRequestRide(boolean confirmedScreenOpened) {
+                            if(confirmedScreenOpened){
+                                requestRideClick();
+                            } else {
+                                imageViewRideNowPoolCheck();
+                            }
                         }
 
                         @Override
-                        public void stopRequestRide() {
+                        public void stopRequestRide(boolean confirmedScreenOpened) {
                             Toast.makeText(HomeActivity.this, getResources().getString(R.string.fares_updated),
                                     Toast.LENGTH_LONG).show();
-                            Animation anim = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.rotate_shake);
-                            imageViewRideNow.startAnimation(anim);
+                            if(!confirmedScreenOpened) {
+                                Animation anim = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.rotate_shake);
+                                imageViewRideNow.startAnimation(anim);
+                            }
+                            if(confirmedScreenOpened
+                                    && (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation())) {
+                                fareEstimateForPool();
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            progressBarInitialSearch.setVisibility(View.GONE);
+                            imageViewRideNow.setEnabled(true);
+                            buttonConfirmRequest.setEnabled(true);
                         }
                     });
         }
@@ -4092,9 +4108,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private ApiFindADriver apiFindADriver = null;
-    private void findDriversETACall(boolean beforeRequestRide){
+    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened){
         getApiFindADriver().hit(Data.userData.accessToken, Data.pickupLatLng, showAllDrivers, showDriverInfo,
-                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide);
+                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide,
+                confirmedScreenOpened);
     }
 
     private void findADriverFinishing(){
