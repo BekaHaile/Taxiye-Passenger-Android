@@ -116,6 +116,7 @@
                 android:background="@drawable/background_pool_info_trb"
                 android:text="Share the ride, Split the fare"
                 android:textColor="@color/text_color"
+                android:singleLine="true"
                 android:paddingLeft="30px"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/text_size_26"/>
@@ -126,6 +127,7 @@
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@+id/textViewPoolInfo1"
                 android:background="@color/white"
+                android:singleLine="true"
                 android:text="SAVE UPTO 80%"
                 android:textColor="@color/theme_color"
                 android:gravity="center"
@@ -257,6 +259,7 @@
             android:tag="mwar">
 
             <ImageView
+                android:id="@+id/imageViewSurge"
                 android:layout_width="29px"
                 android:layout_height="34px"
                 android:layout_centerHorizontal="true"
@@ -268,9 +271,9 @@
                 android:id="@+id/textViewPriorityTipValueMS"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="12px"
+                android:layout_below="@+id/imageViewSurge"
+                android:layout_marginTop="5px"
                 android:gravity="center"
                 android:text="2.5 X"
                 android:textColor="@color/white"

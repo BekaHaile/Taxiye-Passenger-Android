@@ -206,6 +206,9 @@ public class JSONParser implements Constants {
         String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
         String fatafatUrlLink = userData.optString("fatafat_url_link", "");
         String confirmScreenFareEstimateEnable = userData.optString("confirm_screen_fare_estimate_enabled", "0");
+        String poolDestinationPopupText1 = userData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
+        String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
+        String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -253,6 +256,7 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
                 paytmEnabled, mobikwikEnabled);
 
         userDataObj.updateWalletBalances(userData.getJSONObject(KEY_WALLET_BALANCE));

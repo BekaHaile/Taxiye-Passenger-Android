@@ -92,6 +92,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 						callback.onCouponSelected();
 					}
 					notifyDataSetChanged();
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

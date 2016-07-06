@@ -300,7 +300,7 @@
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
 	<string name="two_hifen">--</string>
-	<string name="includes_priority_tip">Includes Priority Tip | Offer applicable to be applied at the end of the ride</string>
+	<string name="includes_priority_tip">Includes Priority Tip | Offer will be applied at ride completion</string>
 
 
 	<!-- Add Places -->
@@ -892,7 +892,7 @@
 	<string name="format_x">%s x</string>
 
 	<string name="fare_details">Fare Details</string>
-	<string name="pay_for_your_rides_using">Pay for your rides using:</string>
+	<string name="pay_for_your_rides_using">Pay for your rides using</string>
 	<string name="enter_destination">Enter Destination</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
 	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9%s</string>

@@ -77,14 +77,21 @@
                 android:layout_marginLeft="-1dp"
                 android:src="@color/text_color_hint"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/linearLayoutOfferConfirm"
                 android:layout_width="330px"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
-                android:gravity="center"
-                android:orientation="horizontal"
                 android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/imageViewPromoConfirm"
+                    android:layout_width="30px"
+                    android:layout_height="29px"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/textViewOffersConfirm"
+                    android:src="@drawable/ic_gift"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewOffersConfirm"
@@ -92,7 +99,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/nl_offers"
+                    android:layout_marginLeft="20px"
                     android:textAllCaps="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"/>
 
@@ -100,11 +110,14 @@
                     android:id="@+id/imageViewOfferConfirm"
                     android:layout_width="31px"
                     android:layout_height="31px"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="50px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
                     android:src="@drawable/tick"
                     android:tag="mwar"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -133,7 +146,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutTotalFare"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="wrap_content"
             android:layout_marginTop="-1dp"
             android:gravity="center"
             android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector">
@@ -145,8 +158,9 @@
             android:gravity="center"
             android:text="@string/total_fare_colon"
             android:textAllCaps="true"
+            android:layout_marginTop="20px"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
+            android:textSize="@dimen/text_size_32"
             android:visibility="visible"/>
 
             <TextView
@@ -160,8 +174,9 @@
                 android:layout_marginTop="7px"
                 android:paddingRight="5px"
                 android:paddingLeft="5px"
+                android:layout_marginBottom="25px"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_15"
+                android:textSize="@dimen/text_size_18"
                 android:visibility="visible"/>
 
 

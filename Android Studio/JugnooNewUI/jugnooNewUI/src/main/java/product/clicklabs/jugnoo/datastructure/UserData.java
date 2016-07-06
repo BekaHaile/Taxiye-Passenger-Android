@@ -41,7 +41,8 @@ public class UserData {
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int isPoolEnabled;
-	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink;
+	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
+			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3;
 	private double driverFareFactor;
 
 	private int paytmEnabled;
@@ -65,6 +66,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
+					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3,
 					int paytmEnabled, int mobikwikEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
@@ -132,6 +134,9 @@ public class UserData {
 		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
 		this.fatafatUrlLink = fatafatUrlLink;
 		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
+		this.poolDestinationPopupText1 = poolDestinationPopupText1;
+		this.poolDestinationPopupText2 = poolDestinationPopupText2;
+		this.poolDestinationPopupText3 = poolDestinationPopupText3;
 
 		checkUserImage();
 
@@ -577,6 +582,30 @@ public class UserData {
 		} else{
 			deleteMobikwik();
 		}
+	}
+
+	public String getPoolDestinationPopupText1() {
+		return poolDestinationPopupText1;
+	}
+
+	public void setPoolDestinationPopupText1(String poolDestinationPopupText1) {
+		this.poolDestinationPopupText1 = poolDestinationPopupText1;
+	}
+
+	public String getPoolDestinationPopupText2() {
+		return poolDestinationPopupText2;
+	}
+
+	public void setPoolDestinationPopupText2(String poolDestinationPopupText2) {
+		this.poolDestinationPopupText2 = poolDestinationPopupText2;
+	}
+
+	public String getPoolDestinationPopupText3() {
+		return poolDestinationPopupText3;
+	}
+
+	public void setPoolDestinationPopupText3(String poolDestinationPopupText3) {
+		this.poolDestinationPopupText3 = poolDestinationPopupText3;
 	}
 
 }
