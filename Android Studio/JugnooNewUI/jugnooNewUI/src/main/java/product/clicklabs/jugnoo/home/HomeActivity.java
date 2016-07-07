@@ -2213,7 +2213,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setCentrePinAccToGoogleMapPadding();
                         zoomAfterFindADriver = true;
                         if("".equalsIgnoreCase(Data.farAwayCity)) {
-                            zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                            //zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                         } else {
                             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                         }
