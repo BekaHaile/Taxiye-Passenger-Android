@@ -124,7 +124,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewPaymentModeValueMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewOffersMode = (TextView) rootView.findViewById(R.id.textViewOffersMode);
         textViewOffersMode.setTypeface(Fonts.mavenMedium(activity));
-        textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
         textViewMinFareMS = (TextView) rootView.findViewById(R.id.textViewMinFareMS);
@@ -139,9 +138,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
         textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
         textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-
-        textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
-        textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -176,6 +172,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             }
         });
 
+        updateOffersCount();
+
+        try {
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return rootView;
     }
@@ -226,7 +229,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         try {
             textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
             textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

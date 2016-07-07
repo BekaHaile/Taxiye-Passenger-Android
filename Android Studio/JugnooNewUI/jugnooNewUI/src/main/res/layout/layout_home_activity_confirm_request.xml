@@ -143,6 +143,7 @@
             android:textSize="@dimen/text_size_26"
             android:visibility="gone"/>
 
+
         <RelativeLayout
             android:id="@+id/relativeLayoutTotalFare"
             android:layout_width="match_parent"

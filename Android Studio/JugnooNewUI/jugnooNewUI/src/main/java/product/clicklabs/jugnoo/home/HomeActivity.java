@@ -267,7 +267,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
     Button initialCancelRideBtn;
-    RelativeLayout relativeLayoutAssigningDropLocationParent;
+    RelativeLayout relativeLayoutAssigningDropLocationParent, linearLayoutAssigningButtons;
     private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
     private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;
@@ -609,6 +609,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
         findDriverJugnooAnimation = (ImageView) findViewById(R.id.findDriverJugnooAnimation);
         jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
+        linearLayoutAssigningButtons = (RelativeLayout) findViewById(R.id.linearLayoutAssigningButtons);
 
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
@@ -995,10 +996,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         // Assigning layout events
-		assigningLayout.setOnClickListener(new OnClickListener() {
+		textViewCancellation.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            }
+        });
 
+        linearLayoutAssigningButtons.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
 
@@ -1518,7 +1524,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             callMapTouchedRefreshDrivers();
                         }
                         if (!zoomedForSearch && map != null) {
-                            getAddress(map.getCameraPosition().target, textViewInitialSearch, null);
+                            getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                         }
                     }
                 }
@@ -1711,8 +1717,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void checkForMyLocationButtonVisibility(){
         try{
             if(MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-                    map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK
-                    || map.getCameraPosition().zoom != MAX_ZOOM){
+                    map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK){
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                 customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
             } else{
@@ -2398,7 +2403,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						firstTimeZoom = true;
 
 						if(!zoomedForSearch && map != null) {
-							getAddress(map.getCameraPosition().target, textViewInitialSearch, null);
+                            getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
 						}
 
 						if(Data.locationSettingsNoPressed){
@@ -3159,7 +3164,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				}
 				setDropLocationMarker();
 				imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-                getAddress(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
+                getAddressAsync(Data.dropLatLng, textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -3177,7 +3182,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         else{
             setDropLocationMarker();
             imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
-            getAddress(Data.dropLatLng, textViewFinalDropLocationClick, progressBarFinalDropLocation);
+            getAddressAsync(Data.dropLatLng, textViewFinalDropLocationClick, progressBarFinalDropLocation);
         }
     }
 
@@ -4186,7 +4191,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     public void run() {
                         try {
                             new FrameAnimDrawable(HomeActivity.this, (ArrayList<String>) Data.campaigns.getMapLeftButton().getImages(),
-									imageViewInAppCampaign);
+                                    imageViewInAppCampaign);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -4455,67 +4460,64 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-	Thread pickupAddressFetcherThread;
-	private void getAddress(final LatLng currentLatLng, final TextView textView, final ProgressWheel progressBar){
-		stopPickupAddressFetcherThread();
-		try {
+
+    private void getAddressAsync(final LatLng currentLatLng, final TextView textView, final ProgressWheel progressBar){
+
+        try {
             if(progressBar != null) {
                 progressBar.setVisibility(View.VISIBLE);
             }
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                relativeLayoutPinEtaRotate.setVisibility(View.GONE);
-            }
             textView.setText("");
             textView.setHint("Getting address...");
-            pickupAddressFetcherThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    GAPIAddress gapiAddressForPin = MapUtils.getGAPIAddressObject(currentLatLng);
-                    String address = gapiAddressForPin.getSearchableAddress();
-                    setAddress(address, textView, progressBar);
-                    stopPickupAddressFetcherThread();
-                }
-            });
-            pickupAddressFetcherThread.start();
-        } catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                    "en", false, new Callback<SettleUserDebt>() {
+                        @Override
+                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                            try {
+                                String resp = new String(((TypedByteArray) response.getBody()).getBytes());
+                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
+                                String address = gapiAddress.getSearchableAddress();
+                                if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+                                    relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
+                                }
+                                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                                    textView.setHint(getResources().getString(R.string.set_pickup_location));
+                                    textView.setText(address);
+                                } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+                                        || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                                        || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                                        || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                                    textView.setHint(getResources().getString(R.string.enter_your_destination));
+                                    textView.setText(address);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                if(progressBar != null) {
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-	private void stopPickupAddressFetcherThread(){
-		try{
-			if(pickupAddressFetcherThread != null){
-				pickupAddressFetcherThread.interrupt();
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		pickupAddressFetcherThread = null;
-	}
+                        @Override
+                        public void failure(RetrofitError error) {
+                            try {
+                                if(progressBar != null) {
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	private void setAddress(final String address, final TextView textView, final ProgressWheel progressBar){
-		runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
-                if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                    relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
-                }
-                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                    textView.setHint(getResources().getString(R.string.set_pickup_location));
-                    textView.setText(address);
-                } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
-                        || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                        || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                        || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                    textView.setHint(getResources().getString(R.string.enter_your_destination));
-                    textView.setText(address);
-                }
-            }
-        });
-	}
+    }
 
     /**
      * ASync for cancelCustomerRequestAsync from server
@@ -7882,12 +7884,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void updateConfirmedStateFare(){
-        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-            relativeLayoutTotalFare.setVisibility(View.VISIBLE);
-            textVieGetFareEstimateConfirm.setVisibility(View.GONE);
-        } else{
-            relativeLayoutTotalFare.setVisibility(View.GONE);
-            textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+        try {
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                relativeLayoutTotalFare.setVisibility(View.VISIBLE);
+                textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+            } else{
+                relativeLayoutTotalFare.setVisibility(View.GONE);
+                if(Data.userData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
+                    textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+                } else{
+                    textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

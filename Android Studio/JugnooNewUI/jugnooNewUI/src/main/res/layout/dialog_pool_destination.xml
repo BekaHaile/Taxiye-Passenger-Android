@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="46px"
+            android:layout_marginBottom="40px"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
@@ -57,9 +58,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40px"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
+            android:layout_marginBottom="40px"
+            android:visibility="visible"
             android:gravity="center"
             android:text="@string/please_provide_pickup_and_dest"
             android:textColor="@color/text_color"
@@ -71,14 +73,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40px"
             android:layout_marginBottom="46px"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
             android:text="@string/you_will_not_change_dest"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_24"
+            android:textSize="@dimen/text_size_22"
             />
 
         <Button
@@ -94,6 +95,7 @@
     <ImageView
         android:id="@+id/imageViewClose"
         style="@style/cross_popup"
+        android:visibility="gone"
         />
 
 
