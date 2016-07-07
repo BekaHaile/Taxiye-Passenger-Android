@@ -259,7 +259,7 @@ public class JSONParser implements Constants {
                 poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
                 paytmEnabled, mobikwikEnabled);
 
-        userDataObj.updateWalletBalances(userData.getJSONObject(KEY_WALLET_BALANCE));
+        userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE));
 
         return userDataObj;
 
