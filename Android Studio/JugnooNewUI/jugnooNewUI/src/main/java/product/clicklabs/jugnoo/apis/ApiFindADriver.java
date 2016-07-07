@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -41,13 +42,13 @@ public class ApiFindADriver {
 	private final long MIN_TIME_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE = 2 * 60 * 1000; // in millis
 
 
-	private Activity activity;
+	private HomeActivity activity;
 	private Callback callback;
 	private Region regionSelected;
 	private LatLng refreshLatLng;
 	private long refreshTime;
 
-	public ApiFindADriver(Activity activity, Region regionSelected, Callback callback){
+	public ApiFindADriver(HomeActivity activity, Region regionSelected, Callback callback){
 		this.activity = activity;
 		this.regionSelected = regionSelected;
 		this.callback = callback;
@@ -85,7 +86,9 @@ public class ApiFindADriver {
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.e(TAG, "findADriverCall response=" + resp);
 
-						double fareFactorOld = Data.userData.fareFactor;
+						double fareFactorOld = ApiFindADriver.this.regionSelected.getCustomerFareFactor();
+						double driverFareFactorOld = ApiFindADriver.this.regionSelected.getDriverFareFactor();
+
 						parseFindADriverResponse(findADriverResponse);
 
 						refreshLatLng = latLng;
@@ -95,7 +98,15 @@ public class ApiFindADriver {
 						}
 
 						if(beforeRequestRide){
-							if(Utils.compareDouble(fareFactorOld, Data.userData.fareFactor) != 0){
+							Region newRegion = null;
+							for (Region region : Data.regions) {
+								if(region.getRegionId() == ApiFindADriver.this.regionSelected.getRegionId()){
+									newRegion = region;
+								}
+							}
+							if(newRegion != null
+									&& (Utils.compareDouble(fareFactorOld, newRegion.getCustomerFareFactor()) != 0
+									|| Utils.compareDouble(driverFareFactorOld, newRegion.getDriverFareFactor()) != 0)){
 								callback.stopRequestRide(confirmedScreenOpened);
 							} else{
 								callback.continueRequestRide(confirmedScreenOpened);

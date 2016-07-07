@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -220,6 +221,15 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             }
         }
     };
+
+    public void updateOffersCount(){
+        try {
+            textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
+            textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public PromoCouponsDialog promoCouponsDialog;
     public PromoCouponsDialog getPromoCouponsDialog(){

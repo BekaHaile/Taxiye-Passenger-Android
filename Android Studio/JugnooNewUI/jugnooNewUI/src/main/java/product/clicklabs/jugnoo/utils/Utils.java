@@ -671,7 +671,7 @@ public class Utils {
 					Bundle extras = location.getExtras();
 					isMockLocation = extras != null && extras.getBoolean(FusedLocationProviderApi.KEY_MOCK_LOCATION, false);
 				}
-				return isMockLocation;
+				return false;
 			} else {
 				return false;
 			}

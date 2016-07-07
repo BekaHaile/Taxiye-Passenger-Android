@@ -108,6 +108,7 @@ public class SlidingBottomPanelV4 {
             requestRideOptionsFragment.updateRegionsUI();
             requestRideOptionsFragment.updateFareStructureUI();
             requestRideOptionsFragment.getPromoCouponsDialog().notifyCoupons();
+            requestRideOptionsFragment.updateOffersCount();
         } catch (Exception e) {
             e.printStackTrace();
         }

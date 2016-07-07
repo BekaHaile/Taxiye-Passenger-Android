@@ -272,7 +272,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;
     ImageView imageViewAssigningDropLocationEdit;
-	boolean cancelTouchHold = false, placeAdded;
+	boolean cancelTouchHold = false, placeAdded, zoomAfterFindADriver;
 
 
     //Request Final Layout
@@ -1898,9 +1898,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 	private float googleMapPadding = 0;
 	public void setGoogleMapPadding(float bottomPadding){
 		try {
+            float mapTopPadding = 0.0f;
 			if(map != null){
-				map.setPadding(0, 0, 0, (int)(ASSL.Yscale() * bottomPadding));
-				googleMapPadding = bottomPadding;
+                if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                    mapTopPadding = 200.0f;
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
+                    params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
+                    centreLocationRl.setLayoutParams(params);
+                }else {
+                    mapTopPadding = 100.0f;
+                }
+                map.setPadding(0, (int) (ASSL.Yscale() * mapTopPadding), 0, (int) (ASSL.Yscale() * bottomPadding));
+                googleMapPadding = bottomPadding;
                 setCentrePinAccToGoogleMapPadding();
 			}
 		} catch (Exception e) {
@@ -2199,11 +2208,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewInitialSearch.setText("");
                 if (myLocation != null) {
                     try {
-
                         zoomedForSearch = false;
                         lastSearchLatLng = null;
                         setCentrePinAccToGoogleMapPadding();
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                        zoomAfterFindADriver = true;
+                        if("".equalsIgnoreCase(Data.farAwayCity)) {
+                            zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                        } else {
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                        }
                         mapTouched = true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -4122,6 +4135,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
             try {
+                if(zoomAfterFindADriver){
+                    zoomAfterFindADriver = false;
+                    zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                }
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
                     showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
                     dontCallRefreshDriver = true;
@@ -4413,6 +4430,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             } else {
+                zoomAfterFindADriver = true;
                 try {
                     new Handler().postDelayed(new Runnable() {
                         @Override
