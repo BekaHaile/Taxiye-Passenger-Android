@@ -4688,7 +4688,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
 
-                                    Data.userData.updateWalletBalances(jObj);
+                                    Data.userData.updateWalletBalances(jObj, false);
 
                                     Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 

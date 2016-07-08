@@ -433,7 +433,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                         }
 
                                     }).getBalance(false);
-                                    Data.userData.updateWalletBalances(jObj);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }

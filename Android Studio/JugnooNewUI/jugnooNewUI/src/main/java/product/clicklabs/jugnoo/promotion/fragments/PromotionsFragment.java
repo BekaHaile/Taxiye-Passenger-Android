@@ -392,7 +392,6 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 										}
 
 									}).getBalance(false);
-									Data.userData.updateWalletBalances(jObj);
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 								}

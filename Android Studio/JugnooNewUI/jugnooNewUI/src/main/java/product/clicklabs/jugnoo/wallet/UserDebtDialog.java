@@ -105,7 +105,7 @@ public class UserDebtDialog {
 								String message = JSONParser.getServerMessage(jObj);
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 									DialogPopup.alertPopup(activity, "", message);
-									userData.updateWalletBalances(jObj);
+									userData.updateWalletBalances(jObj, false);
 									callback.successFullyDeducted(userDebt);
 								} else {
 									DialogPopup.alertPopup(activity, "", message);

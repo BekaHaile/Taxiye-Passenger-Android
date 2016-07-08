@@ -569,21 +569,25 @@ public class UserData {
 		this.paytmEnabled = paytmEnabled;
 	}
 
-	public void updateWalletBalances(JSONObject jObj){
+	public void updateWalletBalances(JSONObject jObj, boolean removeWalletIfNoKey){
 		try {
 			setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE, getJugnooBalance()));
 			if(jObj.has(Constants.KEY_PAYTM_BALANCE)){
 				setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance()));
 				setPaytmEnabled(1);
 			} else{
-				deletePaytm();
+				if(removeWalletIfNoKey) {
+					deletePaytm();
+				}
 			}
 
 			if(jObj.has(Constants.KEY_MOBIKWIK_BALANCE)){
 				setMobikwikBalance(jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance()));
 				setMobikwikEnabled(1);
 			} else{
-				deleteMobikwik();
+				if(removeWalletIfNoKey) {
+					deleteMobikwik();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

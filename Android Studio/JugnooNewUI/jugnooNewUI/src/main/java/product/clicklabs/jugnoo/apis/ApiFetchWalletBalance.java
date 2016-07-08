@@ -69,7 +69,7 @@ public class ApiFetchWalletBalance {
 								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 								String message = JSONParser.getServerMessage(jObj);
 								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-									Data.userData.updateWalletBalances(jObj);
+									Data.userData.updateWalletBalances(jObj, true);
 									Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
