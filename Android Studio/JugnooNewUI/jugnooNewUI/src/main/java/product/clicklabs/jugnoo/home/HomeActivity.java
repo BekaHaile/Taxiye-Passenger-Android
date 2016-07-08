@@ -2404,10 +2404,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 						firstTimeZoom = true;
 
-						if(!zoomedForSearch && map != null) {
-                            getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
-						}
-
 						if(Data.locationSettingsNoPressed){
 							relativeLayoutLocationError.setVisibility(View.VISIBLE);
 							initialMyLocationBtn.setVisibility(View.GONE);
@@ -2450,6 +2446,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStateCoupon();
                             updateConfirmedStateFare();
 
+                        } else{
+                            if (!zoomedForSearch && map != null) {
+                                getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
+                            }
                         }
 
                         break;
@@ -2769,7 +2769,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 openPaytmRechargeDialog();
 
                 showReferAllDialog();
-                    callT20AndReferAllDialog(mode);
+                callT20AndReferAllDialog(mode);
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
 
@@ -7007,7 +7007,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (latLngBoundsBuilderPool != null) {
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 280)),
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 80)),
                                 MAP_ANIMATE_DURATION, null);
                     }
                 } catch (Exception e) {
@@ -7900,17 +7900,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void updateConfirmedStateFare(){
         try {
+            float padding = 150f;
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                 relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                padding = padding + 80f;
             } else{
                 relativeLayoutTotalFare.setVisibility(View.GONE);
                 if(Data.userData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
                     textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+                    padding = padding + 80f;
                 } else{
                     textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                 }
             }
+            setGoogleMapPadding(padding);
         } catch (Exception e) {
             e.printStackTrace();
         }
