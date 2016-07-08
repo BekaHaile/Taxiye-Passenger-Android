@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General -->
+	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -895,7 +895,7 @@
 	<string name="pay_for_your_rides_using">Pay for your rides using</string>
 	<string name="enter_destination">Enter Destination</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
-	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9%s</string>
+	<string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
 	<string name="base_fare">Base Fare</string>
 	<string name="fixed_fare">Fixed Fare</string>
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>

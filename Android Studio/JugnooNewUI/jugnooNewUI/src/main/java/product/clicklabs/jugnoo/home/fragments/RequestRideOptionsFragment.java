@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -118,9 +119,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
         textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
-        textViewOffersMS.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
-        textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
-
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
@@ -152,6 +150,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             }
         });
 
+        updateOffersCount();
+
+        try {
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return rootView;
     }
@@ -179,7 +184,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                activity.startActivity(intent);
+                //activity.startActivity(intent);
+                activity.startActivityForResult(intent, 4);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
@@ -193,6 +199,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             }
         }
     };
+
+    public void updateOffersCount(){
+        try {
+            textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public PromoCouponsDialog promoCouponsDialog;
     public PromoCouponsDialog getPromoCouponsDialog(){

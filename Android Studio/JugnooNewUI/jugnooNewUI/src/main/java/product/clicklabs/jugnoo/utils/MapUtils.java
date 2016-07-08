@@ -164,16 +164,12 @@ public class MapUtils {
 	}
 	
 	
-	
-	public static GAPIAddress getGAPIAddressObject(LatLng latLng){
+	public static GAPIAddress parseGAPIIAddress(String responseStr){
 		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "", "", "", "", "", "not_found");
 		try {
-			Response response = RestClient.getGoogleApiServices().geocode(latLng.latitude + "," + latLng.longitude,
-					"en", false);
-			String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 			JSONObject jsonObj = new JSONObject(responseStr);
 			//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
-			
+
 			String status = jsonObj.getString("status");
 			if (status.equalsIgnoreCase("OK")) {
 				JSONArray Results = jsonObj.getJSONArray("results");
@@ -297,19 +293,7 @@ public class MapUtils {
 
 		return fullAddress;
 	}
-	
-	
-	
-	public static String getGAPIAddress(LatLng latLng) {
-		String fullAddress = "Unnamed";
-		try {
-			GAPIAddress gapiAddress = getGAPIAddressObject(latLng);
-			fullAddress = gapiAddress.formattedAddress;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return fullAddress;
-	}
+
 
 	
 	public static List<LatLng> getLatLngListFromPath(String result){

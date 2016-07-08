@@ -56,7 +56,12 @@ public class PoolDestinationDialog {
 
 			if(Data.userData != null) {
 				textViewDestination.setText(Data.userData.getPoolDestinationPopupText1());
-				textViewLocation.setText(Data.userData.getPoolDestinationPopupText2());
+				if(!Data.userData.getPoolDestinationPopupText2().equalsIgnoreCase("")){
+					textViewLocation.setVisibility(View.VISIBLE);
+					textViewLocation.setText(Data.userData.getPoolDestinationPopupText2());
+				}else{
+					textViewLocation.setVisibility(View.GONE);
+				}
 				textViewNotAble.setText(Data.userData.getPoolDestinationPopupText3());
 			}
 
