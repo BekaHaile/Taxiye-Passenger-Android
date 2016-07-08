@@ -415,7 +415,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     CallbackManager callbackManager;
-    public final int ADD_HOME = 2, ADD_WORK = 3;
+    public final int ADD_HOME = 2, ADD_WORK = 3, FARE_ESTIMATE = 4;
     private String dropLocationSearchText = "";
     private SlidingBottomPanelV4 slidingBottomPanel;
 
@@ -794,7 +794,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, FARE_ESTIMATE);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(HomeActivity.this, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
@@ -1690,27 +1691,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             int minutes = (int) ((diff / (1000*60)) % 60);
             Log.v("diff is ","--> "+minutes);
             if(minutes < DESTINATION_PERSISTENCE_TIME){
-                Data.dropLatLng = temp.getLatLng();
-                if(Data.dropLatLng != null){
-                    if(textViewDestSearch.getText().toString().isEmpty()){
-                        translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
-                        translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
-                    }
-
-                    textViewDestSearch.setText(temp.getName());
-                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
-
-                    dropLocationSet = true;
-                    relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-                    imageViewDropCross.setVisibility(View.VISIBLE);
-
-                    /*translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
-                    translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);*/
-                }
+                setDropAddressAndExpandFields(temp);
             } else{
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
             }
 
+        }
+    }
+
+    private void setDropAddressAndExpandFields(SearchResult searchResult){
+        Data.dropLatLng = searchResult.getLatLng();
+        if(Data.dropLatLng != null){
+            if(textViewDestSearch.getText().toString().isEmpty()){
+                translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+            }
+
+            textViewDestSearch.setText(searchResult.getName());
+            textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
+
+            dropLocationSet = true;
+            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+            imageViewDropCross.setVisibility(View.VISIBLE);
         }
     }
 
@@ -3879,6 +3881,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
                     }else{
                     }
+                } else if(requestCode == FARE_ESTIMATE){
+                    try {
+                        if(data.hasExtra(KEY_SEARCH_RESULT)) {
+                            SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
+                            setDropAddressAndExpandFields(searchResult);
+                        }
+                        imageViewRideNow.performClick();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -3995,6 +4007,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else if(confirmedScreenOpened){
                     poolFareSuccess = false;
                     confirmedScreenOpened = false;
+                    if(Data.dropLatLng != null){
+                        imageViewDropCross.setVisibility(View.VISIBLE);
+                    }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     initialMyLocationBtn.performClick();

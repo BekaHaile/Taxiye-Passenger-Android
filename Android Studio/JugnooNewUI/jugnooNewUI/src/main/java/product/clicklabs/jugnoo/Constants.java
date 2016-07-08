@@ -309,7 +309,7 @@ public interface Constants {
 	String KEY_IS_POOLED = "is_pooled";
 	String KEY_RIDE_TYPE = "ride_type";
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
-
+	String KEY_SEARCH_RESULT = "search_result";
 
 
 
