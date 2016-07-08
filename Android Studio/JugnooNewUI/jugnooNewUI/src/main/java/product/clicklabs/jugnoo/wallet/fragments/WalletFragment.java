@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 
 public class WalletFragment extends Fragment implements FlurryEventNames {
@@ -43,6 +45,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	
 	TextView textViewPromotion;
 
+	LinearLayout linearLayoutWalletContainer;
 	RelativeLayout relativeLayoutJugnooCash;
 	TextView textViewJugnooCashBalanceValue;
 	RelativeLayout relativeLayoutPaytm;
@@ -88,6 +91,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		
 		textViewPromotion = (TextView) rootView.findViewById(R.id.textViewPromotion); textViewPromotion.setTypeface(Fonts.mavenMedium(paymentActivity));
 
+		linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
 		relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWallet);
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.mavenLight(paymentActivity));
@@ -222,6 +226,9 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		});
 
 
+
+		orderPaymentModes();
+
 		setUserWalletInfo();
 
         return rootView;
@@ -277,6 +284,28 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 	}
 
 
+	private void orderPaymentModes(){
+		try{
+			if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas() != null
+					&& MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0){
+				linearLayoutWalletContainer.removeAllViews();
+				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
+						.getPaymentModeConfigDatas()){
+					if(paymentModeConfigData.getEnabled() == 1) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+						}
+					}
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
 
     @Override

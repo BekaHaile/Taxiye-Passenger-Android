@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
@@ -18,6 +22,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 /**
  * Created by shankar on 7/4/16.
@@ -25,6 +30,8 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 public class WalletCore {
 
 	private Context context;
+
+	private ArrayList<PaymentModeConfigData> paymentModeConfigDatas;
 
 	public WalletCore(Context context){
 		this.context = context;
@@ -369,4 +376,21 @@ public class WalletCore {
 		}
 	}
 
+	public void parsePaymentModeConfigDatas(JSONObject jObj){
+		try{
+			JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG);
+			paymentModeConfigDatas = new ArrayList<>();
+			for(int i=0; i<jsonArray.length(); i++){
+				JSONObject ji = jsonArray.getJSONObject(i);
+				paymentModeConfigDatas.add(new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
+						ji.getInt(Constants.KEY_ENABLED), i));
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas() {
+		return paymentModeConfigDatas;
+	}
 }

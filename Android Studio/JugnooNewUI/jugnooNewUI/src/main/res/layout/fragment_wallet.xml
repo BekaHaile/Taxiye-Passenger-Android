@@ -35,7 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <!-- promotional message rl-->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -56,116 +55,123 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <!-- jugnoo cash rl-->
-            <RelativeLayout
-                android:id="@+id/relativeLayoutWallet"
-                android:layout_width="match_parent"
-                android:layout_height="105px"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="30px"
-                android:background="@drawable/background_white_rounded_bordered">
-
-
-                <ImageView
-                    android:id="@+id/imageViewJugnooCashIcon"
-                    android:layout_width="66px"
-                    android:layout_height="50px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/ic_jugnoo_cash"
-                    android:tag="mwar" />
-
-
-                <TextView
-                    android:id="@+id/textViewJugnooCashBalanceValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="34px"
-                    android:gravity="right"
-                    android:text="@string/rupee_0"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_38" />
-
-
+            <LinearLayout
+                android:id="@+id/linearLayoutWalletContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15px"
+                >
+                <!-- jugnoo cash rl-->
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:layout_toRightOf="@+id/imageViewJugnooCashIcon"
-                    android:gravity="center_vertical">
+                    android:id="@+id/relativeLayoutWallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="105px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="15px"
+                    android:background="@drawable/background_white_rounded_bordered">
+
+
+                    <ImageView
+                        android:id="@+id/imageViewJugnooCashIcon"
+                        android:layout_width="66px"
+                        android:layout_height="50px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_jugnoo_cash"
+                        android:tag="mwar" />
+
 
                     <TextView
-                        android:id="@+id/textViewJugnooCashBalance"
+                        android:id="@+id/textViewJugnooCashBalanceValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/jugnoo_cash"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="34px"
+                        android:gravity="right"
+                        android:text="@string/rupee_0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_38" />
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_toRightOf="@+id/imageViewJugnooCashIcon"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/textViewJugnooCashBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/jugnoo_cash"
+                            android:textColor="@color/text_color_light_selector"
+                            android:textSize="@dimen/text_size_32" />
+
+                        <TextView
+                            android:id="@+id/textViewJugnooCashTNC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textViewJugnooCashBalance"
+                            android:layout_marginTop="5px"
+                            android:text="@string/tnc_apply"
+                            android:textColor="@color/black_text_alpha"
+                            android:textSize="18px" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <!-- paytm wallet rl-->
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutPaytm"
+                    android:layout_width="match_parent"
+                    android:layout_height="105px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="15px"
+                    android:background="@drawable/background_white_rounded_bordered"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="72px"
+                        android:layout_height="23px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_paytm_small"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewPaytmBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="120px"
+                        android:text="@string/paytm_wallet"
                         android:textColor="@color/text_color_light_selector"
                         android:textSize="@dimen/text_size_32" />
 
+
                     <TextView
-                        android:id="@+id/textViewJugnooCashTNC"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textViewPaytmBalanceValue"
+                        android:layout_width="250px"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textViewJugnooCashBalance"
-                        android:layout_marginTop="5px"
-                        android:text="@string/tnc_apply"
-                        android:textColor="@color/black_text_alpha"
-                        android:textSize="18px" />
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="34px"
+                        android:gravity="right"
+                        android:text="@string/rupee_0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_38" />
+
+
                 </RelativeLayout>
 
-            </RelativeLayout>
-
-            <!-- paytm wallet rl-->
-            <RelativeLayout
-                android:id="@+id/relativeLayoutPaytm"
-                android:layout_width="match_parent"
-                android:layout_height="105px"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="15px"
-                android:background="@drawable/background_white_rounded_bordered"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="72px"
-                    android:layout_height="23px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/ic_paytm_small"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewPaytmBalance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="120px"
-                    android:text="@string/paytm_wallet"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_32" />
-
-
-                <TextView
-                    android:id="@+id/textViewPaytmBalanceValue"
-                    android:layout_width="250px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="34px"
-                    android:gravity="right"
-                    android:text="@string/rupee_0"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_38" />
-
-
-            </RelativeLayout>
-
-            <!-- mobikwik wallet rl-->
-            <RelativeLayout
+                <!-- mobikwik wallet rl-->
+                <RelativeLayout
                 android:id="@+id/relativeLayoutMobikwik"
                 android:layout_width="match_parent"
                 android:layout_height="105px"
@@ -208,6 +214,7 @@
 
 
             </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

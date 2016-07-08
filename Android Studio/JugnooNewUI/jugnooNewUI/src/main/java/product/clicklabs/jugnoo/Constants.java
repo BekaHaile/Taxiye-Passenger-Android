@@ -322,5 +322,8 @@ public interface Constants {
 	String KEY_PAYTM_ENABLED = "paytm_enabled";
 	String KEY_WALLET_BALANCE = "wallet_balance";
 	String KEY_PAID_USING_MOBIKWIK = "paid_using_mobikwik";
+	String KEY_PAYMENT_MODE_CONFIG = "payment_mode_config";
+	String KEY_ENABLED = "enabled";
+	String KEY_JUGNOO_CASH = "jugnoo_cash";
 
 }

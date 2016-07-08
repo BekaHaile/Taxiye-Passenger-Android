@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 /**
  * Created by shankar on 5/2/16.
@@ -36,6 +37,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 	private Callback callback;
 	private Dialog dialog = null;
 
+	private LinearLayout linearLayoutWalletContainer;
 	private RelativeLayout relativeLayoutPaytm;
 	private RelativeLayout relativeLayoutMobikwik;
 	private LinearLayout linearLayoutCash;
@@ -64,6 +66,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			((TextView) dialog.findViewById(R.id.textViewPayForRides)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+
+			linearLayoutWalletContainer = (LinearLayout) dialog.findViewById(R.id.linearLayoutWalletContainer);
 			relativeLayoutPaytm = (RelativeLayout)dialog.findViewById(R.id.relativeLayoutPaytm);
 			relativeLayoutMobikwik = (RelativeLayout)dialog.findViewById(R.id.relativeLayoutMobikwik);
 			linearLayoutCash = (LinearLayout)dialog.findViewById(R.id.linearLayoutCash);
@@ -79,6 +83,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			relativeLayoutPaytm.setOnClickListener(this);
 			relativeLayoutMobikwik.setOnClickListener(this);
 			linearLayoutCash.setOnClickListener(this);
+
+			orderPaymentModes();
 
 			updatePreferredPaymentOptionUI();
 
@@ -255,20 +261,30 @@ public class PaymentOptionDialog implements View.OnClickListener {
 				textViewMobikwik.setText(activity.getResources().getString(R.string.add_mobikwik_wallet));
 			}
 
-			if(Data.userData.getPaytmBalance() < 0){
-				relativeLayoutPaytm.setVisibility(View.GONE);
-			} else{
-				relativeLayoutPaytm.setVisibility(View.VISIBLE);
-			}
-			if(Data.userData.getMobikwikBalance() < 0){
-				relativeLayoutMobikwik.setVisibility(View.GONE);
-			} else{
-				relativeLayoutMobikwik.setVisibility(View.VISIBLE);
-			}
-
 			setSelectedPaymentOptionUI();
 
 		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void orderPaymentModes(){
+		try{
+			if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas() != null
+					&& MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0){
+				linearLayoutWalletContainer.removeAllViews();
+				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
+						.getPaymentModeConfigDatas()){
+					if(paymentModeConfigData.getEnabled() == 1) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+						}
+					}
+				}
+			}
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
