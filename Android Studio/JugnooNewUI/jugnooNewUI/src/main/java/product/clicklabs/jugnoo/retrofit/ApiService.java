@@ -53,8 +53,8 @@ public interface ApiService {
                          Callback<ShowPromotionsResponse> callback);
 
     @FormUrlEncoded
-    @POST("/paytm/wallet/adjust_money")
-    void adjustUserDebt(@FieldMap Map<String, String> params,
+    @POST("/settle_user_debt")
+    void settleUserDebt(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
 

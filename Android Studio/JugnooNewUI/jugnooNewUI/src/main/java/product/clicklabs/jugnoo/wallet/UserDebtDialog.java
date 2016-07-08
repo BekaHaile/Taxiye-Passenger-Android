@@ -93,7 +93,7 @@ public class UserDebtDialog {
 				params.put(Constants.KEY_IP_ADDRESS, Utils.getLocalIpAddress());
 				Log.i("params", "=" + params);
 
-				RestClient.getApiServices().adjustUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
+				RestClient.getApiServices().settleUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						Log.i(TAG, "adjustUserDebt response = " + response);
