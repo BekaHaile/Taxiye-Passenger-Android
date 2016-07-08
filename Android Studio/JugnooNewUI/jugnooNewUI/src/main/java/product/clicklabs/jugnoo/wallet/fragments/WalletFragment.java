@@ -242,6 +242,14 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 		setUserWalletInfo();
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			orderPaymentModes();
+		}
+	}
+
 	private void setUserWalletInfo(){
 		try{
 			if(Data.userData != null){
@@ -294,9 +302,24 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 					if(paymentModeConfigData.getEnabled() == 1) {
 						if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
-						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+								&& Data.userData.getPaytmEnabled() == 1) {
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
-						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+								&& Data.userData.getMobikwikEnabled() == 1) {
+							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+						}
+					}
+				}
+
+				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
+						.getPaymentModeConfigDatas()){
+					if(paymentModeConfigData.getEnabled() == 1) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+								&& Data.userData.getPaytmEnabled() != 1) {
+							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+								&& Data.userData.getMobikwikEnabled() != 1) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
 						}
 					}

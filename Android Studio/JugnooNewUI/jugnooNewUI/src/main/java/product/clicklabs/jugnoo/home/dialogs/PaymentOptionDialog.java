@@ -276,9 +276,24 @@ public class PaymentOptionDialog implements View.OnClickListener {
 				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
 						.getPaymentModeConfigDatas()){
 					if(paymentModeConfigData.getEnabled() == 1) {
-						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+								&& Data.userData.getPaytmEnabled() == 1) {
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
-						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+								&& Data.userData.getMobikwikEnabled() == 1) {
+							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+						}
+					}
+				}
+
+				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
+						.getPaymentModeConfigDatas()){
+					if(paymentModeConfigData.getEnabled() == 1) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+								&& Data.userData.getPaytmEnabled() != 1) {
+							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+								&& Data.userData.getMobikwikEnabled() != 1) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
 						}
 					}

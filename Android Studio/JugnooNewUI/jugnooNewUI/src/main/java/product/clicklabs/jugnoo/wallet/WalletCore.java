@@ -378,7 +378,7 @@ public class WalletCore {
 
 	public void parsePaymentModeConfigDatas(JSONObject jObj){
 		try{
-			JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG);
+			JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
 			paymentModeConfigDatas = new ArrayList<>();
 			for(int i=0; i<jsonArray.length(); i++){
 				JSONObject ji = jsonArray.getJSONObject(i);
@@ -392,5 +392,30 @@ public class WalletCore {
 
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas() {
 		return paymentModeConfigDatas;
+	}
+
+	public void setDefaultPaymentOption(){
+		try{
+			PaymentModeConfigData paymentModeConfigDataDefault = null;
+			for(PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()){
+				if(paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+						&& Data.userData.getPaytmEnabled() == 1){
+					paymentModeConfigDataDefault = paymentModeConfigData;
+					break;
+				} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+						&& Data.userData.getMobikwikEnabled() == 1){
+					paymentModeConfigDataDefault = paymentModeConfigData;
+					break;
+				}
+			}
+			if(paymentModeConfigDataDefault != null){
+				Data.pickupPaymentOption = paymentModeConfigDataDefault.getPaymentOption();
+			} else{
+				Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+			}
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }

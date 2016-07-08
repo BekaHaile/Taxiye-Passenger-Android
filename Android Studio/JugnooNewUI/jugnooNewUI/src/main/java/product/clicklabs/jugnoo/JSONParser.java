@@ -278,6 +278,8 @@ public class JSONParser implements Constants {
 
         Data.userData = parseUserData(context, jLoginObject);
 
+        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+
         //emergency contacts
         if(Data.emergencyContactsList == null){
             Data.emergencyContactsList = new ArrayList<>();
