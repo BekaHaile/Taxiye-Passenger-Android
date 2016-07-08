@@ -70,7 +70,6 @@
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
                     android:visibility="gone"
-                    android:layout_marginBottom="200px"
                     android:soundEffectsEnabled="false"
                     />
 

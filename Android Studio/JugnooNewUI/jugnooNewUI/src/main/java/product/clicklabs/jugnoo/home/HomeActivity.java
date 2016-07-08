@@ -352,12 +352,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static PassengerScreenMode passengerScreenMode;
 
 
-    Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker;
+    Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker, dropInitialMarker;
     Polyline pathToDropLocationPolyline;
     PolylineOptions pathToDropLocationPolylineOptions;
 
     public static AppInterruptHandler appInterruptHandler;
-
     boolean loggedOut = false,
         zoomedToMyLocation = false,
         mapTouchedOnce = false;
@@ -425,6 +424,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ArrayList<SearchResult> lastPickUp = new ArrayList<SearchResult>();
     private ArrayList<SearchResult> lastDestination = new ArrayList<SearchResult>();
     private long thumbsUpGifStartTime = 0;
+    private int shakeAnim = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -942,6 +942,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 translateViewBottomTop(relativeLayoutDestSearchBar, false);
                 translateViewTopBottom(relativeLayoutInitialSearchBar, true);
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
+                if(dropInitialMarker != null) {
+                    dropInitialMarker.remove();
+                }
             }
         });
 
@@ -2908,7 +2911,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     cancelDriverLocationUpdateTimer();
                     startMapAnimateAndUpdateRideDataTimer();
 					try {
-						getDropLocationPathAndDisplay(Data.pickupLatLng);
+						getDropLocationPathAndDisplay(Data.pickupLatLng, false);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -4356,6 +4359,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else {
                             textViewCentrePinETA.setText(region.getEta());
                         }
+
+                        if(Data.dropLatLng != null){
+                            MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
+                            poolMarkerOptionEnd.title("End");
+                            poolMarkerOptionEnd.position(Data.dropLatLng);
+                            poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
+                                    assl, R.drawable.pin_ball_end)));
+                            dropInitialMarker = map.addMarker(poolMarkerOptionEnd);
+                        }
 					}
 				}
 			}
@@ -4824,7 +4836,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
     }
 
-    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel) {
+    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel, final boolean zoomAfterDropSet) {
         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
 			progressWheel.setVisibility(View.VISIBLE);
@@ -4868,7 +4880,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     stopDropLocationSearchUI(true);
                                     setDropLocationEngagedUI();
 
-                                    getDropLocationPathAndDisplay(Data.pickupLatLng);
+                                    getDropLocationPathAndDisplay(Data.pickupLatLng, zoomAfterDropSet);
                                     FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "ride start", "enter destination");
                                 }
 
@@ -4992,7 +5004,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
-            getDropLocationPathAndDisplay(Data.pickupLatLng);
+            getDropLocationPathAndDisplay(Data.pickupLatLng, false);
 
             timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 10, 15000);
             Log.i("timerDriverLocationUpdater", "started");
@@ -5152,7 +5164,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
 
-            getDropLocationPathAndDisplay(Data.pickupLatLng);
+            getDropLocationPathAndDisplay(Data.pickupLatLng, false);
             displayOldPath();
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 15000);
@@ -5212,7 +5224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return (PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
-    public void getDropLocationPathAndDisplay(final LatLng lastLatLng) {
+    public void getDropLocationPathAndDisplay(final LatLng lastLatLng, final boolean zoomAfterDropSet) {
         try {
             new Thread(new Runnable() {
                 @Override
@@ -5224,7 +5236,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void run() {
                                     try {
-                                        zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
+                                        if(!zoomAfterDropSet) {
+                                            zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -7401,20 +7415,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 switchPassengerScreen(passengerScreenMode);
 
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
+                        shakeAnim > 0){
+                    imageViewRideNow.performClick();
+                }
+
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
             saveLastDestinations(searchResult);
             sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                    getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch());
+                    getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false);
             FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
         }
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
             saveLastDestinations(searchResult);
+            zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng());
+
             sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                    getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch());
+                    getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true);
             FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
         }
 
@@ -7921,7 +7942,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    int shakeAnim = 0;
+
 
     public void setShakeAnim(int shakeAnim) {
         this.shakeAnim = shakeAnim;
@@ -7968,8 +7989,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         } else {
-            //requestRideClick();
-            openConfirmRequestView();
+            requestRideClick();
+            //openConfirmRequestView();
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 "+
                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());

@@ -67,7 +67,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private LinearLayout linearLayoutFare;
     private TextView textViewMinFareValue;
 
-    private LinearLayout linearLayoutFareEstimate, linearLayoutPaymentModeMS;
+    private LinearLayout linearLayoutFareEstimate, linearLayoutPaymentModeMS, linearLayoutFareContainer;
 
     private RelativeLayout relativeLayoutMultipleSupplyMain;
     private RecyclerView recyclerViewVehicles;
@@ -139,8 +139,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
         textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
-        textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
+        textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMSSmall);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+
+        linearLayoutFareContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareContainer);
 
         textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
         textViewPriorityTipValueMS.setTypeface(Fonts.mavenRegular(activity));
@@ -187,7 +189,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     View.OnClickListener onClickListenerRequestOptions = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v.getId() == R.id.linearLayoutPaymentMode){
+            if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
                 getPaymentOptionDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
@@ -202,7 +204,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
 
 
-            } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
+            } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS ||
+                    v.getId() == R.id.textVieGetFareEstimateMSSmall){
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_RIDE_TYPE, getRegionSelected().getRideType());
                 try {
@@ -211,8 +214,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //activity.startActivity(intent);
-                activity.startActivityForResult(intent, 4);
+                activity.startActivity(intent);
+                //activity.startActivityForResult(intent, 4);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
@@ -274,11 +277,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void updateBottomMultipleView(int rideType){
         if(rideType == RideTypeValue.POOL.getOrdinal()){
             textVieGetFareEstimateMS.setVisibility(View.GONE);
+            linearLayoutFareContainer.setVisibility(View.GONE);
             textViewMinFareMS.setText(activity.getResources().getString(R.string.fixed_fare_colon));
             textViewMinFareMSValue.setText(activity.getResources().getString(R.string.two_hifen));
         } else{
             textVieGetFareEstimateMS.setVisibility(View.VISIBLE);
+            linearLayoutFareContainer.setVisibility(View.VISIBLE);
             textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
+
         }
         updateFareFactorUI();
     }
@@ -297,7 +303,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
                 imageViewPaymentMode.setImageResource(R.drawable.ic_paytm_small);
                 imageViewPaymentModeMS.setImageResource(R.drawable.ic_paytm_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
+                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*105f);
                 textViewPaymentModeValue.setText(String.format(activity.getResources()
                                 .getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));

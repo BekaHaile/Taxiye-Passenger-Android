@@ -289,7 +289,7 @@
             android:layout_above="@+id/textViewEstimateFareNote"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="40px"
-            android:text="@string/ride_request_text" />
+            android:text="@string/ok" />
 
 
         <View
