@@ -47,10 +47,8 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -100,7 +98,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public static FacebookRegisterData facebookRegisterData;
 	public static GoogleRegisterData googleRegisterData;
 
-	public static String OTP_SCREEN_OPEN = null;
 
 	@Override
 	protected void onStart() {
@@ -126,6 +123,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_otp_confrim);
 
+		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
 		Utils.enableSMSReceiver(this);
 
 		loginDataFetched = false;
@@ -233,7 +231,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						// Resend OTP call to Paytm server...
 						generateOTP(getLoggedInAccesToken());
 					} else{
-						if (1 == Data.otpViaCallEnabled) {
+						if (1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)) {
 							if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 								initiateOTPCallAsync(OTPConfirmScreen.this, facebookRegisterData.phoneNo);
 							} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
@@ -282,7 +280,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					editTextOTP.setError(null);
 					tweenAnimation.cancel();
 					linearLayoutGiveAMissedCall.clearAnimation();
-					if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+					if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
 								getResources().getString(R.string.give_missed_call_dialog_text),
 								getResources().getString(R.string.call_us),
@@ -290,7 +288,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										Utils.openCallIntent(OTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
+												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
 										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
@@ -412,14 +411,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 
 		try{
-			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+			if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(1 == Data.otpViaCallEnabled || linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
+			if(1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)
+					|| linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -447,8 +447,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						"", Data.deviceToken + "..");
 			}
 		});
-
-		OTP_SCREEN_OPEN = "yes";
 
 
 
@@ -589,6 +587,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	protected void onPause() {
+		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
+		Utils.disableSMSReceiver(this);
 		try{
 			if(Data.locationFetcher != null){
 				Data.locationFetcher.destroy();
@@ -1003,8 +1003,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	@Override
 	protected void onDestroy() {
-		Utils.disableSMSReceiver(this);
-		OTP_SCREEN_OPEN = null;
 		try{
 			if(Data.locationFetcher != null){
 				Data.locationFetcher.destroy();

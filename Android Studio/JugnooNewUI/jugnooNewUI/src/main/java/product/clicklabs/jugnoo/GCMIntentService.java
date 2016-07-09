@@ -504,15 +504,17 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 					} else if (PushFlags.OTP_VERIFIED_BY_CALL.getOrdinal() == flag) {
 						String otp = jObj.getString("message");
-						if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+						if(Prefs.with(this).getString(Constants.SP_OTP_SCREEN_OPEN, "")
+								.equalsIgnoreCase(OTPConfirmScreen.class.getName())) {
 							Intent otpConfirmScreen = new Intent(this, OTPConfirmScreen.class);
-							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
-						else if(PhoneNoOTPConfirmScreen.OTP_SCREEN_OPEN != null){
+						else if(Prefs.with(this).getString(Constants.SP_OTP_SCREEN_OPEN, "")
+								.equalsIgnoreCase(PhoneNoOTPConfirmScreen.class.getName())){
 							Intent otpConfirmScreen = new Intent(this, PhoneNoOTPConfirmScreen.class);
-							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}

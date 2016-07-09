@@ -304,7 +304,11 @@ public interface Constants {
 	String POOL_INTRO_SHOW = "pool_intro_show";
 
 	String KEY_DRIVER_FARE_FACTOR = "driver_fare_factor";
+	String KEY_KNOWLARITY_MISSED_CALL_NUMBER = "knowlarity_missed_call_number";
 
+	String SP_OTP_SCREEN_OPEN = "sp_otp_screen_open";
+	String SP_OTP_VIA_CALL_ENABLED = "sp_otp_via_call_enabled";
+	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
 
 
 

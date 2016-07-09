@@ -115,8 +115,10 @@ public class JSONParser implements Constants {
 
         String userIdentifier = userData.optString("user_identifier", userEmail);
 
-		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
-        Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+        Prefs.with(context).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+                userData.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+        Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED,
+                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
@@ -1140,7 +1142,7 @@ public class JSONParser implements Constants {
 	public static void parsePaytmBalanceStatus(Activity activity, JSONObject jObj){
 		try {
 			if (Data.userData != null) {
-				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
 					setPaytmErrorCase();
 				} else {

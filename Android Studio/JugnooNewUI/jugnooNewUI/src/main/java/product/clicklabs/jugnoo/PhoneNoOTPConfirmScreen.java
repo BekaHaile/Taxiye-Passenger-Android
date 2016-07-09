@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -69,8 +70,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	String phoneNoToVerify = "";
 
-	public static String OTP_SCREEN_OPEN = null;
-	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -119,6 +118,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_phone_no_otp);
 
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
 		Utils.enableSMSReceiver(this);
 		
 		relative = (RelativeLayout) findViewById(R.id.relative);
@@ -204,7 +204,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			@Override
 			public void onClick(View v) {
 				try {
-					if (1 == Data.otpViaCallEnabled) {
+					if (1 == Prefs.with(PhoneNoOTPConfirmScreen.this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 						initiateOTPCallAsync(PhoneNoOTPConfirmScreen.this, phoneNoToVerify);
 					}
 				} catch (Exception e) {
@@ -219,7 +219,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			@Override
 			public void onClick(View v) {
 				try {
-					if (!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+					if (!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this)
+							.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(PhoneNoOTPConfirmScreen.this, "",
 								getResources().getString(R.string.give_missed_call_dialog_text),
 								getResources().getString(R.string.call_us),
@@ -227,7 +228,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 								new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Data.knowlarityMissedCallNumber);
+										Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Prefs.with(PhoneNoOTPConfirmScreen.this)
+												.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 									}
 								},
 								new View.OnClickListener() {
@@ -261,14 +263,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		linearLayoutWaiting.setVisibility(View.GONE);
 
 		try{
-			if(!"".equalsIgnoreCase(Data.knowlarityMissedCallNumber)) {
+			if(!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 				linearLayoutGiveAMissedCall.setVisibility(View.VISIBLE);
 			}
 			else{
 				linearLayoutGiveAMissedCall.setVisibility(View.GONE);
 			}
 
-			if(1 == Data.otpViaCallEnabled) {
+			if(1 == Prefs.with(PhoneNoOTPConfirmScreen.this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -287,8 +289,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			textViewOr.setVisibility(View.GONE);
 		}
 
-
-		OTP_SCREEN_OPEN = "yes";
 
 
 	}
@@ -344,6 +344,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	@Override
 	protected void onPause() {
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, "");
+		Utils.disableSMSReceiver(this);
 		super.onPause();
 	}
 	
@@ -571,8 +573,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 	@Override
 	protected void onDestroy() {
-		Utils.disableSMSReceiver(this);
-		OTP_SCREEN_OPEN = null;
 		ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();
