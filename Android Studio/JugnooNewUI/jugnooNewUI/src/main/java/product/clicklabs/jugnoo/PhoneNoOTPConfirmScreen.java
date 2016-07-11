@@ -117,9 +117,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_phone_no_otp);
-
-		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
-		Utils.enableSMSReceiver(this);
 		
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(PhoneNoOTPConfirmScreen.this, relative, 1134, 720, false);
@@ -339,6 +336,10 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
+		Utils.enableSMSReceiver(this);
+
 		HomeActivity.checkForAccessTokenChange(this);
 	}
 	

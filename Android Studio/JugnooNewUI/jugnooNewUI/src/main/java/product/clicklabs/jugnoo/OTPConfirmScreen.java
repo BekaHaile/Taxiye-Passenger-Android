@@ -123,9 +123,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_otp_confrim);
 
-		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
-		Utils.enableSMSReceiver(this);
-
 		loginDataFetched = false;
 
 		if(getIntent().hasExtra(LINKED_WALLET)){
@@ -557,6 +554,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
+		Utils.enableSMSReceiver(this);
+
 		if(Data.locationFetcher == null){
 			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000, 1);
 		}
