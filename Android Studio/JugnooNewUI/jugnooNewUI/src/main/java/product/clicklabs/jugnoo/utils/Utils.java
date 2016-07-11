@@ -463,9 +463,17 @@ public class Utils {
 	private static DecimalFormat decimalFormatMoney;
 	public static DecimalFormat getMoneyDecimalFormat(){
 		if(decimalFormatMoney == null){
-			decimalFormatMoney = new DecimalFormat("#");
+			decimalFormatMoney = new DecimalFormat("#.##");
 		}
 		return decimalFormatMoney;
+	}
+
+	private static DecimalFormat decimalFormatMoneyWithoutFloat;
+	public static DecimalFormat getMoneyDecimalFormatWithoutFloat(){
+		if(decimalFormatMoneyWithoutFloat == null){
+			decimalFormatMoneyWithoutFloat = new DecimalFormat("#");
+		}
+		return decimalFormatMoneyWithoutFloat;
 	}
 
 

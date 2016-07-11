@@ -170,7 +170,7 @@ public class UserData {
 		if(this.paytmError == 1){
 			return "--";
 		} else{
-			return Utils.getMoneyDecimalFormat().format(getPaytmBalance());
+			return Utils.getMoneyDecimalFormatWithoutFloat().format(getPaytmBalance());
 		}
 	}
 
