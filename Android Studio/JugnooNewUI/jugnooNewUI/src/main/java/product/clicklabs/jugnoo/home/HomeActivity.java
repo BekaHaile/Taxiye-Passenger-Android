@@ -425,6 +425,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ArrayList<SearchResult> lastDestination = new ArrayList<SearchResult>();
     private long thumbsUpGifStartTime = 0;
     private int shakeAnim = 0;
+    private float driverMarkerRotation = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -2564,7 +2565,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
-                            driverLocationMarker.setRotation((float)Data.assignedDriverInfo.getBearing());
+                            if(Utils.compareFloat(driverMarkerRotation, 0) != 0){
+                                driverLocationMarker.setRotation(driverMarkerRotation);
+                            }
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -2625,7 +2628,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
-
+                            if(Utils.compareFloat(driverMarkerRotation, 0) != 0){
+                                driverLocationMarker.setRotation(driverMarkerRotation);
+                            }
                             Log.i("marker added", "REQUEST_FINAL");
 
                             if(Data.dropLatLng != null) {
@@ -3579,6 +3584,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 try {
                     if (activityResumed) {
+                        if((passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+                                || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
+                                && driverLocationMarker != null){
+                            driverMarkerRotation = driverLocationMarker.getRotation();
+                        }
                         if (!feedbackSkipped && !placeAdded
                                 && PassengerScreenMode.P_RIDE_END != passengerScreenMode
                                 && PassengerScreenMode.P_SEARCH != passengerScreenMode
@@ -4296,7 +4306,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
         markerOptions1.position(driverInfo.latLng);
-        //markerOptions1.rotation((float)driverInfo.getBearing());
         markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                 .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
@@ -4981,7 +4990,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                         if (map != null) {
                                                             if (HomeActivity.this.hasWindowFocus()) {
 //                                                                driverLocationMarker.setPosition(driverCurrentLatLng);
-                                                                driverLocationMarker.setRotation(driverLocationMarker.getRotation());
                                                                 MarkerAnimation.animateMarkerToICS(driverLocationMarker,
                                                                         driverCurrentLatLng, new LatLngInterpolator.Spherical());
                                                                 updateDriverETAText(passengerScreenMode);
@@ -6696,7 +6704,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         if(PassengerScreenMode.P_IN_RIDE != passengerScreenModeOld
                                             && PassengerScreenMode.P_IN_RIDE == passengerScreenMode
                                             && Data.dropLatLng != null) {
-
+                                            // havan karo yahan pe
                                         }
 										startUIAfterGettingUserStatus();
 									}

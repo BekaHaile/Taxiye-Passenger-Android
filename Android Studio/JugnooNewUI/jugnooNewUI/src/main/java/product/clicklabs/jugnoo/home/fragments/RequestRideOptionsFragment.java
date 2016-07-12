@@ -67,13 +67,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private LinearLayout linearLayoutFare;
     private TextView textViewMinFareValue;
 
-    private LinearLayout linearLayoutFareEstimate, linearLayoutPaymentModeMS, linearLayoutFareContainer;
+    private LinearLayout linearLayoutFareEstimate, linearLayoutPaymentModeMS;
 
     private RelativeLayout relativeLayoutMultipleSupplyMain;
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2, textViewMinFareMS;
+            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2, textViewMinFareMS,
+            textViewPriorityTipValue;
     private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
@@ -139,14 +140,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
         textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
-        textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMSSmall);
+        textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
-
-        linearLayoutFareContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareContainer);
 
         textViewPriorityTipValueMS = (TextView) rootView.findViewById(R.id.textViewPriorityTipValueMS);
         textViewPriorityTipValueMS.setTypeface(Fonts.mavenRegular(activity));
-        relativeLayoutPriorityTipMS = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPriorityTipMS);
+        textViewPriorityTipValue = (TextView) rootView.findViewById(R.id.textViewPriorityTipValue);
+        textViewPriorityTipValue.setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutPriorityTipMS = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPriorityTip);
 
         recyclerViewVehicles = (RecyclerView) rootView.findViewById(R.id.recyclerViewVehicles);
         recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
@@ -204,8 +205,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
 
 
-            } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS ||
-                    v.getId() == R.id.textVieGetFareEstimateMSSmall){
+            } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_RIDE_TYPE, getRegionSelected().getRideType());
                 try {
@@ -231,7 +231,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updateOffersCount(){
         try {
-            textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + ": " + Data.promoCoupons.size());
+            textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
             textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -278,12 +278,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void updateBottomMultipleView(int rideType){
         if(rideType == RideTypeValue.POOL.getOrdinal()){
             textVieGetFareEstimateMS.setVisibility(View.GONE);
-            linearLayoutFareContainer.setVisibility(View.GONE);
+            linearLayoutPaymentModeMS.setVisibility(View.GONE);
             textViewMinFareMS.setText(activity.getResources().getString(R.string.fixed_fare_colon));
             textViewMinFareMSValue.setText(activity.getResources().getString(R.string.two_hifen));
         } else{
             textVieGetFareEstimateMS.setVisibility(View.VISIBLE);
-            linearLayoutFareContainer.setVisibility(View.VISIBLE);
+            linearLayoutPaymentModeMS.setVisibility(View.VISIBLE);
             textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
 
         }
@@ -432,8 +432,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         double fareFactor = getRegionSelected().getCustomerFareFactor();
         if (fareFactor > 1 || fareFactor < 1) {
             relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
-            textViewPriorityTipValueMS.setText(String.format(activity.getResources().getString(R.string.format_x)
-                            , Utils.getMoneyDecimalFormat().format(fareFactor)));
+            //textViewPriorityTipValueMS.setText(String.format(activity.getResources().getString(R.string.format_x)
+                    //, Utils.getMoneyDecimalFormat().format(fareFactor)));
+            textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x), Utils.getMoneyDecimalFormat().format(fareFactor))+"x");
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }

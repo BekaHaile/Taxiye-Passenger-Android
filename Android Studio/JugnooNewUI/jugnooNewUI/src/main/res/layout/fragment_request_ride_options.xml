@@ -198,7 +198,6 @@
             android:layout_width="match_parent"
             android:layout_height="300px"
             android:layout_below="@+id/recyclerViewVehicles"
-            android:background="@color/red"
             android:gravity="center_vertical">
 
         <LinearLayout
@@ -214,13 +213,52 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="101px">
+                android:layout_height="101px"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutPaymentModeMS"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewPaymentModeMS"
+                        android:layout_width="68px"
+                        android:layout_height="22px"
+                        android:src="@drawable/ic_cash_small"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewPaymentModeValueMS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8px"
+                        android:gravity="center"
+                        android:text="200"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="-1dp"
+                    android:src="@color/text_color_hint" />
 
                 <LinearLayout
                     android:id="@+id/linearLayoutMinFareMS"
-                    android:layout_width="330px"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="-1dp"
+                    android:orientation="vertical"
                     android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
                     android:gravity="center">
 
@@ -237,8 +275,8 @@
                     <TextView
                         android:id="@+id/textViewMinFareMSValue"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0px"
                         android:gravity="center"
                         android:text="@string/rupees_value_format_without_space"
                         android:textAllCaps="true"
@@ -254,7 +292,8 @@
 
                 <TextView
                     android:id="@+id/textViewOffers"
-                    android:layout_width="330px"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="@string/nl_offers"
@@ -274,64 +313,6 @@
                 android:layout_marginTop="-1dp"
                 android:background="@color/text_color_hint" />
 
-            <LinearLayout
-                android:id="@+id/linearLayoutFareContainer"
-                android:layout_width="match_parent"
-                android:layout_height="99px"
-                android:orientation="horizontal"
-                android:visibility="visible"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector">
-
-                <TextView
-                    android:id="@+id/textVieGetFareEstimateMSSmall"
-                    android:layout_width="330px"
-                    android:layout_height="100px"
-                    android:layout_marginTop="-1dp"
-                    android:layout_marginLeft="-1dp"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
-                    android:gravity="center"
-                    android:text="@string/get_fare_estimate"
-                    android:textAllCaps="true"
-                    android:visibility="visible"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26" />
-
-                <ImageView
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="-1dp"
-                    android:src="@color/text_color_hint" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutPaymentModeMS"
-                    android:layout_width="330px"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_brrb_selector"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/imageViewPaymentModeMS"
-                        android:layout_width="68px"
-                        android:layout_height="22px"
-                        android:src="@drawable/ic_cash_small"
-                        android:tag="mwar" />
-
-                    <TextView
-                        android:id="@+id/textViewPaymentModeValueMS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10px"
-                        android:gravity="center"
-                        android:text="200"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
-
-                </LinearLayout>
-
-                </LinearLayout>
 
             <TextView
                 android:id="@+id/textVieGetFareEstimateMS"
@@ -342,11 +323,13 @@
                 android:gravity="center"
                 android:text="@string/get_fare_estimate"
                 android:textAllCaps="true"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_26" />
 
         </LinearLayout>
+
+
 
         <!-- Surge view circle -->
         <RelativeLayout
@@ -355,7 +338,7 @@
             android:layout_height="94px"
             android:layout_alignTop="@+id/linearLayoutOptionsMultipleSupply"
             android:layout_centerHorizontal="true"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_marginTop="-10px"
             android:background="@drawable/circle_surge_price"
             android:tag="mwar">
@@ -382,6 +365,51 @@
                 android:textSize="@dimen/text_size_26" />
 
         </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutPriorityTip"
+                android:layout_width="82px"
+                android:layout_height="30px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-15px"
+                android:layout_alignTop="@+id/linearLayoutOptionsMultipleSupply"
+                android:background="@drawable/background_white_bordered">
+
+                <ImageView
+                    android:layout_width="26px"
+                    android:layout_height="26px"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8px"
+                    android:src="@drawable/ic_surge_grey"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:layout_width="2px"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:src="@color/text_color_light" />
+
+                <LinearLayout
+                    android:layout_width="40px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewPriorityTipValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2px"
+                        android:gravity="center"
+                        android:text="1.3x"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_18" />
+                </LinearLayout>
+            </RelativeLayout>
 
         <TextView
             android:id="@+id/textViewMaxPeople"
