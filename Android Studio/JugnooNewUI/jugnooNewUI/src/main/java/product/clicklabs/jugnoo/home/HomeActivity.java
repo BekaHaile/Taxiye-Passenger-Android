@@ -3542,6 +3542,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
                             }
                         }
+
+                        fetchWalletBalance(this);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3565,8 +3567,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 openDeepLink();
                 performDeepLinkRequest();
-
-                fetchWalletBalance(this);
 
 
                 String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");

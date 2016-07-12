@@ -285,7 +285,7 @@ android:visibility="visible">
         android:layout_marginRight="30px"
         android:background="@drawable/background_white_shadow"
         android:layout_gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -295,7 +295,7 @@ android:visibility="visible">
             android:layout_height="35px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30px"
-            android:src="@drawable/checkbox_signup_checked"
+            android:src="@drawable/checkbox_signup_unchecked"
             android:tag="mwar"/>
 
         <TextView
@@ -312,6 +312,44 @@ android:visibility="visible">
             android:layout_height="27px"
             android:layout_marginLeft="20px"
             android:src="@drawable/ic_paytm_small"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutAddMobikwik"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        android:background="@drawable/background_white_shadow"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageViewAddMobikwik"
+            android:layout_width="38px"
+            android:layout_height="35px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"
+            android:src="@drawable/checkbox_signup_unchecked"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/textViewAddMobikwik"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_add_patym"
+            android:layout_marginLeft="20px"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30"/>
+
+        <ImageView
+            android:layout_width="82px"
+            android:layout_height="27px"
+            android:layout_marginLeft="20px"
+            android:src="@drawable/ic_mobikwik_small"/>
     </LinearLayout>
 
 <Button
