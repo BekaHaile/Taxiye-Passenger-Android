@@ -507,14 +507,14 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 						if(Prefs.with(this).getString(Constants.SP_OTP_SCREEN_OPEN, "")
 								.equalsIgnoreCase(OTPConfirmScreen.class.getName())) {
 							Intent otpConfirmScreen = new Intent(this, OTPConfirmScreen.class);
-							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
 						else if(Prefs.with(this).getString(Constants.SP_OTP_SCREEN_OPEN, "")
 								.equalsIgnoreCase(PhoneNoOTPConfirmScreen.class.getName())){
 							Intent otpConfirmScreen = new Intent(this, PhoneNoOTPConfirmScreen.class);
-							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}

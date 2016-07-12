@@ -38,7 +38,7 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
 					if(Prefs.with(context).getString(Constants.SP_OTP_SCREEN_OPEN, "")
 							.equalsIgnoreCase(OTPConfirmScreen.class.getName())) {
 						Intent otpConfirmScreen = new Intent(context, OTPConfirmScreen.class);
-						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						otpConfirmScreen.putExtra("sender_num", senderNum);
 						otpConfirmScreen.putExtra("message", message);
 						context.startActivity(otpConfirmScreen);
