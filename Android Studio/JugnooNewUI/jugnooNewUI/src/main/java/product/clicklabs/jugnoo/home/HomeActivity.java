@@ -2269,7 +2269,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
 
-            slidingBottomPanel.getRequestRideOptionsFragment().updatePreferredPaymentOptionUI();
+            slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2822,6 +2822,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public SlidingBottomPanelV4 getSlidingBottomPanel(){
         return slidingBottomPanel;
     }
+
 
     private void startStopLocationUpdateService(PassengerScreenMode mode){
         Prefs.with(this).save(Constants.SP_CURRENT_ENGAGEMENT_ID, Data.cEngagementId);

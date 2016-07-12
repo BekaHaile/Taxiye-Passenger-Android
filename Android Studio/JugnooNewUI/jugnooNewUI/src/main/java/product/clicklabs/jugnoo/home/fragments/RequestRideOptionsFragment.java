@@ -236,6 +236,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        updateCouponsFragSingle();
     }
 
     public PromoCouponsDialog promoCouponsDialog;
@@ -310,20 +311,28 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 textViewPaymentModeValueMS.setText(String.format(activity.getResources()
                                 .getString(R.string.rupees_value_format_without_space),
                         Data.userData.getPaytmBalanceStr()));
+
+                activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(R.drawable.ic_paytm_small);
+                activity.getSlidingBottomPanel().getTextViewCashValue().setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getPaytmBalanceStr()));
             } else {
                 imageViewPaymentMode.setImageResource(R.drawable.ic_cash_small);
                 imageViewPaymentModeMS.setImageResource(R.drawable.ic_cash_small);
                 params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
                 textViewPaymentModeValue.setText(activity.getResources().getString(R.string.cash));
                 textViewPaymentModeValueMS.setText(activity.getResources().getString(R.string.cash));
+
+                activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(R.drawable.ic_cash_small);
+                activity.getSlidingBottomPanel().getTextViewCashValue().setText(activity.getResources().getString(R.string.cash));
             }
             imageViewPaymentModeMS.setLayoutParams(params);
+            updatePreferredPaymentOptionUI();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updatePreferredPaymentOptionUI(){
+    private void updatePreferredPaymentOptionUI(){
         try{
             if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
                 getPaymentOptionDialog().updatePreferredPaymentOptionUI();
@@ -331,6 +340,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } catch(Exception e){
             e.printStackTrace();
         }
+        updatePreferredPaymentOptionUISingle();
     }
 
     public void setPaytmLoadingVisiblity(int visiblity){
@@ -341,6 +351,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } catch(Exception e){
             e.printStackTrace();
         }
+        setPaytmLoadingVisiblitySingle(visiblity);
     }
 
 
@@ -394,8 +405,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         if(supplyCount > 1){
             relativeLayoutMultipleSupplyMain.setVisibility(View.VISIBLE);
         } else{
-            linearLayoutOptionsSingleSupply.setVisibility(View.VISIBLE);
+            //linearLayoutOptionsSingleSupply.setVisibility(View.VISIBLE);
+
         }
+        activity.getSlidingBottomPanel().updateBottomPanel(supplyCount);
     }
 
     public void updateFareStructureUI(){
@@ -412,6 +425,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
         updateFareFactorUI();
         updateBottomMultipleView(getRegionSelected().getRideType());
+        updateFareFactorUISingle();
     }
 
     public void updateFareFactorUI(){
@@ -423,7 +437,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }
-        activity.getSlidingBottomPanel().updateFareFactorUI(Data.regions.size());
+        //activity.getSlidingBottomPanel().updateFareFactorUI(Data.regions.size());
     }
 
     public void initSelectedCoupon(){
@@ -581,6 +595,68 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             });
         }
         return paymentOptionDialog;
+    }
+
+
+
+
+
+
+
+
+    private void setPaytmLoadingVisiblitySingle(int visiblity) {
+        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
+        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+            ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
+        }
+    }
+
+    private void updatePreferredPaymentOptionUISingle() {
+        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
+        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
+        }
+    }
+
+    private void updateCouponsFragSingle(){
+        try {
+            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 2);
+            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
+                ((SlidingBottomOffersFragment) frag).setOfferAdapter();
+                ((SlidingBottomOffersFragment) frag).update();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFareFactorUISingle() {
+        try {
+            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 1);
+            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
+                ((SlidingBottomFareFragment) frag1).update();
+            }
+            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+            setSurgeImageVisibility();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setSurgeImageVisibility(){
+        try {
+            if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
+                    && Data.userData.fareFactor > 1.0
+                    && Data.regions.size() == 1){
+                activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.VISIBLE);
+            } else{
+                activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.GONE);
+        }
     }
 
 }

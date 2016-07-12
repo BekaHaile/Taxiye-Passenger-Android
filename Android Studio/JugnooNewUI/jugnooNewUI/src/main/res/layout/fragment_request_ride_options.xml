@@ -147,7 +147,7 @@
             android:id="@+id/relativeLayoutPoolInfoBar"
             android:layout_width="match_parent"
             android:layout_height="70px"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@color/white">
 
             <TextView
@@ -198,6 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="300px"
             android:layout_below="@+id/recyclerViewVehicles"
+            android:background="@color/red"
             android:gravity="center_vertical">
 
         <LinearLayout
