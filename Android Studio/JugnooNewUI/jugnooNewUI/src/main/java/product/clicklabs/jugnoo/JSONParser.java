@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -323,6 +324,7 @@ public class JSONParser implements Constants {
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+                couponsEvent(context);
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
@@ -391,7 +393,7 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
-            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled()==null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
+            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled() == null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
             Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1272,6 +1274,18 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
             Data.dropLatLng = null;
+        }
+    }
+
+    private void couponsEvent(Context context){
+        try{
+            JSONObject map = new JSONObject();
+            for(PromoCoupon promoCoupon : Data.promoCoupons){
+                map.put(promoCoupon.getTitle(), 1);
+            }
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 

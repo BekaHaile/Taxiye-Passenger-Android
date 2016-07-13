@@ -154,7 +154,7 @@ public class SlidingBottomPanelV4 {
             updatePannelHeight();
             if (Data.promoCoupons != null) {
                 if (Data.promoCoupons.size() > 0) {
-                    nudgeCouponsEvent();
+//                    nudgeCouponsEvent();
                     textViewOffersValue.setText(String.valueOf(Data.promoCoupons.size()));
                 } else {
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
@@ -200,29 +200,29 @@ public class SlidingBottomPanelV4 {
         }
     }
 
-    public void nudgeCouponsEvent(){
-        try {
-            JSONObject map = new JSONObject();
-            JSONArray coups = new JSONArray();
-            JSONArray coupsP = new JSONArray();
-            for(PromoCoupon pc : Data.promoCoupons){
-                if(requestRideOptionsFragment.isPaytmCoupon(pc)){
-                    coupsP.put(pc.getTitle());
-                } else{
-                    coups.put(pc.getTitle());
-                }
-            }
-            map.put(Constants.KEY_COUPONS, coups.toString());
-            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
-
-            if(coupsP.length() > 0) {
-                map.put(Constants.KEY_COUPONS, coupsP.toString());
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void nudgeCouponsEvent(){
+//        try {
+//            JSONObject map = new JSONObject();
+//            JSONArray coups = new JSONArray();
+//            JSONArray coupsP = new JSONArray();
+//            for(PromoCoupon pc : Data.promoCoupons){
+//                if(requestRideOptionsFragment.isPaytmCoupon(pc)){
+//                    coupsP.put(pc.getTitle());
+//                } else{
+//                    coups.put(pc.getTitle());
+//                }
+//            }
+//            map.put(Constants.KEY_COUPONS, coups.toString());
+//            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+//
+//            if(coupsP.length() > 0) {
+//                map.put(Constants.KEY_COUPONS, coupsP.toString());
+//                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public RequestRideOptionsFragment getRequestRideOptionsFragment(){
         return requestRideOptionsFragment;

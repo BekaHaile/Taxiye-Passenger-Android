@@ -31,9 +31,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -248,7 +250,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation, confirmMyLocationBtn;
     RelativeLayout relativeLayoutRequest;
     RelativeLayout relativeLayoutInAppCampaignRequest;
-    TextView textViewInAppCampaignRequest, textViewTotalFare, textViewIncludes;
+    TextView textViewInAppCampaignRequest, textViewTotalFare, textViewTotalFareValue, textViewIncludes;
     Button buttonCancelInAppCampaignRequest;
 
 	RelativeLayout relativeLayoutGoogleAttr;
@@ -655,6 +657,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
         textViewCancellation = (TextView) findViewById(R.id.textViewCancellation); textViewCancellation.setTypeface(Fonts.mavenRegular(this));
         textViewTotalFare = (TextView)findViewById(R.id.textViewTotalFare); textViewTotalFare.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewTotalFareValue = (TextView)findViewById(R.id.textViewTotalFareValue); textViewTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewIncludes = (TextView)findViewById(R.id.textViewIncludes); textViewIncludes.setTypeface(Fonts.mavenMedium(this));
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
@@ -1624,7 +1627,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.put(KEY_LONGITUDE, Data.longitude);
             NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN, map);
 
-            slidingBottomPanel.nudgeCouponsEvent();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -7000,8 +7002,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 jugnooPoolFareId = poolFareId;
                 poolFareSuccess = true;
 
-                textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon)+" "+
-                    String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
+                textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
+                textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
 
                 textViewIncludes.setText(text);
             }
