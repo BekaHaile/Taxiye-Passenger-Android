@@ -215,10 +215,8 @@ public class SlidingBottomPanel {
             } else{
                 textViewOffersValue.setText("-");
             }
-            updatePreferredPaymentOptionUI();
             updateRegionsUI();
             updateFareStructureUI();
-            updateCouponsFrag();
             checkForGoogleLogoVisibilityBeforeRide();
 
         } catch (Exception e) {
@@ -256,18 +254,6 @@ public class SlidingBottomPanel {
         imageViewExtraForSliding.setLayoutParams(params);
     }
 
-    public void updatePaymentOption() {
-        try {
-            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
-            imageViewPaymentOp.setImageResource(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionIconSmall(Data.pickupPaymentOption));
-            textViewCashValue.setText(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.pickupPaymentOption));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public SlidingUpPanelLayout getSlidingUpPanelLayout() {
         return slidingUpPanelLayout;
@@ -291,24 +277,56 @@ public class SlidingBottomPanel {
         selectedCoupon = promoCoupon;
     }
 
-    public void setPaytmLoadingVisiblity(int visiblity) {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
-        }
-    }
+//    public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
+//        return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+//    }
 
-    public void updatePreferredPaymentOptionUI() {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
-        }
-    }
-
-    public boolean displayAlertAndCheckForSelectedWalletCoupon() {
-        return MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
-                Data.pickupPaymentOption, selectedCoupon);
-    }
+//    private boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
+//        try {
+//            if (isPaytmCoupon(promoCoupon)) {
+//                if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
+//                    View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            openPaymentActivityInCaseOfPaytmNotAdded();
+//                        }
+//                    };
+//                    View.OnClickListener onClickListenerCancel = new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                        }
+//                    };
+//                    if (Data.userData.paytmEnabled == 1) {
+//                        DialogPopup.alertPopupWithListener(activity, "",
+//                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
+//                                onClickListenerCancel);
+//                    } else {
+//                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+//                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
+//                                activity.getResources().getString(R.string.ok),
+//                                activity.getResources().getString(R.string.cancel),
+//                                onClickListenerPaymentOption,
+//                                onClickListenerCancel,
+//                                true, false);
+//                    }
+//                    return false;
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return true;
+//    }
+//
+//    public void openPaymentActivityInCaseOfPaytmNotAdded() {
+//        if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+//            Intent intent = new Intent(activity, PaymentActivity.class);
+//            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+//            activity.startActivity(intent);
+//            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//            FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
+//        }
+//    }
 
 
     public Region getRegionSelected() {
@@ -338,27 +356,14 @@ public class SlidingBottomPanel {
                 break;
             }
         }
-        updateFareFactorUI();
     }
 
-    public void updateFareFactorUI() {
-        try {
-            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
-            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
-                ((SlidingBottomFareFragment) frag1).update();
-            }
-            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-            setSurgeImageVisibility();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void setSurgeImageVisibility(){
         try {
             if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
-                && Data.userData.fareFactor > 1.0){
+                && Data.userData.fareFactor > 1.0
+                && Data.regions.size() == 1){
                 imageViewSurgeOverSlidingBottom.setVisibility(View.VISIBLE);
 			} else{
                 imageViewSurgeOverSlidingBottom.setVisibility(View.GONE);
@@ -369,17 +374,6 @@ public class SlidingBottomPanel {
         }
     }
 
-    private void updateCouponsFrag(){
-        try {
-            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
-				((SlidingBottomOffersFragment) frag).setOfferAdapter();
-				((SlidingBottomOffersFragment) frag).update();
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void checkForGoogleLogoVisibilityBeforeRide(){
         try{

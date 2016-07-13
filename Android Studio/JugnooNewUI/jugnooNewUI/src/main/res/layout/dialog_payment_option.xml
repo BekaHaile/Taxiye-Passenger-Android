@@ -196,7 +196,7 @@
     <ImageView
         android:id="@+id/imageViewClose"
         style="@style/cross_popup"
-        />
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

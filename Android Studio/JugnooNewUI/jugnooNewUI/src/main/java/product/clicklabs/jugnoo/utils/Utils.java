@@ -468,6 +468,14 @@ public class Utils {
 		return decimalFormatMoney;
 	}
 
+	private static DecimalFormat decimalFormatMoneyWithoutFloat;
+	public static DecimalFormat getMoneyDecimalFormatWithoutFloat(){
+		if(decimalFormatMoneyWithoutFloat == null){
+			decimalFormatMoneyWithoutFloat = new DecimalFormat("#");
+		}
+		return decimalFormatMoneyWithoutFloat;
+	}
+
 
 
 	public static boolean isAppInstalled(Context context, String packageName) {

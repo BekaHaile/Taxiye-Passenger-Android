@@ -168,7 +168,7 @@ public class UserData {
 		if(paytmEnabled != 1 || paytmBalance < 0){
 			return "--";
 		} else {
-			return Utils.getMoneyDecimalFormat().format(paytmBalance);
+			return Utils.getMoneyDecimalFormatWithoutFloat().format(paytmBalance);
 		}
 	}
 
@@ -539,7 +539,7 @@ public class UserData {
 		if(mobikwikEnabled != 1 || mobikwikBalance < 0){
 			return "--";
 		} else {
-			return Utils.getMoneyDecimalFormat().format(mobikwikBalance);
+			return Utils.getMoneyDecimalFormatWithoutFloat().format(mobikwikBalance);
 		}
 	}
 

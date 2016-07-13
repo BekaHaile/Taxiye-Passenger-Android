@@ -1,30 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/linearLayoutRoot"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
-              android:background="@color/sliding_bottom_bg_color"
-              android:gravity="center_vertical"
-              android:orientation="vertical">
+<ScrollView
+    android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
+    android:background="@color/sliding_bottom_bg_color"
+    >
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutPaytm"
+    <LinearLayout
+        android:id="@+id/linearLayoutWalletContainer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/nl_button_size"
-        android:layout_marginBottom="30px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:visibility="visible">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_marginBottom="20px"
+        >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutPaytm"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nl_button_size"
+            android:layout_marginTop="20px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewRadioPaytm"
+                    android:layout_width="33px"
+                    android:layout_height="33px"
+                    android:layout_marginLeft="23px"
+                    android:src="@drawable/ic_radio_button_normal"
+                    android:tag="mwar"/>
+
+                <ImageView
+                    android:layout_width="68px"
+                    android:layout_height="22px"
+                    android:layout_marginLeft="26px"
+                    android:src="@drawable/ic_paytm_small"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/textViewPaytm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="28px"
+                    android:text="@string/paytm_wallet"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewPaytmValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30px"
+                android:text="200"
+                android:textColor="@color/theme_green_color"
+                android:textSize="@dimen/text_size_30"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutMobikwik"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nl_button_size"
+            android:layout_marginTop="20px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewRadioMobikwik"
+                    android:layout_width="33px"
+                    android:layout_height="33px"
+                    android:layout_marginLeft="23px"
+                    android:src="@drawable/ic_radio_button_normal"
+                    android:tag="mwar"/>
+
+                <ImageView
+                    android:layout_width="68px"
+                    android:layout_height="22px"
+                    android:layout_marginLeft="26px"
+                    android:src="@drawable/ic_mobikwik_small"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/textViewMobikwik"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="28px"
+                    android:text="@string/mobikwik_wallet"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewMobikwikValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30px"
+                android:text="200"
+                android:textColor="@color/theme_green_color"
+                android:textSize="@dimen/text_size_30"/>
+
+        </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:id="@+id/linearLayoutCash"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nl_button_size"
+            android:layout_marginTop="20px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:background="@drawable/background_white_rounded_bordered"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <ImageView
-                android:id="@+id/radio_paytm"
+                android:id="@+id/imageViewRadioCash"
                 android:layout_width="33px"
                 android:layout_height="33px"
                 android:layout_marginLeft="23px"
@@ -35,83 +150,20 @@
                 android:layout_width="68px"
                 android:layout_height="22px"
                 android:layout_marginLeft="26px"
-                android:src="@drawable/ic_paytm_small"
+                android:src="@drawable/ic_cash_small"
                 android:tag="mwar"/>
 
             <TextView
-                android:id="@+id/textViewPaytm"
+                android:id="@+id/textViewCash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="28px"
-                android:text="@string/paytm_wallet"
+                android:text="@string/cash"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_30"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textViewPaytmValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
-            android:text="200"
-            android:textColor="@color/theme_green_color"
-            android:textSize="@dimen/text_size_30"/>
-
-        <product.clicklabs.jugnoo.utils.ProgressWheel
-            android:id="@+id/progressBarPaytm"
-            xmlns:wheel="http://schemas.android.com/apk/res-auto"
-            android:layout_width="70px"
-            android:layout_height="70px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20px"
-            android:tag="mwar"
-            wheel:matProg_barColor="@color/theme_color"
-            wheel:matProg_barWidth="3dp"
-            wheel:matProg_fillRadius="true"
-            wheel:matProg_progressIndeterminate="true"/>
-
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutCash"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/nl_button_size"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/radio_cash"
-            android:layout_width="33px"
-            android:layout_height="33px"
-            android:layout_marginLeft="23px"
-            android:src="@drawable/ic_radio_button_normal"
-            android:tag="mwar"/>
-
-        <ImageView
-            android:layout_width="68px"
-            android:layout_height="22px"
-            android:layout_marginLeft="26px"
-            android:src="@drawable/ic_cash_small"
-            android:tag="mwar"/>
-
-        <TextView
-            android:id="@+id/textViewCash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="28px"
-            android:text="@string/cash"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"/>
-
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

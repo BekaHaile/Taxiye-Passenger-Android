@@ -110,6 +110,14 @@ public class PushDialog {
 					}
 				});
 
+				relative.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
+					}
+				});
+
 				dialog.show();
 			}
 		} catch (Exception e) {

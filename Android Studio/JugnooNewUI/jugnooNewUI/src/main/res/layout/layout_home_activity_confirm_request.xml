@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <Button
         android:id="@+id/confirmMyLocationBtn"
@@ -40,7 +40,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100px">
+            android:layout_height="102px">
 
             <LinearLayout
                 android:id="@+id/linearLayoutPaymentModeConfirm"
@@ -81,7 +81,7 @@
                 android:id="@+id/linearLayoutOfferConfirm"
                 android:layout_width="330px"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
                 android:visibility="visible">
 
                 <ImageView
@@ -159,7 +159,7 @@
             android:gravity="center"
             android:text="@string/total_fare_colon"
             android:textAllCaps="true"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="18px"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_32"
             android:visibility="visible"/>
@@ -175,7 +175,7 @@
                 android:layout_marginTop="7px"
                 android:paddingRight="5px"
                 android:paddingLeft="5px"
-                android:layout_marginBottom="25px"
+                android:layout_marginBottom="20px"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_18"
                 android:visibility="visible"/>

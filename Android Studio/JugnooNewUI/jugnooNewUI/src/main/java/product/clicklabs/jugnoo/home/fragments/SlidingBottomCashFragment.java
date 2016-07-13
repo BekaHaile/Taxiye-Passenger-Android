@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -25,6 +26,7 @@ import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 /**
  * Created by Ankit on 1/8/16.
@@ -32,11 +34,10 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener{
 
     private View rootView;
-    private LinearLayout linearLayoutRoot, linearLayoutCash;
-    private ImageView radioBtnPaytm, radioBtnCash;
-    private TextView textViewPaytm, textViewPaytmValue;
-    private RelativeLayout relativeLayoutPaytm;
-    private ProgressWheel progressBarPaytm;
+    private LinearLayout linearLayoutRoot, linearLayoutWalletContainer, linearLayoutCash;
+    private ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioCash;
+    private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik;
     private HomeActivity activity;
 
     @Override
@@ -52,18 +53,27 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             e.printStackTrace();
         }
 
-        relativeLayoutPaytm = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutPaytm);
-        linearLayoutCash = (LinearLayout)rootView.findViewById(R.id.linearLayoutCash);
-        radioBtnPaytm = (ImageView)rootView.findViewById(R.id.radio_paytm);
-        radioBtnCash = (ImageView)rootView.findViewById(R.id.radio_cash);
+        linearLayoutWalletContainer = (LinearLayout)rootView.findViewById(R.id.linearLayoutWalletContainer);
+
+        imageViewRadioPaytm = (ImageView)rootView.findViewById(R.id.imageViewRadioPaytm);
+        imageViewRadioMobikwik = (ImageView)rootView.findViewById(R.id.imageViewRadioMobikwik);
+        imageViewRadioCash = (ImageView)rootView.findViewById(R.id.imageViewRadioCash);
+
         textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenMedium(getActivity()));
-        ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenMedium(getActivity()));
-        progressBarPaytm = (ProgressWheel) rootView.findViewById(R.id.progressBarPaytm);
+        textViewMobikwik = (TextView)rootView.findViewById(R.id.textViewMobikwik);textViewMobikwik.setTypeface(Fonts.mavenMedium(getActivity()));
+        textViewMobikwikValue = (TextView)rootView.findViewById(R.id.textViewMobikwikValue); textViewMobikwikValue.setTypeface(Fonts.mavenMedium(getActivity()));
 
+        relativeLayoutPaytm = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutPaytm);
+        relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
+        linearLayoutCash = (LinearLayout)rootView.findViewById(R.id.linearLayoutCash);
+        ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenMedium(getActivity()));
 
         relativeLayoutPaytm.setOnClickListener(this);
+        relativeLayoutMobikwik.setOnClickListener(this);
         linearLayoutCash.setOnClickListener(this);
+
+        orderPaymentModes();
 
         updatePreferredPaymentOptionUI();
 
@@ -87,118 +97,179 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.relativeLayoutPaytm:
-                if(Data.userData.getPaytmBalance() > 0) {
-                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                    setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
-
-                } else if(Data.userData.getPaytmBalance() < 0){
-                    DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
-                } else{
-                    if(Data.userData.getPaytmEnabled() == 1) {
-                        DialogPopup.alertPopupWithListener(activity, "",
-                                activity.getResources().getString(R.string.paytm_no_cash),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(activity, PaymentActivity.class);
-                                        intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-                                        intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-                                        activity.startActivity(intent);
-                                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                    }
-                                });
+        try {
+            switch (v.getId()){
+                case R.id.relativeLayoutPaytm:
+                    if(Data.userData.getPaytmBalance() > 0) {
+                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
                     }
-                    else{
+                    else if(Data.userData.getPaytmBalance() < 0){
+                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+                    } else{
+                        if(Data.userData.getPaytmEnabled() == 1) {
+                            DialogPopup.alertPopupWithListener(activity, "",
+                                    activity.getResources().getString(R.string.paytm_no_cash),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(activity, PaymentActivity.class);
+                                            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                                            intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
+                                            activity.startActivity(intent);
+                                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                        }
+                                    });
+                        }
+                        else{
+                            MyApplication.getInstance().getWalletCore()
+                                    .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.PAYTM.getOrdinal());
+                        }
                     }
-                }
-                break;
+                    break;
 
-            case R.id.linearLayoutCash:
-                if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
-                    FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
-                }
-                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
-                break;
+                case R.id.relativeLayoutMobikwik:
+                    if(Data.userData.getMobikwikBalance() > 0) {
+                        Data.pickupPaymentOption = PaymentOption.MOBIKWIK.getOrdinal();
+                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
+                    }
+                    else if(Data.userData.getMobikwikBalance() < 0){
+                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
+                    } else{
+                        if(Data.userData.getMobikwikEnabled() == 1) {
+                            DialogPopup.alertPopupWithListener(activity, "",
+                                    activity.getResources().getString(R.string.mobikwik_no_cash),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(activity, PaymentActivity.class);
+                                            intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                                            intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
+                                            activity.startActivity(intent);
+                                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                        }
+                                    });
+                        }
+                        else{
+                            MyApplication.getInstance().getWalletCore()
+                                    .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.MOBIKWIK.getOrdinal());
+                        }
+                    }
+                    break;
+
+                case R.id.linearLayoutCash:
+                    if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
+                        FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
+                    }
+                    Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+                    activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setSelectedPaymentOptionUI(){
+        try {
+            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
+            if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
+                paymentSelection(imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioCash);
+            } else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.pickupPaymentOption){
+                paymentSelection(imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash);
+            } else{
+                paymentSelection(imageViewRadioCash, imageViewRadioPaytm, imageViewRadioMobikwik);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void paymentSelection(ImageView selected, ImageView unSelected, ImageView unSelected2){
+        try {
+            selected.setImageResource(R.drawable.ic_radio_button_selected);
+            unSelected.setImageResource(R.drawable.ic_radio_button_normal);
+            unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void updatePreferredPaymentOptionUI(){
         try{
-            int preferredPaymentOption = Data.pickupPaymentOption;
-            if(PaymentOption.PAYTM.getOrdinal() == preferredPaymentOption){
-                if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > -1){
-                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                    progressBarPaytm.setVisibility(View.GONE);
-                }
-                else{
-                    Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                    progressBarPaytm.setVisibility(View.VISIBLE);
-                }
-            }
-            else{
-                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                progressBarPaytm.setVisibility(View.GONE);
-            }
+            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
 
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+            textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
 
-            if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > -1){
+            textViewMobikwikValue.setText(String.format(activity.getResources()
+                    .getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
+            textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
+
+            if(Data.userData.getPaytmEnabled() == 1){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.paytm_wallet));
-            }
-            else{
+            } else{
                 textViewPaytmValue.setVisibility(View.GONE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
             }
-
-            if(Data.userData.getPaytmBalance() < 0){
-                Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                relativeLayoutPaytm.setVisibility(View.GONE);
+            if(Data.userData.getMobikwikEnabled() == 1){
+                textViewMobikwikValue.setVisibility(View.VISIBLE);
+                textViewMobikwik.setText(activity.getResources().getString(R.string.mobikwik_wallet));
+            } else{
+                textViewMobikwikValue.setVisibility(View.GONE);
+                textViewMobikwik.setText(activity.getResources().getString(R.string.add_mobikwik_wallet));
             }
-            else{
-                relativeLayoutPaytm.setVisibility(View.VISIBLE);
-            }
 
-            setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-
-            textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
+            setSelectedPaymentOptionUI();
 
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    public void setPaytmLoadingVisiblity(int visiblity){
-        try {
-            progressBarPaytm.setVisibility(visiblity);
-            if(visiblity == View.VISIBLE) {
-				textViewPaytmValue.setVisibility(View.GONE);
-			}
-        } catch (Exception e) {
+
+    private void orderPaymentModes(){
+        try{
+            if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas() != null
+                    && MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0){
+                linearLayoutWalletContainer.removeAllViews();
+                for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
+                        .getPaymentModeConfigDatas()){
+                    if(paymentModeConfigData.getEnabled() == 1) {
+                        if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+                                && Data.userData.getPaytmEnabled() == 1) {
+                            linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+                                && Data.userData.getMobikwikEnabled() == 1) {
+                            linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+                        }
+                    }
+                }
+
+                for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
+                        .getPaymentModeConfigDatas()){
+                    if(paymentModeConfigData.getEnabled() == 1) {
+                        if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+                                && Data.userData.getPaytmEnabled() != 1) {
+                            linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+                                && Data.userData.getMobikwikEnabled() != 1) {
+                            linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
-
-    private void setSelectedPaymentOptionUI(int pickupPaymentOption){
-        try {
-            if(PaymentOption.PAYTM.getOrdinal() == pickupPaymentOption){
-				paymentSelection(radioBtnPaytm, radioBtnCash);
-			} else{
-				paymentSelection(radioBtnCash, radioBtnPaytm);
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 
 
 }

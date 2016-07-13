@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
+import retrofit.http.HEAD;
 
 /**
  * Created by shankar on 5/2/16.
@@ -131,7 +132,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 case R.id.relativeLayoutPaytm:
                     if(Data.userData.getPaytmBalance() > 0) {
                         Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                        setSelectedPaymentOptionUI();
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
                         callback.onPaymentModeUpdated();
                     }
@@ -162,7 +163,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 				case R.id.relativeLayoutMobikwik:
 					if(Data.userData.getMobikwikBalance() > 0) {
 						Data.pickupPaymentOption = PaymentOption.MOBIKWIK.getOrdinal();
-						setSelectedPaymentOptionUI();
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
 						callback.onPaymentModeUpdated();
 					}
@@ -195,7 +196,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
                     }
                     Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                    setSelectedPaymentOptionUI();
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
                     callback.onPaymentModeUpdated();
                     break;
@@ -211,8 +212,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 					.getPaymentOptionAccAvailability(Data.pickupPaymentOption);
 			if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
 				paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash);
-			}
-			else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.pickupPaymentOption){
+			} else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.pickupPaymentOption){
 				paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash);
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik);
