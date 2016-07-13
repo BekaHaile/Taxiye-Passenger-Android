@@ -92,6 +92,7 @@ public class ApiFareEstimate {
 
                                 @Override
                                 public void failure(RetrofitError error) {
+                                    DialogPopup.dismissLoadingDialog();
                                     callback.onFailure();
                                 }
                             });
@@ -134,6 +135,7 @@ public class ApiFareEstimate {
                 RestClient.getApiServices().getFareEstimate(params, new retrofit.Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
+                        DialogPopup.dismissLoadingDialog();
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.e("response", "getFareEstimate response = " + responseStr);
                         try {
@@ -164,7 +166,7 @@ public class ApiFareEstimate {
                             exception.printStackTrace();
                             retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled);
                         }
-                        DialogPopup.dismissLoadingDialog();
+
                     }
 
                     @Override

@@ -310,6 +310,7 @@ public interface Constants {
 	String KEY_RIDE_TYPE = "ride_type";
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
 	String KEY_SEARCH_RESULT = "search_result";
+	String SP_DRIVER_BEARING = "driver_bearing";
 
 	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
 	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";

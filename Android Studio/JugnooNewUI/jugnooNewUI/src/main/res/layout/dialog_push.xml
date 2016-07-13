@@ -82,8 +82,7 @@
 
     <ImageView
         android:id="@+id/imageViewClose"
-        style="@style/cross_popup"
-        android:visibility="gone"/>
+        style="@style/cross_popup"/>
 
 
 </RelativeLayout>

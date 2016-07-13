@@ -123,7 +123,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					public void onClick(int position, RideInfo rideInfo) {
 						try {
 							Log.v("Ride Amount is ","---> "+rideInfo.amount);
-							if (rideInfo.amount > 0) {
+							if (rideInfo.isCancelledRide != 1) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
 									if(activity instanceof RideTransactionsActivity){
 										((RideTransactionsActivity)activity).openRideSummaryFragment(rideInfo.engagementId);
@@ -137,6 +137,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 								}
 								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
+							} else{
+								Log.v("Cancelled Ride", "Cancelled Ride");
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

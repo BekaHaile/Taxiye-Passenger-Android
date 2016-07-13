@@ -87,10 +87,8 @@ public class MarkerAnimation {
 
         try {
             if(MapUtils.distance(marker.getPosition(), finalPosition) < 150
-					|| MapUtils.distance(marker.getPosition(), finalPosition) > 1000){
-				List<LatLng> list = new ArrayList<>();
-				list.add(finalPosition);
-				animateMarkerToICSRecursive(marker, list, latLngInterpolator, true);
+					|| MapUtils.distance(marker.getPosition(), finalPosition) > 10000){
+                marker.setPosition(finalPosition);
 			}
 			else{
                 getDirectionsAsyncs.add(new GetDirectionsAsync(marker, finalPosition, latLngInterpolator));
@@ -205,7 +203,6 @@ public class MarkerAnimation {
             });
 
             if(rotation) {
-                //marker.setRotation((float) MapUtils.getBearing(marker.getPosition(), finalPosition));
                 MapUtils.rotateMarker(marker, (float) MapUtils.getBearing(marker.getPosition(), finalPosition));
             }
             animator.start();
