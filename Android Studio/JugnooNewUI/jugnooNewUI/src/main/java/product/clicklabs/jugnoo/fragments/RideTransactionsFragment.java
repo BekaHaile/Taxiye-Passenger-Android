@@ -130,7 +130,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									} else if(activity instanceof SupportActivity){
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null, 0);
+												rideInfo.engagementId, null, null, 0, false);
 									}
 									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 								} else {
@@ -139,6 +139,17 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
 							} else{
 								Log.v("Cancelled Ride", "Cancelled Ride");
+								if (AppStatus.getInstance(activity).isOnline(activity)) {
+									if(activity instanceof RideTransactionsActivity) {
+										new TransactionUtils().openRideIssuesFragment(activity,
+												((RideTransactionsActivity) activity).getContainer(),
+												rideInfo.engagementId, null, null, 0, true);
+										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+									}
+								} else {
+									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+								}
+								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

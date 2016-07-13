@@ -312,6 +312,8 @@ public interface Constants {
 	String KEY_SEARCH_RESULT = "search_result";
 	String SP_DRIVER_BEARING = "driver_bearing";
 
+	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
+
 
 
 }

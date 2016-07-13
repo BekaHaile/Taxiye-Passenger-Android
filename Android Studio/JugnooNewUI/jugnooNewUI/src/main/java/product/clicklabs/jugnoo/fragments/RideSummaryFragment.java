@@ -218,7 +218,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				if(activity instanceof RideTransactionsActivity){
 					new TransactionUtils().openRideIssuesFragment(activity,
 							((RideTransactionsActivity)activity).getContainer(),
-							engagementId, endRideData, getRideSummaryResponse, 0);
+							engagementId, endRideData, getRideSummaryResponse, 0, false);
 					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
 					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
 				} else {
@@ -463,7 +463,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					public void onNoRetry(View view) {
 						performBackPressed();
 					}
-				}).getRideSummaryAPI();
+				}).getRideSummaryAPI(false);
 	}
 
 
