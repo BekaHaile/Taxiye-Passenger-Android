@@ -1,437 +1,476 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/linearLayoutSignup"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:visibility="visible">
-
-
-<LinearLayout
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollViewSignup"
     android:layout_width="match_parent"
-    android:layout_height="464px"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginLeft="30px"
-    android:layout_marginRight="30px"
-    android:layout_marginTop="120px"
-    android:background="@drawable/background_white_shadow"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <ImageView
-            android:layout_width="18px"
-            android:layout_height="27px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
-            android:src="@drawable/ic_user_email"
-            android:tag="mhar" />
 
-        <EditText
-            android:id="@+id/editTextSName"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="88px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="64px"
-            android:background="#0000"
-            android:layout_toLeftOf="@+id/textViewSNameRequired"
-            android:digits="@string/digits_characters_numbers"
-            android:gravity="center_vertical"
-            android:hint="@string/nl_signup_name"
-            android:maxLength="50"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_34"
-            android:inputType="textNoSuggestions"
-            />
-
-        <TextView
-            android:id="@+id/textViewSNameRequired"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_height="464px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
-            android:text="@string/nl_splash_required"
-            android:textColor="@color/text_color_hint"
-            android:textSize="@dimen/text_size_22" />
+            android:layout_marginTop="120px"
+            android:background="@drawable/background_white_shadow"
+            android:orientation="vertical">
 
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_margin="2px"
-        android:src="@color/grey_light" />
+                <ImageView
+                    android:layout_width="18px"
+                    android:layout_height="27px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36px"
+                    android:src="@drawable/ic_user_email"
+                    android:tag="mhar"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+                <EditText
+                    android:id="@+id/editTextSName"
+                    android:layout_width="match_parent"
+                    android:layout_height="88px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="64px"
+                    android:layout_toLeftOf="@+id/textViewSNameRequired"
+                    android:background="#0000"
+                    android:digits="@string/digits_characters_numbers"
+                    android:gravity="center_vertical"
+                    android:hint="@string/nl_signup_name"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="50"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/text_size_34"
+                    />
 
-        <ImageView
-            android:layout_width="27px"
-            android:layout_height="23px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
-            android:src="@drawable/ic_email"
-            android:tag="mhar" />
+                <TextView
+                    android:id="@+id/textViewSNameRequired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:text="@string/nl_splash_required"
+                    android:textColor="@color/text_color_hint"
+                    android:textSize="@dimen/text_size_22"/>
 
-        <EditText
-            android:id="@+id/editTextSEmail"
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_margin="2px"
+                android:src="@color/grey_light"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="27px"
+                    android:layout_height="23px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36px"
+                    android:src="@drawable/ic_email"
+                    android:tag="mhar"/>
+
+                <EditText
+                    android:id="@+id/editTextSEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="88px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="64px"
+                    android:layout_toLeftOf="@+id/textViewSEmailRequired"
+                    android:background="#0000"
+                    android:gravity="center_vertical"
+                    android:hint="@string/nl_signup_email"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/text_size_34"/>
+
+                <TextView
+                    android:id="@+id/textViewSEmailRequired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:text="@string/nl_splash_required"
+                    android:textColor="@color/text_color_hint"
+                    android:textSize="@dimen/text_size_22"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_margin="2px"
+                android:src="@color/grey_light"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="27px"
+                    android:layout_height="27px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36px"
+                    android:src="@drawable/ic_phone"
+                    android:tag="mhar"/>
+
+                <TextView
+                    android:id="@+id/textViewSPhone91"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="84px"
+                    android:gravity="center_vertical"
+                    android:text="@string/nl_signup_plus91"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34"/>
+
+                <EditText
+                    android:id="@+id/editTextSPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="88px"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/textViewSPhoneRequired"
+                    android:layout_toRightOf="@+id/textViewSPhone91"
+                    android:background="#0000"
+                    android:gravity="center_vertical"
+                    android:hint="@string/phone_number"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/text_size_34"/>
+
+                <TextView
+                    android:id="@+id/textViewSPhoneRequired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:text="@string/nl_splash_required"
+                    android:textColor="@color/text_color_hint"
+                    android:textSize="@dimen/text_size_22"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_margin="2px"
+                android:src="@color/grey_light"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="18px"
+                    android:layout_height="27px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36px"
+                    android:src="@drawable/ic_password"
+                    android:tag="mhar"/>
+
+                <EditText
+                    android:id="@+id/editTextSPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="88px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="64px"
+                    android:layout_toLeftOf="@+id/textViewSPasswordRequired"
+                    android:background="#0000"
+                    android:gravity="center_vertical"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:maxLength="20"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/text_size_34"/>
+
+                <TextView
+                    android:id="@+id/textViewSPasswordRequired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    android:text="@string/nl_splash_required"
+                    android:textColor="@color/text_color_hint"
+                    android:textSize="@dimen/text_size_22"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_margin="2px"
+                android:src="@color/grey_light"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="27px"
+                    android:layout_height="27px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="36px"
+                    android:src="@drawable/ic_promocode"
+                    android:tag="mhar"/>
+
+                <EditText
+                    android:id="@+id/editTextSPromo"
+                    android:layout_width="match_parent"
+                    android:layout_height="88px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="64px"
+                    android:background="#0000"
+                    android:capitalize="characters"
+                    android:digits="@string/digits_characters_numbers"
+                    android:gravity="center_vertical"
+                    android:hint="@string/nl_signup_promocode"
+                    android:inputType="textCapCharacters|textNoSuggestions"
+                    android:paddingLeft="20px"
+                    android:paddingRight="20px"
+                    android:singleLine="true"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/text_size_34"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutWalletContainer"
             android:layout_width="match_parent"
-            android:layout_height="88px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="64px"
-            android:background="#0000"
-            android:gravity="center_vertical"
-            android:hint="@string/nl_signup_email"
-            android:layout_toLeftOf="@+id/textViewSEmailRequired"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_34" />
-
-        <TextView
-            android:id="@+id/textViewSEmailRequired"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:background="@drawable/background_white_shadow"
+            android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
-            android:text="@string/nl_splash_required"
-            android:textColor="@color/text_color_hint"
-            android:textSize="@dimen/text_size_22" />
+            android:layout_marginTop="20px"
+            >
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textViewLinkWalletMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_26"
+                android:textColor="@color/text_color"
+                android:text="@string/link_mobile_wallet_message"
+                android:layout_marginTop="30px"
+                android:layout_marginLeft="30px"
+                />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_margin="2px"
-        android:src="@color/grey_light" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20px"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="20px"
+                android:layout_marginBottom="20px"
+                >
+                <LinearLayout
+                    android:id="@+id/linearLayoutPaytm"
+                    android:layout_width="0px"
+                    android:layout_height="50px"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="10px"
+                    >
+                    <ImageView
+                        android:id="@+id/imageViewRadioPaytm"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        android:tag="mwar"/>
+                    <ImageView
+                        android:layout_width="82px"
+                        android:layout_height="27px"
+                        android:layout_marginLeft="10px"
+                        android:src="@drawable/ic_paytm_small"/>
+                </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/linearLayoutMobikwik"
+                    android:layout_width="0px"
+                    android:layout_height="50px"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="10px"
+                    >
+                    <ImageView
+                        android:id="@+id/imageViewRadioMobikwik"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        android:tag="mwar"/>
+                    <ImageView
+                        android:layout_width="82px"
+                        android:layout_height="27px"
+                        android:layout_marginLeft="10px"
+                        android:src="@drawable/ic_mobikwik_small"/>
+                </LinearLayout>
 
-        <ImageView
-            android:layout_width="27px"
-            android:layout_height="27px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
-            android:src="@drawable/ic_phone"
-            android:tag="mhar" />
+                <LinearLayout
+                    android:id="@+id/linearLayoutNone"
+                    android:layout_width="0px"
+                    android:layout_height="50px"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="10px"
+                    >
+                    <ImageView
+                        android:id="@+id/imageViewRadioNone"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        android:tag="mwar"/>
+                    <TextView
+                        android:id="@+id/textViewNone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_26"
+                        android:textColor="@color/text_color"
+                        android:text="@string/none"
+                        android:layout_marginLeft="10px"
+                        />
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/textViewSPhone91"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="84px"
-            android:gravity="center_vertical"
-            android:text="@string/nl_signup_plus91"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34" />
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/editTextSPhone"
-            android:layout_width="match_parent"
-            android:layout_height="88px"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/textViewSPhone91"
-            android:background="#0000"
-            android:gravity="center_vertical"
-            android:hint="@string/phone_number"
-            android:layout_toLeftOf="@+id/textViewSPhoneRequired"
-            android:inputType="number"
-            android:maxLength="10"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_34" />
 
-        <TextView
-            android:id="@+id/textViewSPhoneRequired"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
-            android:text="@string/nl_splash_required"
-            android:textColor="@color/text_color_hint"
-            android:textSize="@dimen/text_size_22" />
+        </LinearLayout>
 
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_margin="2px"
-        android:src="@color/grey_light" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <ImageView
-            android:layout_width="18px"
-            android:layout_height="27px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
-            android:src="@drawable/ic_password"
-            android:tag="mhar" />
-
-        <EditText
-            android:id="@+id/editTextSPassword"
-            android:layout_width="match_parent"
-            android:layout_height="88px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="64px"
-            android:background="#0000"
-            android:gravity="center_vertical"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:layout_toLeftOf="@+id/textViewSPasswordRequired"
-            android:maxLength="20"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_34" />
-
-        <TextView
-            android:id="@+id/textViewSPasswordRequired"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
-            android:text="@string/nl_splash_required"
-            android:textColor="@color/text_color_hint"
-            android:textSize="@dimen/text_size_22" />
-
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_margin="2px"
-        android:src="@color/grey_light" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <ImageView
-            android:layout_width="27px"
-            android:layout_height="27px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="36px"
-            android:src="@drawable/ic_promocode"
-            android:tag="mhar" />
-
-        <EditText
-            android:id="@+id/editTextSPromo"
-            android:layout_width="match_parent"
-            android:layout_height="88px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="64px"
-            android:background="#0000"
-            android:capitalize="characters"
-            android:digits="@string/digits_characters_numbers"
-            android:gravity="center_vertical"
-            android:hint="@string/nl_signup_promocode"
-            android:inputType="textCapCharacters|textNoSuggestions"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:singleLine="true"
+        <Button
+            android:id="@+id/buttonEmailSignup"
+            android:layout_width="@dimen/splash_button_width"
+            android:layout_height="@dimen/splash_button_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="58px"
+            android:background="@drawable/button_theme_alpha_white_stroke_selector"
+            android:text="@string/sign_up"
             android:textAllCaps="true"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_size_34" />
+            android:textColor="@drawable/text_color_white_alpha_selector"
+            android:textSize="@dimen/text_size_34"/>
 
-    </RelativeLayout>
-
-</LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutAddPatym"
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_marginTop="20px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@drawable/background_white_shadow"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageViewAddPaytm"
-            android:layout_width="38px"
-            android:layout_height="35px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
-            android:src="@drawable/checkbox_signup_unchecked"
-            android:tag="mwar"/>
-
-        <TextView
-            android:id="@+id/textViewAddPaytm"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/signup_add_patym"
-            android:layout_marginLeft="20px"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"/>
+            android:layout_margin="20px"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="82px"
-            android:layout_height="27px"
-            android:layout_marginLeft="20px"
-            android:src="@drawable/ic_paytm_small"/>
-    </LinearLayout>
+            <ImageView
+                android:layout_width="200px"
+                android:layout_height="2px"
+                android:layout_marginRight="25px"
+                android:src="@color/white"/>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutAddMobikwik"
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_marginTop="20px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@drawable/background_white_shadow"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textViewSignupOr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/or"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26"/>
 
-        <ImageView
-            android:id="@+id/imageViewAddMobikwik"
-            android:layout_width="38px"
-            android:layout_height="35px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
-            android:src="@drawable/checkbox_signup_unchecked"
-            android:tag="mwar"/>
+            <ImageView
+                android:layout_width="200px"
+                android:layout_height="2px"
+                android:layout_marginLeft="20px"
+                android:src="@color/white"/>
 
-        <TextView
-            android:id="@+id/textViewAddMobikwik"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/signup_add_patym"
-            android:layout_marginLeft="20px"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"/>
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="82px"
-            android:layout_height="27px"
-            android:layout_marginLeft="20px"
-            android:src="@drawable/ic_mobikwik_small"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/buttonFacebookSignup"
+                android:layout_width="222px"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_blue"
+                android:text="@string/nl_login_facebook"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34"/>
 
-<Button
-    android:id="@+id/buttonEmailSignup"
-    android:layout_width="@dimen/splash_button_width"
-    android:layout_height="@dimen/splash_button_height"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="58px"
-    android:background="@drawable/button_theme_alpha_white_stroke_selector"
-    android:text="@string/sign_up"
-    android:textAllCaps="true"
-    android:textColor="@drawable/text_color_white_alpha_selector"
-    android:textSize="@dimen/text_size_34" />
+            <Button
+                android:id="@+id/buttonGoogleSignup"
+                android:layout_width="222px"
+                android:layout_height="@dimen/splash_button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="40px"
+                android:layout_marginTop="28px"
+                android:background="@drawable/button_red_google"
+                android:text="@string/nl_login_google"
+                android:textAllCaps="true"
+                android:textColor="@drawable/text_color_white_alpha_selector"
+                android:textSize="@dimen/text_size_34"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20px"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="200px"
-            android:layout_height="2px"
-            android:layout_marginRight="25px"
-            android:src="@color/white" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textViewSignupOr"
+            android:id="@+id/textViewSTerms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/or"
+            android:layout_marginTop="20px"
+            android:text="@string/nl_splash_terms"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_26" />
-
-        <ImageView
-            android:layout_width="200px"
-            android:layout_height="2px"
-            android:layout_marginLeft="20px"
-            android:src="@color/white" />
+            android:textSize="@dimen/text_size_26"/>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-<Button
-    android:id="@+id/buttonFacebookSignup"
-    android:layout_width="222px"
-    android:layout_height="@dimen/splash_button_height"
-    android:layout_gravity="center_horizontal"
-    android:background="@drawable/button_blue"
-    android:text="@string/nl_login_facebook"
-    android:textAllCaps="true"
-    android:textColor="@drawable/text_color_white_alpha_selector"
-    android:textSize="@dimen/text_size_34" />
-
-<Button
-    android:id="@+id/buttonGoogleSignup"
-    android:layout_width="222px"
-    android:layout_height="@dimen/splash_button_height"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="28px"
-    android:layout_marginLeft="40px"
-    android:background="@drawable/button_red_google"
-    android:text="@string/nl_login_google"
-    android:textAllCaps="true"
-    android:textColor="@drawable/text_color_white_alpha_selector"
-    android:textSize="@dimen/text_size_34" />
-
-    </LinearLayout>
-<TextView
-    android:id="@+id/textViewSTerms"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="20px"
-    android:text="@string/nl_splash_terms"
-    android:textColor="@color/white"
-    android:textSize="@dimen/text_size_26" />
-
-</LinearLayout>
+</ScrollView>

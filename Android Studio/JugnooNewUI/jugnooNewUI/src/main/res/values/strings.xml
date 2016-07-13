@@ -959,6 +959,8 @@
 	<string name="mobikwik">MobiKwik</string>
 	<string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">You need to select MobiKwik as preferred payment option to avail this coupon</string>
 	<string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
+	<string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
+	<string name="none">None</string>
 
 
 </resources>

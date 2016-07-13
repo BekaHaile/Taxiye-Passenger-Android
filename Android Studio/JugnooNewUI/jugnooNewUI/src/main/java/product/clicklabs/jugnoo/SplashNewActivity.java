@@ -37,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -111,13 +112,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
-	ImageView imageViewBack, imageViewJugnooLogo, imageViewAddPaytm, imageViewAddMobikwik;
+	ImageView imageViewBack, imageViewJugnooLogo;
 	ImageView imageViewDebug1, imageViewDebug2, imageViewDebug3;
 
 	RelativeLayout relativeLayoutLS;
-	LinearLayout linearLayoutLoginSignupButtons, linearLayoutAddPatym, linearLayoutAddMobikwik;
+	LinearLayout linearLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
-	TextView textViewTerms, textViewAddPaytm, textViewAddMobikwik;
+	TextView textViewTerms;
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
 	Button buttonNoNetCall, buttonRefresh;
@@ -128,11 +129,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	TextView textViewEmailRequired, textViewPasswordRequired, textViewForgotPassword;
 	Button buttonEmailLogin, buttonFacebookLogin, buttonGoogleLogin;
 
-	LinearLayout linearLayoutSignup;
+	ScrollView scrollViewSignup;
 	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo;
 	TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired;
 	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
 	TextView textViewSTerms;
+
+	LinearLayout linearLayoutWalletContainer, linearLayoutPaytm, linearLayoutMobikwik, linearLayoutNone;
+	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioNone;
 
 	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
@@ -390,14 +394,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			imageViewDebug1 = (ImageView) findViewById(R.id.imageViewDebug1);
 			imageViewDebug2 = (ImageView) findViewById(R.id.imageViewDebug2);
 			imageViewDebug3 = (ImageView) findViewById(R.id.imageViewDebug3);
-			textViewAddPaytm = (TextView) findViewById(R.id.textViewAddPaytm);
-			textViewAddPaytm.setTypeface(Fonts.mavenLight(this));
-			imageViewAddPaytm = (ImageView) findViewById(R.id.imageViewAddPaytm);
-			linearLayoutAddPatym = (LinearLayout) findViewById(R.id.linearLayoutAddPatym);
-			linearLayoutAddMobikwik = (LinearLayout) findViewById(R.id.linearLayoutAddMobikwik);
-			imageViewAddMobikwik = (ImageView) findViewById(R.id.imageViewAddMobikwik);
-			textViewAddMobikwik = (TextView) findViewById(R.id.textViewAddMobikwik);
-			textViewAddMobikwik.setTypeface(Fonts.mavenLight(this));
 
 			relativeLayoutLS = (RelativeLayout) findViewById(R.id.relativeLayoutLS);
 			linearLayoutLoginSignupButtons = (LinearLayout) findViewById(R.id.linearLayoutLoginSignupButtons);
@@ -453,7 +449,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonGoogleLogin.setTypeface(Fonts.mavenRegular(this));
 
 
-			linearLayoutSignup = (LinearLayout) findViewById(R.id.linearLayoutSignup);
+			scrollViewSignup = (ScrollView) findViewById(R.id.scrollViewSignup);
 			editTextSName = (EditText) findViewById(R.id.editTextSName);
 			editTextSName.setTypeface(Fonts.mavenMedium(this));
 			editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
@@ -483,6 +479,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
 			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
 
+			linearLayoutWalletContainer = (LinearLayout) findViewById(R.id.linearLayoutWalletContainer);
+			linearLayoutPaytm = (LinearLayout) findViewById(R.id.linearLayoutPaytm);
+			linearLayoutMobikwik = (LinearLayout) findViewById(R.id.linearLayoutMobikwik);
+			linearLayoutNone = (LinearLayout) findViewById(R.id.linearLayoutNone);
+			((TextView) findViewById(R.id.textViewLinkWalletMessage)).setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewNone)).setTypeface(Fonts.mavenMedium(this));
+			imageViewRadioPaytm = (ImageView) findViewById(R.id.imageViewRadioPaytm);
+			imageViewRadioMobikwik = (ImageView) findViewById(R.id.imageViewRadioMobikwik);
+			imageViewRadioNone = (ImageView) findViewById(R.id.imageViewRadioNone);
+
 			root.setOnClickListener(onClickListenerKeybordHide);
 
 			relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
@@ -506,29 +512,30 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			keyboardLayoutListener.setResizeTextView(false);
 			linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-			linearLayoutAddPatym.setOnClickListener(new View.OnClickListener() {
+			linearLayoutPaytm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-						linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
-					} else {
-						linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal();
-					}
+					linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal();
 					setLinkedWalletTick();
 				}
 			});
 
-			linearLayoutAddMobikwik.setOnClickListener(new View.OnClickListener() {
+			linearLayoutMobikwik.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-						linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
-					} else {
-						linkedWallet = LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal();
-					}
+					linkedWallet = LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal();
 					setLinkedWalletTick();
 				}
 			});
+
+			linearLayoutNone.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+					setLinkedWalletTick();
+				}
+			});
+
 
 			buttonLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -1019,7 +1026,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				linearLayoutSignup.setVisibility(View.VISIBLE);
+				scrollViewSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SPLASH_LS:
@@ -1035,7 +1042,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				linearLayoutSignup.setVisibility(View.VISIBLE);
+				scrollViewSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SPLASH_NO_NET:
@@ -1051,7 +1058,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				linearLayoutSignup.setVisibility(View.VISIBLE);
+				scrollViewSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case LOGIN:
@@ -1067,7 +1074,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				linearLayoutSignup.setVisibility(View.VISIBLE);
+				scrollViewSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SIGNUP:
@@ -1083,7 +1090,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.GONE);
-				linearLayoutSignup.setVisibility(View.VISIBLE);
+				scrollViewSignup.setVisibility(View.VISIBLE);
 				getAllowedAuthChannels(SplashNewActivity.this);
 				break;
 
@@ -1428,15 +1435,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
 
 						if(showPaytm == 1){
-							linearLayoutAddPatym.setVisibility(View.VISIBLE);
+							linearLayoutPaytm.setVisibility(View.VISIBLE);
 						} else{
-							linearLayoutAddPatym.setVisibility(View.GONE);
+							linearLayoutPaytm.setVisibility(View.GONE);
 						}
 
 						if(showMobikwik == 1){
-							linearLayoutAddMobikwik.setVisibility(View.VISIBLE);
+							linearLayoutMobikwik.setVisibility(View.VISIBLE);
 						} else{
-							linearLayoutAddMobikwik.setVisibility(View.GONE);
+							linearLayoutMobikwik.setVisibility(View.GONE);
+						}
+
+						if(showPaytm == 1 || showMobikwik == 1){
+							linearLayoutWalletContainer.setVisibility(View.VISIBLE);
+						} else{
+							linearLayoutWalletContainer.setVisibility(View.GONE);
 						}
 
 						setLinkedWalletTick();
@@ -3198,16 +3211,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void setLinkedWalletTick(){
 		if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_checked);
-			imageViewAddMobikwik.setImageResource(R.drawable.checkbox_signup_unchecked);
+			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_selected);
+			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_normal);
 		}
 		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
-			imageViewAddMobikwik.setImageResource(R.drawable.checkbox_signup_checked);
+			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
+			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_normal);
 		}
 		else {
-			imageViewAddPaytm.setImageResource(R.drawable.checkbox_signup_unchecked);
-			imageViewAddMobikwik.setImageResource(R.drawable.checkbox_signup_unchecked);
+			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_selected);
 		}
 	}
 
