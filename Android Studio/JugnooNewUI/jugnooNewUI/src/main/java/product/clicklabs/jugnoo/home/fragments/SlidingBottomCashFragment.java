@@ -23,7 +23,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NudgeClient;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -84,15 +83,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     public void onResume() {
         super.onResume();
         updatePreferredPaymentOptionUI();
-    }
-
-    private void paymentSelection(ImageView selected, ImageView unSelected){
-        try {
-            selected.setImageResource(R.drawable.ic_radio_button_selected);
-            unSelected.setImageResource(R.drawable.ic_radio_button_normal);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

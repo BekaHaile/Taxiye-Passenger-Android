@@ -168,6 +168,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         });
 
         updateOffersCount();
+        updatePaymentOption();
 
         try {
             textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
@@ -286,7 +287,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void updatePaymentOption() {
         try {
             Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);;
+                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
             imageViewPaymentMode.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption));
             imageViewPaymentModeMS.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption));
             textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption));
