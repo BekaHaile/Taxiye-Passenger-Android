@@ -214,8 +214,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                activity.startActivity(intent);
-                //activity.startActivityForResult(intent, 4);
+                //activity.startActivity(intent);
+                activity.startActivityForResult(intent, 4);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);

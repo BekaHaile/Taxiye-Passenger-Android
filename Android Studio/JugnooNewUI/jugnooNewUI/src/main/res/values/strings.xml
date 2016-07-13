@@ -816,6 +816,7 @@
 
 	<string name="waiting_for_location">Waiting for location&#8230;</string>
 	<string name="get_a_ride">Get a Ride</string>
+	<string name="get_ride">Get Ride</string>
 	<string name="fresh">Fresh</string>
 	<string name="order_history">Order History</string>
 	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>

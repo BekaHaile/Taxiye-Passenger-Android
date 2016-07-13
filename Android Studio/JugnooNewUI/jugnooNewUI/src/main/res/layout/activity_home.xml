@@ -109,7 +109,7 @@
             android:src="@drawable/ic_surge_grey_white_bg"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="92px"
+            android:layout_marginBottom="99px"
             android:visibility="gone"
             />
 

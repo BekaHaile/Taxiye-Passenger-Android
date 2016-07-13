@@ -182,12 +182,12 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             @Override
             public void onClick(View v) {
                 try {
-                    /*Intent intent = new Intent();
+                    Intent intent = new Intent();
                     if(searchResultGlobal != null) {
                         String str = (new Gson()).toJson(searchResultGlobal);
                         intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
                     }
-                    setResult(RESULT_OK, intent);*/
+                    setResult(RESULT_OK, intent);
                     performBackPressed();
                     FlurryEventLogger.event(FARE_RECEIPT_CHECKED);
                 } catch (Exception e) {
