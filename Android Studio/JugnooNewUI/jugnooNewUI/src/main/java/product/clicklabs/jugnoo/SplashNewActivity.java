@@ -50,6 +50,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
 	TextView textViewSTerms;
 
-	LinearLayout linearLayoutWalletContainer, linearLayoutPaytm, linearLayoutMobikwik, linearLayoutNone;
+	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner, linearLayoutPaytm, linearLayoutMobikwik, linearLayoutNone;
 	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioNone;
 
 	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
@@ -480,6 +481,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
 
 			linearLayoutWalletContainer = (LinearLayout) findViewById(R.id.linearLayoutWalletContainer);
+			linearLayoutWalletContainerInner = (LinearLayout) findViewById(R.id.linearLayoutWalletContainerInner);
 			linearLayoutPaytm = (LinearLayout) findViewById(R.id.linearLayoutPaytm);
 			linearLayoutMobikwik = (LinearLayout) findViewById(R.id.linearLayoutMobikwik);
 			linearLayoutNone = (LinearLayout) findViewById(R.id.linearLayoutNone);
@@ -1433,6 +1435,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						linkedWallet = jObj.optJSONObject("signup").optInt("DEFAULT");
 						int showFacebook = jObj.optJSONObject("signup").optInt("FACEBOOK");
 						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
+						JSONArray jWalletOrder = jObj.optJSONArray(KEY_WALLET_ORDER);
+						if(jWalletOrder != null){
+							linearLayoutWalletContainerInner.removeAllViews();
+							for(int i=0; i<jWalletOrder.length(); i++){
+								if(Constants.KEY_PAYTM.equalsIgnoreCase(jWalletOrder.getString(i))){
+									linearLayoutWalletContainerInner.addView(linearLayoutPaytm);
+								}
+								else if(Constants.KEY_MOBIKWIK.equalsIgnoreCase(jWalletOrder.getString(i))){
+									linearLayoutWalletContainerInner.addView(linearLayoutMobikwik);
+								}
+							}
+							linearLayoutWalletContainerInner.addView(linearLayoutNone);
+						}
 
 						if(showPaytm == 1){
 							linearLayoutPaytm.setVisibility(View.VISIBLE);

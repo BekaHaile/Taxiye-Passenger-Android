@@ -326,5 +326,6 @@ public interface Constants {
 	String KEY_PAYMENT_MODE_CONFIG_DATA = "payment_mode_config_data";
 	String KEY_ENABLED = "enabled";
 	String KEY_JUGNOO_CASH = "jugnoo_cash";
+	String KEY_WALLET_ORDER = "wallet_order";
 
 }

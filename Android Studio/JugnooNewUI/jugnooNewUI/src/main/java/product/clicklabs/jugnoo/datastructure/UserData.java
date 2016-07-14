@@ -5,8 +5,10 @@ import android.content.Context;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
@@ -178,11 +180,16 @@ public class UserData {
 
 	public double getTotalWalletBalance() {
 		double walletTotal = 0;
-		if(paytmEnabled == 1 && paytmBalance > -1){
-			walletTotal = walletTotal + paytmBalance;
-		}
-		if(mobikwikEnabled == 1 && mobikwikBalance > -1){
-			walletTotal = walletTotal + mobikwikBalance;
+		for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()){
+			if(paymentModeConfigData.getEnabled() == 1) {
+				if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+						&& paytmEnabled == 1 && paytmBalance > -1) {
+					walletTotal = walletTotal + paytmBalance;
+				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+						&& mobikwikEnabled == 1 && mobikwikBalance > -1) {
+					walletTotal = walletTotal + mobikwikBalance;
+				}
+			}
 		}
 		return jugnooBalance + walletTotal;
 	}

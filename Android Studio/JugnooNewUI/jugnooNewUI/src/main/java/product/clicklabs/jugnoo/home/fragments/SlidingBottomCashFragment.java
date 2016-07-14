@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
@@ -33,7 +34,8 @@ import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 public class SlidingBottomCashFragment extends Fragment implements View.OnClickListener{
 
     private View rootView;
-    private LinearLayout linearLayoutRoot, linearLayoutWalletContainer, linearLayoutCash;
+    private ScrollView linearLayoutRoot;
+    private LinearLayout linearLayoutWalletContainer, linearLayoutCash;
     private ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioCash;
     private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue;
     private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik;
@@ -43,7 +45,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_sliding_bottom_cash, container, false);
         activity = (HomeActivity) getActivity();
-        linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        linearLayoutRoot = (ScrollView) rootView.findViewById(R.id.linearLayoutRoot);
         try {
             if(linearLayoutRoot != null) {
                 new ASSL(getActivity(), linearLayoutRoot, 1134, 720, false);
@@ -75,6 +77,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         orderPaymentModes();
 
         updatePreferredPaymentOptionUI();
+
+        activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(linearLayoutRoot);
 
         return rootView;
     }
@@ -255,6 +259,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                         }
                     }
                 }
+
+                linearLayoutWalletContainer.addView(linearLayoutCash);
             }
         } catch (Exception e){
             e.printStackTrace();

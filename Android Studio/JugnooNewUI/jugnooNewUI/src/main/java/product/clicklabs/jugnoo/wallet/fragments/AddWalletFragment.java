@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +27,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -45,7 +45,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -152,7 +151,7 @@ public class AddWalletFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
-				performBackPressed();
+				paymentActivity.goBack();
 			}
 		});
 
@@ -281,21 +280,6 @@ public class AddWalletFragment extends Fragment {
 	}
 
 
-	/**
-	 * Method used to remove fragment from stack
-	 */
-	public void performBackPressed() {
-		paymentActivity.getSupportFragmentManager()
-				.popBackStack(AddWalletFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivity.paymentActivityPathInt){
-			paymentActivity.getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
-					.addToBackStack(WalletFragment.class.getName())
-					.commitAllowingStateLoss();
-		}
-	}
-
 
 	@Override
 	public void onDestroy() {
@@ -404,7 +388,7 @@ public class AddWalletFragment extends Fragment {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, 0);
 									Data.userData.setPaytmBalance(balance);
 									Data.userData.setPaytmEnabled(1);
-
+									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
@@ -413,7 +397,7 @@ public class AddWalletFragment extends Fragment {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, 0);
 									Data.userData.setMobikwikBalance(balance);
 									Data.userData.setMobikwikEnabled(1);
-
+									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}

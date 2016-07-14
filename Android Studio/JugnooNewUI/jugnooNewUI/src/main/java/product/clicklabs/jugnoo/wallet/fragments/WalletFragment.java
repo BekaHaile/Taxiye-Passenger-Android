@@ -227,8 +227,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 
 
-		orderPaymentModes();
-
 		setUserWalletInfo();
 
         return rootView;
@@ -252,6 +250,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 
 	private void setUserWalletInfo(){
 		try{
+			orderPaymentModes();
 			if(Data.userData != null){
 				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
 				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));

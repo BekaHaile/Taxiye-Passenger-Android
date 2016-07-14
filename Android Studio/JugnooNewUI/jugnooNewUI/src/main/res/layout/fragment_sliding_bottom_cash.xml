@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_marginBottom="20px"
         >
 
         <RelativeLayout
@@ -133,6 +132,7 @@
             android:layout_marginTop="20px"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
+            android:layout_marginBottom="20px"
             android:background="@drawable/background_white_rounded_bordered"
             android:gravity="center_vertical"
             android:orientation="horizontal"

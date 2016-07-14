@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -597,8 +596,6 @@ public class JSONParser implements Constants {
 
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
-        List<Product> productList = new ArrayList<>();
-
 		double baseFare = initialBaseFare;
 		if (jLastRideData.has("base_fare")) {
 			baseFare = jLastRideData.getDouble("base_fare");
@@ -1225,7 +1222,6 @@ public class JSONParser implements Constants {
                     jPRI.getString(KEY_TRANSFER_AMOUNT),
                     jPRI.getString(KEY_TRANSFER_SENDER_NAME));
         } catch (Exception e) {
-            e.printStackTrace();
             paytmRechargeInfo = null;
         }
         return paytmRechargeInfo;

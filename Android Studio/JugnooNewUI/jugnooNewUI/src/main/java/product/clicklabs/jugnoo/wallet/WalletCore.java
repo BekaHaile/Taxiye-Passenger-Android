@@ -382,8 +382,9 @@ public class WalletCore {
 			paymentModeConfigDatas = new ArrayList<>();
 			for(int i=0; i<jsonArray.length(); i++){
 				JSONObject ji = jsonArray.getJSONObject(i);
-				paymentModeConfigDatas.add(new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
-						ji.getInt(Constants.KEY_ENABLED), i));
+				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
+						ji.getInt(Constants.KEY_ENABLED));
+				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -398,20 +399,24 @@ public class WalletCore {
 		try{
 			PaymentModeConfigData paymentModeConfigDataDefault = null;
 			for(PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()){
-				if(paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
-						&& Data.userData.getPaytmEnabled() == 1){
-					paymentModeConfigDataDefault = paymentModeConfigData;
-					break;
-				} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
-						&& Data.userData.getMobikwikEnabled() == 1){
-					paymentModeConfigDataDefault = paymentModeConfigData;
-					break;
+				if(paymentModeConfigData.getEnabled() == 1) {
+					if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+							&& Data.userData.getPaytmEnabled() == 1
+							&& Data.userData.getPaytmBalance() > -1) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
+					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+							&& Data.userData.getMobikwikEnabled() == 1
+							&& Data.userData.getMobikwikBalance() > -1) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
+					}
 				}
 			}
 			if(paymentModeConfigDataDefault != null){
 				Data.pickupPaymentOption = paymentModeConfigDataDefault.getPaymentOption();
 			} else{
-				Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 			}
 
 		} catch (Exception e){

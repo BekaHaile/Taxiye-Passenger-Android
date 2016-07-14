@@ -86,7 +86,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 		}
 	}
 
-	private void goBack(){
+	public void goBack(){
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -170,10 +170,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 				}
 			}
 			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
-				currFrag = getSupportFragmentManager().findFragmentByTag(AddWalletFragment.class.getName());
-				if(currFrag != null){
-					((AddWalletFragment) currFrag).performBackPressed();
-				}
+				goBack();
 			}
 			currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());
 			if(currFrag != null){

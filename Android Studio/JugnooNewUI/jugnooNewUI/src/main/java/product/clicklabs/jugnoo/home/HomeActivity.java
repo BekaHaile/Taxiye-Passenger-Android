@@ -1724,7 +1724,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 customerInRideMyLocationBtn.setVisibility(View.GONE);
             }
         } catch(Exception e){
-            e.printStackTrace();
         }
     }
 
@@ -3067,8 +3066,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 	private void updateInRideAddMoneyToWalletButtonText(){
-		MyApplication.getInstance().getWalletCore().addMoneyToWalletTextDuringRide(Data.assignedDriverInfo.getPreferredPaymentMode());
-	}
+        try {
+            MyApplication.getInstance().getWalletCore().addMoneyToWalletTextDuringRide(Data.assignedDriverInfo.getPreferredPaymentMode());
+        } catch (Exception e) {
+        }
+    }
 
 
     private void setDropLocationAssigningUI(){
@@ -3978,7 +3980,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     initialMyLocationBtn.performClick();
                 }
                 else{
-                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
                     ActivityCompat.finishAffinity(HomeActivity.this);
                 }
             }
@@ -6361,7 +6363,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.dropLatLng = null;
             dropLocationSet = false;
 
-            Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
             setUserData();
 
             resetPickupDropFeilds();
@@ -6996,7 +6998,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
 					@Override
 					public void onSuccess() {
-                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
                         setUserData();
                         try {
                             JSONObject params = new JSONObject();

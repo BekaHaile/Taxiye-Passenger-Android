@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -49,7 +48,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.WalletRechargeWebViewActivity;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -381,15 +379,7 @@ public class WalletRechargeFragment extends Fragment {
 			buttonRemoveWallet.setVisibility(View.GONE);
 			textViewTitleEdit.setVisibility(View.VISIBLE);
 		} else {
-			paymentActivity.getSupportFragmentManager()
-					.popBackStack(WalletRechargeFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			if(PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal() == paymentActivity.paymentActivityPathInt){
-				paymentActivity.getSupportFragmentManager().beginTransaction()
-						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-						.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
-						.addToBackStack(WalletFragment.class.getName())
-						.commitAllowingStateLoss();
-			}
+			paymentActivity.goBack();
 		}
 
 	}
@@ -521,6 +511,7 @@ public class WalletRechargeFragment extends Fragment {
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dialogBanner(paymentActivity, message);
 								MyApplication.getInstance().getWalletCore().deleteWallet(openWalletType);
+								MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");

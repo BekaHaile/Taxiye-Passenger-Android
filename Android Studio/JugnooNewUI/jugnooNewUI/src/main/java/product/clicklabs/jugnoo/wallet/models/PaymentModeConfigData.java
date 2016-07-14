@@ -10,12 +10,11 @@ public class PaymentModeConfigData {
 
 	private String name;
 	private int enabled;
-	private int position, paymentOption;
+	private int paymentOption;
 
-	public PaymentModeConfigData(String name, int enabled, int position){
+	public PaymentModeConfigData(String name, int enabled){
 		this.name = name;
 		this.enabled = enabled;
-		this.position = position;
 		if(Constants.KEY_PAYTM.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.PAYTM.getOrdinal();
 		}
@@ -41,14 +40,6 @@ public class PaymentModeConfigData {
 
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
-	}
-
-	public int getPosition() {
-		return position;
-	}
-
-	public void setPosition(int position) {
-		this.position = position;
 	}
 
 	public int getPaymentOption() {

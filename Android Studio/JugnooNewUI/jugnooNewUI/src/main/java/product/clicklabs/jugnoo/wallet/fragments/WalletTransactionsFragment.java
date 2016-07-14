@@ -133,7 +133,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
             @Override
             public void onClick(View v) {
-				performBackPressed();
+				paymentActivity.goBack();
             }
         });
 
@@ -175,7 +175,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							performBackPressed();
+							paymentActivity.goBack();
 						}
 					}, false, false);
 			
@@ -298,16 +298,6 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	}
 
 
-	/**
-	 * Method used to remove fragment from stack
-	 */
-	public void performBackPressed() {
-		try {
-			paymentActivity.getSupportFragmentManager().popBackStack(WalletTransactionsFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 	

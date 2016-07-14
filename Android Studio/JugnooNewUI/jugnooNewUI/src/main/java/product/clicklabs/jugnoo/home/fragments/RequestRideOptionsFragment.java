@@ -511,9 +511,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
 
     private void updatePreferredPaymentOptionUISingle() {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
+        try {
+            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
+            if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+				((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
+			}
+        } catch (Exception e) {
         }
     }
 
@@ -525,21 +528,19 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 ((SlidingBottomOffersFragment) frag).update();
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     public void updateFareFactorUISingle() {
         try {
+            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
             Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 1);
             if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
                 ((SlidingBottomFareFragment) frag1).update();
             }
-            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
             setSurgeImageVisibility();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
