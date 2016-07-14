@@ -891,6 +891,7 @@
 
 
 	<string name="format_x">%s x</string>
+	<string name="format_x_without_space">%sx</string>
 
 	<string name="fare_details">Fare Details</string>
 	<string name="pay_for_your_rides_using">Pay for your rides using</string>

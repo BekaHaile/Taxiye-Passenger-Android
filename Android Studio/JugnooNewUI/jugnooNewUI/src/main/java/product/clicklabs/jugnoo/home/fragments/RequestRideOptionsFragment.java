@@ -178,7 +178,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         updateOffersCount();
 
         try {
-            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people)+" "+ getRegionSelected().getMaxPeople());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -437,7 +437,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         double fareFactor = getRegionSelected().getCustomerFareFactor();
         if (fareFactor > 1 || fareFactor < 1) {
             relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
-            textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x),
+            textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x_without_space),
                     Utils.getMoneyDecimalFormat().format(fareFactor)));
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);

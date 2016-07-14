@@ -69,9 +69,9 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			linearLayoutCash = (LinearLayout)dialog.findViewById(R.id.linearLayoutCash);
 			radioBtnPaytm = (ImageView)dialog.findViewById(R.id.radio_paytm);
 			radioBtnCash = (ImageView)dialog.findViewById(R.id.radio_cash);
-			textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
-			textViewPaytm = (TextView)dialog.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(activity));
-			((TextView)dialog.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
+			textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenRegular(activity));
+			textViewPaytm = (TextView)dialog.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenRegular(activity));
+			((TextView)dialog.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenRegular(activity));
 			progressBarPaytm = (ProgressWheel) dialog.findViewById(R.id.progressBarPaytm);
 
 			relativeLayoutPaytm.setOnClickListener(this);

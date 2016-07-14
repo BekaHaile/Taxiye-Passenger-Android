@@ -39,8 +39,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createPinMarkerBitmapEnd(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale * 0.7f);
-        int height = (int)(94.0f * scale * 0.7f);
+        int width = (int)(46.0f * scale * 0.85f);
+        int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball_end);
@@ -51,8 +51,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createPinMarkerBitmapStart(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale);
-        int height = (int)(94.0f * scale);
+        int width = (int)(46.0f * scale * 0.85f);
+        int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball_start);
@@ -64,8 +64,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createSmallPinMarkerBitmap(Activity activity, ASSL assl, int drawableId){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale * 0.7f);
-        int height = (int)(94.0f * scale * 0.7f);
+        int width = (int)(46.0f * scale * 0.85f);
+        int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(drawableId);
@@ -125,8 +125,8 @@ public class CustomMapMarkerCreator {
 		final Rect boundsText = new Rect();
 
 
-		int width = (int)(186.0f * scale * 0.7f);
-		int height = (int)(173.0f * scale * 0.7f);
+		int width = (int)(186.0f * scale * 0.85f);
+		int height = (int)(173.0f * scale * 0.85f);
 
 		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);
@@ -147,8 +147,8 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText("ETA: ", (35f * assl.Xscale()), (31f * assl.Yscale()), paint);
-		canvasText.drawText(text+" MIN", (85f * assl.Xscale()), (int)(31f*assl.Yscale()), paint1);
+		canvasText.drawText("ETA: ", (51f * assl.Xscale()), (34f * assl.Yscale()), paint);
+		canvasText.drawText(text+" MIN", (101f * assl.Xscale()), (int)(34f*assl.Yscale()), paint1);
 
 
 		return bmpText;

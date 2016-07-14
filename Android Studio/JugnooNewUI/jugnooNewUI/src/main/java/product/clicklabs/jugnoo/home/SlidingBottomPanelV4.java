@@ -99,6 +99,7 @@ public class SlidingBottomPanelV4 {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
+                activity.setGoogleMapPadding(15);
             }
 
             @Override
@@ -106,6 +107,7 @@ public class SlidingBottomPanelV4 {
                 imageViewExtraForSliding.setVisibility(View.GONE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
+                activity.setGoogleMapPadding(0);
             }
 
             @Override

@@ -653,7 +653,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
         textViewInRideState.setTypeface(Fonts.mavenMedium(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
-        textViewDriverRating.setTypeface(Fonts.mavenLight(this));
+        textViewDriverRating.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
         textViewCancellation = (TextView) findViewById(R.id.textViewCancellation); textViewCancellation.setTypeface(Fonts.mavenRegular(this));
         textViewTotalFare = (TextView)findViewById(R.id.textViewTotalFare); textViewTotalFare.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
@@ -945,9 +945,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 translateViewBottomTop(relativeLayoutDestSearchBar, false);
                 translateViewTopBottom(relativeLayoutInitialSearchBar, true);
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
-                if(dropInitialMarker != null) {
+                /*if(dropInitialMarker != null) {
                     dropInitialMarker.remove();
-                }
+                }*/
             }
         });
 
@@ -4375,14 +4375,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             textViewCentrePinETA.setText(region.getEta());
                         }
 
-                        if(Data.dropLatLng != null){
+                        /*if(Data.dropLatLng != null){
                             MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                             poolMarkerOptionEnd.title("End");
                             poolMarkerOptionEnd.position(Data.dropLatLng);
                             poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
                                     assl, R.drawable.pin_ball_end)));
                             dropInitialMarker = map.addMarker(poolMarkerOptionEnd);
-                        }
+                        }*/
 					}
 				}
 			}
@@ -5149,7 +5149,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                                 final PolylineOptions polylineOptions = new PolylineOptions();
                                                 polylineOptions.add(start, end);
-                                                polylineOptions.width(ASSL.Xscale() * 5);
+                                                polylineOptions.width(ASSL.Xscale() * 7);
                                                 polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
                                                 polylineOptions.geodesic(false);
 
@@ -5220,7 +5220,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         final PolylineOptions polylineOptions = new PolylineOptions();
                         polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
-                        polylineOptions.width(ASSL.Xscale() * 5);
+                        polylineOptions.width(ASSL.Xscale() * 7);
                         polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
                         polylineOptions.geodesic(false);
                         if (map != null && polylineOptions != null) {
@@ -5281,7 +5281,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 													}
 
 													pathToDropLocationPolylineOptions = new PolylineOptions();
-													pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
+													pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
 													for (int z = 0; z < list.size(); z++) {
 														pathToDropLocationPolylineOptions.add(list.get(z));
 														builder.include(list.get(z));
@@ -6949,7 +6949,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 latLngBoundsBuilderPool = new LatLngBounds.Builder();
 
                 PolylineOptions poolPolylineOption = new PolylineOptions();
-                poolPolylineOption.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+                poolPolylineOption.width(ASSL.Xscale() * 8).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
                 for (int z = 0; z < list.size(); z++) {
                     poolPolylineOption.add(list.get(z));
                     latLngBoundsBuilderPool.include(list.get(z));
@@ -6966,7 +6966,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                         .getTextAssignBitmap(HomeActivity.this, assl,
                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                                getResources().getDimensionPixelSize(R.dimen.text_size_22))));
+                                getResources().getDimensionPixelSize(R.dimen.text_size_24))));
                 map.addMarker(poolMarkerOptionStart);
 
                 MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
@@ -7038,7 +7038,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (latLngBoundsBuilderPool != null) {
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 80)),
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 90)),
                                 MAP_ANIMATE_DURATION, null);
                     }
                 } catch (Exception e) {

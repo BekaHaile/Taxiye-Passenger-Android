@@ -27,10 +27,11 @@
             android:layout_below="@+id/imageViewTab"
             android:layout_centerHorizontal="true"
             android:paddingBottom="10px"
+            android:layout_marginTop="-3px"
             android:text="@string/auto"
             android:textAllCaps="true"
             android:textColor="@color/text_color_theme_color_selector"
-            android:textSize="@dimen/text_size_18" />
+            android:textSize="@dimen/text_size_22" />
 
         <ImageView
             android:id="@+id/imageViewMultipleSurge"
