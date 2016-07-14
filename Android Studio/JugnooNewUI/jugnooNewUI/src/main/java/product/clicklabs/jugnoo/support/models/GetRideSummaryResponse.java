@@ -580,7 +580,6 @@ public class GetRideSummaryResponse {
 	}
 
 
-
 	public class Discount {
 
 		@SerializedName("key")

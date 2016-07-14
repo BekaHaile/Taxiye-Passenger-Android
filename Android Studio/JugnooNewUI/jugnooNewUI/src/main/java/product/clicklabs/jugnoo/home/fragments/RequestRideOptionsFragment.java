@@ -231,8 +231,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updateOffersCount(){
         try {
-            textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
-            textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
+            if(Data.promoCoupons.size() > 0) {
+                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
+                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
+            } else{
+                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
+                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -432,9 +437,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         double fareFactor = getRegionSelected().getCustomerFareFactor();
         if (fareFactor > 1 || fareFactor < 1) {
             relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
-            //textViewPriorityTipValueMS.setText(String.format(activity.getResources().getString(R.string.format_x)
-                    //, Utils.getMoneyDecimalFormat().format(fareFactor)));
-            textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x), Utils.getMoneyDecimalFormat().format(fareFactor))+"x");
+            textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x),
+                    Utils.getMoneyDecimalFormat().format(fareFactor)));
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }

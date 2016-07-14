@@ -233,12 +233,14 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
 				}
 
-				if(endRideData.getRideDate() != null) {
+				if(endRideData.getRideDate() != null && (!endRideData.getRideDate().equalsIgnoreCase("null"))) {
 					textViewDate.setVisibility(View.VISIBLE);
 					textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
 							endRideData.getRideDate()));
 				} else{
-					textViewDate.setVisibility(View.GONE);
+					textViewDate.setVisibility(View.VISIBLE);
+					textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
+							endRideData.getEngagementDate()));
 				}
 			}
 		} catch(Exception e){

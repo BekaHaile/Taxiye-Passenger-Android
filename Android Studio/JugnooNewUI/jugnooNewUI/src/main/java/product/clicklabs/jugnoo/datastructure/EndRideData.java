@@ -16,7 +16,7 @@ public class EndRideData {
 	public double paidUsingPaytm;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
-	private String rideDate, phoneNumber, tripTotal;
+	private String rideDate, phoneNumber, tripTotal, engagementDate;
 	private int vehicleType, isPooled;
 	private VehicleIconSet vehicleIconSet;
 	
@@ -26,7 +26,7 @@ public class EndRideData {
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
-					   double sumAdditionalCharges){
+					   double sumAdditionalCharges, String engagementDate){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
@@ -72,6 +72,7 @@ public class EndRideData {
 		this.vehicleType = vehicleType;
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 		this.isPooled = isPooled;
+		this.engagementDate = engagementDate;
 	}
 
 
@@ -134,5 +135,13 @@ public class EndRideData {
 
 	public void setDiscountTypes(ArrayList<DiscountType> discountTypes) {
 		this.discountTypes = discountTypes;
+	}
+
+	public String getEngagementDate() {
+		return engagementDate;
+	}
+
+	public void setEngagementDate(String engagementDate) {
+		this.engagementDate = engagementDate;
 	}
 }

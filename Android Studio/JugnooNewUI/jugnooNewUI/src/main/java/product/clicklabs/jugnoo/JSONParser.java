@@ -677,6 +677,7 @@ public class JSONParser implements Constants {
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+        String engagementDate = jLastRideData.optString("engagement_date", "");
 
 
 
@@ -695,7 +696,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges);
+                sumAdditionalCharges, engagementDate);
 	}
 
 

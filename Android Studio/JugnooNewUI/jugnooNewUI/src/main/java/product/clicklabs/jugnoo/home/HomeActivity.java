@@ -2334,6 +2334,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewThumbsDown.setVisibility(View.INVISIBLE);*/
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
+                        Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0);
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2568,6 +2569,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
                             if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0), 0) != 0){
                                 driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0));
+                            } else{
+                                driverLocationMarker.setRotation((float)Data.assignedDriverInfo.getBearing());
                             }
 
                             Log.i("marker added", "REQUEST_FINAL");
@@ -2813,7 +2816,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
+                                menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
                             }
                         });
                 Data.userData.setPromoSuccess(1);
@@ -3810,7 +3813,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 menuBar.menuAdapter.onClickAction(MenuInfoTags.WALLET.getTag());
 			}
 			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
-                menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
                 menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag());
@@ -5633,6 +5636,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     StringBuilder sb;
     private void setPoolRideStatus(String message, ArrayList<String> userNames){
+        if(message.equalsIgnoreCase("")){
+            message = getResources().getString(R.string.sharing_your_ride_with);
+        }
         sb  = new StringBuilder();
         sb.append(message);
         if(userNames != null) {

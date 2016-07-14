@@ -84,8 +84,6 @@ public class PromoCouponsDialog {
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			TextView textViewNoCurrentOffers = (TextView) dialog.findViewById(R.id.textViewNoCurrentOffers);
 
-			setContinueButton();
-
 			if(Data.promoCoupons.size() > 0){
 				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
 				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
