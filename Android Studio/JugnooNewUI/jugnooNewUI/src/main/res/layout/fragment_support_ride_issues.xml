@@ -1,92 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_light_grey"
     android:orientation="vertical"
-    android:splitMotionEvents="false"
-    >
+    android:splitMotionEvents="false">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/linearLayoutRideShortInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:id="@+id/linearLayoutRideShortInfo"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="152px"
-            >
+            android:layout_height="152px">
 
             <LinearLayout
                 android:layout_width="300px"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewDriverName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color"
-                    android:text="Driver Name"
-                    android:textSize="@dimen/text_size_30"
-                    android:gravity="center"
                     android:layout_marginLeft="10px"
                     android:layout_marginRight="10px"
-                    />
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Driver Name"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30" />
 
                 <TextView
                     android:id="@+id/textViewDriverCarNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color"
-                    android:text="PB65AC0123"
-                    android:textSize="@dimen/text_size_26"
                     android:layout_marginLeft="10px"
                     android:layout_marginRight="10px"
-                    />
+                    android:maxLines="2"
+                    android:text="PB65AC0123"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="300px"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_alignParentRight="true"
-                >
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewTripTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color"
-                    android:text="Trip Total"
-                    android:textSize="@dimen/text_size_30"
-                    android:layout_marginRight="10px"
                     android:layout_marginLeft="10px"
-                    />
+                    android:layout_marginRight="10px"
+                    android:maxLines="2"
+                    android:text="Trip Total"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_30" />
 
                 <TextView
                     android:id="@+id/textViewTripTotalValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color"
-                    android:text="@string/rupee_0"
-                    android:textSize="@dimen/text_size_40"
-                    android:layout_marginRight="10px"
                     android:layout_marginLeft="10px"
-                    />
+                    android:layout_marginRight="10px"
+                    android:maxLines="2"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_40" />
 
             </LinearLayout>
 
@@ -94,8 +85,8 @@
                 android:id="@+id/relativeLayoutDriverImage"
                 android:layout_width="100px"
                 android:layout_height="100px"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:tag="mwar">
 
                 <ImageView
@@ -116,9 +107,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/text_color_hint"
                 android:layout_alignParentBottom="true"
-                />
+                android:background="@color/text_color_hint" />
 
         </RelativeLayout>
 
@@ -130,45 +120,41 @@
                 android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_color"
-                android:text="@string/date_colon_format"
-                android:textSize="@dimen/text_size_26"
-                android:layout_marginTop="20px"
                 android:layout_marginLeft="40px"
-                />
+                android:layout_marginTop="20px"
+                android:text="@string/date_colon_format"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewDate"
-                android:orientation="vertical"
                 android:layout_marginLeft="45px"
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
-                >
+                android:orientation="vertical">
+
                 <ImageView
                     android:id="@+id/imageViewStart"
                     android:layout_width="26px"
                     android:layout_height="37px"
-                    android:tag="mwar"
                     android:src="@drawable/ic_start"
-                    />
+                    android:tag="mwar" />
 
                 <ImageView
                     android:id="@+id/imageViewStartEndLine"
                     android:layout_width="4px"
                     android:layout_height="78px"
-                    android:tag="mwar"
                     android:src="@drawable/ic_start_end_line"
-                    />
+                    android:tag="mwar" />
 
                 <ImageView
                     android:id="@+id/imageViewEnd"
                     android:layout_width="23px"
                     android:layout_height="30px"
-                    android:tag="mwar"
                     android:src="@drawable/ic_end"
-                    />
+                    android:tag="mwar" />
 
             </LinearLayout>
 
@@ -176,63 +162,59 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_below="@+id/textViewDate"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewStart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_color"
-                    android:text="@string/start"
-                    android:textSize="@dimen/text_size_26"
-                    android:layout_marginTop="15px"
                     android:layout_marginLeft="80px"
-                    />
+                    android:layout_marginTop="15px"
+                    android:text="@string/start"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
+
                 <TextView
                     android:id="@+id/textViewStartValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color_light"
-                    android:text="@string/sample_address"
-                    android:textSize="@dimen/text_size_26"
-                    android:layout_marginTop="5px"
                     android:layout_marginLeft="80px"
                     android:layout_marginRight="20px"
-                    />
+                    android:layout_marginTop="5px"
+                    android:maxLines="2"
+                    android:text="@string/sample_address"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_26" />
 
 
                 <TextView
                     android:id="@+id/textViewEnd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_color"
-                    android:text="@string/end"
-                    android:textSize="@dimen/text_size_26"
-                    android:layout_marginTop="15px"
                     android:layout_marginLeft="80px"
-                    />
+                    android:layout_marginTop="15px"
+                    android:text="@string/end"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
+
                 <TextView
                     android:id="@+id/textViewEndValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color_light"
-                    android:text="@string/sample_address"
-                    android:textSize="@dimen/text_size_26"
-                    android:layout_marginTop="5px"
                     android:layout_marginLeft="80px"
                     android:layout_marginRight="20px"
-                    />
+                    android:layout_marginTop="5px"
+                    android:maxLines="2"
+                    android:text="@string/sample_address"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_26" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:background="@color/transparent"
                     android:layout_marginTop="15px"
-                    />
+                    android:background="@color/transparent" />
 
             </LinearLayout>
 
@@ -242,9 +224,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/text_color_hint"
             android:layout_alignParentBottom="true"
-            />
+            android:background="@color/text_color_hint" />
 
 
     </LinearLayout>
@@ -255,9 +236,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30px"
-        android:scrollbars="vertical"
         android:fadeScrollbars="true"
-        />
+        android:scrollbars="vertical" />
 
 
 </LinearLayout>

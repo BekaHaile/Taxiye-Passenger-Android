@@ -126,7 +126,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 							if (rideInfo.isCancelledRide != 1) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
 									if(activity instanceof RideTransactionsActivity){
-										((RideTransactionsActivity)activity).openRideSummaryFragment(rideInfo.engagementId);
+										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
+												rideInfo.engagementId, false);
 									} else if(activity instanceof SupportActivity){
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
@@ -141,8 +142,17 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								Log.v("Cancelled Ride", "Cancelled Ride");
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
 									if(activity instanceof RideTransactionsActivity) {
-										new TransactionUtils().openRideIssuesFragment(activity,
+										/*new TransactionUtils().openRideIssuesFragment(activity,
 												((RideTransactionsActivity) activity).getContainer(),
+												rideInfo.engagementId, null, null, 0, true);*/
+										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity)activity).getContainer(),
+												rideInfo.engagementId, true);
+										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+									} else if(activity instanceof SupportActivity) {
+										/*new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((SupportActivity)activity).getContainer(),
+												rideInfo.engagementId, true);*/
+										new TransactionUtils().openRideIssuesFragment(activity,
+												((SupportActivity) activity).getContainer(),
 												rideInfo.engagementId, null, null, 0, true);
 										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 									}

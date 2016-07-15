@@ -83,6 +83,7 @@
                 android:layout_height="77px"
                 android:padding="5px"
                 android:layout_marginLeft="5px"
+                android:visibility="gone"
                 android:src="@drawable/ic_emergency_help_selector"
                 android:layout_gravity="center_vertical"
                 android:tag="mwar"/>

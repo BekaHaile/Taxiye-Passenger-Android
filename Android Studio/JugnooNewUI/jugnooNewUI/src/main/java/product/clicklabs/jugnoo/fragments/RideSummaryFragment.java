@@ -79,10 +79,12 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 	private View rootView;
     private FragmentActivity activity;
+	private boolean rideCancelled;
 
 	@SuppressLint("ValidFragment")
-	public RideSummaryFragment(int engagementId){
+	public RideSummaryFragment(int engagementId, boolean rideCancelled){
 		this.engagementId = engagementId;
+		this.rideCancelled = rideCancelled;
 	}
 
 	@SuppressLint("ValidFragment")
@@ -463,7 +465,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					public void onNoRetry(View view) {
 						performBackPressed();
 					}
-				}).getRideSummaryAPI(false);
+				}).getRideSummaryAPI(rideCancelled);
 	}
 
 

@@ -26,7 +26,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	RelativeLayout relative;
 	
 	TextView textViewTitle;
-	ImageView imageViewBack;
+	ImageView imageViewBack, imageViewInvoice;
 
     RelativeLayout relativeLayoutContainer;
 
@@ -80,20 +80,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 
 	public RelativeLayout getContainer(){
 		return relativeLayoutContainer;
-	}
-
-	public void openRideSummaryFragment(int engagementId){
-		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
-			getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-					.add(relativeLayoutContainer.getId(),
-							new RideSummaryFragment(engagementId),
-							RideSummaryFragment.class.getName())
-					.addToBackStack(RideSummaryFragment.class.getName())
-					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-							.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
-		}
 	}
 
 

@@ -3064,7 +3064,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             String tag = "", title = "";
             if(RideEndFragmentMode.INVOICE == rideEndFragmentMode) {
                 fragToCheck = getRideSummaryFragment();
-                fragToAdd = new RideSummaryFragment(-1);
+                fragToAdd = new RideSummaryFragment(-1, false);
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
             }
@@ -6949,7 +6949,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 latLngBoundsBuilderPool = new LatLngBounds.Builder();
 
                 PolylineOptions poolPolylineOption = new PolylineOptions();
-                poolPolylineOption.width(ASSL.Xscale() * 8).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
+                poolPolylineOption.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
                 for (int z = 0; z < list.size(); z++) {
                     poolPolylineOption.add(list.get(z));
                     latLngBoundsBuilderPool.include(list.get(z));
