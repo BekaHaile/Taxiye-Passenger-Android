@@ -86,9 +86,10 @@ public class MarkerAnimation {
     public static void animateMarkerToICS(Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
 
         try {
-            if(MapUtils.distance(marker.getPosition(), finalPosition) < 150
-					|| MapUtils.distance(marker.getPosition(), finalPosition) > 10000){
-                marker.setPosition(finalPosition);
+            if(MapUtils.distance(marker.getPosition(), finalPosition) < 80
+					|| MapUtils.distance(marker.getPosition(), finalPosition) > 2000){
+                //marker.setPosition(finalPosition);
+                animationForShortDistance(marker, finalPosition, latLngInterpolator);
 			}
 			else{
                 getDirectionsAsyncs.add(new GetDirectionsAsync(marker, finalPosition, latLngInterpolator));
@@ -176,7 +177,8 @@ public class MarkerAnimation {
             };
             Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
             ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
-            animator.setDuration((long) (30.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
+            //animator.setDuration((long) (30.0d * MapUtils.distance(marker.getPosition(), finalPosition)));
+            animator.setDuration(15000);
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
@@ -207,6 +209,42 @@ public class MarkerAnimation {
             }
             animator.start();
         }
+    }
+
+    public static void animationForShortDistance(final Marker marker, LatLng latLng,
+                                                 final LatLngInterpolator latLngInterpolator){
+
+            TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
+                @Override
+                public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
+                    return latLngInterpolator.interpolate(fraction, startValue, endValue);
+                }
+            };
+            Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
+            ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, latLng);
+            animator.setDuration(15000);
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            animator.start();
     }
 
 

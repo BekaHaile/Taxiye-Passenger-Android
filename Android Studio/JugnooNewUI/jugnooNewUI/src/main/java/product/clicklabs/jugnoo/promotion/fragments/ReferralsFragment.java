@@ -45,9 +45,9 @@ public class ReferralsFragment extends Fragment {
 	private RelativeLayout relativeLayoutRoot;
 
 	private ImageView imageViewLogo, imageViewMore, imageViewFbMessanger, imageViewWhatsapp, imageViewMessage, imageViewEmail;
-	private TextView textViewCode, textViewDesc, textViewMoreInfo;
+	private TextView textViewCode, textViewDesc, textViewMoreInfo, textViewLeaderboardSingle;
 	private Button buttonInvite;
-	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab;
+	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab, relativeLayoutLeaderboardSingle;
 	private LinearLayout linearLayoutLeaderBoard, linearLayoutRefer;
 	private View rootView;
     private ShareActivity activity;
@@ -90,10 +90,12 @@ public class ReferralsFragment extends Fragment {
 		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenMedium(activity));
 
 		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenMedium(activity));
+		textViewLeaderboardSingle = (TextView)rootView.findViewById(R.id.textViewLeaderboardSingle);textViewLeaderboardSingle.setTypeface(Fonts.mavenMedium(activity));
 		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenMedium(activity));
 
 		relativeLayoutReferSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferSingle);
 		relativeLayoutMultipleTab = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleTab);
+		relativeLayoutLeaderboardSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLeaderboardSingle);
 		linearLayoutLeaderBoard = (LinearLayout) rootView.findViewById(R.id.linearLayoutLeaderBoard);
 		((TextView)rootView.findViewById(R.id.textViewLeaderboard)).setTypeface(Fonts.mavenMedium(activity));
 		linearLayoutRefer = (LinearLayout)rootView.findViewById(R.id.linearLayoutRefer);
@@ -131,6 +133,19 @@ public class ReferralsFragment extends Fragment {
 				}
 			}
 		});
+
+		try {
+			if(Data.userData.getInviteFriendButton() == 1){
+                buttonInvite.setVisibility(View.VISIBLE);
+            } else{
+                buttonInvite.setVisibility(View.GONE);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDesc.getLayoutParams();
+                params.setMargins(0, 120, 0, 0);
+                textViewDesc.setLayoutParams(params);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		buttonInvite.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -209,6 +224,13 @@ public class ReferralsFragment extends Fragment {
 			}
 		});
 
+		relativeLayoutLeaderboardSingle.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				linearLayoutLeaderBoard.performClick();
+			}
+		});
+
 		relativeLayoutReferSingle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -245,10 +267,11 @@ public class ReferralsFragment extends Fragment {
 				if(Data.userData != null) {
 					relativeLayoutMultipleTab.setVisibility(View.GONE);
 					relativeLayoutReferSingle.setVisibility(View.GONE);
+					relativeLayoutLeaderboardSingle.setVisibility(View.GONE);
 					if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() == 1) {
 						relativeLayoutMultipleTab.setVisibility(View.VISIBLE);
 					} else if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() != 1) {
-						//relativeLayoutReferSingle.setVisibility(View.VISIBLE);
+						relativeLayoutLeaderboardSingle.setVisibility(View.VISIBLE);
 					} else if (Data.userData.getReferralLeaderboardEnabled() != 1 && Data.userData.getcToDReferralEnabled() == 1) {
 						relativeLayoutReferSingle.setVisibility(View.VISIBLE);
 					}

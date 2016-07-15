@@ -40,7 +40,7 @@ public class UserData {
 	private String city, cityReg, destinationHelpText, inRideSendInviteTextBold, inRideSendInviteTextNormal;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
-	private int isPoolEnabled;
+	private int isPoolEnabled, inviteFriendButton;
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
 			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3;
 	private double driverFareFactor;
@@ -60,7 +60,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
-					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3){
+					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3, int inviteFriendButton){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -141,6 +141,7 @@ public class UserData {
 		this.poolDestinationPopupText1 = poolDestinationPopupText1;
 		this.poolDestinationPopupText2 = poolDestinationPopupText2;
 		this.poolDestinationPopupText3 = poolDestinationPopupText3;
+		this.inviteFriendButton = inviteFriendButton;
 
 		checkUserImage();
 	}
@@ -573,5 +574,13 @@ public class UserData {
 
 	public void setPoolDestinationPopupText3(String poolDestinationPopupText3) {
 		this.poolDestinationPopupText3 = poolDestinationPopupText3;
+	}
+
+	public int getInviteFriendButton() {
+		return inviteFriendButton;
+	}
+
+	public void setInviteFriendButton(int inviteFriendButton) {
+		this.inviteFriendButton = inviteFriendButton;
 	}
 }

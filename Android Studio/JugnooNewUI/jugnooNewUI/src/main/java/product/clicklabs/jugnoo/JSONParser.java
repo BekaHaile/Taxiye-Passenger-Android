@@ -128,7 +128,7 @@ public class JSONParser implements Constants {
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
-        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled");
+        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
 
         if(userData.has("user_saved_addresses")){
@@ -211,6 +211,7 @@ public class JSONParser implements Constants {
         String poolDestinationPopupText1 = userData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
         String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
         String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
+        int inviteFriendButton = userData.optInt("invite_friend_button", 0);
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -254,7 +255,8 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
-                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3);
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
+                inviteFriendButton);
 
     }
 
