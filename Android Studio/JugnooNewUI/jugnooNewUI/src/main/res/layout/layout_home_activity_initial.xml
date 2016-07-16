@@ -10,8 +10,8 @@
         android:id="@+id/linearLayoutInitialSearchBarMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent"
         android:animateLayoutChanges="true"
+        android:background="@color/transparent"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -24,11 +24,11 @@
                 android:id="@+id/relativeLayoutDestSearchBar"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="80px"
                 android:background="@drawable/bg_menu_item_selector_color_r"
-                android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
 
                 <ImageView
@@ -46,12 +46,12 @@
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="37px"
-                    android:paddingRight="20px"
-                    android:layout_toRightOf="@+id/imageViewDestSearchGPSIcon"
                     android:layout_toLeftOf="@+id/imageViewDropCross"
+                    android:layout_toRightOf="@+id/imageViewDestSearchGPSIcon"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/assigning_state_edit_text_hint"
+                    android:paddingRight="20px"
                     android:singleLine="true"
                     android:textColor="@color/text_color"
                     android:textSize="30px" />
@@ -64,18 +64,18 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5px"
                     android:padding="16px"
-                    android:visibility="visible"
                     android:src="@drawable/ic_cross_et_selector"
-                    android:tag="mwar" />
+                    android:tag="mwar"
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/imageViewConfirmDropLocationEdit"
                     android:layout_width="60px"
                     android:layout_height="60px"
-                    android:padding="15px"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5px"
+                    android:padding="15px"
                     android:src="@drawable/edit_icon_selector"
                     android:tag="mwar"
                     android:visibility="gone" />
@@ -87,11 +87,11 @@
                 android:id="@+id/relativeLayoutInitialSearchBar"
                 android:layout_width="match_parent"
                 android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="20px"
                 android:background="@drawable/background_white_rounded_bordered"
-                android:layout_gravity="center_horizontal"
                 android:splitMotionEvents="false">
 
                 <ImageView
@@ -109,11 +109,11 @@
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="37px"
-                    android:paddingRight="20px"
                     android:layout_toRightOf="@+id/imageViewInitialSearchGPSIcon"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/set_pickup_location"
+                    android:paddingRight="20px"
                     android:singleLine="true"
                     android:textColor="@color/text_color"
                     android:textSize="30px" />
@@ -167,91 +167,120 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutRequest"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15px"
+        android:orientation="vertical"
         android:animateLayoutChanges="true"
-        android:soundEffectsEnabled="false"
         >
 
-        <ImageView
-            android:id="@+id/imageViewInAppCampaign"
-            android:layout_width="111px"
-            android:layout_height="111px"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:layout_marginLeft="50px"
-            android:tag="mwar"
-            android:visibility="gone"
-            />
-
-
-
-        <Button
-            android:id="@+id/initialMyLocationBtn"
-            android:layout_width="121px"
-            android:layout_height="117px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
-            android:background="@drawable/mylocation_btn_selector"
-            android:tag="mwar"
-            android:visibility="visible"
-            />
-
-        <ImageView
-            android:id="@+id/imageViewRideNow"
-            android:layout_width="187px"
-            android:layout_height="187px"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_auto_request_selector"
-            android:tag="mwar"/>
-
-        <ImageView
-            android:id="@+id/imageViewJugnooPoolExtra"
-            android:layout_width="101px"
-            android:layout_height="101px"
-            android:tag="mwar"
-            android:src="@drawable/pool_icon_3"
-            android:layout_centerVertical="true"
-            android:visibility="visible"
-            android:layout_marginLeft="55px"/>
-
-        <ImageView
-            android:id="@+id/imageViewJugnooPool"
-            android:layout_width="111px"
-            android:layout_height="111px"
-            android:tag="mwar"
-            android:src="@drawable/pool_icon_3"
-            android:layout_centerVertical="true"
-            android:visibility="visible"
-            android:layout_marginLeft="50px"/>
-
-        <ImageView
-            android:id="@+id/imageViewSupplyType"
-            android:layout_width="103px"
-            android:layout_height="103px"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_pool_request_selector"
-            android:layout_marginLeft="45px"
-            android:tag="mwar"
-            android:visibility="gone"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewVehicles"
+        <RelativeLayout
+            android:id="@+id/relativeLayoutRequest"
             android:layout_width="match_parent"
-            android:layout_height="108px"
-            android:splitMotionEvents="false"
-            android:layout_below="@+id/imageViewRideNow"
-            android:visibility="gone"
-            />
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/relativeLayoutPoolInfoBar"
+            android:layout_marginBottom="15px"
+            android:animateLayoutChanges="true"
+            android:soundEffectsEnabled="false">
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/imageViewInAppCampaign"
+                android:layout_width="111px"
+                android:layout_height="111px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50px"
+                android:clickable="true"
+                android:tag="mwar"
+                android:visibility="gone" />
 
+
+            <Button
+                android:id="@+id/initialMyLocationBtn"
+                android:layout_width="121px"
+                android:layout_height="117px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30px"
+                android:background="@drawable/mylocation_btn_selector"
+                android:tag="mwar"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageViewRideNow"
+                android:layout_width="187px"
+                android:layout_height="187px"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_auto_request_selector"
+                android:tag="mwar" />
+
+            <ImageView
+                android:id="@+id/imageViewJugnooPoolExtra"
+                android:layout_width="101px"
+                android:layout_height="101px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="55px"
+                android:src="@drawable/pool_icon_3"
+                android:tag="mwar"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageViewJugnooPool"
+                android:layout_width="111px"
+                android:layout_height="111px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50px"
+                android:src="@drawable/pool_icon_3"
+                android:tag="mwar"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageViewSupplyType"
+                android:layout_width="103px"
+                android:layout_height="103px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45px"
+                android:src="@drawable/ic_pool_request_selector"
+                android:tag="mwar"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewVehicles"
+                android:layout_width="match_parent"
+                android:layout_height="108px"
+                android:layout_below="@+id/imageViewRideNow"
+                android:splitMotionEvents="false"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutPoolInfoBar"
+            android:layout_width="match_parent"
+            android:layout_height="70px"
+            android:background="@drawable/background_pool_info"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textViewPoolInfo1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="30px"
+                android:paddingRight="30px"
+                android:singleLine="true"
+                android:text="Share the ride, Split the fare"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:src="@color/stroke_color_light" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

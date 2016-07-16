@@ -143,31 +143,6 @@
         android:layout_height="wrap_content"
         android:background="@color/sliding_bottom_bg_color">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutPoolInfoBar"
-            android:layout_width="match_parent"
-            android:layout_height="70px"
-            android:visibility="visible"
-            android:background="@drawable/background_pool_info">
-
-            <TextView
-                android:id="@+id/textViewPoolInfo1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Share the ride, Split the fare"
-                android:textColor="@color/text_color"
-                android:singleLine="true"
-                android:paddingLeft="30px"
-                android:paddingRight="30px"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/text_size_26"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:src="@color/stroke_color_light" />
-        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewVehicles"

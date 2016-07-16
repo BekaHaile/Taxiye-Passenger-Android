@@ -325,8 +325,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
     private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation,
-            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm;
-    private RelativeLayout changeLocalityLayout;
+            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1;
+    private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool, imageViewJugnooPoolExtra,
             imageViewPaymentModeConfirm;
@@ -589,7 +589,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewOfferConfirm = (ImageView) findViewById(R.id.imageViewOfferConfirm);
         imageViewOfferConfirm.setVisibility(View.GONE);
         relativeLayoutOfferConfirm = (RelativeLayout) findViewById(R.id.linearLayoutOfferConfirm);
-
+        relativeLayoutPoolInfoBar = (RelativeLayout) findViewById(R.id.relativeLayoutPoolInfoBar);
+        textViewPoolInfo1 = (TextView) findViewById(R.id.textViewPoolInfo1);
+        textViewPoolInfo1.setTypeface(Fonts.mavenMedium(this));
 
 
 		//Location error layout
@@ -742,6 +744,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         layoutParams.height = (int)(ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
+
 
         if(Data.userData != null){
             textViewSendInvites.setText(Data.userData.getInRideSendInviteTextBold());
@@ -2943,6 +2946,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    public RelativeLayout getRelativeLayoutPoolInfoBar() {
+        return relativeLayoutPoolInfoBar;
+    }
 
     private void setZeroRatingView(){
         textViewRSWhatImprove.setVisibility(View.GONE);
@@ -7626,20 +7632,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                         textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                     }
+                    showPoolInforBar();
                 } else{
                     ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
                     int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
                     if(index == 1 && Data.dropLatLng == null) {
                         translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
                         translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+                        textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                     }
-                    textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+                    relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+                    setGoogleMapPadding(0);
                 }
                 slidingBottomPanel.getRequestRideOptionsFragment()
                         .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
 
-                slidingBottomPanel.getRequestRideOptionsFragment().updatePoolInfoText();
+                //slidingBottomPanel.getRequestRideOptionsFragment().updatePoolInfoText();
             } else{
                 if(getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
@@ -7647,6 +7656,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
+        }
+    }
+
+    public void showPoolInforBar(){
+        if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
+                (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
+                (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
+            relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+            setGoogleMapPadding(70);
         }
     }
 

@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -73,9 +74,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewMinFareMS,
+            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewMinFareMS,
             textViewPriorityTipValue;
-    private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
+    private RelativeLayout relativeLayoutPriorityTipMS;
 
     private VehiclesTabAdapter vehiclesTabAdapter;
 
@@ -86,9 +87,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public RequestRideOptionsFragment(){}
 
-    public RelativeLayout getRelativeLayoutPoolInfoBar() {
+    /*public RelativeLayout getRelativeLayoutPoolInfoBar() {
         return relativeLayoutPoolInfoBar;
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,7 +118,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         linearLayoutFareEstimate = (LinearLayout) rootView.findViewById(R.id.linearLayoutFareEstimate);
         ((TextView) rootView.findViewById(R.id.textViewFareEstimate)).setTypeface(Fonts.mavenMedium(activity));
 
-        relativeLayoutPoolInfoBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPoolInfoBar);
         relativeLayoutMultipleSupplyMain = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleSupplyMain);
         linearLayoutPaymentModeMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutPaymentModeMS);
         imageViewPaymentModeMS = (ImageView) rootView.findViewById(R.id.imageViewPaymentModeMS);
@@ -135,8 +135,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewMaxPeople.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewOffers = (TextView) rootView.findViewById(R.id.textViewOffers);
         textViewOffers.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
-        textViewPoolInfo1 = (TextView) rootView.findViewById(R.id.textViewPoolInfo1);
-        textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -257,16 +255,24 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 public void onSkipped() {
                     //onRequestRideTap();
                 }
+
+                @Override
+                public void onInviteFriends() {
+                    Intent intent = new Intent(activity, ShareActivity.class);
+                    startActivity(intent);
+                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+
             });
         }
         return promoCouponsDialog;
     }
 
-    public void updatePoolInfoText(){
+    /*public void updatePoolInfoText(){
         try {
             for(Region region : Data.regions){
                 if(region.getRideType() == RideTypeValue.POOL.getOrdinal() && (!getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
-                    relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+                    relativeLayoutPoolInfoBar.setVisibility(View.GONE);
                     textViewPoolInfo1.setText(getRegionSelected().getOfferTexts().getText1());
                     return;
                 } else{
@@ -276,18 +282,18 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void updateBottomMultipleView(int rideType){
         if(rideType == RideTypeValue.POOL.getOrdinal()){
             textVieGetFareEstimateMS.setVisibility(View.GONE);
             linearLayoutPaymentModeMS.setVisibility(View.GONE);
-            textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
+            textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare));
             textViewMinFareMSValue.setText(activity.getResources().getString(R.string.two_hifen));
         } else{
             textVieGetFareEstimateMS.setVisibility(View.VISIBLE);
             linearLayoutPaymentModeMS.setVisibility(View.VISIBLE);
-            textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
+            textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare));
 
         }
         updateFareFactorUI();
@@ -377,7 +383,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 }
                 vehiclesTabAdapter.notifyDataSetChanged();
                 updateSupplyUI(Data.regions.size());
-                updatePoolInfoText();
+                //updatePoolInfoText();
             } else if(Data.regions.size() > 0){
                 activity.setVehicleTypeSelected(0);
                 regionSelected = Data.regions.get(0);
