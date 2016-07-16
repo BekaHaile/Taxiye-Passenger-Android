@@ -907,6 +907,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(index == 1 && Data.dropLatLng == null) {
                     translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
                     translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+                    textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                 }else{
                     placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
                     setServiceAvailablityUI("");
@@ -7614,7 +7616,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.setText("");
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
-                slidingBottomPanel.getRequestRideOptionsFragment().updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                    int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                    if(index == 1 && Data.dropLatLng == null) {
+                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+                        textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+                    }
+                } else{
+                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
+                    int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
+                    if(index == 1 && Data.dropLatLng == null) {
+                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+                    }
+                    textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+                }
+                slidingBottomPanel.getRequestRideOptionsFragment()
+                        .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
 
                 slidingBottomPanel.getRequestRideOptionsFragment().updatePoolInfoText();
             } else{
@@ -7993,7 +8016,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewDestSearch.startAnimation(shake);
                     shakeAnim++;
                     if(shakeAnim > 3){
-                        new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
+                        /*new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
                             @Override
                             public void onEnterDestination() {
                                 placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
@@ -8001,7 +8024,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 passengerScreenMode = PassengerScreenMode.P_SEARCH;
                                 switchPassengerScreen(passengerScreenMode);
                             }
-                        }).show();
+                        }).show();*/
                     }
                 }
             }

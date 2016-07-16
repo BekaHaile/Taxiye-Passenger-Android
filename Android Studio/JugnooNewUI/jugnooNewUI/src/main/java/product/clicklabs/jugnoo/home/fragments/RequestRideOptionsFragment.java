@@ -73,7 +73,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private RecyclerView recyclerViewVehicles;
     private LinearLayout linearLayoutMinFareMS;
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
-            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewPoolInfo2, textViewMinFareMS,
+            textViewMaxPeople, textViewOffers, textViewOffersMode, textViewPoolInfo1, textViewMinFareMS,
             textViewPriorityTipValue;
     private RelativeLayout relativeLayoutPriorityTipMS, relativeLayoutPoolInfoBar;
 
@@ -137,8 +137,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         textViewOffers.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewPoolInfo1 = (TextView) rootView.findViewById(R.id.textViewPoolInfo1);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
-        textViewPoolInfo2 = (TextView) rootView.findViewById(R.id.textViewPoolInfo2);
-        textViewPoolInfo2.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -197,7 +195,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                    getPoolDestinationDialog().show();
+                    //getPoolDestinationDialog().show();
+                    getFareDetailsDialog().show();
                 } else{
                     getFareDetailsDialog().show();
                 }
@@ -269,7 +268,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 if(region.getRideType() == RideTypeValue.POOL.getOrdinal() && (!getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
                     relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
                     textViewPoolInfo1.setText(getRegionSelected().getOfferTexts().getText1());
-                    textViewPoolInfo2.setText(getRegionSelected().getOfferTexts().getText2());
                     return;
                 } else{
                     relativeLayoutPoolInfoBar.setVisibility(View.GONE);
@@ -284,7 +282,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         if(rideType == RideTypeValue.POOL.getOrdinal()){
             textVieGetFareEstimateMS.setVisibility(View.GONE);
             linearLayoutPaymentModeMS.setVisibility(View.GONE);
-            textViewMinFareMS.setText(activity.getResources().getString(R.string.fixed_fare_colon));
+            textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare_colon));
             textViewMinFareMSValue.setText(activity.getResources().getString(R.string.two_hifen));
         } else{
             textVieGetFareEstimateMS.setVisibility(View.VISIBLE);

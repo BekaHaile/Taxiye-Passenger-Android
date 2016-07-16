@@ -40,7 +40,8 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			KEYWORD_BOOKING = "booking",
 			KEYWORD_AUTO = "auto",
 			KEYWORD_TAXI_FOR_SURE = "taxiforsure",
-			KEYWORD_TAXI_FS = "taxifs";
+			KEYWORD_TAXI_FS = "taxifs",
+			KEYWORD_PNR = "PNR";
 
 	private final long DAY_MILLIS = 24 * 60 * 60 * 1000;
 	private final long THREE_DAYS_MILLIS = 3 * DAY_MILLIS;
@@ -250,6 +251,9 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 							messages.add(new MSenderBody(sender, body, date));
 						}
 						else if(body.toLowerCase().contains(KEYWORD_TAXI_FS) || body.toLowerCase().contains(KEYWORD_TAXI_FS)){
+							messages.add(new MSenderBody(sender, body, date));
+						}
+						else if(body.contains(KEYWORD_PNR)){
 							messages.add(new MSenderBody(sender, body, date));
 						}
 					} catch (Exception e) {

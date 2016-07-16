@@ -147,31 +147,19 @@
             android:id="@+id/relativeLayoutPoolInfoBar"
             android:layout_width="match_parent"
             android:layout_height="70px"
-            android:visibility="gone"
-            android:background="@color/white">
+            android:visibility="visible"
+            android:background="@drawable/background_pool_info">
 
             <TextView
                 android:id="@+id/textViewPoolInfo1"
-                android:layout_width="450px"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/background_pool_info_trb"
                 android:text="Share the ride, Split the fare"
                 android:textColor="@color/text_color"
                 android:singleLine="true"
                 android:paddingLeft="30px"
+                android:paddingRight="30px"
                 android:gravity="center_vertical"
-                android:textSize="@dimen/text_size_26"/>
-
-            <TextView
-                android:id="@+id/textViewPoolInfo2"
-                android:layout_width="450px"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/textViewPoolInfo1"
-                android:background="@color/white"
-                android:singleLine="true"
-                android:text="SAVE UPTO 80%"
-                android:textColor="@color/theme_color"
-                android:gravity="center"
                 android:textSize="@dimen/text_size_26"/>
 
             <ImageView

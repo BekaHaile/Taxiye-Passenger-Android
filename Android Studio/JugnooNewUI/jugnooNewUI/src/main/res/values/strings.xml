@@ -283,6 +283,7 @@
 	<!-- Ride Summary New Strings -->
 	<string name="total_fare">TOTAL FARE</string>
 	<string name="total_fare_colon">TOTAL FARE: </string>
+	<string name="maximum_fare_colon">MAXIMUM FARE:</string>
 	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">How was your ride ?</string>
@@ -896,6 +897,7 @@
 	<string name="fare_details">Fare Details</string>
 	<string name="pay_for_your_rides_using">Pay for your rides using</string>
 	<string name="enter_destination">Enter Destination</string>
+	<string name="destination_required">Destination required</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
 	<string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
 	<string name="base_fare">Base Fare</string>
@@ -905,7 +907,6 @@
 	<string name="referrals">Referrals</string>
 	<string name="referrals_tab">REFER &amp; WIN</string>
 	<string name="leaderboard">Leaderboard</string>
-	<string name="scores_on_leaderboard">Scores on Leaderboard</string>
 	<string name="activity">Activity</string>
 	<string name="enter_promo_code">Enter Promo code</string>
 	<string name="add_promo_code">Add Promo Code</string>

@@ -207,13 +207,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_refer_a_driver_selector);
-                    try {
+                   /* try {
                         if(Data.userData.getcToDReferralEnabled() != 1){
                             hideLayout(holder.relative);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){

@@ -315,7 +315,7 @@ public class JSONParser implements Constants {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
                     Data.userData.userEmail, Data.userData.phoneNo,
-                    Data.userData.getCity(), Data.userData.getCityReg());
+                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {

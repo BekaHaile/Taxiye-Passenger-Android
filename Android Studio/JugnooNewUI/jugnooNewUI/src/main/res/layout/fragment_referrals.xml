@@ -268,6 +268,8 @@
             android:id="@+id/relativeLayoutReferSingle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginRight="27px"
             android:visibility="gone">
 
             <ImageView
@@ -281,7 +283,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="88px"
                 android:layout_alignParentBottom="true"
-                android:background="@color/menu_item_selector_color"
+                android:background="@drawable/bg_menu_item_selector_color_tlrrb"
                 android:gravity="center"
                 android:text="@string/want_to_refer_a_driver"
                 android:textAllCaps="true"
@@ -289,11 +291,11 @@
                 android:textSize="@dimen/text_size_30" />
 
             <ImageView
-                android:layout_width="126px"
-                android:layout_height="126px"
+                android:layout_width="108px"
+                android:layout_height="109px"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30px"
-                android:background="@drawable/ic_promotions_driver_refer_selector"
+                android:background="@drawable/ic_slide_up"
                 android:tag="mwar" />
 
         </RelativeLayout>
@@ -302,12 +304,15 @@
             android:id="@+id/relativeLayoutLeaderboardSingle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginRight="27px"
             android:visibility="visible">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_above="@+id/textViewLeaderboardSingle"
+                android:visibility="gone"
                 android:background="@color/stroke_color_light" />
 
             <TextView
@@ -315,19 +320,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="95px"
                 android:layout_alignParentBottom="true"
-                android:background="@color/menu_item_selector_color"
+                android:background="@drawable/bg_menu_item_selector_color_tlrrb"
                 android:gravity="center"
-                android:text="@string/scores_on_leaderboard"
-                android:textAllCaps="true"
+                android:text="@string/leaderboard"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_44" />
 
             <ImageView
-                android:layout_width="126px"
-                android:layout_height="126px"
+                android:layout_width="108px"
+                android:layout_height="109px"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30px"
-                android:background="@drawable/ic_share_leaderboard"
+                android:background="@drawable/ic_slide_up"
                 android:tag="mwar" />
 
         </RelativeLayout>
