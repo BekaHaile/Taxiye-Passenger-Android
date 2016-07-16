@@ -151,7 +151,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			if (endRideData != null && getRideSummaryResponse != null) {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
-						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback);
+						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback, false);
 				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
 			}
 		} catch (NumberFormatException e) {
@@ -208,7 +208,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI();
+					}).getRideSummaryAPI(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

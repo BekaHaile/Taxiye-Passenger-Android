@@ -75,6 +75,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			radioBtnPaytm = (ImageView)dialog.findViewById(R.id.radio_paytm);
 			imageViewRadioMobikwik = (ImageView)dialog.findViewById(R.id.imageViewRadioMobikwik);
 			radioBtnCash = (ImageView)dialog.findViewById(R.id.radio_cash);
+
 			textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
 			textViewPaytm = (TextView)dialog.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(activity));
 			textViewMobikwikValue = (TextView)dialog.findViewById(R.id.textViewMobikwikValue);textViewMobikwikValue.setTypeface(Fonts.mavenLight(activity));

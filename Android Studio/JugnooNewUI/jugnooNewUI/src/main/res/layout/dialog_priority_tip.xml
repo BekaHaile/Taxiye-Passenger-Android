@@ -100,7 +100,7 @@
                             android:layout_height="2px"
                             android:layout_marginLeft="50px"
                             android:layout_marginRight="50px"
-                            android:background="@color/text_color_light" />
+                            android:background="@color/stroke_color_light" />
 
                         <TextView
                             android:id="@+id/textViewHighPriority"

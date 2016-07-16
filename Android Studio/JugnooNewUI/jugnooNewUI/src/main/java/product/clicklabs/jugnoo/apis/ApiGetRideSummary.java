@@ -53,7 +53,7 @@ public class ApiGetRideSummary {
 		this.callback = callback;
 	}
 
-	public void getRideSummaryAPI() {
+	public void getRideSummaryAPI(final boolean rideCancelled) {
 		boolean showRideMenu = true;
 		String savedSupportVersion = Prefs.with(activity).getString(Constants.SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION, "-1");
 		if(savedSupportVersion.equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
@@ -67,8 +67,12 @@ public class ApiGetRideSummary {
 			if(engagementId != -1) {
 				params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
 			}
-			if(showRideMenu){
+			if(!rideCancelled && showRideMenu){
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
+			}
+			if(rideCancelled){
+				params.put(Constants.KEY_CANCEL_RIDE_MENU, "1");
+				params.put(Constants.KEY_SHOW_RIDE_MENU, "0");
 			}
 
 			final boolean finalShowRideMenu = showRideMenu;
@@ -90,16 +94,18 @@ public class ApiGetRideSummary {
 							int flag = jObj.getInt(Constants.KEY_FLAG);
 							String message = JSONParser.getServerMessage(jObj);
 							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
-								if(!finalShowRideMenu){
-									ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
-											.getSupportDataItems(SupportCategory.RIDE_MENU.getOrdinal());
-									getRideSummaryResponse.setMenu(menu);
-								} else{
-									Prefs.with(activity).save(Constants.SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION,
-											Data.userData.getInAppSupportPanelVersion());
-									Database2.getInstance(activity)
-											.insertUpdateSupportData(SupportCategory.RIDE_MENU.getOrdinal(),
-													getRideSummaryResponse.getMenu());
+								if(!rideCancelled){
+									if (!finalShowRideMenu) {
+										ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
+												.getSupportDataItems(SupportCategory.RIDE_MENU.getOrdinal());
+										getRideSummaryResponse.setMenu(menu);
+									} else {
+										Prefs.with(activity).save(Constants.SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION,
+												Data.userData.getInAppSupportPanelVersion());
+										Database2.getInstance(activity)
+												.insertUpdateSupportData(SupportCategory.RIDE_MENU.getOrdinal(),
+														getRideSummaryResponse.getMenu());
+									}
 								}
 								callback.onSuccess(JSONParser.parseEndRideData(jObj, String.valueOf(engagementId), fixedFare), getRideSummaryResponse);
 							} else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {

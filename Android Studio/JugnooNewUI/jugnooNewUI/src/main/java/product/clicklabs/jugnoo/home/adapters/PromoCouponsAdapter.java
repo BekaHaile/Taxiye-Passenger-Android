@@ -92,7 +92,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 						callback.onCouponSelected();
 					}
 					notifyDataSetChanged();
-					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
+					//activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -115,7 +115,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
 			imageViewRadio = (ImageView)itemView.findViewById(R.id.imageViewRadio);
 			textViewOfferName = (TextView) itemView.findViewById(R.id.textViewOfferName);
-			textViewOfferName.setTypeface(Fonts.mavenLight(activity));
+			textViewOfferName.setTypeface(Fonts.mavenRegular(activity));
 			textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);
 			textViewTNC.setTypeface(Fonts.mavenLight(activity));
 		}

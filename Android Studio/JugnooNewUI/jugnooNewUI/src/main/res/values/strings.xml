@@ -119,7 +119,7 @@
 	<string name="language_preferences">Language Preferences</string>
 	
 	<string name="ride_in_progress">Ride in progress...</string>
-	<string name="sharing_your_ride_with">Searching your fellow rider</string>
+	<string name="sharing_your_ride_with">Finding your fellow rider</string>
 	
 	<string name="click_to_view">Click to view</string>
 	
@@ -891,6 +891,7 @@
 
 
 	<string name="format_x">%s x</string>
+	<string name="format_x_without_space">%sx</string>
 
 	<string name="fare_details">Fare Details</string>
 	<string name="pay_for_your_rides_using">Pay for your rides using</string>
@@ -904,6 +905,7 @@
 	<string name="referrals">Referrals</string>
 	<string name="referrals_tab">REFER &amp; WIN</string>
 	<string name="leaderboard">Leaderboard</string>
+	<string name="scores_on_leaderboard">Scores on Leaderboard</string>
 	<string name="activity">Activity</string>
 	<string name="enter_promo_code">Enter Promo code</string>
 	<string name="add_promo_code">Add Promo Code</string>

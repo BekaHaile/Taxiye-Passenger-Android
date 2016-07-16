@@ -56,9 +56,9 @@ public class FareDetailsDialog {
 			((TextView) dialog.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenMedium(activity));
 			((TextView) dialog.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewKMValue = (TextView) dialog.findViewById(R.id.textViewKMValue);
-			textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
+			textViewKMValue.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewMinValue = (TextView) dialog.findViewById(R.id.textViewMinValue);
-			textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
+			textViewMinValue.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewThresholdDistance = (TextView) dialog.findViewById(R.id.textViewThresholdDistance);
 			textViewThresholdDistance.setTypeface(Fonts.mavenLight(activity));
 			TextView textViewConvenienceCharge = (TextView) dialog.findViewById(R.id.textViewConvenienceCharge);

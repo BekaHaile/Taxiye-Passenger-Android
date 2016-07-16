@@ -31,9 +31,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -247,7 +249,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation, confirmMyLocationBtn;
     RelativeLayout relativeLayoutRequest;
     RelativeLayout relativeLayoutInAppCampaignRequest;
-    TextView textViewInAppCampaignRequest, textViewTotalFare, textViewIncludes;
+    TextView textViewInAppCampaignRequest, textViewTotalFare, textViewTotalFareValue, textViewIncludes;
     Button buttonCancelInAppCampaignRequest;
 
 	RelativeLayout relativeLayoutGoogleAttr;
@@ -648,10 +650,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
         textViewInRideState.setTypeface(Fonts.mavenMedium(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
-        textViewDriverRating.setTypeface(Fonts.mavenLight(this));
+        textViewDriverRating.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
         textViewCancellation = (TextView) findViewById(R.id.textViewCancellation); textViewCancellation.setTypeface(Fonts.mavenRegular(this));
         textViewTotalFare = (TextView)findViewById(R.id.textViewTotalFare); textViewTotalFare.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewTotalFareValue = (TextView)findViewById(R.id.textViewTotalFareValue); textViewTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewIncludes = (TextView)findViewById(R.id.textViewIncludes); textViewIncludes.setTypeface(Fonts.mavenMedium(this));
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
@@ -937,9 +940,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 translateViewBottomTop(relativeLayoutDestSearchBar, false);
                 translateViewTopBottom(relativeLayoutInitialSearchBar, true);
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
-                if(dropInitialMarker != null) {
+                /*if(dropInitialMarker != null) {
                     dropInitialMarker.remove();
-                }
+                }*/
             }
         });
 
@@ -1618,7 +1621,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.put(KEY_LONGITUDE, Data.longitude);
             NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_APP_OPEN, map);
 
-            slidingBottomPanel.nudgeCouponsEvent();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2294,6 +2296,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewThumbsDown.setVisibility(View.INVISIBLE);*/
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
+                        Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0);
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2528,6 +2531,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
                             if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0), 0) != 0){
                                 driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0));
+                            } else{
+                                driverLocationMarker.setRotation((float)Data.assignedDriverInfo.getBearing());
                             }
 
                             Log.i("marker added", "REQUEST_FINAL");
@@ -2773,7 +2778,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
+                                menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
                             }
                         });
                 Data.userData.setPromoSuccess(1);
@@ -3021,7 +3026,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             String tag = "", title = "";
             if(RideEndFragmentMode.INVOICE == rideEndFragmentMode) {
                 fragToCheck = getRideSummaryFragment();
-                fragToAdd = new RideSummaryFragment(-1);
+                fragToAdd = new RideSummaryFragment(-1, false);
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
             }
@@ -3759,7 +3764,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 menuBar.menuAdapter.onClickAction(MenuInfoTags.WALLET.getTag());
 			}
 			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
-                menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
+                menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
                 menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag());
@@ -4321,14 +4326,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             textViewCentrePinETA.setText(region.getEta());
                         }
 
-                        if(Data.dropLatLng != null){
+                        /*if(Data.dropLatLng != null){
                             MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                             poolMarkerOptionEnd.title("End");
                             poolMarkerOptionEnd.position(Data.dropLatLng);
                             poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
                                     assl, R.drawable.pin_ball_end)));
                             dropInitialMarker = map.addMarker(poolMarkerOptionEnd);
-                        }
+                        }*/
 					}
 				}
 			}
@@ -5092,7 +5097,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                                 final PolylineOptions polylineOptions = new PolylineOptions();
                                                 polylineOptions.add(start, end);
-                                                polylineOptions.width(ASSL.Xscale() * 5);
+                                                polylineOptions.width(ASSL.Xscale() * 7);
                                                 polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
                                                 polylineOptions.geodesic(false);
 
@@ -5163,7 +5168,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         final PolylineOptions polylineOptions = new PolylineOptions();
                         polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
-                        polylineOptions.width(ASSL.Xscale() * 5);
+                        polylineOptions.width(ASSL.Xscale() * 7);
                         polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
                         polylineOptions.geodesic(false);
                         if (map != null && polylineOptions != null) {
@@ -5224,7 +5229,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 													}
 
 													pathToDropLocationPolylineOptions = new PolylineOptions();
-													pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5).color(RIDE_LEFT_PATH).geodesic(true);
+													pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
 													for (int z = 0; z < list.size(); z++) {
 														pathToDropLocationPolylineOptions.add(list.get(z));
 														builder.include(list.get(z));
@@ -5579,6 +5584,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     StringBuilder sb;
     private void setPoolRideStatus(String message, ArrayList<String> userNames){
+        if(message.equalsIgnoreCase("")){
+            message = getResources().getString(R.string.sharing_your_ride_with);
+        }
         sb  = new StringBuilder();
         sb.append(message);
         if(userNames != null) {
@@ -6888,7 +6896,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 latLngBoundsBuilderPool = new LatLngBounds.Builder();
 
                 PolylineOptions poolPolylineOption = new PolylineOptions();
-                poolPolylineOption.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+                poolPolylineOption.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
                 for (int z = 0; z < list.size(); z++) {
                     poolPolylineOption.add(list.get(z));
                     latLngBoundsBuilderPool.include(list.get(z));
@@ -6905,7 +6913,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                         .getTextAssignBitmap(HomeActivity.this, assl,
                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                                getResources().getDimensionPixelSize(R.dimen.text_size_22))));
+                                getResources().getDimensionPixelSize(R.dimen.text_size_24))));
                 map.addMarker(poolMarkerOptionStart);
 
                 MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
@@ -6947,8 +6955,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 jugnooPoolFareId = poolFareId;
                 poolFareSuccess = true;
 
-                textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon)+" "+
-                    String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
+                textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
+                textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
 
                 textViewIncludes.setText(text);
             }
@@ -6977,7 +6985,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (latLngBoundsBuilderPool != null) {
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 80)),
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 90)),
                                 MAP_ANIMATE_DURATION, null);
                     }
                 } catch (Exception e) {

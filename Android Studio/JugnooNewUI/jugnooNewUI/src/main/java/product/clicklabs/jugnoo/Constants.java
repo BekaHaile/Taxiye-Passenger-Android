@@ -327,5 +327,8 @@ public interface Constants {
 	String KEY_ENABLED = "enabled";
 	String KEY_JUGNOO_CASH = "jugnoo_cash";
 	String KEY_WALLET_ORDER = "wallet_order";
+	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
+
+
 
 }

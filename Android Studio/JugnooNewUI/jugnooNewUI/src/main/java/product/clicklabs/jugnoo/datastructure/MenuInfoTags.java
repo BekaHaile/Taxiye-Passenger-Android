@@ -10,7 +10,7 @@ public enum MenuInfoTags {
     WALLET("wallet"),
     INBOX("inbox"),
     JUGNOO_FRESH("jugnoo_fresh"),
-    PROMOTIONS("promotions"),
+//    PROMOTIONS("promotions"),
     HISTORY("history"),
     REFER_A_DRIVER("refer_a_driver"),
     SUPPORT("support"),

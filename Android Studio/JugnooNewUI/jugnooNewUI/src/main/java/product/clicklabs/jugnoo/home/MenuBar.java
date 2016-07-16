@@ -71,7 +71,7 @@ public class MenuBar {
                     MyApplication.getInstance().ACTIVITY_NAME_WALLET = Data.menuInfoList.get(i).getName();
                 } else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_INBOX = Data.menuInfoList.get(i).getName();
-                } else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.PROMOTIONS.getTag())){
+                } else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS = Data.menuInfoList.get(i).getName();
                 }else if(Data.menuInfoList.get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
 					MyApplication.getInstance().ACTIVITY_NAME_OFFERS = Data.menuInfoList.get(i).getName();

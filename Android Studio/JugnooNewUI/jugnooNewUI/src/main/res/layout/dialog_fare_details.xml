@@ -25,13 +25,13 @@
             android:textAllCaps="true"
             android:text="@string/fare_details"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_38"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
         <View
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/text_color"
+            android:background="@color/text_color_light"
             />
 
         <TextView
@@ -69,6 +69,7 @@
                 android:layout_width="300px"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_km"
+                android:textAllCaps="true"
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/text_size_34"
                 android:textColor="@color/text_color_light"
@@ -104,6 +105,7 @@
                 android:layout_width="300px"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_min"
+                android:textAllCaps="true"
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/text_size_34"
                 android:textColor="@color/text_color_light"

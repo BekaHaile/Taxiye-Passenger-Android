@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.WebActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -355,7 +356,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Free rides");
 
-            } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
+            } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, ReferDriverActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, PaymentActivity.class);
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
                 activity.startActivity(intent);

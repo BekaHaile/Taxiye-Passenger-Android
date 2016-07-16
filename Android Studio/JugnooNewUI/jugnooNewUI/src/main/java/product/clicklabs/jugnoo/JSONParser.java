@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -125,7 +126,7 @@ public class JSONParser implements Constants {
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
-        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled");
+        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
 
         if(userData.has("user_saved_addresses")){
@@ -208,6 +209,7 @@ public class JSONParser implements Constants {
         String poolDestinationPopupText1 = userData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
         String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
         String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
+        int inviteFriendButton = userData.optInt("invite_friend_button", 0);
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -257,13 +259,12 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
-                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, inviteFriendButton,
                 paytmEnabled, mobikwikEnabled);
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
         return userDataObj;
-
     }
 
 
@@ -327,6 +328,7 @@ public class JSONParser implements Constants {
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
+                couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
                 nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
@@ -684,6 +686,7 @@ public class JSONParser implements Constants {
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+        String engagementDate = jLastRideData.optString("engagement_date", "");
 
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
@@ -702,7 +705,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, paidUsingMobikwik);
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik);
 	}
 
 
@@ -1245,5 +1248,19 @@ public class JSONParser implements Constants {
             Data.dropLatLng = null;
         }
     }
+
+    private void couponsEvent(Context context){
+        try{
+            JSONObject map = new JSONObject();
+            for(PromoCoupon promoCoupon : Data.promoCoupons){
+                map.put(promoCoupon.getTitle(), 1);
+            }
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

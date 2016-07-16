@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayoutConfirmRequest"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -11,13 +10,12 @@
         android:id="@+id/confirmMyLocationBtn"
         android:layout_width="121px"
         android:layout_height="117px"
-        android:layout_below="@+id/recyclerViewVehicles"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/recyclerViewVehicles"
         android:layout_marginRight="30px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutConfirmBottom"
@@ -26,175 +24,197 @@
         android:layout_below="@+id/confirmMyLocationBtn"
         android:background="@drawable/white_alpha_gradient_up">
 
-    <LinearLayout
-        android:id="@+id/linearLayoutConfirmOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:layout_marginTop="30px"
-        android:visibility="visible"
-        android:background="@drawable/background_white_rounded_bordered"
-        android:orientation="vertical">
-
         <LinearLayout
+            android:id="@+id/linearLayoutConfirmOption"
             android:layout_width="match_parent"
-            android:layout_height="102px">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_marginTop="30px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <LinearLayout
-                android:id="@+id/linearLayoutPaymentModeConfirm"
-                android:layout_width="330px"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:layout_width="match_parent"
+                android:layout_height="102px">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutPaymentModeConfirm"
+                    android:layout_width="330px"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imageViewPaymentModeConfirm"
+                        android:layout_width="68px"
+                        android:layout_height="22px"
+                        android:src="@drawable/ic_cash_small"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewPaymentModeValueConfirm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10px"
+                        android:gravity="center"
+                        android:text="200"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/imageViewPaymentModeConfirm"
-                    android:layout_width="68px"
-                    android:layout_height="22px"
-                    android:src="@drawable/ic_cash_small"
-                    android:tag="mwar"/>
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="-1dp"
+                    android:src="@color/text_color_hint" />
 
-                <TextView
-                    android:id="@+id/textViewPaymentModeValueConfirm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:gravity="center"
-                    android:text="200"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"/>
+                <RelativeLayout
+                    android:id="@+id/linearLayoutOfferConfirm"
+                    android:layout_width="330px"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imageViewPromoConfirm"
+                        android:layout_width="30px"
+                        android:layout_height="29px"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/textViewOffersConfirm"
+                        android:src="@drawable/ic_gift"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewOffersConfirm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:gravity="center"
+                        android:text="@string/nl_offers"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                    <ImageView
+                        android:id="@+id/imageViewOfferConfirm"
+                        android:layout_width="31px"
+                        android:layout_height="31px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="50px"
+                        android:src="@drawable/tick"
+                        android:tag="mwar"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="-1dp"
-                android:src="@color/text_color_hint"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:layout_marginTop="-1dp"
+                android:background="@color/text_color_hint" />
+
+
+            <TextView
+                android:id="@+id/textVieGetFareEstimateConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_marginTop="-1dp"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
+                android:gravity="center"
+                android:text="@string/get_fare_estimate"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_26"
+                android:visibility="gone" />
+
 
             <RelativeLayout
-                android:id="@+id/linearLayoutOfferConfirm"
-                android:layout_width="330px"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
-                android:visibility="visible">
+                android:id="@+id/relativeLayoutTotalFare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-1dp"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
+                android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/imageViewPromoConfirm"
-                    android:layout_width="30px"
-                    android:layout_height="29px"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/textViewOffersConfirm"
-                    android:src="@drawable/ic_gift"
-                    android:tag="mwar" />
+                <LinearLayout
+                    android:id="@+id/linearLayoutTotalFare"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22px"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/textViewTotalFare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/total_fare_colon"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textViewTotalFareValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAllCaps="true"
+                        android:textColor="@color/theme_color"
+                        android:textSize="@dimen/text_size_32"
+                        android:visibility="visible" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textViewOffersConfirm"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textViewIncludes"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/linearLayoutTotalFare"
+                    android:layout_marginBottom="22px"
+                    android:layout_marginTop="7px"
                     android:gravity="center"
-                    android:text="@string/nl_offers"
-                    android:layout_marginLeft="20px"
+                    android:paddingLeft="5px"
+                    android:paddingRight="5px"
+                    android:text="@string/includes_priority_tip"
                     android:textAllCaps="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textSize="@dimen/text_size_18"
+                    android:visibility="visible" />
 
-                <ImageView
-                    android:id="@+id/imageViewOfferConfirm"
-                    android:layout_width="31px"
-                    android:layout_height="31px"
-                    android:layout_marginRight="50px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    android:src="@drawable/tick"
-                    android:tag="mwar"/>
 
             </RelativeLayout>
 
+
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="5px"
-            android:layout_marginRight="5px"
-            android:layout_marginTop="-1dp"
-            android:background="@color/text_color_hint"/>
-
-
-        <TextView
-            android:id="@+id/textVieGetFareEstimateConfirm"
-            android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:layout_marginTop="-1dp"
-            android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
-            android:gravity="center"
-            android:text="@string/get_fare_estimate"
+        <Button
+            android:id="@+id/buttonConfirmRequest"
+            android:layout_width="@dimen/button_big_width"
+            android:layout_height="@dimen/button_big_height"
+            android:background="@drawable/background_theme_gradient_selector"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_38"
             android:textAllCaps="true"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_26"
-            android:visibility="gone"/>
-
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutTotalFare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-1dp"
-            android:gravity="center"
-            android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector">
-
-            <TextView
-            android:id="@+id/textViewTotalFare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/total_fare_colon"
-            android:textAllCaps="true"
-            android:layout_marginTop="18px"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32"
-            android:visibility="visible"/>
-
-            <TextView
-                android:id="@+id/textViewIncludes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_below="@+id/textViewTotalFare"
-                android:text="@string/includes_priority_tip"
-                android:textAllCaps="true"
-                android:layout_marginTop="7px"
-                android:paddingRight="5px"
-                android:paddingLeft="5px"
-                android:layout_marginBottom="20px"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_18"
-                android:visibility="visible"/>
-
-
-        </RelativeLayout>
-
-
-
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/buttonConfirmRequest"
-        style="@style/ButtonThemeBig"
-        android:layout_below="@+id/linearLayoutConfirmOption"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30px"
-        android:text="@string/confirm_request"/>
+            android:layout_below="@+id/linearLayoutConfirmOption"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30px"
+            android:text="@string/confirm_request" />
     </RelativeLayout>
 
 </RelativeLayout>
