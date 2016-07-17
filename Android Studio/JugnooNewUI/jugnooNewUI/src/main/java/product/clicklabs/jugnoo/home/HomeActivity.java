@@ -890,6 +890,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonEndRideSkip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
                 relativeLayoutRideEndWithImage.setVisibility(View.GONE);
             }
         });
@@ -897,6 +898,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonEndRideInviteFriends.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "invite friends");
                 relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                 intentToShareActivity(false);
             }

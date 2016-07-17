@@ -124,6 +124,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
 						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
+						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
                         callback.onPaymentModeUpdated();
                     } else if(Data.userData.getPaytmError() == 1){
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
@@ -159,6 +160,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
                     callback.onPaymentModeUpdated();
                     break;
             }

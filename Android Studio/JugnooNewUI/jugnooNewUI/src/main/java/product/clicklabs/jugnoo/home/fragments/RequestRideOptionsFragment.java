@@ -195,8 +195,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                     //getPoolDestinationDialog().show();
                     getFareDetailsDialog().show();
+                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Pool", "base fare");
                 } else{
                     getFareDetailsDialog().show();
+                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Auto", "base fare");
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);

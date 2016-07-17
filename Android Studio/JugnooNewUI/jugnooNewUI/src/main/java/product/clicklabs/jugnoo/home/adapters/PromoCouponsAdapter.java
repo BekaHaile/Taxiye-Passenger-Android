@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -18,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
@@ -66,6 +68,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 			@Override
 			public void onClick(View v) {
 				try {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "t&c");
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (promoCoupon instanceof CouponInfo) {

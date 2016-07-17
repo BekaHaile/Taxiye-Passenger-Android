@@ -106,6 +106,7 @@ public class PromoCouponsDialog {
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					dialog.dismiss();
 					callback.onSkipped();
@@ -124,6 +125,7 @@ public class PromoCouponsDialog {
 			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "continue");
 					dialog.dismiss();
 					callback.onCouponApplied();
 				}
@@ -132,6 +134,7 @@ public class PromoCouponsDialog {
 			buttonInviteFriends.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "invite friends");
 					dialog.dismiss();
 					callback.onInviteFriends();
 				}
