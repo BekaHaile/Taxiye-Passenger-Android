@@ -325,12 +325,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
     private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation,
-            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1;
-    private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar;
+            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1,
+            textViewRideEndWithImage;
+    private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool, imageViewJugnooPoolExtra,
-            imageViewPaymentModeConfirm;
-    private Button buttonConfirmRequest;
+            imageViewPaymentModeConfirm, imageViewRideEndWithImage;
+    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
 
 
     // data variables declaration
@@ -564,6 +565,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutGreat = (RelativeLayout)findViewById(R.id.relativeLayoutGreat);
         imageViewThumbsUpGif = (ImageView)findViewById(R.id.imageViewThumbsUpGif);
         imageViewConfirmDropLocationEdit = (ImageView)findViewById(R.id.imageViewConfirmDropLocationEdit);
+        relativeLayoutRideEndWithImage = (RelativeLayout)findViewById(R.id.relativeLayoutRideEndWithImage);
+        textViewRideEndWithImage = (TextView)findViewById(R.id.textViewRideEndWithImage); textViewRideEndWithImage.setTypeface(Fonts.mavenMedium(this));
+        buttonEndRideSkip = (Button) findViewById(R.id.buttonEndRideSkip);buttonEndRideSkip.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        buttonEndRideInviteFriends = (Button)findViewById(R.id.buttonEndRideInviteFriends); buttonEndRideInviteFriends.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        imageViewRideEndWithImage = (ImageView)findViewById(R.id.imageViewRideEndWithImage);
 
 		relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
 		imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
@@ -874,7 +880,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
         imageViewSupplyType.setVisibility(View.GONE);
 
+        relativeLayoutRideEndWithImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
+        buttonEndRideSkip.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutRideEndWithImage.setVisibility(View.GONE);
+            }
+        });
+
+        buttonEndRideInviteFriends.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutRideEndWithImage.setVisibility(View.GONE);
+                intentToShareActivity(false);
+            }
+        });
 
 
 
@@ -1642,6 +1667,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+    }
+
+    private void endRideWithGif(){
+        submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
+                rating, "", "");
+        relativeLayoutGreat.setVisibility(View.VISIBLE);
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
+        Glide.with(HomeActivity.this)
+                .load(R.drawable.android_thumbs_up)
+                .placeholder(R.drawable.great_place_holder)
+                        //.fitCenter()
+                .into(imageViewTarget);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                imageViewThumbsUpGif.setImageDrawable(null);
+            }
+        }, 3000);
+    }
+
+    private void endRideWithImages(){
+        relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
     }
 
 
