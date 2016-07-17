@@ -31,11 +31,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -158,7 +156,6 @@ import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
-import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
@@ -2749,7 +2746,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             map.clear();
 
                             if (Data.pickupLatLng != null) {
-                                map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
+                                pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
                             }
 
                             if(Data.dropLatLng != null) {
@@ -4443,9 +4440,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					}
 				}
 			}
-			if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
-				addUserCurrentLocationAddressMarker(userLatLng);
-			}
+//			if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
+//				addUserCurrentLocationAddressMarker(userLatLng);
+//			}
         } catch (Exception e) {
             e.printStackTrace();
         }

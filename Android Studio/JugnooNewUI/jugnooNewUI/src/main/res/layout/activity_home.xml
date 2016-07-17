@@ -273,7 +273,9 @@
         android:id="@+id/relativeLayoutRideEndWithImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone"
+        android:soundEffectsEnabled="false"
+        >
 
         <ImageView
             android:id="@+id/imageViewRideEndWithImage"

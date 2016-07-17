@@ -354,7 +354,8 @@ public class SlidingBottomPanel {
 
     private void updateFareStructureUI(){
         for (int i = 0; i < Data.regions.size(); i++) {
-            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
+            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                    && Data.regions.get(i).getRideType().equals(getRegionSelected().getRideType())) {
                 Data.fareStructure = Data.regions.get(i).getFareStructure();
                 break;
             }

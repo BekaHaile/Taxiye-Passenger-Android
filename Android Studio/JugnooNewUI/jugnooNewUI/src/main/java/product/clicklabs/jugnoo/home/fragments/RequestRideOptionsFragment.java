@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,7 +26,6 @@ import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -35,7 +33,6 @@ import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
-import product.clicklabs.jugnoo.home.dialogs.PoolFareDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
@@ -424,7 +421,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updateFareStructureUI(){
         for (int i = 0; i < Data.regions.size(); i++) {
-            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
+            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                    && Data.regions.get(i).getRideType().equals(getRegionSelected().getRideType())) {
                 Data.fareStructure = Data.regions.get(i).getFareStructure();
                 break;
             }
