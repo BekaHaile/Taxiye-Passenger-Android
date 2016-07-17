@@ -249,7 +249,8 @@ public class ApiFindADriver {
 						for (int i = 0; i < Data.regions.size(); i++) {
 							try {
 								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())) {
+										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+										) {
 									Data.regions.get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
@@ -257,7 +258,8 @@ public class ApiFindADriver {
 							}
 						}
 						if (regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
-								&& regionSelected.getRideType().equals(fareStructure.getRideType())) {
+								&& regionSelected.getRideType().equals(fareStructure.getRideType())
+								) {
 							Data.fareStructure = fareStructure1;
 						}
 					}

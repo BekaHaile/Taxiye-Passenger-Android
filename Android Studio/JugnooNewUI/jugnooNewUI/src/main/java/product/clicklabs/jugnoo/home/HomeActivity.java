@@ -165,6 +165,7 @@ import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
+import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
@@ -1368,20 +1369,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     rating = 5;
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
                             rating, "", "");
-                    relativeLayoutGreat.setVisibility(View.VISIBLE);
-                    GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
-                    Glide.with(HomeActivity.this)
-                            .load(R.drawable.android_thumbs_up)
-                            .placeholder(R.drawable.great_place_holder)
-                            //.fitCenter()
-                            .into(imageViewTarget);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageViewThumbsUpGif.setImageDrawable(null);
+                    if(Data.userData != null){
+                        if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
+                            endRideWithImages(R.drawable.ride_end_image_1);
+                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
+                            endRideWithImages(R.drawable.ride_end_image_2);
+                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
+                            endRideWithImages(R.drawable.ride_end_image_3);
+                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
+                            endRideWithImages(R.drawable.ride_end_image_4);
+                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                            endRideWithGif();
                         }
-                    }, 3000);
-
+                    }
                 }
             }
         });
@@ -1670,8 +1670,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void endRideWithGif(){
-        submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
-                rating, "", "");
         relativeLayoutGreat.setVisibility(View.VISIBLE);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
         Glide.with(HomeActivity.this)
@@ -1687,8 +1685,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }, 3000);
     }
 
-    private void endRideWithImages(){
+    private void endRideWithImages(int drawable){
         relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
+        imageViewRideEndWithImage.setImageResource(drawable);
     }
 
 
@@ -2322,6 +2321,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             updateInRideAddPaytmButtonText();
 			setPaymentOptionInRide();
+            textViewRideEndWithImage.setText(Data.userData.getRideEndGoodFeedbackText());
 
             slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
         } catch (Exception e) {
@@ -7302,18 +7302,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            relativeLayoutGreat.setVisibility(View.GONE);
-                                            try {
-                                                Data.driverInfos.clear();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+                                    if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                submitFeedbackToInitial(givenRating);
                                             }
-                                            afterRideFeedbackSubmitted(givenRating, false);
-                                        }
-                                    }, 3000);
+                                        }, 3000);
+                                    } else {
+                                        submitFeedbackToInitial(givenRating);
+                                    }
+
+
                                     //}, System.currentTimeMillis() - thumbsUpGifStartTime > 10000 ? 10000: System.currentTimeMillis() - thumbsUpGifStartTime);
                                     try {
                                         JSONObject map = new JSONObject();
@@ -7379,6 +7379,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void submitFeedbackToInitial(int givenRating){
+        relativeLayoutGreat.setVisibility(View.GONE);
+        try {
+            Data.driverInfos.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        afterRideFeedbackSubmitted(givenRating, false);
     }
 
     @Override

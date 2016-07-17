@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
@@ -212,6 +213,8 @@ public class JSONParser implements Constants {
         String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
         String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
         int inviteFriendButton = userData.optInt("invite_friend_button", 0);
+        int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal());
+        String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -256,7 +259,7 @@ public class JSONParser implements Constants {
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
                 poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
-                inviteFriendButton);
+                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText);
 
     }
 
@@ -470,7 +473,8 @@ public class JSONParser implements Constants {
                         for (int i = 0; i < Data.regions.size(); i++) {
                             try {
                                 if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-                                        && Data.regions.get(i).getRideType().equals(fareStructure.getRideType())) {
+                                        && Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+                                        ) {
                                     Data.regions.get(i).setFareStructure(fareStructure1);
                                 }
                             } catch (Exception e) {
