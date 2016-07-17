@@ -168,19 +168,26 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayoutRequestMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="273px"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
         >
 
+        <View
+            android:id="@+id/viewPoolInfoBarAnim"
+            android:layout_width="match_parent"
+            android:layout_height="74px"
+            android:visibility="gone"
+            />
+
         <RelativeLayout
             android:id="@+id/relativeLayoutRequest"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/relativeLayoutPoolInfoBar"
-            android:layout_marginBottom="15px"
+            android:layout_height="187px"
+            android:layout_marginBottom="12px"
             android:animateLayoutChanges="true"
             android:soundEffectsEnabled="false">
 
@@ -254,12 +261,18 @@
 
         </RelativeLayout>
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@drawable/shadow_up"
+            />
         <RelativeLayout
             android:id="@+id/relativeLayoutPoolInfoBar"
             android:layout_width="match_parent"
             android:layout_height="70px"
             android:background="@drawable/background_pool_info"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/textViewPoolInfo1"

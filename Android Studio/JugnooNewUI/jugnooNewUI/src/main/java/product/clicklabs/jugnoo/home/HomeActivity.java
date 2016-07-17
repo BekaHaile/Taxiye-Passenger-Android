@@ -326,6 +326,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1,
             textViewRideEndWithImage;
     private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
+    private View viewPoolInfoBarAnim;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, imageViewJugnooPool, imageViewJugnooPoolExtra,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
@@ -594,6 +595,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewOfferConfirm.setVisibility(View.GONE);
         relativeLayoutOfferConfirm = (RelativeLayout) findViewById(R.id.linearLayoutOfferConfirm);
         relativeLayoutPoolInfoBar = (RelativeLayout) findViewById(R.id.relativeLayoutPoolInfoBar);
+        viewPoolInfoBarAnim = findViewById(R.id.viewPoolInfoBarAnim);
+        viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
         textViewPoolInfo1 = (TextView) findViewById(R.id.textViewPoolInfo1);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(this));
 
@@ -2992,8 +2995,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
-    public RelativeLayout getRelativeLayoutPoolInfoBar() {
-        return relativeLayoutPoolInfoBar;
+    public View getViewPoolInfoBarAnim() {
+        return viewPoolInfoBarAnim;
     }
 
     private void setZeroRatingView(){
@@ -7713,7 +7716,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                         textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                     }
-                    relativeLayoutPoolInfoBar.setVisibility(View.GONE);
+                    viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
                     setGoogleMapPadding(0);
                 }
                 slidingBottomPanel.getRequestRideOptionsFragment()
@@ -7735,7 +7738,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
-                relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+                viewPoolInfoBarAnim.setVisibility(View.GONE);
                 textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1());
                 //setGoogleMapPadding(70);
             }

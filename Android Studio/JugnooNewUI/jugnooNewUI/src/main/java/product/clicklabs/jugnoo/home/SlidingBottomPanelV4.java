@@ -4,18 +4,12 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -24,7 +18,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
@@ -89,7 +82,7 @@ public class SlidingBottomPanelV4 {
             public void onPanelSlide(View panel, float slideOffset) {
                 //Log.v("slideOffset", "---> "+slideOffset);
                 if(slideOffset > 0.2f){
-                    activity.getRelativeLayoutPoolInfoBar().setVisibility(View.GONE);
+                    activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
                 }
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
@@ -105,7 +98,7 @@ public class SlidingBottomPanelV4 {
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
                 activity.setGoogleMapPadding(15);
-                activity.getRelativeLayoutPoolInfoBar().setVisibility(View.GONE);
+                activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -319,6 +312,7 @@ public class SlidingBottomPanelV4 {
         } else{
             linearLayoutSlidingBottomSingle.setVisibility(View.VISIBLE);
             linearLayoutSlidingBottom.setVisibility(View.GONE);
+            activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
         }
     }
 
