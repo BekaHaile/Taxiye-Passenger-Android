@@ -468,11 +468,16 @@ public class JSONParser implements Constants {
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
                         for (int i = 0; i < Data.regions.size(); i++) {
-                            try {if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
-                                Data.regions.get(i).setFareStructure(fareStructure1);
-                            }} catch (Exception e) {e.printStackTrace();}
+                            try {
+                                if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+                                        && Data.regions.get(i).getRideType().equals(fareStructure.getRideType())) {
+                                    Data.regions.get(i).setFareStructure(fareStructure1);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        if(Data.fareStructure == null){
+                        if (Data.fareStructure == null) {
                             Data.fareStructure = fareStructure1;
                         }
                     }
