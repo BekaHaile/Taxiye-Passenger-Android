@@ -889,6 +889,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
                 relativeLayoutRideEndWithImage.setVisibility(View.GONE);
+                submitFeedbackToInitial(5);
             }
         });
 
@@ -897,6 +898,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "invite friends");
                 intentToShareActivity(false);
+                submitFeedbackToInitial(5);
             }
         });
 
@@ -2384,7 +2386,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         textViewThumbsDown.setVisibility(View.INVISIBLE);*/
 
                         Data.endRideData.setDriverNameCarName(Data.assignedDriverInfo.name, Data.assignedDriverInfo.carNumber);
-                        Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0);
+                        Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0f);
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2615,10 +2617,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             map.clear();
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
-
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
-                            if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0), 0) != 0){
-                                driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0));
+                            if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0){
+                                driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                             } else{
                                 driverLocationMarker.setRotation((float)Data.assignedDriverInfo.getBearing());
                             }
@@ -2682,8 +2683,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
 
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
-                            if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0), 0) != 0){
-                                driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0));
+                            if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0){
+                                driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                             }
                             Log.i("marker added", "REQUEST_FINAL");
 
@@ -3395,10 +3396,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
             if (!"".equalsIgnoreCase(Data.assignedDriverInfo.getEta())) {
                 try {
-                    pickupLocationMarker.setIcon(BitmapDescriptorFactory
-                            .fromBitmap(CustomMapMarkerCreator
-                                    .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
-                                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+                    if(Data.dropLatLng != null){
+                        pickupLocationMarker.setIcon(BitmapDescriptorFactory
+                                .fromBitmap(CustomMapMarkerCreator
+                                        .getTextAssignBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
+                                                getResources().getDimensionPixelSize(R.dimen.text_size_24))));
+                    } else {
+                        pickupLocationMarker.setIcon(BitmapDescriptorFactory
+                                .fromBitmap(CustomMapMarkerCreator
+                                        .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
+                                                getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4352,10 +4360,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     .fromBitmap(CustomMapMarkerCreator
                             .createPinMarkerBitmapStart(HomeActivity.this, assl)));
         } else{
-            markerOptions.icon(BitmapDescriptorFactory
-                    .fromBitmap(CustomMapMarkerCreator
-                            .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
-                                    getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+            if(Data.dropLatLng != null){
+                markerOptions.icon(BitmapDescriptorFactory
+                        .fromBitmap(CustomMapMarkerCreator
+                                .getTextAssignBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
+                                        getResources().getDimensionPixelSize(R.dimen.text_size_24))));
+            } else{
+                markerOptions.icon(BitmapDescriptorFactory
+                        .fromBitmap(CustomMapMarkerCreator
+                                .getTextBitmap(HomeActivity.this, assl, Data.assignedDriverInfo.getEta(),
+                                        getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+            }
         }
         return markerOptions;
     }
@@ -7308,7 +7323,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 submitFeedbackToInitial(givenRating);
                                             }
                                         }, 3000);
-                                    } else {
+                                    } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
                                         submitFeedbackToInitial(givenRating);
                                     }
 

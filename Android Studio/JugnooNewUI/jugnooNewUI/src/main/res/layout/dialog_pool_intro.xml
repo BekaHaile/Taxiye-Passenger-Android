@@ -178,12 +178,4 @@
     </LinearLayout>
 
 
-    <ImageView
-        android:layout_width="336px"
-        android:layout_height="148px"
-        android:src="@drawable/pool_intro_arrow"
-        android:tag="mwar"
-        android:layout_marginTop="20px"
-        android:layout_below="@+id/linearLayoutInner"
-        android:layout_marginLeft="40px"/>
 </RelativeLayout>

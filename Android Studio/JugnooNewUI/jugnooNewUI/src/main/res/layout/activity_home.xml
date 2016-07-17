@@ -263,87 +263,10 @@
 
         </RelativeLayout>
 
+
     </RelativeLayout>
 
     <!-- menu layout -->
     <include layout="@layout/layout_home_activity_menu" />
-
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutRideEndWithImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:soundEffectsEnabled="false">
-
-        <ImageView
-            android:id="@+id/imageViewRideEndWithImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ride_end_image_1"
-            android:scaleType="centerCrop"/>
-
-        <ImageView
-            android:layout_width="636px"
-            android:layout_height="95px"
-            android:layout_marginTop="34px"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/happy_text"
-            android:tag="mwar"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
-            android:layout_marginRight="50px"
-            android:layout_marginBottom="56px"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/background_white_rounded">
-
-            <TextView
-                android:id="@+id/textViewRideEndWithImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
-                android:layout_marginRight="44px"
-                android:layout_marginLeft="44px"
-                android:layout_marginBottom="30px"
-                android:gravity="center"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
-                android:text="@string/end_ride_with_image_text"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewRideEndWithImage"
-                android:gravity="center"
-                android:layout_marginBottom="32px"
-                android:tag="mwar"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/buttonEndRideSkip"
-                    android:layout_width="152px"
-                    android:layout_height="80px"
-                    android:text="@string/skip"
-                    android:background="@drawable/button_white_grey_theme_border_selector"
-                    android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_34"
-                    android:textAllCaps="true"/>
-
-                <Button
-                    android:id="@+id/buttonEndRideInviteFriends"
-                    android:layout_width="364px"
-                    android:layout_height="80px"
-                    android:text="@string/invite_friends"
-                    android:layout_marginLeft="20px"
-                    android:background="@drawable/background_theme_gradient_selector"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_34"
-                    android:textAllCaps="true"/>
-            </LinearLayout>
-        </RelativeLayout>
-    </RelativeLayout>
-
 
 </android.support.v4.widget.DrawerLayout>
