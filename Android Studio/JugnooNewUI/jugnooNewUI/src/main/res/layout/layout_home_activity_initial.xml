@@ -170,7 +170,7 @@
     <LinearLayout
         android:id="@+id/linearLayoutRequestMain"
         android:layout_width="match_parent"
-        android:layout_height="273px"
+        android:layout_height="271px"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
@@ -184,10 +184,9 @@
             />
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutRequest"
             android:layout_width="match_parent"
             android:layout_height="187px"
-            android:layout_marginBottom="12px"
+            android:layout_marginBottom="10px"
             android:animateLayoutChanges="true"
             android:soundEffectsEnabled="false">
 

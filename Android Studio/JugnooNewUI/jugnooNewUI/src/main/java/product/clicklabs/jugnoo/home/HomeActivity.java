@@ -246,7 +246,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewDropCross;
 	ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation, confirmMyLocationBtn;
-    RelativeLayout relativeLayoutRequest;
+    LinearLayout linearLayoutRequestMain;
     RelativeLayout relativeLayoutInAppCampaignRequest;
     TextView textViewInAppCampaignRequest, textViewTotalFare, textViewTotalFareValue, textViewIncludes;
     Button buttonCancelInAppCampaignRequest;
@@ -543,8 +543,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewJugnooPool.setVisibility(View.GONE);
         imageViewJugnooPoolExtra = (ImageView) findViewById(R.id.imageViewJugnooPoolExtra);
         imageViewJugnooPoolExtra.setVisibility(View.GONE);
-        relativeLayoutRequest = (RelativeLayout) findViewById(R.id.relativeLayoutRequest);
-        relativeLayoutRequest.setVisibility(View.VISIBLE);
+        linearLayoutRequestMain = (LinearLayout) findViewById(R.id.linearLayoutRequestMain);
+        linearLayoutRequestMain.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest = (RelativeLayout) findViewById(R.id.relativeLayoutInAppCampaignRequest);
         relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
         textViewInAppCampaignRequest = (TextView) findViewById(R.id.textViewInAppCampaignRequest);
@@ -2487,7 +2487,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         findADriverFinishing();
                         setGoogleMapPadding(0);
 
-                        relativeLayoutRequest.setVisibility(View.VISIBLE);
+                        linearLayoutRequestMain.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setEnabled(true);
                         imageViewConfirmDropLocationEdit.setVisibility(View.GONE);
                         if(confirmedScreenOpened){
@@ -2498,7 +2498,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
                                 fareEstimateForPool();
                             }
-                            relativeLayoutRequest.setVisibility(View.GONE);
+                            linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             relativeLayoutInitialSearchBar.setEnabled(false);
@@ -7772,7 +7772,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onPre() {
                     try {
-                        relativeLayoutRequest.setVisibility(View.GONE);
+                        linearLayoutRequestMain.setVisibility(View.GONE);
                         relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
                         if(Data.campaigns.getMapLeftButton() != null){
 							textViewInAppCampaignRequest.setText(Data.campaigns.getMapLeftButton().getText());
@@ -7931,7 +7931,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void backFromCampaignAvailLoading(){
-        relativeLayoutRequest.setVisibility(View.VISIBLE);
+        linearLayoutRequestMain.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
     }
 
