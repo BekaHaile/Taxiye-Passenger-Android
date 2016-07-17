@@ -896,7 +896,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "invite friends");
-                relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                 intentToShareActivity(false);
             }
         });
@@ -4131,6 +4130,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         intent.putExtra(KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, fromDeepLink);
         startActivity(intent);
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        relativeLayoutRideEndWithImage.setVisibility(View.GONE);
 
         try {
             if(fromDeepLink){
@@ -7716,11 +7716,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void showPoolInforBar(){
-        if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
-                (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
-            relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
-            setGoogleMapPadding(70);
+        try {
+            if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
+                    (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
+                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
+                relativeLayoutPoolInfoBar.setVisibility(View.VISIBLE);
+                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1());
+                //setGoogleMapPadding(70);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

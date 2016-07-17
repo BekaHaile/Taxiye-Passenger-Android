@@ -213,7 +213,7 @@ public class JSONParser implements Constants {
         String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
         String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
         int inviteFriendButton = userData.optInt("invite_friend_button", 0);
-        int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal());
+        int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
         String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
 
         try {
