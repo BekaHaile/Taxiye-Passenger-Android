@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/background_white_rounded"
+        android:background="@drawable/background_white_rounded_bordered"
         android:orientation="vertical"
         android:splitMotionEvents="false"
         android:soundEffectsEnabled="false"
@@ -23,7 +23,7 @@
         <ImageView
             android:id="@+id/imageViewPool"
             android:layout_width="630px"
-            android:layout_height="296px"
+            android:layout_height="308px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16px"
             android:layout_marginLeft="16px"
