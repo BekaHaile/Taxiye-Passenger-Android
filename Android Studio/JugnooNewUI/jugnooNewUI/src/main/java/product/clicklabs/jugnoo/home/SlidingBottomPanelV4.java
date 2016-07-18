@@ -8,10 +8,6 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -87,6 +83,10 @@ public class SlidingBottomPanelV4 {
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
+                //Log.v("slideOffset", "---> "+slideOffset);
+                if(slideOffset > 0.2f){
+                    activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                }
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
                         && slideOffset < 1f) {
@@ -101,6 +101,7 @@ public class SlidingBottomPanelV4 {
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
                 activity.setGoogleMapPadding(15);
+                activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -109,6 +110,7 @@ public class SlidingBottomPanelV4 {
                 activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
                 activity.setGoogleMapPadding(0);
+                activity.showPoolInforBar();
             }
 
             @Override
@@ -186,9 +188,10 @@ public class SlidingBottomPanelV4 {
             for(Region region : Data.regions){
                 if(region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
                         (!region.getOfferTexts().getText1().equalsIgnoreCase(""))){
-                    slidingUpPanelLayout.setPanelHeight(heightWithBar);
+                    //slidingUpPanelLayout.setPanelHeight(heightWithBar);
+                    slidingUpPanelLayout.setPanelHeight(heightWithourBar);
                     try {
-                        getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.VISIBLE);
+                        //getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -196,7 +199,7 @@ public class SlidingBottomPanelV4 {
                 }
             }
             slidingUpPanelLayout.setPanelHeight(heightWithourBar);
-            getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.GONE);
+            //getRequestRideOptionsFragment().getRelativeLayoutPoolInfoBar().setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -288,6 +291,7 @@ public class SlidingBottomPanelV4 {
         } else{
             linearLayoutSlidingBottomSingle.setVisibility(View.VISIBLE);
             linearLayoutSlidingBottom.setVisibility(View.GONE);
+            activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
         }
     }
 

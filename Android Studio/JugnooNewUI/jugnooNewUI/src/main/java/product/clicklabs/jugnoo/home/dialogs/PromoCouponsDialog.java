@@ -33,7 +33,10 @@ public class PromoCouponsDialog {
 
 	private RecyclerView recyclerViewPromoCoupons;
 	private PromoCouponsAdapter promoCouponsAdapter;
-	private Button buttonContinue;
+	private Button buttonContinue, buttonInviteFriends;
+	private LinearLayout linearLayoutNoCurrentOffers;
+	private TextView textViewNoCurrentOffers;
+	private ImageView imageViewOffers;
 
 	public PromoCouponsDialog(HomeActivity activity, Callback callback) {
 		this.activity = activity;
@@ -80,29 +83,30 @@ public class PromoCouponsDialog {
 			buttonContinue.setTypeface(Fonts.mavenRegular(activity));
 			RelativeLayout relativeLayoutOfferImage = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutOfferImage);
 			RelativeLayout relativeLayoutBottomButtons = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutBottomButtons);
-			ImageView imageViewWhoops = (ImageView) dialog.findViewById(R.id.imageViewWhoops);
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
-			TextView textViewNoCurrentOffers = (TextView) dialog.findViewById(R.id.textViewNoCurrentOffers);
+			linearLayoutNoCurrentOffers = (LinearLayout)dialog.findViewById(R.id.linearLayoutNoCurrentOffers);
+			textViewNoCurrentOffers = (TextView)dialog.findViewById(R.id.textViewNoCurrentOffers);textViewNoCurrentOffers.setTypeface(Fonts.mavenMedium(activity));
+			buttonInviteFriends = (Button)dialog.findViewById(R.id.buttonInviteFriends);buttonInviteFriends.setTypeface(Fonts.mavenMedium(activity));
+			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
 
 			if(Data.promoCoupons.size() > 0){
 				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
 				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
 				relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
-				imageViewWhoops.setVisibility(View.GONE);
-				imageViewClose.setVisibility(View.GONE);
-				textViewNoCurrentOffers.setVisibility(View.GONE);
+				linearLayoutNoCurrentOffers.setVisibility(View.GONE);
+				imageViewOffers.setBackgroundResource(R.drawable.ic_offer_popup);
 			} else{
-				relativeLayoutOfferImage.setVisibility(View.GONE);
+				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
 				recyclerViewPromoCoupons.setVisibility(View.GONE);
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
-				imageViewWhoops.setVisibility(View.VISIBLE);
-				imageViewClose.setVisibility(View.VISIBLE);
-				textViewNoCurrentOffers.setVisibility(View.VISIBLE);
+				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
+				imageViewOffers.setBackgroundResource(R.drawable.no_current_offer);
 			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					dialog.dismiss();
 					callback.onSkipped();
@@ -121,8 +125,18 @@ public class PromoCouponsDialog {
 			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "continue");
 					dialog.dismiss();
 					callback.onCouponApplied();
+				}
+			});
+
+			buttonInviteFriends.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "invite friends");
+					dialog.dismiss();
+					callback.onInviteFriends();
 				}
 			});
 
@@ -166,6 +180,7 @@ public class PromoCouponsDialog {
 	public interface Callback{
 		void onCouponApplied();
 		void onSkipped();
+		void onInviteFriends();
 	}
 
 

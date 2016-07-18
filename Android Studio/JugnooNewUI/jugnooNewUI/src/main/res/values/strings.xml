@@ -197,6 +197,8 @@
 	<string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
 	<string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
 	<string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
+	<string name="no_current_offer_popup_text">Get free rides by referring Jugnoo to friends.Every successful referral gets you a free ride.</string>
+	<string name="end_ride_with_image_text">Gift your friend a Jugnoo Ride worth 50 &amp; Get one for yourself as well. </string>
 
 
     <!-- wallet screen-->
@@ -283,6 +285,7 @@
 	<!-- Ride Summary New Strings -->
 	<string name="total_fare">TOTAL FARE</string>
 	<string name="total_fare_colon">TOTAL FARE: </string>
+	<string name="maximum_fare_colon">MAXIMUM FARE:</string>
 	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">How was your ride ?</string>
@@ -896,6 +899,7 @@
 	<string name="fare_details">Fare Details</string>
 	<string name="pay_for_your_rides_using">Pay for your rides using</string>
 	<string name="enter_destination">Enter Destination</string>
+	<string name="destination_required">Destination required</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
 	<string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
 	<string name="base_fare">Base Fare</string>
@@ -905,7 +909,6 @@
 	<string name="referrals">Referrals</string>
 	<string name="referrals_tab">REFER &amp; WIN</string>
 	<string name="leaderboard">Leaderboard</string>
-	<string name="scores_on_leaderboard">Scores on Leaderboard</string>
 	<string name="activity">Activity</string>
 	<string name="enter_promo_code">Enter Promo code</string>
 	<string name="add_promo_code">Add Promo Code</string>
@@ -964,6 +967,7 @@
 	<string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
 	<string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
 	<string name="none">None</string>
+	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
 
 
 </resources>

@@ -49,7 +49,7 @@ public class SlidingBottomPanel {
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSurgeOverSlidingBottom;
-    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue, textViewPoolInfo1, textViewPoolInfo2;
+    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue, textViewPoolInfo1;
 
     private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
@@ -82,8 +82,6 @@ public class SlidingBottomPanel {
         relativeLayoutPoolInfoBar = (RelativeLayout)view.findViewById(R.id.relativeLayoutPoolInfoBar);
         textViewPoolInfo1 = (TextView)view.findViewById(R.id.textViewPoolInfo1);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
-        textViewPoolInfo2 = (TextView)view.findViewById(R.id.textViewPoolInfo2);
-        textViewPoolInfo2.setTypeface(Fonts.avenirNext(activity));
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
@@ -351,7 +349,8 @@ public class SlidingBottomPanel {
 
     private void updateFareStructureUI(){
         for (int i = 0; i < Data.regions.size(); i++) {
-            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
+            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                    && Data.regions.get(i).getRideType().equals(getRegionSelected().getRideType())) {
                 Data.fareStructure = Data.regions.get(i).getFareStructure();
                 break;
             }

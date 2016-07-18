@@ -75,6 +75,8 @@
 
             </RelativeLayout>
 
+
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutSlidingBottomParent"
                 android:layout_width="match_parent"
@@ -84,6 +86,7 @@
                 <include layout="@layout/layout_home_activity_sliding_bottom"/>
 
                 <include layout="@layout/layout_home_activity_sliding_bottom_v4" />
+
 
             </RelativeLayout>
 
@@ -260,10 +263,10 @@
 
         </RelativeLayout>
 
+
     </RelativeLayout>
 
     <!-- menu layout -->
     <include layout="@layout/layout_home_activity_menu" />
-
 
 </android.support.v4.widget.DrawerLayout>

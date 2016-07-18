@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo.apis;
 
-import android.app.Activity;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -179,7 +177,6 @@ public class ApiFindADriver {
 			}
 
 			Data.campaigns = findADriverResponse.getCampaigns();
-			Data.userData.setIsPoolEnabled(findADriverResponse.getIsPoolEnabled()==null ? 0 : findADriverResponse.getIsPoolEnabled());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -249,11 +246,20 @@ public class ApiFindADriver {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
 						for (int i = 0; i < Data.regions.size(); i++) {
-							try {if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
+							try {
+
+								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+										) {
 									Data.regions.get(i).setFareStructure(fareStructure1);
-								}} catch (Exception e) {e.printStackTrace();}
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
-						if(regionSelected.getVehicleType().equals(fareStructure.getVehicleType())){
+						if (regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
+								&& regionSelected.getRideType().equals(fareStructure.getRideType())
+								) {
 							Data.fareStructure = fareStructure1;
 						}
 					}

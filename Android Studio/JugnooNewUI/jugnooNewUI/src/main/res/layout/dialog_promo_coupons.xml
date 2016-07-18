@@ -20,20 +20,47 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutOfferImage"
             android:layout_width="match_parent"
-            android:layout_height="252px"
+            android:layout_height="wrap_content"
             android:background="@drawable/background_orange_tr"
             android:visibility="visible">
 
             <ImageView
-                android:layout_width="374px"
-                android:layout_height="213px"
+                android:id="@+id/imageViewOffers"
+                android:layout_width="512px"
+                android:layout_height="252px"
                 android:tag="mwar"
+                android:layout_marginTop="22px"
                 android:src="@drawable/ic_offer_popup"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 />
-
-
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutNoCurrentOffers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
+            android:layout_marginBottom="50px"
+            android:layout_marginRight="55px"
+            android:layout_marginLeft="55px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewNoCurrentOffers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_current_offer_popup_text"
+                android:textSize="@dimen/text_size_32"
+                android:textColor="@color/text_color"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/buttonInviteFriends"
+                android:layout_marginTop="50px"
+                android:text="@string/invite_friends"
+                style="@style/ButtonTheme"/>
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewPromoCoupons"
@@ -47,26 +74,6 @@
             android:layout_marginBottom="30px"
             >
         </android.support.v7.widget.RecyclerView>
-
-        <ImageView
-            android:id="@+id/imageViewWhoops"
-            android:layout_width="268px"
-            android:layout_height="381px"
-            android:src="@drawable/ic_no_items"
-            android:layout_marginTop="70px"
-            android:tag="mwar"
-            android:layout_gravity="center_horizontal"/>
-
-        <TextView
-            android:id="@+id/textViewNoCurrentOffers"
-            android:layout_width="match_parent"
-            android:layout_height="96px"
-            android:text="@string/no_current_offers"
-            android:gravity="center"
-            android:layout_marginTop="50px"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32"
-            android:background="@drawable/bg_menu_item_selector_color_blrr"/>
 
 
         <RelativeLayout
@@ -113,6 +120,7 @@
 
     <ImageView
         android:id="@+id/imageViewClose"
+        android:visibility="gone"
         style="@style/cross_popup"
         />
 

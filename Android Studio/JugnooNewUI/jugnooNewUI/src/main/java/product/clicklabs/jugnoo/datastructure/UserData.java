@@ -42,9 +42,9 @@ public class UserData {
 	private String city, cityReg, destinationHelpText, inRideSendInviteTextBold, inRideSendInviteTextNormal;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
-	private int isPoolEnabled, inviteFriendButton;
+	private int inviteFriendButton, rideEndGoodFeedbackViewType;
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
-			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3;
+			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackText;
 	private double driverFareFactor;
 
 	private int paytmEnabled;
@@ -69,6 +69,7 @@ public class UserData {
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
 					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3, int inviteFriendButton,
+					int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText,
 					int paytmEnabled, int mobikwikEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
@@ -140,6 +141,8 @@ public class UserData {
 		this.poolDestinationPopupText2 = poolDestinationPopupText2;
 		this.poolDestinationPopupText3 = poolDestinationPopupText3;
 		this.inviteFriendButton = inviteFriendButton;
+		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
+		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 
 		checkUserImage();
 
@@ -451,14 +454,6 @@ public class UserData {
 		this.referralActivityEnabled = referralActivityEnabled;
 	}
 
-	public int getIsPoolEnabled() {
-		return isPoolEnabled;
-	}
-
-	public void setIsPoolEnabled(int isPoolEnabled) {
-		this.isPoolEnabled = isPoolEnabled;
-	}
-
 	public String getDestinationHelpText() {
 		return destinationHelpText;
 	}
@@ -632,5 +627,21 @@ public class UserData {
 
 	public void setInviteFriendButton(int inviteFriendButton) {
 		this.inviteFriendButton = inviteFriendButton;
+	}
+
+	public int getRideEndGoodFeedbackViewType() {
+		return rideEndGoodFeedbackViewType;
+	}
+
+	public void setRideEndGoodFeedbackViewType(int rideEndGoodFeedbackViewType) {
+		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
+	}
+
+	public String getRideEndGoodFeedbackText() {
+		return rideEndGoodFeedbackText;
+	}
+
+	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
+		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
 }

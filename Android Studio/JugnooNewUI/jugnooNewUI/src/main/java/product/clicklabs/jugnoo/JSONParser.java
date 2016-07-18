@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
@@ -210,6 +211,8 @@ public class JSONParser implements Constants {
         String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
         String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
         int inviteFriendButton = userData.optInt("invite_friend_button", 0);
+        int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+        String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -259,7 +262,8 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
-                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, inviteFriendButton,
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
+                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText,
                 paytmEnabled, mobikwikEnabled);
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
@@ -324,7 +328,7 @@ public class JSONParser implements Constants {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
                     Data.userData.userEmail, Data.userData.phoneNo,
-                    Data.userData.getCity(), Data.userData.getCityReg());
+                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
@@ -404,7 +408,6 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
-            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled() == null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
             Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
@@ -477,11 +480,17 @@ public class JSONParser implements Constants {
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
                         for (int i = 0; i < Data.regions.size(); i++) {
-                            try {if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
-                                Data.regions.get(i).setFareStructure(fareStructure1);
-                            }} catch (Exception e) {e.printStackTrace();}
+                            try {
+                                if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+                                        && Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+                                        ) {
+                                    Data.regions.get(i).setFareStructure(fareStructure1);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        if(Data.fareStructure == null){
+                        if (Data.fareStructure == null) {
                             Data.fareStructure = fareStructure1;
                         }
                     }

@@ -35,8 +35,8 @@
 
         <ImageView
             android:id="@+id/imageViewMultipleSurge"
-            android:layout_width="20px"
-            android:layout_height="32px"
+            android:layout_width="21px"
+            android:layout_height="33px"
             android:visibility="visible"
             android:layout_marginTop="15px"
             android:layout_toLeftOf="@+id/imageViewTab"
