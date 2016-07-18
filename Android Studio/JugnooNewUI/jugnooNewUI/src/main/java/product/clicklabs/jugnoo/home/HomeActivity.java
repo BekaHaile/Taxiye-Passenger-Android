@@ -1608,7 +1608,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             openPushDialog();
-            showPoolIntroDialog();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4234,6 +4233,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     setJugnooPool();
+                    showPoolIntroDialog();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
