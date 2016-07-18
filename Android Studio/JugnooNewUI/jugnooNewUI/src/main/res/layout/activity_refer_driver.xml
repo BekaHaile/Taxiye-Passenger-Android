@@ -56,7 +56,7 @@
                 android:layout_height="226px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="55px"
-                android:src="@drawable/ic_refer_driver"
+                android:src="@drawable/ic_promotions_driver_refer"
                 android:tag="mwar" />
 
             <TextView

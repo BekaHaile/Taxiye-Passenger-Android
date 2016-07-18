@@ -177,7 +177,6 @@ public class ApiFindADriver {
 			}
 
 			Data.campaigns = findADriverResponse.getCampaigns();
-			Data.userData.setIsPoolEnabled(findADriverResponse.getIsPoolEnabled()==null ? 0 : findADriverResponse.getIsPoolEnabled());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -40,7 +40,7 @@ public class UserData {
 	private String city, cityReg, destinationHelpText, inRideSendInviteTextBold, inRideSendInviteTextNormal;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
-	private int isPoolEnabled, inviteFriendButton, rideEndGoodFeedbackViewType;
+	private int inviteFriendButton, rideEndGoodFeedbackViewType;
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
 			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackText;
 	private double driverFareFactor;
@@ -473,14 +473,6 @@ public class UserData {
 
 	public void setReferralActivityEnabled(int referralActivityEnabled) {
 		this.referralActivityEnabled = referralActivityEnabled;
-	}
-
-	public int getIsPoolEnabled() {
-		return isPoolEnabled;
-	}
-
-	public void setIsPoolEnabled(int isPoolEnabled) {
-		this.isPoolEnabled = isPoolEnabled;
 	}
 
 	public String getDestinationHelpText() {

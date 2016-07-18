@@ -303,7 +303,7 @@ public interface Constants {
 	String KEY_OLD_PASSWORD = "old_password";
 	String KEY_NEW_PASSWORD = "new_password";
 
-	String POOL_INTRO_SHOW = "pool_intro_show";
+	String SP_POOL_INTRO_SHOWN = "sp_pool_intro_shown";
 
 	String KEY_DRIVER_FARE_FACTOR = "driver_fare_factor";
 	String KEY_IS_POOLED = "is_pooled";

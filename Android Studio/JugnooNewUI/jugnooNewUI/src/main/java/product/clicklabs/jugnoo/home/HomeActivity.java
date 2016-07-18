@@ -156,6 +156,7 @@ import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
+import product.clicklabs.jugnoo.home.dialogs.PoolIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
@@ -1579,31 +1580,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-        /*if(Data.userData.getIsPoolEnabled() == 1) {
-            new JugnooPoolTutorial(HomeActivity.this, new JugnooPoolTutorial.Callback() {
-                @Override
-                public void onContinueClicked() {
-
-                }
-
-                @Override
-                public void onMayBeLaterClicked() {
-
-                }
-
-                @Override
-                public void onDialogDismiss() {
-
-                }
-
-                @Override
-                public void notShown() {
-
-                }
-            }).show();
-        }*/
-
-
 //        genieLayout = new GenieLayout(this);
 //        genieLayout.addGenieLayout(drawerLayout, linearLayoutRequestInfo);
 
@@ -1632,6 +1608,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             openPushDialog();
+            showPoolIntroDialog();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4307,24 +4284,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setJugnooPool(){
         try {
-            if(Data.userData.getIsPoolEnabled() == 1){
-                //Glide.with(HomeActivity.this).load(R.drawable.pool_gif_1).placeholder(R.drawable.pool_1).into(imageViewJugnooPool);
-                imageViewJugnooPool.setBackgroundResource(R.drawable.pool_icon_3);
-                /*imageViewJugnooPool.setBackgroundResource(R.drawable.pool_icon_frame_anim);
-                imageViewJugnooPool.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AnimationDrawable frameAnimation =
-                                (AnimationDrawable) imageViewJugnooPool.getBackground();
-                        frameAnimation.start();
-                    }
-                });*/
-                imageViewJugnooPool.setVisibility(View.VISIBLE);
-                imageViewJugnooPoolExtra.setVisibility(View.VISIBLE);
-            } else{
-                imageViewJugnooPool.setVisibility(View.GONE);
-                imageViewJugnooPoolExtra.setVisibility(View.GONE);
-            }
+
+            imageViewJugnooPool.setVisibility(View.GONE);
+            imageViewJugnooPoolExtra.setVisibility(View.GONE);
+
+            //POOL old icon
+//            if(Data.userData.getIsPoolEnabled() == 1){
+//                //Glide.with(HomeActivity.this).load(R.drawable.pool_gif_1).placeholder(R.drawable.pool_1).into(imageViewJugnooPool);
+//                imageViewJugnooPool.setBackgroundResource(R.drawable.pool_icon_3);
+//                /*imageViewJugnooPool.setBackgroundResource(R.drawable.pool_icon_frame_anim);
+//                imageViewJugnooPool.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        AnimationDrawable frameAnimation =
+//                                (AnimationDrawable) imageViewJugnooPool.getBackground();
+//                        frameAnimation.start();
+//                    }
+//                });*/
+//                imageViewJugnooPool.setVisibility(View.VISIBLE);
+//                imageViewJugnooPoolExtra.setVisibility(View.VISIBLE);
+//            } else{
+//                imageViewJugnooPool.setVisibility(View.GONE);
+//                imageViewJugnooPoolExtra.setVisibility(View.GONE);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -8154,5 +8136,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 && Data.dropLatLng != null;
     }
 
+
+    private void showPoolIntroDialog(){
+        try {
+            boolean poolEnabled = false;
+            if(Data.regions != null) {
+                for (Region region : Data.regions) {
+                    if(region.getRideType() == RideTypeValue.POOL.getOrdinal()){
+                        poolEnabled = true;
+                        break;
+                    }
+                }
+            }
+            if(poolEnabled) {
+                new PoolIntroDialog(HomeActivity.this, new PoolIntroDialog.Callback() {
+                    @Override
+                    public void onContinueClicked() {
+
+                    }
+
+                    @Override
+                    public void onMayBeLaterClicked() {
+
+                    }
+
+                    @Override
+                    public void onDialogDismiss() {
+
+                    }
+
+                    @Override
+                    public void notShown() {
+
+                    }
+                }).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

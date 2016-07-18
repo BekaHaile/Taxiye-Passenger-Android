@@ -944,6 +944,7 @@
 	<string name="max_people">MAX PEOPLE:</string>
 	<string name="fares_updated">Fares updated try again</string>
 	<string name="no_current_offers">No Current Offers</string>
+	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
 
 
 </resources>
