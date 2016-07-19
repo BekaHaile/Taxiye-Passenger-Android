@@ -154,6 +154,17 @@
                     android:textSize="@dimen/text_size_26"
                     android:layout_marginTop="10px"
                     />
+
+                <TextView
+                    android:id="@+id/textViewPoolMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/convenience_charge_rupees_format"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26"
+                    android:layout_marginTop="10px"
+                    />
             </LinearLayout>
 
             <RelativeLayout

@@ -217,6 +217,7 @@ public class JSONParser implements Constants {
         int inviteFriendButton = userData.optInt("invite_friend_button", 0);
         int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
         String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+        String baseFarePoolText = userData.optString("base_fare_pool_text", "");
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -261,7 +262,7 @@ public class JSONParser implements Constants {
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
                 poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
-                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText);
+                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText);
 
     }
 

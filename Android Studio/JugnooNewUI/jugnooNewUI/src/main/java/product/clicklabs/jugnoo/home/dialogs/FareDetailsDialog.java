@@ -63,6 +63,7 @@ public class FareDetailsDialog {
 			textViewThresholdDistance.setTypeface(Fonts.mavenLight(activity));
 			TextView textViewConvenienceCharge = (TextView) dialog.findViewById(R.id.textViewConvenienceCharge);
 			textViewConvenienceCharge.setTypeface(Fonts.mavenLight(activity));
+			TextView textViewPoolMessage = (TextView) dialog.findViewById(R.id.textViewPoolMessage);textViewPoolMessage.setTypeface(Fonts.mavenMedium(activity));
 
 			RelativeLayout relativeLayoutPriorityTip = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPriorityTip);
 			TextView textViewPriorityTipValue = (TextView) dialog.findViewById(R.id.textViewPriorityTipValue);

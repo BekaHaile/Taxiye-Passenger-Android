@@ -42,7 +42,8 @@ public class UserData {
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private int inviteFriendButton, rideEndGoodFeedbackViewType;
 	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
-			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackText;
+			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackText,
+			baseFarePoolText;
 	private double driverFareFactor;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -61,7 +62,7 @@ public class UserData {
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
 					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3, int inviteFriendButton,
-					int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText){
+					int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -145,6 +146,7 @@ public class UserData {
 		this.inviteFriendButton = inviteFriendButton;
 		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+		this.baseFarePoolText = baseFarePoolText;
 
 		checkUserImage();
 	}
@@ -593,5 +595,13 @@ public class UserData {
 
 	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+	}
+
+	public String getBaseFarePoolText() {
+		return baseFarePoolText;
+	}
+
+	public void setBaseFarePoolText(String baseFarePoolText) {
+		this.baseFarePoolText = baseFarePoolText;
 	}
 }
