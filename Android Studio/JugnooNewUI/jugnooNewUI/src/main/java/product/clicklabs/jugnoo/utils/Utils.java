@@ -702,6 +702,18 @@ public class Utils {
 		return stateListDrawable;
 	}
 
+
+	public static String retrieveOTPFromSMS(String message){
+		String[] arr = message.split("\\ ");
+		for(String iarr : arr){
+			iarr = iarr.replace(".", "");
+			if(iarr.length() >= 4 && checkIfOnlyDigits(iarr)){
+				return iarr;
+			}
+		}
+		return "";
+	}
+
 }
 
 

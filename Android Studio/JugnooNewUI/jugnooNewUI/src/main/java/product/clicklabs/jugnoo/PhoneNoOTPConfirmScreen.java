@@ -90,9 +90,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			String otp = "";
 			if(intent.hasExtra("message")){
 				String message = intent.getStringExtra("message");
-				String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
-				otp = arr[1];
-				otp = otp.replaceAll("\\.", "");
+				otp = Utils.retrieveOTPFromSMS(message);
 			} else if(intent.hasExtra("otp")){
 				otp = intent.getStringExtra("otp");
 			}

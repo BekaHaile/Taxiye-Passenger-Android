@@ -1030,14 +1030,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			String otp = "";
 			if(intent.hasExtra("message")){
 				String message = intent.getStringExtra("message");
-
-				if(message.toLowerCase().contains("paytm")){
-					otp = message.split("\\ ")[0];
-				} else{
-					String[] arr = message.split("Your\\ One\\ Time\\ Password\\ is\\ ");
-					otp = arr[1];
-					otp = otp.replaceAll("\\.", "");
-				}
+				otp = Utils.retrieveOTPFromSMS(message);
 			} else if(intent.hasExtra(KEY_OTP)){
 				otp = intent.getStringExtra(KEY_OTP);
 			}
