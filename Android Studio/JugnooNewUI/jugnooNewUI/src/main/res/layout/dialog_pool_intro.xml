@@ -119,7 +119,6 @@
                 android:layout_marginTop="10px"
                 android:gravity="center"
                 android:text="Share the Journey"
-                android:textAllCaps="true"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_28" />
 
@@ -131,7 +130,6 @@
                 android:layout_marginTop="10px"
                 android:gravity="center"
                 android:text=" Split the Fare"
-                android:textAllCaps="true"
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/text_size_28" />
 
@@ -145,17 +143,32 @@
             android:layout_marginTop="24px"
             android:src="@color/text_color_light" />
 
-        <TextView
-            android:id="@+id/textViewRidingAlone"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="26px"
             android:gravity="center"
-            android:text="@string/riding_alone"
-            android:textColor="@color/text_color_dark"
-            android:textSize="@dimen/text_size_36" />
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/textViewRidingAlone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Riding Alone?"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_36" />
+
+            <TextView
+                android:id="@+id/textViewRidingAlone1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=" Try Jugnoo Pool"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_36" />
+
+        </LinearLayout>
 
 
         <Button

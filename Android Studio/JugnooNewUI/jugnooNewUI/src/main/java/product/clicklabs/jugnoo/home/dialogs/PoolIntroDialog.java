@@ -63,7 +63,8 @@ public class PoolIntroDialog {
                 ImageView imageViewPool = (ImageView) dialog.findViewById(R.id.imageViewPool);
                 //TextView textViewCoolToPool = (TextView) dialog.findViewById(R.id.textViewCoolToPool); textViewCoolToPool.setTypeface(Fonts.mavenMedium(activity));
                 //TextView textViewShareTheJourney = (TextView) dialog.findViewById(R.id.textViewShareTheJourney); textViewShareTheJourney.setTypeface(Fonts.mavenMedium(activity));
-                TextView textViewRidingAlone = (TextView) dialog.findViewById(R.id.textViewRidingAlone); textViewRidingAlone.setTypeface(Fonts.mavenMedium(activity));
+                TextView textViewRidingAlone = (TextView) dialog.findViewById(R.id.textViewRidingAlone); textViewRidingAlone.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                TextView textViewRidingAlone1 = (TextView) dialog.findViewById(R.id.textViewRidingAlone1); textViewRidingAlone1.setTypeface(Fonts.mavenMedium(activity));
                 Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue); buttonContinue.setTypeface(Fonts.avenirNext(activity));
 
 //                final Spannable coolSB = new SpannableString("COOL");
