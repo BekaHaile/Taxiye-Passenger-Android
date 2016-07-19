@@ -2,44 +2,30 @@ package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
-import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
-import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -59,7 +45,7 @@ public class ApiFareEstimate {
         this.callback = callback;
     }
 
-    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled) {
+    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate) {
         try {
             if (AppStatus.getInstance(context).isOnline(context)) {
                 if (sourceLatLng != null && destLatLng != null) {
@@ -85,7 +71,11 @@ public class ApiFareEstimate {
                                             distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                             timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
                                             callback.onSuccess(list, startAddress, endAddress, distanceText, timeText, distanceValue, timeValue);
-                                            getFareEstimate((Activity) context, sourceLatLng, destLatLng, distanceValue/1000d, timeValue/60d, isPooled);
+                                            if(callFareEstimate) {
+                                                getFareEstimate((Activity) context, sourceLatLng, destLatLng, distanceValue / 1000d, timeValue / 60d, isPooled);
+                                            } else{
+                                                DialogPopup.dismissLoadingDialog();
+                                            }
                                         } else {
                                             FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
                                             DialogPopup.alertPopup((Activity) context, "", "Fare could not be estimated between the selected pickup and drop location");
@@ -102,6 +92,7 @@ public class ApiFareEstimate {
 
                                 @Override
                                 public void failure(RetrofitError error) {
+                                    DialogPopup.dismissLoadingDialog();
                                     callback.onFailure();
                                 }
                             });
@@ -120,7 +111,9 @@ public class ApiFareEstimate {
         void onRetry();
         void onNoRetry();
         void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge);
-        void onPoolSuccess(int fare, int rideDistance, String rideDistanceUnit, int rideTime, String rideTimeUnit, int poolFareId);
+        void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
+                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
+                           String text);
     }
 
     /**
@@ -137,11 +130,12 @@ public class ApiFareEstimate {
                 params.put("drop_longitude", ""+desLatLng.longitude);
                 params.put("ride_distance", "" + distanceValue);
                 params.put("ride_time", "" + timeValue);
-                params.put("is_pooled", "" + isPooled);
+                params.put(Constants.KEY_IS_POOLED, "" + isPooled);
 
                 RestClient.getApiServices().getFareEstimate(params, new retrofit.Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
+                        DialogPopup.dismissLoadingDialog();
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.e("response", "getFareEstimate response = " + responseStr);
                         try {
@@ -152,12 +146,14 @@ public class ApiFareEstimate {
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     if(jObj.has("pool_fare_id")){
-                                        callback.onPoolSuccess(jObj.optInt("fare"), jObj.optInt("ride_distance"), jObj.optString("ride_distance_unit"),
-                                                jObj.optInt("ride_time"), jObj.optString("ride_time_unit"), jObj.optInt("pool_fare_id"));
+                                        callback.onPoolSuccess(jObj.optDouble("fare", 0), jObj.optDouble("ride_distance", 0),
+                                                jObj.optString("ride_distance_unit"), jObj.optDouble("ride_time", 0),
+                                                jObj.optString("ride_time_unit"), jObj.optInt("pool_fare_id", 0),
+                                                jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0), jObj.optString("text", ""));
                                     } else{
                                         String minFare = jObj.getString("min_fare");
                                         String maxFare = jObj.getString("max_fare");
-                                        double convenienceCharge = jObj.optDouble("convenience_charge", 0);
+                                        double convenienceCharge = jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0);
                                         callback.onFareEstimateSuccess(minFare, maxFare, convenienceCharge);
                                     }
 
@@ -170,7 +166,7 @@ public class ApiFareEstimate {
                             exception.printStackTrace();
                             retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled);
                         }
-                        DialogPopup.dismissLoadingDialog();
+
                     }
 
                     @Override

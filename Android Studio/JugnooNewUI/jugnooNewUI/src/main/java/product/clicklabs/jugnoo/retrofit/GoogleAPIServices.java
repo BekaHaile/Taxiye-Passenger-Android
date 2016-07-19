@@ -36,8 +36,8 @@ public interface GoogleAPIServices {
 
 
 	@GET("/geocode/json")
-	Response geocode(@Query("latlng") String latLng,
+	void geocode(@Query("latlng") String latLng,
 					 @Query("language") String language,
-					 @Query("sensor") Boolean sensor);
+					 @Query("sensor") Boolean sensor, Callback<SettleUserDebt> callback);
 
 }

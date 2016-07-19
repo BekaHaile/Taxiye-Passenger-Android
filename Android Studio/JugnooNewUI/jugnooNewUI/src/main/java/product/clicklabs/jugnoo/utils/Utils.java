@@ -468,6 +468,14 @@ public class Utils {
 		return decimalFormatMoney;
 	}
 
+	private static DecimalFormat decimalFormatMoneyWithoutFloat;
+	public static DecimalFormat getMoneyDecimalFormatWithoutFloat(){
+		if(decimalFormatMoneyWithoutFloat == null){
+			decimalFormatMoneyWithoutFloat = new DecimalFormat("#");
+		}
+		return decimalFormatMoneyWithoutFloat;
+	}
+
 
 
 	public static boolean isAppInstalled(Context context, String packageName) {
@@ -700,6 +708,18 @@ public class Utils {
 		stateListDrawable.addState(new int[]{},
 				context.getResources().getDrawable(normalState));
 		return stateListDrawable;
+	}
+
+
+	public static String retrieveOTPFromSMS(String message){
+		String[] arr = message.split("\\ ");
+		for(String iarr : arr){
+			iarr = iarr.replace(".", "");
+			if(iarr.length() >= 4 && checkIfOnlyDigits(iarr)){
+				return iarr;
+			}
+		}
+		return "";
 	}
 
 }

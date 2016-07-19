@@ -137,8 +137,8 @@ public class SlidingBottomOffersFragment extends Fragment {
             PromoCoupon promoCoupon = offerList.get(position);
 
             setPromoCouponText(holder.textViewPromotion1, promoCoupon);
-            if(activity.getSlidingBottomPanel().getSelectedCoupon() != null &&
-                    activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id){
+            if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
+                    activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id){
                 holder.radioPromotion1.setImageResource(R.drawable.ic_radio_button_selected);
             } else{
                 holder.radioPromotion1.setImageResource(R.drawable.ic_radio_button_normal);
@@ -172,10 +172,10 @@ public class SlidingBottomOffersFragment extends Fragment {
                     try {
                         int position = (int) v.getTag();
                         PromoCoupon promoCoupon = offerList.get(position);
-                        if (activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id) {
-							activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+                        if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id) {
+							activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 						} else {
-							activity.getSlidingBottomPanel().setSelectedCoupon(position);
+							activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
 						}
                         notifyDataSetChanged();
                     } catch (Exception e) {

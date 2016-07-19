@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -78,11 +79,11 @@ public class PriorityTipDialog {
             LinearLayout linearLayoutLowPriority = (LinearLayout)dialog.findViewById(R.id.linearLayoutLowPriority);
             LinearLayout linearLayoutHighPriority = (LinearLayout)dialog.findViewById(R.id.linearLayoutHighPriority);
             TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.mavenRegular(activity));
+            textHead.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
             TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.mavenLight(activity));
+            textMessage.setTypeface(Fonts.mavenRegular(activity));
             TextView textHighPriority = (TextView)dialog.findViewById(R.id.textViewHighPriority);
-            textHighPriority.setTypeface(Fonts.mavenLight(activity));
+            textHighPriority.setTypeface(Fonts.mavenRegular(activity));
             ImageView close = (ImageView)dialog.findViewById(R.id.close);
             TextView textViewTipValue = (TextView)dialog.findViewById(R.id.textViewTipValue);
             textViewTipValue.setTypeface(Fonts.mavenRegular(activity));

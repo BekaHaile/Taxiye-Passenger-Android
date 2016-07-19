@@ -8,6 +8,7 @@ import android.view.View;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
@@ -89,12 +90,12 @@ public class TransactionUtils {
 
 
 	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
-									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, int fromBadFeedback) {
+									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, int fromBadFeedback, boolean rideCancelled) {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			fragmentTransaction.add(container.getId(),
-					new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse),
+					new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse, rideCancelled),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0){
@@ -111,6 +112,20 @@ public class TransactionUtils {
 
 	public boolean checkIfFragmentAdded(FragmentActivity activity, String tag){
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);
+	}
+
+	public void openRideSummaryFragmentWithRideCancelledFlag(FragmentActivity activity, View container, int engagementId, boolean rideCancelled){
+		if(!new TransactionUtils().checkIfFragmentAdded(activity, RideSummaryFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+					.add(container.getId(),
+							new RideSummaryFragment(engagementId, rideCancelled),
+							RideSummaryFragment.class.getName())
+					.addToBackStack(RideSummaryFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
 	}
 
 }

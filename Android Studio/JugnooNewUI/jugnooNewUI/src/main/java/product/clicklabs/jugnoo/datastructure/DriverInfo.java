@@ -28,6 +28,7 @@ public class DriverInfo {
 	private int vehicleType, cancellationCharges;
 	private ArrayList<Integer> regionIds = new ArrayList<>();
 	private VehicleIconSet vehicleIconSet;
+	private ArrayList<String> fellowRiders = new ArrayList<>();
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -56,7 +57,7 @@ public class DriverInfo {
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
-					  String poolRideStatusString){
+					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -81,6 +82,8 @@ public class DriverInfo {
 		this.cancellationCharges = cancellationCharges;
 		this.isPooledRide = isPooledRide;
 		this.poolRideStatusString = poolRideStatusString;
+		this.fellowRiders = fellowRiders;
+		this.bearing = bearing;
 	}
 
 	//for last ride data
@@ -207,4 +210,14 @@ public class DriverInfo {
 	public void setPoolRideStatusString(String poolRideStatusString) {
 		this.poolRideStatusString = poolRideStatusString;
 	}
+
+	public ArrayList<String> getFellowRiders() {
+		return fellowRiders;
+	}
+
+	public void setFellowRiders(ArrayList<String> fellowRiders) {
+		this.fellowRiders = fellowRiders;
+	}
+
+
 }

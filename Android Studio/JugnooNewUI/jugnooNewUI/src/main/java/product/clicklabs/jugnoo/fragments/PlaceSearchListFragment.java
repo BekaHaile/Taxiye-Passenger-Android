@@ -210,7 +210,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(editTextSearch.getText().length() == 0) {
+				if(editTextSearch.getText().length() == 0 || editTextSearch.getText().toString().equalsIgnoreCase(" ")) {
+					editTextSearch.setText("");
 					editTextSearch.setText(" ");
 					editTextSearch.setText("");
 				}

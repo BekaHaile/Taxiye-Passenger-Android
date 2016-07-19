@@ -28,6 +28,7 @@ public interface Constants {
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
 	int ADD_HOME = 2, ADD_WORK = 3;
+	String COMMA = ", ";
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 
@@ -217,6 +218,7 @@ public interface Constants {
 	String KEY_ICON_SET = "icon_set";
 
 	int VEHICLE_AUTO = 1;
+	int POOL_RIDE = 2;
 
 	String KEY_GIVEN_RATING = "given_rating";
 	String KEY_COUPONS = "coupons";
@@ -301,10 +303,22 @@ public interface Constants {
 	String KEY_OLD_PASSWORD = "old_password";
 	String KEY_NEW_PASSWORD = "new_password";
 
-	String POOL_INTRO_SHOW = "pool_intro_show";
+	String SP_POOL_INTRO_SHOWN = "sp_pool_intro_shown";
 
 	String KEY_DRIVER_FARE_FACTOR = "driver_fare_factor";
 
+	String KEY_IS_POOLED = "is_pooled";
+	String KEY_RIDE_TYPE = "ride_type";
+	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
+	String KEY_SEARCH_RESULT = "search_result";
+	String SP_DRIVER_BEARING = "driver_bearing";
+
+	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
+	String KEY_KNOWLARITY_MISSED_CALL_NUMBER = "knowlarity_missed_call_number";
+
+	String SP_OTP_SCREEN_OPEN = "sp_otp_screen_open";
+	String SP_OTP_VIA_CALL_ENABLED = "sp_otp_via_call_enabled";
+	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
 
 
 

@@ -41,6 +41,9 @@ public class FareStructure {
 	@SerializedName("vehicle_type")
 	@Expose
 	private Integer vehicleType;
+	@SerializedName("ride_type")
+	@Expose
+	private Integer rideType;
 
 	/**
 	 *
@@ -218,5 +221,13 @@ public class FareStructure {
 
 	public void setVehicleType(Integer vehicleType) {
 		this.vehicleType = vehicleType;
+	}
+
+	public Integer getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(Integer rideType) {
+		this.rideType = rideType;
 	}
 }

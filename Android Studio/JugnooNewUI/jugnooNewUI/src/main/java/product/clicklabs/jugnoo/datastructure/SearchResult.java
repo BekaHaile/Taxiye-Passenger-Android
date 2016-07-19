@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -101,4 +104,5 @@ public class SearchResult implements Serializable{
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
 	}
+
 }

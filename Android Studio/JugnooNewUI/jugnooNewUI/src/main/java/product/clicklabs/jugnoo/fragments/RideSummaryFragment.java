@@ -58,12 +58,12 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	RelativeLayout relativeLayoutRideSummary;
 	ScrollView scrollViewEndRide;
 
-	ImageView imageViewEndRideAutoIcon;
+	ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
 	TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
 	RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
 			relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm;
-	LinearLayout linearLayoutEndRideTime;
-	RelativeLayout relativeLayoutEndRideWaitTime;
+	LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
+	RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
 	NonScrollListView listViewEndRideDiscounts;
 	TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
 			textViewEndRideDiscount, textViewEndRideDiscountValue,
@@ -79,16 +79,19 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 	private View rootView;
     private FragmentActivity activity;
+	private boolean rideCancelled;
 
 	@SuppressLint("ValidFragment")
-	public RideSummaryFragment(int engagementId){
+	public RideSummaryFragment(int engagementId, boolean rideCancelled){
 		this.engagementId = engagementId;
+		this.rideCancelled = rideCancelled;
 	}
 
 	@SuppressLint("ValidFragment")
-	public RideSummaryFragment(EndRideData endRideData){
+	public RideSummaryFragment(EndRideData endRideData, boolean rideCancelled){
 		this.engagementId = Integer.parseInt(endRideData.engagementId);
 		this.endRideData = endRideData;
+		this.rideCancelled = rideCancelled;
 	}
 
 
@@ -145,6 +148,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 			}
 		}
 
+		relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
 		relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary); relativeLayoutRideSummary.setVisibility(View.GONE);
 		scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
 
@@ -177,6 +181,9 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 		relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
 		linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
 		relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
+		imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
+		linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
+		relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
 
 		textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue); textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
 		textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue); textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
@@ -214,7 +221,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				if(activity instanceof RideTransactionsActivity){
 					new TransactionUtils().openRideIssuesFragment(activity,
 							((RideTransactionsActivity)activity).getContainer(),
-							engagementId, endRideData, getRideSummaryResponse, 0);
+							engagementId, endRideData, getRideSummaryResponse, 0, false);
 					FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
 					FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
 				} else {
@@ -297,7 +304,16 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 				textViewEndRideStartTimeValue.setText(endRideData.pickupTime);
 				textViewEndRideEndTimeValue.setText(endRideData.dropTime);
 
-				textViewEndRideFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				if(endRideData.fare > 0) {
+					relativeLayoutFare.setVisibility(View.VISIBLE);
+					linearLayoutRideDetail.setVisibility(View.VISIBLE);
+					relativeLayoutFinalFare.setVisibility(View.VISIBLE);
+					textViewEndRideFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				} else{
+					relativeLayoutFare.setVisibility(View.GONE);
+					linearLayoutRideDetail.setVisibility(View.GONE);
+					relativeLayoutFinalFare.setVisibility(View.GONE);
+				}
 
 				if(Utils.compareDouble(endRideData.luggageCharge, 0) > 0){
 					relativeLayoutLuggageCharge.setVisibility(View.VISIBLE);
@@ -313,7 +329,34 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					relativeLayoutConvenienceCharge.setVisibility(View.GONE);
 				}
 
-				if(endRideData.discountTypes.size() > 1){
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewEndRideAutoIcon.getLayoutParams();
+				if(endRideData.getIsPooled() == 1){
+					imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_invoice_pool);
+					params.width = (int)(ASSL.Xscale() * 67);
+					params.height = (int)(ASSL.Xscale() * 37);
+					imageViewEndRideAutoIcon.setLayoutParams(params);
+				}
+
+				if(endRideData.discountTypes.size() > 0) {
+					listViewEndRideDiscounts.setVisibility(View.VISIBLE);
+					endRideDiscountsAdapter.setList(endRideData.discountTypes);
+					textViewEndRideDiscountValue.setVisibility(View.GONE);
+					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
+					textViewEndRideDiscount.setVisibility(View.GONE);
+
+					for(int i=0; i<endRideData.discountTypes.size(); i++){
+						if(endRideData.discountTypes.get(i).getReferenceId() == 0){
+							textViewEndRideDiscount.setVisibility(View.VISIBLE);
+							textViewEndRideDiscount.setText("Discounts");
+							break;
+						}
+					}
+				} else{
+					relativeLayoutEndRideDiscount.setVisibility(View.GONE);
+				}
+
+
+				/*if(endRideData.discountTypes.size() > 1){
 					listViewEndRideDiscounts.setVisibility(View.VISIBLE);
 					endRideDiscountsAdapter.setList(endRideData.discountTypes);
 					textViewEndRideDiscount.setText("Discounts");
@@ -337,7 +380,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					} else{
 						relativeLayoutEndRideDiscount.setVisibility(View.GONE);
 					}
-				}
+				}*/
 
 				textViewEndRideFinalFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.finalFare)));
 
@@ -356,7 +399,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 				textViewEndRideToBePaidValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.toPay)));
 
-				if(endRideData.fareFactor > 1 || endRideData.fareFactor < 1){
+				if(!rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)){
 					textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
 				} else{
 					textViewEndRideFareFactorValue.setVisibility(View.GONE);
@@ -423,7 +466,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					public void onNoRetry(View view) {
 						performBackPressed();
 					}
-				}).getRideSummaryAPI();
+				}).getRideSummaryAPI(rideCancelled);
 	}
 
 

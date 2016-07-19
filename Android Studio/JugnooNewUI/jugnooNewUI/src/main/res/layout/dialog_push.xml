@@ -25,7 +25,6 @@
             android:layout_marginTop="8px"
             android:layout_marginLeft="8px"
             android:layout_marginRight="8px"
-            android:src="@drawable/bg_fresh_intro"
             android:tag="mwar"
             android:scaleType="centerCrop"
             />
@@ -82,8 +81,7 @@
 
     <ImageView
         android:id="@+id/imageViewClose"
-        style="@style/cross_popup"
-        />
+        style="@style/cross_popup"/>
 
 
 </RelativeLayout>

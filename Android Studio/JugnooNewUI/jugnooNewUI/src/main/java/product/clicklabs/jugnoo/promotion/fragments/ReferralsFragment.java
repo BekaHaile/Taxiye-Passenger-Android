@@ -45,9 +45,10 @@ public class ReferralsFragment extends Fragment {
 	private RelativeLayout relativeLayoutRoot;
 
 	private ImageView imageViewLogo, imageViewMore, imageViewFbMessanger, imageViewWhatsapp, imageViewMessage, imageViewEmail;
-	private TextView textViewCode, textViewDesc, textViewMoreInfo;
+	private TextView textViewCode, textViewDesc, textViewMoreInfo, textViewLeaderboardSingle;
 	private Button buttonInvite;
-	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab;
+	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab, relativeLayoutLeaderboardSingle,
+			shareiconContainer;
 	private LinearLayout linearLayoutLeaderBoard, linearLayoutRefer;
 	private View rootView;
     private ShareActivity activity;
@@ -90,10 +91,12 @@ public class ReferralsFragment extends Fragment {
 		textViewMoreInfo = (TextView)rootView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenMedium(activity));
 
 		textViewCode = (TextView)rootView.findViewById(R.id.textViewCode);textViewCode.setTypeface(Fonts.mavenMedium(activity));
+		textViewLeaderboardSingle = (TextView)rootView.findViewById(R.id.textViewLeaderboardSingle);textViewLeaderboardSingle.setTypeface(Fonts.mavenMedium(activity));
 		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenMedium(activity));
 
 		relativeLayoutReferSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferSingle);
 		relativeLayoutMultipleTab = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleTab);
+		relativeLayoutLeaderboardSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLeaderboardSingle);
 		linearLayoutLeaderBoard = (LinearLayout) rootView.findViewById(R.id.linearLayoutLeaderBoard);
 		((TextView)rootView.findViewById(R.id.textViewLeaderboard)).setTypeface(Fonts.mavenMedium(activity));
 		linearLayoutRefer = (LinearLayout)rootView.findViewById(R.id.linearLayoutRefer);
@@ -103,6 +106,7 @@ public class ReferralsFragment extends Fragment {
 		imageViewWhatsapp = (ImageView) rootView.findViewById(R.id.imageViewWhatsapp);
 		imageViewMessage = (ImageView) rootView.findViewById(R.id.imageViewMessage);
 		imageViewEmail = (ImageView) rootView.findViewById(R.id.imageViewEmail);
+		shareiconContainer = (RelativeLayout) rootView.findViewById(R.id.shareiconContainer);
 
 		ArrayList<AppPackage> appPackages = new ArrayList<>();
 		appPackages.add(new AppPackage(0, "com.whatsapp"));
@@ -120,7 +124,7 @@ public class ReferralsFragment extends Fragment {
 			public void onClick(View view) {
 				try {
 					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
-					FlurryEventLogger.eventGA(Constants.REFERRAL, "rides", "more info");
+					FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
 					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
@@ -131,6 +135,23 @@ public class ReferralsFragment extends Fragment {
 				}
 			}
 		});
+
+		try {
+			if(Data.userData.getInviteFriendButton() == 1){
+                buttonInvite.setVisibility(View.VISIBLE);
+            } else{
+                buttonInvite.setVisibility(View.GONE);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDesc.getLayoutParams();
+                params.setMargins(0, 100, 0, 0);
+                textViewDesc.setLayoutParams(params);
+
+				LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) shareiconContainer.getLayoutParams();
+				params1.setMargins(0, 100, 0, 0);
+				shareiconContainer.setLayoutParams(params1);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		buttonInvite.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -174,7 +195,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.shareToWhatsapp(activity);
-				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Whatsapp");
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
 			}
 		});
 
@@ -198,6 +219,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				activity.openLeaderboardFragment();
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Leaderboard");
 			}
 		});
 
@@ -208,9 +230,17 @@ public class ReferralsFragment extends Fragment {
 			}
 		});
 
+		relativeLayoutLeaderboardSingle.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				linearLayoutLeaderBoard.performClick();
+			}
+		});
+
 		relativeLayoutReferSingle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Refer a Driver");
 				getReferDriverDialog().show();
 			}
 		});
@@ -243,10 +273,11 @@ public class ReferralsFragment extends Fragment {
 				if(Data.userData != null) {
 					relativeLayoutMultipleTab.setVisibility(View.GONE);
 					relativeLayoutReferSingle.setVisibility(View.GONE);
+					relativeLayoutLeaderboardSingle.setVisibility(View.GONE);
 					if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() == 1) {
 						relativeLayoutMultipleTab.setVisibility(View.VISIBLE);
 					} else if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() != 1) {
-						//relativeLayoutReferSingle.setVisibility(View.VISIBLE);
+						relativeLayoutLeaderboardSingle.setVisibility(View.VISIBLE);
 					} else if (Data.userData.getReferralLeaderboardEnabled() != 1 && Data.userData.getcToDReferralEnabled() == 1) {
 						relativeLayoutReferSingle.setVisibility(View.VISIBLE);
 					}

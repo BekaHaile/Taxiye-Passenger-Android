@@ -343,9 +343,6 @@ public class LoginResponse {
 		@SerializedName("fresh_available")
 		@Expose
 		private Integer freshAvailable;
-		@SerializedName("is_pool_enabled")
-		@Expose
-		private Integer isPoolEnabled;
 		@SerializedName("menu")
 		@Expose
 		private List<MenuInfo> menuInfoList;
@@ -488,14 +485,6 @@ public class LoginResponse {
 
 		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
 			this.menuInfoList = menuInfoList;
-		}
-
-		public Integer getIsPoolEnabled() {
-			return isPoolEnabled;
-		}
-
-		public void setIsPoolEnabled(Integer isPoolEnabled) {
-			this.isPoolEnabled = isPoolEnabled;
 		}
 
 		public Double getDriverFareFactor() {

@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -45,6 +46,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Coupon;
@@ -115,8 +117,10 @@ public class JSONParser implements Constants {
 
         String userIdentifier = userData.optString("user_identifier", userEmail);
 
-		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
-        Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+        Prefs.with(context).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+                userData.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+        Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED,
+                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
@@ -127,7 +131,7 @@ public class JSONParser implements Constants {
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
 
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
-        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled");
+        int cToDReferralEnabled = userData.optInt("c2d_referral_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
 
         if(userData.has("user_saved_addresses")){
@@ -205,7 +209,15 @@ public class JSONParser implements Constants {
         String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", "");
         String inRideSendInviteTextBold = userData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
         String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
-            String fatafatUrlLink = userData.optString("fatafat_url_link", "");
+        String fatafatUrlLink = userData.optString("fatafat_url_link", "");
+        String confirmScreenFareEstimateEnable = userData.optString("confirm_screen_fare_estimate_enabled", "0");
+        String poolDestinationPopupText1 = userData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
+        String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
+        String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
+        int inviteFriendButton = userData.optInt("invite_friend_button", 0);
+        int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+        String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+        String baseFarePoolText = userData.optString("base_fare_pool_text", "");
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -248,7 +260,9 @@ public class JSONParser implements Constants {
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
-                inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink);
+                inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
+                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText);
 
     }
 
@@ -307,10 +321,11 @@ public class JSONParser implements Constants {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
                     Data.userData.userEmail, Data.userData.phoneNo,
-                    Data.userData.getCity(), Data.userData.getCityReg());
+                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
+                couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
                 nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
@@ -386,7 +401,6 @@ public class JSONParser implements Constants {
             } else {
                 Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
             }
-            Data.userData.setIsPoolEnabled(loginResponse.getLogin().getIsPoolEnabled()==null ? 0 : loginResponse.getLogin().getIsPoolEnabled());
             Data.campaigns = loginResponse.getLogin().getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
@@ -459,11 +473,17 @@ public class JSONParser implements Constants {
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
                         for (int i = 0; i < Data.regions.size(); i++) {
-                            try {if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())) {
-                                Data.regions.get(i).setFareStructure(fareStructure1);
-                            }} catch (Exception e) {e.printStackTrace();}
+                            try {
+                                if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+                                        && Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+                                        ) {
+                                    Data.regions.get(i).setFareStructure(fareStructure1);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        if(Data.fareStructure == null){
+                        if (Data.fareStructure == null) {
                             Data.fareStructure = fareStructure1;
                         }
                     }
@@ -608,7 +628,7 @@ public class JSONParser implements Constants {
 			JSONArray jDiscountsArr =  jLastRideData.getJSONArray("discount");
 			for(int i=0; i<jDiscountsArr.length(); i++){
 				DiscountType discountType = new DiscountType(jDiscountsArr.getJSONObject(i).getString("key"),
-						jDiscountsArr.getJSONObject(i).getDouble("value"));
+						jDiscountsArr.getJSONObject(i).getDouble("value"), 0);
 				if(discountType.value > 0) {
 					discountTypes.add(discountType);
 					discount = discount + discountType.value;
@@ -624,7 +644,19 @@ public class JSONParser implements Constants {
 			discountTypes.clear();
 		}
 
-		String driverName = "", driverCarNumber = "", driverImage = "";
+        double sumAdditionalCharges = 0;
+        try {
+            JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
+            for(int i=0; i<additionalChargesJson.length(); i++){
+                JSONObject obj = additionalChargesJson.getJSONObject(i);
+                discountTypes.add(new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id")));
+                sumAdditionalCharges = sumAdditionalCharges + obj.optDouble("amount");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String driverName = "", driverCarNumber = "", driverImage = "";
 		if(jLastRideData.has("driver_name")){
 			driverName = jLastRideData.getString("driver_name");
 		}
@@ -635,6 +667,7 @@ public class JSONParser implements Constants {
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
         driverImage = jLastRideData.optString("driver_image", "");
+        int isPooled = jLastRideData.optInt(KEY_IS_POOLED);
 
         double rideTime = -1;
 		if(jLastRideData.has("ride_time")){
@@ -657,6 +690,10 @@ public class JSONParser implements Constants {
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+        String engagementDate = jLastRideData.optString("engagement_date", "");
+
+
+
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
@@ -671,7 +708,8 @@ public class JSONParser implements Constants {
 				jLastRideData.getDouble("distance"),
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
-                rideDate, phoneNumber, tripTotal, vehicleType, iconSet);
+                rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
+                sumAdditionalCharges, engagementDate);
 	}
 
 
@@ -724,13 +762,14 @@ public class JSONParser implements Constants {
                     pickupLatitude = "", pickupLongitude = "";
             int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
-            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0;
+            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0, bearing = 0.0;
             Schedule scheduleT20 = null;
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
-            String cancelRideThrashHoldTime = "";
+            String cancelRideThrashHoldTime = "", poolStatusString = "";
             int cancellationCharges = 0, isPooledRide = 0;
             long cancellationTimeOffset = 0;
+            ArrayList<String> fellowRiders = new ArrayList<>();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -828,7 +867,16 @@ public class JSONParser implements Constants {
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
                                 cancellationCharges = jObject.optInt("cancellation_charge", 0);
-                                isPooledRide = jObject.optInt("is_pooled", 0);
+                                isPooledRide = jObject.optInt(KEY_IS_POOLED, 0);
+                                JSONObject poolData = jObject.optJSONObject("pool_data");
+                                bearing = jObject.optDouble("bearing");
+                                if(poolData != null) {
+                                    poolStatusString = poolData.optString("message", context.getResources().getString(R.string.sharing_your_ride_with));
+                                    JSONArray userNames = poolData.optJSONArray("user_names");
+                                    for (int i = 0; i < userNames.length(); i++) {
+                                        fellowRiders.add(userNames.getJSONObject(i).optString("user_name"));
+                                    }
+                                }
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -888,7 +936,7 @@ public class JSONParser implements Constants {
                 Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, "");
+                        isPooledRide, poolStatusString, fellowRiders, bearing);
 
                 Data.userData.fareFactor = fareFactor;
 
@@ -1140,7 +1188,7 @@ public class JSONParser implements Constants {
 	public static void parsePaytmBalanceStatus(Activity activity, JSONObject jObj){
 		try {
 			if (Data.userData != null) {
-				int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
 					setPaytmErrorCase();
 				} else {
@@ -1240,6 +1288,18 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
             Data.dropLatLng = null;
+        }
+    }
+
+    private void couponsEvent(Context context){
+        try{
+            JSONObject map = new JSONObject();
+            for(PromoCoupon promoCoupon : Data.promoCoupons){
+                map.put(promoCoupon.getTitle(), 1);
+            }
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 

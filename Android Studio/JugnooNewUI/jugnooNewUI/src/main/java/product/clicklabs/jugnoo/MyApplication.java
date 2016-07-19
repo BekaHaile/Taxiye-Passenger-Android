@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.multidex.MultiDex;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.branch.referral.Branch;
+import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 
 /**
@@ -42,18 +44,23 @@ public class MyApplication extends Application{
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		if(!this.isTestModeEnabled()) {
-			Branch.getInstance(this);
-		} else {
-			Branch.getTestInstance(this);
+		try {
+			Fabric.with(this, new Crashlytics());
+			if(!this.isTestModeEnabled()) {
+                Branch.getInstance(this);
+            } else {
+                Branch.getTestInstance(this);
+            }
+			Branch.getAutoInstance(this);
+
+
+			mInstance = this;
+
+			AnalyticsTrackers.initialize(this);
+			AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		Branch.getAutoInstance(this);
-
-
-		mInstance = this;
-
-		AnalyticsTrackers.initialize(this);
-		AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 	}
 
 	@Override
@@ -150,6 +157,21 @@ public class MyApplication extends Application{
 		// Build and send an Event.
 		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
 	}
+
+	/**
+	 *
+	 * @param category
+	 * @param action
+	 * @param label
+	 * @param value
+	 */
+	public void trackEvent(String category, String action, String label, long value) {
+		Tracker t = getGoogleAnalyticsTracker();
+		t.enableAdvertisingIdCollection(true);
+		// Build and send an Event.
+		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+	}
+
 
 	/***
 	 * Tracking event

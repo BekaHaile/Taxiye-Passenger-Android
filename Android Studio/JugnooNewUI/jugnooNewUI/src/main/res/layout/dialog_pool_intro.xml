@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical">
+    android:layout_gravity="center_vertical"
+    android:soundEffectsEnabled="false">
 
 
     <LinearLayout
         android:id="@+id/linearLayoutInner"
-        android:layout_width="608px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100px"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:background="@drawable/background_white_rounded_bordered"
         android:orientation="vertical"
+        android:soundEffectsEnabled="false"
         android:splitMotionEvents="false">
 
         <ImageView
-            android:id="@+id/imageViewGif"
-            android:layout_width="594px"
-            android:layout_height="266px"
+            android:id="@+id/imageViewPool"
+            android:layout_width="630px"
+            android:layout_height="308px"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8px" />
+            android:layout_marginBottom="34px"
+            android:layout_marginLeft="16px"
+            android:layout_marginRight="16px"
+            android:layout_marginTop="16px"
+            android:src="@drawable/bg_pool_intro_popup"
+            android:tag="mwar" />
+
+        <!--<TextView
+            android:id="@+id/textViewCoolToPool"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/its_cool_to_pool"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_60" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="ITS "
+                android:text="IT'S "
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_60" />
@@ -77,6 +93,18 @@
 
         </LinearLayout>
 
+        <!--<TextView
+            android:id="@+id/textViewShareTheJourney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10px"
+            android:gravity="center"
+            android:text="@string/share_the_journey"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_28" />-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +119,6 @@
                 android:layout_marginTop="10px"
                 android:gravity="center"
                 android:text="Share the Journey"
-                android:textAllCaps="true"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_28" />
 
@@ -103,7 +130,6 @@
                 android:layout_marginTop="10px"
                 android:gravity="center"
                 android:text=" Split the Fare"
-                android:textAllCaps="true"
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/text_size_28" />
 
@@ -112,15 +138,15 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:layout_marginBottom="30px"
-            android:layout_marginLeft="50px"
-            android:layout_marginRight="50px"
-            android:layout_marginTop="30px"
+            android:layout_marginLeft="80px"
+            android:layout_marginRight="80px"
+            android:layout_marginTop="24px"
             android:src="@color/text_color_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="26px"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -128,9 +154,8 @@
                 android:id="@+id/textViewRidingAlone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="Riding "
+                android:text="Riding Alone?"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_36" />
 
@@ -138,52 +163,24 @@
                 android:id="@+id/textViewRidingAlone1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="Alone? "
-                android:textColor="@color/text_color_dark"
-                android:textSize="@dimen/text_size_36" />
-
-            <TextView
-                android:id="@+id/textViewRidingAlone2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="Try Jugnoo Pool"
+                android:text=" Try Jugnoo Pool"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_36" />
 
         </LinearLayout>
 
+
         <Button
             android:id="@+id/buttonContinue"
             style="@style/ButtonTheme"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40px"
-            android:text="@string/try_now" />
-
-        <TextView
-            android:id="@+id/textViewLater"
-            android:layout_width="250px"
-            android:layout_height="80px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20px"
-            android:textSize="@dimen/text_size_28"
-            android:gravity="center"
-            android:text="@string/fresh_may_be_later"
-            android:textColor="@color/text_color_light_selector" />
+            android:layout_marginBottom="40px"
+            android:layout_marginTop="44px"
+            android:text="@string/okay" />
 
 
     </LinearLayout>
 
 
-    <ImageView
-        android:layout_width="336px"
-        android:layout_height="148px"
-        android:src="@drawable/pool_intro_arrow"
-        android:tag="mwar"
-        android:layout_marginTop="20px"
-        android:layout_below="@+id/linearLayoutInner"
-        android:layout_marginLeft="40px"/>
 </RelativeLayout>

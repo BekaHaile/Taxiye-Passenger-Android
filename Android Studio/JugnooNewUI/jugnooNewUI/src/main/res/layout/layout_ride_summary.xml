@@ -86,8 +86,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewEndRideAutoIcon"
-                        android:layout_width="41px"
-                        android:layout_height="33px"
+                        android:layout_width="72px"
+                        android:layout_height="51px"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15px"
                         android:src="@drawable/ic_auto_invoice"
@@ -161,6 +161,7 @@
 
                         <!-- fare -->
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutFare"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14px">
@@ -291,6 +292,7 @@
 
                         <!-- discounted fare -->
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutFinalFare"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6px">
@@ -420,6 +422,7 @@
 
                     <!-- ride details -->
                     <LinearLayout
+                        android:id="@+id/linearLayoutRideDetail"
                         android:layout_width="match_parent"
                         android:layout_height="100px"
                         android:layout_gravity="center_horizontal"

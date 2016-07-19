@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -18,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
@@ -51,8 +53,8 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(activity.getSlidingBottomPanel().getSelectedCoupon() != null &&
-				activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id){
+		if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
+				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -66,6 +68,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 			@Override
 			public void onClick(View v) {
 				try {
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "t&c");
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (promoCoupon instanceof CouponInfo) {
@@ -85,13 +88,14 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 				try {
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (activity.getSlidingBottomPanel().getSelectedCoupon().id == promoCoupon.id) {
-						activity.getSlidingBottomPanel().setSelectedCoupon(-1);
+					if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id) {
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					} else {
-						activity.getSlidingBottomPanel().setSelectedCoupon(position);
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}
 					notifyDataSetChanged();
+					//activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -114,7 +118,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
 			imageViewRadio = (ImageView)itemView.findViewById(R.id.imageViewRadio);
 			textViewOfferName = (TextView) itemView.findViewById(R.id.textViewOfferName);
-			textViewOfferName.setTypeface(Fonts.mavenLight(activity));
+			textViewOfferName.setTypeface(Fonts.mavenRegular(activity));
 			textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);
 			textViewTNC.setTypeface(Fonts.mavenLight(activity));
 		}

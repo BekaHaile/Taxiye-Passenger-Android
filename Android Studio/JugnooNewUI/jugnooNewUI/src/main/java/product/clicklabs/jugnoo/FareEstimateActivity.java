@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -33,13 +34,14 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GradientManager;
+import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -66,8 +68,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     public ASSL assl;
 
 	private GoogleApiClient mGoogleApiClient;
-    private GradientManager mGradientManager;
-    private Shader shader;
+
+    private int isPooled = 0, rideType = RideTypeValue.NORMAL.getOrdinal();
+    private LatLng pickupLatLng;
+    private SearchResult searchResultGlobal;
 
     @Override
     protected void onResume() {
@@ -80,7 +84,25 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fare_estimate);
 
-		mGoogleApiClient = new GoogleApiClient
+        try {
+            rideType = getIntent().getIntExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
+            if(rideType == RideTypeValue.POOL.getOrdinal()){
+				isPooled = 1;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.pickupLatLng.latitude);
+            double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.pickupLatLng.longitude);
+            pickupLatLng = new LatLng(latitude, longitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+            pickupLatLng = Data.pickupLatLng;
+        }
+
+        mGoogleApiClient = new GoogleApiClient
 				.Builder(this)
 				.addApi(Places.GEO_DATA_API)
 				.addApi(Places.PLACE_DETECTION_API)
@@ -159,21 +181,36 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         buttonOk.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                performBackPressed();
-                FlurryEventLogger.event(FARE_RECEIPT_CHECKED);
+                try {
+                    Intent intent = new Intent();
+                    if(searchResultGlobal != null) {
+                        String str = (new Gson()).toJson(searchResultGlobal);
+                        intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                    }
+                    setResult(RESULT_OK, intent);
+                    performBackPressed();
+                    FlurryEventLogger.event(FARE_RECEIPT_CHECKED);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
-        PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-        bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
-        bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
-        placeSearchListFragment.setArguments(bundle);
+        if(rideType != RideTypeValue.POOL.getOrdinal() && Data.dropLatLng != null){
+            getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng);
+        } else {
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
-                .commitAllowingStateLoss();
+            PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+            bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+            bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
+            placeSearchListFragment.setArguments(bundle);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
+                    .commitAllowingStateLoss();
+        }
 
     }
 
@@ -205,7 +242,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                             builder.include(list.get(z));
                         }
 
-                        final LatLngBounds latLngBounds = builder.build();
+                        final LatLngBounds latLngBounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 408);
 
                         mapLite.clear();
                         mapLite.addPolyline(polylineOptions);
@@ -277,7 +314,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
                     if(convenienceCharge > 0){
                         textViewConvenienceCharge.setText("Convenience Charges "
-                                +getResources().getString(R.string.rupee)+" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                                +getResources().getString(R.string.rupee)
+                                +" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
                     }
                     else{
                         textViewConvenienceCharge.setText("");
@@ -285,8 +323,21 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 }
 
                 @Override
-                public void onPoolSuccess(int fare, int rideDistance, String rideDistanceUnit, int rideTime, String rideTimeUnit, int poolFareId) {
+                public void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
+                                          double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
+                                          String text) {
+                    NudgeClient.trackEventUserId(FareEstimateActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
+                    textViewEstimateFare.setText(getResources().getString(R.string.rupee)
+                            + "" + Utils.getMoneyDecimalFormat().format(fare));
 
+                    if(convenienceCharge > 0){
+                        textViewConvenienceCharge.setText("Convenience Charges "
+                                +getResources().getString(R.string.rupee)
+                                +" "+Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                    }
+                    else{
+                        textViewConvenienceCharge.setText("");
+                    }
                 }
 
                 @Override
@@ -297,7 +348,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 @Override
                 public void onRetry() {
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -381,8 +432,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
+        Data.dropLatLng = searchResult.getLatLng();
         getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.getLatLng());
         FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
+        searchResultGlobal = searchResult;
     }
 
     @Override

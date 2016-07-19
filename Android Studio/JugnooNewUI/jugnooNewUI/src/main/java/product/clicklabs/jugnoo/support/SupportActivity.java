@@ -132,12 +132,12 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return null;
 	}
 
-	public void openRideSummaryFragment(EndRideData endRideData){
+	public void openRideSummaryFragment(EndRideData endRideData, boolean rideCancelled){
 		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
 			getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(getContainer().getId(),
-							new RideSummaryFragment(endRideData),
+							new RideSummaryFragment(endRideData, rideCancelled),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
@@ -151,7 +151,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			if (endRideData != null && getRideSummaryResponse != null) {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
-						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback);
+						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback, false);
 				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
 			}
 		} catch (NumberFormatException e) {
@@ -208,7 +208,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI();
+					}).getRideSummaryAPI(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

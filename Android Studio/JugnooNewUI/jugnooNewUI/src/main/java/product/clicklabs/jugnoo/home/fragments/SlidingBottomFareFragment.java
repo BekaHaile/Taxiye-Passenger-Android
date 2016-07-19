@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -61,7 +62,16 @@ public class SlidingBottomFareFragment extends Fragment{
         textViewFareEstimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(activity, FareEstimateActivity.class));
+                Intent intent = new Intent(activity, FareEstimateActivity.class);
+                intent.putExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
+                try {
+                    intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);
+                    intent.putExtra(Constants.KEY_LONGITUDE, activity.map.getCameraPosition().target.longitude);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //activity.startActivity(intent);
+                activity.startActivityForResult(intent, 4);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
