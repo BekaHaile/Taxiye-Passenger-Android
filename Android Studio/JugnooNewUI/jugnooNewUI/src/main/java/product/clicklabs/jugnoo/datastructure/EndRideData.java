@@ -12,12 +12,12 @@ public class EndRideData {
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
-		distance, rideTime, waitTime, baseFare, fareFactor, finalFare;
+		distance, rideTime, waitTime, baseFare, fareFactor, finalFare, sumAdditionalCharges;
 	public double paidUsingPaytm;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
-	private String rideDate, phoneNumber, tripTotal;
-	private int vehicleType;
+	private String rideDate, phoneNumber, tripTotal, engagementDate;
+	private int vehicleType, isPooled;
 	private VehicleIconSet vehicleIconSet;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
@@ -25,7 +25,8 @@ public class EndRideData {
 			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
-					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet){
+					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
+					   double sumAdditionalCharges, String engagementDate){
 		this.engagementId = engagementId;
 		this.driverName = driverName;
 		this.driverCarNumber = driverCarNumber.toUpperCase(Locale.ENGLISH);
@@ -61,14 +62,17 @@ public class EndRideData {
 		if(this.waitingChargesApplicable == 0 && this.waitTime > 0){
 			this.waitingChargesApplicable = 1;
 		}
+		this.sumAdditionalCharges = sumAdditionalCharges;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount;
+		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount + this.sumAdditionalCharges;
 
 		this.rideDate = rideDate;
 		this.phoneNumber = phoneNumber;
 		this.tripTotal = tripTotal;
 		this.vehicleType = vehicleType;
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
+		this.isPooled = isPooled;
+		this.engagementDate = engagementDate;
 	}
 
 
@@ -115,5 +119,29 @@ public class EndRideData {
 
 	public void setVehicleIconSet(VehicleIconSet vehicleIconSet) {
 		this.vehicleIconSet = vehicleIconSet;
+	}
+
+	public int getIsPooled() {
+		return isPooled;
+	}
+
+	public void setIsPooled(int isPooled) {
+		this.isPooled = isPooled;
+	}
+
+	public ArrayList<DiscountType> getDiscountTypes() {
+		return discountTypes;
+	}
+
+	public void setDiscountTypes(ArrayList<DiscountType> discountTypes) {
+		this.discountTypes = discountTypes;
+	}
+
+	public String getEngagementDate() {
+		return engagementDate;
+	}
+
+	public void setEngagementDate(String engagementDate) {
+		this.engagementDate = engagementDate;
 	}
 }

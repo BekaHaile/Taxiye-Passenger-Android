@@ -31,17 +31,17 @@ public class NudgeClient {
 	}
 
 	public static void initialize(Context context, String userId, String userName, String email, String phoneNo,
-								  String city, String cityReg){
+								  String city, String cityReg, String referralCode){
 		try {
-			getGcmClient(context).initialize(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg));
-			new UpdateAsync(context, userId, userName, email, phoneNo, city, cityReg).execute();
+			getGcmClient(context).initialize(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg, referralCode));
+			new UpdateAsync(context, userId, userName, email, phoneNo, city, cityReg, referralCode).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private static NudgespotSubscriber getNudgespotSubscriber(String userId, String userName, String email, String phoneNo,
-													   String city, String cityReg){
+													   String city, String cityReg, String referralCode){
 		NudgespotSubscriber subscriber = new NudgespotSubscriber(userId);
 		try {
 			JSONObject props = new JSONObject();
@@ -51,6 +51,7 @@ public class NudgeClient {
 			props.put(Constants.KEY_SIGNED_UP_AT, DateOperations.getCurrentTimeInUTC());
 			props.put(Constants.KEY_CITY, city);
 			props.put(Constants.KEY_CITY_REG, cityReg);
+			props.put(Constants.KEY_REFERRAL_CODE, referralCode);
 
 			JSONArray jArray = new JSONArray();
 			JSONObject jContact = new JSONObject();
@@ -101,9 +102,9 @@ public class NudgeClient {
 
 	public static class UpdateAsync extends AsyncTask<String, Integer, String>{
 		private Context context;
-		private String userId, userName, email, phoneNo, city, cityReg;
+		private String userId, userName, email, phoneNo, city, cityReg, referralCode;
 		public UpdateAsync(Context context, String userId, String userName, String email, String phoneNo,
-						   String city, String cityReg){
+						   String city, String cityReg, String referralCode){
 			this.context = context;
 			this.userId = userId;
 			this.userName = userName;
@@ -130,7 +131,7 @@ public class NudgeClient {
 			super.onPostExecute(s);
 			try {
 				if(s.equalsIgnoreCase("go")){
-					getGcmClient(context).update(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg));
+					getGcmClient(context).update(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg, referralCode));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

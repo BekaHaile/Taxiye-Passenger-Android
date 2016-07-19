@@ -1,84 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <color name="white_less_dark">#F1F1F1</color>
-   <color name="white_dark">#CFCFCF</color>
-   <color name="white_dark1">#EFEFEF</color>
-   
-   
-   <color name="black">#202020</color>
-   <color name="black_alpha">#88202020</color>
-   <color name="black_light">#505050</color>
-   
-   <color name="black_text_shop">#1C1C1C</color>
-   
-   
-   <color name="white_translucent">#D8FFFFFF</color>
-   <color name="white_more_translucent">#66FFFFFF</color>
+    <color name="white_less_dark">#F1F1F1</color>
+    <color name="white_dark">#CFCFCF</color>
+    <color name="white_dark1">#EFEFEF</color>
+
+
+    <color name="black">#202020</color>
+    <color name="black_alpha">#88202020</color>
+    <color name="black_light">#505050</color>
+
+    <color name="black_text_shop">#1C1C1C</color>
+
+
+    <color name="white_translucent">#D8FFFFFF</color>
+    <color name="white_more_translucent">#66FFFFFF</color>
 
     <color name="black_translucent_less">#99000000</color>
-   <color name="black_translucent">#77000000</color>
+    <color name="black_translucent">#77000000</color>
     <color name="black_translucent_level_2">#44000000</color>
- <color name="black_translucent_level_3">#33000000</color>
+    <color name="black_translucent_level_3">#33000000</color>
     <color name="black_translucent_more">#BB000000</color>
     <color name="black_80">#CC000000</color>
-   
-   
-   
-   
-   
+
+
     <color name="transparent">#0000</color>
-    
+
     <color name="bg_grey">#D8242930</color>
     <color name="bg_grey_opaque">#242930</color>
     <color name="bg_white_translucent">#AAFFFFFF</color>
-    
+
     <color name="blue_btn">#4CC1D2</color>
     <color name="blue_btn_pressed">#2CA1B2</color>
     <color name="blue_btn_alpha">#774CC1D2</color>
-    
+
     <color name="green_btn">#66BB66</color>
     <color name="green_btn_pressed">#669966</color>
-    
-    
+
+
     <color name="grey_btn">#8E8E8E</color>
     <color name="grey_btn_pressed">#7E7E7E</color>
-    
-    
+
+
     <color name="blue_dark_btn">#3B5999</color>
     <color name="blue_dark_btn_pressed">#1B3979</color>
-    
-    
+
+
     <color name="red_banner">#9B3A26</color>
-    
+
     <color name="red_btn">#8E8E8E</color>
     <color name="red_btn_pressed">#7E7E7E</color>
-    
-    
-    
+
+
     <color name="favorite_bg">#393E44</color>
     <color name="favorite_div">#97989C</color>
-    
+
     <color name="yellow_jugnoo">#FAA31C</color>
-    
-    
-    <color name="yellow_pure">#FAF82A</color>    
-    
-    <color name="yellow_status">#F89414</color>    
-    <color name="green_status">#2EA058</color>    
+
+
+    <color name="yellow_pure">#FAF82A</color>
+
+    <color name="yellow_status">#F89414</color>
+    <color name="green_status">#2EA058</color>
     <color name="red_status">#F53C37</color>
-    
-    
+
+
     <color name="orange_text">#FBBC12</color>
-    
+
     <color name="orange_btn">#F99613</color>
     <color name="orange_btn_pressed">#E98603</color>
-    
+
     <color name="orange_dark">#F96f01</color>
-    
-    <color name="yellow_text">#FABB15</color>   
+
+    <color name="yellow_text">#FABB15</color>
     <color name="grey_text">#232323</color>
     <color name="grey_text_alpha">#77232323</color>
-
 
 
     <color name="red">#F23A30</color>
@@ -86,21 +81,20 @@
     <color name="red_dark">#EA452F</color>
     <color name="red_dark_alpha">#99EA452F</color>
     <color name="green">#57B943</color>
-    
-    
-    
+
+
     <color name="yellow">#F9BC14</color>
     <color name="yellow_alpha">#99F9BC14</color>
-    
+
     <color name="yellow_orange">#F48C27</color>
-    
-    
+
+
     <color name="white">#FFFFFF</color>
     <color name="white_alpha">#99FFFFFF</color>
     <color name="white_light_grey">#FAFAFA</color>
-     <color name="white_light_more_grey">#F3F3F3</color>
-    
-    
+    <color name="white_light_more_grey">#F3F3F3</color>
+
+
     <color name="black_text">#242424
 
 
@@ -122,15 +116,14 @@
     <color name="grey_black_light">#3E3E3E</color>
     <color name="grey_jugnoo_line">#414141</color>
     <color name="notification_text_color">#262626</color>
-    
-    
+
+
     <color name="blue_light">#4E75D8</color>
     <color name="blue_light_alpha">#994E75D8</color>
-    
-    
-    
+
+
     <color name="green_transaction_type">#46B82F</color>
-    
+
     <color name="dialog_border_color">#AA7E7D78</color>
 
     <!--colors used in activity_add_jugnoo_cash-->
@@ -140,38 +133,39 @@
     <color name="wallet_text_amount">#0D0D0D</color>
 
     <color name="grey_lightest">#ffe8e8e8</color>
-   <color name="leaderboard_activity_text_color">#9D9D9D</color>
+    <color name="leaderboard_activity_text_color">#9D9D9D</color>
 
- <!-- share lb colors-->
- <color name="grey_lb_list">#f6f6f6</color>
- <color name="white_60">#9AFFFFFF</color>
- <color name="white_40">#66FFFFFF</color>
- <color name="white_20">#33FFFFFF</color>
+    <!-- share lb colors-->
+    <color name="grey_lb_list">#f6f6f6</color>
+    <color name="white_60">#9AFFFFFF</color>
+    <color name="white_40">#66FFFFFF</color>
+    <color name="white_20">#33FFFFFF</color>
 
- <!-- NEW LOOK COLORS -->
- <color name="theme_color">#FD7945</color>
+    <!-- NEW LOOK COLORS -->
+    <color name="theme_color">#FD7945</color>
     <color name="theme_color_start">#FC644F</color>
     <color name="theme_color_end">#FF9339</color>
- <color name="theme_color_pressed">#99F17B47</color>
+    <color name="theme_color_pressed">#99F17B47</color>
     <color name="theme_color_alpha">#99FD7945</color>
- <color name="jeanie_color">#FD9244</color>
+    <color name="jeanie_color">#FD9244</color>
     <color name="text_color_dark">#494958</color>
- <color name="text_color">#595968</color>
+    <color name="text_color">#595968</color>
     <color name="theme_green_color">#5DC647</color>
     <color name="theme_red_color">#F54646</color>
- <color name="text_color_light">#A4A4A4</color>
- <color name="white_alpha_33">#33FFFFFF</color>
- <color name="sliding_bottom_bg_color">#F2F2F2</color>
- <color name="text_color_hint">#BCBCBC</color>
- <color name="nl_white_dark">#E0E0E0</color>
- <color name="menu_item_selector_color">#EEEEEE</color>
+    <color name="text_color_light">#A4A4A4</color>
+    <color name="white_alpha_33">#33FFFFFF</color>
+    <color name="sliding_bottom_bg_color">#F2F2F2</color>
+    <color name="text_color_hint">#BCBCBC</color>
+    <color name="nl_white_dark">#E0E0E0</color>
+    <color name="menu_item_selector_color">#EEEEEE</color>
     <color name="ride_history_item_text_color">#0EB2CE</color>
+    <color name="google_path_polyline_color">#0889da</color>
 
 
- <color name="red_google">#CF5D3A</color>
- <color name="red_google_alpha">#99CF5D3A</color>
+    <color name="red_google">#CF5D3A</color>
+    <color name="red_google_alpha">#99CF5D3A</color>
 
- <!-- Leaderboard Rank Colors -->
+    <!-- Leaderboard Rank Colors -->
     <color name="rank_1">#FDFDFD</color>
     <color name="rank_2">#F7F7F7</color>
     <color name="rank_3">#ECECEC</color>
@@ -187,13 +181,12 @@
     <color name="view_account_name_color">#FF8162</color>
 
 
+    <integer-array name="gplus_colors">
+        <item>@color/theme_color</item>
+        <item>@color/transparent</item>
+        <item>@color/theme_color</item>
+        <item>@color/transparent</item>
+    </integer-array>
 
- <integer-array name="gplus_colors">
-  <item>@color/theme_color</item>
-  <item>@color/transparent</item>
-  <item>@color/theme_color</item>
-  <item>@color/transparent</item>
- </integer-array>
-    
-   
+
 </resources>

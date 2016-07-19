@@ -63,12 +63,14 @@
 	<string name="refresh">REFRESH</string>
 	
 	<string name="ok">OK</string>
-	
+	<string name="okay">OKAY</string>
+
 	<string name="first_name">First Name</string>
 	<string name="last_name">Last Name</string>
 	<string name="phone_number">Phone Number</string>
 	<string name="confirm_password">Confirm Password</string>
 	<string name="confirm_ride">Confirm Ride</string>
+	<string name="confirm_request">Confirm Request</string>
 	
 	<string name="confirmation_code">Confirmation Code</string>
 	<string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
@@ -117,7 +119,7 @@
 	<string name="language_preferences">Language Preferences</string>
 	
 	<string name="ride_in_progress">Ride in progress...</string>
-	<string name="sharing_your_ride_with">Searching your fellow rider</string>
+	<string name="sharing_your_ride_with">Finding your fellow rider</string>
 	
 	<string name="click_to_view">Click to view</string>
 	
@@ -195,6 +197,8 @@
 	<string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
 	<string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
 	<string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
+	<string name="no_current_offer_popup_text">Get free rides by referring Jugnoo to friends.Every successful referral gets you a free ride.</string>
+	<string name="end_ride_with_image_text">Gift your friend a Jugnoo Ride worth 50 &amp; Get one for yourself as well. </string>
 
 
     <!-- wallet screen-->
@@ -257,6 +261,7 @@
 	<string name="thanks_for_riding_with_jugnoo">Thanks for riding with Jugnoo</string>
 
 
+
 	<!-- Jugnoo Jeanie Strings-->
 	<string name="jugnoo_jeanie">Jugnoo Jeanie</string>
 	<string name="accessibility_service_description">Switch “ON” to let Jugnoo help you find the quickest and cheapest transportation options.
@@ -280,6 +285,8 @@
 
 	<!-- Ride Summary New Strings -->
 	<string name="total_fare">TOTAL FARE</string>
+	<string name="total_fare_colon">TOTAL FARE: </string>
+	<string name="maximum_fare_colon">MAXIMUM FARE:</string>
 	<string name="Cash_to_be_paid">CASH TO BE PAID</string>
 	<string name="view_invoice">View Invoice</string>
 	<string name="rate_your_ride">How was your ride ?</string>
@@ -296,6 +303,8 @@
 	<string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
 	<string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
+	<string name="two_hifen">--</string>
+	<string name="includes_priority_tip">Includes Priority Tip | Offer will be applied at ride completion</string>
 
 
 	<!-- Add Places -->
@@ -811,6 +820,7 @@
 
 	<string name="waiting_for_location">Waiting for location&#8230;</string>
 	<string name="get_a_ride">Get a Ride</string>
+	<string name="get_ride">Get Ride</string>
 	<string name="fresh">Fresh</string>
 	<string name="order_history">Order History</string>
 	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
@@ -866,9 +876,9 @@
 	<string name="search_items">Search Items</string>
 
 	<string name="refer_a_driver">Refer a Driver</string>
-	<string name="came_across_auto_driver">Came across able auto rickshaw drivers\nwho aren\'t aware of Jugnoo yet?</string>
+	<string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
 	<string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
-	<string name="if_they_are_interested">If they are interested, do share their\ndetails with us.</string>
+	<string name="if_they_are_interested">Please help us improve Jugnoo\nand increase driver income.\nWin! Win!</string>
 	<string name="name_of_driver">Name of Driver</string>
 	<string name="contact_number">Contact Number</string>
 	<string name="refer">Refer</string>
@@ -879,17 +889,22 @@
 	<string name="no_campaign_currently">No campaign currently</string>
 	<string name="fare_ln_estimate">Fare\nEstimate</string>
 	<string name="base_fare_colon">Base Fare:</string>
+	<string name="fixed_fare_colon">Fixed Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
+	<string name="base_fare_rupee_format">BASE FARE : \u20B9<b>%s</b></string>
 
 
 	<string name="format_x">%s x</string>
+	<string name="format_x_without_space">%sx</string>
 
 	<string name="fare_details">Fare Details</string>
-	<string name="pay_for_your_rides_using">Pay for your rides using:</string>
+	<string name="pay_for_your_rides_using">Pay for your rides using</string>
 	<string name="enter_destination">Enter Destination</string>
+	<string name="destination_required">Destination required</string>
 	<string name="add_paytm_money_help_text">Pay for Jugnoo Rides with a Mobile Wallet</string>
-	<string name="convenience_charge_rupees_format">Convenience Charge \u20B9%s</string>
+	<string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
 	<string name="base_fare">Base Fare</string>
+	<string name="fixed_fare">Fixed Fare</string>
 	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
 	<string name="promotions">Promotions</string>
 	<string name="referrals">Referrals</string>
@@ -920,9 +935,17 @@
 	<string name="new_password_same_error">New Password is same as the old one</string>
 	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
 	<string name="add_emergency_contacts">Add Emergency Contacts</string>
+	<string name="pool_rides_offer_guaranteed_fares">Pool rides offer guaranteed fares. Check your fare on next screen before confirming the ride</string>
+	<string name="please_provide_pickup_and_dest">Please provide pickup and destination location to generate your guaranteed fare.</string>
+	<string name="you_will_not_change_dest">* You will not be able to change destination during the ride.</string>
 
 	<string name="receipt">Receipt</string>
 	<string name="feedback">Feedback</string>
+	<string name="confirmation">Confirmation</string>
+	<string name="max_people">MAX PEOPLE:</string>
+	<string name="fares_updated">Fares updated try again</string>
+	<string name="no_current_offers">No Current Offers</string>
+	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
 
 
 </resources>

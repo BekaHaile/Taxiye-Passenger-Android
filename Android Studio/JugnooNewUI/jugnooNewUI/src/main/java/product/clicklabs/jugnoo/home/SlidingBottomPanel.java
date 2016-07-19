@@ -55,7 +55,7 @@ public class SlidingBottomPanel {
     private ViewPager viewPager;
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private ImageView imageViewPaymentOp, imageViewExtraForSliding, imageViewSurgeOverSlidingBottom;
-    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue, textViewPoolInfo1, textViewPoolInfo2;
+    private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue, textViewPoolInfo1;
 
     private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
@@ -88,8 +88,6 @@ public class SlidingBottomPanel {
         relativeLayoutPoolInfoBar = (RelativeLayout)view.findViewById(R.id.relativeLayoutPoolInfoBar);
         textViewPoolInfo1 = (TextView)view.findViewById(R.id.textViewPoolInfo1);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(activity));
-        textViewPoolInfo2 = (TextView)view.findViewById(R.id.textViewPoolInfo2);
-        textViewPoolInfo2.setTypeface(Fonts.avenirNext(activity));
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
         slidingUpPanelLayout.setParallaxOffset((int) (260 * ASSL.Yscale()));
@@ -221,10 +219,8 @@ public class SlidingBottomPanel {
             } else{
                 textViewOffersValue.setText("-");
             }
-            updatePreferredPaymentOptionUI();
             updateRegionsUI();
             updateFareStructureUI();
-            updateCouponsFrag();
             checkForGoogleLogoVisibilityBeforeRide();
 
         } catch (Exception e) {
@@ -241,7 +237,7 @@ public class SlidingBottomPanel {
                 //slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
                 //relativeLayoutPoolInfoBar.setVisibility(View.GONE);
             } else{
-                slidingUpPanelLayout.setPanelHeight((int) (112 * ASSL.Yscale()));
+                slidingUpPanelLayout.setPanelHeight((int) (118 * ASSL.Yscale()));
                 relativeLayoutPoolInfoBar.setVisibility(View.GONE);
             }
         } catch (Exception e) {
@@ -262,25 +258,6 @@ public class SlidingBottomPanel {
         imageViewExtraForSliding.setLayoutParams(params);
     }
 
-    public void updatePaymentOption() {
-        try {
-            Data.pickupPaymentOption = (Data.userData.paytmEnabled == 1
-                    && Data.userData.getPaytmError() != 1
-                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
-                    && PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption)
-                    ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
-            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentOp.setImageResource(R.drawable.ic_paytm_small);
-                textViewCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-            } else {
-                imageViewPaymentOp.setImageResource(R.drawable.ic_cash_small);
-                textViewCashValue.setText(activity.getResources().getString(R.string.cash));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public SlidingUpPanelLayout getSlidingUpPanelLayout() {
         return slidingUpPanelLayout;
@@ -301,20 +278,6 @@ public class SlidingBottomPanel {
 
     public void setSelectedCoupon(PromoCoupon promoCoupon){
         selectedCoupon = promoCoupon;
-    }
-
-    public void setPaytmLoadingVisiblity(int visiblity) {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
-        }
-    }
-
-    public void updatePreferredPaymentOptionUI() {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
-        }
     }
 
     public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
@@ -391,32 +354,20 @@ public class SlidingBottomPanel {
 
     private void updateFareStructureUI(){
         for (int i = 0; i < Data.regions.size(); i++) {
-            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())) {
+            if (Data.regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                    && Data.regions.get(i).getRideType().equals(getRegionSelected().getRideType())) {
                 Data.fareStructure = Data.regions.get(i).getFareStructure();
                 break;
             }
         }
-        updateFareFactorUI();
     }
 
-    public void updateFareFactorUI() {
-        try {
-            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
-            if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
-                ((SlidingBottomFareFragment) frag1).update();
-            }
-            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-            setSurgeImageVisibility();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void setSurgeImageVisibility(){
         try {
             if(slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
-                && Data.userData.fareFactor > 1.0){
+                && Data.userData.fareFactor > 1.0
+                && Data.regions.size() == 1){
                 imageViewSurgeOverSlidingBottom.setVisibility(View.VISIBLE);
 			} else{
                 imageViewSurgeOverSlidingBottom.setVisibility(View.GONE);
@@ -427,17 +378,6 @@ public class SlidingBottomPanel {
         }
     }
 
-    private void updateCouponsFrag(){
-        try {
-            Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 2);
-            if (frag != null && frag instanceof SlidingBottomOffersFragment) {
-				((SlidingBottomOffersFragment) frag).setOfferAdapter();
-				((SlidingBottomOffersFragment) frag).update();
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void checkForGoogleLogoVisibilityBeforeRide(){
         try{

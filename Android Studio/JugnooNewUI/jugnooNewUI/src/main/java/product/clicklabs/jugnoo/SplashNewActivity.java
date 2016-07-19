@@ -44,7 +44,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
@@ -77,13 +76,11 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
-import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -337,6 +334,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			FacebookSdk.sdkInitialize(this);
 
+			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			Utils.disableSMSReceiver(this);
 
 			Data.locationSettingsNoPressed = false;
@@ -2016,8 +2014,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								linkedWallet = jObj.optInt("reg_wallet_type");
 								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
 								accessToken = jObj.getString("access_token");
-								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
@@ -2131,8 +2131,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								accessToken = jObj.getString("access_token");
 								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
 								SplashNewActivity.this.accessToken = jObj.getString("access_token");
-								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								sendToOtpScreen = true;
@@ -2245,8 +2247,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								accessToken = jObj.getString("access_token");
 								SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
 								SplashNewActivity.this.accessToken = jObj.getString("access_token");
-								Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-								Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
+										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								sendToOtpScreen = true;
@@ -2937,7 +2941,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void nudgeSignupEvent(String phoneNo, String email, String userName){
 		try {
-			NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo, "", "");
+			NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo, "", "", "");
 			JSONObject map = new JSONObject();
 			map.put(KEY_PHONE_NO, phoneNo);
 			map.put(KEY_EMAIL, email);
@@ -2956,8 +2960,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		SplashNewActivity.this.password = password;
 		SplashNewActivity.this.referralCode = referralCode;
 		SplashNewActivity.this.accessToken = jObj.getString("access_token");
-		Data.knowlarityMissedCallNumber = jObj.optString("knowlarity_missed_call_number", "");
-		Data.otpViaCallEnabled = jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+		Prefs.with(this).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+				jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+		Prefs.with(this).save(SP_OTP_VIA_CALL_ENABLED,
+				jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 		sendToOtpScreen = true;
 		linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
 	}

@@ -21,18 +21,17 @@
             android:id="@+id/textViewFareDetails"
             android:layout_width="match_parent"
             android:layout_height="108px"
-            android:background="@drawable/background_orange_tr"
+            android:background="@drawable/bg_menu_item_selector_tlrr"
             android:textAllCaps="true"
             android:text="@string/fare_details"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_38"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
         <View
             android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:background="@color/white"
-            android:layout_marginTop="-6px"
+            android:layout_height="2px"
+            android:background="@color/text_color_light"
             />
 
         <TextView
@@ -45,7 +44,7 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
-            android:text="@string/minimum_fare_rupee_format"
+            android:text="@string/base_fare_rupee_format"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_34"
             />
@@ -70,6 +69,7 @@
                 android:layout_width="300px"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_km"
+                android:textAllCaps="true"
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/text_size_34"
                 android:textColor="@color/text_color_light"
@@ -105,6 +105,7 @@
                 android:layout_width="300px"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_min"
+                android:textAllCaps="true"
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/text_size_34"
                 android:textColor="@color/text_color_light"
@@ -145,6 +146,17 @@
 
                 <TextView
                     android:id="@+id/textViewConvenienceCharge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/convenience_charge_rupees_format"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26"
+                    android:layout_marginTop="10px"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewPoolMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/convenience_charge_rupees_format"
@@ -195,6 +207,7 @@
     <ImageView
         android:id="@+id/imageViewClose"
         style="@style/cross_popup"
+        android:visibility="gone"
         />
 
 

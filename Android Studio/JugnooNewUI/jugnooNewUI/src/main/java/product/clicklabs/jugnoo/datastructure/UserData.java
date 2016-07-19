@@ -31,7 +31,7 @@ public class UserData {
 
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
-	private String publicAccessToken;
+	private String publicAccessToken, confirmScreenFareEstimateEnable;
 
 	private int gamePredictEnable, cToDReferralEnabled;
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
@@ -40,8 +40,10 @@ public class UserData {
 	private String city, cityReg, destinationHelpText, inRideSendInviteTextBold, inRideSendInviteTextNormal;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
-	private int isPoolEnabled;
-	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink;
+	private int inviteFriendButton, rideEndGoodFeedbackViewType;
+	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
+			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackText,
+			baseFarePoolText;
 	private double driverFareFactor;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
@@ -58,7 +60,9 @@ public class UserData {
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
 					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
-					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink){
+					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
+					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3, int inviteFriendButton,
+					int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -135,6 +139,14 @@ public class UserData {
 		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
 		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
 		this.fatafatUrlLink = fatafatUrlLink;
+		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
+		this.poolDestinationPopupText1 = poolDestinationPopupText1;
+		this.poolDestinationPopupText2 = poolDestinationPopupText2;
+		this.poolDestinationPopupText3 = poolDestinationPopupText3;
+		this.inviteFriendButton = inviteFriendButton;
+		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
+		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+		this.baseFarePoolText = baseFarePoolText;
 
 		checkUserImage();
 	}
@@ -164,7 +176,7 @@ public class UserData {
 		if(this.paytmError == 1){
 			return "--";
 		} else{
-			return Utils.getMoneyDecimalFormat().format(getPaytmBalance());
+			return Utils.getMoneyDecimalFormatWithoutFloat().format(getPaytmBalance());
 		}
 	}
 
@@ -465,14 +477,6 @@ public class UserData {
 		this.referralActivityEnabled = referralActivityEnabled;
 	}
 
-	public int getIsPoolEnabled() {
-		return isPoolEnabled;
-	}
-
-	public void setIsPoolEnabled(int isPoolEnabled) {
-		this.isPoolEnabled = isPoolEnabled;
-	}
-
 	public String getDestinationHelpText() {
 		return destinationHelpText;
 	}
@@ -535,5 +539,69 @@ public class UserData {
 
 	public void setFatafatUrlLink(String fatafatUrlLink) {
 		this.fatafatUrlLink = fatafatUrlLink;
+	}
+
+	public String getConfirmScreenFareEstimateEnable() {
+		return confirmScreenFareEstimateEnable;
+	}
+
+	public void setConfirmScreenFareEstimateEnable(String confirmScreenFareEstimateEnable) {
+		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
+	}
+
+	public String getPoolDestinationPopupText1() {
+		return poolDestinationPopupText1;
+	}
+
+	public void setPoolDestinationPopupText1(String poolDestinationPopupText1) {
+		this.poolDestinationPopupText1 = poolDestinationPopupText1;
+	}
+
+	public String getPoolDestinationPopupText2() {
+		return poolDestinationPopupText2;
+	}
+
+	public void setPoolDestinationPopupText2(String poolDestinationPopupText2) {
+		this.poolDestinationPopupText2 = poolDestinationPopupText2;
+	}
+
+	public String getPoolDestinationPopupText3() {
+		return poolDestinationPopupText3;
+	}
+
+	public void setPoolDestinationPopupText3(String poolDestinationPopupText3) {
+		this.poolDestinationPopupText3 = poolDestinationPopupText3;
+	}
+
+	public int getInviteFriendButton() {
+		return inviteFriendButton;
+	}
+
+	public void setInviteFriendButton(int inviteFriendButton) {
+		this.inviteFriendButton = inviteFriendButton;
+	}
+
+	public int getRideEndGoodFeedbackViewType() {
+		return rideEndGoodFeedbackViewType;
+	}
+
+	public void setRideEndGoodFeedbackViewType(int rideEndGoodFeedbackViewType) {
+		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
+	}
+
+	public String getRideEndGoodFeedbackText() {
+		return rideEndGoodFeedbackText;
+	}
+
+	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
+		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+	}
+
+	public String getBaseFarePoolText() {
+		return baseFarePoolText;
+	}
+
+	public void setBaseFarePoolText(String baseFarePoolText) {
+		this.baseFarePoolText = baseFarePoolText;
 	}
 }

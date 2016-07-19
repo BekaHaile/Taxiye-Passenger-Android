@@ -3,17 +3,13 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -36,7 +32,7 @@ public class PoolFareDialog {
 
 
 
-	public Dialog showPoolFareDialog(int fare) {
+	public Dialog showPoolFareDialog(double fare, String text) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
@@ -62,8 +58,17 @@ public class PoolFareDialog {
 			buttonConfirm.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewCancel = (TextView) dialog.findViewById(R.id.textViewCancel);
 			textViewCancel.setTypeface(Fonts.mavenRegular(activity));
+			TextView textViewTNC = (TextView)dialog.findViewById(R.id.textViewTNC);
+			textViewTNC.setTypeface(Fonts.mavenRegular(activity));
 
-			textViewValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), fare));
+			if(!text.equalsIgnoreCase("")){
+				textViewTNC.setVisibility(View.VISIBLE);
+				textViewTNC.setText(text);
+			} else{
+				textViewTNC.setVisibility(View.GONE);
+			}
+
+			textViewValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(fare)));
 
 			textViewCancel.setOnClickListener(new View.OnClickListener() {
 				@Override

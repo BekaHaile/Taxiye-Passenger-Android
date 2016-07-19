@@ -31,6 +31,7 @@
                 android:visibility="visible" />
 
             <RelativeLayout
+                android:id="@+id/shareiconContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40px">
@@ -79,7 +80,7 @@
                         android:layout_width="115px"
                         android:layout_height="115px"
                         android:tag="mwar"
-                        android:src="@drawable/fb_messanger"/>
+                        android:src="@drawable/ic_share_fb_messenger_selector"/>
 
                     <ImageView
                         android:id="@+id/imageViewWhatsapp"
@@ -87,7 +88,7 @@
                         android:layout_height="115px"
                         android:layout_marginLeft="20px"
                         android:tag="mwar"
-                        android:src="@drawable/whatsapp"/>
+                        android:src="@drawable/ic_share_whatsapp_selector"/>
 
                     <ImageView
                         android:id="@+id/imageViewEmail"
@@ -96,7 +97,7 @@
                         android:layout_marginLeft="20px"
                         android:visibility="gone"
                         android:tag="mwar"
-                        android:src="@drawable/email"/>
+                        android:src="@drawable/ic_share_email_selector"/>
 
                     <ImageView
                         android:id="@+id/imageViewMessage"
@@ -104,7 +105,7 @@
                         android:layout_height="115px"
                         android:layout_marginLeft="20px"
                         android:tag="mwar"
-                        android:src="@drawable/messages"/>
+                        android:src="@drawable/ic_share_messages_selector"/>
 
                     <ImageView
                         android:id="@+id/imageViewMore"
@@ -112,7 +113,7 @@
                         android:layout_height="115px"
                         android:layout_marginLeft="20px"
                         android:tag="mwar"
-                        android:src="@drawable/ic_show_more"/>
+                        android:src="@drawable/ic_share_show_more_selector"/>
                 </LinearLayout>
 
                 <ImageView
@@ -132,6 +133,7 @@
                 android:layout_below="@+id/textViewCode"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="70px"
+                android:visibility="gone"
                 android:text="@string/invite_friends_caps" />
 
             <TextView
@@ -139,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="30px"
+                android:layout_marginTop="120px"
                 android:gravity="center"
                 android:paddingLeft="40px"
                 android:paddingRight="40px"
@@ -168,7 +170,6 @@
                 android:visibility="gone"
                 android:background="@color/theme_color" />
 
-
         </LinearLayout>
     </ScrollView>
 
@@ -176,12 +177,14 @@
         android:id="@+id/relativeLayoutReferADriver"
         android:layout_width="wrap_content"
         android:layout_height="158px"
+        android:visibility="visible"
         android:layout_alignParentBottom="true">
 
         <RelativeLayout
             android:id="@+id/relativeLayoutMultipleTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_alignParentBottom="true">
 
             <ImageView
@@ -204,6 +207,7 @@
                     android:layout_width="359px"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:visibility="visible"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -236,6 +240,7 @@
                     android:layout_width="359px"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:visibility="visible"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -264,6 +269,8 @@
             android:id="@+id/relativeLayoutReferSingle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginRight="27px"
             android:visibility="gone">
 
             <ImageView
@@ -277,7 +284,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="88px"
                 android:layout_alignParentBottom="true"
-                android:background="@color/menu_item_selector_color"
+                android:background="@drawable/bg_menu_item_selector_color_tlrrb"
                 android:gravity="center"
                 android:text="@string/want_to_refer_a_driver"
                 android:textAllCaps="true"
@@ -285,11 +292,47 @@
                 android:textSize="@dimen/text_size_30" />
 
             <ImageView
-                android:layout_width="126px"
-                android:layout_height="126px"
+                android:layout_width="108px"
+                android:layout_height="109px"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30px"
-                android:background="@drawable/ic_promotions_driver_refer_selector"
+                android:background="@drawable/ic_slide_up"
+                android:tag="mwar" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutLeaderboardSingle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginRight="27px"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_above="@+id/textViewLeaderboardSingle"
+                android:visibility="gone"
+                android:background="@color/stroke_color_light" />
+
+            <TextView
+                android:id="@+id/textViewLeaderboardSingle"
+                android:layout_width="match_parent"
+                android:layout_height="95px"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_menu_item_selector_color_tlrrb"
+                android:gravity="center"
+                android:text="@string/leaderboard"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_44" />
+
+            <ImageView
+                android:layout_width="108px"
+                android:layout_height="109px"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30px"
+                android:background="@drawable/ic_slide_up"
                 android:tag="mwar" />
 
         </RelativeLayout>

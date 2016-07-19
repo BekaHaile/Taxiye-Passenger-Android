@@ -59,8 +59,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	private int engagementId;
 	private EndRideData endRideData;
 	private GetRideSummaryResponse getRideSummaryResponse;
-
-	public SupportRideIssuesFragment(){}
+	private boolean rideCancelled;
 
     @Override
     public void onStart() {
@@ -77,10 +76,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
     }
 
 
-	public SupportRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse){
+	public SupportRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, boolean rideCancelled){
 		this.engagementId = engagementId;
 		this.endRideData = endRideData;
 		this.getRideSummaryResponse = getRideSummaryResponse;
+		this.rideCancelled = rideCancelled;
 	}
 
     @Override
@@ -154,10 +154,16 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
 			}
 		} else if(activity instanceof RideTransactionsActivity){
-			linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-			recyclerViewSupportFaq.setVisibility(View.VISIBLE);
-			setRideData();
-			updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+			if(endRideData == null){
+				linearLayoutRideShortInfo.setVisibility(View.GONE);
+				recyclerViewSupportFaq.setVisibility(View.GONE);
+				getRideSummaryAPI(activity, ""+engagementId);
+			} else {
+				linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+				recyclerViewSupportFaq.setVisibility(View.VISIBLE);
+				setRideData();
+				updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+			}
 		}
 
 		return rootView;
@@ -181,7 +187,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				@Override
 				public void onClick(View v) {
 					if(activity instanceof SupportActivity && endRideData != null) {
-						((SupportActivity) activity).openRideSummaryFragment(endRideData);
+						((SupportActivity) activity).openRideSummaryFragment(endRideData, rideCancelled);
 					}
 				}
 			});
@@ -227,8 +233,15 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
 				}
 
-				textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
-						endRideData.getRideDate()));
+				if(endRideData.getRideDate() != null && (!endRideData.getRideDate().equalsIgnoreCase("null"))) {
+					textViewDate.setVisibility(View.VISIBLE);
+					textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
+							endRideData.getRideDate()));
+				} else{
+					textViewDate.setVisibility(View.VISIBLE);
+					textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
+							endRideData.getEngagementDate()));
+				}
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -266,7 +279,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					public void onNoRetry(View view) {
 						performBackPress();
 					}
-				}).getRideSummaryAPI();
+				}).getRideSummaryAPI(rideCancelled);
 	}
 
 

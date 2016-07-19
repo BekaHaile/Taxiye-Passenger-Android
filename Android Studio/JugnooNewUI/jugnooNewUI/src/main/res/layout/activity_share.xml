@@ -1,11 +1,10 @@
 <RelativeLayout
-    android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -17,12 +16,12 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="@string/promotions"
-            style="@style/title"/>
+            style="@style/title"
+            android:text="@string/promotions" />
 
         <ImageView
             android:id="@+id/imageViewBack"
-            style="@style/back_image"/>
+            style="@style/back_image" />
     </RelativeLayout>
 
     <product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip
@@ -30,49 +29,42 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="90px"
+        android:layout_below="@+id/topBar"
         android:visibility="gone"
-        app:pstsIndicatorHeight="6px"
         app:pstsDividerColor="@color/transparent"
+        app:pstsIndicatorHeight="6px"
         app:pstsShouldExpand="true"
         app:pstsUnderlineColor="@color/transparent"
-        app:pstsUnderlineHeight="0px"
-        android:layout_below="@+id/topBar"
-        />
+        app:pstsUnderlineHeight="0px" />
 
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tabs"
-        >
-    </android.support.v4.view.ViewPager>
+        android:layout_below="@+id/tabs"/>
 
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"
         android:layout_below="@+id/tabs"
-        />
+        android:background="@drawable/shadow_down" />
 
     <View
         android:id="@+id/viewGreyBG"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_translucent"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFragContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:soundEffectsEnabled="false"
-        >
-    </RelativeLayout>
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

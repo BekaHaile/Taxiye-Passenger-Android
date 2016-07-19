@@ -6,7 +6,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -85,8 +85,8 @@
         android:layout_height="117px"
         android:layout_above="@+id/relativeLayoutInRideContainer"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="40px"
-        android:layout_marginRight="45px"
+        android:layout_marginBottom="5px"
+        android:layout_marginRight="55px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar"
         android:visibility="visible" />
@@ -131,10 +131,11 @@
 
                 <TextView
                     android:id="@+id/textViewInRidePromoName"
-                    android:layout_width="match_parent"
+                    android:layout_width="500px"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
+                    android:singleLine="true"
                     android:layout_toRightOf="@+id/imageViewPromo"
                     android:gravity="center_vertical"
                     android:maxLines="2"
@@ -168,11 +169,11 @@
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutDriverRating"
-                    android:layout_width="80px"
+                    android:layout_width="90px"
                     android:layout_height="30px"
                     android:layout_alignBottom="@+id/imageViewInRideDriver"
                     android:layout_marginBottom="-20px"
-                    android:layout_marginLeft="55px"
+                    android:layout_marginLeft="50px"
                     android:background="@drawable/background_white_bordered">
 
                     <ImageView
@@ -180,7 +181,7 @@
                         android:layout_height="24px"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="8px"
+                        android:layout_marginRight="10px"
                         android:src="@drawable/ic_star_orange_small"
                         android:tag="mwar" />
 
@@ -224,7 +225,7 @@
                         android:layout_width="240px"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:maxLines="1"
+                        android:maxLines="2"
                         android:text="Driver Name"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
@@ -334,9 +335,9 @@
                         android:visibility="visible">
 
                         <ImageView
-                            android:layout_width="30px"
+                            android:layout_width="34px"
                             android:layout_height="34px"
-                            android:src="@drawable/ic_surge_grey" />
+                            android:src="@drawable/ic_surge_grey_white_bg" />
 
                         <TextView
                             android:id="@+id/textViewInRideFareFactor"
@@ -388,7 +389,7 @@
                     android:layout_marginLeft="20px"
                     android:layout_toRightOf="@+id/imageViewPoolSharing"
                     android:paddingRight="20px"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:text="@string/sharing_your_ride_with"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30" />
@@ -467,11 +468,11 @@
 
         <Button
             android:id="@+id/buttonCallDriver"
-            android:layout_width="128px"
-            android:layout_height="132px"
+            android:layout_width="132px"
+            android:layout_height="136px"
             android:layout_alignParentRight="true"
             android:layout_marginRight="50px"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="-5px"
             android:background="@drawable/ic_ride_call_selector"
             android:tag="mwar" />
     </RelativeLayout>

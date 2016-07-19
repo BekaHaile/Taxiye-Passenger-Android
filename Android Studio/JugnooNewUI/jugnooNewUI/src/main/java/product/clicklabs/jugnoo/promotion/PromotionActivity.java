@@ -148,6 +148,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 NudgeClient.trackEventUserId(PromotionActivity.this, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
+                FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");
             }
         });
 

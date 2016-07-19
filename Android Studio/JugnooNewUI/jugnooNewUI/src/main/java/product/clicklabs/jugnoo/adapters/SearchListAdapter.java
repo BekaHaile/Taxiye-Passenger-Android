@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -240,17 +241,23 @@ public class SearchListAdapter extends BaseAdapter{
 					try {
 						holder = (ViewHolderSearchItem) v.getTag();
 						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-						SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+						final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
                         Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
-						if (autoCompleteSearchResult.getPlaceId() != null
-                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
-							searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-							getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
-						} else{
-                            searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                            searchListActionsHandler.onPlaceSearchPre();
-                            searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
-                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (autoCompleteSearchResult.getPlaceId() != null
+                                        && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
+                                    searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                                    getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
+                                } else{
+                                    searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                                    searchListActionsHandler.onPlaceSearchPre();
+                                    searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                                }
+                            }
+                        }, 200);
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

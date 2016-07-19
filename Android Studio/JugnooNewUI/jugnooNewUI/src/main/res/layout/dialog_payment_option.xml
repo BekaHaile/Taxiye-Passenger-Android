@@ -21,18 +21,17 @@
             android:id="@+id/textViewPayForRides"
             android:layout_width="match_parent"
             android:layout_height="108px"
-            android:background="@drawable/background_orange_tr"
+            android:background="@drawable/bg_menu_item_selector_tlrr"
             android:textAllCaps="true"
             android:text="@string/pay_for_your_rides_using"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_38"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
         <View
             android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:background="@color/white"
-            android:layout_marginTop="-6px"
+            android:layout_height="2px"
+            android:background="@color/text_color_light"
             />
 
         <RelativeLayout
@@ -148,7 +147,7 @@
     <ImageView
         android:id="@+id/imageViewClose"
         style="@style/cross_popup"
-        />
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

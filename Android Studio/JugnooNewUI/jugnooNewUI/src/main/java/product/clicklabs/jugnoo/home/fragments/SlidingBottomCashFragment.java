@@ -91,7 +91,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             case R.id.relativeLayoutPaytm:
                 if(Data.userData.getPaytmBalance() > 0) {
                     Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                    setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+                    activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
 
                 } else if(Data.userData.getPaytmError() == 1){
@@ -116,7 +116,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                 });
                     }
                     else{
-                        activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
+                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().openPaymentActivityInCaseOfPaytmNotAdded();
                     }
                 }
                 break;
@@ -126,7 +126,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
                 }
                 Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-                setSelectedPaymentOptionUI(Data.pickupPaymentOption);
+                activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
                 break;
         }
@@ -200,8 +200,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 				paymentSelection(radioBtnPaytm, radioBtnCash);
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm);
-			}
-            activity.getSlidingBottomPanel().updatePaymentOption();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

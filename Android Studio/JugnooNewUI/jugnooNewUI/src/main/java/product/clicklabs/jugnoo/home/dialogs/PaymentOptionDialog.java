@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
@@ -68,9 +69,9 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			linearLayoutCash = (LinearLayout)dialog.findViewById(R.id.linearLayoutCash);
 			radioBtnPaytm = (ImageView)dialog.findViewById(R.id.radio_paytm);
 			radioBtnCash = (ImageView)dialog.findViewById(R.id.radio_cash);
-			textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
-			textViewPaytm = (TextView)dialog.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(activity));
-			((TextView)dialog.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
+			textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenRegular(activity));
+			textViewPaytm = (TextView)dialog.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenRegular(activity));
+			((TextView)dialog.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenRegular(activity));
 			progressBarPaytm = (ProgressWheel) dialog.findViewById(R.id.progressBarPaytm);
 
 			relativeLayoutPaytm.setOnClickListener(this);
@@ -116,48 +117,55 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()){
-			case R.id.relativeLayoutPaytm:
-				if(Data.userData.getPaytmBalance() > 0) {
-					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-					setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
+		try {
+			switch (v.getId()){
+                case R.id.relativeLayoutPaytm:
+                    if(Data.userData.getPaytmBalance() > 0) {
+                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
+						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
+                        callback.onPaymentModeUpdated();
+                    } else if(Data.userData.getPaytmError() == 1){
+                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+                    } else{
+                        if(Data.userData.paytmEnabled == 1
+                                && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+                            DialogPopup.alertPopupWithListener(activity, "",
+                                    activity.getResources().getString(R.string.paytm_no_cash),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(activity, PaymentActivity.class);
+                                            if(Data.userData.paytmEnabled == 1) {
+                                                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                                            } else {
+                                                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                                            }
+                                            activity.startActivity(intent);
+                                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                        }
+                                    });
+                        }
+                        else{
+                            activity.getSlidingBottomPanel().getRequestRideOptionsFragment().openPaymentActivityInCaseOfPaytmNotAdded();
+                        }
+                    }
+                    break;
 
-				} else if(Data.userData.getPaytmError() == 1){
-					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
-				} else{
-					if(Data.userData.paytmEnabled == 1
-							&& Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-						DialogPopup.alertPopupWithListener(activity, "",
-								activity.getResources().getString(R.string.paytm_no_cash),
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Intent intent = new Intent(activity, PaymentActivity.class);
-										if(Data.userData.paytmEnabled == 1) {
-											intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-										} else {
-											intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-										}
-										activity.startActivity(intent);
-										activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									}
-								});
-					}
-					else{
-						activity.getSlidingBottomPanel().openPaymentActivityInCaseOfPaytmNotAdded();
-					}
-				}
-				break;
-
-			case R.id.linearLayoutCash:
-				if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
-					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
-				}
-				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-				setSelectedPaymentOptionUI(Data.pickupPaymentOption);
-				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
-				break;
+                case R.id.linearLayoutCash:
+                    if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
+                        FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
+                    }
+                    Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
+                    callback.onPaymentModeUpdated();
+                    break;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -168,7 +176,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm);
 			}
-            activity.getSlidingBottomPanel().updatePaymentOption();
 			dialog.dismiss();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -253,6 +260,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 	public interface Callback{
 		void onDialogDismiss();
+		void onPaymentModeUpdated();
 	}
 
 }

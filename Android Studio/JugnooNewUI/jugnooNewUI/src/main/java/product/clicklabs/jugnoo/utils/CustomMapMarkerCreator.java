@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.widget.TextView;
@@ -38,8 +39,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createPinMarkerBitmapEnd(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale);
-        int height = (int)(94.0f * scale);
+        int width = (int)(46.0f * scale * 0.85f);
+        int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball_end);
@@ -50,8 +51,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createPinMarkerBitmapStart(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale);
-        int height = (int)(94.0f * scale);
+        int width = (int)(46.0f * scale * 0.85f);
+        int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(R.drawable.pin_ball_start);
@@ -63,8 +64,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createSmallPinMarkerBitmap(Activity activity, ASSL assl, int drawableId){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale * 0.5f);
-        int height = (int)(94.0f * scale * 0.5f);
+        int width = (int)(46.0f * scale * 0.85f);
+        int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(drawableId);
@@ -103,6 +104,51 @@ public class CustomMapMarkerCreator {
 
 		canvasText.drawText(text, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
 		canvasText.drawText("MIN", canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
+
+
+		return bmpText;
+	}
+
+	public static Bitmap getTextAssignBitmap(final Context context, ASSL assl, String text, final int fontSize) {
+// ic_centre_pin_big
+		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		final TextView textView = new TextView(context);
+		textView.setText(text);
+		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (scale * (float) fontSize));
+		textView.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+
+		final TextView textView1 = new TextView(context);
+		textView1.setText(text);
+		textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (scale * (float) fontSize));
+		textView1.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+
+		final Rect boundsText = new Rect();
+
+
+		int width = (int)(186.0f * scale * 0.85f);
+		int height = (int)(173.0f * scale * 0.85f);
+
+		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);
+
+		final Paint paint = textView.getPaint();
+		paint.getTextBounds(text, 0, textView.length(), boundsText);
+		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setColor(context.getResources().getColor(R.color.text_color));
+
+		final Paint paint1 = textView1.getPaint();
+		paint1.getTextBounds(text, 0, textView1.length(), boundsText);
+		paint1.setTextAlign(Paint.Align.CENTER);
+		paint1.setColor(context.getResources().getColor(R.color.theme_color));
+
+		final Canvas canvasText = new Canvas(bmpText);
+
+		Drawable shape = context.getResources().getDrawable(R.drawable.ic_eta_callout);
+		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
+		shape.draw(canvasText);
+
+		canvasText.drawText("ETA: ", (45f * assl.Xscale()), (34f * assl.Yscale()), paint);
+		canvasText.drawText(text+" MIN", (105f * assl.Xscale()), (int)(34f*assl.Yscale()), paint1);
 
 
 		return bmpText;

@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="110px"
     android:tag="mwar"
-    android:splitMotionEvents="false"
-    >
+    android:splitMotionEvents="false">
 
     <ImageView
         android:id="@+id/imageViewType"
@@ -35,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:singleLine="true"
-            android:textColor="@color/text_color"
+            android:textColor="@color/text_color_light_selector"
             android:textSize="30px" />
 
         <TextView

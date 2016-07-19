@@ -18,12 +18,33 @@ public class Region {
 	@SerializedName("region_id")
 	@Expose
 	private Integer regionId;
+	@SerializedName("ride_type")
+	@Expose
+	private Integer rideType;
+	@SerializedName("max_people")
+	@Expose
+	private Integer maxPeople;
 	@SerializedName("region_name")
 	@Expose
 	private String regionName;
 	@SerializedName("icon_set")
 	@Expose
 	private String iconSet;
+	@SerializedName("customer_fare_factor")
+	@Expose
+	private Double customerFareFactor;
+	@SerializedName("driver_fare_factor")
+	@Expose
+	private Double driverFareFactor;
+	@SerializedName("priority_tip_category")
+	@Expose
+	private Integer priorityTipCategory;
+	@SerializedName("images")
+	@Expose
+	private Images images;
+	@SerializedName("offer_texts")
+	@Expose
+	private OfferTexts offerTexts;
 
 	private VehicleIconSet vehicleIconSet;
 
@@ -41,6 +62,130 @@ public class Region {
 		this.vehicleIconSet = VehicleIconSet.ORANGE_AUTO;
 		this.eta = "-";
 		this.fareStructure = JSONParser.getFareStructure();
+		this.rideType = 0;
+		this.maxPeople = 3;
+		this.customerFareFactor = 1.0;
+		this.driverFareFactor = 1.0;
+		this.priorityTipCategory = 0;
+	}
+
+	public class OfferTexts {
+
+		@SerializedName("text1")
+		@Expose
+		private String text1;
+		@SerializedName("text2")
+		@Expose
+		private String text2;
+
+		/**
+		 *
+		 * @return
+		 * The text1
+		 */
+		public String getText1() {
+			return text1;
+		}
+
+		/**
+		 *
+		 * @param text1
+		 * The text1
+		 */
+		public void setText1(String text1) {
+			this.text1 = text1;
+		}
+
+		/**
+		 *
+		 * @return
+		 * The text2
+		 */
+		public String getText2() {
+			return text2;
+		}
+
+		/**
+		 *
+		 * @param text2
+		 * The text2
+		 */
+		public void setText2(String text2) {
+			this.text2 = text2;
+		}
+
+	}
+
+	public class Images {
+
+		@SerializedName("tab_normal")
+		@Expose
+		private String tabNormal;
+		@SerializedName("tab_highlighted")
+		@Expose
+		private String tabHighlighted;
+		@SerializedName("ride_now_normal")
+		@Expose
+		private String rideNowNormal;
+		@SerializedName("ride_now_highlighted")
+		@Expose
+		private String rideNowHighlighted;
+
+		/**
+		 * @return The tabNormal
+		 */
+		public String getTabNormal() {
+			return tabNormal;
+		}
+
+		/**
+		 * @param tabNormal The tab_normal
+		 */
+		public void setTabNormal(String tabNormal) {
+			this.tabNormal = tabNormal;
+		}
+
+		/**
+		 * @return The tabHighlighted
+		 */
+		public String getTabHighlighted() {
+			return tabHighlighted;
+		}
+
+		/**
+		 * @param tabHighlighted The tab_highlighted
+		 */
+		public void setTabHighlighted(String tabHighlighted) {
+			this.tabHighlighted = tabHighlighted;
+		}
+
+		/**
+		 * @return The rideNowNormal
+		 */
+		public String getRideNowNormal() {
+			return rideNowNormal;
+		}
+
+		/**
+		 * @param rideNowNormal The ride_now_normal
+		 */
+		public void setRideNowNormal(String rideNowNormal) {
+			this.rideNowNormal = rideNowNormal;
+		}
+
+		/**
+		 * @return The rideNowHighlighted
+		 */
+		public String getRideNowHighlighted() {
+			return rideNowHighlighted;
+		}
+
+		/**
+		 * @param rideNowHighlighted The ride_now_highlighted
+		 */
+		public void setRideNowHighlighted(String rideNowHighlighted) {
+			this.rideNowHighlighted = rideNowHighlighted;
+		}
 	}
 
 
@@ -102,5 +247,61 @@ public class Region {
 
 	public void setRegionId(Integer regionId) {
 		this.regionId = regionId;
+	}
+
+	public Integer getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(Integer rideType) {
+		this.rideType = rideType;
+	}
+
+	public Images getImages() {
+		return images;
+	}
+
+	public void setImages(Images images) {
+		this.images = images;
+	}
+
+	public Integer getMaxPeople() {
+		return maxPeople;
+	}
+
+	public void setMaxPeople(Integer maxPeople) {
+		this.maxPeople = maxPeople;
+	}
+
+	public OfferTexts getOfferTexts() {
+		return offerTexts;
+	}
+
+	public void setOfferTexts(OfferTexts offerTexts) {
+		this.offerTexts = offerTexts;
+	}
+
+	public Double getCustomerFareFactor() {
+		return customerFareFactor;
+	}
+
+	public void setCustomerFareFactor(Double customerFareFactor) {
+		this.customerFareFactor = customerFareFactor;
+	}
+
+	public Integer getPriorityTipCategory() {
+		return priorityTipCategory;
+	}
+
+	public void setPriorityTipCategory(Integer priorityTipCategory) {
+		this.priorityTipCategory = priorityTipCategory;
+	}
+
+	public Double getDriverFareFactor() {
+		return driverFareFactor;
+	}
+
+	public void setDriverFareFactor(Double driverFareFactor) {
+		this.driverFareFactor = driverFareFactor;
 	}
 }
