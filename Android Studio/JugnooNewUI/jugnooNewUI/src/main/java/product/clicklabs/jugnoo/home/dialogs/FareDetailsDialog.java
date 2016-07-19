@@ -132,6 +132,7 @@ public class FareDetailsDialog {
 				textViewConvenienceCharge.setVisibility(View.GONE);
 			}
 
+
 			dialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();
