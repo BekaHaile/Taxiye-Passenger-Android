@@ -3947,6 +3947,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             setDropAddressAndExpandFields(searchResult);
                         }
                         imageViewRideNow.performClick();
+                        activityResumed = false;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -6484,13 +6485,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dontCallRefreshDriver = false;
-                    callMapTouchedRefreshDrivers();
-                }
-            }, 150);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    dontCallRefreshDriver = false;
+//                    callMapTouchedRefreshDrivers();
+//                }
+//            }, 150);
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 

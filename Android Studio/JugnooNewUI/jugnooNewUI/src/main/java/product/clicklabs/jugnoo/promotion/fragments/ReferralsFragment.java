@@ -47,7 +47,8 @@ public class ReferralsFragment extends Fragment {
 	private ImageView imageViewLogo, imageViewMore, imageViewFbMessanger, imageViewWhatsapp, imageViewMessage, imageViewEmail;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo, textViewLeaderboardSingle;
 	private Button buttonInvite;
-	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab, relativeLayoutLeaderboardSingle;
+	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab, relativeLayoutLeaderboardSingle,
+			shareiconContainer;
 	private LinearLayout linearLayoutLeaderBoard, linearLayoutRefer;
 	private View rootView;
     private ShareActivity activity;
@@ -105,6 +106,7 @@ public class ReferralsFragment extends Fragment {
 		imageViewWhatsapp = (ImageView) rootView.findViewById(R.id.imageViewWhatsapp);
 		imageViewMessage = (ImageView) rootView.findViewById(R.id.imageViewMessage);
 		imageViewEmail = (ImageView) rootView.findViewById(R.id.imageViewEmail);
+		shareiconContainer = (RelativeLayout) rootView.findViewById(R.id.shareiconContainer);
 
 		ArrayList<AppPackage> appPackages = new ArrayList<>();
 		appPackages.add(new AppPackage(0, "com.whatsapp"));
@@ -140,8 +142,12 @@ public class ReferralsFragment extends Fragment {
             } else{
                 buttonInvite.setVisibility(View.GONE);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDesc.getLayoutParams();
-                params.setMargins(0, 120, 0, 0);
+                params.setMargins(0, 100, 0, 0);
                 textViewDesc.setLayoutParams(params);
+
+				LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) shareiconContainer.getLayoutParams();
+				params1.setMargins(0, 100, 0, 0);
+				shareiconContainer.setLayoutParams(params1);
             }
 		} catch (Exception e) {
 			e.printStackTrace();
