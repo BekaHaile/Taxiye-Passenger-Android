@@ -132,12 +132,12 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return null;
 	}
 
-	public void openRideSummaryFragment(EndRideData endRideData){
+	public void openRideSummaryFragment(EndRideData endRideData, boolean rideCancelled){
 		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
 			getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(getContainer().getId(),
-							new RideSummaryFragment(endRideData),
+							new RideSummaryFragment(endRideData, rideCancelled),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
