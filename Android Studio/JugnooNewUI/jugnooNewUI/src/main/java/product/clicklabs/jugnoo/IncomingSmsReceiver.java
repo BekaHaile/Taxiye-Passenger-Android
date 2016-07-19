@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by socomo20 on 8/12/15.
@@ -34,19 +35,23 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
 
 					Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
 
-					if(OTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+					if(Prefs.with(context).getString(Constants.SP_OTP_SCREEN_OPEN, "")
+							.equalsIgnoreCase(OTPConfirmScreen.class.getName())) {
 						Intent otpConfirmScreen = new Intent(context, OTPConfirmScreen.class);
 						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						otpConfirmScreen.putExtra("sender_num", senderNum);
 						otpConfirmScreen.putExtra("message", message);
 						context.startActivity(otpConfirmScreen);
+						break;
 					}
-					else if(PhoneNoOTPConfirmScreen.OTP_SCREEN_OPEN != null) {
+					else if(Prefs.with(context).getString(Constants.SP_OTP_SCREEN_OPEN, "")
+							.equalsIgnoreCase(PhoneNoOTPConfirmScreen.class.getName())) {
 						Intent otpConfirmScreen = new Intent(context, PhoneNoOTPConfirmScreen.class);
 						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						otpConfirmScreen.putExtra("sender_num", senderNum);
 						otpConfirmScreen.putExtra("message", message);
 						context.startActivity(otpConfirmScreen);
+						break;
 					}
 
 				} // end for loop
