@@ -305,6 +305,10 @@ public class SlidingBottomPanelV4 {
         return imageViewSurgeOverSlidingBottom;
     }
 
+    public TextView getTextViewMinFareValue(){
+        return textViewMinFareValue;
+    }
+
     public void updateBottomPanel(int suppleCount){
         if(suppleCount > 1) {
             linearLayoutSlidingBottomSingle.setVisibility(View.GONE);
