@@ -192,7 +192,6 @@
                     android:paddingLeft="5px"
                     android:paddingRight="5px"
                     android:text="@string/includes_priority_tip"
-                    android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_18"
                     android:visibility="visible" />

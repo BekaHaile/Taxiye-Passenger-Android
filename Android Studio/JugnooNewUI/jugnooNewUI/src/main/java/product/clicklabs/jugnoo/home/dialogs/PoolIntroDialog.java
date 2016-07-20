@@ -7,6 +7,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -53,10 +54,17 @@ public class PoolIntroDialog {
                 dialog.setCanceledOnTouchOutside(false);
 
                 LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
+                ((TextView) dialog.findViewById(R.id.textViewCoolToPool)).setTypeface(Fonts.mavenMedium(activity));
+                ((TextView) dialog.findViewById(R.id.textViewCoolToPool1)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                ((TextView) dialog.findViewById(R.id.textViewCoolToPool2)).setTypeface(Fonts.mavenMedium(activity));
+                ((TextView) dialog.findViewById(R.id.textViewCoolToPool3)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                ((TextView) dialog.findViewById(R.id.textViewShareTheJourney)).setTypeface(Fonts.mavenMedium(activity));
+                ((TextView) dialog.findViewById(R.id.textViewShareTheJourney1)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
                 ImageView imageViewPool = (ImageView) dialog.findViewById(R.id.imageViewPool);
-                TextView textViewCoolToPool = (TextView) dialog.findViewById(R.id.textViewCoolToPool); textViewCoolToPool.setTypeface(Fonts.mavenMedium(activity));
-                TextView textViewShareTheJourney = (TextView) dialog.findViewById(R.id.textViewShareTheJourney); textViewShareTheJourney.setTypeface(Fonts.mavenMedium(activity));
-                TextView textViewRidingAlone = (TextView) dialog.findViewById(R.id.textViewRidingAlone); textViewRidingAlone.setTypeface(Fonts.mavenMedium(activity));
+                //TextView textViewCoolToPool = (TextView) dialog.findViewById(R.id.textViewCoolToPool); textViewCoolToPool.setTypeface(Fonts.mavenMedium(activity));
+                //TextView textViewShareTheJourney = (TextView) dialog.findViewById(R.id.textViewShareTheJourney); textViewShareTheJourney.setTypeface(Fonts.mavenMedium(activity));
+                TextView textViewRidingAlone = (TextView) dialog.findViewById(R.id.textViewRidingAlone); textViewRidingAlone.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                TextView textViewRidingAlone1 = (TextView) dialog.findViewById(R.id.textViewRidingAlone1); textViewRidingAlone1.setTypeface(Fonts.mavenMedium(activity));
                 Button buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue); buttonContinue.setTypeface(Fonts.avenirNext(activity));
 
 //                final Spannable coolSB = new SpannableString("COOL");

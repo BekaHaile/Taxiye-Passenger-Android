@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General -->
+	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -259,6 +259,7 @@
 	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
 	<string name="thanks_for_riding_with_jugnoo">Thanks for riding with Jugnoo</string>
+
 
 
 	<!-- Jugnoo Jeanie Strings-->
@@ -875,9 +876,9 @@
 	<string name="search_items">Search Items</string>
 
 	<string name="refer_a_driver">Refer a Driver</string>
-	<string name="came_across_auto_driver">Came across able auto rickshaw drivers\nwho aren\'t aware of Jugnoo yet?</string>
+	<string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
 	<string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
-	<string name="if_they_are_interested">If they are interested, do share their\ndetails with us.</string>
+	<string name="if_they_are_interested">Please help us improve Jugnoo\nand increase driver income.\nWin! Win!</string>
 	<string name="name_of_driver">Name of Driver</string>
 	<string name="contact_number">Contact Number</string>
 	<string name="refer">Refer</string>

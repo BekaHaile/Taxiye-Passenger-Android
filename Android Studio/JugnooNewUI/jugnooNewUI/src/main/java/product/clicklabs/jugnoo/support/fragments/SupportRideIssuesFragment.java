@@ -187,7 +187,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				@Override
 				public void onClick(View v) {
 					if(activity instanceof SupportActivity && endRideData != null) {
-						((SupportActivity) activity).openRideSummaryFragment(endRideData);
+						((SupportActivity) activity).openRideSummaryFragment(endRideData, rideCancelled);
 					}
 				}
 			});

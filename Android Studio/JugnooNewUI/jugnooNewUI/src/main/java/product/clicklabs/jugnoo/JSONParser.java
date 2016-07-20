@@ -115,8 +115,10 @@ public class JSONParser implements Constants {
 
         String userIdentifier = userData.optString("user_identifier", userEmail);
 
-		Data.knowlarityMissedCallNumber = userData.optString("knowlarity_missed_call_number", "");
-        Data.otpViaCallEnabled = userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1);
+        Prefs.with(context).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+                userData.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+        Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED,
+                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
 		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
@@ -213,6 +215,7 @@ public class JSONParser implements Constants {
         int inviteFriendButton = userData.optInt("invite_friend_button", 0);
         int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
         String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+        String baseFarePoolText = userData.optString("base_fare_pool_text", "");
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -263,7 +266,7 @@ public class JSONParser implements Constants {
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
                 poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
-                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText,
+                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText,
                 paytmEnabled, mobikwikEnabled);
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);

@@ -1602,7 +1602,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             openPushDialog();
-            showPoolIntroDialog();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1757,6 +1756,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 customerInRideMyLocationBtn.setVisibility(View.GONE);
             }
         } catch(Exception e){
+            initialMyLocationBtn.setVisibility(View.VISIBLE);
+            customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -3899,6 +3900,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             setDropAddressAndExpandFields(searchResult);
                         }
                         imageViewRideNow.performClick();
+                        activityResumed = false;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -4185,6 +4187,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     setJugnooPool();
+                    showPoolIntroDialog();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -6438,7 +6441,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     dontCallRefreshDriver = false;
                     callMapTouchedRefreshDrivers();
                 }
-            }, 150);
+            }, 600);
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 

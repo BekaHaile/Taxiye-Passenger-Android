@@ -550,6 +550,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
                 ((SlidingBottomFareFragment) frag1).update();
             }
+            activity.getSlidingBottomPanel().getTextViewMinFareValue().setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
             setSurgeImageVisibility();
         } catch (Exception e) {
         }

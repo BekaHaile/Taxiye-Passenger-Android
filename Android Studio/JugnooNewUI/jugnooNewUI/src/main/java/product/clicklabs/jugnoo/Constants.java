@@ -306,6 +306,7 @@ public interface Constants {
 	String SP_POOL_INTRO_SHOWN = "sp_pool_intro_shown";
 
 	String KEY_DRIVER_FARE_FACTOR = "driver_fare_factor";
+
 	String KEY_IS_POOLED = "is_pooled";
 	String KEY_RIDE_TYPE = "ride_type";
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
@@ -328,6 +329,12 @@ public interface Constants {
 	String KEY_JUGNOO_CASH = "jugnoo_cash";
 	String KEY_WALLET_ORDER = "wallet_order";
 	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
+	String KEY_KNOWLARITY_MISSED_CALL_NUMBER = "knowlarity_missed_call_number";
+
+	String SP_OTP_SCREEN_OPEN = "sp_otp_screen_open";
+	String SP_OTP_VIA_CALL_ENABLED = "sp_otp_via_call_enabled";
+	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
+
 
 
 

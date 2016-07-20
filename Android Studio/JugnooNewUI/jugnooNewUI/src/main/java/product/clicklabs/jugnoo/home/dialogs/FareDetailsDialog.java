@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -15,6 +14,8 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -63,6 +64,7 @@ public class FareDetailsDialog {
 			textViewThresholdDistance.setTypeface(Fonts.mavenLight(activity));
 			TextView textViewConvenienceCharge = (TextView) dialog.findViewById(R.id.textViewConvenienceCharge);
 			textViewConvenienceCharge.setTypeface(Fonts.mavenLight(activity));
+			TextView textViewPoolMessage = (TextView) dialog.findViewById(R.id.textViewPoolMessage);textViewPoolMessage.setTypeface(Fonts.mavenMedium(activity));
 
 			RelativeLayout relativeLayoutPriorityTip = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPriorityTip);
 			TextView textViewPriorityTipValue = (TextView) dialog.findViewById(R.id.textViewPriorityTipValue);
@@ -113,7 +115,8 @@ public class FareDetailsDialog {
 			} else{
 				textViewThresholdDistance.setVisibility(View.GONE);
 			}
-			double fareFactor = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
+			Region region = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected();
+			double fareFactor = region.getCustomerFareFactor();
 			if(fareFactor > 1.0){
 				relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
 				textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x),
@@ -129,6 +132,14 @@ public class FareDetailsDialog {
 						Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge)));
 			} else{
 				textViewConvenienceCharge.setVisibility(View.GONE);
+			}
+
+			if(region.getRideType() == RideTypeValue.POOL.getOrdinal()
+					&& !"".equalsIgnoreCase(Data.userData.getBaseFarePoolText())){
+				textViewPoolMessage.setVisibility(View.VISIBLE);
+				textViewPoolMessage.setText(Data.userData.getBaseFarePoolText());
+			} else{
+				textViewPoolMessage.setVisibility(View.GONE);
 			}
 
 			dialog.show();

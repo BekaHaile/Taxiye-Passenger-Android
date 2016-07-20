@@ -377,18 +377,22 @@
             android:id="@+id/imageViewRideEndWithImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:tag="mwar"
             android:src="@drawable/ride_end_image_1"
             android:scaleType="centerCrop"/>
 
         <ImageView
-            android:layout_width="636px"
-            android:layout_height="95px"
+            android:layout_width="603px"
+            android:layout_height="64px"
             android:layout_marginTop="34px"
             android:layout_centerHorizontal="true"
             android:src="@drawable/happy_text"
+            android:layout_marginBottom="20px"
+            android:layout_above="@+id/relativeLayoutBottomContainer"
             android:tag="mwar"/>
 
         <RelativeLayout
+            android:id="@+id/relativeLayoutBottomContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50px"

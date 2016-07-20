@@ -90,9 +90,10 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 	}
 
 	@SuppressLint("ValidFragment")
-	public RideSummaryFragment(EndRideData endRideData){
+	public RideSummaryFragment(EndRideData endRideData, boolean rideCancelled){
 		this.engagementId = Integer.parseInt(endRideData.engagementId);
 		this.endRideData = endRideData;
+		this.rideCancelled = rideCancelled;
 	}
 
 
@@ -413,7 +414,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 				textViewEndRideToBePaidValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.toPay)));
 
-				if(endRideData.fareFactor > 1 || endRideData.fareFactor < 1){
+				if(!rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)){
 					textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
 				} else{
 					textViewEndRideFareFactorValue.setVisibility(View.GONE);
