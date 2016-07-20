@@ -1762,7 +1762,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 customerInRideMyLocationBtn.setVisibility(View.GONE);
             }
         } catch(Exception e){
-            e.printStackTrace();
+            initialMyLocationBtn.setVisibility(View.VISIBLE);
+            customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
         }
     }
 
