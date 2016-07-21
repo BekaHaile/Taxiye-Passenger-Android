@@ -76,6 +76,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -213,7 +214,7 @@ import retrofit.mime.TypedByteArray;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
 		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants {
+        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback {
 
 
     private final String TAG = "Home Screen";
@@ -512,7 +513,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Map Layout
         mapLayout = (RelativeLayout) findViewById(R.id.mapLayout);
-        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
         mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mapTouched = false;
 
@@ -1414,7 +1415,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
         // map object initialized
+        map = googleMap;
         if (map != null) {
 
             map.getUiSettings().setZoomGesturesEnabled(false);
@@ -1425,11 +1433,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
             //30.7500, 76.7800
-			//22.971723, 78.754263
+            //22.971723, 78.754263
 
 
-			if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
-					|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
+            if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
+                    || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
                 forceFarAwayCity();
                 Data.lastRefreshLatLng = new LatLng(22.971723, 78.754263);
@@ -1481,21 +1489,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             try {
                                 final DriverInfo driverInfo = Data.driverInfos.get(Data.driverInfos.indexOf(new DriverInfo(driverId)));
                                 DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Driver Info", "" + driverInfo.toString(),
-                                    "Call", "Cancel", new OnClickListener() {
+                                        "Call", "Cancel", new OnClickListener() {
 
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                                            callIntent.setData(Uri.parse("tel:" + driverInfo.phoneNumber));
-                                            startActivity(callIntent);
-                                        }
-                                    },
-                                    new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent callIntent = new Intent(Intent.ACTION_VIEW);
+                                                callIntent.setData(Uri.parse("tel:" + driverInfo.phoneNumber));
+                                                startActivity(callIntent);
+                                            }
+                                        },
+                                        new OnClickListener() {
 
-                                        @Override
-                                        public void onClick(View v) {
-                                        }
-                                    }, true, false);
+                                            @Override
+                                            public void onClick(View v) {
+                                            }
+                                        }, true, false);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1556,7 +1564,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     else{
                         Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target));
                         if(MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
-							Data.lastRefreshLatLng = map.getCameraPosition().target;
+                            Data.lastRefreshLatLng = map.getCameraPosition().target;
                             refresh = true;
                         }
                     }
@@ -1623,12 +1631,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-		try{
-			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
+        try{
+            Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
             FlurryAgent.setUserId(Data.userData.getUserId());
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
         try {
             JSONObject map = new JSONObject();
@@ -1641,11 +1649,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-		Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+        Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
-
     }
 
     private void endRideWithGif(){

@@ -411,4 +411,8 @@ public interface ApiService {
     void cancelCampaign(@FieldMap Map<String, String> params,
                        Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/refresh_device_token")
+    Response refreshDeviceToken(@FieldMap Map<String, String> params);
+
 }

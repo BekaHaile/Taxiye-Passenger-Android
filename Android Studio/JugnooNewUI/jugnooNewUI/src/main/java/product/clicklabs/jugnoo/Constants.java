@@ -320,6 +320,9 @@ public interface Constants {
 	String SP_OTP_VIA_CALL_ENABLED = "sp_otp_via_call_enabled";
 	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
 
+	String SP_DEVICE_TOKEN = "sp_device_token";
+	String KEY_DEVICE_TOKEN = "device_token";
+
 
 
 

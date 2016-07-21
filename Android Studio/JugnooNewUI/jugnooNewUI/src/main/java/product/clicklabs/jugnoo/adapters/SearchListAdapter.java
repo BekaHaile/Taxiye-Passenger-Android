@@ -310,9 +310,9 @@ public class SearchListAdapter extends BaseAdapter{
 							refreshingAutoComplete = true;
 							searchResultsForSearch.clear();
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-								String name = autocompletePrediction.getDescription().split(",")[0];
+                                String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-                                        autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
+                                        autocompletePrediction.getFullText(null).toString(), autocompletePrediction.getPlaceId()));
 							}
 							autocompletePredictions.release();
 

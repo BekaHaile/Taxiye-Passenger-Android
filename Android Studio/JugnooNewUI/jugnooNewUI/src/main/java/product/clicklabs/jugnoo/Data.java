@@ -148,24 +148,12 @@ public class Data {
 	
 
 	public static final String DEVICE_TYPE = "0";
-	public static String deviceToken = "", country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
+	public static String country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
 	public static int appVersion;
 
-	public static String getDeviceToken(){
-		if(deviceToken.equalsIgnoreCase("")){
-			deviceToken = "not_found";
-		}
-		return deviceToken;
-	}
-	
-	
 	
 	public static String cEngagementId = "", cDriverId = "", cSessionId = "";
 	public static DriverInfo assignedDriverInfo;
-	
-	
-	
-
 
 	
 	public static EndRideData endRideData;
@@ -225,7 +213,7 @@ public class Data {
             endRideData = null;
             customerRateAppFlag = 0;
 			locationFetcher = null;
-			deviceToken = ""; country = ""; deviceName = ""; appVersion = 0; osVersion = "";
+			country = ""; deviceName = ""; appVersion = 0; osVersion = "";
 			cEngagementId = ""; cDriverId = ""; cSessionId = "";
 			assignedDriverInfo = null;
 			pickupLatLng = null;
