@@ -892,7 +892,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonEndRideSkip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "end_ride_image_skip");
                 relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                 submitFeedbackToInitial(5);
             }

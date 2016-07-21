@@ -70,7 +70,7 @@ public class PushDialog {
 				ImageView imageView = (ImageView) dialog.findViewById(R.id.imageView);
 				TextView textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 				TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Fonts.mavenRegular(activity));
-				Button button = (Button) dialog.findViewById(R.id.button);button.setTypeface(Fonts.mavenRegular(activity));
+				final Button button = (Button) dialog.findViewById(R.id.button);button.setTypeface(Fonts.mavenRegular(activity));
 				ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 
 				textViewTitle.setText(title);
@@ -97,6 +97,7 @@ public class PushDialog {
 								Constants.EMPTY_JSON_OBJECT);
 						callback.onButtonClicked(deepindex);
 						dialog.dismiss();
+						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", button.getText().toString());
 					}
 				});
 
