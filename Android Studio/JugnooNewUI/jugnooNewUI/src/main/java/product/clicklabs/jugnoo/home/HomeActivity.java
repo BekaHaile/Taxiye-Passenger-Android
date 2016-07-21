@@ -356,8 +356,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker, dropInitialMarker;
-    Polyline pathToDropLocationPolyline;
-    PolylineOptions pathToDropLocationPolylineOptions;
+    Polyline pathToDropLocationPolyline, polylineInRideDriverPath;
+    PolylineOptions pathToDropLocationPolylineOptions, polylineOptionsInRideDriverPath;
 
     public static AppInterruptHandler appInterruptHandler;
     boolean loggedOut = false,
@@ -2951,11 +2951,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     cancelTimerUpdateDrivers();
                     cancelDriverLocationUpdateTimer();
                     startMapAnimateAndUpdateRideDataTimer();
-					try {
-						getDropLocationPathAndDisplay(Data.pickupLatLng, false);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 					break;
 
                 case P_RIDE_END:
@@ -3256,6 +3251,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
             }
+            plotPolylineInRideDriverPath();
         }
     }
 
@@ -5202,18 +5198,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                                 LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
                                                 LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
-
-                                                final PolylineOptions polylineOptions = new PolylineOptions();
-                                                polylineOptions.add(start, end);
-                                                polylineOptions.width(ASSL.Xscale() * 7);
-                                                polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-                                                polylineOptions.geodesic(false);
-
-                                                // Drawing poly-line in the Google Map
-                                                if (map != null && polylineOptions != null) {
-                                                    map.addPolyline(polylineOptions);
-                                                }
+                                                getPolylineOptionsInRideDriverPath().add(start, end);
                                             }
+                                            plotPolylineInRideDriverPath();
 
                                             try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
@@ -5245,6 +5232,35 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
+    private PolylineOptions getPolylineOptionsInRideDriverPath(){
+        if(polylineOptionsInRideDriverPath == null) {
+            polylineOptionsInRideDriverPath = new PolylineOptions();
+            polylineOptionsInRideDriverPath.width(ASSL.Xscale() * 7);
+            polylineOptionsInRideDriverPath.color(RIDE_ELAPSED_PATH_COLOR);
+            polylineOptionsInRideDriverPath.geodesic(false);
+            try {
+                ArrayList<RidePath> ridePathsList = Database2.getInstance(HomeActivity.this).getRidePathInfo();
+                for (RidePath ridePath : ridePathsList) {
+                    polylineOptionsInRideDriverPath.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
+                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return polylineOptionsInRideDriverPath;
+    }
+
+    private void plotPolylineInRideDriverPath(){
+        if (map != null) {
+            if(polylineInRideDriverPath != null){
+                polylineInRideDriverPath.remove();
+            }
+            polylineInRideDriverPath = map.addPolyline(getPolylineOptionsInRideDriverPath());
+        }
+    }
+
+
     public void cancelMapAnimateAndUpdateRideDataTimer() {
         try {
             if (timerTaskMapAnimateAndUpdateRideData != null) {
@@ -5268,21 +5284,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    ArrayList<RidePath> ridePathsList = new ArrayList<>();
-                    ridePathsList.addAll(Database2.getInstance(HomeActivity.this).getRidePathInfo());
-
-                    for (int i=0; i<ridePathsList.size(); i++) {
-                        RidePath ridePath = ridePathsList.get(i);
-                        final PolylineOptions polylineOptions = new PolylineOptions();
-                        polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
-                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
-                        polylineOptions.width(ASSL.Xscale() * 7);
-                        polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-                        polylineOptions.geodesic(false);
-                        if (map != null && polylineOptions != null) {
-                            map.addPolyline(polylineOptions);
-                        }
-                    }
+                    polylineOptionsInRideDriverPath = null;
+                    plotPolylineInRideDriverPath();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -5347,6 +5350,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 														pathToDropLocationPolyline.remove();
 													}
 													pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
+                                                    plotPolylineInRideDriverPath();
 
                                                     zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 												}
