@@ -6984,9 +6984,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         dismissPushDialog(false);
         PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
             @Override
-            public void onButtonClicked(int deepIndex) {
-                Data.deepLinkIndex = deepIndex;
-                openDeepLink();
+            public void onButtonClicked(int deepIndex, String url) {
+                if("".equalsIgnoreCase(url)) {
+                    Data.deepLinkIndex = deepIndex;
+                    openDeepLink();
+                } else{
+                    Utils.openUrl(HomeActivity.this, url);
+                }
             }
         }).show();
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
