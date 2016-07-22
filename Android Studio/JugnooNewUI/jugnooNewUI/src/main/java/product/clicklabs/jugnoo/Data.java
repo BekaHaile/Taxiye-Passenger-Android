@@ -168,6 +168,7 @@ public class Data {
 
 	public static FacebookUserData facebookUserData;
 	public static GoogleSignInAccount googleSignInAccount;
+	public static String webActivityTitle = "";
 	
 	
 	
