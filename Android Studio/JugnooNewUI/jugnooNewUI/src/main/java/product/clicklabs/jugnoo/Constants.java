@@ -323,6 +323,10 @@ public interface Constants {
 	String SP_DEVICE_TOKEN = "sp_device_token";
 	String KEY_DEVICE_TOKEN = "device_token";
 
+	String KEY_RATE_APP_DIALOG_CONTENT = "rate_app_dialog_content";
+	String KEY_TEXT = "text";
+	String KEY_CONFIRM_BUTTON_TEXT = "confirm_button_text";
+	String KEY_CANCEL_BUTTON_TEXT = "cancel_button_text";
 
 
 

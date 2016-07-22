@@ -162,6 +162,7 @@ import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
@@ -1653,6 +1654,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
+
+
+        try {
+            AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+                    "947755540", "cZEMCIHV0GgQlLT2wwM", "50.00", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void endRideWithGif(){
@@ -4856,6 +4865,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     try {
                                         if (jObj.has("rate_app")) {
                                             Data.customerRateAppFlag = jObj.getInt("rate_app");
+                                            Data.rateAppDialogContent = JSONParser.parseRateAppDialogContent(jObj);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -5560,26 +5570,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     /**
      * Displays popup to rate the app
      */
-    public void rateAppPopup(final Activity activity) {
+    public void rateAppPopup(final Activity activity, final RateAppDialogContent rateAppDialogContent) {
         try {
-            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Rate Us", "Liked our services!!! Please rate us on Play Store", "RATE NOW", "LATER",
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        acceptAppRatingRequestAPI(activity);
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
-                        activity.startActivity(intent);
-                        FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
+            if(rateAppDialogContent != null) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, rateAppDialogContent.getTitle(), rateAppDialogContent.getText(),
+                        rateAppDialogContent.getConfirmButtonText(), rateAppDialogContent.getCancelButtonText(),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                acceptAppRatingRequestAPI(activity);
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(rateAppDialogContent.getUrl()));
+                                activity.startActivity(intent);
+                                FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
 
-                    }
-                },
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
-                    }
-                }, false, true);
+                            }
+                        },
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
+                            }
+                        }, false, true);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6478,7 +6491,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-				rateAppPopup(HomeActivity.this);
+				rateAppPopup(HomeActivity.this, Data.rateAppDialogContent);
 			}
             firstTimeZoom = false;
             dropLocationSearchText = "";
@@ -6515,13 +6528,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            // Ride Completion
-            // Google Android in-app conversion tracking snippet
-            // Add this code to the event you'd like to track in your app.
-            // See code examples and learn how to add advanced features like app deep links at:
-            //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-            AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
-                    GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+            try {
+                // Ride Completion
+                // Google Android in-app conversion tracking snippet
+                // Add this code to the event you'd like to track in your app.
+                // See code examples and learn how to add advanced features like app deep links at:
+                //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
+                AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+						GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
             try {
@@ -6531,6 +6548,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 map.put(KEY_PAID_RIDE, ""+(Data.endRideData.toPay + Data.endRideData.paidUsingPaytm >= (0.5d * Data.endRideData.fare) ? 1 : 0));
                 NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
             } catch(Exception e){
+                e.printStackTrace();
+            }
+
+            try {
+                AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+						"947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

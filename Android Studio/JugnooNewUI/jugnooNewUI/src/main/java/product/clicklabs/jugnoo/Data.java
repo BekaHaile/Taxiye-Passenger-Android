@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -159,6 +160,7 @@ public class Data {
 	public static EndRideData endRideData;
 	
 	public static int customerRateAppFlag = 0;
+	public static RateAppDialogContent rateAppDialogContent;
 	
 	
 	public static LatLng pickupLatLng, dropLatLng;

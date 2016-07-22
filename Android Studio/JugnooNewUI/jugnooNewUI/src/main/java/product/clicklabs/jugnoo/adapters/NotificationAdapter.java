@@ -153,7 +153,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         int position = (int) v.getTag();
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemChanged(position);*/
-                        openDeepLink(notificationList.get(position).getDeepIndex());
+                        openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -198,11 +198,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position == notificationList.size();
     }
 
-    private void openDeepLink(int deepInt){
+    private void openDeepLink(int deepInt, String url){
         try{
             //int deepInt = Integer.parseInt(deepLink);
             Intent intent = new Intent();
-            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
+            if(url != null && !"".equalsIgnoreCase(url)){
+                Utils.openUrl(activity, url);
+            }
+            else if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
                 intent.setClass(activity, ShareActivity.class);
                 activity.startActivity(intent);
             }

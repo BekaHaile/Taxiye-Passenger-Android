@@ -48,6 +48,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
@@ -76,7 +77,6 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
@@ -85,7 +85,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
-import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
@@ -206,7 +205,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
                                     Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this);
                                     if ("".equalsIgnoreCase(pair.first)
-                                            && !"".equalsIgnoreCase(Prefs.with(SplashNewActivity.this).getString(Constants.SP_DEVICE_TOKEN, "not_found"))) {
+                                            && !"".equalsIgnoreCase(MyApplication.getInstance().getDeviceToken())) {
                                         sendToRegisterThroughSms(Data.deepLinkReferralCode);
                                     }
                                 }
@@ -1186,6 +1185,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                         });
 
             } else {
+                try {
+                    FirebaseInstanceId.getInstance().getToken();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
                     DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
                     getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
@@ -1213,6 +1217,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             runnableGoToAccessToken = new Runnable() {
                 @Override
                 public void run() {
+                    Log.e(TAG, "getRunnableGoToAccessToken running");
                     goToAccessTokenLogin();
                 }
             };
@@ -1236,9 +1241,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     private void goToAccessTokenLogin() {
         try {
             DialogPopup.dismissLoadingDialog();
-            Log.e("deviceToken received", "> " + Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
             accessTokenLogin(SplashNewActivity.this);
-            FlurryEventLogger.appStarted(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            FlurryEventLogger.appStarted(MyApplication.getInstance().getDeviceToken());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1324,7 +1329,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put("access_token", accessToken);
-                params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+                params.put("device_token", MyApplication.getInstance().getDeviceToken());
 
 
                 params.put("latitude", "" + Data.loginLatitude);
@@ -1981,7 +1986,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("email", emailId);
             }
             params.put("password", password);
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);
@@ -2100,7 +2105,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("fb_mail", Data.facebookUserData.userEmail);
             params.put("username", Data.facebookUserData.userName);
 
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);
@@ -2212,7 +2217,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);
@@ -2624,7 +2629,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("client_id", Config.getClientId());
             params.put(KEY_REFERRAL_CODE, referralCode);
 
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("unique_device_id", Data.uniqueDeviceId);
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -2747,7 +2752,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);
@@ -2863,7 +2868,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);
@@ -3039,7 +3044,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             params.put("email", email);
             params.put("password", "");
-            params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+            params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", Data.deviceName);
             params.put("app_version", "" + Data.appVersion);

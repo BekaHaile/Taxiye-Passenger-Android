@@ -47,12 +47,10 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DeviceTokenGenerator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.IDeviceTokenReceiver;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -606,7 +604,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 params.put("email", emailRegisterData.emailId);
                 params.put("password", emailRegisterData.password);
-				params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+				params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", Data.deviceName);
                 params.put("app_version", "" + Data.appVersion);
@@ -711,7 +709,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
 
-				params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+				params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", Data.deviceName);
                 params.put("app_version", "" + Data.appVersion);
@@ -809,7 +807,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("email", googleRegisterData.email);
 				params.put("google_access_token", googleRegisterData.accessToken);
 
-				params.put("device_token", Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found"));
+				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("device_name", Data.deviceName);
 				params.put("app_version", "" + Data.appVersion);
