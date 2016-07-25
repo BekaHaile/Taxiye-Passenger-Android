@@ -28,7 +28,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:layout_marginTop="80px"
-                android:background="@drawable/bg_menu_item_selector_color_r"
+                android:background="@drawable/bg_menu_item_selector_color_rb"
                 android:splitMotionEvents="false">
 
                 <ImageView

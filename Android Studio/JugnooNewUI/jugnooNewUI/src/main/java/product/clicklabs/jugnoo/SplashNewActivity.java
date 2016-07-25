@@ -37,7 +37,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -130,7 +129,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	TextView textViewEmailRequired, textViewPasswordRequired, textViewForgotPassword;
 	Button buttonEmailLogin, buttonFacebookLogin, buttonGoogleLogin;
 
-	ScrollView scrollViewSignup;
+	RelativeLayout relativeLayoutSignup, relativeLayoutScrollStop;
 	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo;
 	TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired;
 	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
@@ -451,7 +450,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonGoogleLogin.setTypeface(Fonts.mavenRegular(this));
 
 
-			scrollViewSignup = (ScrollView) findViewById(R.id.scrollViewSignup);
+			relativeLayoutSignup = (RelativeLayout) findViewById(R.id.relativeLayoutSignup);
+			relativeLayoutScrollStop = (RelativeLayout) findViewById(R.id.relativeLayoutScrollStop);
 			editTextSName = (EditText) findViewById(R.id.editTextSName);
 			editTextSName.setTypeface(Fonts.mavenMedium(this));
 			editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
@@ -971,6 +971,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					}
 				}
 			});
+			relativeLayoutScrollStop.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+
 
 
 			initiateDeviceInfoVariables();
@@ -1015,6 +1021,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
+		relativeLayoutScrollStop.setVisibility(View.VISIBLE);
 		switch (state) {
 			case SPLASH_INIT:
 				viewInitJugnoo.setVisibility(View.VISIBLE);
@@ -1029,7 +1036,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				scrollViewSignup.setVisibility(View.VISIBLE);
+				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SPLASH_LS:
@@ -1045,7 +1052,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				scrollViewSignup.setVisibility(View.VISIBLE);
+				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SPLASH_NO_NET:
@@ -1061,7 +1068,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				scrollViewSignup.setVisibility(View.VISIBLE);
+				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case LOGIN:
@@ -1077,7 +1084,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
-				scrollViewSignup.setVisibility(View.VISIBLE);
+				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				break;
 
 			case SIGNUP:
@@ -1093,7 +1100,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				linearLayoutLogin.setVisibility(View.GONE);
-				scrollViewSignup.setVisibility(View.VISIBLE);
+				relativeLayoutScrollStop.setVisibility(View.GONE);
+				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				getAllowedAuthChannels(SplashNewActivity.this);
 				break;
 

@@ -49,10 +49,10 @@ public class UserData {
 	private double driverFareFactor;
 
 	private int paytmEnabled;
-	private double paytmBalance;
+	private double paytmBalance = -1;
 
 	private int mobikwikEnabled;
-	private double mobikwikBalance;
+	private double mobikwikBalance = -1;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -210,7 +210,7 @@ public class UserData {
 
 	public void deletePaytm(){
 		this.paytmEnabled = 0;
-		this.paytmBalance = 0;
+		this.paytmBalance = -1;
 	}
 
 	public String getBranchDesktopUrl() {
@@ -561,8 +561,8 @@ public class UserData {
 	}
 
 	public void deleteMobikwik(){
-		this.mobikwikBalance = 0;
 		this.mobikwikEnabled = 0;
+		this.mobikwikBalance = -1;
 	}
 
 
@@ -579,7 +579,9 @@ public class UserData {
 			setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE, getJugnooBalance()));
 			if(jObj.has(Constants.KEY_PAYTM_BALANCE)){
 				setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance()));
-				setPaytmEnabled(1);
+				if(getPaytmBalance() > 0) {
+					setPaytmEnabled(1);
+				}
 			} else{
 				if(removeWalletIfNoKey) {
 					deletePaytm();
@@ -588,7 +590,9 @@ public class UserData {
 
 			if(jObj.has(Constants.KEY_MOBIKWIK_BALANCE)){
 				setMobikwikBalance(jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance()));
-				setMobikwikEnabled(1);
+				if(getMobikwikBalance() > 0) {
+					setMobikwikEnabled(1);
+				}
 			} else{
 				if(removeWalletIfNoKey) {
 					deleteMobikwik();

@@ -309,8 +309,8 @@ public class WalletCore {
 															   PromoCoupon promoCoupon) {
 		try {
 			final int couponOfWallet = couponOfWhichWallet(promoCoupon);
-			if (couponOfWallet != PaymentOption.CASH.getOrdinal()
-					&& PaymentOption.CASH.getOrdinal() == paymentOption) {
+			if ((couponOfWallet == PaymentOption.PAYTM.getOrdinal() && PaymentOption.PAYTM.getOrdinal() != paymentOption)
+					|| (couponOfWallet == PaymentOption.MOBIKWIK.getOrdinal() && PaymentOption.MOBIKWIK.getOrdinal() != paymentOption)) {
 				View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -402,12 +402,12 @@ public class WalletCore {
 				if(paymentModeConfigData.getEnabled() == 1) {
 					if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 							&& Data.userData.getPaytmEnabled() == 1
-							&& Data.userData.getPaytmBalance() > -1) {
+							&& Data.userData.getPaytmBalance() >= 1) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
 							&& Data.userData.getMobikwikEnabled() == 1
-							&& Data.userData.getMobikwikBalance() > -1) {
+							&& Data.userData.getMobikwikBalance() >= 1) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					}

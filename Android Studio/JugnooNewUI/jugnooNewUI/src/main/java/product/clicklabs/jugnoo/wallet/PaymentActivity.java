@@ -134,7 +134,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 					@Override
 					public void onFailure() {
-						getBalance(PaymentActivity.this.fragName);
+//						getBalance(PaymentActivity.this.fragName);
 					}
 
 					@Override

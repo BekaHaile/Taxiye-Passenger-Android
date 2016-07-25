@@ -409,7 +409,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private int showAllDrivers = 0, showDriverInfo = 0, rating = 0, jugnooPoolFareId = 0;
 
-    private boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened, poolFareSuccess;
+    private boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened;
 
 	private GoogleApiClient mGoogleApiClient;
 
@@ -1813,7 +1813,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1851,7 +1851,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = (int) (ASSL.Yscale() * 0f);
                 mView.setLayoutParams(params);
-                if(callNextAnim) {
+                if (callNextAnim) {
                     translateViewTopBottom(mView, viewExchange);
                 }
             }
@@ -1880,7 +1880,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1905,7 +1905,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewDestSearch.setText("");
             imageViewDropCross.setVisibility(View.GONE);
 
-            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
+            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
             relativeLayoutDestSearchBar.clearAnimation();
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDestSearchBar.getLayoutParams();
             params.topMargin = (int) (ASSL.Yscale() * 80f);
@@ -4018,7 +4018,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 } else if(confirmedScreenOpened){
-                    poolFareSuccess = false;
                     confirmedScreenOpened = false;
                     if(Data.dropLatLng != null){
                         imageViewDropCross.setVisibility(View.VISIBLE);
@@ -6398,17 +6397,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public void onAfterRideFeedbackSubmitted(final int givenRating, final boolean skipped) {
+    public void onAfterRideFeedbackSubmitted(final int givenRating) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                afterRideFeedbackSubmitted(givenRating, skipped);
+                afterRideFeedbackSubmitted(givenRating);
             }
         });
 
     }
 
-    public void afterRideFeedbackSubmitted(final int givenRating, final boolean skipped){
+    public void afterRideFeedbackSubmitted(final int givenRating){
         try {
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;
@@ -6427,6 +6426,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = null;
             Data.dropLatLng = null;
             dropLocationSet = false;
+            confirmedScreenOpened = false;
 
             MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
             setUserData();
@@ -7010,7 +7010,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                       double convenienceCharge, String text) {
                 Log.v("Pool Fare value is ", "--> " + fare);
                 jugnooPoolFareId = poolFareId;
-                poolFareSuccess = true;
 
                 textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
                 textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
@@ -7197,7 +7196,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
 
             HomeActivity.feedbackSkipped = true;
-            afterRideFeedbackSubmitted(0, true);
+            afterRideFeedbackSubmitted(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -7323,7 +7322,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-        afterRideFeedbackSubmitted(givenRating, false);
+        afterRideFeedbackSubmitted(givenRating);
     }
 
     @Override
@@ -7993,7 +7992,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void imageViewRideNowPoolCheck(){
         if(getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-            poolFareSuccess = false;
             if(Data.dropLatLng != null){
                 //requestRideClick();
                 shakeAnim = 0;

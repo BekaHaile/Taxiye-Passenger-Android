@@ -58,6 +58,7 @@ public class PromoCouponsDialog {
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
 
+			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			recyclerViewPromoCoupons = (RecyclerView) dialog.findViewById(R.id.recyclerViewPromoCoupons);
 			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
 			recyclerViewPromoCoupons.setItemAnimator(new DefaultItemAnimator());
@@ -143,7 +144,12 @@ public class PromoCouponsDialog {
 			relative.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dialog.dismiss();
+				}
+			});
+
+			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
 				}
 			});
 

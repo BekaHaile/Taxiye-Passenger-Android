@@ -4,7 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical">
+    android:layout_gravity="center_vertical"
+    android:soundEffectsEnabled="false"
+    >
 
     <LinearLayout
         android:id="@+id/linearLayoutInner"
@@ -15,6 +17,7 @@
         android:splitMotionEvents="false"
         android:layout_centerInParent="true"
         android:layout_margin="40px"
+        android:soundEffectsEnabled="false"
         >
 
         <RelativeLayout
@@ -86,7 +89,7 @@
                 android:layout_width="320px"
                 android:layout_height="96px"
                 android:textColor="@color/text_color_light_selector"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_blr_selector"
                 android:textSize="@dimen/text_size_34"
                 android:text="@string/skip"
                 />
@@ -96,7 +99,7 @@
                 android:layout_width="320px"
                 android:layout_height="96px"
                 android:textColor="@color/text_color_light_selector"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_blr_selector"
+                android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
                 android:textSize="@dimen/text_size_34"
                 android:text="@string/continue_text"
                 android:layout_alignParentRight="true"
