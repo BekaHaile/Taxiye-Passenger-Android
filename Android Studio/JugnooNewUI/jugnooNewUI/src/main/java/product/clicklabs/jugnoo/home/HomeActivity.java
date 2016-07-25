@@ -7314,7 +7314,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 submitFeedbackToInitial(givenRating);
                                             }
                                         }, 3000);
-                                    } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
+                                    } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
+                                                || givenRating == 1) {
                                         submitFeedbackToInitial(givenRating);
                                     }
 
