@@ -250,8 +250,6 @@ public class JSONParser implements Constants {
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
 
-        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData);
-
         UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable,
@@ -270,6 +268,8 @@ public class JSONParser implements Constants {
                 paytmEnabled, mobikwikEnabled);
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
+
+        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, userDataObj);
 
         return userDataObj;
     }

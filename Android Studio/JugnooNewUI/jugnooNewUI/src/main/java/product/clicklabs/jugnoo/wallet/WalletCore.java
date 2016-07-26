@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
@@ -17,11 +19,13 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.NudgeClient;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -377,7 +381,7 @@ public class WalletCore {
 		}
 	}
 
-	public void parsePaymentModeConfigDatas(JSONObject jObj){
+	public void parsePaymentModeConfigDatas(JSONObject jObj, UserData userData){
 		try{
 			JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
 			paymentModeConfigDatas = new ArrayList<>();
@@ -392,14 +396,69 @@ public class WalletCore {
 		}
 	}
 
-	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas() {
+	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas(UserData userData) {
+
+		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
+			paymentModeConfigData.setPriority(0);
+			if(paymentModeConfigData.getEnabled() == 1){
+				if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+						&& userData.getPaytmEnabled() == 1) {
+					paymentModeConfigData.incrementPriority();
+					if(userData.getPaytmBalance() > 0){
+						paymentModeConfigData.incrementPriority();
+						if(userData.getPaytmBalance() > userData.getMobikwikBalance()){
+							paymentModeConfigData.incrementPriority();
+						}
+					}
+					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
+						paymentModeConfigData.incrementPriority();
+					}
+					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
+						paymentModeConfigData.incrementPriority();
+					}
+				}
+				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+						&& userData.getMobikwikEnabled() == 1) {
+					paymentModeConfigData.incrementPriority();
+					if(userData.getMobikwikBalance() > 0){
+						paymentModeConfigData.incrementPriority();
+						if(userData.getMobikwikBalance() > userData.getPaytmBalance()){
+							paymentModeConfigData.incrementPriority();
+						}
+					}
+					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
+						paymentModeConfigData.incrementPriority();
+					}
+					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
+						paymentModeConfigData.incrementPriority();
+					}
+				}
+			}
+		}
+
+		Collections.sort(paymentModeConfigDatas, new Comparator<PaymentModeConfigData>() {
+			@Override
+			public int compare(PaymentModeConfigData lhs, PaymentModeConfigData rhs) {
+				if(lhs.getPriority() == rhs.getPriority()){
+					return 0;
+				}
+				else if(lhs.getPriority() > rhs.getPriority()){
+					return 1;
+				}
+				else{
+					return -1;
+				}
+			}
+		});
+
+
 		return paymentModeConfigDatas;
 	}
 
 	public void setDefaultPaymentOption(){
 		try{
 			PaymentModeConfigData paymentModeConfigDataDefault = null;
-			for(PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()){
+			for(PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas(Data.userData)){
 				if(paymentModeConfigData.getEnabled() == 1) {
 					if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 							&& Data.userData.getPaytmEnabled() == 1

@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -205,30 +207,14 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 	private void orderPaymentModes(){
 		try{
-			if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas() != null
-					&& MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0){
+			ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+			if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
 				linearLayoutWalletContainer.removeAllViews();
-				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
-						.getPaymentModeConfigDatas()){
+				for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
 					if(paymentModeConfigData.getEnabled() == 1) {
-						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
-								&& Data.userData.getPaytmEnabled() == 1) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
-						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
-								&& Data.userData.getMobikwikEnabled() == 1) {
-							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
-						}
-					}
-				}
-
-				for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore()
-						.getPaymentModeConfigDatas()){
-					if(paymentModeConfigData.getEnabled() == 1) {
-						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
-								&& Data.userData.getPaytmEnabled() != 1) {
-							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
-						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
-								&& Data.userData.getMobikwikEnabled() != 1) {
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
 						}
 					}

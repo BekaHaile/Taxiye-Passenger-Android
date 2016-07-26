@@ -3899,6 +3899,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
                             setDropAddressAndExpandFields(searchResult);
                         }
+                        slidingBottomPanel.getImageViewExtraForSliding().performClick();
                         imageViewRideNow.performClick();
                         activityResumed = false;
                     } catch (Exception e) {
@@ -6238,6 +6239,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     AdWordsConversionReporter.reportWithConversionId(HomeActivity.this.getApplicationContext(),
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
+
+                                                    if(Data.pickupPaymentOption != PaymentOption.CASH.getOrdinal()) {
+                                                        Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.pickupPaymentOption);
+                                                    }
                                                 }
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {

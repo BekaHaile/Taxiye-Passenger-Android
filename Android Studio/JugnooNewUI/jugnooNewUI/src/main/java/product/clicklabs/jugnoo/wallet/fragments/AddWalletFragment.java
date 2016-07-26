@@ -390,6 +390,7 @@ public class AddWalletFragment extends Fragment {
 									Data.userData.setPaytmEnabled(1);
 									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.PAYTM.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -399,6 +400,7 @@ public class AddWalletFragment extends Fragment {
 									Data.userData.setMobikwikEnabled(1);
 									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.MOBIKWIK.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
 							} else {

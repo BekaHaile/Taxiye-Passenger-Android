@@ -336,6 +336,8 @@ public interface Constants {
 	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
 
 
+	String SP_LAST_ADDED_WALLET = "sp_last_added_wallet";
+	String SP_LAST_USED_WALLET = "sp_last_used_wallet";
 
 
 }

@@ -280,6 +280,18 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED);
 			Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
 
+			Prefs.with(context).remove(Constants.SP_CURRENT_STATE);
+			Prefs.with(context).remove(Constants.SP_CURRENT_ENGAGEMENT_ID);
+			Prefs.with(context).remove(Constants.SP_LAST_PUSH_RECEIVED_TIME);
+			Prefs.with(context).remove(Constants.SP_REFERRAL_CODE);
+			Prefs.with(context).remove(Constants.SP_PUSH_DIALOG_CONTENT);
+			Prefs.with(context).remove(Constants.KEY_SP_FUGU_CAMPAIGN_NAME);
+			Prefs.with(context).remove(Constants.SP_POOL_INTRO_SHOWN);
+
+			Prefs.with(context).remove(Constants.SP_LAST_ADDED_WALLET);
+			Prefs.with(context).remove(Constants.SP_LAST_USED_WALLET);
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
