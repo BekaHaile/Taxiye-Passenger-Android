@@ -33,10 +33,8 @@
                     android:id="@+id/imageViewWalletIcon"
                     android:layout_marginTop="30px"
                     android:visibility="gone"
-                    android:layout_width="121px"
-                    android:layout_height="39px"
                     android:src="@drawable/ic_paytm_big"
-                    android:tag="mwar"
+                    style="@style/payment_option_icon_big_dimen"
                     />
 
                 <TextView

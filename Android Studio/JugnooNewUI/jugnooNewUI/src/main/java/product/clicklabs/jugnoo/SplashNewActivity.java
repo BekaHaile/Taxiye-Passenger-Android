@@ -1462,12 +1462,18 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							linearLayoutPaytm.setVisibility(View.VISIBLE);
 						} else{
 							linearLayoutPaytm.setVisibility(View.GONE);
+							if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+								linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+							}
 						}
 
 						if(showMobikwik == 1){
 							linearLayoutMobikwik.setVisibility(View.VISIBLE);
 						} else{
 							linearLayoutMobikwik.setVisibility(View.GONE);
+							if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
+								linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+							}
 						}
 
 						if(showPaytm == 1 || showMobikwik == 1){

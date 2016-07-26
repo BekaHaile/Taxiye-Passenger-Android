@@ -6,7 +6,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -278,11 +278,10 @@
 
                     <ImageView
                         android:id="@+id/imageViewIRPaymentOption"
-                        android:layout_width="72px"
-                        android:layout_height="23px"
+                        style="@style/payment_option_icon_small"
                         android:layout_marginTop="10px"
                         android:src="@drawable/ic_paytm_small"
-                        android:tag="mwar"/>
+                        />
 
 
                     <TextView

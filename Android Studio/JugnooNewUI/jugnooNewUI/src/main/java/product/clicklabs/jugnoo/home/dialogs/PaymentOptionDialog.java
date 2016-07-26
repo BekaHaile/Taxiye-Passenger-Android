@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,22 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
-import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
-import retrofit.http.HEAD;
 
 /**
  * Created by shankar on 5/2/16.
@@ -131,77 +122,18 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		try {
 			switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
-                    if(Data.userData.getPaytmBalance() > 0) {
-                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
-						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
-                        callback.onPaymentModeUpdated();
-                    }
-					else if(Data.userData.getPaytmBalance() < 0){
-                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
-                    } else{
-                        if(Data.userData.getPaytmEnabled() == 1) {
-                            DialogPopup.alertPopupWithListener(activity, "",
-                                    activity.getResources().getString(R.string.paytm_no_cash),
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(activity, PaymentActivity.class);
-											intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-											intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-                                            activity.startActivity(intent);
-                                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                        }
-                                    });
-                        }
-                        else{
-							MyApplication.getInstance().getWalletCore()
-									.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.PAYTM.getOrdinal());
-                        }
-                    }
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
+					callback.onPaymentModeUpdated();
                     break;
 
 				case R.id.relativeLayoutMobikwik:
-					if(Data.userData.getMobikwikBalance() > 0) {
-						Data.pickupPaymentOption = PaymentOption.MOBIKWIK.getOrdinal();
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-						NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
-						callback.onPaymentModeUpdated();
-					}
-					else if(Data.userData.getMobikwikBalance() < 0){
-						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
-					} else{
-						if(Data.userData.getMobikwikEnabled() == 1) {
-							DialogPopup.alertPopupWithListener(activity, "",
-									activity.getResources().getString(R.string.mobikwik_no_cash),
-									new View.OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											Intent intent = new Intent(activity, PaymentActivity.class);
-											intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-											intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
-											activity.startActivity(intent);
-											activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-										}
-									});
-						}
-						else{
-							MyApplication.getInstance().getWalletCore()
-									.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.MOBIKWIK.getOrdinal());
-						}
-					}
+					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
+					callback.onPaymentModeUpdated();
 					break;
 
                 case R.id.linearLayoutCash:
-                    if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
-                        FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
-                    }
-                    Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
-					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
-					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
-                    callback.onPaymentModeUpdated();
+					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
+					callback.onPaymentModeUpdated();
                     break;
             }
 		} catch (Exception e) {

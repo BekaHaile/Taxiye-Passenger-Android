@@ -137,12 +137,11 @@
                     android:visibility="visible">
 
                     <ImageView
-                        android:layout_width="72px"
-                        android:layout_height="23px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="30px"
+                        style="@style/payment_option_icon_small"
                         android:src="@drawable/ic_paytm_small"
-                        android:tag="mwar" />
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15px"
+                        />
 
                     <TextView
                         android:id="@+id/textViewPaytmBalance"
@@ -182,12 +181,11 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="72px"
-                    android:layout_height="23px"
+                    style="@style/payment_option_icon_small"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
+                    android:layout_marginLeft="15px"
                     android:src="@drawable/ic_mobikwik_small"
-                    android:tag="mwar" />
+                    />
 
                 <TextView
                     android:id="@+id/textViewMobikwik"

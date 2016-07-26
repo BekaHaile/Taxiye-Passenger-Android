@@ -385,7 +385,7 @@ public class AddWalletFragment extends Fragment {
 							int flag = jObj.getInt(Constants.KEY_FLAG);
 							if (ApiResponseFlags.PAYTM_LOGGED_IN.getOrdinal() == flag) {
 								if (Data.userData != null && openWalletType == PaymentOption.PAYTM.getOrdinal()) {
-									double balance = jObj.optDouble(Constants.KEY_BALANCE, 0);
+									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setPaytmBalance(balance);
 									Data.userData.setPaytmEnabled(1);
 									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -394,7 +394,7 @@ public class AddWalletFragment extends Fragment {
 								}
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								if (Data.userData != null && openWalletType == PaymentOption.MOBIKWIK.getOrdinal()) {
-									double balance = jObj.optDouble(Constants.KEY_BALANCE, 0);
+									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setMobikwikBalance(balance);
 									Data.userData.setMobikwikEnabled(1);
 									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();

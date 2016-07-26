@@ -68,17 +68,16 @@
                         android:tag="mwar"/>
 
                     <ImageView
-                        android:layout_width="68px"
-                        android:layout_height="22px"
-                        android:layout_marginLeft="26px"
+                        style="@style/payment_option_icon_small"
                         android:src="@drawable/ic_paytm_small"
-                        android:tag="mwar"/>
+                        android:layout_marginLeft="10px"
+                        />
 
                     <TextView
                         android:id="@+id/textViewPaytm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
+                        android:layout_marginLeft="10px"
                         android:text="@string/paytm_wallet"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34"/>
@@ -122,17 +121,16 @@
                         android:tag="mwar"/>
 
                     <ImageView
-                        android:layout_width="68px"
-                        android:layout_height="22px"
-                        android:layout_marginLeft="26px"
+                        style="@style/payment_option_icon_small"
                         android:src="@drawable/ic_mobikwik_small"
-                        android:tag="mwar"/>
+                        android:layout_marginLeft="10px"
+                        />
 
                     <TextView
                         android:id="@+id/textViewMobikwik"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
+                        android:layout_marginLeft="10px"
                         android:text="@string/mobikwik_wallet"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34"/>
@@ -172,17 +170,15 @@
                 android:tag="mwar"/>
 
             <ImageView
-                android:layout_width="68px"
-                android:layout_height="22px"
-                android:layout_marginLeft="15px"
-                android:src="@drawable/ic_cash_small"
-                android:tag="mwar"/>
+                style="@style/payment_option_icon_small"
+                android:layout_marginLeft="10px"
+                />
 
             <TextView
                 android:id="@+id/textViewCash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="39px"
+                android:layout_marginLeft="10px"
                 android:text="@string/cash"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_34"/>

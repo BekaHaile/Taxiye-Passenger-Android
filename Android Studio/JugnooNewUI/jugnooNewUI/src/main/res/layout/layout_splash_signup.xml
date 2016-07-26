@@ -334,9 +334,8 @@
                             android:tag="mwar"/>
 
                         <ImageView
-                            android:layout_width="82px"
-                            android:layout_height="27px"
-                            android:layout_marginLeft="10px"
+                            style="@style/payment_option_icon_small"
+                            android:layout_marginLeft="0px"
                             android:src="@drawable/ic_paytm_small"/>
                     </LinearLayout>
 
@@ -357,9 +356,8 @@
                             android:tag="mwar"/>
 
                         <ImageView
-                            android:layout_width="82px"
-                            android:layout_height="27px"
-                            android:layout_marginLeft="10px"
+                            style="@style/payment_option_icon_small"
+                            android:layout_marginLeft="0px"
                             android:src="@drawable/ic_mobikwik_small"/>
                     </LinearLayout>
 
@@ -487,6 +485,8 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutScrollStop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></RelativeLayout>
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        ></RelativeLayout>
 
 </RelativeLayout>

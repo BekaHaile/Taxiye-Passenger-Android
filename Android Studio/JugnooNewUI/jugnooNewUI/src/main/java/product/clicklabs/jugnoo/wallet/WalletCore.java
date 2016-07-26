@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -420,6 +421,83 @@ public class WalletCore {
 			}
 
 		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+
+	public void paymentOptionSelectionBeforeRequestRide(final HomeActivity activity, PaymentOption paymentOption){
+		try {
+			if(paymentOption == PaymentOption.PAYTM){
+				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > 0) {
+					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
+					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
+				}
+				else if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() < 0){
+					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+				} else{
+					if(Data.userData.getPaytmEnabled() == 1) {
+						DialogPopup.alertPopupWithListener(activity, "",
+								activity.getResources().getString(R.string.paytm_no_cash),
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Intent intent = new Intent(activity, PaymentActivity.class);
+										intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+										intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
+										activity.startActivity(intent);
+										activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									}
+								});
+					}
+					else{
+						MyApplication.getInstance().getWalletCore()
+								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.PAYTM.getOrdinal());
+					}
+				}
+			}
+			else if(paymentOption == PaymentOption.MOBIKWIK){
+				if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() > 0) {
+					Data.pickupPaymentOption = PaymentOption.MOBIKWIK.getOrdinal();
+					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
+				}
+				else if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() < 0){
+					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
+				} else{
+					if(Data.userData.getMobikwikEnabled() == 1) {
+						DialogPopup.alertPopupWithListener(activity, "",
+								activity.getResources().getString(R.string.mobikwik_no_cash),
+								new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Intent intent = new Intent(activity, PaymentActivity.class);
+										intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+										intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
+										activity.startActivity(intent);
+										activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									}
+								});
+					}
+					else{
+						MyApplication.getInstance().getWalletCore()
+								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.MOBIKWIK.getOrdinal());
+					}
+				}
+			}
+			else if(paymentOption == PaymentOption.CASH){
+				if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
+					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
+				}
+				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
+				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

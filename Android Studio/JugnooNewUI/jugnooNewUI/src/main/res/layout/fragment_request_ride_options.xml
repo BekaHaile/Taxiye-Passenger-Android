@@ -114,10 +114,8 @@
 
             <ImageView
                 android:id="@+id/imageViewPaymentMode"
-                android:layout_width="72px"
-                android:layout_height="24px"
-                android:src="@drawable/ic_paytm_small"
-                android:tag="mwar" />
+                style="@style/payment_option_icon_small"
+                />
 
             <TextView
                 android:id="@+id/textViewPaymentModeValue"
@@ -191,10 +189,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewPaymentModeMS"
-                        android:layout_width="68px"
-                        android:layout_height="22px"
-                        android:src="@drawable/ic_cash_small"
-                        android:tag="mwar" />
+                        style="@style/payment_option_icon_small"
+                        />
 
                     <TextView
                         android:id="@+id/textViewPaymentModeValueMS"
