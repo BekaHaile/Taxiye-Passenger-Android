@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.WalletRechargeWebViewActivity;
@@ -512,6 +513,12 @@ public class WalletRechargeFragment extends Fragment {
 								DialogPopup.dialogBanner(paymentActivity, message);
 								MyApplication.getInstance().getWalletCore().deleteWallet(openWalletType);
 								MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_ADDED_WALLET, 0)){
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, 0);
+								}
+								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_USED_WALLET, 0)){
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_USED_WALLET, 0);
+								}
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");
