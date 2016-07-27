@@ -2440,7 +2440,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 
                         checkForFareAvailablity();
-                        findADriverFinishing();
+                        findADriverFinishing(false);
                         setGoogleMapPadding(0);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
@@ -2791,6 +2791,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 openPaytmRechargeDialog();
 
                 showReferAllDialog();
+                if(mode == PassengerScreenMode.P_INITIAL) {
+                    showPoolIntroDialog();
+                }
                 callT20AndReferAllDialog(mode);
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
@@ -3565,7 +3568,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    showPromoFailedAtSignupDialog();
+                                    showPoolIntroDialog();
                                 }
                             });
                 } else{
@@ -3576,6 +3579,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -4117,7 +4121,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onCompleteFindADriver() {
-                    findADriverFinishing();
+                    findADriverFinishing(true);
                 }
 
                 @Override
@@ -4174,7 +4178,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 confirmedScreenOpened);
     }
 
-    private void findADriverFinishing(){
+    private void findADriverFinishing(boolean showPoolIntro){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
                 slidingBottomPanel.update();
@@ -4199,7 +4203,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     setJugnooPool();
-                    showPoolIntroDialog();
+                    if(showPoolIntro) {
+                        showPoolIntroDialog();
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -8114,7 +8120,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
             }
-            if(poolEnabled) {
+            if(poolEnabled && (dialogUploadContacts == null || !dialogUploadContacts.isShowing())) {
                 new PoolIntroDialog(HomeActivity.this, new PoolIntroDialog.Callback() {
                     @Override
                     public void onContinueClicked() {
