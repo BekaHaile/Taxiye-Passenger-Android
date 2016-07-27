@@ -7068,7 +7068,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }).getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng, isPooled, callFareEstimate);
         } else{
-            textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
             ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
@@ -8053,7 +8053,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
-                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
