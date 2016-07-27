@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -163,6 +164,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 		try {
 			Fragment currFrag = null;
 			if(fragName.equalsIgnoreCase(WalletRechargeFragment.class.getName())) {
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 				currFrag = getSupportFragmentManager().findFragmentByTag(WalletRechargeFragment.class.getName());
 				if(currFrag != null){
 					((WalletRechargeFragment) currFrag).onResume();

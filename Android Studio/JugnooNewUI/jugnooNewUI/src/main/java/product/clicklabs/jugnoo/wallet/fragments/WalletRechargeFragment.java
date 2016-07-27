@@ -600,7 +600,6 @@ public class WalletRechargeFragment extends Fragment {
 				if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.SUCCESS) {
 					DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
 							.getString(R.string.transaction_successful));
-					MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 					paymentActivity.getBalance(WalletRechargeFragment.class.getName());
 				}
 				else if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.FAILURE){

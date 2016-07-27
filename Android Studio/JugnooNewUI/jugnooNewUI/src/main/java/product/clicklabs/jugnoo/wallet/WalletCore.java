@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -443,14 +444,14 @@ public class WalletCore {
 					return 0;
 				}
 				else if(lhs.getPriority() > rhs.getPriority()){
-					return 1;
+					return -1;
 				}
 				else{
-					return -1;
+					return 1;
 				}
 			}
 		});
-
+		Log.e("paymentModeConfigDatas", ">"+paymentModeConfigDatas);
 
 		return paymentModeConfigDatas;
 	}
@@ -478,7 +479,7 @@ public class WalletCore {
 			} else{
 				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 			}
-
+			Log.e("pickupPaymentOption", ">"+Data.pickupPaymentOption);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
