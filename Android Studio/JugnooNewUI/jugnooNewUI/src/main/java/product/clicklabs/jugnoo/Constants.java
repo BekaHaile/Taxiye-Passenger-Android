@@ -310,7 +310,7 @@ public interface Constants {
 	String KEY_IS_POOLED = "is_pooled";
 	String KEY_RIDE_TYPE = "ride_type";
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
-	String KEY_SEARCH_RESULT = "search_result";
+        String KEY_SEARCH_RESULT = "search_result";
 	String SP_DRIVER_BEARING = "driver_bearing";
 
 	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
@@ -330,4 +330,5 @@ public interface Constants {
 
 
 
+    String HOME_SCREEN = "Home Screen";
 }

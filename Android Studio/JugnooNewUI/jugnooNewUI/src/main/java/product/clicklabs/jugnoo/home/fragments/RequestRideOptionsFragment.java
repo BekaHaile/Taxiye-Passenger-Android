@@ -23,6 +23,7 @@ import java.util.Locale;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -185,6 +186,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         public void onClick(View v) {
             if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
                 getPaymentOptionDialog().show();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.HOME_SCREEN, "b_payment_mode");
+                MyApplication.getInstance().logEvent(Constants.REVENUE +
+                        Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+                        Constants.RETENTION, bundle);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
@@ -192,9 +198,21 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
                     //getPoolDestinationDialog().show();
                     getFareDetailsDialog().show();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "Pool");
+                    bundle.putString(Constants.HOME_SCREEN, "base fare");
+                    MyApplication.getInstance().logEvent(Constants.REVENUE +
+                            Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+                            Constants.RETENTION, bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Pool", "base fare");
                 } else{
                     getFareDetailsDialog().show();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "Auto");
+                    bundle.putString(Constants.HOME_SCREEN, "base fare");
+                    MyApplication.getInstance().logEvent(Constants.REVENUE +
+                            Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+                            Constants.RETENTION, bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Auto", "base fare");
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
@@ -216,6 +234,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.HOME_SCREEN, "get fare estimate");
+                MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
+
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
                 getPromoCouponsDialog().show();

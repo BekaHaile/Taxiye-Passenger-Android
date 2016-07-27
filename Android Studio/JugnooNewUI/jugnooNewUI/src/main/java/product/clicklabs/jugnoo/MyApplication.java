@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
@@ -13,6 +14,8 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.List;
@@ -43,6 +46,14 @@ public class MyApplication extends Application{
 	public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
 	public String ACTIVITY_NAME_ABOUT = "ABOUT";
 
+    /**
+     * The {@code FirebaseAnalytics} used to record screen views.
+     */
+    // [START declare_analytics]
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private TagManager tagManager;
+    // [END declare_analytics]
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -58,12 +69,32 @@ public class MyApplication extends Application{
 
 			mInstance = this;
 
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 			AnalyticsTrackers.initialize(this);
 			AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        if(mFirebaseAnalytics == null) {
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        }
+        return mFirebaseAnalytics;
+    }
+
+    public TagManager getTagManager() {
+        if(tagManager == null)
+            tagManager = TagManager.getInstance(this);
+
+        return tagManager;
+    }
+
+    public void logEvent(String content, Bundle bundle) {
+        getFirebaseAnalytics().logEvent(content, bundle);
+    }
 
 	@Override
 	protected void attachBaseContext(Context base) {
@@ -158,6 +189,13 @@ public class MyApplication extends Application{
 		t.enableAdvertisingIdCollection(true);
 		// Build and send an Event.
 		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
+
+        if(category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
+            Bundle bundle = new Bundle();
+            logEvent("Transaction_"+action+"_"+label, bundle);
+        }
+
+
 	}
 
 	/**
@@ -172,6 +210,11 @@ public class MyApplication extends Application{
 		t.enableAdvertisingIdCollection(true);
 		// Build and send an Event.
 		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+        if(category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("value", value);
+            logEvent("Transaction_"+action+"_"+label, bundle);
+        }
 	}
 
 

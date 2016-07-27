@@ -48,6 +48,12 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.tagmanager.Container;
+import com.google.android.gms.tagmanager.ContainerHolder;
+import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
@@ -56,6 +62,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -77,6 +84,7 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.ContainerHolderSingleton;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
@@ -292,12 +300,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         RestClient.setupRestClient();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
 
             Fabric.with(this, new Crashlytics());
+
+
+            setTagManager();
 
             try {
                 if (getIntent().hasExtra("deep_link_class")) {
@@ -512,6 +524,28 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             buttonLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+//                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(SplashNewActivity.this);
+
+//            firebaseAnalytics.setUserProperty("Android");
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("it_is_generic", "Login Page");
+//                    firebaseAnalytics.logEvent("Login", bundle);
+                    MyApplication.getInstance().logEvent("Login", bundle);
+
+//                    //Sets whether analytics collection is enabled for this app on this device.
+//                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
+//
+//                    //Sets the minimum engagement time required before starting a session. The default value is 10000 (10 seconds). Let's make it 20 seconds just for the fun
+//                    firebaseAnalytics.setMinimumSessionDuration(20000);
+//
+//                    //Sets the duration of inactivity that terminates the current session. The default value is 1800000 (30 minutes).
+//                    firebaseAnalytics.setSessionTimeoutDuration(500);
+
+
+
+
                     if (isBranchLinkNotClicked()) {
                         linkedWallet = 0;
                         FlurryEventLogger.event(LOGIN_OPTION_MAIN);
@@ -3205,6 +3239,82 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             map.put(KEY_SOURCE, Config.getDownloadSource());
             FlurryEventLogger.event(FlurryEventNames.APP_DOWNLOAD_SOURCE, map);
             Prefs.with(this).save(SP_APP_DOWNLOAD_SOURCE_SENT, 1);
+        }
+    }
+
+    private static final long TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS = 2000;
+    private static final String CONTAINER_ID = "GTM-NRQKNT";
+
+    private void setTagManager() {
+        TagManager tagManager = MyApplication.getInstance().getTagManager();
+
+        // Modify the log level of the logger to print out not only
+        // warning and error messages, but also verbose, debug, info messages.
+        tagManager.setVerboseLoggingEnabled(true);
+
+        PendingResult<ContainerHolder> pending =
+                tagManager.loadContainerPreferNonDefault(CONTAINER_ID,
+                        R.raw.gtm_analytics);
+
+        // The onResult method will be called as soon as one of the following happens:
+        //     1. a saved container is loaded
+        //     2. if there is no saved container, a network container is loaded
+        //     3. the 2-second timeout occurs
+        pending.setResultCallback(new ResultCallback<ContainerHolder>() {
+            @Override
+            public void onResult(ContainerHolder containerHolder) {
+                ContainerHolderSingleton.setContainerHolder(containerHolder);
+                Container container = containerHolder.getContainer();
+                if (!containerHolder.getStatus().isSuccess()) {
+                    Log.e("jugnoo", "failure loading container");
+                    //displayErrorToUser(R.string.load_error);
+                    return;
+                }
+                ContainerLoadedCallback.registerCallbacksForContainer(container);
+                containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
+                Toast.makeText(SplashNewActivity.this, "startActivity", Toast.LENGTH_LONG).show();
+            }
+        }, TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS, TimeUnit.MILLISECONDS);
+        // Rest of the Activity definition.
+    }
+
+    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
+        @Override
+        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
+            // We load each container when it becomes available.
+            Container container = containerHolder.getContainer();
+            registerCallbacksForContainer(container);
+        }
+
+        public static void registerCallbacksForContainer(Container container) {
+            // Register two custom function call macros to the container.
+            container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
+            container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
+            // Register a custom function call tag to the container.
+            container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
+        }
+    }
+
+    private static class CustomMacroCallback implements Container.FunctionCallMacroCallback {
+        private int numCalls;
+
+        @Override
+        public Object getValue(String name, Map<String, Object> parameters) {
+            if ("increment".equals(name)) {
+                return ++numCalls;
+            } else if ("mod".equals(name)) {
+                return (Long) parameters.get("key1") % Integer.valueOf((String) parameters.get("key2"));
+            } else {
+                throw new IllegalArgumentException("Custom macro name: " + name + " is not supported.");
+            }
+        }
+    }
+
+    private static class CustomTagCallback implements Container.FunctionCallTagCallback {
+        @Override
+        public void execute(String tagName, Map<String, Object> parameters) {
+            // The code for firing this custom tag.
+            Log.i("Jugnoo", "Custom function call tag :" + tagName + " is fired.");
         }
     }
 

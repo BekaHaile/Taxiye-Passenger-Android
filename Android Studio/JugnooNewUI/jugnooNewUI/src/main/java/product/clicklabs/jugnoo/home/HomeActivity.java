@@ -85,6 +85,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -430,6 +431,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ArrayList<SearchResult> lastDestination = new ArrayList<SearchResult>();
     private long thumbsUpGifStartTime = 0;
     private int shakeAnim = 0;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -816,7 +819,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(HomeActivity.this, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
                 NudgeClient.trackEventUserId(HomeActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "get fare estimate");
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION,
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName(), "get fare estimate");
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.HOME_SCREEN, "get fare estimate");
+                MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
+
+
+//                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(HomeActivity.this);
+//
+////            firebaseAnalytics.setUserProperty("Android");
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putString("Home Screen", slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName()+ " get fare estimate");
+//                firebaseAnalytics.logEvent(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, bundle);
+//
+//                //Sets whether analytics collection is enabled for this app on this device.
+//                firebaseAnalytics.setAnalyticsCollectionEnabled(true);
+//
+//                //Sets the minimum engagement time required before starting a session. The default value is 10000 (10 seconds). Let's make it 20 seconds just for the fun
+//                firebaseAnalytics.setMinimumSessionDuration(20000);
+//
+//                //Sets the duration of inactivity that terminates the current session. The default value is 1800000 (30 minutes).
+//                firebaseAnalytics.setSessionTimeoutDuration(500);
             }
         });
 
@@ -2144,9 +2169,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 });
                                     }
                                 }
+                                Bundle bundle = new Bundle();
+                                bundle.putString(Constants.HOME_SCREEN, "paytm");
+                                MyApplication.getInstance().logEvent(Constants.REVENUE +
+                                        Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+                                        Constants.RETENTION, bundle);
+
                                 FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
                                 FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "paytm");
                             } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putString(Constants.HOME_SCREEN, "cash");
+                                MyApplication.getInstance().logEvent(Constants.REVENUE +
+                                        Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+                                        Constants.RETENTION, bundle);
+
                                 FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
                                 FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "cash");
                                 callRequestRide = true;
@@ -2162,6 +2199,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (promoCouponSelectedForRide.id > 0) {
                                     FlurryEventLogger.event(COUPONS_SELECTED);
                                     FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "offer selected");
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(Constants.HOME_SCREEN, "offer selected");
+                                    MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
+
                                 } else {
                                     FlurryEventLogger.event(COUPON_NOT_SELECTED);
                                 }
@@ -5529,6 +5570,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         double distance = MapUtils.distance(Data.pickupLatLng, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                         if (distance > MAP_PAN_DISTANCE_CHECK) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constants.HOME_SCREEN, "different pickup location popup");
+                            MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
                             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "different pickup location popup");
                             textMessage.setText("The pickup location you have set is different from your current location. Are you sure this is your pickup location?");
                             dialog.show();
