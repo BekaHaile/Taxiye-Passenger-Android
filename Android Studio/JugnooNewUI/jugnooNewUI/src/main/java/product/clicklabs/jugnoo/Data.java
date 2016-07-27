@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
@@ -142,29 +143,18 @@ public class Data {
 
 
 	public static final String DEVICE_TYPE = "0";
-	public static String deviceToken = "", country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
+	public static String country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
 	public static int appVersion;
 
-	public static String getDeviceToken(){
-		if(deviceToken.equalsIgnoreCase("")){
-			deviceToken = "not_found";
-		}
-		return deviceToken;
-	}
-	
-	
 	
 	public static String cEngagementId = "", cDriverId = "", cSessionId = "";
 	public static DriverInfo assignedDriverInfo;
-	
-	
-	
-
 
 	
 	public static EndRideData endRideData;
 	
 	public static int customerRateAppFlag = 0;
+	public static RateAppDialogContent rateAppDialogContent;
 	
 	
 	public static LatLng pickupLatLng, dropLatLng;
@@ -172,6 +162,7 @@ public class Data {
 
 	public static FacebookUserData facebookUserData;
 	public static GoogleSignInAccount googleSignInAccount;
+	public static String webActivityTitle = "";
 	
 	
 	
@@ -219,7 +210,7 @@ public class Data {
             endRideData = null;
             customerRateAppFlag = 0;
 			locationFetcher = null;
-			deviceToken = ""; country = ""; deviceName = ""; appVersion = 0; osVersion = "";
+			country = ""; deviceName = ""; appVersion = 0; osVersion = "";
 			cEngagementId = ""; cDriverId = ""; cSessionId = "";
 			assignedDriverInfo = null;
 			pickupLatLng = null;

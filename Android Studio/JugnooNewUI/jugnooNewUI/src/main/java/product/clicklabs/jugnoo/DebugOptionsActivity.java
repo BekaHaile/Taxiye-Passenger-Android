@@ -17,6 +17,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -28,10 +32,10 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class DebugOptionsActivity extends BaseActivity {
 
-	RelativeLayout relative;
+    RelativeLayout relative;
 
-	TextView textViewTitle;
-	ImageView imageViewBack;
+    TextView textViewTitle;
+    ImageView imageViewBack;
 
 
     RelativeLayout relativeLayoutShowAllDrivers, relativeLayoutShowDriverInfo;
@@ -39,37 +43,38 @@ public class DebugOptionsActivity extends BaseActivity {
 
     RelativeLayout relativeLayoutLive4012, relativeLayoutTest8012, relativeLayoutTest8013, relativeLayoutTest8014, relativeLayoutTest8015, relativeLayoutCustom;
     ImageView imageViewLive4012, imageViewTest8012, imageViewTest8013, imageViewTest8014, imageViewTest8015, imageViewCustom;
-	EditText editTextCustom;
+    EditText editTextCustom;
 
     Button buttonSave, buttonCancel, buttonRefreshGCM;
 
-	ScrollView scrollView;
-	LinearLayout linearLayoutMain;
-	TextView textViewScroll;
+    ScrollView scrollView;
+    LinearLayout linearLayoutMain;
+    TextView textViewScroll;
 
     int showAllDriversValue = 0;
     int showDriverInfoValue = 0;
 
     String selectedServer = Config.getDefaultServerUrl();
 
-	ProgressDialog progressDialog;
+    ProgressDialog progressDialog;
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		HomeActivity.checkForAccessTokenChange(this);
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HomeActivity.checkForAccessTokenChange(this);
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_debug_options);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_debug_options);
 
-		relative = (RelativeLayout) findViewById(R.id.relative);
-		new ASSL(this, relative, 1134, 720, false);
+        relative = (RelativeLayout) findViewById(R.id.relative);
+        new ASSL(this, relative, 1134, 720, false);
 
-		textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
-		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        textViewTitle.setTypeface(Fonts.avenirNext(this));
+        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
 
         ((TextView) findViewById(R.id.textViewDebugOptions)).setTypeface(Fonts.mavenRegular(this));
@@ -92,69 +97,71 @@ public class DebugOptionsActivity extends BaseActivity {
         relativeLayoutTest8013 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8013);
         relativeLayoutTest8014 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8014);
         relativeLayoutTest8015 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8015);
-		relativeLayoutCustom = (RelativeLayout) findViewById(R.id.relativeLayoutCustom);
+        relativeLayoutCustom = (RelativeLayout) findViewById(R.id.relativeLayoutCustom);
 
         imageViewLive4012 = (ImageView) findViewById(R.id.imageViewLive4012);
         imageViewTest8012 = (ImageView) findViewById(R.id.imageViewTest8012);
         imageViewTest8013 = (ImageView) findViewById(R.id.imageViewTest8013);
         imageViewTest8014 = (ImageView) findViewById(R.id.imageViewTest8014);
         imageViewTest8015 = (ImageView) findViewById(R.id.imageViewTest8015);
-		imageViewCustom = (ImageView) findViewById(R.id.imageViewCustom);
+        imageViewCustom = (ImageView) findViewById(R.id.imageViewCustom);
 
-		((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.mavenLight(this));
-		((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.mavenLight(this));
-		((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
-		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
-		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
-		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.mavenMedium(this));
-
-
-        buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.mavenRegular(this));
-        buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.mavenRegular(this));
-		buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM); buttonRefreshGCM.setTypeface(Fonts.mavenRegular(this));
+        ((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewTest8013)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
+        ((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
+        editTextCustom = (EditText) findViewById(R.id.editTextCustom);
+        editTextCustom.setTypeface(Fonts.mavenMedium(this));
 
 
-		scrollView = (ScrollView) findViewById(R.id.scrollView);
-		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
-		textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+        buttonSave = (Button) findViewById(R.id.buttonSave);
+        buttonSave.setTypeface(Fonts.mavenRegular(this));
+        buttonCancel = (Button) findViewById(R.id.buttonCancel);
+        buttonCancel.setTypeface(Fonts.mavenRegular(this));
+        buttonRefreshGCM = (Button) findViewById(R.id.buttonRefreshGCM);
+        buttonRefreshGCM.setTypeface(Fonts.mavenRegular(this));
 
 
-		imageViewBack.setOnClickListener(new OnClickListener() {
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
-			@Override
-			public void onClick(View v) {
-				performBackPressed();
-			}
-		});
+
+        imageViewBack.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                performBackPressed();
+            }
+        });
 
 
         buttonSave.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-				if(!selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())
-						&& !selectedServer.equalsIgnoreCase(Config.getDevServerUrl())
-						&& !selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())
-						&& !selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())
-						&& !selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())){
-					String customUrl = editTextCustom.getText().toString().trim();
-					if("".equalsIgnoreCase(customUrl)){
-						editTextCustom.requestFocus();
-						editTextCustom.setError("Please enter something");
-					}
-					else {
-						selectedServer = customUrl;
-						Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
-						Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
-						Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
-						performBackPressed();
-					}
-				}
-				else{
-					Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
-					Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
-					Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
-					performBackPressed();
-				}
+                if (!selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())
+                        && !selectedServer.equalsIgnoreCase(Config.getDevServerUrl())
+                        && !selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())
+                        && !selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())
+                        && !selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())) {
+                    String customUrl = editTextCustom.getText().toString().trim();
+                    if ("".equalsIgnoreCase(customUrl)) {
+                        editTextCustom.requestFocus();
+                        editTextCustom.setError("Please enter something");
+                    } else {
+                        selectedServer = customUrl;
+                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
+                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
+                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
+                        performBackPressed();
+                    }
+                } else {
+                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
+                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
+                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
+                    performBackPressed();
+                }
             }
         });
 
@@ -165,15 +172,27 @@ public class DebugOptionsActivity extends BaseActivity {
             }
         });
 
-		buttonRefreshGCM.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(DebugOptionsActivity.this, RegistrationIntentService.class);
-				intent.putExtra(Data.INTENT_CLASS_NAME, DebugOptionsActivity.class.getName());
-				startService(intent);
-			}
-		});
+        buttonRefreshGCM.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                FirebaseInstanceId.getInstance().deleteInstanceId();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
 
         showAllDriversValue = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
@@ -181,20 +200,18 @@ public class DebugOptionsActivity extends BaseActivity {
 
         selectedServer = Prefs.with(this).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
-        if(showAllDriversValue == 1){
+        if (showAllDriversValue == 1) {
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
             imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
-        }
-        else{
+        } else {
             relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
             imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
         }
 
-        if(showDriverInfoValue == 1){
+        if (showDriverInfoValue == 1) {
             relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
             imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
-        }
-        else{
+        } else {
             relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
             imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
         }
@@ -202,39 +219,36 @@ public class DebugOptionsActivity extends BaseActivity {
         setServerUI(selectedServer);
 
 
-
         relativeLayoutShowAllDrivers.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (showAllDriversValue == 0) {
-					showAllDriversValue = 1;
-					relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
-				} else {
-					showAllDriversValue = 0;
-					relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-					imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
-				}
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                if (showAllDriversValue == 0) {
+                    showAllDriversValue = 1;
+                    relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
+                    imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
+                } else {
+                    showAllDriversValue = 0;
+                    relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
+                    imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
+                }
+            }
+        });
 
 
         relativeLayoutShowDriverInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(showDriverInfoValue == 0){
+                if (showDriverInfoValue == 0) {
                     showDriverInfoValue = 1;
                     relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
                     imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
-                }
-                else{
+                } else {
                     showDriverInfoValue = 0;
                     relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
                     imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
                 }
             }
         });
-
 
 
         relativeLayoutLive4012.setOnClickListener(new OnClickListener() {
@@ -277,34 +291,33 @@ public class DebugOptionsActivity extends BaseActivity {
             }
         });
 
-		relativeLayoutCustom.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String customUrl = editTextCustom.getText().toString().trim();
-				if("".equalsIgnoreCase(customUrl)){
-					editTextCustom.requestFocus();
-					editTextCustom.setError("Please enter something");
-				}
-				else {
-					selectedServer = customUrl;
-					setServerUI(selectedServer);
-				}
-			}
-		});
+        relativeLayoutCustom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String customUrl = editTextCustom.getText().toString().trim();
+                if ("".equalsIgnoreCase(customUrl)) {
+                    editTextCustom.requestFocus();
+                    editTextCustom.setError("Please enter something");
+                } else {
+                    selectedServer = customUrl;
+                    setServerUI(selectedServer);
+                }
+            }
+        });
 
-		editTextCustom.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+        editTextCustom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //				relativeLayoutCustom.performClick();
-				selectedServer = editTextCustom.getText().toString().trim();
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						scrollView.smoothScrollTo(0, buttonRefreshGCM.getTop());
-					}
-				}, 200);
-			}
-		});
+                selectedServer = editTextCustom.getText().toString().trim();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, buttonRefreshGCM.getTop());
+                    }
+                }, 200);
+            }
+        });
 
 //		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
 //			@Override
@@ -319,155 +332,143 @@ public class DebugOptionsActivity extends BaseActivity {
 //		}));
 
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-	}
+    }
 
 
-    public void setServerUI(String selectedServer){
-        if(selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())){
+    public void setServerUI(String selectedServer) {
+        if (selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())) {
             relativeLayoutLive4012.setBackgroundColor(Color.WHITE);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_checked);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
-        }
-        else if(selectedServer.equalsIgnoreCase(Config.getDevServerUrl())){
+            imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
+        } else if (selectedServer.equalsIgnoreCase(Config.getDevServerUrl())) {
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8012.setBackgroundColor(Color.WHITE);
             relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8012.setImageResource(R.drawable.check_box_checked);
             imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
-        }
-        else if(selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())){
+            imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
+        } else if (selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())) {
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8013.setBackgroundColor(Color.WHITE);
             relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8013.setImageResource(R.drawable.check_box_checked);
             imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
-        }
-        else if(selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())){
+            imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
+        } else if (selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())) {
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8014.setBackgroundColor(Color.WHITE);
             relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8014.setImageResource(R.drawable.check_box_checked);
             imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
-        }
-        else if(selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())){
+            imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
+        } else if (selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())) {
             relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
             relativeLayoutTest8015.setBackgroundColor(Color.WHITE);
-			relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutCustom.setBackgroundColor(Color.TRANSPARENT);
 
             imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
             imageViewTest8015.setImageResource(R.drawable.check_box_checked);
-			imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
+            imageViewCustom.setImageResource(R.drawable.check_box_unchecked);
+        } else {
+            relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
+            relativeLayoutCustom.setBackgroundColor(Color.WHITE);
+
+            imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
+            imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
+            imageViewCustom.setImageResource(R.drawable.check_box_checked);
+
+            editTextCustom.setText(selectedServer);
+            editTextCustom.setSelection(editTextCustom.getText().toString().length());
         }
-		else{
-			relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutTest8012.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutTest8013.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutTest8014.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutTest8015.setBackgroundColor(Color.TRANSPARENT);
-			relativeLayoutCustom.setBackgroundColor(Color.WHITE);
-
-			imageViewLive4012.setImageResource(R.drawable.check_box_unchecked);
-			imageViewTest8012.setImageResource(R.drawable.check_box_unchecked);
-			imageViewTest8013.setImageResource(R.drawable.check_box_unchecked);
-			imageViewTest8014.setImageResource(R.drawable.check_box_unchecked);
-			imageViewTest8015.setImageResource(R.drawable.check_box_unchecked);
-			imageViewCustom.setImageResource(R.drawable.check_box_checked);
-
-			editTextCustom.setText(selectedServer);
-			editTextCustom.setSelection(editTextCustom.getText().toString().length());
-		}
     }
-    
 
 
-
-	
-	public void performBackPressed(){
+    public void performBackPressed() {
         startActivity(new Intent(this, SplashNewActivity.class));
-		finish();
-		overridePendingTransition(R.anim.left_in, R.anim.left_out);
-	}
-	
-	@Override
-	public void onBackPressed() {
-		performBackPressed();
-	}
-	
-	
-	@Override
-	protected void onDestroy() {
+        finish();
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        performBackPressed();
+    }
+
+
+    @Override
+    protected void onDestroy() {
         ASSL.closeActivity(relative);
         System.gc();
-		super.onDestroy();
-	}
+        super.onDestroy();
+    }
 
 
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		if(Data.REGISTRATION_COMPLETE.equalsIgnoreCase(intent.getAction())){
-			if(intent.hasExtra(Data.DEVICE_TOKEN)){
-				Toast.makeText(this, "Registration complete = " + intent.getStringExtra(Data.DEVICE_TOKEN), Toast.LENGTH_LONG).show();
-			}
-			else{
-				Toast.makeText(this, "Registration failed"+"", Toast.LENGTH_LONG).show();
-			}
-		}
-		else if(Data.REGISTRATION_FAILED.equalsIgnoreCase(intent.getAction())){
-			if(intent.hasExtra(Data.ERROR)){
-				Toast.makeText(this, "Registration failed = "+intent.getStringExtra(Data.ERROR), Toast.LENGTH_LONG).show();
-			}
-			else{
-				Toast.makeText(this, "Registration failed"+"", Toast.LENGTH_LONG).show();
-			}
-		}
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-		}
-	}
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (Data.REGISTRATION_COMPLETE.equalsIgnoreCase(intent.getAction())) {
+            if (intent.hasExtra(Data.DEVICE_TOKEN)) {
+                Toast.makeText(this, "Registration complete = " + intent.getStringExtra(Data.DEVICE_TOKEN), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Registration failed" + "", Toast.LENGTH_LONG).show();
+            }
+        } else if (Data.REGISTRATION_FAILED.equalsIgnoreCase(intent.getAction())) {
+            if (intent.hasExtra(Data.ERROR)) {
+                Toast.makeText(this, "Registration failed = " + intent.getStringExtra(Data.ERROR), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Registration failed" + "", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
 
-	
+
 }

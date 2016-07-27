@@ -41,6 +41,15 @@ public class WebActivity extends BaseActivity {
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         imageViewProgressBar = (ImageView) findViewById(R.id.imageViewProgressBar);
+
+        try {
+            if(Data.webActivityTitle != null && !"".equalsIgnoreCase(Data.webActivityTitle)){
+				textViewTitle.setText(Data.webActivityTitle);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         imageViewProgressBar.setBackgroundResource(R.drawable.auto_loading_frame_anim);

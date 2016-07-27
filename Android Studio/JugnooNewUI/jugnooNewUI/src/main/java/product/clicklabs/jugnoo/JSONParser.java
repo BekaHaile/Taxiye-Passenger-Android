@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
@@ -593,6 +594,7 @@ public class JSONParser implements Constants {
             try {
                 if (jLastRideData.has("rate_app")) {
                     Data.customerRateAppFlag = jLastRideData.getInt("rate_app");
+                    Data.rateAppDialogContent = parseRateAppDialogContent(jLastRideData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1270,6 +1272,24 @@ public class JSONParser implements Constants {
             NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
         } catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public static RateAppDialogContent parseRateAppDialogContent(JSONObject jObj){
+        try{
+            JSONObject jRA = jObj.getJSONObject(KEY_RATE_APP_DIALOG_CONTENT);
+            return new RateAppDialogContent(jRA.getString(KEY_TITLE),
+                    jRA.getString(KEY_TEXT),
+                    jRA.getString(KEY_CONFIRM_BUTTON_TEXT),
+                    jRA.getString(KEY_CANCEL_BUTTON_TEXT),
+                    jRA.getString(KEY_URL));
+        } catch(Exception e){
+            e.printStackTrace();
+            return new RateAppDialogContent("Rate Us",
+                    "Liked our services!!! Please rate us on Play Store",
+                    "RATE NOW",
+                    "LATER",
+                    "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo") ;
         }
     }
 

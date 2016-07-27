@@ -76,6 +76,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -160,6 +161,7 @@ import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
@@ -212,7 +214,7 @@ import retrofit.mime.TypedByteArray;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
 		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants {
+        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback {
 
 
     private final String TAG = "Home Screen";
@@ -354,8 +356,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker, dropInitialMarker;
-    Polyline pathToDropLocationPolyline;
-    PolylineOptions pathToDropLocationPolylineOptions;
+    Polyline pathToDropLocationPolyline, polylineInRideDriverPath;
+    PolylineOptions pathToDropLocationPolylineOptions, polylineOptionsInRideDriverPath;
 
     public static AppInterruptHandler appInterruptHandler;
     boolean loggedOut = false,
@@ -509,7 +511,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Map Layout
         mapLayout = (RelativeLayout) findViewById(R.id.mapLayout);
-        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
         mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mapTouched = false;
 
@@ -886,7 +888,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         buttonEndRideSkip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "end_ride_image_skip");
                 relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                 submitFeedbackToInitial(5);
             }
@@ -1408,7 +1410,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
         // map object initialized
+        map = googleMap;
         if (map != null) {
 
             map.getUiSettings().setZoomGesturesEnabled(false);
@@ -1419,11 +1428,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
             //30.7500, 76.7800
-			//22.971723, 78.754263
+            //22.971723, 78.754263
 
 
-			if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
-					|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
+            if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
+                    || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
                 forceFarAwayCity();
                 Data.lastRefreshLatLng = new LatLng(22.971723, 78.754263);
@@ -1475,21 +1484,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             try {
                                 final DriverInfo driverInfo = Data.driverInfos.get(Data.driverInfos.indexOf(new DriverInfo(driverId)));
                                 DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "Driver Info", "" + driverInfo.toString(),
-                                    "Call", "Cancel", new OnClickListener() {
+                                        "Call", "Cancel", new OnClickListener() {
 
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                                            callIntent.setData(Uri.parse("tel:" + driverInfo.phoneNumber));
-                                            startActivity(callIntent);
-                                        }
-                                    },
-                                    new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent callIntent = new Intent(Intent.ACTION_VIEW);
+                                                callIntent.setData(Uri.parse("tel:" + driverInfo.phoneNumber));
+                                                startActivity(callIntent);
+                                            }
+                                        },
+                                        new OnClickListener() {
 
-                                        @Override
-                                        public void onClick(View v) {
-                                        }
-                                    }, true, false);
+                                            @Override
+                                            public void onClick(View v) {
+                                            }
+                                        }, true, false);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1550,7 +1559,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     else{
                         Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target));
                         if(MapUtils.distance(Data.lastRefreshLatLng, map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
-							Data.lastRefreshLatLng = map.getCameraPosition().target;
+                            Data.lastRefreshLatLng = map.getCameraPosition().target;
                             refresh = true;
                         }
                     }
@@ -1617,12 +1626,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-		try{
-			Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
+        try{
+            Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
             FlurryAgent.setUserId(Data.userData.getUserId());
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
         try {
             JSONObject map = new JSONObject();
@@ -1640,6 +1649,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
+
+        try {
+            AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+                    "947755540", "cZEMCIHV0GgQlLT2wwM", "50.00", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void endRideWithGif(){
@@ -2914,11 +2930,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     cancelTimerUpdateDrivers();
                     cancelDriverLocationUpdateTimer();
                     startMapAnimateAndUpdateRideDataTimer();
-					try {
-						getDropLocationPathAndDisplay(Data.pickupLatLng, false);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 					break;
 
                 case P_RIDE_END:
@@ -3213,6 +3224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
             }
+            plotPolylineInRideDriverPath();
         }
     }
 
@@ -4805,6 +4817,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     try {
                                         if (jObj.has("rate_app")) {
                                             Data.customerRateAppFlag = jObj.getInt("rate_app");
+                                            Data.rateAppDialogContent = JSONParser.parseRateAppDialogContent(jObj);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -5151,18 +5164,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                                 LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
                                                 LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
-
-                                                final PolylineOptions polylineOptions = new PolylineOptions();
-                                                polylineOptions.add(start, end);
-                                                polylineOptions.width(ASSL.Xscale() * 7);
-                                                polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-                                                polylineOptions.geodesic(false);
-
-                                                // Drawing poly-line in the Google Map
-                                                if (map != null && polylineOptions != null) {
-                                                    map.addPolyline(polylineOptions);
-                                                }
+                                                getPolylineOptionsInRideDriverPath().add(start, end);
                                             }
+                                            plotPolylineInRideDriverPath();
 
                                             try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
@@ -5194,6 +5198,35 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
+    private PolylineOptions getPolylineOptionsInRideDriverPath(){
+        if(polylineOptionsInRideDriverPath == null) {
+            polylineOptionsInRideDriverPath = new PolylineOptions();
+            polylineOptionsInRideDriverPath.width(ASSL.Xscale() * 7);
+            polylineOptionsInRideDriverPath.color(RIDE_ELAPSED_PATH_COLOR);
+            polylineOptionsInRideDriverPath.geodesic(false);
+            try {
+                ArrayList<RidePath> ridePathsList = Database2.getInstance(HomeActivity.this).getRidePathInfo();
+                for (RidePath ridePath : ridePathsList) {
+                    polylineOptionsInRideDriverPath.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
+                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return polylineOptionsInRideDriverPath;
+    }
+
+    private void plotPolylineInRideDriverPath(){
+        if (map != null) {
+            if(polylineInRideDriverPath != null){
+                polylineInRideDriverPath.remove();
+            }
+            polylineInRideDriverPath = map.addPolyline(getPolylineOptionsInRideDriverPath());
+        }
+    }
+
+
     public void cancelMapAnimateAndUpdateRideDataTimer() {
         try {
             if (timerTaskMapAnimateAndUpdateRideData != null) {
@@ -5217,21 +5250,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    ArrayList<RidePath> ridePathsList = new ArrayList<>();
-                    ridePathsList.addAll(Database2.getInstance(HomeActivity.this).getRidePathInfo());
-
-                    for (int i=0; i<ridePathsList.size(); i++) {
-                        RidePath ridePath = ridePathsList.get(i);
-                        final PolylineOptions polylineOptions = new PolylineOptions();
-                        polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
-                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
-                        polylineOptions.width(ASSL.Xscale() * 7);
-                        polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-                        polylineOptions.geodesic(false);
-                        if (map != null && polylineOptions != null) {
-                            map.addPolyline(polylineOptions);
-                        }
-                    }
+                    polylineOptionsInRideDriverPath = null;
+                    plotPolylineInRideDriverPath();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -5296,6 +5316,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 														pathToDropLocationPolyline.remove();
 													}
 													pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
+                                                    plotPolylineInRideDriverPath();
 
                                                     zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 												}
@@ -5498,26 +5519,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     /**
      * Displays popup to rate the app
      */
-    public void rateAppPopup(final Activity activity) {
+    public void rateAppPopup(final Activity activity, final RateAppDialogContent rateAppDialogContent) {
         try {
-            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "Rate Us", "Liked our services!!! Please rate us on Play Store", "RATE NOW", "LATER",
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        acceptAppRatingRequestAPI(activity);
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
-                        activity.startActivity(intent);
-                        FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
+            if(rateAppDialogContent != null) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, rateAppDialogContent.getTitle(), rateAppDialogContent.getText(),
+                        rateAppDialogContent.getConfirmButtonText(), rateAppDialogContent.getCancelButtonText(),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                acceptAppRatingRequestAPI(activity);
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(rateAppDialogContent.getUrl()));
+                                activity.startActivity(intent);
+                                FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
 
-                    }
-                },
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
-                    }
-                }, false, true);
+                            }
+                        },
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
+                            }
+                        }, false, true);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6420,7 +6444,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             if (givenRating >= 4 && Data.customerRateAppFlag == 1) {
-				rateAppPopup(HomeActivity.this);
+				rateAppPopup(HomeActivity.this, Data.rateAppDialogContent);
 			}
             firstTimeZoom = false;
             dropLocationSearchText = "";
@@ -6458,13 +6482,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            // Ride Completion
-            // Google Android in-app conversion tracking snippet
-            // Add this code to the event you'd like to track in your app.
-            // See code examples and learn how to add advanced features like app deep links at:
-            //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-            AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
-                    GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+            try {
+                // Ride Completion
+                // Google Android in-app conversion tracking snippet
+                // Add this code to the event you'd like to track in your app.
+                // See code examples and learn how to add advanced features like app deep links at:
+                //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
+                AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+						GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
             try {
@@ -6474,6 +6502,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 map.put(KEY_PAID_RIDE, ""+(Data.endRideData.toPay + Data.endRideData.paidUsingPaytm >= (0.5d * Data.endRideData.fare) ? 1 : 0));
                 NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_RIDE_COMPLETED, map);
             } catch(Exception e){
+                e.printStackTrace();
+            }
+
+            try {
+                AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+						"947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -6926,9 +6961,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         dismissPushDialog(false);
         PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
             @Override
-            public void onButtonClicked(int deepIndex) {
-                Data.deepLinkIndex = deepIndex;
-                openDeepLink();
+            public void onButtonClicked(int deepIndex, String url) {
+                if("".equalsIgnoreCase(url)) {
+                    Data.deepLinkIndex = deepIndex;
+                    openDeepLink();
+                } else{
+                    Utils.openUrl(HomeActivity.this, url);
+                }
             }
         }).show();
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -7248,7 +7287,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 submitFeedbackToInitial(givenRating);
                                             }
                                         }, 3000);
-                                    } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
+                                    } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
+                                                || givenRating == 1) {
                                         submitFeedbackToInitial(givenRating);
                                     }
 

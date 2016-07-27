@@ -32,9 +32,13 @@ public class NotificationData {
     @SerializedName("image")
     @Expose
     private String notificationImage;
+    @SerializedName("url")
+    @Expose
+    private String url;
     private boolean expanded;
 
-    public NotificationData(int notificationId, String timePushArrived, String title, String message, int deepIndex, String timeToDisplay, String timeTillDisplay, String notificationImage) {
+    public NotificationData(int notificationId, String timePushArrived, String title, String message, int deepIndex,
+                            String timeToDisplay, String timeTillDisplay, String notificationImage, String url) {
         this.notificationId = notificationId;
         this.timePushArrived = timePushArrived;
         this.title = title;
@@ -43,6 +47,7 @@ public class NotificationData {
         this.timeToDisplay = timeToDisplay;
         this.timeTillDisplay = timeTillDisplay;
         this.notificationImage = notificationImage;
+        this.url = url;
         this.expanded = false;
     }
 
@@ -116,5 +121,13 @@ public class NotificationData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

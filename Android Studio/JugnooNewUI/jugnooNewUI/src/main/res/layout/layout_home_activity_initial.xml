@@ -154,13 +154,13 @@
 
             <ImageView
                 android:id="@+id/imageViewGoogleAttrPoweredByGoogle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="240px"
+                android:layout_height="28px"
                 android:layout_below="@+id/textViewGoogleAttrText"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:src="@drawable/powered_by_google_light"
-                android:tag="DontTouchMe" />
+                android:layout_marginTop="8px"
+                android:tag="mwar"
+                android:src="@drawable/powered_by_google_light" />
 
         </RelativeLayout>
 

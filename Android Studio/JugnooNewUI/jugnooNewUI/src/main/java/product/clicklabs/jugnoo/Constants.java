@@ -335,6 +335,13 @@ public interface Constants {
 	String SP_OTP_VIA_CALL_ENABLED = "sp_otp_via_call_enabled";
 	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
 
+	String SP_DEVICE_TOKEN = "sp_device_token";
+	String KEY_DEVICE_TOKEN = "device_token";
+
+	String KEY_RATE_APP_DIALOG_CONTENT = "rate_app_dialog_content";
+	String KEY_TEXT = "text";
+	String KEY_CONFIRM_BUTTON_TEXT = "confirm_button_text";
+	String KEY_CANCEL_BUTTON_TEXT = "cancel_button_text";
 
 	String SP_LAST_ADDED_WALLET = "sp_last_added_wallet";
 	String SP_LAST_USED_WALLET = "sp_last_used_wallet";

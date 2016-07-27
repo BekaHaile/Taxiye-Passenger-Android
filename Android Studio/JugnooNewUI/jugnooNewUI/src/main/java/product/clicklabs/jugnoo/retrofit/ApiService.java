@@ -431,4 +431,8 @@ public interface ApiService {
     void mobikwikUnlink(@FieldMap Map<String, String> params,
                             Callback<SettleUserDebt> callback);
 
+    @FormUrlEncoded
+    @POST("/refresh_device_token")
+    Response refreshDeviceToken(@FieldMap Map<String, String> params);
+
 }
