@@ -276,7 +276,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                 public void run() {
                                     try {
                                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                        mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int) (minRatio * 40)));
+                                        mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
+                                                (int) (660f * minRatio), (int) (240f * minRatio),
+                                                (int) (minRatio * 60)));
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
