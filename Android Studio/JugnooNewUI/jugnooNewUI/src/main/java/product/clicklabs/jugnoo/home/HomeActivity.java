@@ -7051,11 +7051,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
 
             @Override
-            public void onFailure() {
-
-            }
-
-            @Override
             public void onRetry() {
 
             }

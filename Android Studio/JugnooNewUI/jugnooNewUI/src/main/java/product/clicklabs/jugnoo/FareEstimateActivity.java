@@ -310,11 +310,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 }
 
                 @Override
-                public void onFailure() {
-
-                }
-
-                @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
 
                     NudgeClient.trackEventUserId(FareEstimateActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);

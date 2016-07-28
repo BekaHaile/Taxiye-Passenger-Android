@@ -298,11 +298,10 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
 			if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
 				linearLayoutWalletContainer.removeAllViews();
+				linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
 				for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
 					if(paymentModeConfigData.getEnabled() == 1) {
-						if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
-							linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
-						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
 						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
