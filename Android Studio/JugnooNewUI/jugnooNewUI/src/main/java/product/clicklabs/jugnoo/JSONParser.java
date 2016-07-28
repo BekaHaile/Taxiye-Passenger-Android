@@ -659,8 +659,11 @@ public class JSONParser implements Constants {
             JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
             for(int i=0; i<additionalChargesJson.length(); i++){
                 JSONObject obj = additionalChargesJson.getJSONObject(i);
-                discountTypes.add(new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id")));
-                sumAdditionalCharges = sumAdditionalCharges + obj.optDouble("amount");
+                DiscountType discountType = new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id"));
+                if(discountType.value > 0) {
+                    discountTypes.add(discountType);
+                    sumAdditionalCharges = sumAdditionalCharges + discountType.value;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

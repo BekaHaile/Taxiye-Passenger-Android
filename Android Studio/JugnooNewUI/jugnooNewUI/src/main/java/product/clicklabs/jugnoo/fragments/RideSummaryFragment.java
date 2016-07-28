@@ -187,8 +187,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
         textViewEndRideJugnooCashValue.setTypeface(Fonts.mavenRegular(activity));
         textViewEndRidePaytmValue = (TextView) rootView.findViewById(R.id.textViewEndRidePaytmValue);
         textViewEndRidePaytmValue.setTypeface(Fonts.mavenRegular(activity));
-                textViewEndRideMobikwikValue = (TextView) rootView.findViewById(R.id.textViewEndRideMobikwikValue);
-                textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewEndRideMobikwikValue = (TextView) rootView.findViewById(R.id.textViewEndRideMobikwikValue);
+        textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
         textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
         textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
         textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue);
@@ -209,7 +209,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
         relativeLayoutEndRideDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideDiscount);
         relativeLayoutPaidUsingJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
         relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
-                relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
+        relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
         linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
         relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
         imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
@@ -241,6 +241,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
         ((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
+        ((TextView) rootView.findViewById(R.id.textViewEndRideMobikwik)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
         ((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity));

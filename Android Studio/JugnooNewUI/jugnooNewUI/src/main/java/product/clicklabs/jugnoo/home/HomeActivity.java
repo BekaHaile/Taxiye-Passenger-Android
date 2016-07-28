@@ -2503,6 +2503,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						textViewFindingDriver.setText("Finding a Jugnoo driver...");
                         initialCancelRideBtn.setVisibility(View.GONE);
+                        try {
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
 
                         if (map != null) {
@@ -6195,10 +6200,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
+                                try {
+                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
+
+                                try {
+                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                                 try{
                                     if(promoCouponSelectedForRide.id > 0) {
