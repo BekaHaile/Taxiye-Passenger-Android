@@ -972,7 +972,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Data.dropLatLng = null;
                 dropLocationSet = false;
                 dropLocationSearched = false;
-                textViewDestSearch.setText("");
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                    textViewDestSearch.setText(R.string.destination_required);
+                } else {
+                    textViewDestSearch.setText(R.string.enter_destination);
+                }
                 imageViewDropCross.setVisibility(View.GONE);
                 translateViewBottomTop(relativeLayoutDestSearchBar, false);
                 translateViewTopBottom(relativeLayoutInitialSearchBar, true);
@@ -5908,7 +5912,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static void logoutUser(final Activity cont) {
         try {
-
             SharedPreferences pref = cont.getSharedPreferences("myPref", 0);
             Editor editor = pref.edit();
             editor.clear();

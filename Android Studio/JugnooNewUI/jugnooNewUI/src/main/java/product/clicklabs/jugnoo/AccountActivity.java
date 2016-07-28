@@ -1015,7 +1015,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 imageViewChangePassword.setVisibility(View.VISIBLE);
                                 relativeLayoutChangePassword.performClick();
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
-                                DialogPopup.alertPopup(activity, "", message);
+                                HomeActivity.logoutUser(activity);
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }

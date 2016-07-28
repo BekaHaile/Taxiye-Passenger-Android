@@ -413,7 +413,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 					}
 				}*/
 
+
                 textViewEndRideFinalFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.finalFare)));
+                if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){
+                    relativeLayoutFinalFare.setVisibility(View.GONE);
+                }
 
                 if (Utils.compareDouble(endRideData.paidUsingWallet, 0) > 0) {
                     relativeLayoutPaidUsingJugnooCash.setVisibility(View.VISIBLE);
