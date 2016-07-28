@@ -384,7 +384,7 @@
 
 	<!-- NL OTP-->
 	<string name="nl_otp_verification">Verification</string>
-	<string name="nl_otp_please_enter_otp">Please enter the One Time Password sent to</string>
+	<string name="nl_otp_please_enter_otp">Please enter One Time Password sent to</string>
 	<string name="nl_otp_enter_otp">Enter OTP</string>
 	<string name="nl_otp_waiting_to_detect_otp">Waiting to automatically detect OTP</string>
 	<string name="nl_otp_verify">Verify Me</string>
@@ -691,7 +691,7 @@
 
 	<string name="whoops">W h o o p s !</string>
 
-	<string name="give_missed_call_dialog_text">No Code? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
+	<string name="give_missed_call_dialog_text">No OTP? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
 	<string name="call_us">Call Us</string>
 	<string name="call_me">Call Me</string>
 	<string name="receive_otp_via_call">Receive the OTP via call</string>

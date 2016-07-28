@@ -2513,6 +2513,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
 
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 600);
+
 
                         if (map != null) {
                             MarkerOptions markerOptions = new MarkerOptions();
@@ -7045,8 +7056,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                 poolMarkerOptionEnd.title("End");
                 poolMarkerOptionEnd.position(Data.dropLatLng);
-                poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
-                        assl, R.drawable.pin_ball_end)));
+                poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this,
+                        assl)));
                 //map.addMarker(poolMarkerEnd);
                 map.addMarker(poolMarkerOptionEnd);
 

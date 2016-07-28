@@ -191,7 +191,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					public void onPlaceSaved() {
 					}
 
-				});
+				}, true);
 
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));

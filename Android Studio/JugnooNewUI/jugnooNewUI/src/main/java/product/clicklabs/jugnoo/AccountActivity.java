@@ -463,7 +463,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this,AddPlaceActivity.class);
+                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
                 intent.putExtra("requestCode", "HOME");
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
                 startActivityForResult(intent, ADD_HOME);
@@ -476,7 +476,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this,AddPlaceActivity.class);
+                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
                 intent.putExtra("requestCode", "WORK");
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
                 startActivityForResult(intent, ADD_WORK);
