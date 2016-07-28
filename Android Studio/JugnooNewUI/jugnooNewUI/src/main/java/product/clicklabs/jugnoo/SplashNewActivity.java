@@ -870,7 +870,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										editTextSPassword.requestFocus();
 										editTextSPassword.setError("Please enter password");
 									} else {
-										if (Utils.isEmailValid(emailId)) {
+										if ((linkedWallet == LinkedWalletStatus.NO_WALLET.getOrdinal() && Utils.isEmailValid(emailId))
+												||
+												((linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
+														|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal())
+														&& Utils.isEmailValid(emailId) && !emailId.contains("+"))
+												) {
 											if (password.length() >= 6) {
 												Prefs.with(SplashNewActivity.this).save(SP_REFERRAL_CODE, referralCode);
 												if (RegisterationType.FACEBOOK == registerationType) {
