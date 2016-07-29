@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
@@ -39,6 +40,7 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -252,6 +254,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                             ((RideTransactionsActivity) activity).getContainer(),
                             engagementId, endRideData, getRideSummaryResponse, 0, false);
                     FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
                 } else {
                     performBackPressed();
@@ -495,6 +499,9 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
     public void performBackPressed() {
+        Bundle bundle = new Bundle();
+        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.BACK, bundle);
+
         if (activity instanceof RideTransactionsActivity) {
             ((RideTransactionsActivity) activity).performBackPressed();
             FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", "Back");

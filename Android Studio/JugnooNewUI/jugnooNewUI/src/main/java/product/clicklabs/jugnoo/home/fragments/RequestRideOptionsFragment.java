@@ -40,6 +40,7 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -187,10 +188,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
                 getPaymentOptionDialog().show();
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.HOME_SCREEN, "b_payment_mode");
-                MyApplication.getInstance().logEvent(Constants.REVENUE +
-                        Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                        Constants.RETENTION, bundle);
+                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                        +FirebaseEvents.B_PAYMENT_MODE, bundle);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
@@ -199,20 +198,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                     //getPoolDestinationDialog().show();
                     getFareDetailsDialog().show();
                     Bundle bundle = new Bundle();
-                    bundle.putString("type", "Pool");
-                    bundle.putString(Constants.HOME_SCREEN, "base fare");
-                    MyApplication.getInstance().logEvent(Constants.REVENUE +
-                            Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                            Constants.RETENTION, bundle);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                            +FirebaseEvents.FARE_POPUP+"_pool", bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Pool", "base fare");
                 } else{
                     getFareDetailsDialog().show();
                     Bundle bundle = new Bundle();
-                    bundle.putString("type", "Auto");
-                    bundle.putString(Constants.HOME_SCREEN, "base fare");
-                    MyApplication.getInstance().logEvent(Constants.REVENUE +
-                            Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                            Constants.RETENTION, bundle);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                            +FirebaseEvents.FARE_POPUP+"_auto", bundle);
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Auto", "base fare");
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
@@ -236,13 +229,15 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
 
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.HOME_SCREEN, "get fare estimate");
-                MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
-
+                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                        +FirebaseEvents.GET_FARE_ESTIMATE, bundle);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
                 getPromoCouponsDialog().show();
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                        +FirebaseEvents.B_OFFER, bundle);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
             }
         }

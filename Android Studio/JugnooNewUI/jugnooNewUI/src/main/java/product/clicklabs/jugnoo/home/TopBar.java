@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -33,7 +34,7 @@ import product.clicklabs.jugnoo.utils.NudgeClient;
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar {
+public class TopBar implements FirebaseEvents {
 
 
     Activity activity;
@@ -125,9 +126,7 @@ public class TopBar {
                             FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "menu");
                         } else {
                             Bundle bundle = new Bundle();
-                            bundle.putString(Constants.HOME_SCREEN, "menu");
-                            MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION +
-                                    Constants.SLASH + Constants.RETENTION, bundle);
+                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
 
                             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION,
                                     "Home Screen", "menu");
@@ -147,6 +146,8 @@ public class TopBar {
                             if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
                                 //FlurryEventLogger.eventGA(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
                             } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
+                                Bundle bundle = new Bundle();
+                                MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+Constants.HELP, bundle);
                                 FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "help");
                             }
                         } catch (Exception e) {
@@ -191,9 +192,7 @@ public class TopBar {
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
 
                         Bundle bundle = new Bundle();
-                        bundle.putString(Constants.HOME_SCREEN, "fresh");
-                        MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION +
-                                Constants.SLASH + Constants.RETENTION, bundle);
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+FRESH, bundle);
 
                         FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "fresh");
                     }

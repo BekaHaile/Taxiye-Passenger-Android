@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
@@ -34,6 +36,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -52,6 +55,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<NotificationData> notificationList;
     private int totalNotifications;
     private Callback callback;
+
+    private String msg = "";
 
     public NotificationAdapter(Activity activity, int rowLayout, int totalNotifications, Callback callback) {
         this.notificationList = new ArrayList<>();
@@ -100,7 +105,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(viewholder instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) viewholder;
             NotificationData notification = notificationList.get(position);
-
+            msg = notification.getTitle();
             holder.textViewTitle.setText(notification.getTitle());
             holder.textViewDescription.setText(notification.getMessage());
             holder.textViewTime.setText(DateOperations
@@ -154,6 +159,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemChanged(position);*/
                         openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("message", ""+msg);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+"deepInt", bundle);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -258,6 +266,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == deepInt){
                 CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
             }
+
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
             e.printStackTrace();

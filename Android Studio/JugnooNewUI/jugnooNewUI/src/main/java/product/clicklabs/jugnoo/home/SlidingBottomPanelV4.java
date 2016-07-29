@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,12 +10,14 @@ import android.widget.TextView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -40,7 +43,7 @@ public class SlidingBottomPanelV4 {
     private SlidingBottomFragmentAdapter slidingBottomFragmentAdapter;
     private ImageView imageViewPaymentOp, imageViewSurgeOverSlidingBottom;
     private TextView textViewMinFareValue, textViewOffersValue, textViewCashValue;
-
+    Bundle bundle = new Bundle();
 
     private final String TAG = SlidingBottomPanelV4.class.getSimpleName();
 
@@ -264,6 +267,8 @@ public class SlidingBottomPanelV4 {
                     viewPager.setCurrentItem(0, true);
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
+                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                        +FirebaseEvents.B_PAYMENT_MODE, bundle);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
                 break;
 
@@ -274,6 +279,8 @@ public class SlidingBottomPanelV4 {
                     viewPager.setCurrentItem(1, true);
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
+                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                        +FirebaseEvents.FARE_POPUP, bundle);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
                 break;
 
@@ -284,6 +291,8 @@ public class SlidingBottomPanelV4 {
                     viewPager.setCurrentItem(2, true);
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
+                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                        +FirebaseEvents.B_OFFER, bundle);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
                 break;
         }

@@ -47,6 +47,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -60,7 +61,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class AccountActivity extends BaseActivity implements FlurryEventNames {
+public class AccountActivity extends BaseActivity implements FlurryEventNames, FirebaseEvents {
 
     private final String TAG = "View Account";
 
@@ -94,6 +95,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
     private boolean setJeanieState;
     public static final int ADD_HOME = 2, ADD_WORK = 3;
+    Bundle bundle = new Bundle();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -269,6 +271,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                         } else {
                             updateUserProfileAPI(AccountActivity.this, nameChanged, emailChanged, "+91" + phoneNoChanged,
                                     !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
+                            MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EDIT_PHONE_NUMBER, bundle);
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "edit phone number");
                         }
                     } else {
@@ -343,6 +346,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             linearLayoutPasswordChange.setVisibility(View.VISIBLE);
                             linearLayoutPasswordSave.setVisibility(View.VISIBLE);
                             imageViewChangePassword.setVisibility(View.GONE);
+                            MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+CHANGE_PASSWORD, bundle);
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Change Password");
                         } else {
                             linearLayoutPasswordChange.setVisibility(View.GONE);
@@ -456,6 +460,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_EMERGENCY_CONTACTS);
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+EMERGENCY_CONTACTS, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Emergency contacts");
             }
         });
@@ -469,6 +474,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivityForResult(intent, ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_HOME, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Home");
             }
         });
@@ -482,6 +488,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                 startActivityForResult(intent, ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_WORK, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Add Work");
             }
         });
@@ -513,6 +520,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                             @Override
                             public void onClick(View v) {
                                 FlurryEventLogger.event(AccountActivity.this, CLICKS_ON_LOGOUT);
+                                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+LOGOUT, bundle);
                                 logoutAsync(AccountActivity.this);
                             }
                         },
@@ -577,6 +585,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	public void performBackPressed(){
         FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
+        MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+BACK, bundle);
         if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
             if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
                 relativeLayoutChangePassword.performClick();

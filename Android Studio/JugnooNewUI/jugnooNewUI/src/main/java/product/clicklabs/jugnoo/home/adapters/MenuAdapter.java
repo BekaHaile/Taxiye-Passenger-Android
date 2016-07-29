@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
@@ -45,6 +47,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -322,6 +325,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))){
                 if(activity instanceof HomeActivity) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.GET_A_RIDE, bundle);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
                 }
             } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
@@ -346,6 +351,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
                         }
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FRESH, bundle);
                         FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
                     }
                 }
@@ -355,11 +362,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Free rides");
 
             } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, ReferDriverActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                //MyApplication.getInstance().logEvent(FirebaseEvents.Refer_a_driver);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.REFER_A_DRIVER, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Refer a driver");
             }else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, PaymentActivity.class);
@@ -369,6 +381,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.WALLET, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "wallet");
 
             } else if(MenuInfoTags.INBOX.getTag().equalsIgnoreCase(tag)){
@@ -384,6 +398,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.NOTIFICATION_ICON);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.INBOX, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "inbox");
 
             }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)){
@@ -398,6 +414,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         activity.startActivity(new Intent(activity, PromotionActivity.class));
                         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.PROMOTION, bundle);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "promotion");
                     } else {
                         DialogPopup.dialogNoInternet(activity,
@@ -429,18 +447,24 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.RIDE_HISTORY, bundle);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
                 }
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
                     activity.startActivity(new Intent(activity, SupportActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.SUPPORT, bundle);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Support");
                 }
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.helpScreenOpened(Data.userData.accessToken);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
             }
         } catch (Exception e) {

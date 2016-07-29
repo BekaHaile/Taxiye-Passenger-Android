@@ -52,6 +52,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
+import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -89,6 +90,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -106,7 +108,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants {
+public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants, FirebaseEvents {
 
     //adding drop location
 
@@ -525,25 +527,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 @Override
                 public void onClick(View v) {
 
-//                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(SplashNewActivity.this);
-
-//            firebaseAnalytics.setUserProperty("Android");
-
                     Bundle bundle = new Bundle();
-                    bundle.putString("it_is_generic", "Login Page");
-//                    firebaseAnalytics.logEvent("Login", bundle);
-                    MyApplication.getInstance().logEvent("Login", bundle);
-
-//                    //Sets whether analytics collection is enabled for this app on this device.
-//                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
-//
-//                    //Sets the minimum engagement time required before starting a session. The default value is 10000 (10 seconds). Let's make it 20 seconds just for the fun
-//                    firebaseAnalytics.setMinimumSessionDuration(20000);
-//
-//                    //Sets the duration of inactivity that terminates the current session. The default value is 1800000 (30 minutes).
-//                    firebaseAnalytics.setSessionTimeoutDuration(500);
-
-
+                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
 
 
                     if (isBranchLinkNotClicked()) {
@@ -614,9 +599,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 public void onClick(View v) {
                     if (State.LOGIN == state) {
                         performLoginBackPressed();
+
                     } else if (State.SIGNUP == state) {
                         performSignupBackPressed();
                     }
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+BACK, bundle);
                     Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
                 }
             });
@@ -731,6 +719,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 public void onClick(View v) {
                     if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
                         FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_FACEBOOK, bundle);
                         Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
                         facebookLoginHelper.openFacebookSession();
                     } else {
@@ -758,6 +748,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 public void onClick(View v) {
                     if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
                         FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_GOOGLE, bundle);
                         Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
                         startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
                                 GOOGLE_SIGNIN_REQ_CODE_LOGIN);
@@ -790,7 +782,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     finish();
                     FlurryEventLogger.event(FORGOT_PASSWORD);
-                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Forget password");
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+FORGET_PASSWORD, bundle);
+                    FlurryEventLogger.eventGA("Revenue" + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Forget password");
                 }
             });
 
@@ -1727,7 +1721,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     @Override
     public void onBackPressed() {
         if (State.LOGIN == state) {
-            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Back");
+            FlurryEventLogger.eventGA("Revenue" + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Back");
             performLoginBackPressed();
         } else if (State.SIGNUP == state) {
             FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Back");
@@ -2085,7 +2079,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 sendToOtpScreen = true;
                             } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
                                 if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-                                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
+                                    FlurryEventLogger.eventGA("Revenue" + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
                                     new JSONParser().parseAccessTokenLoginData(activity, responseStr,
                                             loginResponse, LoginVia.EMAIL);
                                     Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
@@ -2201,7 +2195,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 sendToOtpScreen = true;
                             } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
                                 if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
-                                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
+                                    FlurryEventLogger.eventGA("Revenue" + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
                                     new JSONParser().parseAccessTokenLoginData(activity, responseStr,
                                             loginResponse, LoginVia.FACEBOOK);
                                     loginDataFetched = true;
@@ -2316,7 +2310,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
                                     new JSONParser().parseAccessTokenLoginData(activity, responseStr,
                                             loginResponse, LoginVia.GOOGLE);
-                                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with Google");
+                                    FlurryEventLogger.eventGA("Revenue" + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with Google");
                                     loginDataFetched = true;
 
                                     Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
@@ -3242,8 +3236,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         }
     }
 
-    private static final long TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS = 2000;
-    private static final String CONTAINER_ID = "GTM-NRQKNT";
+
 
     private void setTagManager() {
         TagManager tagManager = MyApplication.getInstance().getTagManager();
@@ -3253,7 +3246,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         tagManager.setVerboseLoggingEnabled(true);
 
         PendingResult<ContainerHolder> pending =
-                tagManager.loadContainerPreferNonDefault(CONTAINER_ID,
+                tagManager.loadContainerPreferNonDefault(Data.CONTAINER_ID,
                         R.raw.gtm_analytics);
 
         // The onResult method will be called as soon as one of the following happens:
@@ -3274,7 +3267,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
                 Toast.makeText(SplashNewActivity.this, "startActivity", Toast.LENGTH_LONG).show();
             }
-        }, TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS, TimeUnit.MILLISECONDS);
+        }, Data.TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS, TimeUnit.MILLISECONDS);
         // Rest of the Activity definition.
     }
 
@@ -3317,5 +3310,24 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Log.i("Jugnoo", "Custom function call tag :" + tagName + " is fired.");
         }
     }
+
+//    TagManager mTagManager = TagManager.getInstance(this);
+//
+//    DataLayer mDataLayer = com.google.android.gms.tagmanager.TagManager.getInstance(this).getDataLayer();
+//
+//    ContainerOpener.openContainer(mTagManager, Data.CONTAINER_ID, OpenType.PREFER_NON_DEFAULT,
+//    Data.TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS, new ContainerOpener.Notifier() {
+//
+//        @Override
+//        public void containerAvailable(Container container) {
+//            container.refresh();
+//            // Save container for use by any other activities in the app.
+//            com.appsconceptelite.appsconceptelite.testfunctionnalities.gtm.ContainerHolder.setContainer(container);
+//
+//            mContainer = com.appsconceptelite.appsconceptelite.testfunctionnalities.gtm.ContainerHolder.getContainer();
+//
+//            Utils.pushOpenScreenEvent(SplashNewActivity.this, "Learn Screen");
+//        }
+//    });
 
 }
