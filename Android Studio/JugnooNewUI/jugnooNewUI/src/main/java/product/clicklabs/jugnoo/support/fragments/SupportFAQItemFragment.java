@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
@@ -41,6 +42,7 @@ import product.clicklabs.jugnoo.support.models.ViewType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -176,6 +178,9 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
+                        Bundle bundle = new Bundle();
+                        String str = parentName.replaceAll("\\W", "");
+                        MyApplication.getInstance().logEvent(ISSUES+"_"+str, bundle);
 					}
 				}
 			}
@@ -187,6 +192,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, phoneNumber);
 					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_DRIVER);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_DRIVER, bundle);
 					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Driver");
 				}
 			}
@@ -198,6 +205,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
 					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
 					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_JUGNOO);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_JUGNOO, bundle);
 					FlurryEventLogger.eventGA(Constants.ISSUES, item.getText(), "Call Jugnoo");
 				}
 			}

@@ -153,7 +153,8 @@ public interface FirebaseEvents {
     String PROMOTIONS_AND_OFFERS = "Promotions_and_offers";
     String PAYMENTS = "Payments";
     String USING_JUGNOO = "Using_jugnoo";
-
+    String FORGOT_AN_ITEM = "Forgot_an_item";
+    String CALL_JUGNOO = "Call_jugnoo";
 
 
 
