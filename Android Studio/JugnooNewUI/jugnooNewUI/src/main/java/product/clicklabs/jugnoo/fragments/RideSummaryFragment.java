@@ -473,6 +473,11 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     textViewEndRideTime.setText("Time");
                 }
 
+                if(rideCancelled){
+                    relativeLayoutConvenienceCharge.setVisibility(View.GONE);
+                    relativeLayoutLuggageCharge.setVisibility(View.GONE);
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
