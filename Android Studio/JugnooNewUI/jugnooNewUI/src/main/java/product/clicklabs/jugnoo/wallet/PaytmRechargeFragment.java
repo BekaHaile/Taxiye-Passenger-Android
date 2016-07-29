@@ -30,6 +30,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
@@ -42,6 +43,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -207,6 +209,9 @@ public class PaytmRechargeFragment extends Fragment {
 						} else {
 							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
+                                Bundle bundle = new Bundle();
+                                bundle.putString("amount", editTextAmount.getText().toString().trim());
+                                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_PAYTM_CASH, bundle);
 								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
 								FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Add Paytm Cash "+editTextAmount.getText().toString().trim());
 							}
@@ -225,7 +230,10 @@ public class PaytmRechargeFragment extends Fragment {
 				linearLayoutInner.setVisibility(View.GONE);
 				buttonRemoveWallet.setVisibility(View.VISIBLE);
 				textViewTitleEdit.setVisibility(View.GONE);
-				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.EDIT, bundle);
+
+                NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Edit");
 			}
 		});
@@ -251,6 +259,8 @@ public class PaytmRechargeFragment extends Fragment {
 							}
 						}, false, false);
 				}
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
 				FlurryEventLogger.event(paymentActivity, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Remove Wallet");
 			}
@@ -363,6 +373,8 @@ public class PaytmRechargeFragment extends Fragment {
 	 */
 	public void performBackPressed() {
 
+        Bundle bundle = new Bundle();
+        MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.BACK, bundle);
 		if(buttonRemoveWallet.getVisibility() == View.VISIBLE){
 			linearLayoutInner.setVisibility(View.VISIBLE);
 			buttonRemoveWallet.setVisibility(View.GONE);
@@ -378,6 +390,8 @@ public class PaytmRechargeFragment extends Fragment {
 						.commitAllowingStateLoss();
 			}
 		}
+
+
 
 	}
 

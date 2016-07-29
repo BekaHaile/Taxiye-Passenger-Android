@@ -527,14 +527,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 @Override
                 public void onClick(View v) {
 
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
+//                    Bundle bundle = new Bundle();
+//                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
 
 
                     if (isBranchLinkNotClicked()) {
                         linkedWallet = 0;
                         FlurryEventLogger.event(LOGIN_OPTION_MAIN);
-                        FlurryEventLogger.eventGA(ACQUISITION, TAG, "Sign up");
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
+                        FlurryEventLogger.eventGA(ACQUISITION, TAG, LOGIN);
                         changeUIState(State.LOGIN);
                     } else {
                         clickCount = clickCount + 1;
@@ -554,7 +556,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                             linkedWallet = 0;
                         }
                         FlurryEventLogger.event(SIGNUP);
-                        FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
+                        FlurryEventLogger.eventGA(ACQUISITION, TAG, SIGNUP);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+SIGNUP, bundle);
                         SplashNewActivity.registerationType = RegisterationType.EMAIL;
                         changeUIState(State.SIGNUP);
                     } else {
@@ -837,6 +841,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 @Override
                 public void onClick(View v) {
                     Utils.hideSoftKeyboard(SplashNewActivity.this, editTextSName);
+                    Bundle bundle = new Bundle();
 
                     String name = editTextSName.getText().toString().trim();
                     if (name.length() > 0) {
@@ -888,10 +893,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                                     if (noFbEmail) {
                                                         emailId = "";
                                                     }
+
+                                                    MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+ FirebaseEvents.SIGN_UP_WITH_FACEBOOK, bundle);
                                                     sendFacebookSignupValues(SplashNewActivity.this, referralCode, phoneNo, password, linkedWallet);
                                                 } else if (RegisterationType.GOOGLE == registerationType) {
+                                                    MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+ FirebaseEvents.SIGN_UP_WITH_GOOGLE, bundle);
                                                     sendGoogleSignupValues(SplashNewActivity.this, referralCode, phoneNo, password, linkedWallet);
                                                 } else {
+                                                    MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+ FirebaseEvents.SIGN_UP, bundle);
                                                     sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password, linkedWallet);
                                                 }
                                                 FlurryEventLogger.event(SIGNUP_FINAL);
@@ -968,6 +977,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 @Override
                 public void onClick(View v) {
                     try {
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+ FirebaseEvents.TERMS_OF_USE, bundle);
                         FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Terms of use");
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
                         startActivity(browserIntent);

@@ -318,6 +318,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent intent = new Intent(activity, T20Activity.class);
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.GAME, bundle);
                     FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "game");

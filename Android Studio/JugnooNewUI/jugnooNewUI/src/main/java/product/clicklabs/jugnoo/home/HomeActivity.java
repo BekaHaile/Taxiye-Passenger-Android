@@ -433,7 +433,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private long thumbsUpGifStartTime = 0;
     private int shakeAnim = 0;
 
-
+    private Bundle bundle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -2141,7 +2141,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             @Override
                             public void onConfirmed(boolean confirmClicked) {
                                 if (confirmClicked) {
-                                    FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "ok");
+                                    bundle = new Bundle();
+                                    MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+OK, bundle);
+                                    FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "priority tip pop up", "ok");
                                 }
                                 finalRequestRideTimerStart();
                             }
@@ -2149,6 +2151,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             @Override
                             public void onCancelled() {
                                 Log.v("Request of Ride", "Aborted");
+                                bundle = new Bundle();
+                                MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+CANCEL, bundle);
                                 FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "cancel");
                                 FlurryEventLogger.event(HomeActivity.this, SURGE_NOT_ACCEPTED);
                             }
@@ -3591,6 +3595,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void onClick(View view) {
                                     if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "yes");
+                                        bundle = new Bundle();
+                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCR_POP_UP+"_"+YES, bundle);
                                         //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -3626,6 +3632,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void onClick(View view) {
                                     if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "no thanks");
+                                        bundle = new Bundle();
+                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCR_POP_UP+"_"+NO_THANKS, bundle);
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
                                         uploadContactsApi(false);
                                         dismissReferAllDialog();
@@ -3669,7 +3677,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onClick(View view) {
                                     if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "yes");
+                                        bundle = new Bundle();
+                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCD_POP_UP+"_"+YES, bundle);
                                         //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Data.userData.contactSaved = 1;
                                         Data.userData.setReferAllStatusLogin(1);
@@ -3706,6 +3717,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 public void onClick(View view) {
                                     if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "no thanks");
+                                        bundle = new Bundle();
+                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCD_POP_UP+"_"+NO_THANKS, bundle);
                                         Data.userData.contactSaved = 0;
                                         Data.userData.setReferAllStatusLogin(-1);
                                         uploadContactsApi(true);
@@ -6792,6 +6805,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(EMERGENCY_MODE_ENABLED);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(HELP+"_"+HELP_POP_UP, bundle);
                     FlurryEventLogger.eventGA(HELP, "help pop up", "enable emergency mode");
                 }
 

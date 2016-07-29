@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -207,6 +208,9 @@ public class ShareActivity extends BaseFragmentActivity {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
+        Bundle bundle = new Bundle();
+        MyApplication.getInstance().logEvent(FirebaseEvents.REFERRAL+"_"+FirebaseEvents.BACK, bundle);
+
 	}
 	
 	@Override
