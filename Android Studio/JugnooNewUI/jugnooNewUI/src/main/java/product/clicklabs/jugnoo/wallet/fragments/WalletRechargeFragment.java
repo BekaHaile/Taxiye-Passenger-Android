@@ -519,6 +519,9 @@ public class WalletRechargeFragment extends Fragment {
 								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_USED_WALLET, 0)){
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_USED_WALLET, 0);
 								}
+								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0)){
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_MONEY_ADDED_WALLET, 0);
+								}
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");
@@ -607,6 +610,7 @@ public class WalletRechargeFragment extends Fragment {
 				if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.SUCCESS) {
 					DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
 							.getString(R.string.transaction_successful));
+					Prefs.with(paymentActivity).save(Constants.SP_LAST_MONEY_ADDED_WALLET, openWalletType);
 					paymentActivity.getBalance(WalletRechargeFragment.class.getName());
 				}
 				else if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.FAILURE){

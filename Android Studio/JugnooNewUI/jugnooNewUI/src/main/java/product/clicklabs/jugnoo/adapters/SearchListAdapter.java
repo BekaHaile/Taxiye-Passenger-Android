@@ -241,24 +241,27 @@ public class SearchListAdapter extends BaseAdapter{
                 public void onClick(View v) {
 					try {
 						holder = (ViewHolderSearchItem) v.getTag();
-						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-						final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
-                        Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (autoCompleteSearchResult.getPlaceId() != null
-                                        && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
-                                    searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                                    getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
-                                } else{
-                                    searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                                    searchListActionsHandler.onPlaceSearchPre();
-                                    searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+                        if(!context.getResources().getString(R.string.no_results_found).equalsIgnoreCase(autoCompleteSearchResult.getName())
+                                && !context.getResources().getString(R.string.no_internet_connection).equalsIgnoreCase(autoCompleteSearchResult.getName())){
+                            Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
+                            Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (autoCompleteSearchResult.getPlaceId() != null
+                                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
+                                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                                        getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
+                                    } else{
+                                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                                        searchListActionsHandler.onPlaceSearchPre();
+                                        searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                                    }
                                 }
-                            }
-                        }, 200);
+                            }, 200);
 
+                        }
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -243,7 +242,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
                         PolylineOptions polylineOptions = new PolylineOptions();
-                        polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+                        polylineOptions.width(ASSL.Xscale() * 5).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
                         for (int z = 0; z < list.size(); z++) {
                             polylineOptions.add(list.get(z));
                             builder.include(list.get(z));

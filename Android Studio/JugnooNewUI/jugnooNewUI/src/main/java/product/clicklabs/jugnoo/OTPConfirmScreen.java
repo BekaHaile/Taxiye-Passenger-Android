@@ -202,7 +202,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
-					editTextOTP.setError("Code can't be empty");
+					editTextOTP.setError("OTP can't be empty");
 				}
 			}
 		});

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +25,6 @@ import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
@@ -168,7 +168,16 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         updatePaymentOption();
 
         try {
-            textViewMaxPeople.setText(getResources().getString(R.string.max_people)+" "+ getRegionSelected().getMaxPeople());
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + " " + getRegionSelected().getMaxPeople());
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(Data.regions.size() > 1) {
+                        setRegionSelected(0);
+                        activity.setRegionUI(true);
+                    }
+                }
+            }, 500);
         } catch (Exception e) {
             e.printStackTrace();
         }

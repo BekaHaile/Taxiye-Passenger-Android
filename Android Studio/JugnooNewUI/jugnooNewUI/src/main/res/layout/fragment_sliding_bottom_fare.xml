@@ -129,7 +129,7 @@
     <TextView
         android:id="@+id/textViewFareEstimage"
         android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/nl_button_size"
+        android:layout_height="80px"
         android:text="@string/get_fare_estimate"
         android:layout_gravity="center_horizontal"
         android:gravity="center"

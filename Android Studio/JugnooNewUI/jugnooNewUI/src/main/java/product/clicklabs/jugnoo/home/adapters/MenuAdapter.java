@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -129,10 +130,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             new SelectorBitmapLoader(activity).loadSelector(holder.imageViewMenuIcon, menuInfo.getIconNormal(), menuInfo.getIconHighlighted(),
                                     new SelectorBitmapLoader.Callback() {
                                         @Override
-                                        public void onSuccess() {
+                                        public void onSuccess(Drawable drawable) {
 
                                         }
-                                    });
+                                    }, true);
                         } else{
                             if(!"".equalsIgnoreCase(icon)){
                                 Picasso.with(activity)

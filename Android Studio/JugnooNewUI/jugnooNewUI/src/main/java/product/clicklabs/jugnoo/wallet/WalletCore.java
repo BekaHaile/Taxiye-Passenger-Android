@@ -417,6 +417,9 @@ public class WalletCore {
 					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
 						paymentModeConfigData.incrementPriority();
 					}
+					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
+						paymentModeConfigData.incrementPriority();
+					}
 				}
 				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
 						&& userData.getMobikwikEnabled() == 1) {
@@ -431,6 +434,9 @@ public class WalletCore {
 						paymentModeConfigData.incrementPriority();
 					}
 					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
+						paymentModeConfigData.incrementPriority();
+					}
+					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
 						paymentModeConfigData.incrementPriority();
 					}
 				}

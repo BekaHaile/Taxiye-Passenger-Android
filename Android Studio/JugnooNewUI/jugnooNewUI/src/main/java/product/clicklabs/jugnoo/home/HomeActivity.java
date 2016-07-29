@@ -7672,50 +7672,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else {
             if (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
                     || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
-                new SelectorBitmapLoader(HomeActivity.this).loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
-                        getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
-                        getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-                });
-                imageViewRideNow.startAnimation(getBounceScale());
-                showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
-
                 if(oldRideType == RideTypeValue.POOL.getOrdinal()
                         && textViewDestSearch.getText().toString()
                         .equalsIgnoreCase(getResources().getString(R.string.enter_destination))) {
                     textViewDestSearch.setText("");
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
-
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                    int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                    if(index == 1 && Data.dropLatLng == null) {
-                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                        textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                    }
-                    showPoolInforBar();
-                } else{
-                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
-                    int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-                    if(index == 1 && Data.dropLatLng == null) {
-                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
-                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
-                        textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                    }
-                    viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
-                    setGoogleMapPadding(0);
-                }
-                slidingBottomPanel.getRequestRideOptionsFragment()
-                        .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
-
-                //slidingBottomPanel.getRequestRideOptionsFragment().updatePoolInfoText();
+                setRegionUI(false);
             } else{
                 if(getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
@@ -7724,6 +7687,57 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         }
+    }
+
+    private SelectorBitmapLoader selectorBitmapLoader;
+    private int regionIdForSelectorLoader;
+    private SelectorBitmapLoader getSelectorBitmapLoader(int regionIdForSelectorLoader){
+        if(selectorBitmapLoader == null){
+            selectorBitmapLoader = new SelectorBitmapLoader(this);
+        }
+        this.regionIdForSelectorLoader = regionIdForSelectorLoader;
+        return selectorBitmapLoader;
+    }
+
+    public void setRegionUI(boolean firstTime) {
+        getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+                .loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
+                        getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
+                        getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
+                    @Override
+                    public void onSuccess(Drawable drawable) {
+                        if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+                            imageViewRideNow.setImageDrawable(drawable);
+                        }
+                    }
+        }, false);
+        imageViewRideNow.startAnimation(getBounceScale());
+        showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+            ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+            int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+            if (!firstTime && index == 1 && Data.dropLatLng == null) {
+                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+            }
+            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+            textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            showPoolInforBar();
+        } else {
+            ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
+            int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
+            if (!firstTime && index == 1 && Data.dropLatLng == null) {
+                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+            }
+            textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+            textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+            setGoogleMapPadding(0);
+        }
+        slidingBottomPanel.getRequestRideOptionsFragment()
+                .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
     }
 
     public void showPoolInforBar(){

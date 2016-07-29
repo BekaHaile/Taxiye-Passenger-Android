@@ -345,6 +345,7 @@ public interface Constants {
 
 	String SP_LAST_ADDED_WALLET = "sp_last_added_wallet";
 	String SP_LAST_USED_WALLET = "sp_last_used_wallet";
+	String SP_LAST_MONEY_ADDED_WALLET = "sp_last_money_added_wallet";
 
 
 }
