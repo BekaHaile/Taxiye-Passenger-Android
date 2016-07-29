@@ -74,7 +74,7 @@ public class SlidingBottomPanelV4 {
         imageViewPriorityTip = (ImageView) view.findViewById(R.id.imageViewPriorityTip);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
-        slidingUpPanelLayout.setParallaxOffset((int) (280 * ASSL.Yscale()));
+        slidingUpPanelLayout.setParallaxOffset((int) (306 * ASSL.Yscale()));
         updatePannelHeight();
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -97,7 +97,6 @@ public class SlidingBottomPanelV4 {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
-                activity.setGoogleMapPadding(15);
                 activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
             }
 
@@ -106,7 +105,6 @@ public class SlidingBottomPanelV4 {
                 imageViewExtraForSliding.setVisibility(View.GONE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
-                activity.setGoogleMapPadding(0);
                 activity.showPoolInforBar();
             }
 

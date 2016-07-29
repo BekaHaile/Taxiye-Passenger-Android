@@ -4,12 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/sliding_bottom_bg_color"
-    android:layout_height="@dimen/nl_sliding_bottom_without_tabs">
+    android:layout_height="@dimen/nl_sliding_bottom_without_tabs"
+    android:gravity="center"
+    >
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="128px"
-        android:layout_marginTop="10px"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -117,9 +118,11 @@
         android:id="@+id/textViewThreshold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="416465465"
+        android:text="test\nabc"
         android:gravity="center"
         android:layout_marginTop="-10px"
+        android:layout_marginLeft="27px"
+        android:layout_marginRight="27px"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_26"/>
 
