@@ -2812,7 +2812,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 showReferAllDialog();
                 if(mode == PassengerScreenMode.P_INITIAL) {
-                    showPoolIntroDialog();
+//                    showPoolIntroDialog();
                 }
                 callT20AndReferAllDialog(mode);
 
@@ -3588,7 +3588,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    showPoolIntroDialog();
+//                                    showPoolIntroDialog();
                                 }
                             });
                 } else{
@@ -4224,7 +4224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupInAppCampaignUI();
                     setJugnooPool();
                     if(showPoolIntro) {
-                        showPoolIntroDialog();
+//                        showPoolIntroDialog();
                     }
                 }
             } catch (Exception e) {
