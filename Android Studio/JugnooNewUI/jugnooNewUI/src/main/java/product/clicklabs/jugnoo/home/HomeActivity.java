@@ -7721,8 +7721,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
                 translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
             }
-            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-            textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            if(Data.dropLatLng == null) {
+                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            }
             showPoolInforBar();
         } else {
             ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
@@ -7731,8 +7733,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
                 translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
             }
-            textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-            textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            if(Data.dropLatLng == null) {
+                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            }
             viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
             setGoogleMapPadding(0);
         }
