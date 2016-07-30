@@ -172,6 +172,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 				}
 			}
 			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 				goBack();
 			}
 			currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());

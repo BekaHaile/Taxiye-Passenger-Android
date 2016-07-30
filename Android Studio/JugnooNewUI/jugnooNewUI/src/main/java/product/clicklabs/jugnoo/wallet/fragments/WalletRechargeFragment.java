@@ -512,7 +512,6 @@ public class WalletRechargeFragment extends Fragment {
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dialogBanner(paymentActivity, message);
 								MyApplication.getInstance().getWalletCore().deleteWallet(openWalletType);
-								MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_ADDED_WALLET, 0)){
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, 0);
 								}
@@ -522,6 +521,7 @@ public class WalletRechargeFragment extends Fragment {
 								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0)){
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_MONEY_ADDED_WALLET, 0);
 								}
+								MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");

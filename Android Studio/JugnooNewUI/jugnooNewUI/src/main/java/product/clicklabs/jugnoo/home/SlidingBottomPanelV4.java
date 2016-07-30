@@ -74,7 +74,7 @@ public class SlidingBottomPanelV4 {
         imageViewPriorityTip = (ImageView) view.findViewById(R.id.imageViewPriorityTip);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
-        slidingUpPanelLayout.setParallaxOffset((int) (306 * ASSL.Yscale()));
+        slidingUpPanelLayout.setParallaxOffset((int) (295 * ASSL.Yscale()));
         updatePannelHeight();
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {

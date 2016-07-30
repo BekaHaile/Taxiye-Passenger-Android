@@ -174,7 +174,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     try {
                         holder.textViewValue.setText(String.format(activity.getResources()
                                         .getString(R.string.rupees_value_format_without_space),
-                                Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
+                                Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                         holder.textViewValue.setVisibility(View.VISIBLE);
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();

@@ -27,7 +27,6 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -388,7 +387,6 @@ public class AddWalletFragment extends Fragment {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setPaytmBalance(balance);
 									Data.userData.setPaytmEnabled(1);
-									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.PAYTM.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
@@ -398,7 +396,6 @@ public class AddWalletFragment extends Fragment {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setMobikwikBalance(balance);
 									Data.userData.setMobikwikEnabled(1);
-									MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.MOBIKWIK.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
