@@ -62,6 +62,7 @@ public interface FirebaseEvents {
     String OK = "ok";
     String CANCEL = "cancel";
     String GET_RIDE = "get_ride";
+    String REQUEST_RIDE_L2_AUTO_POOL = "request_ride_l2_auto_pool";
 
     String INBOX = "inbox";
     String PROMOTION = "promotion";
@@ -163,11 +164,11 @@ public interface FirebaseEvents {
     String OUTSIDE_MOBILE_SMS = "Outside_mobile_sms";
     String THREEDOTS = "3_dots";
     String DETAILS = "Details";
-    String DIALOG_WHATSUPP = "Dialog_whatsupp";
+    String DIALOG_WHATSUPP = "Dialog_whatsapp";
     String DIALOG_FB_MESSENGER = "Dialog_fb_messenger";
     String DIALOG_FB_APP = "Dialog_fb_app";
     String DIALOG_GMAIL = "Dialog_gmail";
-    String DIALOG_EMAIL = "Dialog_email";
+    String DIALOG_TWITTER = "Dialog_twitter";
     String DIALOG_MOBILE_SMS = "Dialog_mobile_sms";
     String DIALOG_OTHERS = "Dialog_others";
 

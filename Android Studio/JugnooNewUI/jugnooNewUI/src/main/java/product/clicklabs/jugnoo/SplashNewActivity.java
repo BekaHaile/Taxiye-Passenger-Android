@@ -311,7 +311,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Fabric.with(this, new Crashlytics());
 
 
-            setTagManager();
+            //setTagManager();
 
             try {
                 if (getIntent().hasExtra("deep_link_class")) {
@@ -3276,7 +3276,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 }
                 ContainerLoadedCallback.registerCallbacksForContainer(container);
                 containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
-                Toast.makeText(SplashNewActivity.this, "startActivity", Toast.LENGTH_LONG).show();
             }
         }, Data.TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS, TimeUnit.MILLISECONDS);
         // Rest of the Activity definition.

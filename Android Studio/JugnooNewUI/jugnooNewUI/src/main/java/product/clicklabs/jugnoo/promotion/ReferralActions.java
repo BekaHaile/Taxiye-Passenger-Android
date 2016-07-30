@@ -322,13 +322,13 @@ public class ReferralActions implements FirebaseEvents {
                     if(info.activityInfo.packageName.contains("com.twitter.android")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
                         Bundle bundle  = new Bundle();
-                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FlurryEventNames.WHO_CLICKED_ON_TWITTER, bundle);
+                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FirebaseEvents.DIALOG_TWITTER, bundle);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_TWITTER, null);
                     } else if(info.activityInfo.packageName.contains("com.android.mms")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_SMS, null);
                         Bundle bundle  = new Bundle();
-                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FlurryEventNames.WHO_CLICKED_ON_SMS, bundle);
+                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FirebaseEvents.DIALOG_MOBILE_SMS, bundle);
                         FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "SMS");
                     } else{
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);

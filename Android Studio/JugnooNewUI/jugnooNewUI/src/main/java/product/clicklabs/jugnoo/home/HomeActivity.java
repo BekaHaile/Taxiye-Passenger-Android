@@ -902,6 +902,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         requestRideClick();
                     }
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+Constants.HOME_SCREEN+"_"+REQUEST_RIDE_L2_AUTO_POOL, bundle);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1137,6 +1139,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 intentToShareActivity(false);
+                Bundle bundle = new Bundle();
+                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
+                    MyApplication.getInstance().logEvent(TRANSACTION + "_" + RIDE_START + "_" + SEND_INVITES+"_"+AUTO, bundle);
+                } else {
+                    MyApplication.getInstance().logEvent(TRANSACTION + "_" + RIDE_START + "_" + SEND_INVITES+"_"+POOL, bundle);
+                }
                 FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "send invites");
             }
         });

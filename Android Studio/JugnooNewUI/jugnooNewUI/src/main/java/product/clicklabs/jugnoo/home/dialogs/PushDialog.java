@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,9 +16,11 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -31,6 +34,7 @@ public class PushDialog {
 	private Activity activity;
 	private Callback callback;
 	private Dialog dialog = null;
+    private String title = "";
 
 	public PushDialog(Activity activity, Callback callback) {
 		this.activity = activity;
@@ -44,7 +48,7 @@ public class PushDialog {
 			JSONObject jObj = new JSONObject(pushDialogContent);
 			if(!pushDialogContent.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)
 					&& jObj.optInt(Constants.KEY_SHOW_DIALOG, 0) == 1){
-				String title = jObj.optString(Constants.KEY_TITLE, activity.getResources().getString(R.string.app_name));
+				title = jObj.optString(Constants.KEY_TITLE, activity.getResources().getString(R.string.app_name));
 				String message = jObj.optString(Constants.KEY_MESSAGE, "");
 				final int deepindex = jObj.optInt(Constants.KEY_DEEPINDEX, -1);
 				String picture = jObj.optString(Constants.KEY_PICTURE, "");
@@ -57,6 +61,9 @@ public class PushDialog {
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_push);
+
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(Constants.CAMPAIGNS+"_"+FirebaseEvents.PROMOTIONAL_POP_UP+"_"+title+"_"+String.valueOf(HomeActivity.passengerScreenMode), bundle);
 				FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", String.valueOf(HomeActivity.passengerScreenMode));
 
 				RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
@@ -98,6 +105,8 @@ public class PushDialog {
 								Constants.EMPTY_JSON_OBJECT);
 						callback.onButtonClicked(deepindex, url);
 						dialog.dismiss();
+                        Bundle bundle1 = new Bundle();
+                        MyApplication.getInstance().logEvent(Constants.CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP, bundle1);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", button.getText().toString());
 					}
 				});
@@ -108,6 +117,8 @@ public class PushDialog {
 						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
 								Constants.EMPTY_JSON_OBJECT);
 						dialog.dismiss();
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(Constants.CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+title+"_"+FirebaseEvents.CANCEL, bundle);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				});
@@ -116,6 +127,8 @@ public class PushDialog {
 					@Override
 					public void onClick(View v) {
 						dialog.dismiss();
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(Constants.CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+title+"_"+FirebaseEvents.CANCEL, bundle);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				});
