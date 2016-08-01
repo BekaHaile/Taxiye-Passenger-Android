@@ -1751,7 +1751,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setDropAddressAndExpandFields(SearchResult searchResult){
         Data.dropLatLng = searchResult.getLatLng();
         if(Data.dropLatLng != null){
-            if(textViewDestSearch.getText().toString().isEmpty()){
+            if(textViewDestSearch.getText().toString().isEmpty()
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.enter_destination))
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.destination_required))){
                 translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
                 translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
             }
@@ -3938,7 +3940,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     try {
                         if(data.hasExtra(KEY_SEARCH_RESULT)) {
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
+                            searchResult.setTime(System.currentTimeMillis());
                             setDropAddressAndExpandFields(searchResult);
+                            saveLastDestinations(searchResult);
                         }
                         slidingBottomPanel.getImageViewExtraForSliding().performClick();
                         imageViewRideNow.performClick();
