@@ -535,7 +535,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                         linkedWallet = 0;
                         FlurryEventLogger.event(LOGIN_OPTION_MAIN);
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
                         FlurryEventLogger.eventGA(ACQUISITION, TAG, LOGIN);
                         changeUIState(State.LOGIN);
                     } else {
@@ -686,7 +686,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     editTextEmail.setError("Please enter valid email");
                                 }
                             }
-
+                            Bundle bundle = new Bundle();
+                            MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
                             FlurryEventLogger.event(LOGIN_VIA_EMAIL);
                         }
                     }

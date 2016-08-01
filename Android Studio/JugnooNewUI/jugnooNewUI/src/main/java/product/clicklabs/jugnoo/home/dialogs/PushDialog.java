@@ -106,7 +106,7 @@ public class PushDialog {
 						callback.onButtonClicked(deepindex, url);
 						dialog.dismiss();
                         Bundle bundle1 = new Bundle();
-                        MyApplication.getInstance().logEvent(Constants.CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP, bundle1);
+                        MyApplication.getInstance().logEvent(Constants.CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+button.getText().toString(), bundle1);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", button.getText().toString());
 					}
 				});
