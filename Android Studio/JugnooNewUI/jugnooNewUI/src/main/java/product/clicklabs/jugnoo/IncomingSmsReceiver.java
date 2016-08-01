@@ -8,6 +8,7 @@ import android.telephony.SmsMessage;
 
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
 /**
  * Created by socomo20 on 8/12/15.
@@ -47,6 +48,15 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
 					else if(Prefs.with(context).getString(Constants.SP_OTP_SCREEN_OPEN, "")
 							.equalsIgnoreCase(PhoneNoOTPConfirmScreen.class.getName())) {
 						Intent otpConfirmScreen = new Intent(context, PhoneNoOTPConfirmScreen.class);
+						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						otpConfirmScreen.putExtra("sender_num", senderNum);
+						otpConfirmScreen.putExtra("message", message);
+						context.startActivity(otpConfirmScreen);
+						break;
+					}
+					else if(Prefs.with(context).getString(Constants.SP_OTP_SCREEN_OPEN, "")
+							.equalsIgnoreCase(PaymentActivity.class.getName())) {
+						Intent otpConfirmScreen = new Intent(context, PaymentActivity.class);
 						otpConfirmScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						otpConfirmScreen.putExtra("sender_num", senderNum);
 						otpConfirmScreen.putExtra("message", message);
