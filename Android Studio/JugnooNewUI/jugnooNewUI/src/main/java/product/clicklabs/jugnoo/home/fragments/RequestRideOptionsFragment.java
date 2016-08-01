@@ -366,7 +366,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
     public Region getRegionSelected() {
-        if(regionSelected == null){
+        if(regionSelected == null || regionSelected.isDefault()){
             if(Data.regions.size() > 0){
                 regionSelected = Data.regions.get(0);
             } else{

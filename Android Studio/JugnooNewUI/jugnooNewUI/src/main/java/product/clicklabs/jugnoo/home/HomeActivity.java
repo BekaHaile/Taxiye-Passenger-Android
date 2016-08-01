@@ -1767,10 +1767,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void checkForMyLocationButtonVisibility(){
         try{
-            if(MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-                    map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK){
-                initialMyLocationBtn.setVisibility(View.VISIBLE);
-                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+            if("".equalsIgnoreCase(Data.farAwayCity) || changeLocalityLayout.getVisibility() == View.GONE) {
+                if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
+                        map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
+                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+                } else {
+                    initialMyLocationBtn.setVisibility(View.GONE);
+                    customerInRideMyLocationBtn.setVisibility(View.GONE);
+                }
             } else{
                 initialMyLocationBtn.setVisibility(View.GONE);
                 customerInRideMyLocationBtn.setVisibility(View.GONE);
@@ -4524,7 +4529,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             } else {
-                zoomAfterFindADriver = true;
+//                zoomAfterFindADriver = true;
                 try {
                     new Handler().postDelayed(new Runnable() {
                         @Override

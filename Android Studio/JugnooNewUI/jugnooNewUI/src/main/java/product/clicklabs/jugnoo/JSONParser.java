@@ -429,6 +429,7 @@ public class JSONParser implements Constants {
                 HomeUtil homeUtil = new HomeUtil();
                 for (Region region : loginResponse.getLogin().getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
+                    region.setIsDefault(false);
                     Data.regions.add(region);
                 }
             }
