@@ -550,6 +550,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					if (isBranchLinkNotClicked()) {
 						FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Sign up");
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
 						changeUIState(State.LOGIN);
 					} else {
 						clickCount = clickCount + 1;
@@ -562,6 +564,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					if(isBranchLinkNotClicked()) {
 						FlurryEventLogger.event(SIGNUP);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+SIGN_UP, bundle);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
 						changeUIState(State.SIGNUP);
@@ -607,8 +611,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					if (State.LOGIN == state) {
 						performLoginBackPressed();
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+BACK, bundle);
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+SIGN_UP_PAGE+"_"+BACK, bundle);
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}
@@ -687,7 +695,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									editTextEmail.setError("Please enter valid email");
 								}
 							}
-
+                            Bundle bundle = new Bundle();
+                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN, bundle);
 							FlurryEventLogger.event(LOGIN_VIA_EMAIL);
 						}
 					}
@@ -726,6 +735,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
 						Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 						facebookLoginHelper.openFacebookSession();
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_FACEBOOK, bundle);
 					} else {
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
 								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -751,9 +762,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
 					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_GOOGLE, bundle);
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 					startActivityForResult(new Intent(SplashNewActivity.this, GoogleSigninActivity.class),
 							GOOGLE_SIGNIN_REQ_CODE_LOGIN);
+
 					} else{
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
 								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -783,6 +797,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					finish();
 					FlurryEventLogger.event(FORGOT_PASSWORD);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+FORGET_PASSWORD, bundle);
 					FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Forget password");
 				}
 			});
@@ -898,6 +914,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 												} else {
 													sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password, linkedWallet);
 												}
+                                                Bundle bundle = new Bundle();
+                                                MyApplication.getInstance().logEvent(ACQUISITION+"_"+SIGN_UP_PAGE+"_"+SIGN_UP, bundle);
 												FlurryEventLogger.event(SIGNUP_FINAL);
 											} else {
 												editTextSPassword.requestFocus();
@@ -973,6 +991,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					try {
 						FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Terms of use");
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SIGN_UP_PAGE+"_"+TERMS_OF_USE, bundle);
 						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
 						startActivity(browserIntent);
 					} catch (Exception e) {
