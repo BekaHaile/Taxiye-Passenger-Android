@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -248,7 +247,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
                         PolylineOptions polylineOptions = new PolylineOptions();
-                        polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
+                        polylineOptions.width(ASSL.Xscale() * 5).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
                         for (int z = 0; z < list.size(); z++) {
                             polylineOptions.add(list.get(z));
                             builder.include(list.get(z));
@@ -281,7 +280,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                                 public void run() {
                                     try {
                                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                                        mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int) (minRatio * 40)));
+                                        mapLite.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
+                                                (int) (660f * minRatio), (int) (240f * minRatio),
+                                                (int) (minRatio * 60)));
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -312,11 +313,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                         e.printStackTrace();
                         DialogPopup.dismissLoadingDialog();
                     }
-                }
-
-                @Override
-                public void onFailure() {
-
                 }
 
                 @Override

@@ -86,11 +86,13 @@ public interface FirebaseEvents {
 
     String JUGNOO_CASH = "Jugnoo_Cash";
     String PAYTM_WALLET = "Paytm_Wallet";
+    String MOBIKWIK_WALLET = "Mobikwik_Wallet";
     String VIEW_RECENT_TRANSACTION = "View_Recent_Transaction";
     String REQUEST_OTP = "Request_OTP";
     String EDIT = "Edit";
     String REMOVE_WALLET = "Remove_Wallet";
     String ADD_PAYTM_CASH = "Add_Paytm_Cash";
+    String ADD_MOBIKWIK_CASH = "Add_Mobikwik_Cash"
 
     String CUSTOMER_SUPPORT = "Customer_Support";
     String SELECT_AN_ISSUE = "Select_An_Issue";
@@ -156,7 +158,7 @@ public interface FirebaseEvents {
     String USING_JUGNOO = "Using_jugnoo";
     String FORGOT_AN_ITEM = "Forgot_an_item";
     String CALL_JUGNOO = "Call_jugnoo";
-
+    String MOBIKWIK  = "mobikwik";
 
 
     String OUTSIDE_FB_MESSENGER  = "Outside_fb_messenger";

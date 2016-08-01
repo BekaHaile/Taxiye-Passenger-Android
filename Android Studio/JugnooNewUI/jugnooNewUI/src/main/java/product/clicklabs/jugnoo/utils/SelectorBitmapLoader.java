@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import product.clicklabs.jugnoo.R;
-
 /**
  * Created by ankit on 6/13/16.
  */
@@ -22,6 +20,7 @@ public class SelectorBitmapLoader {
     private Bitmap bitmapNormal, bitmapPressed;
     private Callback callback;
     private Target targetNormal, targetPressed;
+    private boolean setDrawable;
 
     public SelectorBitmapLoader(Context context) {
         this.context = context;
@@ -63,7 +62,8 @@ public class SelectorBitmapLoader {
         };
     }
 
-    public void loadSelector(ImageView imageView, String urlNormal, String urlPressed, Callback callback) {
+    public void loadSelector(ImageView imageView, String urlNormal, String urlPressed, Callback callback, boolean setDrawable) {
+        this.setDrawable = setDrawable;
         this.imageView = imageView;
         this.bitmapNormal = null;
         this.bitmapPressed = null;
@@ -86,17 +86,17 @@ public class SelectorBitmapLoader {
                     new BitmapDrawable(context.getResources(), bitmapPressed));
             states.addState(new int[]{},
                     new BitmapDrawable(context.getResources(), bitmapNormal));
-            if (imageView != null) {
+            if (imageView != null && setDrawable) {
                 imageView.setImageDrawable(states);
-                if (callback != null) {
-                    callback.onSuccess();
-                }
+            }
+            if (callback != null) {
+                callback.onSuccess(states);
             }
         }
     }
 
     public interface Callback {
-        void onSuccess();
+        void onSuccess(Drawable drawable);
     }
 
 }

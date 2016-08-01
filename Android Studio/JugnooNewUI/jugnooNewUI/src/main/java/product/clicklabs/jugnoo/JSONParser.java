@@ -1,13 +1,11 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -126,7 +124,7 @@ public class JSONParser implements Constants {
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
 
-		int paytmEnabled = userData.optInt("paytm_enabled", 0);
+
         int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
         String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
 		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
@@ -249,9 +247,13 @@ public class JSONParser implements Constants {
         int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
         int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
 
-        return new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
+
+        int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
+        int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
+
+        UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
-                jugnooFbBanner, numCouponsAvailable, paytmEnabled,
+                jugnooFbBanner, numCouponsAvailable,
                 contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
@@ -263,8 +265,14 @@ public class JSONParser implements Constants {
                 cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
                 poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
-                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText);
+                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText,
+                paytmEnabled, mobikwikEnabled);
 
+        userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
+
+        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, userDataObj);
+
+        return userDataObj;
     }
 
 
@@ -277,6 +285,8 @@ public class JSONParser implements Constants {
         JSONObject jLoginObject = jObj.getJSONObject("login");
 
         Data.userData = parseUserData(context, jLoginObject);
+
+        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
         //emergency contacts
         if(Data.emergencyContactsList == null){
@@ -602,8 +612,6 @@ public class JSONParser implements Constants {
 
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
-        List<Product> productList = new ArrayList<>();
-
 		double baseFare = initialBaseFare;
 		if (jLastRideData.has("base_fare")) {
 			baseFare = jLastRideData.getDouble("base_fare");
@@ -651,8 +659,11 @@ public class JSONParser implements Constants {
             JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
             for(int i=0; i<additionalChargesJson.length(); i++){
                 JSONObject obj = additionalChargesJson.getJSONObject(i);
-                discountTypes.add(new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id")));
-                sumAdditionalCharges = sumAdditionalCharges + obj.optDouble("amount");
+                DiscountType discountType = new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id"));
+                if(discountType.value > 0) {
+                    discountTypes.add(discountType);
+                    sumAdditionalCharges = sumAdditionalCharges + discountType.value;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -682,7 +693,7 @@ public class JSONParser implements Constants {
 		}
 
 		int waitingChargesApplicable = jLastRideData.optInt("waiting_charges_applicable", 0);
-		double paidUsingPaytm = jLastRideData.optDouble("paid_using_paytm", 0);
+		double paidUsingPaytm = jLastRideData.optDouble(KEY_PAID_USING_PAYTM, 0);
 
         engagementId = jLastRideData.optString(KEY_ENGAGEMENT_ID, "0");
 
@@ -695,7 +706,7 @@ public class JSONParser implements Constants {
         String engagementDate = jLastRideData.optString("engagement_date", "");
 
 
-
+        double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
 
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
@@ -711,7 +722,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate);
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik);
 	}
 
 
@@ -1187,43 +1198,6 @@ public class JSONParser implements Constants {
 
 
 
-	public static void parsePaytmBalanceStatus(Activity activity, JSONObject jObj){
-		try {
-			if (Data.userData != null) {
-                int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-				if (ApiResponseFlags.PAYTM_BALANCE_ERROR.getOrdinal() == flag) {
-					setPaytmErrorCase();
-				} else {
-					Data.userData.setPaytmError(0);
-					String paytmStatus = jObj.optString("STATUS", Data.PAYTM_STATUS_INACTIVE);
-					if (paytmStatus.equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-						String balance = jObj.optString("WALLETBALANCE", "0");
-						Data.userData.setPaytmBalance(Double.parseDouble(balance));
-						Data.userData.setPaytmStatus(paytmStatus);
-					} else {
-						Data.userData.setPaytmStatus(Data.PAYTM_STATUS_INACTIVE);
-						Data.userData.setPaytmBalance(0);
-					}
-					Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void setPaytmErrorCase(){
-		try {
-			if (Data.userData != null) {
-				Data.userData.setPaytmError(1);
-				Data.userData.setPaytmBalance(0);
-				Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 
 
     public static Schedule parseT20Schedule(JSONObject jObj){
@@ -1268,7 +1242,6 @@ public class JSONParser implements Constants {
                     jPRI.getString(KEY_TRANSFER_AMOUNT),
                     jPRI.getString(KEY_TRANSFER_SENDER_NAME));
         } catch (Exception e) {
-            e.printStackTrace();
             paytmRechargeInfo = null;
         }
         return paytmRechargeInfo;

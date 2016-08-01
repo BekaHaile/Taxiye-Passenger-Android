@@ -14,7 +14,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -47,40 +47,32 @@ public class UserDebtDialog {
 		this.callback = callback;
 	}
 
-	public void showUserDebtDialog(double userDebt, String message, boolean fromFresh) {
+	public void showUserDebtDialog(double userDebt, String message) {
 		this.userDebt = userDebt;
 		if(message.length() == 0){
-			if(fromFresh){
-				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
-			}else{
-				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
-			}
+			message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
 		}
 		DialogPopup.alertPopupWithListener(activity, "", message,
-				activity.getResources().getString(R.string.user_debt_pay_via_paytm),
+				activity.getResources().getString(R.string.user_debt_pay_via_wallet),
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)){
-							if(userData.getPaytmBalance() >= UserDebtDialog.this.userDebt){
+						if(userData.getPaytmEnabled() == 1 || userData.getMobikwikEnabled() == 1){
+							double availableBalance = (userData.getPaytmEnabled() == 1 ? userData.getPaytmBalance() : 0)
+									+ (userData.getMobikwikEnabled() == 1 ? userData.getMobikwikBalance() : 0);
+							if(availableBalance >= UserDebtDialog.this.userDebt){
 								settleUserDebt(activity);
 							}
 							else{
 								Intent intent = new Intent(activity, PaymentActivity.class);
-								intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+								intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
 								activity.startActivity(intent);
 								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 								FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
 							}
-						} else if(userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)){
+						} else {
 							Intent intent = new Intent(activity, PaymentActivity.class);
-							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-							activity.startActivity(intent);
-							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
-						} else{
-							Intent intent = new Intent(activity, PaymentActivity.class);
-							intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+							intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
 							activity.startActivity(intent);
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
@@ -101,7 +93,7 @@ public class UserDebtDialog {
 				params.put(Constants.KEY_IP_ADDRESS, Utils.getLocalIpAddress());
 				Log.i("params", "=" + params);
 
-				RestClient.getApiServices().adjustUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
+				RestClient.getApiServices().settleUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						Log.i(TAG, "adjustUserDebt response = " + response);
@@ -113,7 +105,7 @@ public class UserDebtDialog {
 								String message = JSONParser.getServerMessage(jObj);
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 									DialogPopup.alertPopup(activity, "", message);
-									userData.setPaytmBalance(userData.getPaytmBalance() - userDebt);
+									userData.updateWalletBalances(jObj, false);
 									callback.successFullyDeducted(userDebt);
 								} else {
 									DialogPopup.alertPopup(activity, "", message);

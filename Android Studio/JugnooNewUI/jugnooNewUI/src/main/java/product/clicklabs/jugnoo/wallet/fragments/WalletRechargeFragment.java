@@ -1,7 +1,6 @@
-package product.clicklabs.jugnoo.wallet;
+package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,10 +32,9 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -45,21 +43,23 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.WalletRechargeWebViewActivity;
+import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 @SuppressLint("ValidFragment")
-public class PaytmRechargeFragment extends Fragment {
+public class WalletRechargeFragment extends Fragment {
 
-	private final String TAG = PaytmRechargeFragment.class.getSimpleName();
+	private final String TAG = WalletRechargeFragment.class.getSimpleName();
 
 	RelativeLayout relative;
 
@@ -67,6 +67,7 @@ public class PaytmRechargeFragment extends Fragment {
 	TextView textViewTitle, textViewTitleEdit;
 	TextView textViewAddCashHelp;
 
+	ImageView imageViewWalletIcon;
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
 
 	TextView textViewAddCash;
@@ -82,8 +83,10 @@ public class PaytmRechargeFragment extends Fragment {
 	boolean scrolled = false;
 
 	String amount1 = "500", amount2 = "1000", amount3 = "2000";
+	private int openWalletType;
 
-	public PaytmRechargeFragment(){
+	public WalletRechargeFragment(int openWalletType){
+		this.openWalletType = openWalletType;
 	}
 
 
@@ -106,11 +109,10 @@ public class PaytmRechargeFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_paytm_recharge, container, false);
-
-		Data.paytmPaymentState = PaytmPaymentState.INIT;
-
+		rootView = inflater.inflate(R.layout.fragment_wallet_recharge, container, false);
 		paymentActivity = (PaymentActivity) getActivity();
+
+		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
 
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
@@ -118,14 +120,13 @@ public class PaytmRechargeFragment extends Fragment {
 
 		new ASSL(paymentActivity, relative, 1134, 720, false);
 
-//		setupUI(rootView.findViewById(R.id.relative));
-
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
 
+		imageViewWalletIcon = (ImageView) rootView.findViewById(R.id.imageViewWalletIcon);
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
@@ -142,13 +143,25 @@ public class PaytmRechargeFragment extends Fragment {
 		buttonAmount2 = (Button) rootView.findViewById(R.id.buttonAmount2);	buttonAmount2.setTypeface(Fonts.mavenRegular(paymentActivity));
 		buttonAmount3 = (Button) rootView.findViewById(R.id.buttonAmount3);	buttonAmount3.setTypeface(Fonts.mavenRegular(paymentActivity));
 		buttonAddMoney = (Button) rootView.findViewById(R.id.buttonAddMoney); buttonAddMoney.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
-		buttonRemoveWallet = (Button) rootView.findViewById(R.id.buttonRemoveWallet);	buttonRemoveWallet.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
+		buttonRemoveWallet = (Button) rootView.findViewById(R.id.buttonRemoveWallet); buttonRemoveWallet.setTypeface(Fonts.mavenRegular(paymentActivity), Typeface.BOLD);
 
 
 		scrolled = false;
 		scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+
+
+		if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
+			textViewTitle.setText(paymentActivity.getResources().getString(R.string.paytm_wallet));
+			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
+			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_paytm_cash));
+		}
+		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
+			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
+			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_mobikwik_cash));
+		}
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, textViewTitle));
 
@@ -201,19 +214,15 @@ public class PaytmRechargeFragment extends Fragment {
 				try {
 					String amount = editTextAmount.getText().toString().trim();
 					if ("".equalsIgnoreCase(amount)) {
-						DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
+						DialogPopup.dialogBanner(paymentActivity, getResources().getString(R.string.amount_range));
 					} else {
 						int amountInt = Integer.parseInt(amount);
 						if (amountInt < Config.getMinAmount() || amountInt > Config.getMaxAmount()) {
-							DialogPopup.dialogBanner(paymentActivity, "" + getResources().getString(R.string.amount_range));
+							DialogPopup.dialogBanner(paymentActivity, getResources().getString(R.string.amount_range));
 						} else {
 							if (Data.userData != null) {
 								addBalance(editTextAmount.getText().toString().trim());
-                                Bundle bundle = new Bundle();
-                                bundle.putString("amount", editTextAmount.getText().toString().trim());
-                                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_PAYTM_CASH, bundle);
-								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
-								FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Add Paytm Cash "+editTextAmount.getText().toString().trim());
+								MyApplication.getInstance().getWalletCore().addMoneyFlurryEvent(openWalletType, editTextAmount.getText().toString().trim());
 							}
 						}
 					}
@@ -230,39 +239,32 @@ public class PaytmRechargeFragment extends Fragment {
 				linearLayoutInner.setVisibility(View.GONE);
 				buttonRemoveWallet.setVisibility(View.VISIBLE);
 				textViewTitleEdit.setVisibility(View.GONE);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.EDIT, bundle);
-
-                NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
-				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Edit");
+				MyApplication.getInstance().getWalletCore().editWalletFlurryEvent(openWalletType);
 			}
 		});
 
 		buttonRemoveWallet.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
-					|| PassengerScreenMode.P_SEARCH == HomeActivity.passengerScreenMode) {
+				if (PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
+						|| PassengerScreenMode.P_SEARCH == HomeActivity.passengerScreenMode) {
 					DialogPopup.alertPopupTwoButtonsWithListeners(paymentActivity, "",
-						paymentActivity.getResources().getString(R.string.paytm_remove_alert),
-						paymentActivity.getResources().getString(R.string.remove),
-						paymentActivity.getResources().getString(R.string.cancel),
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								removeWallet();
-							}
-						},
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-							}
-						}, false, false);
+							paymentActivity.getResources().getString(R.string.wallet_remove_alert),
+							paymentActivity.getResources().getString(R.string.remove),
+							paymentActivity.getResources().getString(R.string.cancel),
+							new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									removeWallet();
+								}
+							},
+							new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+								}
+							}, false, false);
 				}
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
-				FlurryEventLogger.event(paymentActivity, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
-				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Remove Wallet");
+				MyApplication.getInstance().getWalletCore().removeWalletFlurryEvent(openWalletType);
 			}
 		});
 
@@ -319,7 +321,7 @@ public class PaytmRechargeFragment extends Fragment {
 		paymentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
-		updatePaytmBalance();
+		updateWalletBalance();
 
 
 		if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
@@ -349,12 +351,13 @@ public class PaytmRechargeFragment extends Fragment {
 		}
 	}
 
-	private void updatePaytmBalance(){
+	private void updateWalletBalance(){
 		try{
 			if(Data.userData != null){
 				textViewCurrentBalanceValue.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format),
-						Data.userData.getPaytmBalanceStr()));
-				textViewCurrentBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
+						MyApplication.getInstance().getWalletCore().getWalletBalanceStr(openWalletType)));
+				textViewCurrentBalanceValue.setTextColor(MyApplication.getInstance().getWalletCore()
+						.getWalletBalanceColor(openWalletType));
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -364,7 +367,7 @@ public class PaytmRechargeFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		updatePaytmBalance();
+		updateWalletBalance();
 	}
 
 
@@ -380,15 +383,7 @@ public class PaytmRechargeFragment extends Fragment {
 			buttonRemoveWallet.setVisibility(View.GONE);
 			textViewTitleEdit.setVisibility(View.VISIBLE);
 		} else {
-			paymentActivity.getSupportFragmentManager()
-					.popBackStack(PaytmRechargeFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
-				paymentActivity.getSupportFragmentManager().beginTransaction()
-						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-						.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
-						.addToBackStack(WalletFragment.class.getName())
-						.commitAllowingStateLoss();
-			}
+			paymentActivity.goBack();
 		}
 
 
@@ -414,34 +409,67 @@ public class PaytmRechargeFragment extends Fragment {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Adding Balance...");
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", "1");
-				params.put("amount", amount);
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+				params.put(Constants.KEY_AMOUNT, amount);
 
-				RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
-					@Override
-					public void success(String settleUserDebt, Response response) {
-						Log.i(TAG, "paytmAddMoney settleUserDebt = " + settleUserDebt);
-						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "paytmAddMoney response = " + responseStr);
-						DialogPopup.dismissLoadingDialog();
-						try {
-							openWebView(responseStr);
-						} catch (Exception e) {
+				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
+					RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
+						@Override
+						public void success(String settleUserDebt, Response response) {
+							Log.i(TAG, "paytmAddMoney settleUserDebt = " + settleUserDebt);
+							String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+							Log.i(TAG, "paytmAddMoney response = " + responseStr);
 							DialogPopup.dismissLoadingDialog();
-							e.printStackTrace();
+							try {
+								openWebView(responseStr, openWalletType);
+							} catch (Exception e) {
+								DialogPopup.dismissLoadingDialog();
+								e.printStackTrace();
+								DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							}
+						}
+
+						@Override
+						public void failure(RetrofitError error) {
+							Log.e(TAG, "paytmAddMoney error=" + error.toString());
+							DialogPopup.dismissLoadingDialog();
 							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 						}
-					}
+					});
+				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+					RestClient.getApiServices().mobikwikAddMoney(params, new Callback<SettleUserDebt>() {
+						@Override
+						public void success(SettleUserDebt settleUserDebt, Response response) {
+							String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+							Log.i(TAG, "mobikwikAddMoney response = " + responseStr);
+							DialogPopup.dismissLoadingDialog();
+							try {
+								JSONObject jObj = new JSONObject(responseStr);
+								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+								String message = JSONParser.getServerMessage(jObj);
+								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+									String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
+									openWebView(url, openWalletType);
+								} else{
+									DialogPopup.alertPopup(paymentActivity, "", message);
+								}
+							} catch (Exception e) {
+								DialogPopup.dismissLoadingDialog();
+								e.printStackTrace();
+								DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							}
+						}
 
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmAddMoney error="+error.toString());
-						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
-					}
-				});
+						@Override
+						public void failure(RetrofitError error) {
+							Log.e(TAG, "mobikwikAddMoney error=" + error.toString());
+							DialogPopup.dismissLoadingDialog();
+							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						}
+					});
+				}
 			}
 			else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -473,26 +501,36 @@ public class PaytmRechargeFragment extends Fragment {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", "1");
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-				RestClient.getApiServices().paytmDeletePaytm(params, new Callback<SettleUserDebt>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i(TAG, "paytmDeletePaytm response = " + responseStr);
+						Log.i(TAG, "deleteWallet response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
-							int flag = jObj.getInt("flag");
+							int flag = jObj.getInt(Constants.KEY_FLAG);
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dialogBanner(paymentActivity, message);
-								Data.userData.deletePaytm();
+								MyApplication.getInstance().getWalletCore().deleteWallet(openWalletType);
+								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_ADDED_WALLET, 0)){
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, 0);
+								}
+								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_USED_WALLET, 0)){
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_USED_WALLET, 0);
+								}
+								if(openWalletType == Prefs.with(paymentActivity).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0)){
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_MONEY_ADDED_WALLET, 0);
+								}
+								MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 								performBackPressed();
 								performBackPressed();
 								paymentActivity.performGetBalanceSuccess("");
-								NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_REMOVED, null);
+								MyApplication.getInstance().getWalletCore().deleteWalletFlurryEvent(openWalletType);
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							}
@@ -505,11 +543,18 @@ public class PaytmRechargeFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmDeletePaytm error="+error.toString());
+						Log.e(TAG, "deleteWallet error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-				});
+				};
+
+				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
+					RestClient.getApiServices().paytmDeletePaytm(params, callback);
+				}
+				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+					RestClient.getApiServices().mobikwikUnlink(params, callback);
+				}
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {
@@ -537,10 +582,16 @@ public class PaytmRechargeFragment extends Fragment {
 
 	private int rechargeRequestCode = 1;
 
-	private void openWebView(String jsonData) {
-		Data.paytmPaymentState = PaytmPaymentState.INIT;
-		Intent intent = new Intent(paymentActivity, PaytmRechargeWebViewActivity.class);
-		intent.putExtra(Constants.POST_DATA, jsonData);
+	private void openWebView(String data, int walletType) {
+		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
+		Intent intent = new Intent(paymentActivity, WalletRechargeWebViewActivity.class);
+		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
+			intent.putExtra(Constants.POST_DATA, data);
+		}
+		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
+			intent.putExtra(Constants.KEY_URL, data);
+		}
+		intent.putExtra(Constants.KEY_WALLET_TYPE, walletType);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivityForResult(intent, rechargeRequestCode);
 	}
@@ -549,26 +600,27 @@ public class PaytmRechargeFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == rechargeRequestCode) {
-			if(resultCode == PaytmPaymentState.SUCCESS.getOrdinal()){
-				Data.paytmPaymentState = PaytmPaymentState.SUCCESS;
+			if(resultCode == WalletAddMoneyState.SUCCESS.getOrdinal()){
+				paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.SUCCESS);
 			}
-			else if (resultCode == PaytmPaymentState.FAILURE.getOrdinal()) {
-				Data.paytmPaymentState = PaytmPaymentState.FAILURE;
+			else if (resultCode == WalletAddMoneyState.FAILURE.getOrdinal()) {
+				paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.FAILURE);
 			}
 			else{
-				DialogPopup.dialogBanner(paymentActivity, "Transaction cancelled");
+				DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
+						.getString(R.string.transaction_cancelled));
 			}
 
 			try{
-				if(Data.paytmPaymentState == PaytmPaymentState.SUCCESS) {
-					if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == paymentActivity.addPaymentPathInt){
-						HomeActivity.rechargedOnce = true;
-					}
-					DialogPopup.dialogBanner(paymentActivity, "Transaction Successful");
-					paymentActivity.getBalance(PaytmRechargeFragment.class.getName());
+				if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.SUCCESS) {
+					DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
+							.getString(R.string.transaction_successful));
+					Prefs.with(paymentActivity).save(Constants.SP_LAST_MONEY_ADDED_WALLET, openWalletType);
+					paymentActivity.getBalance(WalletRechargeFragment.class.getName());
 				}
-				else if(Data.paytmPaymentState == PaytmPaymentState.FAILURE){
-					DialogPopup.dialogBanner(paymentActivity, "Transaction failed");
+				else if(paymentActivity.getWalletAddMoneyState() == WalletAddMoneyState.FAILURE){
+					DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
+							.getString(R.string.transaction_failed));
 				}
 			} catch(Exception e){
 				e.printStackTrace();

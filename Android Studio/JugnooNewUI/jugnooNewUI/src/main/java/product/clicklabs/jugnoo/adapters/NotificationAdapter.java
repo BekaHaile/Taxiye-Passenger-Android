@@ -24,7 +24,8 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
@@ -219,7 +220,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == deepInt){
                 intent.setClass(activity, PaymentActivity.class);
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
                 activity.startActivity(intent);
             }
             else if(AppLinkIndex.PROMOTIONS.getOrdinal() == deepInt){

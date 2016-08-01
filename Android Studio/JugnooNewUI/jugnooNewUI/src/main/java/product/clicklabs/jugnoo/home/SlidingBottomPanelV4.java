@@ -77,7 +77,7 @@ public class SlidingBottomPanelV4 {
         imageViewPriorityTip = (ImageView) view.findViewById(R.id.imageViewPriorityTip);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
-        slidingUpPanelLayout.setParallaxOffset((int) (280 * ASSL.Yscale()));
+        slidingUpPanelLayout.setParallaxOffset((int) (295 * ASSL.Yscale()));
         updatePannelHeight();
 
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -100,7 +100,6 @@ public class SlidingBottomPanelV4 {
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
-                activity.setGoogleMapPadding(15);
                 activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
             }
 
@@ -109,7 +108,6 @@ public class SlidingBottomPanelV4 {
                 imageViewExtraForSliding.setVisibility(View.GONE);
                 activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
-                activity.setGoogleMapPadding(0);
                 activity.showPoolInforBar();
             }
 
@@ -169,7 +167,6 @@ public class SlidingBottomPanelV4 {
             } else{
                 textViewOffersValue.setText("-");
             }
-            requestRideOptionsFragment.updatePaymentOption();
             requestRideOptionsFragment.updateRegionsUI();
             requestRideOptionsFragment.updateFareStructureUI();
             requestRideOptionsFragment.getPromoCouponsDialog().notifyCoupons();
@@ -206,29 +203,6 @@ public class SlidingBottomPanelV4 {
         }
     }
 
-//    public void nudgeCouponsEvent(){
-//        try {
-//            JSONObject map = new JSONObject();
-//            JSONArray coups = new JSONArray();
-//            JSONArray coupsP = new JSONArray();
-//            for(PromoCoupon pc : Data.promoCoupons){
-//                if(requestRideOptionsFragment.isPaytmCoupon(pc)){
-//                    coupsP.put(pc.getTitle());
-//                } else{
-//                    coups.put(pc.getTitle());
-//                }
-//            }
-//            map.put(Constants.KEY_COUPONS, coups.toString());
-//            NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
-//
-//            if(coupsP.length() > 0) {
-//                map.put(Constants.KEY_COUPONS, coupsP.toString());
-//                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_COUPON_AVAILABLE, map);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public RequestRideOptionsFragment getRequestRideOptionsFragment(){
         return requestRideOptionsFragment;
@@ -327,6 +301,10 @@ public class SlidingBottomPanelV4 {
             linearLayoutSlidingBottom.setVisibility(View.GONE);
             activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
         }
+    }
+
+    public ImageView getImageViewExtraForSliding(){
+        return imageViewExtraForSliding;
     }
 
 }

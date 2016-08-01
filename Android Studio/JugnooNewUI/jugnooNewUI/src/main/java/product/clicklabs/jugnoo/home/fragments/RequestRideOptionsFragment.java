@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,16 +19,12 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.Locale;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
@@ -39,7 +36,6 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -47,7 +43,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.PaymentActivity;
 
 /**
  * Created by Shankar on 1/8/16.
@@ -171,9 +166,19 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         });
 
         updateOffersCount();
+        updatePaymentOption();
 
         try {
-            textViewMaxPeople.setText(getResources().getString(R.string.max_people)+" "+ getRegionSelected().getMaxPeople());
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + " " + getRegionSelected().getMaxPeople());
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(Data.regions.size() > 1) {
+                        setRegionSelected(0);
+                        activity.setRegionUI(true);
+                    }
+                }
+            }, 500);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -319,39 +324,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updatePaymentOption() {
         try {
-            Data.pickupPaymentOption = (Data.userData.paytmEnabled == 1
-                    && Data.userData.getPaytmError() != 1
-                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)
-                    && PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption)
-                    ? PaymentOption.PAYTM.getOrdinal() : PaymentOption.CASH.getOrdinal();
-
-
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewPaymentModeMS.getLayoutParams();
-            if (PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption) {
-                imageViewPaymentMode.setImageResource(R.drawable.ic_paytm_small);
-                imageViewPaymentModeMS.setImageResource(R.drawable.ic_paytm_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*105f);
-                textViewPaymentModeValue.setText(String.format(activity.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-                textViewPaymentModeValueMS.setText(String.format(activity.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-
-                activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(R.drawable.ic_paytm_small);
-                activity.getSlidingBottomPanel().getTextViewCashValue().setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-            } else {
-                imageViewPaymentMode.setImageResource(R.drawable.ic_cash_small);
-                imageViewPaymentModeMS.setImageResource(R.drawable.ic_cash_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
-                textViewPaymentModeValue.setText(activity.getResources().getString(R.string.cash));
-                textViewPaymentModeValueMS.setText(activity.getResources().getString(R.string.cash));
-
-                activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(R.drawable.ic_cash_small);
-                activity.getSlidingBottomPanel().getTextViewCashValue().setText(activity.getResources().getString(R.string.cash));
-            }
-            imageViewPaymentModeMS.setLayoutParams(params);
+            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
+            imageViewPaymentMode.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption));
+            imageViewPaymentModeMS.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption));
+            textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption));
+            textViewPaymentModeValueMS.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption));
+            activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption));
+            activity.getSlidingBottomPanel().getTextViewCashValue().setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption));
             updatePreferredPaymentOptionUI();
         } catch (Exception e) {
             e.printStackTrace();
@@ -367,17 +347,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             e.printStackTrace();
         }
         updatePreferredPaymentOptionUISingle();
-    }
-
-    public void setPaytmLoadingVisiblity(int visiblity){
-        try{
-            if(getPaymentOptionDialog().getDialog() != null && getPaymentOptionDialog().getDialog().isShowing()){
-                getPaymentOptionDialog().setPaytmLoadingVisiblity(visiblity);
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        setPaytmLoadingVisiblitySingle(visiblity);
     }
 
 
@@ -464,18 +433,17 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } else {
             relativeLayoutPriorityTipMS.setVisibility(View.GONE);
         }
-        //activity.getSlidingBottomPanel().updateFareFactorUI(Data.regions.size());
     }
 
     public void initSelectedCoupon(){
         try {
             if(selectedCoupon == null) {
-				if (Data.promoCoupons.size() > 0) {
-					selectedCoupon = noSelectionCoupon;
-				} else {
-					selectedCoupon = new CouponInfo(0, "");
-				}
-			}
+                if (Data.promoCoupons.size() > 0) {
+                    selectedCoupon = noSelectionCoupon;
+                } else {
+                    selectedCoupon = new CouponInfo(0, "");
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -493,7 +461,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } else {
             promoCoupon = noSelectionCoupon;
         }
-        if(displayAlertAndCheckForSelectedPaytmCoupon(promoCoupon)){
+        if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+                Data.pickupPaymentOption, promoCoupon)){
             selectedCoupon = promoCoupon;
         }
     }
@@ -502,63 +471,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         selectedCoupon = promoCoupon;
     }
 
-    public boolean displayAlertAndCheckForSelectedPaytmCoupon(PromoCoupon promoCoupon) {
-        try {
-            if (isPaytmCoupon(promoCoupon)) {
-                if (PaymentOption.PAYTM.getOrdinal() != Data.pickupPaymentOption) {
-                    View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            openPaymentActivityInCaseOfPaytmNotAdded();
-                        }
-                    };
-                    View.OnClickListener onClickListenerCancel = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    };
-                    if (Data.userData.paytmEnabled == 1) {
-                        DialogPopup.alertPopupWithListener(activity, "",
-                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_option_not_selected),
-                                onClickListenerCancel);
-                    } else {
-                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                                activity.getResources().getString(R.string.paytm_coupon_selected_but_paytm_not_added),
-                                activity.getResources().getString(R.string.ok),
-                                activity.getResources().getString(R.string.cancel),
-                                onClickListenerPaymentOption,
-                                onClickListenerCancel,
-                                true, false);
-                    }
-                    return false;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public void openPaymentActivityInCaseOfPaytmNotAdded() {
-        if (Data.userData.paytmEnabled != 1 || !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-            Intent intent = new Intent(activity, PaymentActivity.class);
-            intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-            activity.startActivity(intent);
-            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
-        }
-    }
-
-    public boolean isPaytmCoupon(PromoCoupon pc){
-        if(pc.getTitle().toLowerCase(Locale.ENGLISH)
-                .contains(activity.getString(R.string.paytm).toLowerCase(Locale.ENGLISH))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean displayAlertAndCheckForSelectedPaytmCoupon() {
-        return displayAlertAndCheckForSelectedPaytmCoupon(selectedCoupon);
+    public boolean displayAlertAndCheckForSelectedWalletCoupon() {
+        return MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+                Data.pickupPaymentOption, selectedCoupon);
     }
 
     public void setRegionSelected(int position) {
@@ -631,17 +546,14 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
 
 
-    private void setPaytmLoadingVisiblitySingle(int visiblity) {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).setPaytmLoadingVisiblity(visiblity);
-        }
-    }
 
     private void updatePreferredPaymentOptionUISingle() {
-        Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
-        if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
-            ((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
+        try {
+            Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 0);
+            if (frag1 != null && frag1 instanceof SlidingBottomCashFragment) {
+				((SlidingBottomCashFragment) frag1).updatePreferredPaymentOptionUI();
+			}
+        } catch (Exception e) {
         }
     }
 
@@ -653,12 +565,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 ((SlidingBottomOffersFragment) frag).update();
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     public void updateFareFactorUISingle() {
         try {
+            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
+                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
             Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 1);
             if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
                 ((SlidingBottomFareFragment) frag1).update();
@@ -667,7 +580,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                     , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
             setSurgeImageVisibility();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

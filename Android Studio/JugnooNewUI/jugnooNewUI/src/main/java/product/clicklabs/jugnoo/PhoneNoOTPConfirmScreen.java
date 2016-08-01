@@ -170,7 +170,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 					verifyOtpPhoneNoChange(PhoneNoOTPConfirmScreen.this, phoneNoToVerify, otpCode);
 				} else {
 					editTextOTP.requestFocus();
-					editTextOTP.setError("Code can't be empty");
+					editTextOTP.setError("OTP can't be empty");
 				}
 			}
 		});

@@ -83,9 +83,9 @@ public enum ApiResponseFlags {
 	PAYTM_BALANCE_ERROR(706),
 
 
-	USER_IN_DEBT(755)
+	USER_IN_DEBT(755),
 
-
+	MOBIKWIK_LOGGED_IN(802),
 
 
 	;

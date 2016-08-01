@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.promotion.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
@@ -16,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.CallbackManager;
 import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +47,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 	private ImageView imageViewLogo, imageViewMore, imageViewFbMessanger, imageViewWhatsapp, imageViewMessage, imageViewEmail;
 	private TextView textViewCode, textViewDesc, textViewMoreInfo, textViewLeaderboardSingle;
 	private Button buttonInvite;
-	private RelativeLayout relativeLayoutReferSingle, relativeLayoutMultipleTab, relativeLayoutLeaderboardSingle,
+	private RelativeLayout relativeLayoutReferContainer, relativeLayoutReferSingle, relativeLayoutMultipleTab, relativeLayoutLeaderboardSingle,
 			shareiconContainer;
 	private LinearLayout linearLayoutLeaderBoard, linearLayoutRefer;
 	private View rootView;
@@ -97,6 +95,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 		textViewLeaderboardSingle = (TextView)rootView.findViewById(R.id.textViewLeaderboardSingle);textViewLeaderboardSingle.setTypeface(Fonts.mavenMedium(activity));
 		buttonInvite = (Button)rootView.findViewById(R.id.buttonInvite);buttonInvite.setTypeface(Fonts.mavenMedium(activity));
 
+		relativeLayoutReferContainer = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferContainer);
 		relativeLayoutReferSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutReferSingle);
 		relativeLayoutMultipleTab = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMultipleTab);
 		relativeLayoutLeaderboardSingle = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLeaderboardSingle);
@@ -264,7 +263,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 					textViewMoreInfo.performClick();
 				}
 			};
-			ss.setSpan(clickableSpan, (textViewDesc.getText().length()-6), textViewDesc.getText().length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			ss.setSpan(clickableSpan, (textViewDesc.getText().length() - 6), textViewDesc.getText().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			textViewDesc.setText(ss);
 			textViewDesc.setMovementMethod(LinkMovementMethod.getInstance());
@@ -277,19 +276,24 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 			}
 			FlurryEventLogger.event(activity, FlurryEventNames.WHO_VISITED_FREE_RIDE_SCREEN);
 
-
-				if(Data.userData != null) {
-					relativeLayoutMultipleTab.setVisibility(View.GONE);
-					relativeLayoutReferSingle.setVisibility(View.GONE);
-					relativeLayoutLeaderboardSingle.setVisibility(View.GONE);
-					if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() == 1) {
-						relativeLayoutMultipleTab.setVisibility(View.VISIBLE);
-					} else if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() != 1) {
-						relativeLayoutLeaderboardSingle.setVisibility(View.VISIBLE);
-					} else if (Data.userData.getReferralLeaderboardEnabled() != 1 && Data.userData.getcToDReferralEnabled() == 1) {
-						relativeLayoutReferSingle.setVisibility(View.VISIBLE);
-					}
+			relativeLayoutReferContainer.setVisibility(View.GONE);
+			if (Data.userData != null) {
+				relativeLayoutMultipleTab.setVisibility(View.GONE);
+				relativeLayoutReferSingle.setVisibility(View.GONE);
+				relativeLayoutLeaderboardSingle.setVisibility(View.GONE);
+				if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() == 1) {
+					relativeLayoutMultipleTab.setVisibility(View.VISIBLE);
+					relativeLayoutReferContainer.setVisibility(View.VISIBLE);
 				}
+				else if (Data.userData.getReferralLeaderboardEnabled() == 1 && Data.userData.getcToDReferralEnabled() != 1) {
+					relativeLayoutLeaderboardSingle.setVisibility(View.VISIBLE);
+					relativeLayoutReferContainer.setVisibility(View.VISIBLE);
+				}
+				else if (Data.userData.getReferralLeaderboardEnabled() != 1 && Data.userData.getcToDReferralEnabled() == 1) {
+					relativeLayoutReferSingle.setVisibility(View.VISIBLE);
+					relativeLayoutReferContainer.setVisibility(View.VISIBLE);
+				}
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

@@ -129,10 +129,9 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
-import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -293,11 +292,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
-    Button buttonCancelRide, buttonAddPaytmCash, buttonCallDriver;
+    Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
-	LinearLayout relativeLayoutIRPaymentOption;
 	TextView textViewIRPaymentOption, textViewIRPaymentOptionValue;
-	ImageView imageViewIRPaymentOptionPaytm, imageViewIRPaymentOptionCash, imageViewThumbsUpGif, imageViewOfferConfirm;
+	ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
 
 
 
@@ -397,7 +395,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	public static final double FIX_ZOOM_DIAGONAL = 408;
 
-	public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
+	public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
 
     private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
@@ -408,14 +406,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     public boolean activityResumed = false;
-    public static boolean rechargedOnce = false, feedbackSkipped = false;
+    public static boolean feedbackSkipped = false;
 
     public ASSL assl;
 
 
     private int showAllDrivers = 0, showDriverInfo = 0, rating = 0, jugnooPoolFareId = 0;
 
-    private boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened, poolFareSuccess;
+    private boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened;
 
 	private GoogleApiClient mGoogleApiClient;
 
@@ -482,7 +480,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
 
         activityResumed = false;
-        rechargedOnce = false;
         dropLocationSearched = false;
 
         loggedOut = false;
@@ -678,19 +675,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
-		buttonAddPaytmCash = (Button) findViewById(R.id.buttonAddPaytmCash);
-		buttonAddPaytmCash.setTypeface(Fonts.mavenRegular(this));
+		buttonAddMoneyToWallet = (Button) findViewById(R.id.buttonAddMoneyToWallet);
+		buttonAddMoneyToWallet.setTypeface(Fonts.mavenRegular(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
         buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
 
 
-		relativeLayoutIRPaymentOption = (LinearLayout) findViewById(R.id.relativeLayoutIRPaymentOption);
 		textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.mavenRegular(this));
 		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
-		imageViewIRPaymentOptionPaytm = (ImageView) findViewById(R.id.imageViewIRPaymentOptionPaytm);
-		imageViewIRPaymentOptionCash = (ImageView) findViewById(R.id.imageViewIRPaymentOptionCash);
+        imageViewIRPaymentOption = (ImageView) findViewById(R.id.imageViewIRPaymentOption);
 
         linearLayoutSendInvites = (LinearLayout) findViewById(R.id.linearLayoutSendInvites);
         textViewSendInvites = (TextView) findViewById(R.id.textViewSendInvites); textViewSendInvites.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -1017,7 +1012,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 Data.dropLatLng = null;
                 dropLocationSet = false;
                 dropLocationSearched = false;
-                textViewDestSearch.setText("");
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                    textViewDestSearch.setText(R.string.destination_required);
+                } else {
+                    textViewDestSearch.setText(R.string.enter_destination);
+                }
                 imageViewDropCross.setVisibility(View.GONE);
                 translateViewBottomTop(relativeLayoutDestSearchBar, false);
                 translateViewTopBottom(relativeLayoutInitialSearchBar, true);
@@ -1210,28 +1209,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        buttonAddPaytmCash.setOnClickListener(new OnClickListener() {
+        buttonAddMoneyToWallet.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
-                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+            @Override
+            public void onClick(View v) {
+                try {
+                    MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(HomeActivity.this,
+                            Data.assignedDriverInfo.getPreferredPaymentMode());
+                    if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+                        FlurryEventLogger.event(FlurryEventNames.JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
+                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION
+                                + Constants.SLASH + Constants.RETENTION, "accept ride", "add money to wallet");
+                    } else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                        FlurryEventLogger.event(FlurryEventNames.JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
+                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION
+                                + Constants.SLASH + Constants.RETENTION, "ride start", "add money to  wallet");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                else{
-                    intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-                }
-                startActivity(intent);
-				overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_DRIVER_ARRIVED);
-                    FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "add paytm wallet");
-				} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-					FlurryEventLogger.event(JUGNOO_CASH_ADDED_WHEN_RIDE_IN_PROGRESS);
-                    FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "add paytm wallet");
-				}
-			}
-		});
+            }
+        });
 
         buttonCallDriver.setOnClickListener(new OnClickListener() {
 
@@ -1762,7 +1760,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-        Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
+//		Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
@@ -1947,7 +1945,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -1985,7 +1983,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = (int) (ASSL.Yscale() * 0f);
                 mView.setLayoutParams(params);
-                if(callNextAnim) {
+                if (callNextAnim) {
                     translateViewTopBottom(mView, viewExchange);
                 }
             }
@@ -2014,7 +2012,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (viewExchange) {
                     mView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                 } else {
-                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
+                    mView.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
                 }
                 mView.clearAnimation();
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
@@ -2039,7 +2037,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewDestSearch.setText("");
             imageViewDropCross.setVisibility(View.GONE);
 
-            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_r);
+            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
             relativeLayoutDestSearchBar.clearAnimation();
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDestSearchBar.getLayoutParams();
             params.topMargin = (int) (ASSL.Yscale() * 80f);
@@ -2229,56 +2227,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
                         FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
-                        boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedPaytmCoupon();
+                        boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedWalletCoupon();
                         if(proceed) {
-                            boolean callRequestRide = true;
-                            if (Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()) {
-                                if (Data.userData.getPaytmBalance() > 0) {
-                                    callRequestRide = true;
-                                    if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
-                                        DialogPopup.dialogBanner(HomeActivity.this, getResources().getString(R.string.paytm_low_cash));
-                                    }
-                                } else {
-                                    callRequestRide = false;
-                                    if(Data.userData.getPaytmError() == 1){
-                                        DialogPopup.alertPopup(HomeActivity.this, "", getResources().getString(R.string.paytm_error_cash_select_cash));
-                                    } else{
-                                        DialogPopup.alertPopupWithListener(HomeActivity.this, "",
-                                                getResources().getString(R.string.paytm_no_cash),
-                                                new OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Intent intent = new Intent(HomeActivity.this, PaymentActivity.class);
-                                                        if(Data.userData.paytmEnabled == 1) {
-                                                            intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
-                                                        } else {
-                                                            intent.putExtra(KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
-                                                        }
-                                                        startActivity(intent);
-                                                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                                    }
-                                                });
-                                    }
-                                }
-                                Bundle bundle = new Bundle();
-                                bundle.putString(Constants.HOME_SCREEN, "paytm");
-                                MyApplication.getInstance().logEvent(Constants.REVENUE +
-                                        Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                                        Constants.RETENTION, bundle);
 
-                                FlurryEventLogger.event(PAYTM_SELECTED_WHEN_REQUESTING);
-                                FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "paytm");
-                            } else {
-                                Bundle bundle = new Bundle();
-                                bundle.putString(Constants.HOME_SCREEN, "cash");
-                                MyApplication.getInstance().logEvent(Constants.REVENUE +
-                                        Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                                        Constants.RETENTION, bundle);
 
-                                FlurryEventLogger.event(CASH_SELECTED_WHEN_REQUESTING);
-                                FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "cash");
-                                callRequestRide = true;
-                            }
+                            boolean callRequestRide = MyApplication.getInstance().getWalletCore()
+                                    .requestWalletBalanceCheck(HomeActivity.this, Data.pickupPaymentOption);
+                            MyApplication.getInstance().getWalletCore().requestRideWalletSelectedFlurryEvent(Data.pickupPaymentOption, TAG);
+
                             if (callRequestRide) {
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
                                 callAnAutoPopup(HomeActivity.this);
@@ -2447,7 +2403,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             menuBar.setUserData();
             topBar.setUserData();
 
-            updateInRideAddPaytmButtonText();
+            updateInRideAddMoneyToWalletButtonText();
 			setPaymentOptionInRide();
             textViewRideEndWithImage.setText(Data.userData.getRideEndGoodFeedbackText());
 
@@ -2609,7 +2565,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						}
 
                         checkForFareAvailablity();
-                        findADriverFinishing();
+                        findADriverFinishing(false);
                         setGoogleMapPadding(0);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
@@ -2672,6 +2628,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 						textViewFindingDriver.setText("Finding a Jugnoo driver...");
                         initialCancelRideBtn.setVisibility(View.GONE);
+                        try {
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 600);
 
 
                         if (map != null) {
@@ -2773,7 +2745,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
-                        buttonAddPaytmCash.setVisibility(View.GONE);
+                        buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
                         checkForGoogleLogoVisibilityInRide();
@@ -2841,7 +2813,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
-                        buttonAddPaytmCash.setVisibility(View.GONE);
+                        buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
                         checkForGoogleLogoVisibilityInRide();
@@ -2903,9 +2875,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.assignedDriverInfo.latLng);
 
                         buttonCancelRide.setVisibility(View.GONE);
-                        buttonAddPaytmCash.setVisibility(View.GONE);
+                        buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.VISIBLE);
-                        updateInRideAddPaytmButtonText();
+                        updateInRideAddMoneyToWalletButtonText();
                         checkForGoogleLogoVisibilityInRide();
 						setPaymentOptionInRide();
 
@@ -2960,6 +2932,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 openPaytmRechargeDialog();
 
                 showReferAllDialog();
+                if(mode == PassengerScreenMode.P_INITIAL) {
+//                    showPoolIntroDialog();
+                }
                 callT20AndReferAllDialog(mode);
 
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
@@ -3285,18 +3260,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return (BadFeedbackFragment) frag;
     }
 
-	private void updateInRideAddPaytmButtonText(){
-		try{
-            if (Data.userData.paytmEnabled == 1 && !Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
-				buttonAddPaytmCash.setText(getResources().getString(R.string.add_paytm_cash));
-			}
-			else{
-				buttonAddPaytmCash.setText(getResources().getString(R.string.nl_add_paytm_wallet));
-			}
-		} catch(Exception e){
-			buttonAddPaytmCash.setText(getResources().getString(R.string.nl_add_paytm_wallet));
-		}
-	}
+	private void updateInRideAddMoneyToWalletButtonText(){
+        try {
+            MyApplication.getInstance().getWalletCore().addMoneyToWalletTextDuringRide(Data.assignedDriverInfo.getPreferredPaymentMode());
+        } catch (Exception e) {
+        }
+    }
 
 
     private void setDropLocationAssigningUI(){
@@ -3491,27 +3460,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 	private void setPaymentOptionInRide(){
 		try{
-			if(Data.assignedDriverInfo.getPreferredPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
-				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
-				imageViewIRPaymentOptionPaytm.setVisibility(View.VISIBLE);
-				imageViewIRPaymentOptionCash.setVisibility(View.GONE);
-				textViewIRPaymentOption.setText(getResources().getString(R.string.paytm));
-                textViewIRPaymentOption.setVisibility(View.GONE);
-				textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
-				textViewIRPaymentOptionValue.setText(String.format(getResources()
-                        .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
-                textViewIRPaymentOptionValue.setTextColor(Data.userData.getPaytmBalanceColor(this));
-			}
-			else{
-				relativeLayoutIRPaymentOption.setVisibility(View.VISIBLE);
-				imageViewIRPaymentOptionPaytm.setVisibility(View.GONE);
-				imageViewIRPaymentOptionCash.setVisibility(View.VISIBLE);
+            imageViewIRPaymentOption.setImageResource(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionIconSmall(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            textViewIRPaymentOption.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionName(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionBalanceText(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            textViewIRPaymentOptionValue.setTextColor(MyApplication.getInstance().getWalletCore()
+                    .getWalletBalanceColor(Data.assignedDriverInfo.getPreferredPaymentMode()));
+            if(PaymentOption.CASH.getOrdinal() == Data.assignedDriverInfo.getPreferredPaymentMode()){
                 textViewIRPaymentOption.setVisibility(View.VISIBLE);
-				textViewIRPaymentOption.setText(getResources().getString(R.string.cash));
-				textViewIRPaymentOptionValue.setVisibility(View.GONE);
-			}
-		} catch(Exception e){
-		}
+                textViewIRPaymentOptionValue.setVisibility(View.GONE);
+            } else {
+                textViewIRPaymentOption.setVisibility(View.GONE);
+                textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
+            }
+		} catch(Exception e){}
 	}
 
 
@@ -3754,7 +3718,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    showPromoFailedAtSignupDialog();
+//                                    showPoolIntroDialog();
                                 }
                             });
                 } else{
@@ -3765,6 +3729,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -3806,6 +3771,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
                             }
                         }
+
+                        fetchWalletBalance(this);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3829,8 +3796,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 openDeepLink();
                 performDeepLinkRequest();
-
-                getPaytmBalance(this);
 
 
                 String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");
@@ -4100,6 +4065,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
                             setDropAddressAndExpandFields(searchResult);
                         }
+                        slidingBottomPanel.getImageViewExtraForSliding().performClick();
                         imageViewRideNow.performClick();
                         activityResumed = false;
                     } catch (Exception e) {
@@ -4219,7 +4185,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 } else if(confirmedScreenOpened){
-                    poolFareSuccess = false;
                     confirmedScreenOpened = false;
                     if(Data.dropLatLng != null){
                         imageViewDropCross.setVisibility(View.VISIBLE);
@@ -4229,7 +4194,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     initialMyLocationBtn.performClick();
                 }
                 else{
-                    Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
                     ActivityCompat.finishAffinity(HomeActivity.this);
                 }
             }
@@ -4306,7 +4271,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onCompleteFindADriver() {
-                    findADriverFinishing();
+                    findADriverFinishing(true);
                 }
 
                 @Override
@@ -4363,7 +4328,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 confirmedScreenOpened);
     }
 
-    private void findADriverFinishing(){
+    private void findADriverFinishing(boolean showPoolIntro){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
                 slidingBottomPanel.update();
@@ -4388,7 +4353,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     setJugnooPool();
-                    showPoolIntroDialog();
+                    if(showPoolIntro) {
+//                        showPoolIntroDialog();
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -5012,10 +4979,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
 
-                                    Data.userData.setJugnooBalance(jObj.optDouble(KEY_JUGNOO_BALANCE,
-                                            Data.userData.getJugnooBalance()));
-                                    Data.userData.setPaytmBalance(jObj.optDouble(KEY_PAYTM_BALANCE,
-                                            Data.userData.getPaytmBalance()));
+                                    Data.userData.updateWalletBalances(jObj, false);
 
                                     Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
 
@@ -6097,7 +6061,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static void logoutUser(final Activity cont) {
         try {
-
             SharedPreferences pref = cont.getSharedPreferences("myPref", 0);
             Editor editor = pref.edit();
             editor.clear();
@@ -6389,10 +6352,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
+                                try {
+                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                                 Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
+
+                                try {
+                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                                 try{
                                     if(promoCouponSelectedForRide.id > 0) {
@@ -6463,6 +6437,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     AdWordsConversionReporter.reportWithConversionId(HomeActivity.this.getApplicationContext(),
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
+
+                                                    if(Data.pickupPaymentOption != PaymentOption.CASH.getOrdinal()) {
+                                                        Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.pickupPaymentOption);
+                                                    }
                                                 }
                                                 Data.cSessionId = jObj.getString("session_id");
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -6515,7 +6493,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                                         public void successFullyDeducted(double userDebt) {
                                                                             setUserData();
                                                                         }
-                                                                    }).showUserDebtDialog(userDebt, message, false);
+                                                                    }).showUserDebtDialog(userDebt, message);
                                                         }
                                                     }
                                                 });
@@ -6622,17 +6600,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public void onAfterRideFeedbackSubmitted(final int givenRating, final boolean skipped) {
+    public void onAfterRideFeedbackSubmitted(final int givenRating) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                afterRideFeedbackSubmitted(givenRating, skipped);
+                afterRideFeedbackSubmitted(givenRating);
             }
         });
 
     }
 
-    public void afterRideFeedbackSubmitted(final int givenRating, final boolean skipped){
+    public void afterRideFeedbackSubmitted(final int givenRating){
         try {
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;
@@ -6651,8 +6629,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.pickupLatLng = null;
             Data.dropLatLng = null;
             dropLocationSet = false;
+            confirmedScreenOpened = false;
 
-            Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
             setUserData();
 
             resetPickupDropFeilds();
@@ -6735,7 +6714,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             @Override
                             public void onClick(View v) {
-//                                HomeActivity.this.startActivity(new Intent(HomeActivity.this, WalletActivity.class));
                                 HomeActivity.this.startActivity(new Intent(HomeActivity.this, PaymentActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                             }
@@ -7218,17 +7196,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                 poolMarkerOptionEnd.title("End");
                 poolMarkerOptionEnd.position(Data.dropLatLng);
-                poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
-                        assl, R.drawable.pin_ball_end)));
+                poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this,
+                        assl)));
                 //map.addMarker(poolMarkerEnd);
                 map.addMarker(poolMarkerOptionEnd);
 
                 poolPathZoomAtConfirm();
-            }
-
-            @Override
-            public void onFailure() {
-
             }
 
             @Override
@@ -7252,7 +7225,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                       double convenienceCharge, String text) {
                 Log.v("Pool Fare value is ", "--> " + fare);
                 jugnooPoolFareId = poolFareId;
-                poolFareSuccess = true;
 
                 textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
                 textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
@@ -7261,7 +7233,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }).getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng, isPooled, callFareEstimate);
         } else{
-            textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
             ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
@@ -7298,14 +7270,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
 
-    private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
-	private void getPaytmBalance(final Activity activity) {
+    private ApiFetchWalletBalance apiFetchWalletBalance = null;
+	private void fetchWalletBalance(final Activity activity) {
         try {
-            if(apiPaytmCheckBalance == null){
-				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
+            if(apiFetchWalletBalance == null){
+				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
 					@Override
 					public void onSuccess() {
-                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
                         setUserData();
                         try {
                             JSONObject params = new JSONObject();
@@ -7320,9 +7292,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					@Override
 					public void onFailure() {
                         try {
-                            JSONParser.setPaytmErrorCase();
                             setUserData();
-                            slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -7330,7 +7300,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     @Override
                     public void onFinish() {
-                        slidingBottomPanel.getRequestRideOptionsFragment().setPaytmLoadingVisiblity(View.GONE);
                     }
 
                     @Override
@@ -7340,23 +7309,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					@Override
 					public void onNoRetry(View view) {
 					}
-
-                    @Override
-                    public void paytmDisabled() {
-                        try {
-                            JSONObject params = new JSONObject();
-                            params.put(KEY_JUGNOO_BALANCE, Data.userData.getJugnooBalance());
-                            NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_INITIAL_BALANCE, params);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
                 });
 			}
-            long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
-            long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
-            if(lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
-                apiPaytmCheckBalance.getBalance(Data.userData.paytmEnabled, false);
+            long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+            long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
+            if(lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
+                apiFetchWalletBalance.getBalance(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -7453,7 +7411,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
 
             HomeActivity.feedbackSkipped = true;
-            afterRideFeedbackSubmitted(0, true);
+            afterRideFeedbackSubmitted(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -7580,7 +7538,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-        afterRideFeedbackSubmitted(givenRating, false);
+        afterRideFeedbackSubmitted(givenRating);
     }
 
     @Override
@@ -7815,9 +7773,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onOk() {
                                 if(Data.userData != null) {
                                     Data.userData.setPaytmRechargeInfo(null);
-                                    Prefs.with(HomeActivity.this).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME,
-                                            (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
-                                    getPaytmBalance(HomeActivity.this);
+                                    Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
+                                            (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+                                    fetchWalletBalance(HomeActivity.this);
                                 }
                             }
 
@@ -7854,50 +7812,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } else {
             if (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
                     || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
-                new SelectorBitmapLoader(HomeActivity.this).loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
-                        getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
-                        getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-                });
-                imageViewRideNow.startAnimation(getBounceScale());
-                showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
-
                 if(oldRideType == RideTypeValue.POOL.getOrdinal()
                         && textViewDestSearch.getText().toString()
                         .equalsIgnoreCase(getResources().getString(R.string.enter_destination))) {
                     textViewDestSearch.setText("");
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
-
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                    int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                    if(index == 1 && Data.dropLatLng == null) {
-                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                        textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                    }
-                    showPoolInforBar();
-                } else{
-                    ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
-                    int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-                    if(index == 1 && Data.dropLatLng == null) {
-                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
-                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
-                        textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                    }
-                    viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
-                    setGoogleMapPadding(0);
-                }
-                slidingBottomPanel.getRequestRideOptionsFragment()
-                        .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
-
-                //slidingBottomPanel.getRequestRideOptionsFragment().updatePoolInfoText();
+                setRegionUI(false);
             } else{
                 if(getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
@@ -7906,6 +7827,61 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         }
+    }
+
+    private SelectorBitmapLoader selectorBitmapLoader;
+    private int regionIdForSelectorLoader;
+    private SelectorBitmapLoader getSelectorBitmapLoader(int regionIdForSelectorLoader){
+        if(selectorBitmapLoader == null){
+            selectorBitmapLoader = new SelectorBitmapLoader(this);
+        }
+        this.regionIdForSelectorLoader = regionIdForSelectorLoader;
+        return selectorBitmapLoader;
+    }
+
+    public void setRegionUI(boolean firstTime) {
+        getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+                .loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
+                        getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
+                        getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
+                    @Override
+                    public void onSuccess(Drawable drawable) {
+                        if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+                            imageViewRideNow.setImageDrawable(drawable);
+                        }
+                    }
+        }, false);
+        imageViewRideNow.startAnimation(getBounceScale());
+        showDriverMarkersAndPanMap(Data.pickupLatLng, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+            ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+            int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+            if (!firstTime && index == 1 && Data.dropLatLng == null) {
+                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+            }
+            if(Data.dropLatLng == null) {
+                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            }
+            showPoolInforBar();
+        } else {
+            ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
+            int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
+            if (!firstTime && index == 1 && Data.dropLatLng == null) {
+                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+            }
+            if(Data.dropLatLng == null) {
+                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            }
+            viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+            setGoogleMapPadding(0);
+        }
+        slidingBottomPanel.getRequestRideOptionsFragment()
+                .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
     }
 
     public void showPoolInforBar(){
@@ -8196,23 +8172,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void updateConfirmedStatePaymentUI(){
         try {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewPaymentModeConfirm.getLayoutParams();
-            if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
-                imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_paytm_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*68f);
-                textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-                textViewPaymentModeValueConfirm.setText(String.format(HomeActivity.this.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Data.userData.getPaytmBalanceStr()));
-            }
-            else{
-                imageViewPaymentModeConfirm.setImageResource(R.drawable.ic_cash_small);
-                params.width = (int) (Math.min(ASSL.Xscale(), ASSL.Yscale())*39f);
-                textViewPaymentModeValueConfirm.setText(HomeActivity.this.getResources().getString(R.string.cash));
-            }
-            imageViewPaymentModeConfirm.setLayoutParams(params);
+            imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionIconSmall(Data.pickupPaymentOption));
+            textViewPaymentModeValueConfirm.setText(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionBalanceText(Data.pickupPaymentOption));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -8263,7 +8226,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void imageViewRideNowPoolCheck(){
         if(getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-            poolFareSuccess = false;
             if(Data.dropLatLng != null){
                 //requestRideClick();
                 shakeAnim = 0;
@@ -8274,7 +8236,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
-                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
@@ -8341,7 +8303,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
             }
-            if(poolEnabled) {
+            if(poolEnabled && (dialogUploadContacts == null || !dialogUploadContacts.isShowing())) {
                 new PoolIntroDialog(HomeActivity.this, new PoolIntroDialog.Callback() {
                     @Override
                     public void onContinueClicked() {

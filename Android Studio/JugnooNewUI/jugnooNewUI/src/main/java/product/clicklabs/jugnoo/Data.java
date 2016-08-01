@@ -17,7 +17,6 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -43,9 +42,6 @@ public class Data {
 
 	public static final String DRIVER_APP_PACKAGE = "product.clicklabs.jugnoo.driver";
 
-
-	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
-						PAYTM_STATUS_INACTIVE = "INACTIVE";
 
 	public static boolean linkFoundOnce = false;
 
@@ -146,8 +142,6 @@ public class Data {
 	
 	public static LocationFetcher locationFetcher;
 
-	public static PaytmPaymentState paytmPaymentState;
-	
 
 	public static final String DEVICE_TYPE = "0";
 	public static String country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
@@ -259,7 +253,7 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
 			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACTS_ERROR);
-			Prefs.with(context).remove(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME);
+			Prefs.with(context).remove(SPLabels.CHECK_BALANCE_LAST_TIME);
 			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE);
 			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA);
 
@@ -277,6 +271,19 @@ public class Data {
 			Prefs.with(context).remove(Constants.KEY_SP_T20_WC_SCHEDULE_VERSION);
 			Prefs.with(context).remove(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED);
 			Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
+
+			Prefs.with(context).remove(Constants.SP_CURRENT_STATE);
+			Prefs.with(context).remove(Constants.SP_CURRENT_ENGAGEMENT_ID);
+			Prefs.with(context).remove(Constants.SP_LAST_PUSH_RECEIVED_TIME);
+			Prefs.with(context).remove(Constants.SP_REFERRAL_CODE);
+			Prefs.with(context).remove(Constants.SP_PUSH_DIALOG_CONTENT);
+			Prefs.with(context).remove(Constants.KEY_SP_FUGU_CAMPAIGN_NAME);
+			Prefs.with(context).remove(Constants.SP_POOL_INTRO_SHOWN);
+
+			Prefs.with(context).remove(Constants.SP_LAST_ADDED_WALLET);
+			Prefs.with(context).remove(Constants.SP_LAST_USED_WALLET);
+			Prefs.with(context).remove(Constants.SP_LAST_MONEY_ADDED_WALLET);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

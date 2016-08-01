@@ -75,7 +75,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	LinearLayout linearLayoutWaiting;
 	TextView textViewCounter;
-	ImageView imageViewYellowLoadingBar, imageViewPaytmIcon;
+	ImageView imageViewYellowLoadingBar, imageViewWalletIcon;
 
 	Button buttonVerify, buttonOtpViaCall;
 	TextView textViewOr;
@@ -143,7 +143,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
-		imageViewPaytmIcon = (ImageView) findViewById(R.id.imageViewPaytmIcon);
+		imageViewWalletIcon = (ImageView) findViewById(R.id.imageViewWalletIcon);
 
 		linearLayoutWaiting = (LinearLayout) findViewById(R.id.linearLayoutWaiting);
 		((TextView)findViewById(R.id.textViewWaiting)).setTypeface(Fonts.mavenRegular(this));
@@ -205,7 +205,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
-					editTextOTP.setError("Code can't be empty");
+					editTextOTP.setError("OTP can't be empty");
 				}
 			}
 		});
@@ -225,10 +225,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				try{
 					editTextOTP.setError(null);
-					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
+							|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
 						// Resend OTP call to Paytm server...
 
-						generateOTP(getLoggedInAccesToken());
+						generateOTP(getLoggedInAccesToken(), linkedWallet);
 					} else{
 						if (1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)) {
 							if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
@@ -388,12 +389,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		long timerDuration = 30000;
 		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-			imageViewPaytmIcon.setVisibility(View.VISIBLE);
+			imageViewWalletIcon.setVisibility(View.VISIBLE);
+			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
 			textViewCounter.setText("0:60");
 			timerDuration = 60000;
 			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
-		} else{
-			imageViewPaytmIcon.setVisibility(View.GONE);
+		}
+		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
+			imageViewWalletIcon.setVisibility(View.VISIBLE);
+			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
+			textViewCounter.setText("0:60");
+			timerDuration = 60000;
+			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
+		}else{
+			imageViewWalletIcon.setVisibility(View.GONE);
 			textViewCounter.setText("0:30");
 			buttonOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
 		}
@@ -423,7 +432,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 
 			if(1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)
-					|| linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
+					|| linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
+					|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -556,8 +566,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000, 1);
 		}
 		HomeActivity.checkForAccessTokenChange(this);
-
-//        checkIfRegisterDataNull(this);
 
 	}
 
@@ -1043,7 +1051,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
-	public void generateOTP(final String accessToken) {
+	public void generateOTP(final String accessToken, final int linkedWallet) {
 		try {
 			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
@@ -1052,7 +1060,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("client_id", Config.getClientId());
 				params.put("is_access_token_new", "1");
 
-				RestClient.getApiServices().paytmRequestOtp(params, new Callback<SettleUserDebt>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1063,7 +1071,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 							String message = JSONParser.getServerMessage(jObj);
 							int flag = jObj.getInt("flag");
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									DialogPopup.dialogBanner(OTPConfirmScreen.this, message);
+								DialogPopup.dialogBanner(OTPConfirmScreen.this, message);
 							} else if (ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag) {
 								DialogPopup.alertPopup(OTPConfirmScreen.this, "", message);
 							} else {
@@ -1081,13 +1089,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
 					}
-				});
+				};
+
+				if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+					RestClient.getApiServices().paytmRequestOtp(params, callback);
+				}
+				else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
+					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
+				}
 			} else{
 				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {
-								generateOTP(accessToken);
+								generateOTP(accessToken, linkedWallet);
 							}
 
 							@Override

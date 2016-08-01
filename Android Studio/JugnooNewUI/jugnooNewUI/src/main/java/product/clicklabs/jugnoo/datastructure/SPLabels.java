@@ -44,7 +44,7 @@ public class SPLabels {
 
 	NOTIFICATION_UNREAD_COUNT = "notification_unread_count",
 
-	PAYTM_CHECK_BALANCE_LAST_TIME = "paytmCheckBalanceLastTime",
+	CHECK_BALANCE_LAST_TIME = "checkBalanceLastTime",
     UPLOAD_CONTACT_NO_THANKS = "upload_contact_no_thanks",
 
     JUGNOO_JEANIE_TUTORIAL_SHOWN = "jugnoo_jeanie_tutorial_shown",

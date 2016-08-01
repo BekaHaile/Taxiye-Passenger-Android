@@ -54,7 +54,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/paytm/wallet/adjust_money")
-    void adjustUserDebt(@FieldMap Map<String, String> params,
+    void settleUserDebt(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
 
@@ -142,11 +142,6 @@ public interface ApiService {
     @POST("/request_ride")
     Response requestRide(@FieldMap Map<String, String> params);
 
-
-    @FormUrlEncoded
-    @POST("/paytm/check_balance")
-    void paytmCheckBalance(@FieldMap Map<String, String> params,
-                           Callback<SettleUserDebt> callback);
 
 
     @FormUrlEncoded
@@ -410,6 +405,31 @@ public interface ApiService {
     @POST("/customer/cancel_campaign")
     void cancelCampaign(@FieldMap Map<String, String> params,
                        Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/generate_otp")
+    void mobikwikRequestOtp(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/login_with_otp")
+    void mobikwikLoginWithOtp(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/add_money")
+    void mobikwikAddMoney(@FieldMap Map<String, String> params,
+                       Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_wallet_balance")
+    void fetchWalletBalance(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/mobikwik/unlink")
+    void mobikwikUnlink(@FieldMap Map<String, String> params,
+                            Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/refresh_device_token")

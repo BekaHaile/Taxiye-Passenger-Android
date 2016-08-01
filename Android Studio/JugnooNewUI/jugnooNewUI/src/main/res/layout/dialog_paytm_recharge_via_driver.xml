@@ -32,9 +32,9 @@
 
 
                 <ImageView
-                    android:id="@+id/imageViewPaytmIcon"
-                    android:layout_width="111px"
-                    android:layout_height="35px"
+                    android:id="@+id/imageViewWalletIcon"
+                    android:layout_width="122px"
+                    android:layout_height="38px"
                     android:src="@drawable/ic_paytm_big"
                     android:tag="mwar"/>
 
@@ -42,7 +42,7 @@
                     android:id="@+id/textViewRecharge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginLeft="0px"
                     android:text="@string/recharge"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_38"

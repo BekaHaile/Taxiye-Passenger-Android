@@ -64,8 +64,8 @@ public class CustomMapMarkerCreator {
 
     public static Bitmap createSmallPinMarkerBitmap(Activity activity, ASSL assl, int drawableId){
         float scale = Math.min(assl.Xscale(), assl.Yscale());
-        int width = (int)(46.0f * scale * 0.85f);
-        int height = (int)(94.0f * scale * 0.85f);
+        int width = (int)(46.0f * scale * 0.65f);
+        int height = (int)(94.0f * scale * 0.65f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
         Drawable shape = activity.getResources().getDrawable(drawableId);
