@@ -5666,7 +5666,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (jObj.getString("session_id").equalsIgnoreCase(Data.cSessionId)) {
                     cancelTimerUpdateDrivers();
                     cancelTimerRequestRide();
-                    fetchAcceptedDriverInfoAndChangeState(jObj, false);
+                    fetchAcceptedDriverInfoAndChangeState(jObj, ApiResponseFlags.RIDE_ACCEPTED.getOrdinal());
                 }
             }
         } catch (Exception e) {
@@ -5730,7 +5730,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj, boolean inRide) {
+    public void fetchAcceptedDriverInfoAndChangeState(JSONObject jObj, int flag) {
         try {
             cancelTimerRequestRide();
             ArrayList<String> fellowRiders = new ArrayList<>();
@@ -5805,30 +5805,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing);
 
-			if(inRide){
-				initializeStartRideVariables();
-				passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						switchPassengerScreen(passengerScreenMode);
-					}
-				});
-			}
-			else{
-				passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-				runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e("assignedDriverInfo", "=" + Data.assignedDriverInfo);
-                        Log.e("myLocation", "=" + myLocation);
-                        if (myLocation != null) {
-                            passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-                            switchPassengerScreen(passengerScreenMode);
-                        }
-                    }
-                });
+            if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
+                passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
             }
+            else if(ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag){
+                initializeStartRideVariables();
+                passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+            }
+            else if(ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag){
+                passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    switchPassengerScreen(passengerScreenMode);
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -6310,15 +6302,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     }
                                                 }
                                                 Data.cSessionId = jObj.getString("session_id");
-                                            } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
+                                            } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
+                                                    || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
+                                                    || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                     cancelTimerRequestRide();
-                                                    fetchAcceptedDriverInfoAndChangeState(jObj, false);
-                                                }
-                                            } else if (ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag) {
-                                                if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                    cancelTimerRequestRide();
-													fetchAcceptedDriverInfoAndChangeState(jObj, true);
+                                                    fetchAcceptedDriverInfoAndChangeState(jObj, flag);
                                                 }
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
