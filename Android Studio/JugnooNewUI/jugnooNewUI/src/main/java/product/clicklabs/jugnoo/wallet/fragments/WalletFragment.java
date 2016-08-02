@@ -18,12 +18,14 @@ import com.flurry.android.FlurryAgent;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -56,8 +58,10 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 	RelativeLayout relativeLayoutMobikwik;
 	TextView textViewMobiKwik, textViewMobiKwikBalanceValue;
 
+    RelativeLayout relativeLayoutFreeCharge;
+    TextView textViewFreeCharge, textViewFreeChargeBalanceValue;
 
-	RelativeLayout relativeLayoutWalletTransactions;
+    RelativeLayout relativeLayoutWalletTransactions;
 
 
     View rootView;
@@ -110,7 +114,12 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 		textViewMobiKwik = (TextView) rootView.findViewById(R.id.textViewMobikwik); textViewMobiKwik.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewMobiKwikBalanceValue = (TextView) rootView.findViewById(R.id.textViewMobikwikBalanceValue); textViewMobiKwikBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-		relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
+        relativeLayoutFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFreeCharge);
+        textViewFreeCharge = (TextView) rootView.findViewById(R.id.textViewFreeCharge); textViewFreeCharge.setTypeface(Fonts.mavenRegular(paymentActivity));
+        textViewFreeChargeBalanceValue = (TextView) rootView.findViewById(R.id.textViewFreeChargeBalanceValue); textViewFreeChargeBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
+
+
+        relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
 		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
 
 
@@ -210,6 +219,31 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 			}
 		});
 
+        relativeLayoutFreeCharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
+                    if(Data.userData.getFreeChargeEnabled() == 1) {
+                        paymentActivity.getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                                .add(R.id.fragLayout, new WalletRechargeFragment(PaymentOption.FREECHARGE.getOrdinal()), WalletRechargeFragment.class.getName())
+                                .addToBackStack(WalletRechargeFragment.class.getName())
+                                .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+                                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                                .commit();
+                    } else {
+                        paymentActivity.getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                                .add(R.id.fragLayout, new AddWalletFragment(PaymentOption.FREECHARGE.getOrdinal()), AddWalletFragment.class.getName())
+                                .addToBackStack(AddWalletFragment.class.getName())
+                                .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+                                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                                .commit();
+                    }
+                }
+            }
+        });
+
 
         textViewPromotion.setOnClickListener(new View.OnClickListener() {
 
@@ -290,6 +324,18 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 					textViewMobiKwikBalanceValue.setVisibility(View.GONE);
 				}
 
+                if(Data.userData.getFreeChargeEnabled() == 1){
+                    textViewFreeCharge.setText(getResources().getString(R.string.freecharge_wallet));
+                    textViewFreeChargeBalanceValue.setVisibility(View.VISIBLE);
+                    textViewFreeChargeBalanceValue.setText(String.format(paymentActivity.getResources()
+                            .getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+                    textViewFreeChargeBalanceValue.setTextColor(Data.userData.getFreeChargeBalanceColor(paymentActivity));
+                } else{
+                    textViewFreeCharge.setText(getResources().getString(R.string.add_freecharge_wallet));
+                    textViewFreeChargeBalanceValue.setVisibility(View.GONE);
+                }
+
+
 				Spannable spanJ = new SpannableString(textViewJugnooCashBalanceValue.getText());
 				spanJ.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				//textViewJugnooCashBalanceValue.setText(spanJ);
@@ -316,9 +362,15 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
 						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
-						}
+						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
+                        }
 					}
 				}
+                if(BuildConfig.DEBUG_MODE)
+                    linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
+
+
 			}
 		} catch (Exception e){
 			e.printStackTrace();

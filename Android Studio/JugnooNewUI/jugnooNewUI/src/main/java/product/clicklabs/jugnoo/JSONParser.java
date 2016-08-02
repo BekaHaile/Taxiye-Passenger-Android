@@ -234,6 +234,8 @@ public class JSONParser implements Constants {
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
+        int freeChargeEnabled = userData.optInt(KEY_FREECHARGE_ENABLED, 0);
+
         int mealsEnabled = userData.optInt(KEY_MEALS_ENABLED, 0);
         int freshEnabled = userData.optInt(KEY_FRESH_ENABLED, 0);
         int deliveryEnabled = userData.optInt(KEY_DELIVERY_ENABLED, 0);
@@ -252,7 +254,7 @@ public class JSONParser implements Constants {
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
-                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled,
+                fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled);
 
 

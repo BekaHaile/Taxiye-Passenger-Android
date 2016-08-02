@@ -65,6 +65,9 @@ public class UserData {
 
 	private JeanieIntroDialogContent jeanieIntroDialogContent;
 
+	private int mFreeChargeEnabled;
+    private double mFreeChargeBalance = -1;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
 					String jugnooFbBanner,
@@ -78,7 +81,7 @@ public class UserData {
 					int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,
+					int paytmEnabled, int mobikwikEnabled, int mFreeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled){
         this.userIdentifier = userIdentifier;
@@ -137,6 +140,8 @@ public class UserData {
 
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
+		this.mFreeChargeEnabled = mFreeChargeEnabled;
+
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.deliveryEnabled = deliveryEnabled;
@@ -145,6 +150,7 @@ public class UserData {
 
 		this.defaultClientId = defaultClientId;
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
+
 	}
 
 	private void checkUserImage(){
@@ -473,7 +479,50 @@ public class UserData {
 	}
 
 
-	public int getPaytmEnabled() {
+    /**
+     * For FreeCharge
+     */
+
+
+    public int getFreeChargeEnabled() {
+        return mFreeChargeEnabled;
+    }
+
+    public void setFreeChargeEnabled(int mFreeChargeEnabled) {
+        this.mFreeChargeEnabled = mFreeChargeEnabled;
+    }
+
+    public double getFreeChargeBalance() {
+        return mobikwikBalance;
+    }
+
+    public String getFreeChargeBalanceStr(){
+        if(mFreeChargeEnabled != 1 || mFreeChargeBalance < 0){
+            return "--";
+        } else {
+            return Utils.getMoneyDecimalFormatWithoutFloat().format(mFreeChargeBalance);
+        }
+    }
+
+    public void setFreeChargeBalance(double mFreeChargeBalance) {
+        this.mFreeChargeBalance = mFreeChargeBalance;
+    }
+
+    public int getFreeChargeBalanceColor(Context context){
+        if(getMobikwikBalance() < 0){
+            return context.getResources().getColor(R.color.theme_red_color);
+        } else{
+            return context.getResources().getColor(R.color.theme_green_color);
+        }
+    }
+
+    public void deleteFreeCharge(){
+        this.mFreeChargeEnabled = 0;
+        this.mFreeChargeBalance = -1;
+    }
+
+
+    public int getPaytmEnabled() {
 		return paytmEnabled;
 	}
 
@@ -505,6 +554,18 @@ public class UserData {
 					deleteMobikwik();
 				}
 			}
+
+            if(jObj.has(Constants.KEY_FREECHAGE_BALANCE)) {
+                setFreeChargeBalance(jObj.optDouble(Constants.KEY_FREECHAGE_BALANCE, getFreeChargeBalance()));
+                if(getFreeChargeBalance() > 0) {
+                    setFreeChargeEnabled(1);
+                }
+            } else {
+                if(removeWalletIfNoKey) {
+                    deleteFreeCharge();
+                }
+            }
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

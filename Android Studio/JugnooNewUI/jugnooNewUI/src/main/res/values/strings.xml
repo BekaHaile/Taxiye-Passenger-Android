@@ -954,11 +954,14 @@
 	<string name="fares_updated">Fares updated try again</string>
 	<string name="no_current_offers">No Current Offers</string>
 	<string name="mobikwik_wallet">MobiKwik Wallet</string>
+    <string name="freecharge_wallet">FreeCharge Wallet</string>
 	<string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
+    <string name="add_freecharge_wallet">Add FreeCharge Wallet</string>
 	<string name="paytm_colon">Paytm:</string>
 	<string name="mobikwik_colon">MobiKwik:</string>
 	<string name="request_otp_message_paytm">Request an OTP to link Paytm Wallet to</string>
 	<string name="request_otp_message_mobikwik">Request an OTP to link MobiKwik Wallet to</string>
+    <string name="request_otp_message_freecharge">Request an OTP to link FreeCharge Wallet to</string>
 	<string name="sending_otp_to">Sending OTP To</string>
 	<string name="otp_sent_successfully">OTP sent successfully</string>
 	<string name="add_wallet">Add Wallet</string>

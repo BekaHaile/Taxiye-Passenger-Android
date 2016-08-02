@@ -409,9 +409,20 @@ public interface ApiService {
                          Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/freecharge/generate_otp")
+    void freeChargeRequestOtp(@FieldMap Map<String, String> params,
+                            Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
     @POST("/mobikwik/login_with_otp")
     void mobikwikLoginWithOtp(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);
+
+
+    @FormUrlEncoded
+    @POST("/freecharge/login_with_otp")
+    void freeChargeLoginWithOtp(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/mobikwik/add_money")

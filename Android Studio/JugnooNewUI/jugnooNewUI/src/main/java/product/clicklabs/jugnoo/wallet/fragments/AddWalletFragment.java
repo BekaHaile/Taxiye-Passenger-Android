@@ -143,7 +143,10 @@ public class AddWalletFragment extends Fragment {
 		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
 			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
-		}
+		} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            textViewTitle.setText(paymentActivity.getResources().getString(R.string.freecharge_wallet));
+            imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
+        }
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
@@ -288,7 +291,9 @@ public class AddWalletFragment extends Fragment {
 		}
 		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 			textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_mobikwik));
-		}
+		} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_freecharge));
+        }
 		linearLayoutOTP.setVisibility(View.GONE);
 
 		buttonRequestOTP.setVisibility(View.VISIBLE);
@@ -365,7 +370,9 @@ public class AddWalletFragment extends Fragment {
 				}
 				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
-				}
+				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                    RestClient.getApiServices().freeChargeRequestOtp(params, callback);
+                }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {
@@ -427,7 +434,9 @@ public class AddWalletFragment extends Fragment {
 									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.MOBIKWIK.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
-								}
+								} else if(Data.userData != null && openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                                    // TO Do
+                                }
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
 							}
@@ -450,7 +459,9 @@ public class AddWalletFragment extends Fragment {
 				}
 				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
-				}
+				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                    RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);
+                }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {

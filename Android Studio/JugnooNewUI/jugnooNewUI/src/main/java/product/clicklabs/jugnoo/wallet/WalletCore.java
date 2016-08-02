@@ -441,7 +441,7 @@ public class WalletCore {
 		}
 	}
 
-	public void parsePaymentModeConfigDatas(JSONObject jObj, UserData userData){
+	public void parsePaymentModeConfigDatas(JSONObject jObj){
 		try{
 			JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
 			paymentModeConfigDatas = new ArrayList<>();

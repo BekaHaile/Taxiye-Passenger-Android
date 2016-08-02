@@ -349,6 +349,11 @@ public interface Constants {
         String KEY_SEARCH_RESULT = "search_result";
 	String SP_DRIVER_BEARING = "driver_bearing";
 
+    String KEY_FREECHARGE = "freecharge";
+    String KEY_FREECHAGE_BALANCE = "freecharge_balance";
+    String KEY_FREECHARGE_ENABLED = "freecharge_enabled";
+
+
 	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
 	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
 	String KEY_PAYTM = "paytm";

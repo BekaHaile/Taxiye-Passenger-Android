@@ -206,6 +206,50 @@
                         android:textSize="@dimen/text_size_38" />
 
 
+            </RelativeLayout>
+
+                <!-- FreeCharge wallet rl-->
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutFreeCharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="105px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="15px"
+                    android:background="@drawable/background_white_rounded_bordered"
+                    android:visibility="visible">
+
+                    <ImageView
+                        style="@style/payment_option_icon_small"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15px"
+                        android:src="@drawable/ic_mobikwik_small"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewFreeCharge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="120px"
+                        android:text="@string/freecharge_wallet"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_32" />
+
+
+                    <TextView
+                        android:id="@+id/textViewFreeChargeBalanceValue"
+                        android:layout_width="250px"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="34px"
+                        android:gravity="right"
+                        android:text="@string/rupee_0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_38" />
+
+
                 </RelativeLayout>
             </LinearLayout>
 
