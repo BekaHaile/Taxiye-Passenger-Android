@@ -21,7 +21,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.dialogs.WalletSelectionDialog;
+import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -165,7 +165,7 @@ public class WalletCore {
 				} else {
 					callRequestRide = false;
 					if(Data.userData.getPaytmBalance() < 0){
-						new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
 							public void onPositiveClick() {
 							}
@@ -175,7 +175,7 @@ public class WalletCore {
 							}
 						}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
 					} else{
-						new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
 							public void onPositiveClick() {
 								MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(activity, paymentOption);
@@ -197,7 +197,7 @@ public class WalletCore {
 				} else {
 					callRequestRide = false;
 					if(Data.userData.getMobikwikBalance() < 0){
-						new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
 							public void onPositiveClick() {
 							}
@@ -207,7 +207,7 @@ public class WalletCore {
 							}
 						}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
 					} else{
-						new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
 							public void onPositiveClick() {
 								MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(activity, paymentOption);
@@ -527,7 +527,7 @@ public class WalletCore {
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
 				}
 				else if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() < 0){
-					new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+					new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 						@Override
 						public void onPositiveClick() {
 
@@ -540,14 +540,19 @@ public class WalletCore {
 					}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
 				} else{
 					if(Data.userData.getPaytmEnabled() == 1) {
-						new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
 							public void onPositiveClick() {
-								Intent intent = new Intent(activity, PaymentActivity.class);
-								intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-								intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-								activity.startActivity(intent);
-								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+								try {
+									Intent intent = new Intent(activity, PaymentActivity.class);
+									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
+									activity.startActivity(intent);
+									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 
 							@Override
@@ -577,7 +582,7 @@ public class WalletCore {
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
 				}
 				else if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() < 0){
-					new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+					new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 						@Override
 						public void onPositiveClick() {
 
@@ -590,14 +595,19 @@ public class WalletCore {
 					}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
 				} else{
 					if(Data.userData.getMobikwikEnabled() == 1) {
-						new WalletSelectionDialog(activity, new WalletSelectionDialog.Callback() {
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
 							public void onPositiveClick() {
-								Intent intent = new Intent(activity, PaymentActivity.class);
-								intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-								intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
-								activity.startActivity(intent);
-								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+								try {
+									Intent intent = new Intent(activity, PaymentActivity.class);
+									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
+									activity.startActivity(intent);
+									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 
 							@Override

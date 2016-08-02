@@ -354,6 +354,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			setContentView(R.layout.activity_splash_new);
 
 
+			try{
+				if(getIntent().getIntExtra(KEY_LOGGED_OUT, 0) == 1){
+					String message = getIntent().getStringExtra(KEY_MESSAGE);
+					DialogPopup.alertPopup(this, "", message);
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+
 			resumed = false;
 
 			debugState = 0;

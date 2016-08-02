@@ -13,17 +13,14 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
-/**
- * Created by Ankit on 5/2/16.
- */
-public class WalletSelectionDialog {
+public class WalletSelectionErrorDialog {
 
-	private final String TAG = WalletSelectionDialog.class.getSimpleName();
+	private final String TAG = WalletSelectionErrorDialog.class.getSimpleName();
 	private Activity activity;
 	private Callback callback;
 	private Dialog dialog = null;
 
-	public WalletSelectionDialog(Activity activity, Callback callback) {
+	public WalletSelectionErrorDialog(Activity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
 	}

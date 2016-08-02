@@ -849,28 +849,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag) {
-
-                                try {
-                                    PicassoTools.clearCache(Picasso.with(activity));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                FacebookLoginHelper.logoutFacebook();
-
-                                GCMIntentService.clearNotifications(activity);
-
-                                Data.clearDataOnLogout(activity);
-
-                                HomeActivity.userMode = UserMode.PASSENGER;
-                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-
-                                ActivityCompat.finishAffinity(activity);
-                                Intent intent = new Intent(activity, SplashNewActivity.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
-
-                                Branch.getInstance(activity).logout();
+                                logoutFunc(activity, null);
                                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Logout");
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -895,6 +874,34 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
+
+    private void logoutFunc(Activity activity, String message){
+        try {
+            PicassoTools.clearCache(Picasso.with(activity));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FacebookLoginHelper.logoutFacebook();
+
+        GCMIntentService.clearNotifications(activity);
+
+        Data.clearDataOnLogout(activity);
+
+        HomeActivity.userMode = UserMode.PASSENGER;
+        HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+
+        ActivityCompat.finishAffinity(activity);
+        Intent intent = new Intent(activity, SplashNewActivity.class);
+        if(message != null){
+            intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
+            intent.putExtra(Constants.KEY_MESSAGE, message);
+        }
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+        Branch.getInstance(activity).logout();
+    }
 
 
     // To check if service is enabled
@@ -1008,7 +1015,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 imageViewChangePassword.setVisibility(View.VISIBLE);
                                 relativeLayoutChangePassword.performClick();
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
-                                HomeActivity.logoutUser(activity);
+                                logoutFunc(activity, message);
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }
