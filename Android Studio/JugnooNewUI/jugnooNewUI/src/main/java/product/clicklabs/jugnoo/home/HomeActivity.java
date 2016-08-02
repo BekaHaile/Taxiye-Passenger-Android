@@ -356,8 +356,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     Marker pickupLocationMarker, driverLocationMarker, currentLocationMarker, dropLocationMarker, dropInitialMarker;
-    Polyline pathToDropLocationPolyline, polylineInRideDriverPath;
-    PolylineOptions pathToDropLocationPolylineOptions, polylineOptionsInRideDriverPath;
+    Polyline pathToDropLocationPolyline;
+    PolylineOptions pathToDropLocationPolylineOptions;
+    ArrayList<Polyline> polylinesInRideDriverPath = new ArrayList<>();
+    ArrayList<PolylineOptions> polylineOptionsInRideDriverPath = new ArrayList<>();
 
     public static AppInterruptHandler appInterruptHandler;
     boolean loggedOut = false,
@@ -366,7 +368,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, firstTimeZoom = false, zoomingForDeepLink = false;
     boolean dropLocationSet = false;
 
-    Dialog noDriversDialog, dialogUploadContacts, dialogPaytmRecharge, freshIntroDialog;
+    Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
 
     LocationFetcher lowPowerLF, highAccuracyLF;
@@ -5199,7 +5201,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                                 LatLng start = new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude);
                                                 LatLng end = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
-                                                getPolylineOptionsInRideDriverPath().add(start, end);
+                                                PolylineOptions polylineOptions = new PolylineOptions();
+                                                polylineOptions.width(ASSL.Xscale() * 7);
+                                                polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
+                                                polylineOptions.geodesic(false);
+                                                polylineOptions.add(start, end);
+                                                getPolylineOptionsInRideDriverPath().add(polylineOptions);
                                             }
                                             plotPolylineInRideDriverPath();
 
@@ -5233,17 +5240,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
-    private PolylineOptions getPolylineOptionsInRideDriverPath(){
-        if(polylineOptionsInRideDriverPath == null) {
-            polylineOptionsInRideDriverPath = new PolylineOptions();
-            polylineOptionsInRideDriverPath.width(ASSL.Xscale() * 7);
-            polylineOptionsInRideDriverPath.color(RIDE_ELAPSED_PATH_COLOR);
-            polylineOptionsInRideDriverPath.geodesic(false);
+    private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath(){
+        if(polylineOptionsInRideDriverPath.size() == 0) {
             try {
                 ArrayList<RidePath> ridePathsList = Database2.getInstance(HomeActivity.this).getRidePathInfo();
                 for (RidePath ridePath : ridePathsList) {
-                    polylineOptionsInRideDriverPath.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
+                    PolylineOptions polylineOptions = new PolylineOptions();
+                    polylineOptions.width(ASSL.Xscale() * 7);
+                    polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
+                    polylineOptions.geodesic(false);
+                    polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
                             new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+                    polylineOptionsInRideDriverPath.add(polylineOptions);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -5254,10 +5262,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void plotPolylineInRideDriverPath(){
         if (map != null) {
-            if(polylineInRideDriverPath != null){
-                polylineInRideDriverPath.remove();
+            if(polylinesInRideDriverPath.size() > 0){
+                for(Polyline polyline : polylinesInRideDriverPath){
+                    polyline.remove();
+                }
+                polylinesInRideDriverPath.clear();
             }
-            polylineInRideDriverPath = map.addPolyline(getPolylineOptionsInRideDriverPath());
+            for(PolylineOptions polylineOptions : getPolylineOptionsInRideDriverPath()){
+                polylinesInRideDriverPath.add(map.addPolyline(polylineOptions));
+            }
         }
     }
 
@@ -7615,35 +7628,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+
+    private PaytmRechargeDialog paytmRechargeDialog;
     private void openPaytmRechargeDialog(){
         try {
-            if(dialogPaytmRecharge != null && dialogPaytmRecharge.isShowing()){
-                dialogPaytmRecharge.dismiss();
-            }
             if(Data.userData.getPaytmRechargeInfo() != null) {
-                dialogPaytmRecharge = new PaytmRechargeDialog(HomeActivity.this,
-                        Data.userData.getPaytmRechargeInfo().getTransferId(),
-                        Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
-                        Data.userData.getPaytmRechargeInfo().getTransferPhone(),
-                        Data.userData.getPaytmRechargeInfo().getTransferAmount(),
-                        new PaytmRechargeDialog.Callback() {
-                            @Override
-                            public void onOk() {
-                                if(Data.userData != null) {
-                                    Data.userData.setPaytmRechargeInfo(null);
-                                    Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
-                                            (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
-                                    fetchWalletBalance(HomeActivity.this);
+                if (paytmRechargeDialog != null
+                        && paytmRechargeDialog.getDialog() != null
+                        && paytmRechargeDialog.getDialog().isShowing()) {
+                    paytmRechargeDialog.updateDialogDataAndContent(Data.userData.getPaytmRechargeInfo().getTransferId(),
+                            Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                            Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                            Data.userData.getPaytmRechargeInfo().getTransferAmount());
+                } else{
+                    paytmRechargeDialog = new PaytmRechargeDialog(HomeActivity.this,
+                            Data.userData.getPaytmRechargeInfo().getTransferId(),
+                            Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                            Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                            Data.userData.getPaytmRechargeInfo().getTransferAmount(),
+                            new PaytmRechargeDialog.Callback() {
+                                @Override
+                                public void onOk() {
+                                    if (Data.userData != null) {
+                                        Data.userData.setPaytmRechargeInfo(null);
+                                        Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
+                                                (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+                                        fetchWalletBalance(HomeActivity.this);
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onCancel() {
-                                if(Data.userData != null) {
-                                    Data.userData.setPaytmRechargeInfo(null);
+                                @Override
+                                public void onCancel() {
+                                    if (Data.userData != null) {
+                                        Data.userData.setPaytmRechargeInfo(null);
+                                    }
                                 }
-                            }
-                        }).show();
+                            });
+                    paytmRechargeDialog.show();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
