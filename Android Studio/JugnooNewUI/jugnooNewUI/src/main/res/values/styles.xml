@@ -136,4 +136,17 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="payment_option_icon_small">
+        <item name="android:layout_width">101px</item>
+        <item name="android:layout_height">37px</item>
+        <item name="android:src">@drawable/ic_cash_small</item>
+        <item name="android:tag">mwar</item>
+    </style>
+
+    <style name="payment_option_icon_big_dimen">
+        <item name="android:layout_width">199px</item>
+        <item name="android:layout_height">81px</item>
+        <item name="android:tag">mwar</item>
+    </style>
+
 </resources>

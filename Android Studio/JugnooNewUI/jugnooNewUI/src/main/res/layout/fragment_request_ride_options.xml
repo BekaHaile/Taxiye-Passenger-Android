@@ -114,10 +114,8 @@
 
             <ImageView
                 android:id="@+id/imageViewPaymentMode"
-                android:layout_width="72px"
-                android:layout_height="24px"
-                android:src="@drawable/ic_paytm_small"
-                android:tag="mwar" />
+                style="@style/payment_option_icon_small"
+                />
 
             <TextView
                 android:id="@+id/textViewPaymentModeValue"
@@ -184,17 +182,15 @@
                     android:layout_width="0px"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
                     android:gravity="center"
                     android:visibility="visible"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/imageViewPaymentModeMS"
-                        android:layout_width="68px"
-                        android:layout_height="22px"
-                        android:src="@drawable/ic_cash_small"
-                        android:tag="mwar" />
+                        style="@style/payment_option_icon_small"
+                        />
 
                     <TextView
                         android:id="@+id/textViewPaymentModeValueMS"
@@ -222,7 +218,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_b_selector"
                     android:gravity="center">
 
                     <TextView

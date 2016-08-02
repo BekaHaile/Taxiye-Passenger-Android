@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.datastructure;
+package product.clicklabs.jugnoo.wallet.models;
 
 public enum TransactionType {
 	CREDIT(1), 

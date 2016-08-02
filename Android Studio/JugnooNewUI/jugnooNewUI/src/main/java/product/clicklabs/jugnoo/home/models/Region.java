@@ -54,6 +54,8 @@ public class Region {
 	@Expose
 	private String eta;
 
+	private boolean isDefault = false;
+
 	public Region(){
 		this.vehicleType = Constants.VEHICLE_AUTO;
 		this.regionId = Constants.VEHICLE_AUTO;
@@ -67,6 +69,15 @@ public class Region {
 		this.customerFareFactor = 1.0;
 		this.driverFareFactor = 1.0;
 		this.priorityTipCategory = 0;
+		this.isDefault = true;
+	}
+
+	public boolean isDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	public class OfferTexts {

@@ -17,7 +17,6 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -57,7 +56,6 @@ public class ApiFareEstimate {
                                     try {
                                         String result = new String(((TypedByteArray) response.getBody()).getBytes());
                                         Log.i("result", "=" + result);
-
                                         JSONObject jObj = new JSONObject(result);
                                         final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
                                         if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
@@ -78,27 +76,26 @@ public class ApiFareEstimate {
                                             }
                                         } else {
                                             FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
-                                            DialogPopup.alertPopup((Activity) context, "", "Fare could not be estimated between the selected pickup and drop location");
                                             DialogPopup.dismissLoadingDialog();
-                                            callback.onFailure();
+                                            retryDialogDirections("Fare could not be estimated between the selected pickup and drop location", sourceLatLng, destLatLng, isPooled, callFareEstimate);
                                         }
-
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        callback.onFailure();
+                                        DialogPopup.dismissLoadingDialog();
+                                        retryDialogDirections(Data.SERVER_ERROR_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate);
                                     }
                                 }
 
                                 @Override
                                 public void failure(RetrofitError error) {
                                     DialogPopup.dismissLoadingDialog();
-                                    callback.onFailure();
+                                    retryDialogDirections(Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate);
                                 }
                             });
                 }
             } else {
-                DialogPopup.alertPopup((Activity) context, "", Data.CHECK_INTERNET_MSG);
+                retryDialogDirections(Data.CHECK_INTERNET_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,7 +104,6 @@ public class ApiFareEstimate {
 
     public interface Callback{
         void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue);
-        void onFailure();
         void onRetry();
         void onNoRetry();
         void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge);
@@ -192,6 +188,7 @@ public class ApiFareEstimate {
                     @Override
                     public void onClick(View v) {
                         getFareEstimate(activity, sourceLatLng, destLatLng, distanceValue, timeValue, isPooled);
+                        callback.onRetry();
                     }
                 },
                 new View.OnClickListener() {
@@ -202,5 +199,22 @@ public class ApiFareEstimate {
                 }, false, false);
     }
 
+
+    private void retryDialogDirections(String message, final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate){
+        DialogPopup.alertPopupTwoButtonsWithListeners((Activity) context, "", message, "Retry", "Cancel",
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, callFareEstimate);
+                        callback.onRetry();
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.onNoRetry();
+                    }
+                }, false, false);
+    }
 
 }

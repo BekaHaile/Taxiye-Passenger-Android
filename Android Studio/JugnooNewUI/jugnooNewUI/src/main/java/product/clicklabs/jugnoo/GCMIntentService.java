@@ -19,19 +19,21 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.widget.TextView;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -51,7 +53,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
-public class GCMIntentService extends GcmListenerService implements Constants {
+public class GCMIntentService extends FirebaseMessagingService implements Constants {
 
 	private final String TAG = GCMIntentService.class.getSimpleName();
 
@@ -308,20 +310,21 @@ public class GCMIntentService extends GcmListenerService implements Constants {
 
 
 	@Override
-	public void onMessageReceived(String from, Bundle data) {
-        Log.e(TAG, "onMessageReceived data=" + data);
+	public void onMessageReceived(RemoteMessage remoteMessage) {
 
 		try {
-
+			String from = remoteMessage.getFrom();
+			Map data = remoteMessage.getData();
+			Log.e(TAG, "onMessageReceived data=" + data);
 			try {
-				Prefs.with(this).save(KEY_SP_FUGU_CAMPAIGN_NAME, data.getString(KEY_SP_FUGU_CAMPAIGN_NAME, ""));
+				Prefs.with(this).save(KEY_SP_FUGU_CAMPAIGN_NAME, String.valueOf(data.get(KEY_SP_FUGU_CAMPAIGN_NAME)));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			if (!"".equalsIgnoreCase(data.getString(KEY_MESSAGE, ""))) {
+			if (!"".equalsIgnoreCase(String.valueOf(data.get(KEY_MESSAGE)))) {
 
-				String message = data.getString(KEY_MESSAGE);
+				String message = String.valueOf(data.get(KEY_MESSAGE));
 
 				try {
 					JSONObject jObj = new JSONObject(message);

@@ -58,6 +58,7 @@ public class PromoCouponsDialog {
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
 
+			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			recyclerViewPromoCoupons = (RecyclerView) dialog.findViewById(R.id.recyclerViewPromoCoupons);
 			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
 			recyclerViewPromoCoupons.setItemAnimator(new DefaultItemAnimator());
@@ -81,7 +82,6 @@ public class PromoCouponsDialog {
 			buttonSkip.setTypeface(Fonts.mavenRegular(activity));
 			buttonContinue = (Button) dialog.findViewById(R.id.buttonContinue);
 			buttonContinue.setTypeface(Fonts.mavenRegular(activity));
-			RelativeLayout relativeLayoutOfferImage = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutOfferImage);
 			RelativeLayout relativeLayoutBottomButtons = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutBottomButtons);
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			linearLayoutNoCurrentOffers = (LinearLayout)dialog.findViewById(R.id.linearLayoutNoCurrentOffers);
@@ -90,17 +90,15 @@ public class PromoCouponsDialog {
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
 
 			if(Data.promoCoupons.size() > 0){
-				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
 				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
 				relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoCurrentOffers.setVisibility(View.GONE);
-				imageViewOffers.setBackgroundResource(R.drawable.ic_offer_popup);
+				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
 			} else{
-				relativeLayoutOfferImage.setVisibility(View.VISIBLE);
 				recyclerViewPromoCoupons.setVisibility(View.GONE);
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
 				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
-				imageViewOffers.setBackgroundResource(R.drawable.no_current_offer);
+				imageViewOffers.setImageResource(R.drawable.no_current_offer);
 			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +141,15 @@ public class PromoCouponsDialog {
 			relative.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dialog.dismiss();
+					if(Data.promoCoupons.size() == 0){
+						dialog.dismiss();
+					}
+				}
+			});
+
+			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
 				}
 			});
 

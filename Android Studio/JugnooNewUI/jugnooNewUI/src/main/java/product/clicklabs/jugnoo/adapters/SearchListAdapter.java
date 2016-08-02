@@ -85,7 +85,8 @@ public class SearchListAdapter extends BaseAdapter{
      * @throws IllegalStateException
      */
     public SearchListAdapter(final Context context, EditText editTextForSearch, LatLng searchPivotLatLng,
-							 GoogleApiClient mGoogleApiClient, int searchMode, SearchListActionsHandler searchListActionsHandler)
+							 GoogleApiClient mGoogleApiClient, int searchMode, SearchListActionsHandler searchListActionsHandler,
+                             boolean showSavedPlaces)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
@@ -96,7 +97,6 @@ public class SearchListAdapter extends BaseAdapter{
             this.defaultSearchPivotLatLng = searchPivotLatLng;
             this.searchListActionsHandler = searchListActionsHandler;
 			this.mGoogleApiClient = mGoogleApiClient;
-            this.showSavedPlaces = true;
             this.searchMode = searchMode;
             this.editTextForSearch.addTextChangedListener(new TextWatcher() {
 
@@ -132,6 +132,7 @@ public class SearchListAdapter extends BaseAdapter{
                 }
             });
 
+            this.showSavedPlaces = showSavedPlaces;
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
@@ -240,24 +241,27 @@ public class SearchListAdapter extends BaseAdapter{
                 public void onClick(View v) {
 					try {
 						holder = (ViewHolderSearchItem) v.getTag();
-						Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-						final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
-                        Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (autoCompleteSearchResult.getPlaceId() != null
-                                        && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
-                                    searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                                    getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
-                                } else{
-                                    searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                                    searchListActionsHandler.onPlaceSearchPre();
-                                    searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+                        if(!context.getResources().getString(R.string.no_results_found).equalsIgnoreCase(autoCompleteSearchResult.getName())
+                                && !context.getResources().getString(R.string.no_internet_connection).equalsIgnoreCase(autoCompleteSearchResult.getName())){
+                            Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
+                            Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (autoCompleteSearchResult.getPlaceId() != null
+                                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
+                                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                                        getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
+                                    } else{
+                                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+                                        searchListActionsHandler.onPlaceSearchPre();
+                                        searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                                    }
                                 }
-                            }
-                        }, 200);
+                            }, 200);
 
+                        }
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -291,10 +295,6 @@ public class SearchListAdapter extends BaseAdapter{
 		}
 	}
 
-    public void setShowSavedPlaces(boolean showSavedPlaces) {
-        this.showSavedPlaces = showSavedPlaces;
-    }
-
     private boolean refreshingAutoComplete = false;
 
     private synchronized void getSearchResults(final String searchText, final LatLng latLng) {
@@ -310,16 +310,15 @@ public class SearchListAdapter extends BaseAdapter{
 							refreshingAutoComplete = true;
 							searchResultsForSearch.clear();
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-								String name = autocompletePrediction.getDescription().split(",")[0];
+                                String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-                                        autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
+                                        autocompletePrediction.getFullText(null).toString(), autocompletePrediction.getPlaceId()));
 							}
 							autocompletePredictions.release();
 
-                            if(showSavedPlaces) {
-                                addFavoriteLocations(searchText);
-                            }
-							setSearchResultsToList();
+                            addFavoriteLocations(searchText);
+
+                            setSearchResultsToList();
 							refreshingAutoComplete = false;
 
 							if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
@@ -367,25 +366,27 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
-			if(!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-				if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
-						Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
-                        || searchText.equalsIgnoreCase("")) {
-					SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
-					searchResult.setName(SPLabels.ADD_WORK);
-					searchResultsForSearch.add(0, searchResult);
-				}
-			}
+            if(showSavedPlaces) {
+                if (!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+                    if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
+                            Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
+                            || searchText.equalsIgnoreCase("")) {
+                        SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
+                        searchResult.setName(SPLabels.ADD_WORK);
+                        searchResultsForSearch.add(0, searchResult);
+                    }
+                }
 
-			if(!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-				if(SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
-						Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
-                        || searchText.equalsIgnoreCase("")) {
-					SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
-					searchResult.setName(SPLabels.ADD_HOME);
-					searchResultsForSearch.add(0, searchResult);
-				}
-			}
+                if (!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+                    if (SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
+                            Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
+                            || searchText.equalsIgnoreCase("")) {
+                        SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
+                        searchResult.setName(SPLabels.ADD_HOME);
+                        searchResultsForSearch.add(0, searchResult);
+                    }
+                }
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.datastructure;
+package product.clicklabs.jugnoo.wallet.models;
 
 public class TransactionInfo {
 	
@@ -6,14 +6,19 @@ public class TransactionInfo {
 	public String time, date;
 	public String transactionText;
 	public double amount;
+	public int paytm;
+	private int mobikwik;
 	
-	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText, double amount){
+	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
+						   double amount, int paytm, int mobikwik){
 		this.transactionId = transactionId;
 		this.transactionType = transactionType;
 		this.time = time;
 		this.date = date;
 		this.transactionText = transactionText;
 		this.amount = amount;
+		this.paytm = paytm;
+		this.mobikwik = mobikwik;
 	}
 	
 	@Override
@@ -29,5 +34,8 @@ public class TransactionInfo {
 			return false;
 		}
 	}
-	
+
+	public int getMobikwik() {
+		return mobikwik;
+	}
 }

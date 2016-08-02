@@ -351,7 +351,7 @@
                     android:layout_marginLeft="45px"
                     android:layout_marginBottom="40px"
                     android:background="@drawable/button_theme"
-                    android:text="Refresh GCM"
+                    android:text="Refresh FCM"
                     android:textColor="@drawable/text_color_white_alpha_selector"
                     android:textSize="26px" />
 

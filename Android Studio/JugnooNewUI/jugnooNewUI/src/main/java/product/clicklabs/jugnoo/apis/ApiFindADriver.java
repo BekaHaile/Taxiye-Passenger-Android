@@ -191,6 +191,7 @@ public class ApiFindADriver {
 				HomeUtil homeUtil = new HomeUtil();
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
+					region.setIsDefault(false);
 					Data.regions.add(region);
 				}
 			}
@@ -244,13 +245,12 @@ public class ApiFindADriver {
 								fareStructure.getFarePerMin(),
 								fareStructure.getFareThresholdTime(),
 								fareStructure.getFarePerWaitingMin(),
-								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
+								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
+								fareStructure.getDisplayBaseFare());
 						for (int i = 0; i < Data.regions.size(); i++) {
 							try {
-
 								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
-										) {
+										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())) {
 									Data.regions.get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {

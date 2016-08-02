@@ -52,6 +52,7 @@ public class PushDialog {
 					picture = jObj.optString(Constants.KEY_IMAGE, "");
 				}
 				String buttonText = jObj.optString(Constants.KEY_BUTTON_TEXT, "Button");
+				final String url = jObj.optString(Constants.KEY_URL, "");
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -70,7 +71,7 @@ public class PushDialog {
 				ImageView imageView = (ImageView) dialog.findViewById(R.id.imageView);
 				TextView textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 				TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Fonts.mavenRegular(activity));
-				Button button = (Button) dialog.findViewById(R.id.button);button.setTypeface(Fonts.mavenRegular(activity));
+				final Button button = (Button) dialog.findViewById(R.id.button);button.setTypeface(Fonts.mavenRegular(activity));
 				ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 
 				textViewTitle.setText(title);
@@ -95,8 +96,9 @@ public class PushDialog {
 					public void onClick(View v) {
 						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
 								Constants.EMPTY_JSON_OBJECT);
-						callback.onButtonClicked(deepindex);
+						callback.onButtonClicked(deepindex, url);
 						dialog.dismiss();
+						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", button.getText().toString());
 					}
 				});
 
@@ -139,7 +141,7 @@ public class PushDialog {
 
 
 	public interface Callback{
-		void onButtonClicked(int deepIndex);
+		void onButtonClicked(int deepIndex, String url);
 	}
 
 }

@@ -1,5 +1,6 @@
-package product.clicklabs.jugnoo.wallet;
+package product.clicklabs.jugnoo.wallet.fragments;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,13 +26,13 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -42,21 +43,23 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+@SuppressLint("ValidFragment")
+public class AddWalletFragment extends Fragment {
 
-public class AddPaytmFragment extends Fragment {
-
-	private final String TAG = AddPaytmFragment.class.getSimpleName();
+	private final String TAG = AddWalletFragment.class.getSimpleName();
 
 	RelativeLayout relative;
 
 	ImageView imageViewBack;
 	TextView textViewTitle;
 
+	ImageView imageViewWalletIcon;
 	TextView textViewAddWalletHelp, textViewOTPMessage, textViewOTPNumber;
 
 	LinearLayout linearLayoutOTP;
@@ -71,6 +74,11 @@ public class AddPaytmFragment extends Fragment {
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
 
+	private int openWalletType;
+
+	public AddWalletFragment(int openWalletType){
+		this.openWalletType = openWalletType;
+	}
 
 	@Override
 	public void onStart() {
@@ -98,7 +106,7 @@ public class AddPaytmFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_add_paytm, container, false);
+		rootView = inflater.inflate(R.layout.fragment_add_wallet, container, false);
 
 		paymentActivity = (PaymentActivity) getActivity();
 
@@ -110,6 +118,7 @@ public class AddPaytmFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 
+		imageViewWalletIcon = (ImageView) rootView.findViewById(R.id.imageViewWalletIcon);
 		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.mavenMedium(paymentActivity));
@@ -125,6 +134,15 @@ public class AddPaytmFragment extends Fragment {
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 
+		if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
+			textViewTitle.setText(paymentActivity.getResources().getString(R.string.paytm_wallet));
+			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
+		}
+		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
+			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
+		}
+
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +150,7 @@ public class AddPaytmFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
-				performBackPressed();
+				paymentActivity.goBack();
 			}
 		});
 
@@ -196,24 +214,22 @@ public class AddPaytmFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-//			@Override
-//			public void keyboardOpened() {
-//
-//			}
-//
-//			@Override
-//			public void keyBoardClosed() {
-//
-//			}
-//		}));
-
 		setInitialUI();
-
 
 		return rootView;
 	}
 
+	public void receiveOtp(String otp){
+		try {
+			if(buttonVerifyOTP.getVisibility() == View.VISIBLE) {
+				editTextOTP.setText(otp);
+				editTextOTP.setSelection(editTextOTP.getText().length());
+				buttonVerifyOTP.performClick();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 
@@ -250,7 +266,12 @@ public class AddPaytmFragment extends Fragment {
 	};
 
 	private void setInitialUI(){
-		textViewOTPMessage.setText("Request an OTP to link Paytm Wallet to");
+		if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
+			textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_paytm));
+		}
+		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+			textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_mobikwik));
+		}
 		linearLayoutOTP.setVisibility(View.GONE);
 
 		buttonRequestOTP.setVisibility(View.VISIBLE);
@@ -260,7 +281,7 @@ public class AddPaytmFragment extends Fragment {
 
 
 	private void setUIAfterRequest(){
-		textViewOTPMessage.setText("Sending OTP To");
+		textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.sending_otp_to));
 		linearLayoutOTP.setVisibility(View.VISIBLE);
 
 		buttonRequestOTP.setVisibility(View.GONE);
@@ -268,21 +289,6 @@ public class AddPaytmFragment extends Fragment {
 		buttonResendOTP.setVisibility(View.VISIBLE);
 	}
 
-
-	/**
-	 * Method used to remove fragment from stack
-	 */
-	public void performBackPressed() {
-		paymentActivity.getSupportFragmentManager()
-				.popBackStack(AddPaytmFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-		if(AddPaymentPath.ADD_PAYTM.getOrdinal() == paymentActivity.addPaymentPathInt){
-			paymentActivity.getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
-					.addToBackStack(WalletFragment.class.getName())
-					.commitAllowingStateLoss();
-		}
-	}
 
 
 	@Override
@@ -298,24 +304,25 @@ public class AddPaytmFragment extends Fragment {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", "1");
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-				RestClient.getApiServices().paytmRequestOtp(params, new Callback<SettleUserDebt>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "paytmRequestOtp response = " + responseStr);
+						Log.i(TAG, "requestOtp response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
-							int flag = jObj.getInt("flag");
+							int flag = jObj.getInt(Constants.KEY_FLAG);
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								setUIAfterRequest();
 								if (retry) {
-									DialogPopup.dialogBanner(paymentActivity, "OTP sent successfully");
+									DialogPopup.dialogBanner(paymentActivity, paymentActivity.getResources()
+											.getString(R.string.otp_sent_successfully));
 								}
 							} else if (ApiResponseFlags.PAYTM_INVALID_EMAIL.getOrdinal() == flag) {
 								DialogPopup.alertPopup(paymentActivity, "", message);
@@ -330,11 +337,18 @@ public class AddPaytmFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmRequestOtp error="+error.toString());
+						Log.e(TAG, "requestOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-				});
+				};
+
+				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
+					RestClient.getApiServices().paytmRequestOtp(params, callback);
+				}
+				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
+				}
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {
@@ -364,39 +378,42 @@ public class AddPaytmFragment extends Fragment {
 			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
-				params.put("is_access_token_new", "1");
-				params.put("otp", "" + otp);
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+				params.put(Constants.KEY_OTP, otp);
 
-				RestClient.getApiServices().paytmLoginWithOtp(params, new Callback<SettleUserDebt>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
-						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i(TAG, "paytmLoginWithOtp response = " + responseStr);
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "loginWithOtp response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
-							int flag = jObj.getInt("flag");
-							if(ApiResponseFlags.PAYTM_OTP_ERROR.getOrdinal() == flag){
-								DialogPopup.alertPopup(paymentActivity, "", message);
-							}
-							else if(ApiResponseFlags.PAYTM_INACTIVE_LOGGED_IN.getOrdinal() == flag){
-								DialogPopup.alertPopup(paymentActivity, "", message);
-							}
-							else if(ApiResponseFlags.PAYTM_LOGGED_IN.getOrdinal() == flag){
-								if (Data.userData != null) {
-									String balance = jObj.optString("balance", "0");
-									Data.userData.setPaytmBalance(Double.parseDouble(balance));
-									Data.userData.setPaytmStatus(Data.PAYTM_STATUS_ACTIVE);
-									Data.userData.paytmEnabled = 1;
-
-									Prefs.with(paymentActivity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-									paymentActivity.performGetBalanceSuccess(AddPaytmFragment.class.getName());
+							int flag = jObj.getInt(Constants.KEY_FLAG);
+							if (ApiResponseFlags.PAYTM_LOGGED_IN.getOrdinal() == flag) {
+								if (Data.userData != null && openWalletType == PaymentOption.PAYTM.getOrdinal()) {
+									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
+									Data.userData.setPaytmBalance(balance);
+									Data.userData.setPaytmEnabled(1);
+									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.PAYTM.getOrdinal());
+									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
+							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								if (Data.userData != null && openWalletType == PaymentOption.MOBIKWIK.getOrdinal()) {
+									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
+									Data.userData.setMobikwikBalance(balance);
+									Data.userData.setMobikwikEnabled(1);
+									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.MOBIKWIK.getOrdinal());
+									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
+								}
+							} else {
+								DialogPopup.alertPopup(paymentActivity, "", message);
 							}
-
 						} catch (Exception e) {
 							e.printStackTrace();
 							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
@@ -405,11 +422,18 @@ public class AddPaytmFragment extends Fragment {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmLoginWithOtp error="+error.toString());
+						Log.e(TAG, "loginWithOtp error=" + error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 					}
-				});
+				};
+
+				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
+					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
+				}
+				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
+				}
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {

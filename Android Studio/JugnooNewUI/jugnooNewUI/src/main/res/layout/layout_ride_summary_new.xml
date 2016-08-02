@@ -52,7 +52,7 @@
                 android:layout_marginTop="40px"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
-                android:background="@drawable/bg_menu_item_selector_color_r"
+                android:background="@drawable/bg_menu_item_selector_color_rb"
                 android:orientation="horizontal">
 
                 <LinearLayout

@@ -170,7 +170,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void getRideSummaryAPI(final Activity activity) {
 		try {
-			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.fixedFare,
+			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.fareStructure.getFixedFare(),
 					new ApiGetRideSummary.Callback() {
 						@Override
 						public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {

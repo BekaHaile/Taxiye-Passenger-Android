@@ -429,7 +429,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                             if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
                                 if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
-                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating, false);
+                                    HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating);
                                 } else if (FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null) {
                                     RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
                                 }
@@ -474,7 +474,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 			try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
 
 			HomeActivity.feedbackSkipped = true;
-			HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0, true);
+			HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0);
 			finish();
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 

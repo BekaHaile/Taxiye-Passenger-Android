@@ -6,7 +6,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -104,7 +104,7 @@
             android:id="@+id/linearLayoutInRideDriverInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80px"
+            android:layout_marginTop="75px"
             android:orientation="vertical">
 
             <ImageView
@@ -276,31 +276,12 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutIRPaymentOption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15px"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/imageViewIRPaymentOptionPaytm"
-                            android:layout_width="72px"
-                            android:layout_height="23px"
-                            android:src="@drawable/ic_paytm_small"
-                            android:tag="mwar"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/imageViewIRPaymentOptionCash"
-                            android:layout_width="39px"
-                            android:layout_height="20px"
-                            android:src="@drawable/ic_cash_small"
-                            android:tag="mwar"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imageViewIRPaymentOption"
+                        style="@style/payment_option_icon_small"
+                        android:layout_marginTop="10px"
+                        android:src="@drawable/ic_paytm_small"
+                        />
 
 
                     <TextView
@@ -423,7 +404,7 @@
                     />
 
                 <Button
-                    android:id="@+id/buttonAddPaytmCash"
+                    android:id="@+id/buttonAddMoneyToWallet"
                     android:layout_width="359px"
                     android:layout_height="match_parent"
                     android:background="@color/menu_item_selector_color"
@@ -472,7 +453,7 @@
             android:layout_height="136px"
             android:layout_alignParentRight="true"
             android:layout_marginRight="50px"
-            android:layout_marginTop="-5px"
+            android:layout_marginTop="0px"
             android:background="@drawable/ic_ride_call_selector"
             android:tag="mwar" />
     </RelativeLayout>

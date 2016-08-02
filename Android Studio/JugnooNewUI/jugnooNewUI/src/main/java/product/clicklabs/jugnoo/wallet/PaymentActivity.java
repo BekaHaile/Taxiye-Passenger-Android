@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -7,14 +8,19 @@ import android.view.ViewGroup;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiPaytmCheckBalance;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
-import product.clicklabs.jugnoo.datastructure.PaytmPaymentState;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
+import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
+import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 
 
 /**
@@ -24,9 +30,9 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 	private final String TAG = PaymentActivity.class.getSimpleName();
 
-	public int addPaymentPathInt = AddPaymentPath.WALLET.getOrdinal();
+	public int paymentActivityPathInt = PaymentActivityPath.WALLET.getOrdinal();
 	public String amountToPreFill = "";
-
+	private WalletAddMoneyState walletAddMoneyState;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,74 +41,56 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 		new ASSL(this, (ViewGroup) findViewById(R.id.fragLayout), 1134, 720, false);
 
-		addPaymentPathInt = getIntent()
-				.getIntExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+		paymentActivityPathInt = getIntent()
+				.getIntExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
 
-		if(AddPaymentPath.WALLET.getOrdinal() == addPaymentPathInt){
+		if(PaymentActivityPath.WALLET.getOrdinal() == paymentActivityPathInt){
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
 					.addToBackStack(WalletFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
-		else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
+		else if(PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal() == paymentActivityPathInt){
 			if(getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)){
 				amountToPreFill = getIntent().getStringExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE);
 			}
+			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new PaytmRechargeFragment(), PaytmRechargeFragment.class.getName())
-					.addToBackStack(PaytmRechargeFragment.class.getName())
+					.add(R.id.fragLayout, new WalletRechargeFragment(walletType), WalletRechargeFragment.class.getName())
+					.addToBackStack(WalletRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
-		else if(AddPaymentPath.ADD_PAYTM.getOrdinal() == addPaymentPathInt){
+		else if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivityPathInt){
+			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new AddPaytmFragment(), AddPaytmFragment.class.getName())
-					.addToBackStack(AddPaytmFragment.class.getName())
+					.add(R.id.fragLayout, new AddWalletFragment(walletType), AddWalletFragment.class.getName())
+					.addToBackStack(AddWalletFragment.class.getName())
 					.commitAllowingStateLoss();
 		}
 
-		Data.paytmPaymentState = PaytmPaymentState.INIT;
+		setWalletAddMoneyState(WalletAddMoneyState.INIT);
     }
 
 
     @Override
     public void onBackPressed() {
 		try {
-			Fragment fragment = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(WalletRechargeFragment.class.getName());
 			if (fragment != null
 					&& fragment.isVisible()
-					&& fragment instanceof PaytmRechargeFragment
-					&& ((PaytmRechargeFragment)fragment).getButtonRemoveWalletVisiblity() == View.VISIBLE) {
-				((PaytmRechargeFragment) fragment).performBackPressed();
+					&& fragment instanceof WalletRechargeFragment
+					&& ((WalletRechargeFragment)fragment).getButtonRemoveWalletVisiblity() == View.VISIBLE) {
+				((WalletRechargeFragment) fragment).performBackPressed();
 			} else {
 				goBack();
 			}
-
-//			if(AddPaymentPath.WALLET.getOrdinal() == addPaymentPathInt){
-//				goBack();
-//			}
-//			else if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
-//				Fragment fragment = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
-//				if (fragment != null && fragment.isVisible() && fragment instanceof PaytmRechargeFragment) {
-//					((PaytmRechargeFragment) fragment).performBackPressed();
-//				} else{
-//					goBack();
-//				}
-//			}
-//			else if(AddPaymentPath.ADD_PAYTM.getOrdinal() == addPaymentPathInt){
-//				Fragment fragment = getSupportFragmentManager().findFragmentByTag(AddPaytmFragment.class.getName());
-//				if (fragment != null && fragment.isVisible() && fragment instanceof AddPaytmFragment) {
-//					((AddPaytmFragment) fragment).performBackPressed();
-//				} else{
-//					goBack();
-//				}
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			super.onBackPressed();
 		}
 	}
 
-	private void goBack(){
+	public void goBack(){
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -117,10 +105,46 @@ public class PaymentActivity extends BaseFragmentActivity{
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		if(Data.paytmPaymentState != PaytmPaymentState.SUCCESS) {
+		if(getWalletAddMoneyState() != WalletAddMoneyState.SUCCESS) {
 			getBalance("Refresh");
 		} else{
-			Data.paytmPaymentState = PaytmPaymentState.INIT;
+			setWalletAddMoneyState(WalletAddMoneyState.INIT);
+		}
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PaymentActivity.class.getName());
+		Utils.enableSMSReceiver(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, "");
+		Utils.disableSMSReceiver(this);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		retrieveOTPFromSMS(intent);
+		super.onNewIntent(intent);
+	}
+
+	private void retrieveOTPFromSMS(Intent intent){
+		try {
+			String otp = "";
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				otp = Utils.retrieveOTPFromSMS(message);
+			}
+
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					Fragment currFrag = getSupportFragmentManager().findFragmentByTag(AddWalletFragment.class.getName());
+					if(currFrag != null){
+						((AddWalletFragment)currFrag).receiveOtp(otp);
+					}
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
@@ -136,13 +160,13 @@ public class PaymentActivity extends BaseFragmentActivity{
 	}
 
 
-	private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
+	private ApiFetchWalletBalance apiFetchWalletBalance = null;
 	private String fragName = "Refresh";
 	public void getBalance(String fragName) {
 		try {
 			this.fragName = fragName;
-			if(apiPaytmCheckBalance == null){
-				apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
+			if(apiFetchWalletBalance == null){
+				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
 					@Override
 					public void onSuccess() {
 						performGetBalanceSuccess(PaymentActivity.this.fragName);
@@ -150,7 +174,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 					@Override
 					public void onFailure() {
-						getBalance(PaymentActivity.this.fragName);
+//						getBalance(PaymentActivity.this.fragName);
 					}
 
 					@Override
@@ -167,14 +191,9 @@ public class PaymentActivity extends BaseFragmentActivity{
 					public void onNoRetry(View view) {
 
 					}
-
-					@Override
-					public void paytmDisabled() {
-
-					}
 				});
 			}
-			apiPaytmCheckBalance.getBalance(1, true);
+			apiFetchWalletBalance.getBalance(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -183,51 +202,33 @@ public class PaymentActivity extends BaseFragmentActivity{
 	public void performGetBalanceSuccess(String fragName){
 		try {
 			Fragment currFrag = null;
-			if(fragName.equalsIgnoreCase(PaytmRechargeFragment.class.getName())) {
-				currFrag = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
+			if(fragName.equalsIgnoreCase(WalletRechargeFragment.class.getName())) {
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+				currFrag = getSupportFragmentManager().findFragmentByTag(WalletRechargeFragment.class.getName());
 				if(currFrag != null){
-					currFrag.onResume();
-					((PaytmRechargeFragment) currFrag).performBackPressed();
+					((WalletRechargeFragment) currFrag).onResume();
+					((WalletRechargeFragment) currFrag).performBackPressed();
 				}
 			}
-			else if(fragName.equalsIgnoreCase(AddPaytmFragment.class.getName())){
-				currFrag = getSupportFragmentManager().findFragmentByTag(AddPaytmFragment.class.getName());
-				if(currFrag != null){
-					((AddPaytmFragment) currFrag).performBackPressed();
-				}
+			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+				goBack();
 			}
 			currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());
 			if(currFrag != null){
 				currFrag.onResume();
-			}
-
-			if(AddPaymentPath.PAYTM_RECHARGE.getOrdinal() == addPaymentPathInt){
-				currFrag = getSupportFragmentManager().findFragmentByTag(PaytmRechargeFragment.class.getName());
-				if(currFrag != null){
-					currFrag.onResume();
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void retryDialog(String message, final String fragName){
-		DialogPopup.alertPopupTwoButtonsWithListeners(PaymentActivity.this, "", message,
-				getResources().getString(R.string.retry), getResources().getString(R.string.cancel),
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						getBalance(fragName);
-					}
-				},
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						finish();
-						overridePendingTransition(R.anim.left_in, R.anim.left_out);
-					}
-				}, false, false);
+	public WalletAddMoneyState getWalletAddMoneyState() {
+		return walletAddMoneyState;
+	}
+
+	public void setWalletAddMoneyState(WalletAddMoneyState walletAddMoneyState) {
+		this.walletAddMoneyState = walletAddMoneyState;
 	}
 
 }

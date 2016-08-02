@@ -363,22 +363,35 @@
                 android:layout_height="110px"
                 android:background="@color/white">
 
-                <TextView
-                    android:id="@+id/textViewAddHome"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
+                    android:orientation="vertical"
                     android:layout_toLeftOf="@+id/imageViewEditHome"
                     android:layout_toRightOf="@+id/imageViewAddHome"
-                    android:gravity="center_vertical"
-                    android:lineSpacingExtra="2px"
-                    android:maxLines="2"
-                    android:paddingRight="20px"
-                    android:tag="mwar"
-                    android:text="@string/add_home"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewAddHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_home"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_28" />
+
+                    <TextView
+                        android:id="@+id/textViewAddHomeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="test"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24"
+                        android:singleLine="true"
+                        android:layout_marginTop="5px"
+                        android:visibility="gone"
+                        />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageViewAddHome"
@@ -417,22 +430,35 @@
                 android:layout_height="110px"
                 android:background="@color/white">
 
-                <TextView
-                    android:id="@+id/textViewAddWork"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
+                    android:orientation="vertical"
                     android:layout_toLeftOf="@+id/imageViewEditWork"
                     android:layout_toRightOf="@+id/imageViewAddWork"
-                    android:gravity="center_vertical"
-                    android:lineSpacingExtra="2px"
-                    android:maxLines="2"
-                    android:paddingRight="20px"
-                    android:tag="mwar"
-                    android:text="@string/add_work"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewAddWork"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_work"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_28" />
+
+                    <TextView
+                        android:id="@+id/textViewAddWorkValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="test"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24"
+                        android:singleLine="true"
+                        android:layout_marginTop="5px"
+                        android:visibility="gone"
+                        />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageViewAddWork"
