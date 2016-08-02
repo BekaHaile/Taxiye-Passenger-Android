@@ -159,7 +159,7 @@ public class WalletCore {
 			if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
 				if (Data.userData.getPaytmBalance() > 0) {
 					callRequestRide = true;
-					if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
+					if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.getFixedFare()) {
 						DialogPopup.dialogBanner(activity, context.getResources().getString(R.string.paytm_low_cash));
 					}
 				} else {
@@ -191,7 +191,7 @@ public class WalletCore {
 			else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
 				if (Data.userData.getMobikwikBalance() > 0) {
 					callRequestRide = true;
-					if (Data.fareStructure != null && Data.userData.getMobikwikBalance() < Data.fareStructure.fixedFare) {
+					if (Data.fareStructure != null && Data.userData.getMobikwikBalance() < Data.fareStructure.getFixedFare()) {
 						DialogPopup.dialogBanner(activity, context.getResources().getString(R.string.mobikwik_low_cash));
 					}
 				} else {

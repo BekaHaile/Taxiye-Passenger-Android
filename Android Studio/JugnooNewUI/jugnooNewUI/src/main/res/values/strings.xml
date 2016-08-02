@@ -891,7 +891,7 @@
 	<string name="base_fare_colon">Base Fare:</string>
 	<string name="fixed_fare_colon">Fixed Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
-	<string name="base_fare_rupee_format">BASE FARE : \u20B9<b>%s</b></string>
+	<string name="base_fare_format">BASE FARE : <b>%s</b></string>
 
 
 	<string name="format_x">%s x</string>

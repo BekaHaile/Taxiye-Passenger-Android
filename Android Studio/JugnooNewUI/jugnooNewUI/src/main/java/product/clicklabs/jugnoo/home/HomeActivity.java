@@ -4862,7 +4862,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                     Data.userData.updateWalletBalances(jObj, false);
 
-                                    Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.fixedFare);
+                                    Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.getFixedFare());
 
                                     clearSPData();
                                     map.clear();
