@@ -37,6 +37,10 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
     private final String MOBIKWIK_SUCCESS_URL = "https://jugnoo.in/mobikwik/wallet/success.php";
     private final String MOBIKWIK_FAILURE_URL = "https://jugnoo.in/mobikwik/wallet/failure.php";
 
+    private final String FREECHARGE_SUCCESS_URL = "https://jugnoo.in/freecharge/wallet/success.php";
+    private final String FREECHARGE_FAILURE_URL = "https://jugnoo.in/freecharge/wallet/failure.php";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -79,7 +83,10 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 				String url = getIntent().getStringExtra(Constants.KEY_URL);
 				webView.loadUrl(url);
-			}
+			} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                String url = getIntent().getStringExtra(Constants.KEY_URL);
+                webView.loadUrl(url);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
@@ -193,6 +200,16 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
                     setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
                     finish();
                 } else if (MOBIKWIK_FAILURE_URL.equalsIgnoreCase(url)) {
+                    Intent returnIntent = new Intent();
+                    setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
+                    finish();
+                }
+            } else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                if (FREECHARGE_SUCCESS_URL.equalsIgnoreCase(url)) {
+                    Intent returnIntent = new Intent();
+                    setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
+                    finish();
+                } else if (FREECHARGE_FAILURE_URL.equalsIgnoreCase(url)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
                     finish();

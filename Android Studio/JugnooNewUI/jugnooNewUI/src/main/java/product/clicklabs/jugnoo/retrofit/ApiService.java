@@ -408,21 +408,12 @@ public interface ApiService {
     void mobikwikRequestOtp(@FieldMap Map<String, String> params,
                          Callback<SettleUserDebt> callback);
 
-    @FormUrlEncoded
-    @POST("/freecharge/generate_otp")
-    void freeChargeRequestOtp(@FieldMap Map<String, String> params,
-                            Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/mobikwik/login_with_otp")
     void mobikwikLoginWithOtp(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);
 
-
-    @FormUrlEncoded
-    @POST("/freecharge/login_with_otp")
-    void freeChargeLoginWithOtp(@FieldMap Map<String, String> params,
-                              Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST("/mobikwik/add_money")
@@ -463,4 +454,26 @@ public interface ApiService {
     @POST("/update_client_id")
     void updateClientId(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+    //    FreeCharge APIs
+    @FormUrlEncoded
+    @POST("/freecharge/generate_otp")
+    void freeChargeRequestOtp(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/freecharge/login_with_otp")
+    void freeChargeLoginWithOtp(@FieldMap Map<String, String> params,
+                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/freecharge/add_money")
+    void freechargeAddMoney(@FieldMap Map<String, String> params,
+                          Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/freecharge/unlink")
+    void freechargeUnlink(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
+
 }

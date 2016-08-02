@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -63,7 +64,9 @@ public class WalletCore {
             MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_MOBIKWIK_CASH, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_MOBIKWIK_ADD_MONEY_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Add Mobikwik Cash " + amount);
-		}
+		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            //Todo: freecharge events here
+        }
 	}
 
 	public void editWalletFlurryEvent(int walletType){
@@ -78,7 +81,9 @@ public class WalletCore {
             MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.EDIT, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_EDIT_MOBIKWIK_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Edit");
-		}
+		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            //Todo: freecharge events here
+        }
 	}
 
 	public void removeWalletFlurryEvent(int walletType){
@@ -93,7 +98,9 @@ public class WalletCore {
             MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
 			FlurryEventLogger.event(context, FlurryEventNames.CLICKS_ON_REMOVE_WALLET_MOBIKWIK);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Remove Wallet");
-		}
+		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            //Todo: freecharge events here
+        }
 	}
 
 
@@ -104,7 +111,9 @@ public class WalletCore {
 			}
 			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
 				return Data.userData.getMobikwikBalanceStr();
-			}
+			} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                return Data.userData.getFreeChargeBalanceStr();
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,7 +127,9 @@ public class WalletCore {
 			}
 			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
 				return Data.userData.getMobikwikBalanceColor(context);
-			}
+			} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                return Data.userData.getFreeChargeBalanceColor(context);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,7 +142,9 @@ public class WalletCore {
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_MOBIKWIK_WALLET_REMOVED, null);
-		}
+		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            //TOdo: NudgeClient tracker event here
+        }
 	}
 
 	public void deleteWallet(int walletType){
@@ -140,7 +153,9 @@ public class WalletCore {
 				Data.userData.deletePaytm();
 			} else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 				Data.userData.deleteMobikwik();
-			}
+			} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                Data.userData.deleteFreeCharge();
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -164,7 +179,14 @@ public class WalletCore {
 					intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
 				}
 				intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
-			}
+			} else if(preferredPaymentMode == PaymentOption.FREECHARGE.getOrdinal()) {
+                if(Data.userData.getFreeChargeEnabled() == 1) {
+                    intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+                } else {
+                    intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                }
+                intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.FREECHARGE.getOrdinal());
+            }
 			activity.startActivity(intent);
 			activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		} catch (Exception e){
@@ -238,7 +260,9 @@ public class WalletCore {
 						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
 					}
 				}
-			}
+			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
+                //Todo freecharge api call back here
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -265,7 +289,9 @@ public class WalletCore {
 
 			FlurryEventLogger.event(FlurryEventNames.MOBIKWIK_SELECTED_WHEN_REQUESTING);
 			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "mobikwik");
-		}
+		} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
+            //Todo: freecharge events here
+        }
 		else {
 //            Bundle bundle = new Bundle();
 //            bundle.putString(Constants.HOME_SCREEN, "cash");
@@ -291,7 +317,13 @@ public class WalletCore {
 				} else {
 					return context.getResources().getString(R.string.add_mobikwik_wallet);
 				}
-			}
+			} else if(preferredPaymentMode == PaymentOption.FREECHARGE.getOrdinal()) {
+                if(Data.userData.getFreeChargeEnabled() == 1) {
+                    return context.getResources().getString(R.string.add_freecharge_cash);
+                } else {
+                    return context.getResources().getString(R.string.add_freecharge_cash);
+                }
+            }
 		} catch(Exception e){
 		}return context.getResources().getString(R.string.add_wallet);
 	}
@@ -306,7 +338,10 @@ public class WalletCore {
 			else if(PaymentOption.MOBIKWIK.getOrdinal() == previousPaymentOption
 					&& Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() > -1){
 				return PaymentOption.MOBIKWIK.getOrdinal();
-			}
+			} else if(previousPaymentOption == PaymentOption.FREECHARGE.getOrdinal() && Data.userData.getFreeChargeEnabled() == 1
+                    && Data.userData.getFreeChargeBalance() > -1) {
+                return PaymentOption.FREECHARGE.getOrdinal();
+            }
 			else {
 				return PaymentOption.CASH.getOrdinal();
 			}
@@ -321,7 +356,10 @@ public class WalletCore {
 			return R.drawable.ic_paytm_small;
 		} else if(paymentOption == PaymentOption.MOBIKWIK.getOrdinal()){
 			return R.drawable.ic_mobikwik_small;
-		} else {
+		} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
+            //Todo freecharge icon here
+            return R.drawable.ic_mobikwik_small;
+        } else {
 			return R.drawable.ic_cash_small;
 		}
 	}
@@ -334,7 +372,10 @@ public class WalletCore {
 			} else if(paymentOption == PaymentOption.MOBIKWIK.getOrdinal()){
 				return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
 						Data.userData.getMobikwikBalanceStr());
-			} else {
+			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
+                return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
+                        Data.userData.getFreeChargeBalanceStr());
+            } else {
 				return context.getResources().getString(R.string.cash);
 			}
 		} catch (Exception e) {
@@ -349,7 +390,9 @@ public class WalletCore {
 				return context.getResources().getString(R.string.paytm);
 			} else if(paymentOption == PaymentOption.MOBIKWIK.getOrdinal()){
 				return context.getResources().getString(R.string.mobikwik);
-			} else {
+			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
+                return context.getResources().getString(R.string.freecharge);
+            } else {
 				return context.getResources().getString(R.string.cash);
 			}
 		} catch (Exception e) {
@@ -365,7 +408,10 @@ public class WalletCore {
 		} else if(pc.getTitle().toLowerCase(Locale.ENGLISH)
 				.contains(context.getString(R.string.mobikwik).toLowerCase(Locale.ENGLISH))) {
 			return PaymentOption.MOBIKWIK.getOrdinal();
-		}
+		} else if(pc.getTitle().toLowerCase(Locale.ENGLISH)
+                .contains(context.getString(R.string.freecharge).toLowerCase(Locale.ENGLISH))) {
+            return PaymentOption.FREECHARGE.getOrdinal();
+        }
 		return PaymentOption.CASH.getOrdinal();
 	}
 
@@ -375,7 +421,8 @@ public class WalletCore {
 		try {
 			final int couponOfWallet = couponOfWhichWallet(promoCoupon);
 			if ((couponOfWallet == PaymentOption.PAYTM.getOrdinal() && PaymentOption.PAYTM.getOrdinal() != paymentOption)
-					|| (couponOfWallet == PaymentOption.MOBIKWIK.getOrdinal() && PaymentOption.MOBIKWIK.getOrdinal() != paymentOption)) {
+					|| (couponOfWallet == PaymentOption.MOBIKWIK.getOrdinal() && PaymentOption.MOBIKWIK.getOrdinal() != paymentOption)
+                    || (couponOfWallet == PaymentOption.FREECHARGE.getOrdinal() && paymentOption != PaymentOption.FREECHARGE.getOrdinal())) {
 				View.OnClickListener onClickListenerPaymentOption = new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -415,7 +462,21 @@ public class WalletCore {
 								onClickListenerCancel,
 								true, false);
 					}
-				}
+				} else if(couponOfWallet == PaymentOption.FREECHARGE.getOrdinal()) {
+                    if (Data.userData.getFreeChargeEnabled() == 1) {
+                        DialogPopup.alertPopupWithListener(activity, "",
+                                activity.getResources().getString(R.string.freecharge_coupon_selected_but_freecharge_option_not_selected),
+                                onClickListenerCancel);
+                    } else {
+                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                                activity.getResources().getString(R.string.freecharge_coupon_selected_but_freecharge_not_added),
+                                activity.getResources().getString(R.string.ok),
+                                activity.getResources().getString(R.string.cancel),
+                                onClickListenerPaymentOption,
+                                onClickListenerCancel,
+                                true, false);
+                    }
+                }
 				return false;
 			}
 		} catch (Exception e) {
@@ -424,8 +485,8 @@ public class WalletCore {
 		return true;
 	}
 
-
-	public void openPaymentActivityInCaseOfWalletNotAdded(Activity activity, int paymentOption) {
+    // TODO: 02/08/16 confirm check
+    public void openPaymentActivityInCaseOfWalletNotAdded(Activity activity, int paymentOption) {
 		try {
 			if (Data.userData.getPaytmEnabled() != 1
 					|| Data.userData.getMobikwikEnabled() != 1) {
@@ -435,7 +496,16 @@ public class WalletCore {
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
-			}
+			} else if(Data.userData.getPaytmEnabled() != 1
+                    || Data.userData.getFreeChargeEnabled() != 1) {
+                //Todo: ask shanker
+                Intent intent = new Intent(activity, PaymentActivity.class);
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -456,6 +526,7 @@ public class WalletCore {
 		}
 	}
 
+    //Todo: change logic or ask shankar
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas(UserData userData) {
 
 		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
@@ -543,11 +614,16 @@ public class WalletCore {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
-							&& Data.userData.getMobikwikEnabled() == 1
-							&& Data.userData.getMobikwikBalance() >= 1) {
-						paymentModeConfigDataDefault = paymentModeConfigData;
-						break;
-					}
+                            && Data.userData.getMobikwikEnabled() == 1
+                            && Data.userData.getMobikwikBalance() >= 1) {
+                        paymentModeConfigDataDefault = paymentModeConfigData;
+                        break;
+                    } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
+                            && Data.userData.getFreeChargeEnabled() == 1
+                            && Data.userData.getFreeChargeBalance() >= 1) {
+                        paymentModeConfigDataDefault = paymentModeConfigData;
+                        break;
+                    }
 				}
 			}
 			if (paymentModeConfigDataDefault != null) {
@@ -686,7 +762,10 @@ public class WalletCore {
 								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.MOBIKWIK.getOrdinal());
 					}
 				}
-			}
+			} else if(paymentOption == PaymentOption.FREECHARGE){
+                //todo: brfore ride with freecharge wallet
+                Toast.makeText(activity, "Added FreeCharge wallet here", Toast.LENGTH_LONG).show();
+            }
 			else if(paymentOption == PaymentOption.CASH){
 				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
 					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);

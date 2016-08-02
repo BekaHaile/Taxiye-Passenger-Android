@@ -156,12 +156,16 @@ public class WalletRechargeFragment extends Fragment {
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.paytm_wallet));
 			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
 			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_paytm_cash));
-		}
-		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+		} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
 			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
 			buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_mobikwik_cash));
-		}
+		} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            textViewTitle.setText(paymentActivity.getResources().getString(R.string.freecharge_wallet));
+            // TODO: 02/08/16 change icon here
+            imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
+            buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_freecharge_cash));
+        }
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(paymentActivity, textViewTitle));
 
@@ -482,7 +486,38 @@ public class WalletRechargeFragment extends Fragment {
 							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
 						}
 					});
-				}
+				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                    RestClient.getApiServices().freechargeAddMoney(params, new Callback<SettleUserDebt>() {
+                        @Override
+                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                            String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                            Log.i(TAG, "freechargeAddMoney response = " + responseStr);
+                            DialogPopup.dismissLoadingDialog();
+                            try {
+                                JSONObject jObj = new JSONObject(responseStr);
+                                int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                                String message = JSONParser.getServerMessage(jObj);
+                                if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                                    String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
+                                    openWebView(url, openWalletType);
+                                } else{
+                                    DialogPopup.alertPopup(paymentActivity, "", message);
+                                }
+                            } catch (Exception e) {
+                                DialogPopup.dismissLoadingDialog();
+                                e.printStackTrace();
+                                DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(TAG, "freechargeAddMoney error=" + error.toString());
+                            DialogPopup.dismissLoadingDialog();
+                            DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+                        }
+                    });
+                }
 			}
 			else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -567,7 +602,9 @@ public class WalletRechargeFragment extends Fragment {
 				}
 				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikUnlink(params, callback);
-				}
+				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+                    RestClient.getApiServices().freechargeUnlink(params, callback);
+                }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 						new Utils.AlertCallBackWithButtonsInterface() {
@@ -603,7 +640,9 @@ public class WalletRechargeFragment extends Fragment {
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
 			intent.putExtra(Constants.KEY_URL, data);
-		}
+		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+            //ToDo: set freechage code here
+        }
 		intent.putExtra(Constants.KEY_WALLET_TYPE, walletType);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivityForResult(intent, rechargeRequestCode);

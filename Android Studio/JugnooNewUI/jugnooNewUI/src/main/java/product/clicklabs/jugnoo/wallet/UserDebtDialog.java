@@ -50,7 +50,7 @@ public class UserDebtDialog {
 		this.callback = callback;
 	}
 
-	public void showUserDebtDialog(double userDebt, String message) {
+	public void showUserDebtDialog(final double userDebt, String message) {
 		this.userDebt = userDebt;
 		if(message.length() == 0){
 			if(activity instanceof HomeActivity) {
@@ -64,9 +64,11 @@ public class UserDebtDialog {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(userData.getPaytmEnabled() == 1 || userData.getMobikwikEnabled() == 1){
+                        // TODO: 02/08/16 for freecharge wallet
+                        if(userData.getPaytmEnabled() == 1 || userData.getMobikwikEnabled() == 1 || userData.getFreeChargeEnabled() == 1){
 							double availableBalance = (userData.getPaytmEnabled() == 1 ? userData.getPaytmBalance() : 0)
-									+ (userData.getMobikwikEnabled() == 1 ? userData.getMobikwikBalance() : 0);
+									+ (userData.getMobikwikEnabled() == 1 ? userData.getMobikwikBalance() : 0)
+                                    + (userData.getFreeChargeEnabled() == 1 ? userData.getFreeChargeBalance() : 0);
 							if(availableBalance >= UserDebtDialog.this.userDebt){
 								settleUserDebt(activity);
 							}

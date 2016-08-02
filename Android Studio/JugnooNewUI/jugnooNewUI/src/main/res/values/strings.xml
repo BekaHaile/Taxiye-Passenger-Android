@@ -1111,4 +1111,12 @@
 	<string name="delivery">Delivery</string>
 	<string name="please_swipe_down_to_reload">Please swipe down to reload</string>
 
+
+    <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">You need to select FreeCharge as preferred payment option to avail this coupon</string>
+    <string name="freecharge_coupon_selected_but_freecharge_not_added">You need to add FreeCharge Wallet to avail this coupon</string>
+
+    <string name="freecharge">FreeCharge</string>
+    <string name="add_freecharge_cash">Add FreeCharge Cash</string>
+
+
 </resources>

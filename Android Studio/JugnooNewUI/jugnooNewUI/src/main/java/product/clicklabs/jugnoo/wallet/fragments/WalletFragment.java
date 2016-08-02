@@ -367,6 +367,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
                         }
 					}
 				}
+                //Todo: remove below code
                 if(BuildConfig.DEBUG_MODE)
                     linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
 
