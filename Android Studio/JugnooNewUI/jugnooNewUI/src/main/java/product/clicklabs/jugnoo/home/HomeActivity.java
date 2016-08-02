@@ -5241,6 +5241,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath(){
+        if(polylineOptionsInRideDriverPath == null){
+            polylineOptionsInRideDriverPath = new ArrayList<>();
+        }
         if(polylineOptionsInRideDriverPath.size() == 0) {
             try {
                 ArrayList<RidePath> ridePathsList = Database2.getInstance(HomeActivity.this).getRidePathInfo();
@@ -5262,6 +5265,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void plotPolylineInRideDriverPath(){
         if (map != null) {
+            if(polylinesInRideDriverPath == null){
+                polylinesInRideDriverPath = new ArrayList<>();
+            }
             if(polylinesInRideDriverPath.size() > 0){
                 for(Polyline polyline : polylinesInRideDriverPath){
                     polyline.remove();
