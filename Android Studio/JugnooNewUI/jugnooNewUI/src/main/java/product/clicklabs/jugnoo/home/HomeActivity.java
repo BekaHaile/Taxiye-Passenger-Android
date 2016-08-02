@@ -939,7 +939,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(index == 1 && Data.dropLatLng == null) {
                     translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
                     translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
-                    textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                        textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                    } else {
+                        textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                    }
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                 }else{
                     placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
