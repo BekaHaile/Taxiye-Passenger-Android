@@ -7742,6 +7742,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
     }
 
+    public void setDestinationBarPlaceholderText(int rideTypeValue){
+        if(rideTypeValue == RideTypeValue.POOL.getOrdinal()){
+            if(Data.dropLatLng == null) {
+                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            }
+        } else {
+            if(Data.dropLatLng == null) {
+                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+            }
+        }
+    }
+
     public void showPoolInforBar(){
         try {
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&

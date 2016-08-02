@@ -387,6 +387,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
         }
         activity.getSlidingBottomPanel().updateBottomPanel(supplyCount);
+        activity.setDestinationBarPlaceholderText(regionSelected.getRideType());
     }
 
     public void updateFareStructureUI(){
