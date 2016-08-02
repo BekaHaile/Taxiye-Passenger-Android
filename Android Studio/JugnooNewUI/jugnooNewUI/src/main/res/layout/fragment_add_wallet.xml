@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="PAYTM WALLET"
+            android:text="@string/paytm_wallet"
             style="@style/title" />
 
         <ImageView
@@ -54,18 +54,16 @@
 
 
                     <ImageView
-                        android:id="@+id/imageViewPaytmIcon"
-                        android:layout_width="121px"
-                        android:layout_height="39px"
+                        android:id="@+id/imageViewWalletIcon"
                         android:src="@drawable/ic_paytm_big"
-                        android:tag="mwar" />
+                        style="@style/payment_option_icon_big_dimen"/>
 
 
                     <TextView
                         android:id="@+id/textViewAddWalletHelp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30px"
+                        android:layout_marginTop="10px"
                         android:text="@string/add_paytm_money_help_text"
                         android:visibility="visible"
                         android:textColor="@color/text_color"

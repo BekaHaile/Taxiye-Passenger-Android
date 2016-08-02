@@ -22,9 +22,11 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.datastructure.AddPaymentPath;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
@@ -152,7 +154,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         int position = (int) v.getTag();
                         /*notificationList.get(position).setExpanded(!notificationList.get(position).isExpanded());
                         notifyItemChanged(position);*/
-                        openDeepLink(notificationList.get(position).getDeepIndex());
+                        openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -197,22 +199,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position == notificationList.size();
     }
 
-    private void openDeepLink(int deepInt){
+    private void openDeepLink(int deepInt, String url){
         try{
             //int deepInt = Integer.parseInt(deepLink);
             Intent intent = new Intent();
-            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
+            if(url != null && !"".equalsIgnoreCase(url)){
+                Utils.openUrl(activity, url);
+            }
+            else if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
                 intent.setClass(activity, ShareActivity.class);
                 activity.startActivity(intent);
             }
             else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == deepInt){
                 intent.setClass(activity, PaymentActivity.class);
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
                 activity.startActivity(intent);
             }
             else if(AppLinkIndex.PROMOTIONS.getOrdinal() == deepInt){
                 if(AppStatus.getInstance(activity).isOnline(activity)) {
-                    intent.setClass(activity, ShareActivity.class);
+                    intent.setClass(activity, PromotionActivity.class);
                     activity.startActivity(intent);
                 } else {
                     DialogPopup.dialogNoInternet(activity,

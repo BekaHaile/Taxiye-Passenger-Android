@@ -13,6 +13,7 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import java.util.Map;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
+import product.clicklabs.jugnoo.wallet.WalletCore;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by socomo20 on 8/22/15.
@@ -212,6 +215,27 @@ public class MyApplication extends Application{
 //                .build());
 
 
+	}
+
+
+	private WalletCore walletCore;
+	public WalletCore getWalletCore(){
+		if(walletCore == null){
+			walletCore = new WalletCore(this);
+		}
+		return walletCore;
+	}
+
+
+	public String getDeviceToken(){
+		String deviceToken = Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found");
+		if(deviceToken.equalsIgnoreCase("not_found")){
+			deviceToken = FirebaseInstanceId.getInstance().getToken();
+			if(deviceToken == null){
+				deviceToken = "not_found";
+			}
+		}
+		return deviceToken;
 	}
 
 }

@@ -100,8 +100,8 @@ public class FareDetailsDialog {
 				}
 			});
 
-			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.base_fare_rupee_format),
-					Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare))));
+			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.base_fare_format),
+					Data.fareStructure.getDisplayBaseFare(activity))));
 			textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
 					Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
 			textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),

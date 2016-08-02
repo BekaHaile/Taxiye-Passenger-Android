@@ -50,7 +50,7 @@ public interface Constants {
 	String KEY_FORGOT_LOGIN_EMAIL = "forgot_login_email";
 	String KEY_PREVIOUS_LOGIN_EMAIL = "previous_login_email";
 	String KEY_BACK_FROM_OTP = "back_from_otp";
-	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+	String KEY_PAYMENT_ACTIVITY_PATH = "paymentActivityPath";
 	String KEY_PAYMENT_RECHARGE_VALUE = "payment_recharge_value";
 
 	String POST_DATA = "post_data";
@@ -313,6 +313,21 @@ public interface Constants {
 	String KEY_SEARCH_RESULT = "search_result";
 	String SP_DRIVER_BEARING = "driver_bearing";
 
+	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
+	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
+	String KEY_PAYTM = "paytm";
+	String KEY_MOBIKWIK = "mobikwik";
+	String KEY_BALANCE = "balance";
+	String KEY_WALLET_TYPE = "wallet_type";
+	String KEY_AMOUNT = "amount";
+	String KEY_ADD_MONEY_URL = "add_money_url";
+	String KEY_PAYTM_ENABLED = "paytm_enabled";
+	String KEY_WALLET_BALANCE = "wallet_balance";
+	String KEY_PAID_USING_MOBIKWIK = "paid_using_mobikwik";
+	String KEY_PAYMENT_MODE_CONFIG_DATA = "payment_mode_config_data";
+	String KEY_ENABLED = "enabled";
+	String KEY_JUGNOO_CASH = "jugnoo_cash";
+	String KEY_WALLET_ORDER = "wallet_order";
 	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
 	String KEY_KNOWLARITY_MISSED_CALL_NUMBER = "knowlarity_missed_call_number";
 
@@ -320,7 +335,17 @@ public interface Constants {
 	String SP_OTP_VIA_CALL_ENABLED = "sp_otp_via_call_enabled";
 	String SP_KNOWLARITY_MISSED_CALL_NUMBER = "sp_knowlarity_missed_call_number";
 
+	String SP_DEVICE_TOKEN = "sp_device_token";
+	String KEY_DEVICE_TOKEN = "device_token";
 
+	String KEY_RATE_APP_DIALOG_CONTENT = "rate_app_dialog_content";
+	String KEY_TEXT = "text";
+	String KEY_CONFIRM_BUTTON_TEXT = "confirm_button_text";
+	String KEY_CANCEL_BUTTON_TEXT = "cancel_button_text";
 
+	String SP_LAST_ADDED_WALLET = "sp_last_added_wallet";
+	String SP_LAST_USED_WALLET = "sp_last_used_wallet";
+	String SP_LAST_MONEY_ADDED_WALLET = "sp_last_money_added_wallet";
+	String KEY_LOGGED_OUT = "logged_out";
 
 }

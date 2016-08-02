@@ -8,10 +8,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +86,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
 	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
-	TextView textViewAddHome, textViewAddWork, textViewJugnooJeanie;
+	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
     private boolean setJeanieState;
@@ -146,9 +143,11 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
         imageViewEditHome = (ImageView)findViewById(R.id.imageViewEditHome);
 		textViewAddHome = (TextView) findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(this));
+        textViewAddHomeValue = (TextView) findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutAddWork = (RelativeLayout) findViewById(R.id.relativeLayoutAddWork);
         imageViewEditWork = (ImageView)findViewById(R.id.imageViewEditWork);
         textViewAddWork = (TextView) findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(this));
+        textViewAddWorkValue = (TextView) findViewById(R.id.textViewAddWorkValue); textViewAddWorkValue.setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
         textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.mavenMedium(this));
@@ -463,7 +462,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this,AddPlaceActivity.class);
+                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
                 intent.putExtra("requestCode", "HOME");
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
                 startActivityForResult(intent, ADD_HOME);
@@ -476,7 +475,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AccountActivity.this,AddPlaceActivity.class);
+                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
                 intent.putExtra("requestCode", "WORK");
                 intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
                 startActivityForResult(intent, ADD_WORK);
@@ -850,28 +849,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag) {
-
-                                try {
-                                    PicassoTools.clearCache(Picasso.with(activity));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                FacebookLoginHelper.logoutFacebook();
-
-                                GCMIntentService.clearNotifications(activity);
-
-                                Data.clearDataOnLogout(activity);
-
-                                HomeActivity.userMode = UserMode.PASSENGER;
-                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-
-                                ActivityCompat.finishAffinity(activity);
-                                Intent intent = new Intent(activity, SplashNewActivity.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
-
-                                Branch.getInstance(activity).logout();
+                                logoutFunc(activity, null);
                                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Logout");
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -896,6 +874,34 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 		}
 	}
+
+    private void logoutFunc(Activity activity, String message){
+        try {
+            PicassoTools.clearCache(Picasso.with(activity));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FacebookLoginHelper.logoutFacebook();
+
+        GCMIntentService.clearNotifications(activity);
+
+        Data.clearDataOnLogout(activity);
+
+        HomeActivity.userMode = UserMode.PASSENGER;
+        HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+
+        ActivityCompat.finishAffinity(activity);
+        Intent intent = new Intent(activity, SplashNewActivity.class);
+        if(message != null){
+            intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
+            intent.putExtra(Constants.KEY_MESSAGE, message);
+        }
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+        Branch.getInstance(activity).logout();
+    }
 
 
     // To check if service is enabled
@@ -941,34 +947,28 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-            textViewAddHome.setTextColor(getResources().getColor(R.color.text_color_hint));
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
             SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
-            String s = getResources().getString(R.string.home)+" \n" + searchResult.getAddress();
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
-            textViewAddHome.setText(ss1);
+            textViewAddHome.setText(getResources().getString(R.string.home));
+            textViewAddHomeValue.setVisibility(View.VISIBLE);
+            textViewAddHomeValue.setText(searchResult.getAddress());
             imageViewEditHome.setVisibility(View.VISIBLE);
         } else{
             textViewAddHome.setText(getResources().getString(R.string.add_home));
-            textViewAddHome.setTextColor(getResources().getColor(R.color.text_color));
+            textViewAddHomeValue.setVisibility(View.GONE);
             imageViewEditHome.setVisibility(View.GONE);
         }
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-            textViewAddWork.setTextColor(getResources().getColor(R.color.text_color_hint));
             String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
             SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
-            String s = getResources().getString(R.string.work)+" \n" + searchResult.getAddress();
-            SpannableString ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(1f), 0, 4, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_color)), 0, 4, 0);// set color
-            textViewAddWork.setText(ss1);
+            textViewAddWork.setText(getResources().getString(R.string.work));
+            textViewAddWorkValue.setVisibility(View.VISIBLE);
+            textViewAddWorkValue.setText(searchResult.getAddress());
             imageViewEditWork.setVisibility(View.VISIBLE);
         } else{
             textViewAddWork.setText(getResources().getString(R.string.add_work));
-            textViewAddWork.setTextColor(getResources().getColor(R.color.text_color));
+            textViewAddWorkValue.setVisibility(View.GONE);
             imageViewEditWork.setVisibility(View.GONE);
         }
     }
@@ -1015,7 +1015,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
                                 imageViewChangePassword.setVisibility(View.VISIBLE);
                                 relativeLayoutChangePassword.performClick();
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
-                                DialogPopup.alertPopup(activity, "", message);
+                                logoutFunc(activity, message);
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }

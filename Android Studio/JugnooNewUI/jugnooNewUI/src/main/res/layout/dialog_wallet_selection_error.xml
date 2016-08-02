@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="40px"
+        android:background="@drawable/background_white_rounded"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60px"
+            android:gravity="center"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:text="@string/your_driver_is_on_his_way"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="60px"
+            android:layout_marginBottom="40px"
+            >
+            <Button
+                android:id="@+id/buttonPositive"
+                android:layout_width="460px"
+                android:layout_height="@dimen/button_height"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_theme"
+                android:text="@string/upload_contact_yes"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_28"
+                android:layout_marginBottom="20px"
+                />
+
+            <Button
+                android:id="@+id/buttonNegative"
+                android:layout_width="460px"
+                android:layout_height="@dimen/button_height"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_white_grey_theme_border_selector"
+                android:text="NO"
+                android:textColor="@color/text_color_theme_selector"
+                android:textSize="@dimen/text_size_28"
+                android:layout_marginBottom="20px"
+                android:textAllCaps="true"
+                />
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

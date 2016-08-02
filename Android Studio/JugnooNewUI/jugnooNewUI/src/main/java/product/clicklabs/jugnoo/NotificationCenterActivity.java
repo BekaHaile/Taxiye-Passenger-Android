@@ -105,11 +105,6 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
     }
 
-
-
-
-
-
     private void loadListFromDB() {
         ArrayList<NotificationData> notificationDatas = Database2.getInstance(NotificationCenterActivity.this).getAllNotification();
         Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);

@@ -194,8 +194,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                     public void onPlaceSaved() {
 
                     }
-                });
-        searchListAdapter.setShowSavedPlaces(false);
+                }, false);
 
         listViewSearch.setAdapter(searchListAdapter);
 
@@ -218,7 +217,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
             if(!getIntent().getStringExtra("address").equalsIgnoreCase("")){
                 SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(getIntent().getStringExtra("address"));
-                editTextSearch.setText(searchResult.getName());
+                editTextSearch.setText(searchResult.getAddress());
 				editTextSearch.setSelection(editTextSearch.getText().length());
                 buttonRemove.setVisibility(View.VISIBLE);
             }else {

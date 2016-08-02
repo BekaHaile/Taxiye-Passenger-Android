@@ -22,25 +22,25 @@ public class NudgeClient {
 	private static GcmClient mGcmClient;
 
 	public static GcmClient getGcmClient(Context context){
-		if(mGcmClient == null){
+		/*if(mGcmClient == null){
 			mGcmClient = GcmClient.getClient(new NudgespotCredentials(
 					context.getResources().getString(R.string.nudgespot_javascript_api_key),
 					context.getResources().getString(R.string.nudgespot_rest_api_key)), context);
-		}
+		}*/
 		return mGcmClient;
 	}
 
 	public static void initialize(Context context, String userId, String userName, String email, String phoneNo,
 								  String city, String cityReg, String referralCode){
-		try {
+		/*try {
 			getGcmClient(context).initialize(getNudgespotSubscriber(userId, userName, email, phoneNo, city, cityReg, referralCode));
 			new UpdateAsync(context, userId, userName, email, phoneNo, city, cityReg, referralCode).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
-	private static NudgespotSubscriber getNudgespotSubscriber(String userId, String userName, String email, String phoneNo,
+	/*private static NudgespotSubscriber getNudgespotSubscriber(String userId, String userName, String email, String phoneNo,
 													   String city, String cityReg, String referralCode){
 		NudgespotSubscriber subscriber = new NudgespotSubscriber(userId);
 		try {
@@ -71,11 +71,11 @@ public class NudgeClient {
 			e.printStackTrace();
 		}
 		return subscriber;
-	}
+	}*/
 
 
 	public static void trackEventUserId(Context context, String eventName, JSONObject map){
-		try {
+		/*try {
 			if(map == null){
 				map = new JSONObject();
 			}
@@ -93,14 +93,14 @@ public class NudgeClient {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public static void logout(Context context){
-		getGcmClient(context).clearRegistration();
+		//getGcmClient(context).clearRegistration();
 	}
 
-	public static class UpdateAsync extends AsyncTask<String, Integer, String>{
+	/*public static class UpdateAsync extends AsyncTask<String, Integer, String>{
 		private Context context;
 		private String userId, userName, email, phoneNo, city, cityReg, referralCode;
 		public UpdateAsync(Context context, String userId, String userName, String email, String phoneNo,
@@ -137,6 +137,6 @@ public class NudgeClient {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
 }

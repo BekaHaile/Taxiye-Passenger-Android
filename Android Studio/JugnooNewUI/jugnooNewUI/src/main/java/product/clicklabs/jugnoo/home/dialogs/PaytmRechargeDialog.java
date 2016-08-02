@@ -29,7 +29,7 @@ public class PaytmRechargeDialog {
     private Dialog dialog;
     private String transferId, transferSenderName, transferPhone, transferAmount;
     private EditText editTextAmount;
-    private TextView textViewTypeAmount;
+    private TextView textViewRechargeInfo;
     private Button btnOk;
     private Callback callback;
 
@@ -62,9 +62,9 @@ public class PaytmRechargeDialog {
 
             LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
             ((TextView)dialog.findViewById(R.id.textViewRecharge)).setTypeface(Fonts.mavenRegular(activity));
-            TextView textViewRechargeInfo = (TextView) dialog.findViewById(R.id.textViewRechargeInfo);
+            textViewRechargeInfo = (TextView) dialog.findViewById(R.id.textViewRechargeInfo);
             textViewRechargeInfo.setTypeface(Fonts.mavenLight(activity));
-            textViewTypeAmount = (TextView)dialog.findViewById(R.id.textViewTypeAmount);
+            TextView textViewTypeAmount = (TextView)dialog.findViewById(R.id.textViewTypeAmount);
             textViewTypeAmount.setTypeface(Fonts.mavenRegular(activity));
             ((TextView)dialog.findViewById(R.id.textViewRupee)).setTypeface(Fonts.mavenRegular(activity));
             editTextAmount = (EditText) dialog.findViewById(R.id.editTextAmount);
@@ -74,21 +74,7 @@ public class PaytmRechargeDialog {
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
             btnCancel.setTypeface(Fonts.mavenRegular(activity));
 
-
-            Spannable spannableName = new SpannableString(transferSenderName);
-            spannableName.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            Spannable spannablePhone = new SpannableString(transferPhone);
-            spannablePhone.setSpan(new StyleSpan(Typeface.BOLD), 0, spannablePhone.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            textViewRechargeInfo.setText("");
-            textViewRechargeInfo.append(activity.getResources().getString(R.string.driver));
-            textViewRechargeInfo.append(" ");
-            textViewRechargeInfo.append(spannableName);
-            textViewRechargeInfo.append(" ");
-            textViewRechargeInfo.append(activity.getResources().getString(R.string.paytm_recharge_via_driver_info));
-            textViewRechargeInfo.append(" ");
-            textViewRechargeInfo.append(spannablePhone);
+            updateNameAndPhoneText();
 
             editTextAmount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -130,6 +116,38 @@ public class PaytmRechargeDialog {
         }
     }
 
+    private void updateNameAndPhoneText(){
+        try {
+            Spannable spannableName = new SpannableString(transferSenderName);
+            spannableName.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            Spannable spannablePhone = new SpannableString(transferPhone);
+            spannablePhone.setSpan(new StyleSpan(Typeface.BOLD), 0, spannablePhone.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            textViewRechargeInfo.setText("");
+            textViewRechargeInfo.append(activity.getResources().getString(R.string.driver));
+            textViewRechargeInfo.append(" ");
+            textViewRechargeInfo.append(spannableName);
+            textViewRechargeInfo.append(" ");
+            textViewRechargeInfo.append(activity.getResources().getString(R.string.paytm_recharge_via_driver_info));
+            textViewRechargeInfo.append(" ");
+            textViewRechargeInfo.append(spannablePhone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDialogDataAndContent(String transferId, String transferSenderName, String transferPhone, String transferAmount){
+        this.transferId = transferId;
+        this.transferSenderName = transferSenderName;
+        this.transferPhone = transferPhone;
+        this.transferAmount = transferAmount;
+        updateNameAndPhoneText();
+    }
+
+    public Dialog getDialog() {
+        return dialog;
+    }
 
     private void authenticatePaytmRechargeApi(final String amountEntered){
         new ApiAuthenticatePaytmRecharge(activity, dialog, new ApiAuthenticatePaytmRecharge.Callback() {

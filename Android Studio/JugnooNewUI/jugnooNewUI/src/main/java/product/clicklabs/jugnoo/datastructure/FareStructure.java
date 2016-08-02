@@ -1,7 +1,12 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.content.Context;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
+
 public class FareStructure {
-	public double fixedFare;
+	private double fixedFare;
 	public double thresholdDistance;
 	public double farePerKm;
 	public double farePerMin;
@@ -13,9 +18,11 @@ public class FareStructure {
 
     private boolean fromServer;
 
+    private String displayBaseFare;
+
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
-						 double convenienceCharge, boolean fromServer){
+						 double convenienceCharge, boolean fromServer, String displayBaseFare){
         this.fixedFare = fixedFare;
         this.thresholdDistance = thresholdDistance;
         this.farePerKm = farePerKm;
@@ -26,6 +33,7 @@ public class FareStructure {
 		this.convenienceCharge = convenienceCharge;
 
         this.fromServer = fromServer;
+        this.displayBaseFare = displayBaseFare;
     }
 
 
@@ -35,5 +43,26 @@ public class FareStructure {
 
     public void setFromServer(boolean fromServer) {
         this.fromServer = fromServer;
+    }
+
+    public String getDisplayBaseFare(Context context) {
+        if(displayBaseFare == null){
+            return context.getResources().getString(R.string.rupees_value_format_without_space,
+                    Utils.getMoneyDecimalFormatWithoutFloat().format(fixedFare));
+        } else{
+            return displayBaseFare;
+        }
+    }
+
+    public void setDisplayBaseFare(String displayBaseFare) {
+        this.displayBaseFare = displayBaseFare;
+    }
+
+    public double getFixedFare() {
+        return fixedFare;
+    }
+
+    public void setFixedFare(double fixedFare) {
+        this.fixedFare = fixedFare;
     }
 }

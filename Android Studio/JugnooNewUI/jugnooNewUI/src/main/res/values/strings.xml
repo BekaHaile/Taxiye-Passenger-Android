@@ -10,7 +10,7 @@
 
 	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General -->
+	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -360,7 +360,7 @@
 	<string name="nl_splash_already_have_account">Already have an account?</string>
 	<string name="nl_splash_terms">By Signing up you agree to our <u>Terms of Use</u></string>
 	<string name="nl_splash_policy">and <u>Private Policy</u></string>
-	<string name="nl_paytm_wallet">Paytm Wallet</string>
+	<string name="paytm_wallet">Paytm Wallet</string>
 	<string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
 	<string name="nl_splash_required">Required</string>
 
@@ -384,7 +384,7 @@
 
 	<!-- NL OTP-->
 	<string name="nl_otp_verification">Verification</string>
-	<string name="nl_otp_please_enter_otp">Please enter the One Time Password sent to</string>
+	<string name="nl_otp_please_enter_otp">Please enter One Time Password sent to</string>
 	<string name="nl_otp_enter_otp">Enter OTP</string>
 	<string name="nl_otp_waiting_to_detect_otp">Waiting to automatically detect OTP</string>
 	<string name="nl_otp_verify">Verify Me</string>
@@ -401,7 +401,7 @@
 	
 
 	<!-- User Debt-->
-	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
+	<string name="user_debt_pay_via_wallet">Pay via Wallet</string>
 	<string name="user_debt_settle_balance_message">Before you ride again, please settle \u20B9%s balance from the last ride</string>
 	<string name="user_debt_settle_balance_message_fresh">Before you order again, please settle \u20B9%s balance from the last order</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
@@ -656,9 +656,9 @@
     <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
     <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as preferred payment option to avail this coupon</string>
     <string name="paytm_low_cash">Your Paytm cash is low</string>
-    <string name="paytm_no_cash">You do not have Paytm cash, Please select payment method as Cash</string>
+    <string name="paytm_no_cash">You do not have money in your\nPaytm Account</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
-	<string name="paytm_error_cash_select_cash">We are not able to connect to Paytm, Please select payment method as Cash</string>
+	<string name="paytm_error_case_select_cash">We are not able to connect to Paytm</string>
 
     <string name="who_are_we">Who are we?</string>
     <string name="about_caps">ABOUT</string>
@@ -671,7 +671,7 @@
     <string name="call_number">call_number</string>
 
 
-	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
+	<string name="wallet_remove_alert">Are you sure you want to remove this payment method?</string>
 
 	<string name="remove">Remove</string>
 	<string name="change">Change</string>
@@ -691,7 +691,7 @@
 
 	<string name="whoops">W h o o p s !</string>
 
-	<string name="give_missed_call_dialog_text">No Code? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
+	<string name="give_missed_call_dialog_text">No OTP? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
 	<string name="call_us">Call Us</string>
 	<string name="call_me">Call Me</string>
 	<string name="receive_otp_via_call">Receive the OTP via call</string>
@@ -891,7 +891,7 @@
 	<string name="base_fare_colon">Base Fare:</string>
 	<string name="fixed_fare_colon">Fixed Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
-	<string name="base_fare_rupee_format">BASE FARE : \u20B9<b>%s</b></string>
+	<string name="base_fare_format">BASE FARE : <b>%s</b></string>
 
 
 	<string name="format_x">%s x</string>
@@ -945,7 +945,32 @@
 	<string name="max_people">MAX PEOPLE:</string>
 	<string name="fares_updated">Fares updated try again</string>
 	<string name="no_current_offers">No Current Offers</string>
+	<string name="mobikwik_wallet">MobiKwik Wallet</string>
+	<string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
+	<string name="paytm_colon">Paytm:</string>
+	<string name="mobikwik_colon">MobiKwik:</string>
+	<string name="request_otp_message_paytm">Request an OTP to link Paytm Wallet to</string>
+	<string name="request_otp_message_mobikwik">Request an OTP to link MobiKwik Wallet to</string>
+	<string name="sending_otp_to">Sending OTP To</string>
+	<string name="otp_sent_successfully">OTP sent successfully</string>
+	<string name="add_wallet">Add Wallet</string>
+	<string name="add_mobikwik_cash">Add MobiKwik Cash</string>
+	<string name="mobikwik_low_cash">Your MobiKwik cash is low</string>
+	<string name="mobikwik_error_select_cash">We are not able to connect to MobiKwik</string>
+	<string name="mobikwik_no_cash">You do not have money in your\nMobikwik Account</string>
+	<string name="remove_wallet">Remove Wallet</string>
+	<string name="wallet_abort_transaction_alert">Do you really want to cancel the transaction ?</string>
+	<string name="transaction_cancelled">Transaction cancelled</string>
+	<string name="transaction_successful">Transaction Successful</string>
+	<string name="transaction_failed">Transaction failed</string>
+	<string name="mobikwik">MobiKwik</string>
+	<string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">You need to select MobiKwik as preferred payment option to avail this coupon</string>
+	<string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
+	<string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
+	<string name="none">None</string>
 	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
+	<string name="add_money_to_wallet">Add Money to Wallet</string>
+	<string name="choose_other_mode_to_pay">Choose other mode to pay</string>
 
 
 </resources>
