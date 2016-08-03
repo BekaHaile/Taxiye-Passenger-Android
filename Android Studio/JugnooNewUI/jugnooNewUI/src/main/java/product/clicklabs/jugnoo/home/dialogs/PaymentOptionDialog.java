@@ -88,6 +88,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			relativeLayoutPaytm.setOnClickListener(this);
 			relativeLayoutMobikwik.setOnClickListener(this);
 			linearLayoutCash.setOnClickListener(this);
+            relativeLayoutFreeCharge.setOnClickListener(this);
 
 			orderPaymentModes();
 
