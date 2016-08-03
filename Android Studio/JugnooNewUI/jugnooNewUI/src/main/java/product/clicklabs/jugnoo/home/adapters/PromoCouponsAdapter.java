@@ -100,6 +100,8 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.PROMOTIONS+"_"+FirebaseEvents.COUPON_PROMOTION, bundle);
 					notifyDataSetChanged();
 					//activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
 				} catch (Exception e) {
