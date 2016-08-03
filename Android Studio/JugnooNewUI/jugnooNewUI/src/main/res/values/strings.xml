@@ -8,9 +8,10 @@
     <string name="filter_title">Jugnoo</string>
 
 
-    <!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live -->
+     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> <!-- General -->
+	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
+
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -656,9 +657,9 @@
     <string name="paytm_coupon_selected_but_paytm_not_added">You need to add Paytm Wallet to avail this coupon</string>
     <string name="paytm_coupon_selected_but_paytm_option_not_selected">You need to select Paytm as preferred payment option to avail this coupon</string>
     <string name="paytm_low_cash">Your Paytm cash is low</string>
-    <string name="paytm_no_cash">You do not have Paytm cash, Please select payment method as Cash</string>
+    <string name="paytm_no_cash">You do not have money in your\nPaytm Account</string>
     <string name="paytm_no_cash_when_selecting_coupon">You do not have enough Paytm cash</string>
-	<string name="paytm_error_cash_select_cash">We are not able to connect to Paytm, Please select payment method as Cash</string>
+	<string name="paytm_error_case_select_cash">We are not able to connect to Paytm</string>
 
     <string name="who_are_we">Who are we?</string>
     <string name="about_caps">ABOUT</string>
@@ -891,7 +892,7 @@
 	<string name="base_fare_colon">Base Fare:</string>
 	<string name="fixed_fare_colon">Fixed Fare:</string>
 	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
-	<string name="base_fare_rupee_format">BASE FARE : \u20B9<b>%s</b></string>
+	<string name="base_fare_format">BASE FARE : <b>%s</b></string>
 
 
 	<string name="format_x">%s x</string>
@@ -956,8 +957,8 @@
 	<string name="add_wallet">Add Wallet</string>
 	<string name="add_mobikwik_cash">Add MobiKwik Cash</string>
 	<string name="mobikwik_low_cash">Your MobiKwik cash is low</string>
-	<string name="mobikwik_error_select_cash">We are not able to connect to MobiKwik, Please select payment method as Cash</string>
-	<string name="mobikwik_no_cash">You do not have MobiKwik cash, Please select payment method as Cash</string>
+	<string name="mobikwik_error_select_cash">We are not able to connect to MobiKwik</string>
+	<string name="mobikwik_no_cash">You do not have money in your\nMobikwik Account</string>
 	<string name="remove_wallet">Remove Wallet</string>
 	<string name="wallet_abort_transaction_alert">Do you really want to cancel the transaction ?</string>
 	<string name="transaction_cancelled">Transaction cancelled</string>
@@ -969,6 +970,8 @@
 	<string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
 	<string name="none">None</string>
 	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
+	<string name="add_money_to_wallet">Add Money to Wallet</string>
+	<string name="choose_other_mode_to_pay">Choose other mode to pay</string>
 
 
 </resources>

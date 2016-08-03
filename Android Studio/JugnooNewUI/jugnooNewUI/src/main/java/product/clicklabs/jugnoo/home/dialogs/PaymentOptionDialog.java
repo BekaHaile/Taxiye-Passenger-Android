@@ -236,6 +236,12 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		return dialog;
 	}
 
+	public void dismiss(){
+		if(dialog != null){
+			dialog.dismiss();
+		}
+	}
+
 	public interface Callback{
 		void onDialogDismiss();
 		void onPaymentModeUpdated();

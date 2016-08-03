@@ -44,7 +44,7 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
-            android:text="@string/base_fare_rupee_format"
+            android:text="@string/base_fare_format"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_34"
             />

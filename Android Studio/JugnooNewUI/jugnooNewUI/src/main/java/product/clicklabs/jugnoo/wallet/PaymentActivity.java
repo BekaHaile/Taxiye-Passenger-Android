@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -13,6 +14,8 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
@@ -106,6 +109,42 @@ public class PaymentActivity extends BaseFragmentActivity{
 			getBalance("Refresh");
 		} else{
 			setWalletAddMoneyState(WalletAddMoneyState.INIT);
+		}
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PaymentActivity.class.getName());
+		Utils.enableSMSReceiver(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, "");
+		Utils.disableSMSReceiver(this);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		retrieveOTPFromSMS(intent);
+		super.onNewIntent(intent);
+	}
+
+	private void retrieveOTPFromSMS(Intent intent){
+		try {
+			String otp = "";
+			if(intent.hasExtra("message")){
+				String message = intent.getStringExtra("message");
+				otp = Utils.retrieveOTPFromSMS(message);
+			}
+
+			if(Utils.checkIfOnlyDigits(otp)){
+				if(!"".equalsIgnoreCase(otp)) {
+					Fragment currFrag = getSupportFragmentManager().findFragmentByTag(AddWalletFragment.class.getName());
+					if(currFrag != null){
+						((AddWalletFragment)currFrag).receiveOtp(otp);
+					}
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 

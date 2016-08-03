@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -171,44 +172,67 @@ public class WalletCore {
 	public boolean requestWalletBalanceCheck(final Activity activity, final int paymentOption){
 		boolean callRequestRide = true;
 		try {
-			View.OnClickListener onClickListener = new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(activity, paymentOption);
-				}
-			};
-
 			if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
 				if (Data.userData.getPaytmBalance() > 0) {
 					callRequestRide = true;
-					if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.fixedFare) {
+					if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.getFixedFare()) {
 						DialogPopup.dialogBanner(activity, context.getResources().getString(R.string.paytm_low_cash));
 					}
 				} else {
 					callRequestRide = false;
 					if(Data.userData.getPaytmBalance() < 0){
-						DialogPopup.alertPopup(activity, "", context.getResources().getString(R.string.paytm_error_cash_select_cash));
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+							}
+
+							@Override
+							public void onNegativeClick() {
+							}
+						}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
 					} else{
-						DialogPopup.alertPopupWithListener(activity, "",
-								context.getResources().getString(R.string.paytm_no_cash),
-								onClickListener);
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(activity, paymentOption);
+							}
+
+							@Override
+							public void onNegativeClick() {
+							}
+						}).show(activity.getResources().getString(R.string.paytm_no_cash), false);
 					}
 				}
 			}
 			else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
 				if (Data.userData.getMobikwikBalance() > 0) {
 					callRequestRide = true;
-					if (Data.fareStructure != null && Data.userData.getMobikwikBalance() < Data.fareStructure.fixedFare) {
+					if (Data.fareStructure != null && Data.userData.getMobikwikBalance() < Data.fareStructure.getFixedFare()) {
 						DialogPopup.dialogBanner(activity, context.getResources().getString(R.string.mobikwik_low_cash));
 					}
 				} else {
 					callRequestRide = false;
 					if(Data.userData.getMobikwikBalance() < 0){
-						DialogPopup.alertPopup(activity, "", context.getResources().getString(R.string.mobikwik_error_select_cash));
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+							}
+
+							@Override
+							public void onNegativeClick() {
+							}
+						}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
 					} else{
-						DialogPopup.alertPopupWithListener(activity, "",
-								context.getResources().getString(R.string.mobikwik_no_cash),
-								onClickListener);
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								MyApplication.getInstance().getWalletCore().addMoneyToWalletIntent(activity, paymentOption);
+							}
+
+							@Override
+							public void onNegativeClick() {
+							}
+						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
 					}
 				}
 			}
@@ -540,21 +564,47 @@ public class WalletCore {
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
 				}
 				else if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() < 0){
-					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+					new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+						@Override
+						public void onPositiveClick() {
+
+						}
+
+						@Override
+						public void onNegativeClick() {
+
+						}
+					}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
 				} else{
 					if(Data.userData.getPaytmEnabled() == 1) {
-						DialogPopup.alertPopupWithListener(activity, "",
-								activity.getResources().getString(R.string.paytm_no_cash),
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Intent intent = new Intent(activity, PaymentActivity.class);
-										intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-										intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-										activity.startActivity(intent);
-										activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								try {
+									Intent intent = new Intent(activity, PaymentActivity.class);
+									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
+									activity.startActivity(intent);
+									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+
+							@Override
+							public void onNegativeClick() {
+								try {
+									if(Data.userData.getMobikwikEnabled() != 1){
+										Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
 									}
-								});
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}).show(activity.getResources().getString(R.string.paytm_no_cash), false);
 					}
 					else{
 						MyApplication.getInstance().getWalletCore()
@@ -572,21 +622,47 @@ public class WalletCore {
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
 				}
 				else if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() < 0){
-					DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
+					new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+						@Override
+						public void onPositiveClick() {
+
+						}
+
+						@Override
+						public void onNegativeClick() {
+
+						}
+					}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
 				} else{
 					if(Data.userData.getMobikwikEnabled() == 1) {
-						DialogPopup.alertPopupWithListener(activity, "",
-								activity.getResources().getString(R.string.mobikwik_no_cash),
-								new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Intent intent = new Intent(activity, PaymentActivity.class);
-										intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-										intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
-										activity.startActivity(intent);
-										activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								try {
+									Intent intent = new Intent(activity, PaymentActivity.class);
+									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
+									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
+									activity.startActivity(intent);
+									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+
+							@Override
+							public void onNegativeClick() {
+								try {
+									if(Data.userData.getPaytmEnabled() != 1){
+										Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
 									}
-								});
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
 					}
 					else{
 						MyApplication.getInstance().getWalletCore()

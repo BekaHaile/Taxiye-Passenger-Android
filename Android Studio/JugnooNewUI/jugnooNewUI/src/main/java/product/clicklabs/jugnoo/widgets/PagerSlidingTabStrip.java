@@ -145,13 +145,14 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
 
 		//tabTextSize = a.getDimensionPixelSize(0, tabTextSize);
-		tabTextColor = a.getColor(1, tabTextColor);
+
 
 		a.recycle();
 
 		// get custom attrs
 
 		a = context.obtainStyledAttributes(attrs, R.styleable.PagerSlidingTabStrip);
+		tabTextColor = context.getResources().getColor(R.color.text_color);
 
 		indicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, indicatorColor);
 		underlineColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsUnderlineColor, underlineColor);

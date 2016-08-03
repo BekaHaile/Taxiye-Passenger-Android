@@ -311,7 +311,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             textVieGetFareEstimateMS.setVisibility(View.GONE);
             linearLayoutPaymentModeMS.setVisibility(View.GONE);
             textViewMinFareMS.setText(activity.getResources().getString(R.string.base_fare));
-            textViewMinFareMSValue.setText(activity.getResources().getString(R.string.two_hifen));
+            textViewMinFareMSValue.setText(Data.fareStructure.getDisplayBaseFare(activity));
         } else{
             textVieGetFareEstimateMS.setVisibility(View.VISIBLE);
             linearLayoutPaymentModeMS.setVisibility(View.VISIBLE);
@@ -333,6 +333,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.pickupPaymentOption));
             activity.getSlidingBottomPanel().getTextViewCashValue().setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.pickupPaymentOption));
             updatePreferredPaymentOptionUI();
+            activity.updateConfirmedStatePaymentUI();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -383,7 +384,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
     public Region getRegionSelected() {
-        if(regionSelected == null){
+        if(regionSelected == null || regionSelected.isDefault()){
             if(Data.regions.size() > 0){
                 regionSelected = Data.regions.get(0);
             } else{
@@ -404,6 +405,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
         }
         activity.getSlidingBottomPanel().updateBottomPanel(supplyCount);
+        activity.setDestinationBarPlaceholderText(regionSelected.getRideType());
     }
 
     public void updateFareStructureUI(){
@@ -414,10 +416,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 break;
             }
         }
-        textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
-        textViewMinFareMSValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+        textViewMinFareValue.setText(Data.fareStructure.getDisplayBaseFare(activity));
+        textViewMinFareMSValue.setText(Data.fareStructure.getDisplayBaseFare(activity));
         textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
         updateFareFactorUI();
         updateBottomMultipleView(getRegionSelected().getRideType());
@@ -570,14 +570,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updateFareFactorUISingle() {
         try {
-            textViewMinFareValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+            textViewMinFareValue.setText(Data.fareStructure.getDisplayBaseFare(activity));
             Fragment frag1 = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 1);
             if (frag1 != null && frag1 instanceof SlidingBottomFareFragment) {
                 ((SlidingBottomFareFragment) frag1).update();
             }
-            activity.getSlidingBottomPanel().getTextViewMinFareValue().setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space)
-                    , Utils.getMoneyDecimalFormat().format(Data.fareStructure.fixedFare)));
+            activity.getSlidingBottomPanel().getTextViewMinFareValue().setText(Data.fareStructure.getDisplayBaseFare(activity));
             setSurgeImageVisibility();
         } catch (Exception e) {
         }

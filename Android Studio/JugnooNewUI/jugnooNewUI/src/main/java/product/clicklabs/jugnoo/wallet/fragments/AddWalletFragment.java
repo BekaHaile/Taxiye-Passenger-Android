@@ -223,6 +223,17 @@ public class AddWalletFragment extends Fragment {
 		return rootView;
 	}
 
+	public void receiveOtp(String otp){
+		try {
+			if(buttonVerifyOTP.getVisibility() == View.VISIBLE) {
+				editTextOTP.setText(otp);
+				editTextOTP.setSelection(editTextOTP.getText().length());
+				buttonVerifyOTP.performClick();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 

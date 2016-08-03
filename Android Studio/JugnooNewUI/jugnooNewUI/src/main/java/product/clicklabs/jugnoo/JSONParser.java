@@ -429,6 +429,7 @@ public class JSONParser implements Constants {
                 HomeUtil homeUtil = new HomeUtil();
                 for (Region region : loginResponse.getLogin().getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
+                    region.setIsDefault(false);
                     Data.regions.add(region);
                 }
             }
@@ -482,7 +483,8 @@ public class JSONParser implements Constants {
                                 fareStructure.getFarePerMin(),
                                 fareStructure.getFareThresholdTime(),
                                 fareStructure.getFarePerWaitingMin(),
-                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true);
+                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
+                                fareStructure.getDisplayBaseFare());
                         for (int i = 0; i < Data.regions.size(); i++) {
                             try {
                                 if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
@@ -511,12 +513,12 @@ public class JSONParser implements Constants {
     }
 
     private product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false);
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
         if(Data.fareStructure == null) {
-            return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false);
+            return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null);
         } else{
             return Data.fareStructure;
         }
@@ -600,7 +602,7 @@ public class JSONParser implements Constants {
                 e.printStackTrace();
             }
 
-			Data.endRideData = parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.fareStructure.fixedFare);
+			Data.endRideData = parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.fareStructure.getFixedFare());
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 

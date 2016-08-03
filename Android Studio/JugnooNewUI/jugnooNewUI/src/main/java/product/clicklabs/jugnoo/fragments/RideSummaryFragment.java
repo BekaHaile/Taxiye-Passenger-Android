@@ -490,7 +490,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.fareStructure.fixedFare,
+        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.fareStructure.getFixedFare(),
                 new ApiGetRideSummary.Callback() {
                     @Override
                     public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
