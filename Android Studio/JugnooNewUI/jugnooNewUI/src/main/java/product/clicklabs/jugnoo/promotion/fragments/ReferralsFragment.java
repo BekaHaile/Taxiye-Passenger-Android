@@ -218,6 +218,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 			@Override
 			public void onClick(View v) {
 				ReferralActions.openMailIntent(activity);
+				MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_EMAIL, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Email");
 			}
 		});

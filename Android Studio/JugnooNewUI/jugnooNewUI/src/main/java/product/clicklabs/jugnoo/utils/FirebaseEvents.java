@@ -51,7 +51,7 @@ public interface FirebaseEvents {
     String RATING_1 = "rating_1";
     String CALL_DRIVER = "Call_Driver";
     String ENTER_DESTINATION = "enter_destination";
-    String SEND_INVITES = "send_invites";
+    String SEND_INVITES = "send_invite_friends_screen";
     String CANCEL_RIDE = "cancel_ride";
     String REQUEST_RIDE_L2 = "request_ride_l2";
     String LOGIN = "Login";
@@ -67,7 +67,7 @@ public interface FirebaseEvents {
     String INBOX = "inbox";
     String PROMOTION = "promotion";
     String WALLET = "wallet";
-    String FREE_RIDES = "Free_rides";
+    String FREE_RIDES = "Free_rides_invite_friends_screen";
     String GAME = "game";
     String GET_A_RIDE = "Get_a_Ride";
     String ABOUT = "About";
@@ -115,7 +115,7 @@ public interface FirebaseEvents {
 
     String CONTINUE = "continue";
     String SKIP = "skip";
-    String INVITE_FRIENDS = "invite_friends";
+    String INVITE_FRIENDS = "invite_friends_screen";
     String PAYTM = "paytm";
     String CASH = "cash";
     String SKIP_RIDE_IMAGE_END = "skip_ride_image_end";
@@ -145,7 +145,7 @@ public interface FirebaseEvents {
     String YES = "Yes";
     String NO_THANKS = "No_thanks";
     String APPLY = "Apply";
-    String WANT_FREE_RIDES = "Want_free_rides";
+    String WANT_FREE_RIDES = "Want_invite_friends_screen";
     String COUPON_PROMOTION = "Coupon_promotion";
     //*State of user at time of pop up (eg ride start)
     String GENERAL_BUTTON_OF_YES = "General_button_of_yes";
@@ -165,6 +165,7 @@ public interface FirebaseEvents {
     String OUTSIDE_FB_MESSENGER  = "Outside_fb_messenger";
     String OUTSIDE_WHATSAPP = "Outside_whatsapp";
     String OUTSIDE_MOBILE_SMS = "Outside_mobile_sms";
+    String OUTSIDE_EMAIL = "Outside_email";
     String THREEDOTS = "3_dots";
     String DETAILS = "Details";
     String DIALOG_WHATSUPP = "Dialog_whatsapp";

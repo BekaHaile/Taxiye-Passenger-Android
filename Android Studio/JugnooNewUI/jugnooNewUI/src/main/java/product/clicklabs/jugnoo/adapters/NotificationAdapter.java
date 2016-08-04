@@ -24,8 +24,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.promotion.PromotionActivity;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
@@ -42,6 +40,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 
 
 /**
@@ -162,7 +161,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
                         Bundle bundle = new Bundle();
                         bundle.putString("message", ""+msg);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getTitle(), bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getDeepIndex(), bundle);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -215,6 +214,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Utils.openUrl(activity, url);
             }
             else if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == deepInt){
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.INVITE_FRIENDS, bundle);
                 intent.setClass(activity, ShareActivity.class);
                 activity.startActivity(intent);
             }
