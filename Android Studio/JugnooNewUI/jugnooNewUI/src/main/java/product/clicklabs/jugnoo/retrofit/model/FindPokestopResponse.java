@@ -18,7 +18,7 @@ public class FindPokestopResponse {
 	@SerializedName("message")
 	@Expose
 	private String message;
-    @SerializedName("pokestops")
+    @SerializedName("data")
     @Expose
     private List<PokestopInfo> pokestops;
 

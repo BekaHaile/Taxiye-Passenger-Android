@@ -84,9 +84,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
 
     LinearLayout linearLayoutLogout, linearLayoutAbout;
 
-	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie;
+	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
-	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie;
+    LinearLayout relativeLayoutPokemon;
+	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
     private boolean setJeanieState;
@@ -156,6 +157,35 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames {
         if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
             relativeLayoutJugnooJeanie.setVisibility(View.VISIBLE);
         }
+
+
+        //textViewPokemon, imageViewPokemon
+        relativeLayoutPokemon = (LinearLayout) findViewById(R.id.relativeLayoutPokemon);
+        textViewPokemon = (TextView)findViewById(R.id.textViewPokemon); textViewPokemon.setTypeface(Fonts.mavenMedium(this));
+        imageViewPokemon = (ImageView)findViewById(R.id.imageViewPokemon);
+        relativeLayoutPokemon.setVisibility(View.GONE);
+        if(Prefs.with(AccountActivity.this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
+            relativeLayoutPokemon.setVisibility(View.VISIBLE);
+            if(Prefs.with(AccountActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
+                imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_on);
+            } else {
+                imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_off);
+            }
+        }
+
+        imageViewPokemon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Prefs.with(AccountActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
+                    imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_off);
+                    Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 0);
+                } else {
+                    imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_on);
+                    Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
+                }
+            }
+        });
+
 
         linearLayoutLogout = (LinearLayout) findViewById(R.id.linearLayoutLogout);
         ((TextView)findViewById(R.id.textViewLogout)).setTypeface(Fonts.mavenMedium(this));

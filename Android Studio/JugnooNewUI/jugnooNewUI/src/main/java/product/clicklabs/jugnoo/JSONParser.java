@@ -251,7 +251,7 @@ public class JSONParser implements Constants {
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
 
-        Prefs.with(context).save(Constants.KEY_SP_POKESTOP_ENABLED, userData.optInt(KEY_SP_POKESTOP_ENABLED, 0));
+        Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, userData.optInt(KEY_SHOW_POKEMON_DATA, 0));
 
         UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,

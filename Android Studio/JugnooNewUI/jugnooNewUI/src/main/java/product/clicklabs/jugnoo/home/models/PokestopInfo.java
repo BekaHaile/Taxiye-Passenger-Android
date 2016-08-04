@@ -17,13 +17,13 @@ public class PokestopInfo {
     @SerializedName("longitude")
     @Expose
     private Double longitude;
-    @SerializedName("name")
+    @SerializedName("title")
     @Expose
     private String name;
     @SerializedName("type")
     @Expose
     private Integer type;
-    @SerializedName("url")
+    @SerializedName("image")
     @Expose
     private String url;
 

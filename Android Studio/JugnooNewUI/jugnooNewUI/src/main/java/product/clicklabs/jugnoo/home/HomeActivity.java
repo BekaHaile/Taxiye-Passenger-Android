@@ -1587,7 +1587,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
 
                     try {
-                        pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
+                        if(PassengerScreenMode.P_INITIAL != passengerScreenMode) {
+                            pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -4170,6 +4172,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onCompleteFindADriver() {
                     findADriverFinishing(true);
+                    try {
+                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                            pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override

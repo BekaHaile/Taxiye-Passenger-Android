@@ -10,25 +10,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.home.models.PokestopInfo;
 import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
-import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -64,7 +58,7 @@ public class PokestopHelper {
 
     public void checkPokestopData(LatLng latLngMapCenter, int cityId) {
         try {
-            if (Prefs.with(context).getInt(Constants.KEY_SP_POKESTOP_ENABLED, 0) == 1
+            if (Prefs.with(context).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1
                     && Prefs.with(context).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                 File file = fileUtils.getFile(POKE_FILE+cityId);
                 String data = fileUtils.readFromFile(file);
@@ -99,7 +93,7 @@ public class PokestopHelper {
                     params.put(Constants.KEY_LATITUDE, String.valueOf(HomeActivity.myLocation.getLatitude()));
                     params.put(Constants.KEY_LONGITUDE, String.valueOf(HomeActivity.myLocation.getLongitude()));
                 }
-                params.put(Constants.KEY_CITY, String.valueOf(cityId));
+                params.put(Constants.KEY_CITY_ID, String.valueOf(cityId));
 
 
                 RestClient.getApiServices().findPokestop(params, new retrofit.Callback<FindPokestopResponse>() {
@@ -144,6 +138,7 @@ public class PokestopHelper {
             this.pokestopInfos = pokestopInfos;
             removePokestopMarkers();
             if(map != null) {
+                float ratio = 0.4f;
                 for(PokestopInfo pokestopInfo : pokestopInfos){
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.title(pokestopInfo.getName());
@@ -152,10 +147,10 @@ public class PokestopHelper {
                     markerOptions.anchor(0.5f, 0.5f);
                     if(pokestopInfo.getType() == PokestopTypeValue.GYM.getOrdinal()){
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.alert_icon)));
+                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_gym, 62f*ratio, 66f*ratio)));
                     } else{
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.alert_icon)));
+                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_pokemon_stop, 71f*ratio, 71f*ratio)));
                     }
                     markerArrayListPokemap.add(map.addMarker(markerOptions));
                 }

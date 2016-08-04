@@ -282,6 +282,7 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_LAST_ADDED_WALLET);
 			Prefs.with(context).remove(Constants.SP_LAST_USED_WALLET);
 			Prefs.with(context).remove(Constants.SP_LAST_MONEY_ADDED_WALLET);
+            Prefs.with(context).remove(Constants.SP_POKESTOP_ENABLED_BY_USER);
 
 
 		} catch (Exception e) {

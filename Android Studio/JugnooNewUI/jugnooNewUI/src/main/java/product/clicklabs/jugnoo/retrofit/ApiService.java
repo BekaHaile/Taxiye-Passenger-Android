@@ -437,7 +437,7 @@ public interface ApiService {
     Response refreshDeviceToken(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
-    @POST("/find_pokestop")
+    @POST("/catch_em_all")
     void findPokestop(@FieldMap Map<String, String> params,
                         Callback<FindPokestopResponse> callback);
 

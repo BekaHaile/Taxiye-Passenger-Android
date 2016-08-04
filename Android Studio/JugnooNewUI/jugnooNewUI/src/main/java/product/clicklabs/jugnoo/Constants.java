@@ -275,6 +275,7 @@ public interface Constants {
 	String VALUE_CAMPAIGN_DATA_CANCEL = "-1";
 
 	String KEY_CITY = "city";
+    String KEY_CITY_ID = "city_id";
 	String KEY_CITY_REG = "city_reg";
 	String KEY_FARE_VALUE = "fare_value";
 	String KEY_FARE_TO_PAY = "fare_to_pay";
@@ -352,7 +353,7 @@ public interface Constants {
     String KEY_MAP_CENTER_LATITUDE = "map_center_latitude";
     String KEY_MAP_CENTER_LONGITUDE = "map_center_longitude";
 
-    String KEY_SP_POKESTOP_ENABLED = "pokestop_enabled";
+    String KEY_SHOW_POKEMON_DATA = "show_pokemon_data";
     String SP_POKESTOP_ENABLED_BY_USER = "sp_pokestop_enabled_by_user";
     String POKEMON_GO_APP_PACKAGE = "com.nianticlabs.pokemongo";
 }
