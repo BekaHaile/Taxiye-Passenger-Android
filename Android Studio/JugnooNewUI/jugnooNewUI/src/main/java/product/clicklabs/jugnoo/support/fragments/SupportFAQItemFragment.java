@@ -179,8 +179,9 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 						textViewRSOtherError.setVisibility(View.GONE);
 						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
                         Bundle bundle = new Bundle();
-                        String str = parentName.replaceAll("\\W", "");
-                        MyApplication.getInstance().logEvent(ISSUES+"_"+str, bundle);
+                        String str = parentName.replaceAll("\\W", "_");
+						String btnStr = buttonSubmit.getText().toString().replaceAll("\\W", "_");
+                        MyApplication.getInstance().logEvent(ISSUES+"_"+str+"_"+btnStr, bundle);
 					}
 				}
 			}

@@ -320,7 +320,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.GAME, bundle);
+                    String gameName = "";
+                    for(MenuInfo menuInfo : menuList){
+                        if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.GAME.getTag())){
+                            gameName = menuInfo.getName();
+                            break;
+                        }
+                    }
+                    gameName = gameName.replaceAll("\\W", "_");
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.GAME+"_"+gameName, bundle);
                     FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "game");
