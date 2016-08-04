@@ -180,10 +180,10 @@ public interface Constants {
 
 
 
-	long SECOND_MILLIS = 1000;
-	long MINUTE_MILLIS = 60 * SECOND_MILLIS;
-	long HOUR_MILLIS = 60 * MINUTE_MILLIS;
-	long DAY_MILLIS = 24 * HOUR_MILLIS;
+	long SECOND_MILLIS = 1000l;
+	long MINUTE_MILLIS = 60l * SECOND_MILLIS;
+	long HOUR_MILLIS = 60l * MINUTE_MILLIS;
+	long DAY_MILLIS = 24l * HOUR_MILLIS;
 
 	long DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL = DAY_MILLIS;
 	long LOCATION_UPDATE_INTERVAL = MINUTE_MILLIS;
@@ -348,4 +348,11 @@ public interface Constants {
 	String SP_LAST_MONEY_ADDED_WALLET = "sp_last_money_added_wallet";
 	String KEY_LOGGED_OUT = "logged_out";
 
+
+    String KEY_MAP_CENTER_LATITUDE = "map_center_latitude";
+    String KEY_MAP_CENTER_LONGITUDE = "map_center_longitude";
+
+    String KEY_SP_POKESTOP_ENABLED = "pokestop_enabled";
+    String SP_POKESTOP_ENABLED_BY_USER = "sp_pokestop_enabled_by_user";
+    String POKEMON_GO_APP_PACKAGE = "com.nianticlabs.pokemongo";
 }

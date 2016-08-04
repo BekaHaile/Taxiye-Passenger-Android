@@ -52,6 +52,9 @@ public class FindADriverResponse {
     @SerializedName("campaigns")
     @Expose
     private Campaigns campaigns;
+    @SerializedName("city_id")
+    @Expose
+    private Integer cityId;
 
     /**
      *
@@ -212,5 +215,13 @@ public class FindADriverResponse {
 
     public void setDriverFareFactor(Double driverFareFactor) {
         this.driverFareFactor = driverFareFactor;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
     }
 }

@@ -161,6 +161,8 @@ import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
+import product.clicklabs.jugnoo.home.models.PokestopInfo;
+import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -170,6 +172,7 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -431,6 +434,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private long thumbsUpGifStartTime = 0;
     private int shakeAnim = 0;
 
+    private PokestopHelper pokestopHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -489,7 +494,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 		zoomingForDeepLink = false;
         freshIntroDialog = null;
         dropLocationSet = false;
-
 
 
 
@@ -1581,6 +1585,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                         }
                     }
+
+                    try {
+                        pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             };
 
@@ -1589,6 +1599,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             confirmMyLocationBtn.setOnClickListener(mapMyLocationClick);
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+
+
+            pokestopHelper = new PokestopHelper(this, map, assl);
 
         }
 

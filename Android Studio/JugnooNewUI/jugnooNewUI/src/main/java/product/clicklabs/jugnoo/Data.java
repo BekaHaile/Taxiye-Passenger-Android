@@ -84,7 +84,7 @@ public class Data {
 	
 	
 	
-
+    public static int currentCity = 1;
 	
 	
 	

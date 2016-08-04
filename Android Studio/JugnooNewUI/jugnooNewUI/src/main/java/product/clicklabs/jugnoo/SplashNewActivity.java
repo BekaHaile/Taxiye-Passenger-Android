@@ -1021,6 +1021,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		logSome();
 
+
+        if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
+                && Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, -1) == -1){
+            Prefs.with(this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
+        }
+
 	}
 
 	private void logSome(){
