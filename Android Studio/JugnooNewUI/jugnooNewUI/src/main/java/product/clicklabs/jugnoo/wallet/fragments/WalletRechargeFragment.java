@@ -186,6 +186,7 @@ public class WalletRechargeFragment extends Fragment {
 				setButtonBackground(buttonAmount1);
 				editTextAmount.setText(amount1);
 				editTextAmount.setSelection(editTextAmount.getText().length());
+                fireBaseEvent(amount1);
 			}
 		});
 
@@ -195,6 +196,7 @@ public class WalletRechargeFragment extends Fragment {
 				setButtonBackground(buttonAmount2);
 				editTextAmount.setText(amount2);
 				editTextAmount.setSelection(editTextAmount.getText().length());
+                fireBaseEvent(amount2);
 			}
 		});
 
@@ -204,6 +206,7 @@ public class WalletRechargeFragment extends Fragment {
 				setButtonBackground(buttonAmount3);
 				editTextAmount.setText(amount3);
 				editTextAmount.setSelection(editTextAmount.getText().length());
+                fireBaseEvent(amount3);
 			}
 		});
 
@@ -337,6 +340,16 @@ public class WalletRechargeFragment extends Fragment {
 		return rootView;
 	}
 
+    private void fireBaseEvent(String amount) {
+        Bundle bundle = new Bundle();
+        bundle.putString("amount", amount);
+        if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
+            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
+        }
+        else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
+        }
+    }
 	private void setButtonBackground(Button selected){
 		buttonAmount1.setBackgroundResource(R.drawable.background_white_grey_theme_rb_selector);
 		buttonAmount2.setBackgroundResource(R.drawable.background_white_grey_theme_rb_selector);

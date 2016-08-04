@@ -203,8 +203,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-                            +FirebaseEvents.MOBIKWIK, bundle);
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ WALLET+"_" +FirebaseEvents.MOBIKWIK, bundle);
 					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
 					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 				}

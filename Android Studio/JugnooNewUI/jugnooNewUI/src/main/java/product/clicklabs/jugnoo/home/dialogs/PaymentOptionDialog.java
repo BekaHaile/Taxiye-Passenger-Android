@@ -123,24 +123,28 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		}
 		return this;
 	}
-
+    Bundle bundle = new Bundle();
 	@Override
 	public void onClick(View v) {
 		try {
 			switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
-
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
 					callback.onPaymentModeUpdated();
                     break;
 
 				case R.id.relativeLayoutMobikwik:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
 					callback.onPaymentModeUpdated();
 					break;
 
                 case R.id.linearLayoutCash:
-
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
 					callback.onPaymentModeUpdated();
                     break;

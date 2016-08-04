@@ -162,7 +162,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         openDeepLink(notificationList.get(position).getDeepIndex(), notificationList.get(position).getUrl());
                         Bundle bundle = new Bundle();
                         bundle.putString("message", ""+msg);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getDeepIndex(), bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.INBOX+"_"+FirebaseEvents.DEEP_INDEX+notificationList.get(position).getTitle(), bundle);
                         FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Inbox", "Deep Index", notificationList.get(position).getNotificationId());
                     } catch (Exception e) {
                         e.printStackTrace();

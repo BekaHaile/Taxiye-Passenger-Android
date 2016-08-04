@@ -1693,6 +1693,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                         }
                     }
+
                 }
             };
 
@@ -8374,5 +8375,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
 
 }

@@ -152,6 +152,13 @@ public class AddWalletFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
+                Bundle bundle = new Bundle();
+                if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.BACK, bundle);
+                }
+                else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.BACK, bundle);
+                }
 				paymentActivity.goBack();
 			}
 		});
@@ -162,7 +169,13 @@ public class AddWalletFragment extends Fragment {
 			public void onClick(View v) {
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Request OTP");
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REQUEST_OTP, bundle);
+                if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REQUEST_OTP, bundle);
+                }
+                else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REQUEST_OTP, bundle);
+                }
+
 				generateOTP(false);
 			}
 		});

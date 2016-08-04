@@ -557,9 +557,7 @@ public class WalletCore {
 				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > 0) {
 					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-                            +FirebaseEvents.PAYTM, bundle);
+
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "paytm");
 				}
@@ -616,9 +614,9 @@ public class WalletCore {
 				if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() > 0) {
 					Data.pickupPaymentOption = PaymentOption.MOBIKWIK.getOrdinal();
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-                            +FirebaseEvents.MOBIKWIK, bundle);
+//                    Bundle bundle = new Bundle();
+//                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+//                            +FirebaseEvents.MOBIKWIK, bundle);
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MOBIKWIK_METHOD_SELECTED, null);
 				}
 				else if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() < 0){
@@ -676,9 +674,9 @@ public class WalletCore {
 				}
 				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-                        +FirebaseEvents.CASH, bundle);
+//                Bundle bundle = new Bundle();
+//                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+//                        +FirebaseEvents.CASH, bundle);
 				NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_CASH_METHOD_SELECTED, null);
 				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
 			}

@@ -93,6 +93,7 @@ public interface FirebaseEvents {
     String REMOVE_WALLET = "Remove_Wallet";
     String ADD_PAYTM_CASH = "Add_Paytm_Cash";
     String ADD_MOBIKWIK_CASH = "Add_Mobikwik_Cash";
+    String ADD_AMOUNT = "add_amount";
 
     String CUSTOMER_SUPPORT = "Customer_Support";
     String SELECT_AN_ISSUE = "Select_An_Issue";
