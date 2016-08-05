@@ -52,7 +52,7 @@ public class PokestopHelper {
             if (Prefs.with(context).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1
                     && Prefs.with(context).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                 long updatedTimestamp = Database2.getInstance(context).getPokestopDataUpdatedTimestamp(cityId);
-                if((System.currentTimeMillis() - updatedTimestamp) > Constants.MINUTE_MILLIS) {
+                if((System.currentTimeMillis() - updatedTimestamp) > Constants.DAY_MILLIS) {
                     findPokeStop(latLngMapCenter, cityId);
                 } else{
                     if(pokestopInfos.size() == 0 || cityIdOfData != cityId){
@@ -133,7 +133,6 @@ public class PokestopHelper {
             this.cityIdOfData = cityId;
             removePokestopMarkers();
             if(map != null) {
-                float ratio = 0.4f;
                 float zIndex = 0.0f;
                 for(PokestopInfo pokestopInfo : pokestopInfos){
                     MarkerOptions markerOptions = new MarkerOptions();
@@ -144,10 +143,10 @@ public class PokestopHelper {
                     markerOptions.zIndex(zIndex);
                     if(pokestopInfo.getType() == PokestopTypeValue.GYM.getOrdinal()){
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_gym, 62f*ratio, 66f*ratio)));
+                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_gym, 42f, 43f)));
                     } else{
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_pokemon_stop, 71f*ratio, 71f*ratio)));
+                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_stop, 39f, 40f)));
                     }
                     markersPokemap.add(map.addMarker(markerOptions));
                     markerOptionsPokemap.add(markerOptions);
