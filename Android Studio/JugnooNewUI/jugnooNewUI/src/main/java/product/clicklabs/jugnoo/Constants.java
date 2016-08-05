@@ -357,4 +357,6 @@ public interface Constants {
     String SP_POKESTOP_ENABLED_BY_USER = "sp_pokestop_enabled_by_user";
     String POKEMON_GO_APP_PACKAGE = "com.nianticlabs.pokemongo";
     String HOME_SCREEN = "Home Screen";
+    String KEY_TOTAL_RIDES_AS_USER = "total_rides_as_user";
+    String SP_TOTAL_RIDES_AS_USER = "sp_total_rides_as_user";
 }

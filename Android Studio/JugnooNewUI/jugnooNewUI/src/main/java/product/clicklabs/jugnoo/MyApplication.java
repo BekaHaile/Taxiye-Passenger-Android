@@ -17,6 +17,7 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.kochava.android.tracker.Feature;
 
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,10 @@ public class MyApplication extends Application{
     private TagManager tagManager;
     // [END declare_analytics]
 
+    private Feature kTracker;
+    private static final String KEY = "kotest-android-app-5oj";
+
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -67,6 +72,9 @@ public class MyApplication extends Application{
             }
 			Branch.getAutoInstance(this);
 
+            Feature.setErrorDebug(true);
+            Feature.enableDebug(true);
+            kTracker = new Feature( this , KEY );
 
 			mInstance = this;
 
@@ -280,5 +288,12 @@ public class MyApplication extends Application{
 		}
 		return deviceToken;
 	}
+
+    public Feature getkTracker() {
+        if(kTracker == null) {
+            kTracker = new Feature(this, KEY);
+        }
+        return kTracker;
+    }
 
 }

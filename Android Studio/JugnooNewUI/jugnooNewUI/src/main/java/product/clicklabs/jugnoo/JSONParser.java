@@ -8,6 +8,7 @@ import android.content.SharedPreferences.Editor;
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.kochava.android.tracker.Feature;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -247,6 +248,8 @@ public class JSONParser implements Constants {
         int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
         int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
 
+        int totalRides = userData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 1);
+        Prefs.with(context).save(Constants.SP_TOTAL_RIDES_AS_USER, totalRides);
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
@@ -338,6 +341,9 @@ public class JSONParser implements Constants {
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
+                // TODO: 05/08/16 Add event name and data
+                MyApplication.getInstance().getkTracker().event("", "");
+
                 couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
