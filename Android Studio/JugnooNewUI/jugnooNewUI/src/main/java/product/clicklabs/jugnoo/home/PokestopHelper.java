@@ -52,16 +52,16 @@ public class PokestopHelper {
             if (Prefs.with(context).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1
                     && Prefs.with(context).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                 long updatedTimestamp = Database2.getInstance(context).getPokestopDataUpdatedTimestamp(cityId);
-                if((System.currentTimeMillis() - updatedTimestamp) > Constants.DAY_MILLIS) {
+                if((System.currentTimeMillis() - updatedTimestamp) > Constants.MINUTE_MILLIS) {
                     findPokeStop(latLngMapCenter, cityId);
                 } else{
-                    if(pokestopInfos.size() > 0 && cityIdOfData == cityId){
-                        showPokestopData(pokestopInfos, cityIdOfData);
-                    } else{
+                    if(pokestopInfos.size() == 0 || cityIdOfData != cityId){
                         FindPokestopResponse findPokestopResponse = Database2.getInstance(context).getPokestopData(cityId);
                         showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
                     }
                 }
+            } else{
+                mapCleared();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,7 +138,7 @@ public class PokestopHelper {
                 for(PokestopInfo pokestopInfo : pokestopInfos){
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.title(pokestopInfo.getName());
-                    markerOptions.snippet("");
+                    markerOptions.snippet("poke_");
                     markerOptions.position(new LatLng(pokestopInfo.getLatitude(), pokestopInfo.getLongitude()));
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(zIndex);
@@ -171,6 +171,12 @@ public class PokestopHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void mapCleared(){
+        pokestopInfos.clear();
+        cityIdOfData = 0;
+        removePokestopMarkers();
     }
     
 }

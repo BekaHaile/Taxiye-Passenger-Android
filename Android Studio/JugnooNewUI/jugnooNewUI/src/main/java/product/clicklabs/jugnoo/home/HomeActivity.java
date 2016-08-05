@@ -1489,7 +1489,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         map.setInfoWindowAdapter(customIW);
 
                         return true;
-                    } else if (arg0.getTitle().equalsIgnoreCase("driver shown to customer")) {
+                    }
+//                    else if(arg0.getSnippet().equalsIgnoreCase("poke_")){
+//                        CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getTitle(), "");
+//                        map.setInfoWindowAdapter(customIW);
+//                        return true;
+//                    }
+                    else if (arg0.getTitle().equalsIgnoreCase("driver shown to customer")) {
                         if (1 == showDriverInfo) {
                             String driverId = arg0.getSnippet();
                             try {
@@ -1584,7 +1590,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
 
                     try {
-                        if(PassengerScreenMode.P_INITIAL != passengerScreenMode) {
+                        if(PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh) {
                             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
                         }
                     } catch (Exception e) {
@@ -2407,7 +2413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
 
-						try{ map.clear(); } catch(Exception e){ e.printStackTrace(); }
+						clearMap();
 
 
                         setEnteredDestination();
@@ -2620,7 +2626,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             Log.e("Data.assignedDriverInfo.latLng", "=" + Data.assignedDriverInfo.latLng);
 
-                            map.clear();
+                            clearMap();
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, false));
                             driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.assignedDriverInfo));
@@ -2684,7 +2690,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             Log.e("Data.assignedDriverInfo.latLng", "=" + Data.assignedDriverInfo.latLng);
 
-                            map.clear();
+                            clearMap();
 
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
 
@@ -2749,7 +2755,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     case P_IN_RIDE:
 
                         if (map != null) {
-                            map.clear();
+                            clearMap();
 
                             if (Data.pickupLatLng != null) {
                                 pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.pickupLatLng, true));
@@ -3703,6 +3709,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 updateTopBar();
 
+                try {
+                    pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             HomeActivity.checkForAccessTokenChange(this);
@@ -4402,7 +4413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private final float HOME_MARKER_ZINDEX = 2.0f;
-    public void addDriverMarkerForCustomer(DriverInfo driverInfo, int resourceId) {
+    public Marker addDriverMarkerForCustomer(DriverInfo driverInfo, int resourceId) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("driver shown to customer");
         markerOptions.snippet("" + driverInfo.userId);
@@ -4412,7 +4423,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.rotation((float) driverInfo.getBearing());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                 .createMarkerBitmapForResource(HomeActivity.this, assl, resourceId)));
-        map.addMarker(markerOptions);
+        return map.addMarker(markerOptions);
     }
 
 
@@ -4434,6 +4445,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private ArrayList<Marker> markersDriversFindADriver = new ArrayList<>();
+    private void clearMarkersDriversFindADriver(){
+        for(Marker marker : markersDriversFindADriver){
+            marker.remove();
+        }
+        markersDriversFindADriver.clear();
+    }
+
     public void showDriverMarkersAndPanMap(final LatLng userLatLng, Region region) {
         try {
 			if("".equalsIgnoreCase(Data.farAwayCity)) {
@@ -4441,13 +4460,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 						((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
 								|| PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
 					if (map != null) {
-						map.clear();
 						setDropLocationMarker();
+                        clearMarkersDriversFindADriver();
 						for (int i = 0; i < Data.driverInfos.size(); i++) {
                             if(region.getVehicleType().equals(Data.driverInfos.get(i).getVehicleType())
                                     && Data.driverInfos.get(i).getRegionIds().contains(region.getRegionId())) {
-                                addDriverMarkerForCustomer(Data.driverInfos.get(i),
-                                        region.getVehicleIconSet().getIconMarker());
+                                markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.driverInfos.get(i),
+                                        region.getVehicleIconSet().getIconMarker()));
                             }
 						}
 						if (!mapTouchedOnce) {
@@ -4894,7 +4913,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Data.endRideData = JSONParser.parseEndRideData(jObj, engagementId, Data.fareStructure.getFixedFare());
 
                                     clearSPData();
-                                    map.clear();
                                     passengerScreenMode = PassengerScreenMode.P_RIDE_END;
                                     switchPassengerScreen(passengerScreenMode);
 
@@ -7086,7 +7104,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     latLngBoundsBuilderPool.include(list.get(z));
                 }
 
-                //map.clear();
                 map.addPolyline(poolPolylineOption);
 
                 MarkerOptions poolMarkerOptionStart = new MarkerOptions();
@@ -8258,6 +8275,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }).show();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearMap(){
+        try {
+            map.clear();
+            pokestopHelper.mapCleared();
+            pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
         } catch (Exception e) {
             e.printStackTrace();
         }
