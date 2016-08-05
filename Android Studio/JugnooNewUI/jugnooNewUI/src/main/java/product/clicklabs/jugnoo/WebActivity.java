@@ -91,6 +91,8 @@ public class WebActivity extends BaseActivity {
     public void performBackPressed(){
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//        Bundle bundle = new Bundle();
+//        MyApplication.getInstance().logEvent();
     }
 
     @Override

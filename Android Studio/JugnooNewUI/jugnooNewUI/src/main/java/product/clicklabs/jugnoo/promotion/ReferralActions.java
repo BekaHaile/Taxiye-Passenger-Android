@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -26,6 +28,7 @@ import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
@@ -37,7 +40,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by socomo20 on 6/19/15.
  */
-public class ReferralActions {
+public class ReferralActions implements FirebaseEvents {
 
     public static FacebookLoginHelper facebookLoginHelper;
     public static void shareToFacebook(final Activity activity, final boolean isMessenger, CallbackManager callbackManager){
@@ -278,6 +281,8 @@ public class ReferralActions {
                     shareToFacebookBasic(activity, callbackManager, link);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_FACEBOOK);
                     FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Facebook");
+                    Bundle bundle  = new Bundle();
+                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_FB_APP, bundle);
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_FACEBOOK, null);
                 }
 				else if(info.activityInfo.packageName.contains("com.google.android.gm")
@@ -291,6 +296,8 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_EMAIL);
+                    Bundle bundle  = new Bundle();
+                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_GMAIL, bundle);
                     FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Gmail");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_EMAIL, null);
 				}
@@ -301,6 +308,8 @@ public class ReferralActions {
 					intent.putExtra(Intent.EXTRA_TEXT, body);
 					activity.startActivity(intent);
 					FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_WHATSAPP);
+                    Bundle bundle  = new Bundle();
+                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_WHATSUPP, bundle);
                     FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "WhatsApp");
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_WHATSAPP, null);
 				}
@@ -312,13 +321,19 @@ public class ReferralActions {
                     activity.startActivity(intent);
                     if(info.activityInfo.packageName.contains("com.twitter.android")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_TWITTER);
+                        Bundle bundle  = new Bundle();
+                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FirebaseEvents.DIALOG_TWITTER, bundle);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_TWITTER, null);
                     } else if(info.activityInfo.packageName.contains("com.android.mms")){
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_SMS);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_SMS, null);
+                        Bundle bundle  = new Bundle();
+                        MyApplication.getInstance().logEvent(REFERRAL+"_"+FirebaseEvents.DIALOG_MOBILE_SMS, bundle);
                         FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "SMS");
                     } else{
                         FlurryEventLogger.event(activity, FlurryEventNames.WHO_CLICKED_ON_OTHERS);
+                        Bundle bundle  = new Bundle();
+                        MyApplication.getInstance().logEvent(REFERRAL+"_"+DIALOG_OTHERS, bundle);
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_VIA_OTHER, null);
                         FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up others", "Other");
                     }

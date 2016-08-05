@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -38,7 +39,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 
-public class WalletFragment extends Fragment implements FlurryEventNames {
+public class WalletFragment extends Fragment implements FlurryEventNames, FirebaseEvents {
 	
 	RelativeLayout relative;
 	
@@ -124,6 +125,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 			@Override
 			public void onClick(View v) {
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Back");
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+WALLET+"_"+BACK, bundle);
 				paymentActivity.finish();
 				paymentActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 			}
@@ -135,6 +138,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
 					DialogPopup.alertPopupLeftOriented(paymentActivity, "", Data.userData.getJugnooCashTNC());
 					FlurryEventLogger.event(JUGNOO_CASH_CHECKED);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+WALLET+"_"+JUGNOO_CASH, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Jugnoo Cash");
 				}
 			}
@@ -166,6 +171,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
 					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+WALLET+"_"+PAYTM_WALLET, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 				}
 			}
@@ -195,6 +202,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.commit();
 						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
 					}
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ WALLET+"_" +FirebaseEvents.MOBIKWIK, bundle);
 					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
 					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 				}
@@ -223,6 +232,8 @@ public class WalletFragment extends Fragment implements FlurryEventNames {
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
 				FlurryEventLogger.event(RECENT_TRANSACTIONS);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+WALLET+"_"+VIEW_RECENT_TRANSACTION, bundle);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "View Recent Transaction");
 			}
 		});

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
@@ -31,6 +32,7 @@ import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -38,7 +40,7 @@ import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class ReferralsFragment extends Fragment {
+public class ReferralsFragment extends Fragment implements FirebaseEvents{
 
 	private RelativeLayout relativeLayoutRoot;
 
@@ -50,6 +52,7 @@ public class ReferralsFragment extends Fragment {
 	private LinearLayout linearLayoutLeaderBoard, linearLayoutRefer;
 	private View rootView;
     private ShareActivity activity;
+    private Bundle bundle;
 
     @Override
     public void onStart() {
@@ -72,7 +75,7 @@ public class ReferralsFragment extends Fragment {
 
 
         activity = (ShareActivity) getActivity();
-
+        bundle = new Bundle();
 		relativeLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRoot);
 		try {
 			if(relativeLayoutRoot != null) {
@@ -124,6 +127,7 @@ public class ReferralsFragment extends Fragment {
 				try {
 					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
 					FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
+                    MyApplication.getInstance().logEvent(REFERRAL+"_"+DETAILS, bundle);
 					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
@@ -178,6 +182,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				buttonInvite.performClick();
+                MyApplication.getInstance().logEvent(REFERRAL+"_"+THREEDOTS, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Others");
 			}
 		});
@@ -186,6 +191,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.shareToFacebook(activity, true, activity.getCallbackManager());
+                MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_FB_MESSENGER, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Facebook");
 			}
 		});
@@ -194,6 +200,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.shareToWhatsapp(activity);
+                MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_WHATSAPP, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
 			}
 		});
@@ -202,6 +209,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.sendSMSIntent(activity);
+                MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_MOBILE_SMS, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Message");
 			}
 		});
@@ -210,6 +218,7 @@ public class ReferralsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				ReferralActions.openMailIntent(activity);
+				MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_EMAIL, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "Email");
 			}
 		});

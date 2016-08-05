@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -199,6 +200,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						verifyOtpViaEmail(OTPConfirmScreen.this, otpCode, linkedWallet);
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
 					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
@@ -225,6 +228,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
 							|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
 						// Resend OTP call to Paytm server...
+
 						generateOTP(getLoggedInAccesToken(), linkedWallet);
 					} else{
 						if (1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)) {
@@ -287,6 +291,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
+                                        Bundle bundle = new Bundle();
+                                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
 										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
 								},
@@ -311,7 +317,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
             public void onClick(View v) {
 				editTextOTP.setError(null);
                 FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
-				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
+
+                FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
 				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
 				intent.putExtra(LINKED_WALLET, linkedWallet);
 				startActivity(intent);
@@ -979,6 +988,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 
 	public void performBackPressed(){
+        Bundle bundle = new Bundle();
+        MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
 		if(intentFromRegister){
 			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
 			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());

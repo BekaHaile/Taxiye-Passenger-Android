@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -188,6 +189,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             @Override
             public void onClick(View v) {
                 try {
+
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                            +FirebaseEvents.GET_FARE_ESTIMATE+"_"+FirebaseEvents.GET_RIDE, bundle);
                     Intent intent = new Intent();
                     if (searchResultGlobal != null) {
                         String str = (new Gson()).toJson(searchResultGlobal);
@@ -367,6 +372,10 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
 
     public void performBackPressed() {
+        Bundle bundle = new Bundle();
+        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
+                +FirebaseEvents.GET_FARE_ESTIMATE+"_"+FirebaseEvents.BACK, bundle);
+
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

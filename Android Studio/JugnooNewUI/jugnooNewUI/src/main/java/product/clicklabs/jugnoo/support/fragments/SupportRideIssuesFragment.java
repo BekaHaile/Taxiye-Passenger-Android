@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
@@ -34,6 +35,7 @@ import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -41,7 +43,7 @@ import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerVie
 import product.clicklabs.jugnoo.utils.Utils;
 
 @SuppressLint("ValidFragment")
-public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants {
+public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants, FirebaseEvents {
 
 	private LinearLayout root;
 
@@ -137,6 +139,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 									endRideData.getRideDate(),
 									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
 						}
+                        Bundle bundle = new Bundle();
+                        String label = item.getText().replaceAll("\\W", "_");
+                        MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES+"_"+FirebaseEvents.ISSUE_WITH_RECENT_RIDE+"_"+label, bundle);
 						FlurryEventLogger.eventGA(Constants.ISSUES, "Select An Issue", item.getText());
 					}
 				});

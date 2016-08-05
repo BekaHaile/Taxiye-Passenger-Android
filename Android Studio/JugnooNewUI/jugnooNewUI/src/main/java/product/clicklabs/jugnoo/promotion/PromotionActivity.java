@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -148,6 +149,8 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 NudgeClient.trackEventUserId(PromotionActivity.this, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");
             }
         });
@@ -168,6 +171,8 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
             @Override
             public void onClick(View v) {
                 FlurryEventLogger.event(PromotionActivity.this, ENTERED_PROMO_CODE);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.APPLY, bundle);
                 String promoCode = editTextPromoCode.getText().toString().trim();
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
@@ -245,6 +250,8 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     }
 
     public void performBackPressed(){
+        Bundle bundle = new Bundle();
+        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.BACK, bundle);
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

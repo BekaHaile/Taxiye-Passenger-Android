@@ -65,9 +65,10 @@ public class Data {
 	
 	
 	public static final String SP_SERVER_LINK = "sp_server_link";
-	
-	
-	
+
+
+    public static final long TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS = 2000;
+    public static final String CONTAINER_ID = "GTM-NRQKNT";
 	
 	
 	

@@ -311,7 +311,7 @@ public interface Constants {
 	String KEY_IS_POOLED = "is_pooled";
 	String KEY_RIDE_TYPE = "ride_type";
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
-	String KEY_SEARCH_RESULT = "search_result";
+        String KEY_SEARCH_RESULT = "search_result";
 	String SP_DRIVER_BEARING = "driver_bearing";
 
 	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
@@ -356,4 +356,5 @@ public interface Constants {
     String KEY_SHOW_POKEMON_DATA = "show_pokemon_data";
     String SP_POKESTOP_ENABLED_BY_USER = "sp_pokestop_enabled_by_user";
     String POKEMON_GO_APP_PACKAGE = "com.nianticlabs.pokemongo";
+    String HOME_SCREEN = "Home Screen";
 }
