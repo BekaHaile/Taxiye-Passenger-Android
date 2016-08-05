@@ -2,21 +2,19 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.models.PokestopInfo;
@@ -26,7 +24,6 @@ import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
-import product.clicklabs.jugnoo.utils.FileUtils;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.RetrofitError;
@@ -42,17 +39,11 @@ public class PokestopHelper {
     private Context context;
     private GoogleMap map;
     private ASSL assl;
-    private FileUtils fileUtils;
-    private Gson gson;
-
-    private final String POKE_FILE = "poke_file_";
 
     public PokestopHelper(Context context, GoogleMap googleMap, ASSL assl){
         this.context = context;
         this.map = googleMap;
         this.assl = assl;
-        this.fileUtils = new FileUtils(context);
-        this.gson = new Gson();
     }
     
 
@@ -60,14 +51,16 @@ public class PokestopHelper {
         try {
             if (Prefs.with(context).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1
                     && Prefs.with(context).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
-                File file = fileUtils.getFile(POKE_FILE+cityId);
-                String data = fileUtils.readFromFile(file);
-                if(TextUtils.isEmpty(data)
-                    || ((System.currentTimeMillis() - file.lastModified()) > Constants.DAY_MILLIS)) {
+                long updatedTimestamp = Database2.getInstance(context).getPokestopDataUpdatedTimestamp(cityId);
+                if((System.currentTimeMillis() - updatedTimestamp) > Constants.DAY_MILLIS) {
                     findPokeStop(latLngMapCenter, cityId);
                 } else{
-                    FindPokestopResponse findPokestopResponse = gson.fromJson(data, FindPokestopResponse.class);
-                    showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops());
+                    if(pokestopInfos.size() > 0 && cityIdOfData == cityId){
+                        showPokestopData(pokestopInfos, cityIdOfData);
+                    } else{
+                        FindPokestopResponse findPokestopResponse = Database2.getInstance(context).getPokestopData(cityId);
+                        showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -103,8 +96,8 @@ public class PokestopHelper {
                         Log.i(TAG, "findpokestop response = " + responseStr);
                         try {
                             if(findPokestopResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                                showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops());
-                                fileUtils.writeToFile(fileUtils.getFile(POKE_FILE+cityId), responseStr);
+                                showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
+                                Database2.getInstance(context).insertUpdatePokestopData(cityId, responseStr);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -121,30 +114,34 @@ public class PokestopHelper {
                     }
                 });
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private ArrayList<PokestopInfo> pokestopInfos = new ArrayList<>();
-    private ArrayList<Marker> markerArrayListPokemap = new ArrayList<>();
+    private int cityIdOfData = 0;
+    private ArrayList<Marker> markersPokemap = new ArrayList<>();
+    private ArrayList<MarkerOptions> markerOptionsPokemap = new ArrayList<>();
 
     /**
      * Method used to show poke marker on map
      */
-    private void showPokestopData(ArrayList<PokestopInfo> pokestopInfos) {
+    private void showPokestopData(ArrayList<PokestopInfo> pokestopInfos, int cityId) {
         try {
             this.pokestopInfos = pokestopInfos;
+            this.cityIdOfData = cityId;
             removePokestopMarkers();
             if(map != null) {
                 float ratio = 0.4f;
+                float zIndex = 0.0f;
                 for(PokestopInfo pokestopInfo : pokestopInfos){
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.title(pokestopInfo.getName());
                     markerOptions.snippet("");
                     markerOptions.position(new LatLng(pokestopInfo.getLatitude(), pokestopInfo.getLongitude()));
                     markerOptions.anchor(0.5f, 0.5f);
+                    markerOptions.zIndex(zIndex);
                     if(pokestopInfo.getType() == PokestopTypeValue.GYM.getOrdinal()){
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                                 .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_gym, 62f*ratio, 66f*ratio)));
@@ -152,7 +149,8 @@ public class PokestopHelper {
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                                 .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_pokemon_stop, 71f*ratio, 71f*ratio)));
                     }
-                    markerArrayListPokemap.add(map.addMarker(markerOptions));
+                    markersPokemap.add(map.addMarker(markerOptions));
+                    markerOptionsPokemap.add(markerOptions);
                 }
             }
         } catch (Exception e) {
@@ -165,12 +163,11 @@ public class PokestopHelper {
      */
     public void removePokestopMarkers() {
         try {
-            if(markerArrayListPokemap.size() > 0){
-                for(Marker marker : markerArrayListPokemap){
-                    marker.remove();
-                }
-                markerArrayListPokemap.clear();
+            markerOptionsPokemap.clear();
+            for(Marker marker : markersPokemap){
+                marker.remove();
             }
+            markersPokemap.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }

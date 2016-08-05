@@ -161,8 +161,6 @@ import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
-import product.clicklabs.jugnoo.home.models.PokestopInfo;
-import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -172,7 +170,6 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
@@ -2558,6 +2555,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             markerOptions.title("pickup location");
                             markerOptions.snippet("");
                             markerOptions.position(Data.pickupLatLng);
+                            markerOptions.zIndex(HOME_MARKER_ZINDEX);
+
                             if((confirmedScreenOpened &&
                                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()))
                                     || Data.dropLatLng != null){
@@ -4369,6 +4368,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.title("pickup location");
         markerOptions.snippet("");
         markerOptions.position(latLng);
+        markerOptions.zIndex(HOME_MARKER_ZINDEX);
         if(inRide){
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
@@ -4395,17 +4395,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions1.snippet("");
         markerOptions1.position(driverInfo.latLng);
         markerOptions1.anchor(0.5f, 0.5f);
+        markerOptions1.zIndex(HOME_MARKER_ZINDEX);
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                 .createMarkerBitmapForResource(HomeActivity.this, assl, driverInfo.getVehicleIconSet().getIconMarker())));
         return markerOptions1;
     }
 
+    private final float HOME_MARKER_ZINDEX = 2.0f;
     public void addDriverMarkerForCustomer(DriverInfo driverInfo, int resourceId) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("driver shown to customer");
         markerOptions.snippet("" + driverInfo.userId);
         markerOptions.position(driverInfo.latLng);
         markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.zIndex(HOME_MARKER_ZINDEX);
         markerOptions.rotation((float) driverInfo.getBearing());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                 .createMarkerBitmapForResource(HomeActivity.this, assl, resourceId)));
@@ -5429,6 +5432,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         markerOptions.title("End Location");
         markerOptions.snippet("");
         markerOptions.position(customerLatLng);
+        markerOptions.zIndex(HOME_MARKER_ZINDEX);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this, assl)));
         return markerOptions;
     }
@@ -7088,6 +7092,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 MarkerOptions poolMarkerOptionStart = new MarkerOptions();
                 poolMarkerOptionStart.title("Start");
                 poolMarkerOptionStart.position(Data.pickupLatLng);
+                poolMarkerOptionStart.zIndex(HOME_MARKER_ZINDEX);
 //                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
 //                        assl, R.drawable.pin_ball_start)));
                 poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
@@ -7099,6 +7104,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                 poolMarkerOptionEnd.title("End");
                 poolMarkerOptionEnd.position(Data.dropLatLng);
+                poolMarkerOptionEnd.zIndex(HOME_MARKER_ZINDEX);
                 poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this,
                         assl)));
                 //map.addMarker(poolMarkerEnd);
