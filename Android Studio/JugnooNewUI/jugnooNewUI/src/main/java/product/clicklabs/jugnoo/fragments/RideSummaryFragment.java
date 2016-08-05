@@ -84,6 +84,9 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
     private FragmentActivity activity;
     private boolean rideCancelled;
 
+    public RideSummaryFragment() {
+    }
+
     @SuppressLint("ValidFragment")
     public RideSummaryFragment(int engagementId, boolean rideCancelled) {
         this.engagementId = engagementId;

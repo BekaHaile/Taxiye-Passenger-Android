@@ -4348,6 +4348,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
             }
+            showPokestopOnOffButton(passengerScreenMode);
         }
 	}
 
@@ -7780,6 +7781,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
             }
             showPoolInforBar();
+            try {
+                if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
+                    imageViewPokemonOnOffInitial.setAlpha(1.0f);
+                } else {
+                    imageViewPokemonOnOffInitial.setAlpha(0.3f);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
             int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
@@ -7796,6 +7806,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         slidingBottomPanel.getRequestRideOptionsFragment()
                 .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
+						imageViewPokemonOnOffInitial.setAlpha(1.0f);
+					} else {
+						imageViewPokemonOnOffInitial.setAlpha(0.3f);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
     }
 
     public void setDestinationBarPlaceholderText(int rideTypeValue){
@@ -8267,7 +8292,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void showPokestopOnOffButton(PassengerScreenMode mode){
         try {
-            if(Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
+            if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
+                    && changeLocalityLayout.getVisibility() == View.GONE
+                    && Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
 				imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
                 imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
                 imageViewPokemonOnOffAssigning.setVisibility(View.VISIBLE);
@@ -8292,7 +8319,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                         imageView.setAlpha(1.0f);
                     } else {
-                        imageView.setAlpha(0.5f);
+                        imageView.setAlpha(0.3f);
                     }
                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.currentCity);
                 }

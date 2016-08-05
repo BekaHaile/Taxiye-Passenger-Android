@@ -146,7 +146,7 @@ public class PokestopHelper {
                                 .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_gym, 42f, 43f)));
                     } else{
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_stop, 39f, 40f)));
+                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_stop, 39f*0.9f, 40f*0.9f)));
                     }
                     markersPokemap.add(map.addMarker(markerOptions));
                     markerOptionsPokemap.add(markerOptions);
