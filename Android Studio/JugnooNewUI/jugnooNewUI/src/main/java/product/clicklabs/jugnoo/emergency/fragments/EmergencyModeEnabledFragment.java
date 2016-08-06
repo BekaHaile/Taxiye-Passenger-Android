@@ -19,6 +19,7 @@ import com.flurry.android.FlurryAgent;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -145,6 +147,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 					case R.id.buttonCallEmergencyContact:
 						if(activity instanceof EmergencyActivity) {
+                            Bundle bundle = new Bundle();
+                            MyApplication.getInstance().logEvent(Constants.HELP+"_"+ FirebaseEvents.CALL_YOUR_CONTACTS, bundle);
 							FlurryEventLogger.eventGA(Constants.HELP, "emergency mode screen", "cal emergency contact");
 							new FragTransUtils().openEmergencyContactsOperationsFragment(activity,
 									((EmergencyActivity)activity).getContainer(), engagementId,

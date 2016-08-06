@@ -91,6 +91,18 @@
         android:tag="mwar"
         android:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/imageViewPokemonOnOffEngaged"
+        android:layout_width="90px"
+        android:layout_height="90px"
+        android:src="@drawable/ic_poke_on_off_button"
+        android:tag="mwar"
+        android:layout_marginLeft="56px"
+        android:layout_marginBottom="5px"
+        android:layout_above="@+id/relativeLayoutInRideContainer"
+        android:visibility="visible"
+        />
+
 
     <!-- drive info layout-->
     <RelativeLayout

@@ -177,6 +177,10 @@ public class ApiFindADriver {
 			}
 
 			Data.campaigns = findADriverResponse.getCampaigns();
+
+            if(findADriverResponse.getCityId() != null){
+                Data.currentCity = findADriverResponse.getCityId();
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

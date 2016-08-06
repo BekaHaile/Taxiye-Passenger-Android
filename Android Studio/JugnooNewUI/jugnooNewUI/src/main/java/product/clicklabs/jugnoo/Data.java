@@ -65,9 +65,10 @@ public class Data {
 	
 	
 	public static final String SP_SERVER_LINK = "sp_server_link";
-	
-	
-	
+
+
+    public static final long TIMEOUT_FOR_CONTAINER_OPEN_MILLISECONDS = 2000;
+    public static final String CONTAINER_ID = "GTM-NRQKNT";
 	
 	
 	
@@ -84,7 +85,7 @@ public class Data {
 	
 	
 	
-
+    public static int currentCity = 1;
 	
 	
 	
@@ -282,6 +283,7 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_LAST_ADDED_WALLET);
 			Prefs.with(context).remove(Constants.SP_LAST_USED_WALLET);
 			Prefs.with(context).remove(Constants.SP_LAST_MONEY_ADDED_WALLET);
+            Prefs.with(context).remove(Constants.SP_POKESTOP_ENABLED_BY_USER);
 
 
 		} catch (Exception e) {

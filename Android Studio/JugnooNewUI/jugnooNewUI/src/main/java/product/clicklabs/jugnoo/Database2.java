@@ -22,6 +22,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
+import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Selection;
@@ -93,6 +94,11 @@ public class Database2 {                                                        
     private static final String T20_CATEGORY = "t20_category";
     private static final String T20_DATA = "t20_data";
 
+    private static final String TABLE_POKESTOP_DATA = "table_pokestop_data";
+    private static final String CITY_ID = "city_id";
+    private static final String POKESTOP_DATA = "pokestop_data";
+    private static final String UPDATED_TIMESTAMP = "updated_timestamp";
+
 
     /**
      * Creates and opens database for the application use
@@ -163,6 +169,12 @@ public class Database2 {                                                        
         database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_T20_DATA + " ("
                 + T20_CATEGORY + " INTEGER, "
                 + T20_DATA + " TEXT"
+                + ");");
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_POKESTOP_DATA + " ("
+                + CITY_ID + " INTEGER, "
+                + POKESTOP_DATA + " TEXT, "
+                + UPDATED_TIMESTAMP + " REAL "
                 + ");");
 
     }
@@ -748,6 +760,83 @@ public class Database2 {                                                        
         }
 
         return dataList;
+    }
+
+
+
+
+
+
+
+
+
+
+    private void insertPokestopData(int cityId, String pokestopData) {
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(CITY_ID, cityId);
+            contentValues.put(POKESTOP_DATA, pokestopData);
+            contentValues.put(UPDATED_TIMESTAMP, System.currentTimeMillis());
+            database.insert(TABLE_POKESTOP_DATA, null, contentValues);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void insertUpdatePokestopData(int cityId, String pokestopData){
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(POKESTOP_DATA, pokestopData);
+            contentValues.put(UPDATED_TIMESTAMP, System.currentTimeMillis());
+            int rowsAffected = database.update(TABLE_POKESTOP_DATA, contentValues, CITY_ID + "=" + cityId, null);
+            if(rowsAffected == 0){
+                insertPokestopData(cityId, pokestopData);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public FindPokestopResponse getPokestopData(int cityId){
+        try{
+            FindPokestopResponse findPokestopResponse = null;
+            String[] columns = new String[] { POKESTOP_DATA };
+            Cursor cursor = database.query(TABLE_POKESTOP_DATA, columns, CITY_ID + "=" + cityId,
+                    null, null, null, null);
+
+            if(cursor.getCount() > 0){
+                cursor.moveToFirst();
+                String data = cursor.getString(cursor.getColumnIndex(POKESTOP_DATA));
+
+                Gson gson = new Gson();
+                findPokestopResponse = gson.fromJson(data, FindPokestopResponse.class);
+            }
+
+            cursor.close();
+            return findPokestopResponse;
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public long getPokestopDataUpdatedTimestamp(int cityId){
+        long updatedTimestamp = 1000l;
+        try{
+            String[] columns = new String[] { UPDATED_TIMESTAMP };
+            Cursor cursor = database.query(TABLE_POKESTOP_DATA, columns, CITY_ID + "=" + cityId,
+                    null, null, null, null);
+
+            if(cursor.getCount() > 0){
+                cursor.moveToFirst();
+                updatedTimestamp = cursor.getLong(cursor.getColumnIndex(UPDATED_TIMESTAMP));
+            }
+
+            cursor.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return updatedTimestamp;
     }
 
 

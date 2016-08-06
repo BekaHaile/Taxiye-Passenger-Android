@@ -131,6 +131,7 @@
         <!-- end ride layout -->
         <include layout="@layout/layout_ride_summary_new"/>
 
+
         <!-- search layout -->
         <RelativeLayout
             android:id="@+id/relativeLayoutSearch"

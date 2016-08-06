@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -18,6 +19,10 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -118,22 +123,28 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		}
 		return this;
 	}
-
+    Bundle bundle = new Bundle();
 	@Override
 	public void onClick(View v) {
 		try {
 			switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
 					callback.onPaymentModeUpdated();
                     break;
 
 				case R.id.relativeLayoutMobikwik:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
 					callback.onPaymentModeUpdated();
 					break;
 
                 case R.id.linearLayoutCash:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
 					callback.onPaymentModeUpdated();
                     break;
