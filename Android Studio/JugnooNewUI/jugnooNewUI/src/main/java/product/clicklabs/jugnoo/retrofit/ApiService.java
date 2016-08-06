@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.retrofit;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
+import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
@@ -434,5 +435,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/refresh_device_token")
     Response refreshDeviceToken(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/catch_em_all")
+    void findPokestop(@FieldMap Map<String, String> params,
+                        Callback<FindPokestopResponse> callback);
 
 }

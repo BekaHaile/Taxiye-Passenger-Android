@@ -36,6 +36,18 @@ public class CustomMapMarkerCreator {
 		return mDotMarkerBitmap;
 	}
 
+    public static Bitmap createMarkerBitmapForResource(Activity activity, ASSL assl, int resourceId, float originalWidth, float originalHeight){
+        float scale = Math.min(assl.Xscale(), assl.Yscale());
+        int width = (int)(originalWidth * scale);
+        int height = (int)(originalHeight * scale);
+        Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(mDotMarkerBitmap);
+        Drawable shape = activity.getResources().getDrawable(resourceId);
+        shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+        shape.draw(canvas);
+        return mDotMarkerBitmap;
+    }
+
 
     public static Bitmap createPinMarkerBitmapEnd(Activity activity, ASSL assl){
         float scale = Math.min(assl.Xscale(), assl.Yscale());

@@ -8,9 +8,10 @@
     <string name="filter_title">Jugnoo</string>
 
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
+     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
 	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
+
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
 
@@ -972,5 +973,6 @@
 	<string name="add_money_to_wallet">Add Money to Wallet</string>
 	<string name="choose_other_mode_to_pay">Choose other mode to pay</string>
 
+    <string name="jugnoo_pokemon">POKEMON RADAR</string>
 
 </resources>

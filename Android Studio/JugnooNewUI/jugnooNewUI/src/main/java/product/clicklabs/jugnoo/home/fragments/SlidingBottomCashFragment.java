@@ -15,10 +15,15 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
+import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -82,20 +87,26 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         super.onResume();
         updatePreferredPaymentOptionUI();
     }
-
+    Bundle bundle = new Bundle();
     @Override
     public void onClick(View v) {
         try {
             switch (v.getId()){
                 case R.id.relativeLayoutPaytm:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                            +FirebaseEvents.PAYTM, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
                     break;
 
                 case R.id.relativeLayoutMobikwik:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                            +FirebaseEvents.MOBIKWIK, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
                     break;
 
                 case R.id.linearLayoutCash:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                            +FirebaseEvents.CASH, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
                     break;
             }
@@ -103,6 +114,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             e.printStackTrace();
         }
     }
+
 
     private void setSelectedPaymentOptionUI(){
         try {

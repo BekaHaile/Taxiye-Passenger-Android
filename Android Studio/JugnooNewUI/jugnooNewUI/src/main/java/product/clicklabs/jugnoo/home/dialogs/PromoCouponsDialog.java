@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Dialog;
+import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +15,12 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -104,6 +107,9 @@ public class PromoCouponsDialog {
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
+                            +FirebaseEvents.SKIP, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					dialog.dismiss();
@@ -123,6 +129,9 @@ public class PromoCouponsDialog {
 			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
+                            +FirebaseEvents.CONTINUE, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "continue");
 					dialog.dismiss();
 					callback.onCouponApplied();
@@ -132,6 +141,9 @@ public class PromoCouponsDialog {
 			buttonInviteFriends.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
+                            +FirebaseEvents.INVITE_FRIENDS, bundle);
 					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "invite friends");
 					dialog.dismiss();
 					callback.onInviteFriends();

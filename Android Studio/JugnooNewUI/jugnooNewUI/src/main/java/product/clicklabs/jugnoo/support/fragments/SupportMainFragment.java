@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -134,6 +135,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					public void onClick(int position, ShowPanelResponse.Item item) {
 						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
 								-1, "", activity.getResources().getString(R.string.support_main_title), item, "");
+
+                        Bundle bundle = new Bundle();
+                        String eventName = item.getText().replaceAll("\\W", "_");
+                        MyApplication.getInstance().logEvent(FirebaseEvents.SUPPORT+"_"+eventName, bundle);
 					}
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
@@ -141,6 +146,9 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES+"_"+FirebaseEvents.ISSUE_WITH_RECENT_RIDE, bundle);
+
 				activity.openSupportRideIssuesFragment();
 			}
 		});

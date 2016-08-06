@@ -14,13 +14,14 @@ import android.widget.Toast;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class AboutActivity extends BaseActivity implements FlurryEventNames {
+public class AboutActivity extends BaseActivity implements FlurryEventNames, FirebaseEvents {
 
     RelativeLayout relative;
 
@@ -35,6 +36,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
 //    String facebookPageName = "ridejugnoo";
     String facebookPageName = "jugnoose";
     private final String  TAG = "About";
+    Bundle bundle;
 
     @Override
     protected void onResume() {
@@ -82,6 +84,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
                 startActivity(intent);
                 FlurryEventLogger.event(RATING_ON_PLAYSTORE_ABOUT);
+                bundle = new Bundle();
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
             }
         });
@@ -113,6 +117,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                     startActivity(intent);
                 }
                 FlurryEventLogger.event(LIKING_ON_FACEBOOK_ABOUT);
+                bundle = new Bundle();
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+FACEBOOK_LIKE, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Facebook Like");
             }
         });
@@ -125,6 +131,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(TERMS_AND_CONDITIONS);
+                bundle = new Bundle();
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+TERMS_AND_CONDITION, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Terms and Condition");
             }
         });
@@ -136,7 +144,9 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 HelpParticularActivity.helpSection = HelpSection.PRIVACY;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                FlurryEventLogger.event(PRIVACY_POLICY);
+                FlurryEventLogger.event(FlurryEventNames.PRIVACY_POLICY);
+                bundle = new Bundle();
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+FirebaseEvents.PRIVACY_POLICY, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Privacy Policy");
             }
         });
@@ -149,6 +159,8 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(ABOUT_JUGOO_AUTOS);
+                bundle = new Bundle();
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+ABOUT_JUGNOO, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "About Jugnoo");
             }
         });
@@ -166,6 +178,9 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames {
 
 
     public void performBackPressed() {
+        bundle = new Bundle();
+        MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+BACK, bundle);
+
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

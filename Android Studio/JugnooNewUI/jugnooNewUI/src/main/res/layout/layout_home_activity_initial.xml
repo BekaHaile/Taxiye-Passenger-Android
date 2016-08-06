@@ -221,42 +221,15 @@
                 android:tag="mwar" />
 
             <ImageView
-                android:id="@+id/imageViewJugnooPoolExtra"
-                android:layout_width="101px"
-                android:layout_height="101px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="55px"
-                android:src="@drawable/pool_icon_3"
+                android:id="@+id/imageViewPokemonOnOffInitial"
+                android:layout_width="90px"
+                android:layout_height="90px"
+                android:src="@drawable/ic_poke_on_off_button"
                 android:tag="mwar"
-                android:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/imageViewJugnooPool"
-                android:layout_width="111px"
-                android:layout_height="111px"
+                android:layout_marginLeft="56px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
-                android:src="@drawable/pool_icon_3"
-                android:tag="mwar"
-                android:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/imageViewSupplyType"
-                android:layout_width="103px"
-                android:layout_height="103px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="45px"
-                android:src="@drawable/ic_pool_request_selector"
-                android:tag="mwar"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerViewVehicles"
-                android:layout_width="match_parent"
-                android:layout_height="108px"
-                android:layout_below="@+id/imageViewRideNow"
-                android:splitMotionEvents="false"
-                android:visibility="gone" />
+                android:visibility="visible"
+                />
 
         </RelativeLayout>
 
