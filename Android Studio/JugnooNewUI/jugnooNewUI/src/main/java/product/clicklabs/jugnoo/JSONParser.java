@@ -717,7 +717,7 @@ public class JSONParser implements Constants {
 
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
-        int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 1);
+        int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
