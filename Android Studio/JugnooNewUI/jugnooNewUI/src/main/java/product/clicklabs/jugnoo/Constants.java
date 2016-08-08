@@ -359,8 +359,8 @@ public interface Constants {
     String HOME_SCREEN = "Home Screen";
     String KEY_TOTAL_RIDES_AS_USER = "total_rides_as_user";
 
-	String KOCHAVA_FIRST_RIDE_KEY = "";
+	String KOCHAVA_FIRST_RIDE_KEY = "first ride";
 	String KOCHAVA_FIRST_RIDE_VALUE = "";
-	String KOCHAVA_REG_KEY = "";
+	String KOCHAVA_REG_KEY = "registration";
 	String KOCHAVA_REG_VALUE = "";
 }

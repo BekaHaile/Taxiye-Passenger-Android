@@ -24,6 +24,7 @@ import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -56,7 +57,7 @@ public class MyApplication extends Application{
     // [END declare_analytics]
 
     private Feature kTracker;
-    private static final String KEY = "kotest-android-app-5oj";
+
 
 
 	@Override
@@ -73,7 +74,7 @@ public class MyApplication extends Application{
 
             Feature.setErrorDebug(true);
             Feature.enableDebug(true);
-            kTracker = new Feature( this , KEY );
+            kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
 			mInstance = this;
 
