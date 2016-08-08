@@ -52,6 +52,9 @@ public class UserData {
 	private int mobikwikEnabled, integratedJugnooEnabled;
 	private double mobikwikBalance = -1;
 
+	private int freeChargeEnabled;
+	private double freeChargeBalance = -1;
+
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
@@ -64,9 +67,6 @@ public class UserData {
 	private String defaultClientId;
 
 	private JeanieIntroDialogContent jeanieIntroDialogContent;
-
-	private int mFreeChargeEnabled;
-    private double mFreeChargeBalance = -1;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -81,7 +81,7 @@ public class UserData {
 					int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int mFreeChargeEnabled, int notificationPreferenceEnabled,
+					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled){
         this.userIdentifier = userIdentifier;
@@ -140,7 +140,7 @@ public class UserData {
 
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
-		this.mFreeChargeEnabled = mFreeChargeEnabled;
+		this.freeChargeEnabled = freeChargeEnabled;
 
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
@@ -195,6 +195,9 @@ public class UserData {
 				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
 						&& mobikwikEnabled == 1 && mobikwikBalance > -1) {
 					walletTotal = walletTotal + mobikwikBalance;
+				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
+						&& freeChargeEnabled == 1 && freeChargeBalance > -1) {
+					walletTotal = walletTotal + freeChargeBalance;
 				}
 			}
 		}
@@ -485,31 +488,31 @@ public class UserData {
 
 
     public int getFreeChargeEnabled() {
-        return mFreeChargeEnabled;
+        return freeChargeEnabled;
     }
 
-    public void setFreeChargeEnabled(int mFreeChargeEnabled) {
-        this.mFreeChargeEnabled = mFreeChargeEnabled;
+    public void setFreeChargeEnabled(int freeChargeEnabled) {
+        this.freeChargeEnabled = freeChargeEnabled;
     }
 
     public double getFreeChargeBalance() {
-        return mobikwikBalance;
+        return freeChargeBalance;
     }
 
     public String getFreeChargeBalanceStr(){
-        if(mFreeChargeEnabled != 1 || mFreeChargeBalance < 0){
+        if(freeChargeEnabled != 1 || freeChargeBalance < 0){
             return "--";
         } else {
-            return Utils.getMoneyDecimalFormatWithoutFloat().format(mFreeChargeBalance);
+            return Utils.getMoneyDecimalFormatWithoutFloat().format(freeChargeBalance);
         }
     }
 
-    public void setFreeChargeBalance(double mFreeChargeBalance) {
-        this.mFreeChargeBalance = mFreeChargeBalance;
+    public void setFreeChargeBalance(double freeChargeBalance) {
+        this.freeChargeBalance = freeChargeBalance;
     }
 
     public int getFreeChargeBalanceColor(Context context){
-        if(getMobikwikBalance() < 0){
+        if(freeChargeBalance < 0){
             return context.getResources().getColor(R.color.theme_red_color);
         } else{
             return context.getResources().getColor(R.color.theme_green_color);
@@ -517,8 +520,8 @@ public class UserData {
     }
 
     public void deleteFreeCharge(){
-        this.mFreeChargeEnabled = 0;
-        this.mFreeChargeBalance = -1;
+        this.freeChargeEnabled = 0;
+        this.freeChargeBalance = -1;
     }
 
 

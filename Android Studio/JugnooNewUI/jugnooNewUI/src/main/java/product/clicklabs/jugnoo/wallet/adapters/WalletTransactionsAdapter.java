@@ -89,6 +89,9 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             } else if(transactionInfo.getMobikwik() == 1){
                 holder.textViewTransactionMode.setVisibility(View.VISIBLE);
                 holder.textViewTransactionMode.setText(context.getResources().getString(R.string.mobikwik_colon));
+            } else if(transactionInfo.getFreecharge() == 1){
+                holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                holder.textViewTransactionMode.setText(context.getResources().getString(R.string.freecharge_colon));
             }
         }
         else if(viewholder instanceof ViewFooterHolder){

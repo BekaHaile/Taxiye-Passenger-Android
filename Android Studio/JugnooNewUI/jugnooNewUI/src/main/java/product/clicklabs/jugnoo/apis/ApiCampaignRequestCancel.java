@@ -80,7 +80,7 @@ public class ApiCampaignRequestCancel {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+						Log.e(TAG, "cancelCampaign error" + error.toString());
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
 					}

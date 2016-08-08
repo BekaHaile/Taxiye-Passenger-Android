@@ -52,7 +52,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
         }
 
 
-        setContentView(R.layout.activity_paytm_recharge_webview);
+        setContentView(R.layout.activity_wallet_recharge_webview);
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -80,13 +80,11 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 					loadHTMLContent(postDataQuery);
 				}
 			}
-			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
+			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()
+                    || walletType == PaymentOption.FREECHARGE.getOrdinal()){
 				String url = getIntent().getStringExtra(Constants.KEY_URL);
 				webView.loadUrl(url);
-			} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
-                String url = getIntent().getStringExtra(Constants.KEY_URL);
-                webView.loadUrl(url);
-            }
+			}
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();

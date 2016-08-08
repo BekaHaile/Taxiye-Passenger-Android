@@ -13,18 +13,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -65,7 +60,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewMobikwik = (TextView)rootView.findViewById(R.id.textViewMobikwik);textViewMobikwik.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewMobikwikValue = (TextView)rootView.findViewById(R.id.textViewMobikwikValue); textViewMobikwikValue.setTypeface(Fonts.mavenMedium(getActivity()));
-
         textViewFreeCharge = (TextView)rootView.findViewById(R.id.textViewFreeCharge);textViewFreeCharge.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewFreeChargeValue = (TextView)rootView.findViewById(R.id.textViewFreeChargeValue); textViewFreeChargeValue.setTypeface(Fonts.mavenMedium(getActivity()));
 
@@ -73,7 +67,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
         linearLayoutCash = (LinearLayout)rootView.findViewById(R.id.linearLayoutCash);
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenMedium(getActivity()));
-
         relativeLayoutFreeCharge = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutFreeCharge);
 
         relativeLayoutPaytm.setOnClickListener(this);
@@ -118,6 +111,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
                     break;
                 case R.id.relativeLayoutFreeCharge:
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
+                            +FirebaseEvents.FREECHARGE, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     break;
             }
@@ -169,6 +164,10 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
             textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
 
+            textViewFreeChargeValue.setText(String.format(activity.getResources()
+                    .getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+            textViewFreeChargeValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
+
             if(Data.userData.getPaytmEnabled() == 1){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.paytm_wallet));
@@ -215,9 +214,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                         }
                     }
                 }
-                // TODO: 02/08/16 remove after testing
-                if(BuildConfig.DEBUG_MODE)
-                    linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
 
                 linearLayoutWalletContainer.addView(linearLayoutCash);
             }

@@ -13,7 +13,7 @@ public class EndRideData {
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
 		distance, rideTime, waitTime, baseFare, fareFactor, finalFare, sumAdditionalCharges;
-	public double paidUsingPaytm, paidUsingMobikwik;
+	public double paidUsingPaytm, paidUsingMobikwik, paidUsingFreeCharge;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	private String rideDate, phoneNumber, tripTotal, engagementDate;
@@ -29,8 +29,8 @@ public class EndRideData {
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
-					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, int totalRide, int status, String supportNumber){
-
+					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,
+					   int totalRide, int status, String supportNumber){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -77,13 +77,16 @@ public class EndRideData {
 		this.vehicleType = vehicleType;
 		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
 		this.isPooled = isPooled;
+		this.engagementDate = engagementDate;
+		this.totalRide = totalRide;
 
 		this.paidUsingMobikwik = paidUsingMobikwik;
+		this.paidUsingFreeCharge = paidUsingFreeCharge;
+
 		this.engagementDate = engagementDate;
 		this.status = status;
 
 		this.supportNumber = supportNumber;
-
 	}
 
 

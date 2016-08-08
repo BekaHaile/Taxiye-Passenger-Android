@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -136,17 +135,8 @@ public class AddWalletFragment extends Fragment {
 		linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 
-		if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
-			textViewTitle.setText(paymentActivity.getResources().getString(R.string.paytm_wallet));
-			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
-		}
-		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-			textViewTitle.setText(paymentActivity.getResources().getString(R.string.mobikwik_wallet));
-			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
-		} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
-            textViewTitle.setText(paymentActivity.getResources().getString(R.string.freecharge_wallet));
-            imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
-        }
+		textViewTitle.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionNameWallet(openWalletType));
+		imageViewWalletIcon.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconBig(openWalletType));
 
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
@@ -155,14 +145,8 @@ public class AddWalletFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
-                Bundle bundle = new Bundle();
-                if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.BACK, bundle);
-                }
-                else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.BACK, bundle);
-                }
 				paymentActivity.goBack();
+				MyApplication.getInstance().getWalletCore().faEventAddWallet(openWalletType, FirebaseEvents.BACK);
 			}
 		});
 
@@ -170,16 +154,9 @@ public class AddWalletFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Request OTP");
-                Bundle bundle = new Bundle();
-                if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REQUEST_OTP, bundle);
-                }
-                else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REQUEST_OTP, bundle);
-                }
-
 				generateOTP(false);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Request OTP");
+				MyApplication.getInstance().getWalletCore().faEventAddWallet(openWalletType, FirebaseEvents.REQUEST_OTP);
 			}
 		});
 
@@ -288,8 +265,7 @@ public class AddWalletFragment extends Fragment {
 	private void setInitialUI(){
 		if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 			textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_paytm));
-		}
-		else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+		} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 			textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_mobikwik));
 		} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
             textViewOTPMessage.setText(paymentActivity.getResources().getString(R.string.request_otp_message_freecharge));
@@ -367,8 +343,7 @@ public class AddWalletFragment extends Fragment {
 
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 					RestClient.getApiServices().paytmRequestOtp(params, callback);
-				}
-				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
 				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
                     RestClient.getApiServices().freeChargeRequestOtp(params, callback);
@@ -422,7 +397,6 @@ public class AddWalletFragment extends Fragment {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setPaytmBalance(balance);
 									Data.userData.setPaytmEnabled(1);
-									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.PAYTM.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
 								}
@@ -431,11 +405,15 @@ public class AddWalletFragment extends Fragment {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setMobikwikBalance(balance);
 									Data.userData.setMobikwikEnabled(1);
-									Prefs.with(paymentActivity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.MOBIKWIK.getOrdinal());
 									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
-								} else if(Data.userData != null && openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
-                                    // TO Do
+								}
+								else if(Data.userData != null && openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
+									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
+									Data.userData.setFreeChargeBalance(balance);
+									Data.userData.setFreeChargeEnabled(1);
+									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.FREECHARGE.getOrdinal());
+									paymentActivity.performGetBalanceSuccess(AddWalletFragment.class.getName());
                                 }
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
@@ -456,8 +434,7 @@ public class AddWalletFragment extends Fragment {
 
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
-				}
-				else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
+				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
 				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
                     RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);

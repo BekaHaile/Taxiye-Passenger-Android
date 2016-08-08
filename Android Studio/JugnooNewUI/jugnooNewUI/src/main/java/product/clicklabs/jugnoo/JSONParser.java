@@ -850,8 +850,9 @@ public class JSONParser implements Constants {
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
         String engagementDate = jLastRideData.optString("engagement_date", "");
 
-
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
+        double paidUsingFreeCharge = jLastRideData.optDouble(KEY_PAID_USING_FREECHARGE, 0);
+
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
 
@@ -870,7 +871,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate, paidUsingMobikwik, totalRide, status, supportNumber);
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge, totalRide, status, supportNumber);
 	}
 
 

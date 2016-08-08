@@ -43,9 +43,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- paytm logo rl-->
                 <LinearLayout
-                    android:id="@+id/relativeLayoutPaytmLogo"
                     android:layout_width="match_parent"
                     android:layout_height="192px"
                     android:background="@color/menu_item_selector_color"

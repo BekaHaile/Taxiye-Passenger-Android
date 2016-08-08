@@ -135,8 +135,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
 	TextView textViewSTerms;
 
-	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner, linearLayoutPaytm, linearLayoutMobikwik, linearLayoutNone;
-	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioNone;
+	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner,
+			linearLayoutPaytm, linearLayoutMobikwik, linearLayoutFreeCharge, linearLayoutNone;
+	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone;
 
 	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
@@ -493,11 +494,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			linearLayoutWalletContainerInner = (LinearLayout) findViewById(R.id.linearLayoutWalletContainerInner);
 			linearLayoutPaytm = (LinearLayout) findViewById(R.id.linearLayoutPaytm);
 			linearLayoutMobikwik = (LinearLayout) findViewById(R.id.linearLayoutMobikwik);
+			linearLayoutFreeCharge = (LinearLayout) findViewById(R.id.linearLayoutFreeCharge);
 			linearLayoutNone = (LinearLayout) findViewById(R.id.linearLayoutNone);
 			((TextView) findViewById(R.id.textViewLinkWalletMessage)).setTypeface(Fonts.mavenMedium(this));
 			((TextView) findViewById(R.id.textViewNone)).setTypeface(Fonts.mavenMedium(this));
 			imageViewRadioPaytm = (ImageView) findViewById(R.id.imageViewRadioPaytm);
 			imageViewRadioMobikwik = (ImageView) findViewById(R.id.imageViewRadioMobikwik);
+			imageViewRadioFreeCharge = (ImageView) findViewById(R.id.imageViewRadioFreeCharge);
 			imageViewRadioNone = (ImageView) findViewById(R.id.imageViewRadioNone);
 
 			root.setOnClickListener(onClickListenerKeybordHide);
@@ -535,6 +538,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					linkedWallet = LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal();
+					setLinkedWalletTick();
+				}
+			});
+
+			linearLayoutFreeCharge.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					linkedWallet = LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal();
 					setLinkedWalletTick();
 				}
 			});
@@ -903,7 +914,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										if ((linkedWallet == LinkedWalletStatus.NO_WALLET.getOrdinal() && Utils.isEmailValid(emailId))
 												||
 												((linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
-														|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal())
+														|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
+														|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal())
 														&& Utils.isEmailValid(emailId) && !emailId.contains("+"))
 												) {
 											if (password.length() >= 6) {
@@ -1459,6 +1471,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						JSONObject jObj = new JSONObject(responseStr);
 						int showPaytm = jObj.optJSONObject("signup").optInt("PAYTM");
 						int showMobikwik = jObj.optJSONObject("signup").optInt("MOBIKWIK");
+						int showFreecharge = jObj.optJSONObject("signup").optInt("FREECHARGE");
 						linkedWallet = jObj.optJSONObject("signup").optInt("DEFAULT");
 						int showFacebook = jObj.optJSONObject("signup").optInt("FACEBOOK");
 						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
@@ -1471,6 +1484,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								}
 								else if(Constants.KEY_MOBIKWIK.equalsIgnoreCase(jWalletOrder.getString(i))){
 									linearLayoutWalletContainerInner.addView(linearLayoutMobikwik);
+								}
+								else if(Constants.KEY_FREECHARGE.equalsIgnoreCase(jWalletOrder.getString(i))){
+									linearLayoutWalletContainerInner.addView(linearLayoutFreeCharge);
 								}
 							}
 							linearLayoutWalletContainerInner.addView(linearLayoutNone);
@@ -1494,7 +1510,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							}
 						}
 
-						if(showPaytm == 1 || showMobikwik == 1){
+						if(showFreecharge == 1){
+							linearLayoutFreeCharge.setVisibility(View.VISIBLE);
+						} else{
+							linearLayoutFreeCharge.setVisibility(View.GONE);
+							if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+								linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+							}
+						}
+
+						if(showPaytm == 1 || showMobikwik == 1 || showFreecharge == 1){
 							linearLayoutWalletContainer.setVisibility(View.VISIBLE);
 						} else{
 							linearLayoutWalletContainer.setVisibility(View.GONE);
@@ -3250,20 +3275,24 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void setLinkedWalletTick(){
 		if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_selected);
-			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_normal);
+			setWalletRadio(imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone);
 		}
 		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
-			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_normal);
+			setWalletRadio(imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioFreeCharge, imageViewRadioNone);
+		}
+		else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+			setWalletRadio(imageViewRadioFreeCharge, imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioNone);
 		}
 		else {
-			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_selected);
+			setWalletRadio(imageViewRadioNone, imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge);
 		}
+	}
+
+	private void setWalletRadio(ImageView selected, ImageView unSelected1, ImageView unSelected2, ImageView unSelected3){
+		selected.setImageResource(R.drawable.ic_radio_button_selected);
+		unSelected1.setImageResource(R.drawable.ic_radio_button_normal);
+		unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
+		unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
 	}
 
 }

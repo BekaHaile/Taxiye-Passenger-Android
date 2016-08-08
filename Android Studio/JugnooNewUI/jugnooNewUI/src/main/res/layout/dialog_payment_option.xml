@@ -148,6 +148,7 @@
                     android:textSize="@dimen/text_size_34"/>
 
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutFreeCharge"
                 android:layout_width="match_parent"
@@ -174,7 +175,7 @@
 
                     <ImageView
                         style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_mobikwik_small"
+                        android:src="@drawable/ic_freecharge_small"
                         android:layout_marginLeft="10px"
                         />
 

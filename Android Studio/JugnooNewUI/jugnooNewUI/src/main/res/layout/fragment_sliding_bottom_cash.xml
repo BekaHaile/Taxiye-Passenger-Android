@@ -149,7 +149,7 @@
 
                 <ImageView
                     style="@style/payment_option_icon_small"
-                    android:src="@drawable/ic_mobikwik_small"
+                    android:src="@drawable/ic_freecharge_small"
                     android:layout_marginLeft="10px"
                     />
 

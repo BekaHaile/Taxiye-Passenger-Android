@@ -3,9 +3,6 @@ package product.clicklabs.jugnoo.wallet.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +15,12 @@ import com.flurry.android.FlurryAgent;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -107,8 +102,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 
 		relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
 		textViewPaytmBalance = (TextView)rootView.findViewById(R.id.textViewPaytmBalance); textViewPaytmBalance.setTypeface(Fonts.mavenRegular(paymentActivity));
-		textViewPaytmBalanceValue = (TextView) rootView.findViewById(R.id.textViewPaytmBalanceValue);
-		textViewPaytmBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewPaytmBalanceValue = (TextView) rootView.findViewById(R.id.textViewPaytmBalanceValue); textViewPaytmBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		relativeLayoutMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMobikwik);
 		textViewMobiKwik = (TextView) rootView.findViewById(R.id.textViewMobikwik); textViewMobiKwik.setTypeface(Fonts.mavenRegular(paymentActivity));
@@ -158,89 +152,21 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 
 			@Override
 			public void onClick(View v) {
-				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-					if(Data.userData.getPaytmEnabled() == 1) {
-						paymentActivity.getSupportFragmentManager().beginTransaction()
-								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new WalletRechargeFragment(PaymentOption.PAYTM.getOrdinal()), WalletRechargeFragment.class.getName())
-								.addToBackStack(WalletRechargeFragment.class.getName())
-								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-								.commit();
-						FlurryEventLogger.event(PAYTM_WALLET_OPENED);
-						FlurryEventLogger.event(paymentActivity, CLICKS_ON_PAYTM_WALLET);
-					} else {
-						paymentActivity.getSupportFragmentManager().beginTransaction()
-								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new AddWalletFragment(PaymentOption.PAYTM.getOrdinal()), AddWalletFragment.class.getName())
-								.addToBackStack(AddWalletFragment.class.getName())
-								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-								.commit();
-						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
-					}
-					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+PAYTM_WALLET, bundle);
-					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
-				}
+				walletOnClick(PaymentOption.PAYTM.getOrdinal());
 			}
 		});
 
 		relativeLayoutMobikwik.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-					if(Data.userData.getMobikwikEnabled() == 1) {
-						paymentActivity.getSupportFragmentManager().beginTransaction()
-								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new WalletRechargeFragment(PaymentOption.MOBIKWIK.getOrdinal()), WalletRechargeFragment.class.getName())
-								.addToBackStack(WalletRechargeFragment.class.getName())
-								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-								.commit();
-						FlurryEventLogger.event(PAYTM_WALLET_OPENED);
-						FlurryEventLogger.event(paymentActivity, CLICKS_ON_PAYTM_WALLET);
-					} else {
-						paymentActivity.getSupportFragmentManager().beginTransaction()
-								.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-								.add(R.id.fragLayout, new AddWalletFragment(PaymentOption.MOBIKWIK.getOrdinal()), AddWalletFragment.class.getName())
-								.addToBackStack(AddWalletFragment.class.getName())
-								.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-										.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-								.commit();
-						FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
-					}
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ WALLET+"_" +FirebaseEvents.MOBIKWIK, bundle);
-					NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
-					FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
-				}
+				walletOnClick(PaymentOption.MOBIKWIK.getOrdinal());
 			}
 		});
 
         relativeLayoutFreeCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-                    if(Data.userData.getFreeChargeEnabled() == 1) {
-                        paymentActivity.getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                                .add(R.id.fragLayout, new WalletRechargeFragment(PaymentOption.FREECHARGE.getOrdinal()), WalletRechargeFragment.class.getName())
-                                .addToBackStack(WalletRechargeFragment.class.getName())
-                                .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-                                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                                .commit();
-                    } else {
-                        paymentActivity.getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                                .add(R.id.fragLayout, new AddWalletFragment(PaymentOption.FREECHARGE.getOrdinal()), AddWalletFragment.class.getName())
-                                .addToBackStack(AddWalletFragment.class.getName())
-                                .hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-                                        .getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                                .commit();
-                    }
-                }
+				walletOnClick(PaymentOption.FREECHARGE.getOrdinal());
             }
         });
 
@@ -277,6 +203,55 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 		setUserWalletInfo();
 
         return rootView;
+	}
+
+	private void walletOnClick(int paymentOption){
+		try {
+			if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
+
+				boolean walletAdded = false;
+				if((paymentOption == PaymentOption.PAYTM.getOrdinal() && Data.userData.getPaytmEnabled() == 1)
+						|| (paymentOption == PaymentOption.MOBIKWIK.getOrdinal() && Data.userData.getMobikwikEnabled() == 1)
+						|| (paymentOption == PaymentOption.FREECHARGE.getOrdinal() && Data.userData.getFreeChargeEnabled() == 1)){
+					walletAdded = true;
+				}
+
+				if(walletAdded){
+					paymentActivity.getSupportFragmentManager().beginTransaction()
+							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+							.add(R.id.fragLayout, new WalletRechargeFragment(paymentOption), WalletRechargeFragment.class.getName())
+							.addToBackStack(WalletRechargeFragment.class.getName())
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+					FlurryEventLogger.event(PAYTM_WALLET_OPENED);
+					FlurryEventLogger.event(paymentActivity, CLICKS_ON_PAYTM_WALLET);
+				} else{
+					paymentActivity.getSupportFragmentManager().beginTransaction()
+							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+							.add(R.id.fragLayout, new AddWalletFragment(paymentOption), AddWalletFragment.class.getName())
+							.addToBackStack(AddWalletFragment.class.getName())
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+					FlurryEventLogger.event(PAYTM_WALLET_ADD_CLICKED);
+				}
+
+				String suffix = "";
+				if(paymentOption == PaymentOption.PAYTM.getOrdinal()){
+					suffix = FirebaseEvents.PAYTM_WALLET;
+				} else if(paymentOption == PaymentOption.MOBIKWIK.getOrdinal()){
+					suffix = FirebaseEvents.MOBIKWIK_WALLET;
+				} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
+					suffix = FirebaseEvents.FREECHARGE_WALLET;
+				}
+				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.WALLET+"_"+suffix, new Bundle());
+				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
+				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -335,14 +310,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
                     textViewFreeChargeBalanceValue.setVisibility(View.GONE);
                 }
 
-
-				Spannable spanJ = new SpannableString(textViewJugnooCashBalanceValue.getText());
-				spanJ.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				//textViewJugnooCashBalanceValue.setText(spanJ);
-
-				Spannable spanP = new SpannableString(textViewPaytmBalanceValue.getText());
-				spanP.setSpan(new RelativeSizeSpan(0.8f), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				//textViewPaytmBalanceValue.setText(spanP);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -367,11 +334,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
                         }
 					}
 				}
-                //Todo: remove below code
-                if(BuildConfig.DEBUG_MODE)
-                    linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
-
-
 			}
 		} catch (Exception e){
 			e.printStackTrace();

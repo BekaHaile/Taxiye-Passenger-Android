@@ -89,7 +89,7 @@ public class ApiCampaignAvailRequest {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+						Log.e(TAG, "availCampaign error" + error.toString());
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
 					}
