@@ -250,6 +250,9 @@ public class JSONParser implements Constants {
 
         int totalRides = userData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 1);
         Prefs.with(context).save(Constants.SP_TOTAL_RIDES_AS_USER, totalRides);
+        if(totalRides == 0) {
+            Prefs.with(context).save(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, totalRides);
+        }
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);

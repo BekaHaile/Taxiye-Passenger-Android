@@ -6632,10 +6632,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void afterRideFeedbackSubmitted(final int givenRating) {
         try {
-            if (Prefs.with(this).getInt(Constants.SP_TOTAL_RIDES_AS_USER, 1) == 0) {
-                // TODO: 05/08/16 Add event name and data
+            if (Prefs.with(this).getInt(Constants.SP_TOTAL_RIDES_AS_USER, 1) == 0 ||
+                    Prefs.with(this).getInt(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, 1) == 0) {
+                // TODO: 05/08/16 Add event name and data after first ride
                 MyApplication.getInstance().getkTracker().event("", "");
                 Prefs.with(this).save(Constants.SP_TOTAL_RIDES_AS_USER, 1);
+                Prefs.with(this).save(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, 1);
             }
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;

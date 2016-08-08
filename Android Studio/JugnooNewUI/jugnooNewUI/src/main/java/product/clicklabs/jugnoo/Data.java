@@ -285,7 +285,12 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_LAST_MONEY_ADDED_WALLET);
             Prefs.with(context).remove(Constants.SP_POKESTOP_ENABLED_BY_USER);
 
+            if(Prefs.with(context).getInt(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, 0) == 1) {
+                Prefs.with(context).remove(Constants.SP_TOTAL_RIDE_COUNT_LOCAL);
+            }
             Prefs.with(context).remove(Constants.SP_TOTAL_RIDES_AS_USER);
+
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
