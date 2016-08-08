@@ -53,7 +53,6 @@ public class MyApplication extends Application{
      */
     // [START declare_analytics]
     private FirebaseAnalytics mFirebaseAnalytics;
-    private TagManager tagManager;
     // [END declare_analytics]
 
     private Feature kTracker;
@@ -94,12 +93,6 @@ public class MyApplication extends Application{
         return mFirebaseAnalytics;
     }
 
-    public TagManager getTagManager() {
-        if(tagManager == null)
-            tagManager = TagManager.getInstance(this);
-
-        return tagManager;
-    }
 
     public void logEvent(String content, Bundle bundle) {
         getFirebaseAnalytics().logEvent(content, bundle);

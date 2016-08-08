@@ -413,32 +413,12 @@
             android:theme="@android:style/Theme.NoDisplay" >
         </activity>
 
-<<<<<<< 02c30e00b8e6078b514adb3e82db6bbe9a355754
-        <!--  Add preview activity. -->
-        <activity
-            android:name="com.google.android.gms.tagmanager.PreviewActivity"
-            android:label="@string/app_name"
-            android:noHistory="true">  <!-- optional, removes the previewActivity from the activity stack. -->
-            <intent-filter>
-                <data android:scheme="tagmanager.c.product.clicklabs.jugnoo" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE"/>
-            </intent-filter>
-        </activity>
-=======
-
         <receiver android:name ="com.kochava.android.tracker.ReferralCapture"
                   android:exported ="true" >
             <intent-filter>
                 <action android:name ="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <meta-data
-            android:name ="com.google.android.gms.version"
-            android:value ="@integer/google_play_services_version"/>
->>>>>>> feature_kochava: kochava sdk added and basic event added without event name
 
     </application>
 
