@@ -201,7 +201,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					}
 					FlurryEventLogger.event(OTP_VERIFIED_WITH_SMS);
                     Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.VERIFY_ME, bundle);
 					FlurryEventLogger.eventGA(ACQUISITION, TAG, "Verify me");
 				} else {
 					editTextOTP.requestFocus();
@@ -292,7 +292,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
                                         Bundle bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
 										FlurryEventLogger.eventGA(ACQUISITION, TAG, "Give a miss call");
 									}
 								},
@@ -318,7 +318,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				editTextOTP.setError(null);
                 FlurryEventLogger.event(CHANGE_PHONE_OTP_NOT_RECEIVED);
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
+                MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.EDIT_PHONE_NUMBER, bundle);
 
                 FlurryEventLogger.eventGA(ACQUISITION, TAG, "Edit phone number");
 				Intent intent = new Intent(OTPConfirmScreen.this, ChangePhoneBeforeOTPActivity.class);
@@ -989,7 +989,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	public void performBackPressed(){
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.BACK, bundle);
 		if(intentFromRegister){
 			Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
 			intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
