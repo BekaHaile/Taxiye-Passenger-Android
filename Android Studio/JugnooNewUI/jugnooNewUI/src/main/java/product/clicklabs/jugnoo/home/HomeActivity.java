@@ -85,7 +85,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -6656,13 +6655,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void afterRideFeedbackSubmitted(final int givenRating){
         try {
-            if (Prefs.with(this).getInt(Constants.SP_TOTAL_RIDES_AS_USER, 1) == 0 ||
-                    Prefs.with(this).getInt(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, 1) == 0) {
-                // TODO: 05/08/16 Add event name and data after first ride
-                MyApplication.getInstance().getkTracker().event("", "");
-                Prefs.with(this).save(Constants.SP_TOTAL_RIDES_AS_USER, 1);
-                Prefs.with(this).save(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, 1);
+            try {
+                // TODO: 08/08/16 Enter kochava event name and data 
+                if(Data.endRideData != null && Data.endRideData.getTotalRide() == 0) {
+					MyApplication.getInstance().getkTracker().event("", "");
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;
 

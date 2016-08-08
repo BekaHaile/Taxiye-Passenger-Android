@@ -358,6 +358,4 @@ public interface Constants {
     String POKEMON_GO_APP_PACKAGE = "com.nianticlabs.pokemongo";
     String HOME_SCREEN = "Home Screen";
     String KEY_TOTAL_RIDES_AS_USER = "total_rides_as_user";
-    String SP_TOTAL_RIDES_AS_USER = "sp_total_rides_as_user";
-    String SP_TOTAL_RIDE_COUNT_LOCAL = "sp_total_ride_count_local";
 }

@@ -8,7 +8,6 @@ import android.content.SharedPreferences.Editor;
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.kochava.android.tracker.Feature;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -247,12 +246,6 @@ public class JSONParser implements Constants {
 
         int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
         int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
-
-        int totalRides = userData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 1);
-        Prefs.with(context).save(Constants.SP_TOTAL_RIDES_AS_USER, totalRides);
-        if(totalRides == 0) {
-            Prefs.with(context).save(Constants.SP_TOTAL_RIDE_COUNT_LOCAL, totalRides);
-        }
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
@@ -724,7 +717,7 @@ public class JSONParser implements Constants {
 
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
-
+        int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 1);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -739,7 +732,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate, paidUsingMobikwik);
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik, totalRide);
 	}
 
 
