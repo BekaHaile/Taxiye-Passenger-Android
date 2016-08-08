@@ -63,7 +63,7 @@ public class PushDialog {
 				dialog.setContentView(R.layout.dialog_push);
 
                 Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+FirebaseEvents.PROMOTIONAL_POP_UP+"_"+title+"_"+String.valueOf(HomeActivity.passengerScreenMode), bundle);
+                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+FirebaseEvents.PROMOTIONAL_POP_UP+"_"+String.valueOf(HomeActivity.passengerScreenMode+"_"+title), bundle);
 				FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", String.valueOf(HomeActivity.passengerScreenMode));
 
 				RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
@@ -118,7 +118,7 @@ public class PushDialog {
 								Constants.EMPTY_JSON_OBJECT);
 						dialog.dismiss();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+title+"_"+FirebaseEvents.CANCEL, bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+FirebaseEvents.CANCEL+"_"+title, bundle);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				});
@@ -128,7 +128,7 @@ public class PushDialog {
 					public void onClick(View v) {
 						dialog.dismiss();
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+title+"_"+FirebaseEvents.CANCEL, bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+FirebaseEvents.CANCEL+"_"+title, bundle);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				});

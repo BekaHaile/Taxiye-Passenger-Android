@@ -94,6 +94,9 @@ public class MyApplication extends Application{
     }
 
     public void logEvent(String content, Bundle bundle) {
+		if(content.length()>31) {
+			content = content.substring(0, 31);
+		}
         getFirebaseAnalytics().logEvent(content, bundle);
     }
 
