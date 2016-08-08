@@ -6658,7 +6658,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             try {
                 // TODO: 08/08/16 Enter kochava event name and data 
                 if(Data.endRideData != null && Data.endRideData.getTotalRide() == 0) {
-					MyApplication.getInstance().getkTracker().event("", "");
+					MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_FIRST_RIDE_KEY, Constants.KOCHAVA_FIRST_RIDE_VALUE);
 				}
             } catch (Exception e) {
                 e.printStackTrace();
