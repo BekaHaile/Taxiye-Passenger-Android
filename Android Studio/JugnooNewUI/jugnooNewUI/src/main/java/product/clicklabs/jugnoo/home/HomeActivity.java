@@ -6534,6 +6534,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                                     new UserDebtDialog.Callback() {
                                                                         @Override
                                                                         public void successFullyDeducted(double userDebt) {
+                                                                            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
                                                                             setUserData();
                                                                         }
                                                                     }).showUserDebtDialog(userDebt, message);

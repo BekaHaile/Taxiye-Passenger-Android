@@ -285,7 +285,7 @@ public class MyApplication extends Application{
 
     public Feature getkTracker() {
         if(kTracker == null) {
-            kTracker = new Feature(this, KEY);
+            kTracker = new Feature(this, Config.KOCHAVA_KEY);
         }
         return kTracker;
     }

@@ -387,23 +387,20 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			e.printStackTrace();
 		}
 
-		long timerDuration = 30000;
+		long timerDuration = 20000;
+		textViewCounter.setText("0:20");
+
 		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
 			imageViewWalletIcon.setVisibility(View.VISIBLE);
 			imageViewWalletIcon.setImageResource(R.drawable.ic_paytm_big);
-			textViewCounter.setText("0:60");
-			timerDuration = 60000;
 			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
 		}
 		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
 			imageViewWalletIcon.setVisibility(View.VISIBLE);
 			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
-			textViewCounter.setText("0:60");
-			timerDuration = 60000;
 			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
 		}else{
 			imageViewWalletIcon.setVisibility(View.GONE);
-			textViewCounter.setText("0:30");
 			buttonOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
 		}
 
