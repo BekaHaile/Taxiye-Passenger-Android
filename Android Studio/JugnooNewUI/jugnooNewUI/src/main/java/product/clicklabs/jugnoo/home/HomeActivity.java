@@ -4228,6 +4228,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     && linearLayoutRideSummaryContainer.getVisibility() == View.VISIBLE){
                 linearLayoutRideSummaryContainerSetVisiblity(View.GONE, RideEndFragmentMode.INVOICE);
             }
+            else if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
+                    && relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE){
+                buttonEndRideSkip.performClick();
+            }
             else{
                 if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
