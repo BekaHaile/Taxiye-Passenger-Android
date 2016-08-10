@@ -814,6 +814,7 @@
 	<string name="disable_mock_location">Disable mock location first</string>
 
 	<string name="notifications">Notifications</string>
+	<string name="push_noti_pref">Push Notifications Preference</string>
 	<string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
 
 	<string name="auto">Auto</string>

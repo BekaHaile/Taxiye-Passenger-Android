@@ -1,0 +1,113 @@
+package product.clicklabs.jugnoo.adapters;
+
+import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
+
+/**
+ * Created by gurmail on 10/08/16.
+ */
+public class NotificationSettingAdapter extends RecyclerView.Adapter<NotificationSettingAdapter.ViewHolder> {
+
+    private Activity activity;
+    private int rowLayout;
+    private ArrayList<ShowPanelResponse.Item> items = new ArrayList<>();
+    private Callback callback;
+
+    public NotificationSettingAdapter(ArrayList<ShowPanelResponse.Item> items, Activity activity, int rowLayout, Callback callback) {
+        if(items != null){
+            this.items = items;
+        }
+        this.activity = activity;
+        this.rowLayout = rowLayout;
+        this.callback = callback;
+    }
+
+    public void setResults(ArrayList<ShowPanelResponse.Item> items){
+        this.items = items;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
+
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
+                RecyclerView.LayoutParams.WRAP_CONTENT);
+        v.setLayoutParams(layoutParams);
+
+        ASSL.DoMagic(v);
+        return new ViewHolder(v, activity);
+    }
+
+    @Override
+    public void onBindViewHolder(NotificationSettingAdapter.ViewHolder holder, int position) {
+//        ShowPanelResponse.Item supportFAq = items.get(position);
+//        holder.textViewFaqItemName.setText(supportFAq.getText());
+//        holder.root.setTag(position);
+//        holder.root.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int clickedPosition = (int) v.getTag();
+//                callback.onClick(clickedPosition, items.get(clickedPosition));
+//            }
+//        });
+//
+//        if(position == 0){
+//            holder.imageViewSep.setVisibility(View.GONE);
+//            holder.root.setBackgroundResource(R.drawable.background_white_top_rounded_bordered);
+//        }
+//        else if(position == getItemCount()-2){
+//            holder.imageViewSep.setVisibility(View.GONE);
+//            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
+//        }
+//        else if(position == getItemCount()-1){
+//            holder.imageViewSep.setVisibility(View.GONE);
+//            holder.root.setBackgroundResource(R.drawable.background_white_bottom_rounded_bordered);
+//        }
+//        else{
+//            holder.imageViewSep.setVisibility(View.VISIBLE);
+//            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
+//        }
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return items == null ? 0 : items.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        public LinearLayout root;
+        public TextView textViewNotiTitle, textViewNotiText;
+        public ImageView imageViewStatus;
+        public ViewHolder(View itemView, Activity activity) {
+            super(itemView);
+            root = (LinearLayout) itemView.findViewById(R.id.root);
+            textViewNotiTitle = (TextView)itemView.findViewById(R.id.textViewNotiTitle);
+            textViewNotiTitle.setTypeface(Fonts.mavenLight(activity));
+
+            textViewNotiText = (TextView)itemView.findViewById(R.id.textViewNotiText);
+            textViewNotiText.setTypeface(Fonts.mavenLight(activity));
+
+            imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
+        }
+    }
+
+    public interface Callback {
+        void onClick(int position, ShowPanelResponse.Item supportFAq);
+    }
+
+}
