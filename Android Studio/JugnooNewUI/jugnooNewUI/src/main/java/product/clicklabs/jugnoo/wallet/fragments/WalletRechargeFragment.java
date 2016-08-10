@@ -344,10 +344,10 @@ public class WalletRechargeFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("amount", amount);
         if(openWalletType == PaymentOption.PAYTM.getOrdinal()){
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
         }
         else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_AMOUNT, bundle);
         }
     }
 	private void setButtonBackground(Button selected){
@@ -390,7 +390,7 @@ public class WalletRechargeFragment extends Fragment {
 	public void performBackPressed() {
 
         Bundle bundle = new Bundle();
-        MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.BACK, bundle);
+        MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.BACK, bundle);
 		if(buttonRemoveWallet.getVisibility() == View.VISIBLE){
 			linearLayoutInner.setVisibility(View.VISIBLE);
 			buttonRemoveWallet.setVisibility(View.GONE);

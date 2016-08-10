@@ -181,7 +181,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
                         Bundle bundle = new Bundle();
                         String str = parentName.replaceAll("\\W", "_");
 						String btnStr = buttonSubmit.getText().toString().replaceAll("\\W", "_");
-                        MyApplication.getInstance().logEvent(ISSUES+"_"+str+"_"+btnStr, bundle);
+                        MyApplication.getInstance().logEvent(ISSUES+"_"+btnStr+"_"+str, bundle);
 					}
 				}
 			}

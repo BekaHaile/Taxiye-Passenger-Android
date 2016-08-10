@@ -19,10 +19,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -137,14 +134,14 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 				case R.id.relativeLayoutMobikwik:
                     MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-                            +FirebaseEvents.PAYTM, bundle);
+                            +FirebaseEvents.MOBIKWIK, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
 					callback.onPaymentModeUpdated();
 					break;
 
                 case R.id.linearLayoutCash:
                     MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-                            +FirebaseEvents.PAYTM, bundle);
+                            +FirebaseEvents.CASH, bundle);
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
 					callback.onPaymentModeUpdated();
                     break;

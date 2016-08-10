@@ -2181,7 +2181,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onConfirmed(boolean confirmClicked) {
                                 if (confirmClicked) {
                                     bundle = new Bundle();
-                                    MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+OK, bundle);
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+OK, bundle);
                                     FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "priority tip pop up", "ok");
                                 }
                                 finalRequestRideTimerStart();
@@ -2191,7 +2191,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onCancelled() {
                                 Log.v("Request of Ride", "Aborted");
                                 bundle = new Bundle();
-                                MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+CANCEL, bundle);
+                                MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+CANCEL, bundle);
                                 FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "cancel");
                                 FlurryEventLogger.event(HomeActivity.this, SURGE_NOT_ACCEPTED);
                             }
@@ -2281,7 +2281,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "offer selected");
                                     Bundle bundle = new Bundle();
                                     bundle.putString(Constants.HOME_SCREEN, "offer selected");
-                                    MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
 
                                 } else {
                                     FlurryEventLogger.event(COUPON_NOT_SELECTED);
@@ -3608,7 +3608,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "yes");
                                         bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCR_POP_UP+"_"+YES, bundle);
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCR_POP_UP+"_"+YES, bundle);
                                         //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
@@ -3645,7 +3645,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "no thanks");
                                         bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCR_POP_UP+"_"+NO_THANKS, bundle);
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCR_POP_UP+"_"+NO_THANKS, bundle);
                                         Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
                                         uploadContactsApi(false);
                                         dismissReferAllDialog();
@@ -3692,7 +3692,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "yes");
                                         bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCD_POP_UP+"_"+YES, bundle);
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+YES, bundle);
                                         //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
                                         Data.userData.contactSaved = 1;
                                         Data.userData.setReferAllStatusLogin(1);
@@ -3730,7 +3730,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "no thanks");
                                         bundle = new Bundle();
-                                        MyApplication.getInstance().logEvent(CAMPAIGNS+"_"+CBCD_POP_UP+"_"+NO_THANKS, bundle);
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+NO_THANKS, bundle);
                                         Data.userData.contactSaved = 0;
                                         Data.userData.setReferAllStatusLogin(-1);
                                         uploadContactsApi(true);
@@ -5642,7 +5642,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
-                            +DIFFERENT_PICKUP_LOCATION_POPUP+"_"+CANCEL, bundle);
+                            +DIFFERENT_PICKUP_LOCATION_POPUP+"_can", bundle);
                     dialog.dismiss();
                 }
             });
