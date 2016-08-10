@@ -346,7 +346,7 @@ public class AddWalletFragment extends Fragment {
 				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
 					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
 				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
-                    RestClient.getApiServices().freeChargeRequestOtp(params, callback);
+					RestClient.getApiServices().freeChargeRequestOtp(params, callback);
                 }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,

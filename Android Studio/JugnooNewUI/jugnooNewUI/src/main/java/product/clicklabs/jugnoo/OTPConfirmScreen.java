@@ -1064,9 +1064,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", accessToken);
-				params.put("client_id", Config.getAutosClientId());
-				params.put("is_access_token_new", "1");
+				params.put(KEY_ACCESS_TOKEN, accessToken);
+				params.put(KEY_CLIENT_ID, Config.getAutosClientId());
+				params.put(KEY_IS_ACCESS_TOKEN_NEW, "1");
 
 				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
