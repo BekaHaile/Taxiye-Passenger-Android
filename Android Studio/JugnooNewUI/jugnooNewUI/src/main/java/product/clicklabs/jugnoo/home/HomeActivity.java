@@ -4179,6 +4179,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
+        try {
+            if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
+					&& relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE){
+				eventKochavaFirstRide();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         super.onPause();
 
     }
@@ -6658,16 +6668,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
+    private void eventKochavaFirstRide(){
+        try {
+            if(Data.endRideData != null && Data.endRideData.getTotalRide() == 1) {
+                MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_FIRST_RIDE_KEY, ""+Data.endRideData.finalFare);
+                Data.endRideData.setTotalRide(Data.endRideData.getTotalRide()+1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void afterRideFeedbackSubmitted(final int givenRating){
         try {
-            try {
-                // TODO: 08/08/16 Enter kochava event name and data 
-                if(Data.endRideData != null && Data.endRideData.getTotalRide() == 1) {
-					MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_FIRST_RIDE_KEY, ""+Data.endRideData.finalFare);
-				}
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            eventKochavaFirstRide();
             
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;

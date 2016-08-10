@@ -337,9 +337,7 @@ public class JSONParser implements Constants {
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
-                // TODO: 05/08/16 Add event name and data
                 MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_REG_KEY, ""+loginVia);
-                Log.d("First time reg", "first time reg thr "+loginVia);
                 couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
