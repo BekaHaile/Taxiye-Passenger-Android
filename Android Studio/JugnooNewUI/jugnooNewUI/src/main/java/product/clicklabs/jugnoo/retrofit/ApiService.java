@@ -441,4 +441,14 @@ public interface ApiService {
     void findPokestop(@FieldMap Map<String, String> params,
                         Callback<FindPokestopResponse> callback);
 
+
+    @FormUrlEncoded
+    @POST("/fetch_push_preference")
+    void getNotificationPreference(@FieldMap Map<String, String> params,
+                           Callback<NotificationInboxResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/update_push_preference")
+    void updateNotificationPreference(@FieldMap Map<String, String> params,
+                           Callback<NotificationInboxResponse> callback);
 }

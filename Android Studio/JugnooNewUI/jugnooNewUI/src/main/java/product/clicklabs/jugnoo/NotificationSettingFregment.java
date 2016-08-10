@@ -111,7 +111,7 @@ public class NotificationSettingFregment extends Fragment implements Notificatio
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-                RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
+                RestClient.getApiServices().getNotificationPreference(params, new Callback<NotificationInboxResponse>() {
                     @Override
                     public void success(final NotificationInboxResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
@@ -176,14 +176,14 @@ public class NotificationSettingFregment extends Fragment implements Notificatio
     /**
      * ASync for confirming otp from server
      */
-    public void setNotificationSettingStatus() {
+    public void updateNotificationPreferenceStatus() {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-                RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
+                RestClient.getApiServices().updateNotificationPreference(params, new Callback<NotificationInboxResponse>() {
                     @Override
                     public void success(final NotificationInboxResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
