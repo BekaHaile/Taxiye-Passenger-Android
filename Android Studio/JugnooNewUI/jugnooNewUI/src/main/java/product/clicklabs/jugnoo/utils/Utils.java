@@ -718,7 +718,7 @@ public class Utils {
 		String[] arr = message.split("\\ ");
 		for(String iarr : arr){
 			iarr = iarr.replace(".", "");
-			if(iarr.length() >= 4 && checkIfOnlyDigits(iarr)){
+			if(iarr.length() >= 3 && checkIfOnlyDigits(iarr)){
 				return iarr;
 			}
 		}
