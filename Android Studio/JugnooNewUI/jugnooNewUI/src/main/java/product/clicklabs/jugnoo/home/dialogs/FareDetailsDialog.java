@@ -60,10 +60,8 @@ public class FareDetailsDialog {
 			textViewKMValue.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewMinValue = (TextView) dialog.findViewById(R.id.textViewMinValue);
 			textViewMinValue.setTypeface(Fonts.mavenMedium(activity));
-			TextView textViewThresholdDistance = (TextView) dialog.findViewById(R.id.textViewThresholdDistance);
-			textViewThresholdDistance.setTypeface(Fonts.mavenLight(activity));
-			TextView textViewConvenienceCharge = (TextView) dialog.findViewById(R.id.textViewConvenienceCharge);
-			textViewConvenienceCharge.setTypeface(Fonts.mavenLight(activity));
+			TextView textViewThreshold = (TextView) dialog.findViewById(R.id.textViewThreshold);
+			textViewThreshold.setTypeface(Fonts.mavenLight(activity));
 			TextView textViewPoolMessage = (TextView) dialog.findViewById(R.id.textViewPoolMessage);textViewPoolMessage.setTypeface(Fonts.mavenMedium(activity));
 
 			RelativeLayout relativeLayoutPriorityTip = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPriorityTip);
@@ -107,14 +105,6 @@ public class FareDetailsDialog {
 			textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
 					Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
 
-			if(Data.fareStructure.thresholdDistance > 1.0){
-				textViewThresholdDistance.setVisibility(View.VISIBLE);
-				textViewThresholdDistance.setText(String.format(activity.getResources()
-								.getString(R.string.fare_threshold_distance_message_format),
-						Utils.getMoneyDecimalFormat().format(Data.fareStructure.thresholdDistance)));
-			} else{
-				textViewThresholdDistance.setVisibility(View.GONE);
-			}
 			Region region = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected();
 			double fareFactor = region.getCustomerFareFactor();
 			if(fareFactor > 1.0){
@@ -125,21 +115,18 @@ public class FareDetailsDialog {
 				relativeLayoutPriorityTip.setVisibility(View.GONE);
 			}
 
-			if(Data.fareStructure.convenienceCharge > 0.0d){
-				textViewConvenienceCharge.setVisibility(View.VISIBLE);
-				textViewConvenienceCharge.setText(String.format(activity.getResources()
-								.getString(R.string.convenience_charge_rupees_format),
-						Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge)));
-			} else{
-				textViewConvenienceCharge.setVisibility(View.GONE);
-			}
-
 			if(region.getRideType() == RideTypeValue.POOL.getOrdinal()
 					&& !"".equalsIgnoreCase(Data.userData.getBaseFarePoolText())){
 				textViewPoolMessage.setVisibility(View.VISIBLE);
 				textViewPoolMessage.setText(Data.userData.getBaseFarePoolText());
 			} else{
 				textViewPoolMessage.setVisibility(View.GONE);
+			}
+
+			textViewThreshold.setVisibility(View.GONE);
+			if(!"".equalsIgnoreCase(Data.fareStructure.getDisplayFareText(activity))){
+				textViewThreshold.setVisibility(View.VISIBLE);
+				textViewThreshold.setText(Data.fareStructure.getDisplayFareText(activity));
 			}
 
 			dialog.show();

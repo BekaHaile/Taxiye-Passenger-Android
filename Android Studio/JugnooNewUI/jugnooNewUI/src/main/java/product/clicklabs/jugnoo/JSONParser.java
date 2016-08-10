@@ -490,7 +490,8 @@ public class JSONParser implements Constants {
                                 fareStructure.getFareThresholdTime(),
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
-                                fareStructure.getDisplayBaseFare());
+                                fareStructure.getDisplayBaseFare(),
+                                fareStructure.getDisplayBaseFareText());
                         for (int i = 0; i < Data.regions.size(); i++) {
                             try {
                                 if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
@@ -518,13 +519,13 @@ public class JSONParser implements Constants {
         }
     }
 
-    private product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null);
+    private static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
         if(Data.fareStructure == null) {
-            return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null);
+            return getDefaultFareStructure();
         } else{
             return Data.fareStructure;
         }
