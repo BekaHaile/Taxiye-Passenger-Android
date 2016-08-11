@@ -251,7 +251,7 @@ public class ApiFindADriver {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayBaseFareText());
+								fareStructure.getDisplayFareText());
 						for (int i = 0; i < Data.regions.size(); i++) {
 							try {
 								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())

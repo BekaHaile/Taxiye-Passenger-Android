@@ -20,8 +20,8 @@ public class FareStructure {
 	public double convenienceCharge;
 
     private boolean fromServer;
-    private String displayFareText;
     private String displayBaseFare;
+    private String displayFareText;
 
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
