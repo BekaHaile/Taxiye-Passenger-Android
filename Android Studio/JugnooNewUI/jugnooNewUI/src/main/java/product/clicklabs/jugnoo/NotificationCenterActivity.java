@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.fragments.NotificationSettingFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.utils.ASSL;

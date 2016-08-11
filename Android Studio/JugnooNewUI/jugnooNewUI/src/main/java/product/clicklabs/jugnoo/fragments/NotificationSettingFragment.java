@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo;
+package product.clicklabs.jugnoo.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.NotificationCenterActivity;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.NotificationSettingAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;

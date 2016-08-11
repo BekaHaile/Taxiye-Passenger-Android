@@ -17,7 +17,7 @@
         android:layout_marginBottom="13px"
         android:layout_marginLeft="25px"
         android:layout_marginRight="25px"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="34px"
         android:background="@color/white"
         card_view:cardCornerRadius="@dimen/button_corner_radius">
 
