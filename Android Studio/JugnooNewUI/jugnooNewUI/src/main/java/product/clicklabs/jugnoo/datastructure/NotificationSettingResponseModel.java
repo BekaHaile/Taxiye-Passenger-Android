@@ -59,6 +59,9 @@ public class NotificationSettingResponseModel {
         @SerializedName("content")
         @Expose
         private String content;
+        @SerializedName("is_editable")
+        @Expose
+        private Integer isEditable;
 
         /**
          * @return The name
@@ -115,6 +118,17 @@ public class NotificationSettingResponseModel {
         public void setContent(String content) {
             this.content = content;
         }
+
+
+        public Integer getIsEditable() {
+            return isEditable;
+        }
+
+        public void setIsEditable(Integer isEditable) {
+            this.isEditable = isEditable;
+        }
+
+
 
     }
 

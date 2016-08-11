@@ -62,8 +62,14 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int clickedPosition = (int) v.getTag();
-                callback.onClick(clickedPosition, notificationPrefDatas.get(clickedPosition));
+                try {
+                    int clickedPosition = (int) v.getTag();
+                    if(notificationPrefDatas.get(clickedPosition).getIsEditable() == 1) {
+						callback.onClick(clickedPosition, notificationPrefDatas.get(clickedPosition));
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -71,6 +77,12 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
             holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_off);
         } else{
             holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_on);
+        }
+
+        if(notificationSetting.getIsEditable() == 0) {
+            holder.imageViewStatus.setAlpha(0.5f);
+        } else{
+            holder.imageViewStatus.setAlpha(1.0f);
         }
 
     }

@@ -365,4 +365,5 @@ public interface Constants {
 	String KOCHAVA_REG_VALUE = "";
 	String KEY_PUSH_TYPE = "push_type";
 	String KEY_PUSH_STATUS = "push_status";
+	String KEY_NOTIFICATION_PREFERENCE_ENABLED = "notification_preference_enabled";
 }
