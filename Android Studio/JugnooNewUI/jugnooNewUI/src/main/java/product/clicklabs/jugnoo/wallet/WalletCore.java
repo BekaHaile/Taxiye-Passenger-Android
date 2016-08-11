@@ -50,14 +50,14 @@ public class WalletCore {
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
             bundle.putString("amount", amount);
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_PAYTM_CASH, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.ADD_PAYTM_CASH, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_ADD_MONEY_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Add Paytm Cash " + amount);
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
             bundle.putString("amount", amount);
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_MOBIKWIK_CASH, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_MOBIKWIK_CASH, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_MOBIKWIK_ADD_MONEY_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Add Mobikwik Cash " + amount);
 		}
@@ -66,13 +66,13 @@ public class WalletCore {
 	public void editWalletFlurryEvent(int walletType){
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.EDIT, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.EDIT, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_EDIT_PAYTM_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Edit");
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.EDIT, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.EDIT, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_EDIT_MOBIKWIK_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Edit");
 		}
@@ -81,13 +81,13 @@ public class WalletCore {
 	public void removeWalletFlurryEvent(int walletType){
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.PAYTM_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
 			FlurryEventLogger.event(context, FlurryEventNames.CLICKS_ON_REMOVE_WALLET);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Paytm Wallet", "Remove Wallet");
 		}
 		else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
-            MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
+            MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.REMOVE_WALLET, bundle);
 			FlurryEventLogger.event(context, FlurryEventNames.CLICKS_ON_REMOVE_WALLET_MOBIKWIK);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Remove Wallet");
 		}
@@ -246,9 +246,9 @@ public class WalletCore {
 		if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.HOME_SCREEN, Constants.KEY_PAYTM);
-            MyApplication.getInstance().logEvent(Constants.REVENUE +
-                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                    Constants.RETENTION, bundle);
+//            MyApplication.getInstance().logEvent(Constants.REVENUE +
+//                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+//                    Constants.RETENTION, bundle);
 
             FlurryEventLogger.event(FlurryEventNames.PAYTM_SELECTED_WHEN_REQUESTING);
             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "paytm");
@@ -256,19 +256,17 @@ public class WalletCore {
 		else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.HOME_SCREEN, Constants.KEY_MOBIKWIK);
-            MyApplication.getInstance().logEvent(Constants.REVENUE +
-                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                    Constants.RETENTION, bundle);
+//            MyApplication.getInstance().logEvent(Constants.REVENUE +
+//                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
+//                    Constants.RETENTION, bundle);
 
 			FlurryEventLogger.event(FlurryEventNames.MOBIKWIK_SELECTED_WHEN_REQUESTING);
 			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "mobikwik");
 		}
 		else {
-            Bundle bundle = new Bundle();
-            bundle.putString(Constants.HOME_SCREEN, "cash");
-            MyApplication.getInstance().logEvent(Constants.REVENUE +
-                    Constants.SLASH + Constants.ACTIVATION + Constants.SLASH +
-                    Constants.RETENTION, bundle);
+//            Bundle bundle = new Bundle();
+//            bundle.putString(Constants.HOME_SCREEN, "cash");
+//            MyApplication.getInstance().logEvent(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, bundle);
 
             FlurryEventLogger.event(FlurryEventNames.CASH_SELECTED_WHEN_REQUESTING);
             FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, tag, "cash");

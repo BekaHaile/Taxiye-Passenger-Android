@@ -560,7 +560,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						FlurryEventLogger.event(LOGIN_OPTION_MAIN);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Sign up");
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SPLASH_SCREEN+"_"+LOGIN, bundle);
 						changeUIState(State.LOGIN);
 					} else {
 						clickCount = clickCount + 1;
@@ -574,7 +574,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					if(isBranchLinkNotClicked()) {
 						FlurryEventLogger.event(SIGNUP);
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SPLASH_SCREEN+"_"+SIGN_UP, bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SPLASH_SCREEN+"_"+SIGN_UP, bundle);
 						FlurryEventLogger.eventGA(ACQUISITION, TAG, "Log in");
 						SplashNewActivity.registerationType = RegisterationType.EMAIL;
 						changeUIState(State.SIGNUP);
@@ -924,7 +924,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 													sendSignupValues(SplashNewActivity.this, name, referralCode, emailId, phoneNo, password, linkedWallet);
 												}
                                                 Bundle bundle = new Bundle();
-                                                MyApplication.getInstance().logEvent(ACQUISITION+"_"+SIGN_UP_PAGE+"_"+SIGN_UP, bundle);
+                                                MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+SIGN_UP, bundle);
 												FlurryEventLogger.event(SIGNUP_FINAL);
 											} else {
 												editTextSPassword.requestFocus();
@@ -1001,7 +1001,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					try {
 						FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Terms of use");
                         Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(ACQUISITION+"_"+SIGN_UP_PAGE+"_"+TERMS_OF_USE, bundle);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+SIGN_UP_PAGE+"_"+TERMS_OF_USE, bundle);
 						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
 						startActivity(browserIntent);
 					} catch (Exception e) {

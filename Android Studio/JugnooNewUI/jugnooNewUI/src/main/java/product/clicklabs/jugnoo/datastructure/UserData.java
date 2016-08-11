@@ -54,6 +54,8 @@ public class UserData {
 	private int mobikwikEnabled;
 	private double mobikwikBalance = -1;
 
+	private int notificationPreferenceEnabled = 0;
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
 					String jugnooFbBanner, int numCouponsAvaliable,
@@ -71,7 +73,7 @@ public class UserData {
 					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
 					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3, int inviteFriendButton,
 					int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText,
-					int paytmEnabled, int mobikwikEnabled){
+					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -145,6 +147,7 @@ public class UserData {
 		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 		this.baseFarePoolText = baseFarePoolText;
+		this.notificationPreferenceEnabled = notificationPreferenceEnabled;
 
 		checkUserImage();
 
@@ -658,4 +661,14 @@ public class UserData {
 	public void setBaseFarePoolText(String baseFarePoolText) {
 		this.baseFarePoolText = baseFarePoolText;
 	}
+
+
+	public int getNotificationSettingEnabled() {
+		return notificationPreferenceEnabled;
+	}
+
+	public void setNotificationSettingEnabled(int isSettingEnabled) {
+		this.notificationPreferenceEnabled = isSettingEnabled;
+	}
+
 }

@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
@@ -441,4 +442,14 @@ public interface ApiService {
     void findPokestop(@FieldMap Map<String, String> params,
                         Callback<FindPokestopResponse> callback);
 
+
+    @FormUrlEncoded
+    @POST("/fetch_push_preference")
+    void getNotificationPreference(@FieldMap Map<String, String> params,
+                           Callback<NotificationSettingResponseModel> callback);
+
+    @FormUrlEncoded
+    @POST("/update_push_preference")
+    void updateNotificationPreference(@FieldMap Map<String, String> params,
+                           Callback<NotificationInboxResponse> callback);
 }
