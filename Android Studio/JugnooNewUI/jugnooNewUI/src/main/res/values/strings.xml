@@ -8,7 +8,7 @@
     <string name="filter_title">Jugnoo</string>
 
 
-     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
+	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> <!-- Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
 	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
@@ -814,6 +814,7 @@
 	<string name="disable_mock_location">Disable mock location first</string>
 
 	<string name="notifications">Notifications</string>
+	<string name="push_noti_pref">Push Notifications Preference</string>
 	<string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
 
 	<string name="auto">Auto</string>

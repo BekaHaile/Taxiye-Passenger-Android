@@ -10,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
@@ -94,29 +92,11 @@ public class SlidingBottomFareFragment extends Fragment{
             textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
                     Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
 
-            String convenienceThresholdText = "";
-            if(Data.fareStructure.convenienceCharge > 0){
-                convenienceThresholdText = activity.getResources().getString(R.string.convenience_charge_rupees_format,
-                        Utils.getMoneyDecimalFormat().format(Data.fareStructure.convenienceCharge));
-            }
-
-            if(Data.fareStructure.thresholdDistance > 1.0){
-                DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                if("".equalsIgnoreCase(convenienceThresholdText)){
-                    convenienceThresholdText = String.format(activity.getResources()
-                                    .getString(R.string.fare_threshold_distance_message_format),
-                            decimalFormat.format(Data.fareStructure.thresholdDistance));
-                } else{
-                    convenienceThresholdText = convenienceThresholdText + "\n" + String.format(activity.getResources()
-                                    .getString(R.string.fare_threshold_distance_message_format),
-                            decimalFormat.format(Data.fareStructure.thresholdDistance));
-                }
-            }
 
             textViewThreshold.setVisibility(View.GONE);
-            if(!"".equalsIgnoreCase(convenienceThresholdText)){
+            if(!"".equalsIgnoreCase(Data.fareStructure.getDisplayFareText(activity))){
                 textViewThreshold.setVisibility(View.VISIBLE);
-                textViewThreshold.setText(convenienceThresholdText);
+                textViewThreshold.setText(Data.fareStructure.getDisplayFareText(activity));
             }
 
 

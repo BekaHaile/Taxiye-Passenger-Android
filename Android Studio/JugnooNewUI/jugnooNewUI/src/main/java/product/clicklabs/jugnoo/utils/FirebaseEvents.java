@@ -6,52 +6,52 @@ package product.clicklabs.jugnoo.utils;
 public interface FirebaseEvents {
 
     //Categories
-    String TRANSACTION = "Transaction";
-    String INFORMATIVE = "Informative";
-//    String REVENUE = "Revenue";      // get from Constant interface
+    String TRANSACTION = "Tr";
+    String INFORMATIVE = "In";
+    String FB_REVENUE = "Rv";      // get from Constant interface
     String ISSUES = "Issues";
 //    String HELP = "Help";    // get from Constant interface
     String REFERRAL = "Referral";
-    String ACQUISTION = "Acquistion";
-//    String CAMPAIGNS = "Campaigns";   // get from Constant interface
-    String ACTIVATION_RETENTION = "Activation_Retention";
+    String FB_ACQUISITION = "Ac";
+    String FB_CAMPAIGNS = "Ca";   // get from Constant interface
+
 
 
     // Labels
-    String HOME_SCREEN = "Home_Screen";
-    String RIDE_COMPLETED = "ride_completed";
-    String RIDE_START = "Ride_Start";
-    String REQUEST_RIDE = "request_ride";
-    String ACCEPT_RIDE = "accept_ride";
+    String HOME_SCREEN = "H_S";
+    String RIDE_COMPLETED = "Rid_Cm";
+    String RIDE_START = "Rid_St";
+    String REQUEST_RIDE = "req_ride";
+    String ACCEPT_RIDE = "acc_ride";
     String AUTO_POOL = "auto_pool";
-    String LOGIN_PAGE = "Login_Page";
-    String REFER_A_DRIVER = "Refer_a_driver";
+    String LOGIN_PAGE = "Lg_Pg";
+    String REFER_A_DRIVER = "Ref_Dr";
     String POOL = "pool";
     String AUTO = "auto";
-    String S_PAYMENT_MODE = "s_payment_mode";
-    String VIEW_ACCOUNT = "View_Account";
-    String SPLASH_SCREEN = "Splash_Screen";
-
+    String S_PAYMENT_MODE = "s_pay_m";
+    String VIEW_ACCOUNT = "V_A";
+    String SPLASH_SCREEN = "S_S";
+    String B_PAYMENT_MODE = "b_pay_m";
 
 
     // Events
     String MENU = "menu";
-    String DIFFERENT_PICKUP_LOCATION_POPUP = "different_pickup_location_popup";
-    String GET_FARE_ESTIMATE = "get_fare_estimate";
+    String DIFFERENT_PICKUP_LOCATION_POPUP = "diff_pick_loc_pop";
+    String GET_FARE_ESTIMATE = "get_fare_esti";
     String OFFER_SELECTED = "offer_selected";
     String OFFER_T_N_C = "offer_tnc";
     String FRESH = "fresh";
-    String REQUEST_RIDE_L1_AUTO = "request_ride_l1_auto";
-    String REQUEST_RIDE_L1_AUTO_POOL = "request_ride_l1_auto_pool";
-    String B_PAYMENT_MODE = "b_payment_mode";
+    String REQUEST_RIDE_L1_AUTO = "req_ride_l1_auto";
+    String REQUEST_RIDE_L1_AUTO_POOL = "req_ride_l1_auto_pool";
+
     String FARE_POPUP = "fare_popup";
-    String B_OFFER = "b_offer";
+    String B_OFFER = "b_off";
     String RATING_5 = "rating_5";
     String VIEW_INVOICE = "view_invoice";
     String RATING_1 = "rating_1";
     String CALL_DRIVER = "Call_Driver";
     String ENTER_DESTINATION = "enter_destination";
-    String SEND_INVITES = "send_invite_friends_screen";
+    String SEND_INVITES = "send_inv_frnds_sc";
     String CANCEL_RIDE = "cancel_ride";
     String REQUEST_RIDE_L2 = "request_ride_l2";
     String LOGIN = "Login";
@@ -62,12 +62,12 @@ public interface FirebaseEvents {
     String OK = "ok";
     String CANCEL = "cancel";
     String GET_RIDE = "get_ride";
-    String REQUEST_RIDE_L2_AUTO_POOL = "request_ride_l2_auto_pool";
+    String REQUEST_RIDE_L2_AUTO_POOL = "req_ride_l2_auto_pool";
 
     String INBOX = "inbox";
     String PROMOTION = "promotion";
-    String WALLET = "wallet";
-    String FREE_RIDES = "Free_rides_invite_friends_screen";
+    String WALLET = "wal";
+    String FREE_RIDES = "F_rid_send_inv_frnds_sc";
     String GAME = "game";
     String GET_A_RIDE = "Get_a_Ride";
     String ABOUT = "About";
@@ -85,8 +85,8 @@ public interface FirebaseEvents {
     String NEED_HELP_ON_A_RIDE = "Need_help_on_a_ride";
 
     String JUGNOO_CASH = "Jugnoo_Cash";
-    String PAYTM_WALLET = "Paytm_Wallet";
-    String MOBIKWIK_WALLET = "Mobikwik_Wallet";
+    String PAYTM_WALLET = "P_wal";
+    String MOBIKWIK_WALLET = "M_wal";
     String VIEW_RECENT_TRANSACTION = "View_Recent_Transaction";
     String REQUEST_OTP = "Request_OTP";
     String EDIT = "Edit";
@@ -115,7 +115,7 @@ public interface FirebaseEvents {
 
     String CONTINUE = "continue";
     String SKIP = "skip";
-    String INVITE_FRIENDS = "invite_friends_screen";
+    String INVITE_FRIENDS = "inv_frnds_sc";
     String PAYTM = "paytm";
     String CASH = "cash";
     String SKIP_RIDE_IMAGE_END = "skip_ride_image_end";
@@ -125,34 +125,34 @@ public interface FirebaseEvents {
     String DRIVER_ARRIVED = "driver_arrived";
     String DEEP_INDEX = "Deep_Index_";
 
-    String OTP_SCREEN = "OTP_screen";
-    String SIGN_UP_PAGE = "Sign_up_Page";
+    String OTP_SCREEN = "OTP_S";
+    String SIGN_UP_PAGE = "Si_up_Pg";
     String VERIFY_ME = "Verify_me";
     String GIVE_A_MISS_CALL = "Give_a_miss_call";
     String EDIT_PHONE_NUMBER = "Edit_phone_number";
     String SIGN_UP = "Sign_up";
-    String SIGN_UP_WITH_GOOGLE = "Sign_up_with_Google";
-    String SIGN_UP_WITH_FACEBOOK = "Sign_up_with_Facebook";
+    String SIGN_UP_WITH_GOOGLE = "Sign_up_with_Goo";
+    String SIGN_UP_WITH_FACEBOOK = "Sign_up_with_FB";
     String TERMS_OF_USE = "Terms_of_use";
 
 
 
-    String PRIORITY_TIP_POP_UP = "Priority_tip_pop_up";
-    String CBCD_POP_UP = "CBCD_pop_up";
-    String CBCR_POP_UP = "CBCR_pop_up";
-    String PROMOTIONS = "Promotions";
-    String PROMOTIONAL_POP_UP = "Promotional_pop_up";
+    String PRIORITY_TIP_POP_UP = "surge";
+    String CBCD_POP_UP = "CBCD_up";
+    String CBCR_POP_UP = "CBCR_up";
+    String PROMOTIONS = "Promo";
+    String PROMOTIONAL_POP_UP = "Promo_up";
     String YES = "Yes";
     String NO_THANKS = "No_thanks";
     String APPLY = "Apply";
-    String WANT_FREE_RIDES = "Want_invite_friends_screen";
+    String WANT_FREE_RIDES = "Want_inv_frnds_sc";
     String COUPON_PROMOTION = "Coupon_promotion";
     //*State of user at time of pop up (eg ride start)
     String GENERAL_BUTTON_OF_YES = "General_button_of_yes";
 
     String SUPPORT = "Support";
 
-    String RIDE_HISTORY = "Ride_history";
+    String RIDE_HISTORY = "Rid_H";
     String ISSUE_WITH_RECENT_RIDE = "Issue_with_recent_ride";
     String PROMOTIONS_AND_OFFERS = "Promotions_and_offers";
     String PAYMENTS = "Payments";

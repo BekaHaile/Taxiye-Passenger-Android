@@ -1,6 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
+import android.text.TextUtils;
+
+import java.text.DecimalFormat;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -17,12 +20,12 @@ public class FareStructure {
 	public double convenienceCharge;
 
     private boolean fromServer;
-
     private String displayBaseFare;
+    private String displayFareText;
 
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
-						 double convenienceCharge, boolean fromServer, String displayBaseFare){
+						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText){
         this.fixedFare = fixedFare;
         this.thresholdDistance = thresholdDistance;
         this.farePerKm = farePerKm;
@@ -34,6 +37,7 @@ public class FareStructure {
 
         this.fromServer = fromServer;
         this.displayBaseFare = displayBaseFare;
+        this.displayFareText = displayFareText;
     }
 
 
@@ -64,5 +68,44 @@ public class FareStructure {
 
     public void setFixedFare(double fixedFare) {
         this.fixedFare = fixedFare;
+    }
+
+    public String getDisplayFareText(Context context) {
+        String convenienceThresholdText = "";
+        try {
+            if(convenienceCharge > 0){
+                convenienceThresholdText = context.getResources().getString(R.string.convenience_charge_rupees_format,
+                        Utils.getMoneyDecimalFormat().format(convenienceCharge));
+            }
+
+            if(thresholdDistance > 1.0){
+                DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                if("".equalsIgnoreCase(convenienceThresholdText)){
+                    convenienceThresholdText = String.format(context.getResources()
+                                    .getString(R.string.fare_threshold_distance_message_format),
+                            decimalFormat.format(thresholdDistance));
+                } else{
+                    convenienceThresholdText = convenienceThresholdText + "\n" + String.format(context.getResources()
+                                    .getString(R.string.fare_threshold_distance_message_format),
+                            decimalFormat.format(thresholdDistance));
+                }
+            }
+
+            try {
+                if(displayFareText != null && !TextUtils.isEmpty(displayFareText)) {
+                    convenienceThresholdText = displayFareText;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return convenienceThresholdText;
+    }
+
+    public void setDisplayFareText(String displayFareText) {
+        this.displayFareText = displayFareText;
     }
 }

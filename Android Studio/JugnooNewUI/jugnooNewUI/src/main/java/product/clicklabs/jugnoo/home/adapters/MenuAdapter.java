@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.CircleTransform;
@@ -35,7 +34,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.WebActivity;
-import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -58,6 +56,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 
 /**
  * Created by Ankit on 4/29/16.
@@ -413,45 +412,43 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.INBOX, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "inbox");
 
-            }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)){
+            }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)) {
                 LatLng currLatLng = null;
-                if(activity instanceof HomeActivity){
-                    currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+                if (activity instanceof HomeActivity) {
+                    currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
                 }
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
-                    if(AppStatus.getInstance(activity).isOnline(activity)) {
-                        activity.startActivity(new Intent(activity, PromotionActivity.class));
-                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.PROMOTION, bundle);
-                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "promotion");
-                    } else {
-                        DialogPopup.dialogNoInternet(activity,
-                                Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-                                new Utils.AlertCallBackWithButtonsInterface() {
-                                    @Override
-                                    public void positiveClick(View v) {
-                                        onClickAction(tag);
-                                    }
-
-                                    @Override
-                                    public void neutralClick(View v) {
-
-                                    }
-
-                                    @Override
-                                    public void negativeClick(View v) {
-
-                                    }
-                                });
-                    }
-                } else {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.waiting_for_location),
-                            Toast.LENGTH_SHORT).show();
                 }
+                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                    activity.startActivity(new Intent(activity, PromotionActivity.class));
+                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.PROMOTION, bundle);
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "promotion");
+                } else {
+                    DialogPopup.dialogNoInternet(activity,
+                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            new Utils.AlertCallBackWithButtonsInterface() {
+                                @Override
+                                public void positiveClick(View v) {
+                                    onClickAction(tag);
+                                }
+
+                                @Override
+                                public void neutralClick(View v) {
+
+                                }
+
+                                @Override
+                                public void negativeClick(View v) {
+
+                                }
+                            });
+                }
+
             } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
                     Intent intent = new Intent(activity, RideTransactionsActivity.class);

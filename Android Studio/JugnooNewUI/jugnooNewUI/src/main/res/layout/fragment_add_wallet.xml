@@ -115,7 +115,6 @@
                         android:gravity="center"
                         android:hint="@string/nl_otp_enter_otp"
                         android:inputType="number"
-                        android:maxLength="6"
                         android:padding="20px"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"

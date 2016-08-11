@@ -217,6 +217,7 @@ public class JSONParser implements Constants {
         int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
         String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
         String baseFarePoolText = userData.optString("base_fare_pool_text", "");
+        int notificationPreferenceEnabled = userData.optInt(KEY_NOTIFICATION_PREFERENCE_ENABLED, 0);
 
         try {
             String gamePredictViewData = userData.optString(KEY_GAME_PREDICT_VIEW_DATA, "");
@@ -247,7 +248,6 @@ public class JSONParser implements Constants {
         int referralLeaderboardEnabled = userData.optInt(KEY_REFERRAL_LEADERBOARD_ENABLED, 1);
         int referralActivityEnabled = userData.optInt(KEY_REFERRAL_ACTIVITY_ENABLED, 1);
 
-
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
 
@@ -268,7 +268,7 @@ public class JSONParser implements Constants {
                 inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
                 poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
                 inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText,
-                paytmEnabled, mobikwikEnabled);
+                paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled);
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
@@ -338,6 +338,7 @@ public class JSONParser implements Constants {
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
+                MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_REG_KEY, ""+loginVia);
                 couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
@@ -490,7 +491,8 @@ public class JSONParser implements Constants {
                                 fareStructure.getFareThresholdTime(),
                                 fareStructure.getFarePerWaitingMin(),
                                 fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
-                                fareStructure.getDisplayBaseFare());
+                                fareStructure.getDisplayBaseFare(),
+                                fareStructure.getDisplayFareText());
                         for (int i = 0; i < Data.regions.size(); i++) {
                             try {
                                 if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
@@ -518,13 +520,13 @@ public class JSONParser implements Constants {
         }
     }
 
-    private product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null);
+    private static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
         if(Data.fareStructure == null) {
-            return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null);
+            return getDefaultFareStructure();
         } else{
             return Data.fareStructure;
         }
@@ -715,7 +717,7 @@ public class JSONParser implements Constants {
 
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
-
+        int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -730,7 +732,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate, paidUsingMobikwik);
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik, totalRide);
 	}
 
 

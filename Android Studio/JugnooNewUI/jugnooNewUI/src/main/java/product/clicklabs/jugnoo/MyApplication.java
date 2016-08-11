@@ -17,12 +17,14 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.kochava.android.tracker.Feature;
 
 import java.util.List;
 import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -46,14 +48,18 @@ public class MyApplication extends Application{
 	public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
 	public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
 	public String ACTIVITY_NAME_ABOUT = "ABOUT";
+	public String ACTIVITY_NAME_NOTIFICATION_SETTING = "SET PREFERENCE";
 
     /**
      * The {@code FirebaseAnalytics} used to record screen views.
      */
     // [START declare_analytics]
     private FirebaseAnalytics mFirebaseAnalytics;
-    private TagManager tagManager;
     // [END declare_analytics]
+
+    private Feature kTracker;
+
+
 
 	@Override
 	public void onCreate() {
@@ -67,6 +73,9 @@ public class MyApplication extends Application{
             }
 			Branch.getAutoInstance(this);
 
+            Feature.setErrorDebug(true);
+            Feature.enableDebug(true);
+            kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
 			mInstance = this;
 
@@ -86,14 +95,11 @@ public class MyApplication extends Application{
         return mFirebaseAnalytics;
     }
 
-    public TagManager getTagManager() {
-        if(tagManager == null)
-            tagManager = TagManager.getInstance(this);
-
-        return tagManager;
-    }
 
     public void logEvent(String content, Bundle bundle) {
+		if(content.length()>31) {
+			content = content.substring(0, 31);
+		}
         getFirebaseAnalytics().logEvent(content, bundle);
     }
 
@@ -280,5 +286,12 @@ public class MyApplication extends Application{
 		}
 		return deviceToken;
 	}
+
+    public Feature getkTracker() {
+        if(kTracker == null) {
+            kTracker = new Feature(this, Config.KOCHAVA_KEY);
+        }
+        return kTracker;
+    }
 
 }

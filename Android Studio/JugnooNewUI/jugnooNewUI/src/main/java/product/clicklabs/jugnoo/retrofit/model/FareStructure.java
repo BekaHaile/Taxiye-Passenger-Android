@@ -47,6 +47,9 @@ public class FareStructure {
 	@SerializedName("display_base_fare")
 	@Expose
 	private String displayBaseFare;
+	@SerializedName("display_fare_text")
+	@Expose
+	private String displayFareText;
 
 	/**
 	 *
@@ -241,4 +244,15 @@ public class FareStructure {
 	public void setDisplayBaseFare(String displayBaseFare) {
 		this.displayBaseFare = displayBaseFare;
 	}
+
+
+	public String getDisplayFareText() {
+		return displayFareText;
+	}
+
+	public void setDisplayFareText(String displayFareText) {
+		this.displayFareText = displayFareText;
+	}
+
+
 }
