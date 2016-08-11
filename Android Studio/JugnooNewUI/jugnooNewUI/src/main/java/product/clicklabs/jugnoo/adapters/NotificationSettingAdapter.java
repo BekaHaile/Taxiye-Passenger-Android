@@ -1,18 +1,19 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -23,20 +24,18 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
 
     private Activity activity;
     private int rowLayout;
-    private ArrayList<ShowPanelResponse.Item> items = new ArrayList<>();
+    private ArrayList<NotificationSettingResponseModel.NotificationPrefData> notificationPrefDatas;
     private Callback callback;
 
-    public NotificationSettingAdapter(ArrayList<ShowPanelResponse.Item> items, Activity activity, int rowLayout, Callback callback) {
-        if(items != null){
-            this.items = items;
-        }
+    public NotificationSettingAdapter(Activity activity, int rowLayout, Callback callback) {
         this.activity = activity;
         this.rowLayout = rowLayout;
         this.callback = callback;
+        notificationPrefDatas = new ArrayList<>();
     }
 
-    public void setResults(ArrayList<ShowPanelResponse.Item> items){
-        this.items = items;
+    public void setResults(ArrayList<NotificationSettingResponseModel.NotificationPrefData> items){
+        this.notificationPrefDatas = items;
         notifyDataSetChanged();
     }
 
@@ -54,60 +53,61 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
 
     @Override
     public void onBindViewHolder(NotificationSettingAdapter.ViewHolder holder, int position) {
-//        ShowPanelResponse.Item supportFAq = items.get(position);
-//        holder.textViewFaqItemName.setText(supportFAq.getText());
-//        holder.root.setTag(position);
-//        holder.root.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int clickedPosition = (int) v.getTag();
-//                callback.onClick(clickedPosition, items.get(clickedPosition));
-//            }
-//        });
-//
-//        if(position == 0){
-//            holder.imageViewSep.setVisibility(View.GONE);
-//            holder.root.setBackgroundResource(R.drawable.background_white_top_rounded_bordered);
-//        }
-//        else if(position == getItemCount()-2){
-//            holder.imageViewSep.setVisibility(View.GONE);
-//            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
-//        }
-//        else if(position == getItemCount()-1){
-//            holder.imageViewSep.setVisibility(View.GONE);
-//            holder.root.setBackgroundResource(R.drawable.background_white_bottom_rounded_bordered);
-//        }
-//        else{
-//            holder.imageViewSep.setVisibility(View.VISIBLE);
-//            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
-//        }
+        NotificationSettingResponseModel.NotificationPrefData notificationSetting = notificationPrefDatas.get(position);
+
+        holder.textViewNotiTitle.setText(notificationSetting.getTitle());
+        holder.textViewNoticontent.setText(notificationSetting.getContent());
+
+        holder.root.setTag(position);
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int clickedPosition = (int) v.getTag();
+                callback.onClick(clickedPosition, notificationPrefDatas.get(clickedPosition));
+            }
+        });
+
+        if(position == 0){
+            holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_off);
+        } else{
+            holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_on);
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return items == null ? 0 : items.size();
+        return notificationPrefDatas == null ? 0 : notificationPrefDatas.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout root;
-        public TextView textViewNotiTitle, textViewNotiText;
+        public RelativeLayout root;
+        public TextView textViewNotiTitle, textViewNoticontent;
         public ImageView imageViewStatus;
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
-            root = (LinearLayout) itemView.findViewById(R.id.root);
+            root = (RelativeLayout) itemView.findViewById(R.id.root);
             textViewNotiTitle = (TextView)itemView.findViewById(R.id.textViewNotiTitle);
-            textViewNotiTitle.setTypeface(Fonts.mavenLight(activity));
+            textViewNotiTitle.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
-            textViewNotiText = (TextView)itemView.findViewById(R.id.textViewNotiText);
-            textViewNotiText.setTypeface(Fonts.mavenLight(activity));
+            textViewNoticontent = (TextView)itemView.findViewById(R.id.textViewNotiText);
+            textViewNoticontent.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
 
             imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
         }
     }
 
     public interface Callback {
-        void onClick(int position, ShowPanelResponse.Item supportFAq);
+        void onClick(int position, NotificationSettingResponseModel.NotificationPrefData prefData);
+    }
+
+
+    public ArrayList<NotificationSettingResponseModel.NotificationPrefData> getNotificationPrefDatas() {
+        return notificationPrefDatas;
+    }
+
+    public void setNotificationPrefDatas(ArrayList<NotificationSettingResponseModel.NotificationPrefData> notificationPrefDatas) {
+        this.notificationPrefDatas = notificationPrefDatas;
     }
 
 }

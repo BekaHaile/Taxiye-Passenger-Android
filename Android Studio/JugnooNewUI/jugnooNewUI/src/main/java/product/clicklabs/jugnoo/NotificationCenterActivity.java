@@ -131,8 +131,6 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
             layoutToggle();
             super.onBackPressed();
         }
-//        finish();
-//        overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override
@@ -264,10 +262,10 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
     public void layoutToggle() {
         if(swipeRefreshLayout.getVisibility() == View.GONE) {
             textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
             mNotificationSettingBtn.setVisibility(View.VISIBLE);
             linearLayoutContainer.setVisibility(View.GONE);
             if (myNotificationAdapter.getListSize() > 0) {
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
                 linearLayoutNoNotifications.setVisibility(View.GONE);
             } else {
                 linearLayoutNoNotifications.setVisibility(View.VISIBLE);
@@ -289,9 +287,9 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                         .add(getContainer().getId(),
-                                new NotificationSettingFregment(),
-                                NotificationSettingFregment.class.getName())
-                        .addToBackStack(NotificationSettingFregment.class.getName())
+                                new NotificationSettingFragment(),
+                                NotificationSettingFragment.class.getName())
+                        .addToBackStack(NotificationSettingFragment.class.getName())
                         .commitAllowingStateLoss();
                 break;
         }

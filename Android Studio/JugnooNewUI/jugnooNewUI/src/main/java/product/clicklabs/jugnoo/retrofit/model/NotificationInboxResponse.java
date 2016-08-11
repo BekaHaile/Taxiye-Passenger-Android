@@ -3,10 +3,11 @@ package product.clicklabs.jugnoo.retrofit.model;
 /**
  * Created by socomo33 on 3/28/16.
  */
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 
@@ -21,6 +22,9 @@ public class NotificationInboxResponse {
     @SerializedName("total")
     @Expose
     private Integer total;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     /**
      * @return The flag
@@ -64,4 +68,11 @@ public class NotificationInboxResponse {
         this.total = total;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
