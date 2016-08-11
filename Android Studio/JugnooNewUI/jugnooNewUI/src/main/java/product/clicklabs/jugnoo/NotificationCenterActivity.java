@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,28 +39,31 @@ import retrofit.client.Response;
 /**
  * Created by socomo on 10/15/15.
  */
-public class NotificationCenterActivity extends BaseActivity implements DisplayPushHandler {
+public class NotificationCenterActivity extends BaseFragmentActivity implements DisplayPushHandler, View.OnClickListener {
 
-    private LinearLayout root;
+    private RelativeLayout root;
     private TextView textViewTitle;
-    private ImageView imageViewBack;
+    private ImageView imageViewBack, mNotificationSettingBtn;
     private RecyclerView recyclerViewNotification;
     private NotificationAdapter myNotificationAdapter;
     private LinearLayout linearLayoutNoNotifications;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout linearLayoutContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_center);
 
-        root = (LinearLayout) findViewById(R.id.root);
+        root = (RelativeLayout) findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
+        linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
+        linearLayoutContainer.setVisibility(View.GONE);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.theme_color);
         linearLayoutNoNotifications = (LinearLayout) findViewById(R.id.linearLayoutNoNotifications);
@@ -82,6 +86,8 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
+        mNotificationSettingBtn = (ImageView) findViewById(R.id.imageViewSetting);
+        mNotificationSettingBtn.setOnClickListener(this);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,8 +124,13 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
 
 
     public void performBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else {
+            layoutToggle();
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -244,4 +255,43 @@ public class NotificationCenterActivity extends BaseActivity implements DisplayP
         }
     }
 
+    public LinearLayout getContainer(){
+        return linearLayoutContainer;
+    }
+
+    public void layoutToggle() {
+        if(swipeRefreshLayout.getVisibility() == View.GONE) {
+            textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
+            mNotificationSettingBtn.setVisibility(View.VISIBLE);
+            linearLayoutContainer.setVisibility(View.GONE);
+            if (myNotificationAdapter.getListSize() > 0) {
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                linearLayoutNoNotifications.setVisibility(View.GONE);
+            } else {
+                linearLayoutNoNotifications.setVisibility(View.VISIBLE);
+            }
+        } else {
+            textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_NOTIFICATION_SETTING);
+            swipeRefreshLayout.setVisibility(View.GONE);
+            mNotificationSettingBtn.setVisibility(View.GONE);
+            linearLayoutNoNotifications.setVisibility(View.GONE);
+            linearLayoutContainer.setVisibility(View.VISIBLE);
+        }
+    }
+    @Override
+    public void onClick(View v) {
+        int tag = v.getId();
+        switch (tag) {
+            case R.id.imageViewSetting:
+                layoutToggle();
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                        .add(getContainer().getId(),
+                                new NotificationSettingFragment(),
+                                NotificationSettingFragment.class.getName())
+                        .addToBackStack(NotificationSettingFragment.class.getName())
+                        .commitAllowingStateLoss();
+                break;
+        }
+    }
 }

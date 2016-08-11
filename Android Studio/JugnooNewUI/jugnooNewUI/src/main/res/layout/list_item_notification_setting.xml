@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/imageViewStatus"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="20px"
+        android:layout_marginBottom="20px"
+        android:layout_centerVertical="true"
+        >
+
+        <TextView
+            android:id="@+id/textViewNotiTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No Current Notifications"
+            android:textColor="@color/stroke_color_dark"
+            android:textSize="@dimen/text_size_26" />
+
+        <TextView
+            android:id="@+id/textViewNotiText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10px"
+            android:text="No Current Notifications"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_26" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewStatus"
+        android:layout_width="77px"
+        android:layout_height="50px"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10px"
+        android:src="@drawable/jugnoo_sticky_off"
+        android:tag="mwar" />
+
+</RelativeLayout>

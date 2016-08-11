@@ -48,6 +48,7 @@ public class MyApplication extends Application{
 	public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
 	public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
 	public String ACTIVITY_NAME_ABOUT = "ABOUT";
+	public String ACTIVITY_NAME_NOTIFICATION_SETTING = "SET PREFERENCE";
 
     /**
      * The {@code FirebaseAnalytics} used to record screen views.
