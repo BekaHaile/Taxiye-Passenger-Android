@@ -80,7 +80,7 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
         }
 
         if(notificationSetting.getIsEditable() == 0) {
-            holder.imageViewStatus.setAlpha(0.5f);
+            holder.imageViewStatus.setAlpha(0.3f);
         } else{
             holder.imageViewStatus.setAlpha(1.0f);
         }
