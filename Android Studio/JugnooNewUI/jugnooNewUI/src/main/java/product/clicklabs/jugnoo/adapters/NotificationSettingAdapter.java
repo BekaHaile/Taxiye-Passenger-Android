@@ -67,7 +67,7 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
             }
         });
 
-        if(position == 0){
+        if(notificationSetting.getStatus() == 0){
             holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_off);
         } else{
             holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_on);
@@ -88,10 +88,10 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
             super(itemView);
             root = (RelativeLayout) itemView.findViewById(R.id.root);
             textViewNotiTitle = (TextView)itemView.findViewById(R.id.textViewNotiTitle);
-            textViewNotiTitle.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+            textViewNotiTitle.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
             textViewNoticontent = (TextView)itemView.findViewById(R.id.textViewNotiText);
-            textViewNoticontent.setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+            textViewNoticontent.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
             imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
         }

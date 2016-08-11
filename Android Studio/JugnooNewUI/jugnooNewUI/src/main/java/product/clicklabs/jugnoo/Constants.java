@@ -363,6 +363,6 @@ public interface Constants {
 	String KOCHAVA_FIRST_RIDE_VALUE = "";
 	String KOCHAVA_REG_KEY = "registration";
 	String KOCHAVA_REG_VALUE = "";
-	String KEY_PUSH_TYPE = "key_push_type";
-	String KEY_PUSH_STATUS = "key_push_status";
+	String KEY_PUSH_TYPE = "push_type";
+	String KEY_PUSH_STATUS = "push_status";
 }

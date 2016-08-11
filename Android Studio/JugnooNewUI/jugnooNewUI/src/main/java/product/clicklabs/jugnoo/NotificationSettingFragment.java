@@ -171,7 +171,6 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 params.put(Constants.KEY_PUSH_TYPE, name);
                 params.put(Constants.KEY_PUSH_STATUS, ""+status);
 
-
                 RestClient.getApiServices().updateNotificationPreference(params, new Callback<NotificationInboxResponse>() {
                     @Override
                     public void success(final NotificationInboxResponse notificationInboxResponse, Response response) {
