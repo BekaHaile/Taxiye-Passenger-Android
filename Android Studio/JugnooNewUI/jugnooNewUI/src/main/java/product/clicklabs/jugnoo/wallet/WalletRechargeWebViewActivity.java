@@ -18,6 +18,8 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.apache.http.util.EncodingUtils;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -71,8 +73,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
         walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 
         try {
-            if(walletType == PaymentOption.PAYTM.getOrdinal()
-                    || walletType == PaymentOption.FREECHARGE.getOrdinal()){
+            if(walletType == PaymentOption.PAYTM.getOrdinal()){
 				String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
 				try {
 					loadHTMLContent(postDataQuery);
@@ -85,6 +86,11 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 				String url = getIntent().getStringExtra(Constants.KEY_URL);
 				webView.loadUrl(url);
 			}
+            else if(walletType == PaymentOption.FREECHARGE.getOrdinal()){
+                String url = getIntent().getStringExtra(Constants.KEY_URL);
+                String data = getIntent().getStringExtra(Constants.POST_DATA);
+                webView.postUrl(url, EncodingUtils.getBytes(data, "BASE64"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
