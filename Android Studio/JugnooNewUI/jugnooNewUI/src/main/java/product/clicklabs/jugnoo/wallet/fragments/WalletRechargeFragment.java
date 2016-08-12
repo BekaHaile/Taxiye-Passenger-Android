@@ -471,8 +471,13 @@ public class WalletRechargeFragment extends Fragment {
 								int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 								String message = JSONParser.getServerMessage(jObj);
 								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-									String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
-									openWebView(url, openWalletType);
+									if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()) {
+										String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
+										openWebView(url, openWalletType);
+									} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()){
+										String data = jObj.optString(Constants.KEY_DATA, "");
+										openWebView(data, openWalletType);
+									}
 								} else{
 									DialogPopup.alertPopup(paymentActivity, "", message);
 								}
@@ -613,13 +618,12 @@ public class WalletRechargeFragment extends Fragment {
 	private void openWebView(String data, int walletType) {
 		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
 		Intent intent = new Intent(paymentActivity, WalletRechargeWebViewActivity.class);
-		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
+		if(walletType == PaymentOption.PAYTM.getOrdinal()
+				|| walletType == PaymentOption.FREECHARGE.getOrdinal()) {
 			intent.putExtra(Constants.POST_DATA, data);
 		} else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()) {
 			intent.putExtra(Constants.KEY_URL, data);
-		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
-			intent.putExtra(Constants.KEY_URL, data);
-        }
+		}
 		intent.putExtra(Constants.KEY_WALLET_TYPE, walletType);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivityForResult(intent, rechargeRequestCode);

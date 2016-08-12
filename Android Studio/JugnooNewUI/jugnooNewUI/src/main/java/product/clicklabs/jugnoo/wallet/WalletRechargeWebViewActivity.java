@@ -71,7 +71,8 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
         walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 
         try {
-            if(walletType == PaymentOption.PAYTM.getOrdinal()){
+            if(walletType == PaymentOption.PAYTM.getOrdinal()
+                    || walletType == PaymentOption.FREECHARGE.getOrdinal()){
 				String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
 				try {
 					loadHTMLContent(postDataQuery);
@@ -80,8 +81,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 					loadHTMLContent(postDataQuery);
 				}
 			}
-			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()
-                    || walletType == PaymentOption.FREECHARGE.getOrdinal()){
+			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 				String url = getIntent().getStringExtra(Constants.KEY_URL);
 				webView.loadUrl(url);
 			}
