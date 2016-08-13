@@ -5,13 +5,14 @@ package product.clicklabs.jugnoo.wallet;
  */
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.webkit.WebChromeClient;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -59,18 +60,33 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_wallet_recharge_webview);
 
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptFileSchemeCookies(true);
+        cookieManager.setAcceptCookie(true);
+        cookieManager.acceptCookie();
+
         webView = (WebView) findViewById(R.id.webview);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        // Enable javascript
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setDatabaseEnabled(true);
+        // Create database folder
+        String databasePath = getDir("databases", Context.MODE_PRIVATE).getPath();
+        webView.getSettings().setDatabasePath(databasePath);
+
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setSaveFormData(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setSaveFormData(true);
+
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
 
-        webView.setWebChromeClient(new WebChromeClient() {
-        });
         webView.setWebViewClient(new MyAppWebViewClient());
 
         walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
@@ -78,12 +94,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
         try {
             if(walletType == PaymentOption.PAYTM.getOrdinal()){
 				String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
-				try {
-					loadHTMLContent(postDataQuery);
-				} catch(Exception e) {
-					Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
-					loadHTMLContent(postDataQuery);
-				}
+                loadHTMLContent(postDataQuery);
 			}
 			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
 				String url = getIntent().getStringExtra(Constants.KEY_URL);
@@ -154,6 +165,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
         @Override
         public void onLoadResource(WebView view, String url) {
             super.onLoadResource(view, url);
+//            Log.e("onLoadResource url", "=" + url);
         }
 
         @Override
@@ -170,7 +182,6 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
                 progressBar.setVisibility(View.GONE);
             }
         }
-
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -236,31 +247,30 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
             public void run() {
                 String respStr = "";
                 try {
-//                            OkHttpClient client = new OkHttpClient();
-//
-//                            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-//                            RequestBody body = RequestBody.create(mediaType, data);
-//                            Request request = new Request.Builder()
-//									.url(url)
-//									.post(body)
-//									.addHeader("cache-control", "no-cache")
-//									.addHeader("postman-token", "163a261c-1ddf-04cb-8f16-0a747d5118b8")
-//									.addHeader("content-type", "application/x-www-form-urlencoded")
-//									.build();
-//
-//                            Response response = client.newCall(request).execute();
+//                    OkHttpClient client = new OkHttpClient();
+//                    MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+//                    RequestBody body = RequestBody.create(mediaType, data);
+//                    Request request = new Request.Builder()
+//                            .url(url)
+//                            .post(body)
+//                            .addHeader("cache-control", "no-cache")
+//                            .addHeader("postman-token", "163a261c-1ddf-04cb-8f16-0a747d5118b8")
+//                            .addHeader("content-type", "application/x-www-form-urlencoded")
+//                            .build();
+//                    Response response = client.newCall(request).execute();
+//                            .url("https://checkout-sandbox.freecharge.in/api/v1/co/oauth/wallet/add")
+//                    RequestBody body = RequestBody.create(mediaType, "amount=1&channel=ANDROID&metadata=22&merchantId=TpIysmf2ri3KJY&callbackUrl=https%3A%2F%2Ftest.jugnoo.in%3A8017%2Ffreecharge%2Fadd_money_callback&loginToken=072610d5cef4d694c65a5ab1ab53cc31be84c932ec8e7e5f52c0e48e7123f9e5eb69bc26b7f8921cc4991613682ed636576db7b5b336ba2baf1c272623a31bbc354d1069d170a30005d2223e7a18e2ef8517387154d92f5a1012d91ec40e79963766507b778e9ffcf5048fe03a2bd4f879a0c44a17338c8cdfadda4e890cfcc8d81e426cce4a48f51da16df50c679fa1&checksum=70b5cb56383e45b02b3389af7210d553827222de01eddd299f10062c2eda0a5a");
 
                     OkHttpClient client = new OkHttpClient();
                     MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-                    RequestBody body = RequestBody.create(mediaType, "amount=1&channel=ANDROID&metadata=22&merchantId=TpIysmf2ri3KJY&callbackUrl=https%3A%2F%2Ftest.jugnoo.in%3A8017%2Ffreecharge%2Fadd_money_callback&loginToken=072610d5cef4d694c65a5ab1ab53cc31be84c932ec8e7e5f52c0e48e7123f9e5eb69bc26b7f8921cc4991613682ed636576db7b5b336ba2baf1c272623a31bbc354d1069d170a30005d2223e7a18e2ef8517387154d92f5a1012d91ec40e79963766507b778e9ffcf5048fe03a2bd4f879a0c44a17338c8cdfadda4e890cfcc8d81e426cce4a48f51da16df50c679fa1&checksum=70b5cb56383e45b02b3389af7210d553827222de01eddd299f10062c2eda0a5a");
+                    RequestBody body = RequestBody.create(mediaType, data);
                     Request request = new Request.Builder()
-                            .url("https://checkout-sandbox.freecharge.in/api/v1/co/oauth/wallet/add")
+                            .url(url)
                             .post(body)
                             .addHeader("cache-control", "no-cache")
                             .addHeader("postman-token", "163a261c-1ddf-04cb-8f16-0a747d5118b8")
                             .addHeader("content-type", "application/x-www-form-urlencoded")
                             .build();
-
                     Response response = client.newCall(request).execute();
 
                     respStr = new String(response.body().bytes());
@@ -274,7 +284,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
                     @Override
                     public void run() {
                         try {
-                            loadHTMLContent(respStrFinal);
+                            webView.loadDataWithBaseURL("", respStrFinal, "text/html", "utf-8", null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

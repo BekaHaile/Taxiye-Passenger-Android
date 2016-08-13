@@ -434,6 +434,7 @@ public class WalletRechargeFragment extends Fragment {
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 				params.put(Constants.KEY_AMOUNT, amount);
+				params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 					RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
