@@ -5,7 +5,6 @@ package product.clicklabs.jugnoo.wallet;
  */
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +12,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -27,6 +28,7 @@ import okhttp3.Response;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.utils.EncodeUtils;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 
@@ -60,55 +62,12 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_wallet_recharge_webview);
 
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptFileSchemeCookies(true);
-        cookieManager.setAcceptCookie(true);
-        cookieManager.acceptCookie();
-
-        webView = (WebView) findViewById(R.id.webview);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-
-        // Enable javascript
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setDatabaseEnabled(true);
-        // Create database folder
-        String databasePath = getDir("databases", Context.MODE_PRIVATE).getPath();
-        webView.getSettings().setDatabasePath(databasePath);
-
-        webView.getSettings().setAppCacheEnabled(true);
-        webView.getSettings().setSaveFormData(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setSaveFormData(true);
-
+        initWebView();
+        CookieManager.getInstance().setAcceptCookie(true);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
-
-
-        webView.setWebViewClient(new MyAppWebViewClient());
-
-        walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-
-        try {
-            if(walletType == PaymentOption.PAYTM.getOrdinal()){
-				String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
-                loadHTMLContent(postDataQuery);
-			}
-			else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
-				String url = getIntent().getStringExtra(Constants.KEY_URL);
-				webView.loadUrl(url);
-			}
-            else if(walletType == PaymentOption.FREECHARGE.getOrdinal()){
-                String url = getIntent().getStringExtra(Constants.KEY_URL);
-                String data = getIntent().getStringExtra(Constants.POST_DATA);
-                loadDataFreecharge(url, data);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
-        }
     }
 
 	public void loadHTMLContent(String data) {
@@ -117,6 +76,51 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 		webView.loadDataWithBaseURL("", data, mimeType, encoding, "");
 	}
 
+
+    private void initWebView(){
+        CookieSyncManager.createInstance(this).sync();
+        webView = (WebView) findViewById(R.id.webview);
+
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setSupportMultipleWindows(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setBuiltInZoomControls(true);
+        webView.setWebViewClient(new MyAppWebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+
+        loadWebview();
+    }
+
+    private void loadWebview(){
+        walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
+        try {
+            if(walletType == PaymentOption.PAYTM.getOrdinal()){
+                String postDataQuery = getIntent().getStringExtra(Constants.POST_DATA);
+                loadHTMLContent(postDataQuery);
+            }
+            else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
+                String url = getIntent().getStringExtra(Constants.KEY_URL);
+                webView.loadUrl(url);
+            }
+            else if(walletType == PaymentOption.FREECHARGE.getOrdinal()){
+                String url = getIntent().getStringExtra(Constants.KEY_URL);
+                String data = getIntent().getStringExtra(Constants.POST_DATA);
+                String jsonData = getIntent().getStringExtra(Constants.KEY_JSON_DATA);
+//                loadDataFreecharge(url, data);
+                webView.postUrl(url, getBody(jsonData));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private byte[] getBody(String jsonData) {
+        return EncodeUtils.jsonToUrlEncodeBytes(jsonData, Constants.KEY_REQUEST_ENCODING);
+    }
 
 
 	@Override
@@ -165,7 +169,6 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
         @Override
         public void onLoadResource(WebView view, String url) {
             super.onLoadResource(view, url);
-//            Log.e("onLoadResource url", "=" + url);
         }
 
         @Override

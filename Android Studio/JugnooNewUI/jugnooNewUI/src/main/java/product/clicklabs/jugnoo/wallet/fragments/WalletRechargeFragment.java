@@ -445,7 +445,7 @@ public class WalletRechargeFragment extends Fragment {
 							Log.i(TAG, "paytmAddMoney response = " + responseStr);
 							DialogPopup.dismissLoadingDialog();
 							try {
-								openWebView(null, responseStr, openWalletType);
+								openWebView(null, responseStr, null, openWalletType);
 							} catch (Exception e) {
 								DialogPopup.dismissLoadingDialog();
 								e.printStackTrace();
@@ -474,11 +474,12 @@ public class WalletRechargeFragment extends Fragment {
 								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
 									if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()) {
 										String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
-										openWebView(url, null, openWalletType);
+										openWebView(url, null, null, openWalletType);
 									} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()){
 										String url = jObj.optString(Constants.KEY_ADD_MONEY_URL, "");
 										String data = jObj.optString(Constants.KEY_DATA, "");
-										openWebView(url, data, openWalletType);
+										String jsonData = jObj.optJSONObject(Constants.KEY_JSON_DATA).toString();
+										openWebView(url, data, jsonData, openWalletType);
 									}
 								} else{
 									DialogPopup.alertPopup(paymentActivity, "", message);
@@ -617,7 +618,7 @@ public class WalletRechargeFragment extends Fragment {
 
 	private int rechargeRequestCode = 1;
 
-	private void openWebView(String url, String data, int walletType) {
+	private void openWebView(String url, String data, String jsonData, int walletType) {
 		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
 		Intent intent = new Intent(paymentActivity, WalletRechargeWebViewActivity.class);
 		if(walletType == PaymentOption.PAYTM.getOrdinal()) {
@@ -626,6 +627,7 @@ public class WalletRechargeFragment extends Fragment {
 			intent.putExtra(Constants.KEY_URL, url);
 		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
 			intent.putExtra(Constants.POST_DATA, data);
+			intent.putExtra(Constants.KEY_JSON_DATA, jsonData);
 			intent.putExtra(Constants.KEY_URL, url);
 		}
 		intent.putExtra(Constants.KEY_WALLET_TYPE, walletType);

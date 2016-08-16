@@ -307,6 +307,8 @@ public interface Constants {
 	String KEY_HEIGHT = "height";
 	String KEY_CAMPAIGN_ID = "campaign_id";
 	String KEY_DATA = "data";
+	String KEY_JSON_DATA = "json_data";
+	String KEY_REQUEST_ENCODING = "UTF-8";
 	String VALUE_CAMPAIGN_DATA_REQUEST = "1";
 	String VALUE_CAMPAIGN_DATA_CANCEL = "-1";
 
