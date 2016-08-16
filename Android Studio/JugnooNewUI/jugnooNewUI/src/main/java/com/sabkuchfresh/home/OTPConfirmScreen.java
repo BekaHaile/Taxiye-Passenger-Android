@@ -27,8 +27,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.google.gson.Gson;
-import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.config.Config;
@@ -47,10 +45,8 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.Data;
-import com.sabkuchfresh.utils.DeviceTokenGenerator;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.IDeviceTokenReceiver;
 import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.LocationFetcher;
 import com.sabkuchfresh.utils.Log;
@@ -61,6 +57,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -140,9 +138,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationFetcher.Lo
 		textViewOtpNumber = (TextView) findViewById(R.id.textViewOtpNumber); textViewOtpNumber.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
 		imageViewChangePhoneNumber = (ImageView) findViewById(R.id.imageViewChangePhoneNumber);
-		linearLayoutEnterOtp = (LinearLayout) findViewById(R.id.linearLayoutEnterOtp);
-		linearLayoutOtherOptions = (LinearLayout) findViewById(R.id.linearLayoutOtherOptions);
-		linearLayoutOR = (LinearLayout) findViewById(R.id.linearLayoutOR);
+//		linearLayoutEnterOtp = (LinearLayout) findViewById(R.id.linearLayoutEnterOtp);
+//		linearLayoutOtherOptions = (LinearLayout) findViewById(R.id.linearLayoutOtherOptions);
+//		linearLayoutOR = (LinearLayout) findViewById(R.id.linearLayoutOR);
 		linearLayoutTopDefault = (LinearLayout) findViewById(R.id.linearLayoutTopDefault);
 		imageViewPaytmIcon = (ImageView) findViewById(R.id.imageViewPaytmIcon);
 
@@ -425,15 +423,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationFetcher.Lo
 			linearLayoutOR.setVisibility(View.GONE);
 		}
 
-		new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
-
-			@Override
-			public void deviceTokenReceived(final String regId) {
-				Data.deviceToken = regId;
-				Log.e("deviceToken in IDeviceTokenReceiver" +
-						"", Data.deviceToken + "..");
-			}
-		});
+//		new DeviceTokenGenerator().generateDeviceToken(this, new IDeviceTokenReceiver() {
+//
+//			@Override
+//			public void deviceTokenReceived(final String regId) {
+//				Data.deviceToken = regId;
+//				Log.e("deviceToken in IDeviceTokenReceiver" +
+//						"", Data.deviceToken + "..");
+//			}
+//		});
 
 		OTP_SCREEN_OPEN = "yes";
 

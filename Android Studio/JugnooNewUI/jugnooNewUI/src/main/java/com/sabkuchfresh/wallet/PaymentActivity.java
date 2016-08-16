@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.apis.ApiPaytmCheckBalance;
 import com.sabkuchfresh.datastructure.AddPaymentPath;
@@ -18,6 +17,8 @@ import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
+
+import product.clicklabs.jugnoo.R;
 
 
 /**
@@ -38,7 +39,7 @@ public class PaymentActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        new ASSL(this, (ViewGroup) findViewById(R.id.mainHomelayout), 1134, 720, false);
+        new ASSL(this, (ViewGroup) findViewById(R.id.fragLayout), 1134, 720, false);
 
         addPaymentPathInt = getIntent().getIntExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
         if (getIntent().hasExtra(Constants.KEY_PAYMENT_PATH)) {

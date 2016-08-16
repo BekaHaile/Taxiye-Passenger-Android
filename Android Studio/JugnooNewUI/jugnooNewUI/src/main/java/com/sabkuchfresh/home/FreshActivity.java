@@ -33,6 +33,7 @@ import com.sabkuchfresh.apis.ApiPaytmCheckBalance;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.datastructure.AppLinkIndex;
 import com.sabkuchfresh.datastructure.PaymentOption;
 import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
@@ -77,12 +78,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.MenuBar;
 
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseFragmentActivity implements LocationFetcher.LocationUpdate, FlurryEventNames {
+public class FreshActivity extends BaseFragmentActivity implements LocationFetcher.LocationUpdate, MenuBar.Buttonclicked, FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -169,7 +169,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
         topView = (View) findViewById(R.id.topBarMain);
 
-        menuBar = new MenuBar(this, drawerLayout);
+        menuBar = new MenuBar(this, drawerLayout, this);
         topBar = new TopBar(this, drawerLayout);
 
 //        if(BuildConfig.DEBUG_MODE)
@@ -349,52 +349,52 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
                 locationFetcher.connect();
             }
 
-            //openDeepLink();
+            openDeepLink();
         }
 
     }
 
-//    private void openDeepLink(){
-//        try{
-//            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
-//                //onitemClicked(AppConstant.MenuClick.REFER);
-//            }
-//            else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-//                onitemClicked(AppConstant.MenuClick.WALLET);
-//            }
-//            else if(AppLinkIndex.HISTORY.getOrdinal() == Data.deepLinkIndex){
-//                onitemClicked(AppConstant.MenuClick.HISTORY);
-//            }
-//            else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
-//                onitemClicked(AppConstant.MenuClick.SUPPORT);
-//            }
-//            else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
-//                onitemClicked(AppConstant.MenuClick.USERINFO);
-//            }
-//            else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-//                onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
-//            }
-//            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
-//                Utils.openPlayStore(FreshActivity.this);
-//            }
-//            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
-//                FreshFragment frag = getFreshFragment();
-//                if(frag == null && Data.userData.stores.size() > 1) {
-//                    addFreshFragment1(new FreshFragment(), true);
-//                }
-//            }
-//            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
-//                MealFragment mealFragment = getMealFragment();
-//                if(mealFragment == null && Data.userData.stores.size() > 1) {
-//                    addMealFragment(new MealFragment(), true);
-//                }
-//            }
-//
-//        } catch(Exception e){
-//            e.printStackTrace();
-//        }
-//        Data.deepLinkIndex = -1;
-//    }
+    private void openDeepLink(){
+        try{
+            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
+                //onitemClicked(AppConstant.MenuClick.REFER);
+            }
+            else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
+                onitemClicked(AppConstant.MenuClick.WALLET);
+            }
+            else if(AppLinkIndex.HISTORY.getOrdinal() == Data.deepLinkIndex){
+                onitemClicked(AppConstant.MenuClick.HISTORY);
+            }
+            else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
+                onitemClicked(AppConstant.MenuClick.SUPPORT);
+            }
+            else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
+                onitemClicked(AppConstant.MenuClick.USERINFO);
+            }
+            else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
+                onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
+            }
+            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
+                Utils.openPlayStore(FreshActivity.this);
+            }
+            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
+                FreshFragment frag = getFreshFragment();
+                if(frag == null && Data.userData.stores.size() > 1) {
+                    addFreshFragment1(new FreshFragment(), true);
+                }
+            }
+            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
+                MealFragment mealFragment = getMealFragment();
+                if(mealFragment == null && Data.userData.stores.size() > 1) {
+                    addMealFragment(new MealFragment(), true);
+                }
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        Data.deepLinkIndex = -1;
+    }
 
     public void resumeMethod() {
         menuBar.setUserData();
@@ -1397,4 +1397,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
     }
 
+    @Override
+    public void onitemClicked(int position) {
+
+    }
 }

@@ -82,6 +82,8 @@ public class MyApplication extends Application{
             kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
 			mInstance = this;
+			mBus = new Bus();
+			mBus.register(this);
 
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -90,6 +92,10 @@ public class MyApplication extends Application{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Bus getBus() {
+		return mBus;
 	}
 
     public FirebaseAnalytics getFirebaseAnalytics() {

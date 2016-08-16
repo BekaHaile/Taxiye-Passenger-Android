@@ -15,8 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Constants;
@@ -24,6 +22,9 @@ import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.EnglishNumberToWords;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Utils;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 
 public class MultipleAccountsActivity extends BaseActivity {

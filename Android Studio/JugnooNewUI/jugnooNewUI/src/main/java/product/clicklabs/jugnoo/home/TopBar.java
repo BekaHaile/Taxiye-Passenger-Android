@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
@@ -117,23 +118,24 @@ public class TopBar implements FirebaseEvents {
                     break;
 
                 case R.id.imageViewMenu:
-                    drawerLayout.openDrawer(GravityCompat.START);
-                    FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
-
-                    try {
-                        if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                            FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "menu");
-                        } else {
-                            Bundle bundle = new Bundle();
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
-
-                            FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION,
-                                    "Home Screen", "menu");
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    activity.startActivity(new Intent(activity, FreshActivity.class));
+//                    drawerLayout.openDrawer(GravityCompat.START);
+//                    FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
+//                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
+//
+//                    try {
+//                        if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
+//                            FlurryEventLogger.eventGA(Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Ride Start", "menu");
+//                        } else {
+//                            Bundle bundle = new Bundle();
+//                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+MENU, bundle);
+//
+//                            FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION,
+//                                    "Home Screen", "menu");
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
                     break;
 
                 case R.id.buttonCheckServer:

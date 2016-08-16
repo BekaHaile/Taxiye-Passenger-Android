@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
@@ -655,7 +654,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 				}
 			};
-			PicassoTools.into(requestCreator, target);
+//			PicassoTools.into(requestCreator, target);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
@@ -20,6 +19,8 @@ import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Prefs;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by shankar on 4/8/16.
@@ -85,7 +86,7 @@ public class TopBar implements FlurryEventNames {
 		if(activity instanceof FreshActivity){
 			relativeLayoutNotification.setVisibility(View.GONE);
 			imageViewSearchCancel.setVisibility(View.GONE);
-			title.setText(activity.getResources().getString(R.string.jugnoo_fresh).toUpperCase());
+			title.setText(activity.getResources().getString(R.string.app_name).toUpperCase());
 		}
 
         try {

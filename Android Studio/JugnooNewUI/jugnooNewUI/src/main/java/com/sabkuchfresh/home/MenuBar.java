@@ -1,75 +1,75 @@
-//package com.sabkuchfresh.home;
-//
-//import android.app.Activity;
-//import android.support.v4.widget.DrawerLayout;
-//import android.text.TextUtils;
-//import android.view.View;
-//import android.widget.ImageView;
-//import android.widget.LinearLayout;
-//import android.widget.RelativeLayout;
-//import android.widget.TextView;
-//
-//import product.clicklabs.jugnoo.R;
-//import com.sabkuchfresh.utils.AppConstant;
-//import com.sabkuchfresh.utils.Data;
-//import com.sabkuchfresh.utils.Fonts;
-//import com.sabkuchfresh.utils.Utils;
-//import com.sabkuchfresh.widgets.ProgressWheel;
-//import com.squareup.picasso.CircleTransform;
-//
-///**
-// * Created by shankar on 4/8/16.
-// */
-//public class MenuBar {
-//
-//    Activity activity;
-//    DrawerLayout drawerLayout;
-//
-//    //menu bar
-//    public LinearLayout menuLayout;
-//
-//    public LinearLayout linearLayoutProfile;
-//    public ImageView imageViewProfile;
-//    public TextView textViewUserName, textViewViewAccount;
-//
-//
-//    public RelativeLayout relativeLayoutWallet;
-//    public TextView textViewWallet, textViewWalletValue;
-//    public ProgressWheel progressBarMenuPaytmWalletLoading;
-//
-//    public RelativeLayout relativeLayoutRefer;
-//    public TextView textViewRefer;
-//    public ImageView imageViewRefer;
-//
-//    public RelativeLayout relativeLayoutTransactions;
-//    public TextView textViewTransactions;
-//    public ImageView imageViewTransactions;
-//
-//    public RelativeLayout relativeLayoutNotification;
-//    public TextView textViewNotification;
-//
-//    public RelativeLayout relativeLayoutfatafat;
-//    public TextView textViewFatafat;
-//
-//    public RelativeLayout relativeLayoutmeals;
-//    public TextView textViewmeals;
-//
-//    public RelativeLayout relativeLayoutSupport;
-//    public TextView textViewSupport;
-//
-//    public RelativeLayout relativeLayoutAbout;
-//    public TextView textViewAbout;
-//
-//    public Buttonclicked buttonclicked;
-//
-//    public MenuBar(Activity activity, DrawerLayout rootView, Buttonclicked buttonclicked) {
-//        this.activity = activity;
-//        this.drawerLayout = rootView;
-//        this.buttonclicked = buttonclicked;
+package com.sabkuchfresh.home;
+
+import android.app.Activity;
+import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.sabkuchfresh.utils.Data;
+import com.sabkuchfresh.utils.Utils;
+import com.sabkuchfresh.widgets.ProgressWheel;
+import com.squareup.picasso.CircleTransform;
+import com.squareup.picasso.Picasso;
+
+import product.clicklabs.jugnoo.R;
+
+/**
+ * Created by shankar on 4/8/16.
+ */
+public class MenuBar {
+
+    Activity activity;
+    DrawerLayout drawerLayout;
+
+    //menu bar
+    public LinearLayout menuLayout;
+
+    public LinearLayout linearLayoutProfile;
+    public ImageView imageViewProfile;
+    public TextView textViewUserName, textViewViewAccount;
+
+
+    public RelativeLayout relativeLayoutWallet;
+    public TextView textViewWallet, textViewWalletValue;
+    public ProgressWheel progressBarMenuPaytmWalletLoading;
+
+    public RelativeLayout relativeLayoutRefer;
+    public TextView textViewRefer;
+    public ImageView imageViewRefer;
+
+    public RelativeLayout relativeLayoutTransactions;
+    public TextView textViewTransactions;
+    public ImageView imageViewTransactions;
+
+    public RelativeLayout relativeLayoutNotification;
+    public TextView textViewNotification;
+
+    public RelativeLayout relativeLayoutfatafat;
+    public TextView textViewFatafat;
+
+    public RelativeLayout relativeLayoutmeals;
+    public TextView textViewmeals;
+
+    public RelativeLayout relativeLayoutSupport;
+    public TextView textViewSupport;
+
+    public RelativeLayout relativeLayoutAbout;
+    public TextView textViewAbout;
+
+    public Buttonclicked buttonclicked;
+
+    public MenuBar(Activity activity, DrawerLayout rootView, Buttonclicked buttonclicked) {
+        this.activity = activity;
+        this.drawerLayout = rootView;
+        this.buttonclicked = buttonclicked;
 //        initComponents();
-//    }
-//
-//
+    }
+
+
 //    private void initComponents() {
 //        //Swipe menu
 //        menuLayout = (LinearLayout) drawerLayout.findViewById(R.id.menuLayout);
@@ -232,57 +232,57 @@
 //        }
 //
 //    }
-//
-//    private void setupShareMenu() {
-//        try {
-//            if (!TextUtils.isEmpty(Data.userData.shateName))
-//                textViewRefer.setText(Data.userData.shateName);
-//
-//            try {
-//                Picasso.with(activity).load(Data.userData.shareImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewRefer);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void setUserData() {
-//        try {
-//            textViewUserName.setText(Data.userData.userName);
-//
-//
-//            textViewWalletValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-//                    Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
-//
-//            Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
-//            try {
-//                Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void dismissPaytmLoading() {
-//        try {
-//            progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
-//            textViewWalletValue.setVisibility(View.VISIBLE);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
-//    /**
-//     * used to perfome click when menu button clicked and notify in FrashActivity class
-//     */
-//    public interface Buttonclicked {
-//        void onitemClicked(int position);
-//    }
-//
-//}
+
+    private void setupShareMenu() {
+        try {
+            if (!TextUtils.isEmpty(Data.userData.shateName))
+                textViewRefer.setText(Data.userData.shateName);
+
+            try {
+                Picasso.with(activity).load(Data.userData.shareImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewRefer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUserData() {
+        try {
+            textViewUserName.setText(Data.userData.userName);
+
+
+            textViewWalletValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                    Utils.getMoneyDecimalFormat().format(Data.userData.getTotalWalletBalance())));
+
+            Data.userData.userImage = Data.userData.userImage.replace("http://graph.facebook", "https://graph.facebook");
+            try {
+                Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewProfile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dismissPaytmLoading() {
+        try {
+            progressBarMenuPaytmWalletLoading.setVisibility(View.GONE);
+            textViewWalletValue.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * used to perfome click when menu button clicked and notify in FrashActivity class
+     */
+    public interface Buttonclicked {
+        void onitemClicked(int position);
+    }
+
+}

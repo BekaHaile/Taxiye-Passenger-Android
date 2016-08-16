@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
-import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -51,6 +49,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

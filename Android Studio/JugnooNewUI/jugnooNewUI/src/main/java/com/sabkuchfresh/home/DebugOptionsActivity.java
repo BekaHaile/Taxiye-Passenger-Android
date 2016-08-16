@@ -17,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.datastructure.SPLabels;
@@ -27,6 +26,7 @@ import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Prefs;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 
 public class DebugOptionsActivity extends BaseActivity {

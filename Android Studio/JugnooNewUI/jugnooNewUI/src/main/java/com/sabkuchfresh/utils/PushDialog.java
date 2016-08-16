@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.datastructure.PopupData;
+import com.squareup.picasso.Picasso;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by shankar on 5/2/16.
