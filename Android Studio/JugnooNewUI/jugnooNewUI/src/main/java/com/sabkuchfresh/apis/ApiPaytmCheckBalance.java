@@ -3,7 +3,6 @@ package com.sabkuchfresh.apis;
 import android.app.Activity;
 import android.view.View;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.datastructure.DialogErrorType;
 import com.sabkuchfresh.retrofit.RestClient;
@@ -20,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;

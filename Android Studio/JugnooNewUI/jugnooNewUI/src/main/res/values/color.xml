@@ -188,5 +188,8 @@
         <item>@color/transparent</item>
     </integer-array>
 
+    <color name="apply_btn_normal">#d8d8d8</color>
+    <color name="apply_btn_pressed">#C8C8C8</color>
+
 
 </resources>

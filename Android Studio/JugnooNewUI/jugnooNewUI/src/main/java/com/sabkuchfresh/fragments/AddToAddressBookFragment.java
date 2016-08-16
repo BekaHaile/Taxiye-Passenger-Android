@@ -23,13 +23,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.ASSL;
@@ -52,6 +52,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.
@@ -219,34 +221,41 @@ public class AddToAddressBookFragment extends Fragment {
 
 
         if (googleMap == null) {
-            googleMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.addressmapView)).getMap();
-
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            googleMap.getUiSettings().setZoomControlsEnabled(false);
-            googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.addressmapView)).getMapAsync(new OnMapReadyCallback() {
                 @Override
-                public void onMapClick(LatLng latLng) {
-                    goToExpandedMap();
+                public void onMapReady(GoogleMap map) {
+                    googleMap = map;
+                    googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    googleMap.getUiSettings().setZoomControlsEnabled(false);
+                    googleMap.getUiSettings().setAllGesturesEnabled(false);
+
+                    googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng latLng) {
+                            goToExpandedMap();
+                        }
+                    });
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            goToExpandedMap();
+                            return true;
+                        }
+                    });
+
+                    // check if map is created successfully or not
+                    if (googleMap == null) {
+                        Toast.makeText(homeActivity,
+                                "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                    extractMapSnapShot(currentLatitude, currentLongitude);
                 }
             });
 
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    goToExpandedMap();
-                    return true;
-                }
-            });
 
-            // check if map is created successfully or not
-            if (googleMap == null) {
-                Toast.makeText(homeActivity,
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
         }
     }
 
@@ -315,7 +324,7 @@ public class AddToAddressBookFragment extends Fragment {
 //            activityTitle.setText("ADD ADDRESS");
             buttonAddToAddressBook.setText("ADD ADDRESS");
 
-            extractMapSnapShot(currentLatitude, currentLongitude);
+
 //        } else if (homeActivity.current_action.equals(homeActivity.EDIT_ADDRESS)) {
 //            activityTitle.setText("UPDATE ADDRESS");
 //            buttonAddToAddressBook.setText("UPDATE ADDRESS");

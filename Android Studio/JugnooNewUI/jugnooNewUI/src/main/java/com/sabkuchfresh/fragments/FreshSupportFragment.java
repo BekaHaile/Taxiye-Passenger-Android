@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabkuchfresh.MyApplication;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.config.Config;
@@ -35,6 +34,7 @@ import com.sabkuchfresh.utils.Utils;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

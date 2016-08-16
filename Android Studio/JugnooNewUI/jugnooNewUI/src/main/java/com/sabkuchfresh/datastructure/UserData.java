@@ -2,12 +2,13 @@ package com.sabkuchfresh.datastructure;
 
 import android.content.Context;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.retrofit.model.Store;
 import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;

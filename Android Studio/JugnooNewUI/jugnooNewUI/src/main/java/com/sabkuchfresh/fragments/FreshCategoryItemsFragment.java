@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.SwipeCheckout;
@@ -25,6 +24,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 
 @SuppressLint("ValidFragment")

@@ -12,7 +12,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
+
 
 /**
  * Created by Gurmail S. Kang on 5/18/16.

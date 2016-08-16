@@ -3,6 +3,7 @@ package com.sabkuchfresh.adapters;
 /**
  * Created by Shankar on 12/8/2015.
  */
+
 import android.app.Activity;
 import android.content.pm.ResolveInfo;
 import android.view.LayoutInflater;
@@ -12,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 
 
 public class ShareIntentListAdapter extends ArrayAdapter

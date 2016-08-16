@@ -6,13 +6,14 @@ import com.nudgespot.api.GcmClient;
 import com.nudgespot.api.auth.NudgespotCredentials;
 import com.nudgespot.resource.NudgespotActivity;
 import com.nudgespot.resource.NudgespotSubscriber;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DateOperations;
 import com.sabkuchfresh.utils.Prefs;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by shankar on 3/29/16.

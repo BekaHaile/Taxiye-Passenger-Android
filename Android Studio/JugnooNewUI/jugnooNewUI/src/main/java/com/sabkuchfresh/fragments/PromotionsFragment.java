@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.home.SupportActivity;
@@ -34,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

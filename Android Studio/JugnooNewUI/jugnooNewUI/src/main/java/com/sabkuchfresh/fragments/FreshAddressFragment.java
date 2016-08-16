@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.FreshAddressAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -23,6 +22,8 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Prefs;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import product.clicklabs.jugnoo.R;
 
 
 public class FreshAddressFragment extends Fragment implements View.OnClickListener, FlurryEventNames, FreshAddressAdapter.Callback {

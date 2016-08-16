@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.sabkuchfresh.MyApplication;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -47,6 +46,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

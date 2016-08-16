@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.MyApplication;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.NotificationAdapter;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.datastructure.DialogErrorType;
@@ -34,6 +33,7 @@ import com.sabkuchfresh.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

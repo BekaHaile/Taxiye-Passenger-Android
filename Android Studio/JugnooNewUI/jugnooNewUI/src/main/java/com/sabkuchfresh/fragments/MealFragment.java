@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -46,6 +45,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

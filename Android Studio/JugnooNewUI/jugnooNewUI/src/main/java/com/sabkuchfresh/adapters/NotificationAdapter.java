@@ -11,13 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.retrofit.model.NotificationData;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.DateOperations;
 import com.sabkuchfresh.utils.Fonts;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 
 /**

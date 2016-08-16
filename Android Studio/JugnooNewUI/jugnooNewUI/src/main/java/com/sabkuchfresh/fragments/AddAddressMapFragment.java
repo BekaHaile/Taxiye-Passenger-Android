@@ -33,7 +33,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.SearchListAdapter;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;
@@ -59,6 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -66,7 +66,7 @@ import retrofit.client.Response;
 /**
  * Created by Gurmail S. Kang on 5/4/16.
  */
-public class AddAddressMapFragment extends Fragment implements LocationFetcher.LocationUpdate, OnMapReadyCallback,
+public class AddAddressMapFragment extends Fragment implements LocationFetcher.LocationUpdate,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String TAG = "AddAddressMapFragment";
@@ -168,7 +168,13 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
                 .build();
 
         //Map Layout
-        googleMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView)).getMap();
+        ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView)).getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                googleMap = map;
+
+            }
+        });
         mapFragment = ((TouchableMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView));
         mapTouched = false;
 
@@ -507,10 +513,6 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-    }
 
     private void fillAddressDetails(final LatLng latLng) {
 

@@ -3,7 +3,6 @@ package com.sabkuchfresh.analytics;
 import android.content.Context;
 
 import com.sabkuchfresh.MyApplication;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
@@ -13,6 +12,7 @@ import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by socomo20 on 7/29/15.

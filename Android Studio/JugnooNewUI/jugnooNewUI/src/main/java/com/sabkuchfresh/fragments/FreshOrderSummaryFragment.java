@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
@@ -44,6 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

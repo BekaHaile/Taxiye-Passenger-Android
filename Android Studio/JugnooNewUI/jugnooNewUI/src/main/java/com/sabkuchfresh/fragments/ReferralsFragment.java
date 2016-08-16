@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -32,11 +31,13 @@ import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.Log;
 import com.sabkuchfresh.utils.ReferralActions;
 import com.sabkuchfresh.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

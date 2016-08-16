@@ -24,7 +24,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;
 import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.datastructure.SearchResult;
@@ -39,6 +38,8 @@ import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 
 /**
@@ -262,9 +263,9 @@ public class SearchListAdapter extends BaseAdapter {
 							refreshingAutoComplete = true;
 							autoCompleteSearchResultsForSearch.clear();
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-								String name = autocompletePrediction.getDescription().split(",")[0];
+								String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(name,
-										autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
+										autocompletePrediction.getFullText(null).toString(), autocompletePrediction.getPlaceId()));
 							}
 							autocompletePredictions.release();
 

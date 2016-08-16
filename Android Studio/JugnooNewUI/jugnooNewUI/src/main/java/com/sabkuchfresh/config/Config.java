@@ -3,7 +3,6 @@ package com.sabkuchfresh.config;
 
 import android.content.Context;
 
-import com.sabkuchfresh.BuildConfig;
 import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.utils.Log;
 import com.sabkuchfresh.utils.Prefs;
@@ -19,7 +18,7 @@ public class Config {
 
     private static final String DOWNLOAD_SOURCE = "playstore";
 
-    private static final String FABRIC_APIKEY = BuildConfig.FABRIC_APIKEY;
+    private static final String FABRIC_APIKEY = "f96b4d9d9886e413041e7b14fa52434b87709356";
 
     private static final String CLIENT_ID = "FHkmrtv6zn0KuGcW";
 //    private static final String CLIENT_SHARED_SECRET = "fMxVVNgUl5XV9bzr12T1xtiQfxaAblXf";

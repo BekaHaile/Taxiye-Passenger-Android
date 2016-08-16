@@ -9,13 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Fonts;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.

@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -34,6 +33,8 @@ import com.sabkuchfresh.widgets.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import product.clicklabs.jugnoo.R;
 
 
 @SuppressLint("ValidFragment")
