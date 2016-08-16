@@ -2,7 +2,7 @@ package com.sabkuchfresh.analytics;
 
 import android.content.Context;
 
-import com.sabkuchfresh.MyApplication;
+import product.clicklabs.jugnoo.MyApplication;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;

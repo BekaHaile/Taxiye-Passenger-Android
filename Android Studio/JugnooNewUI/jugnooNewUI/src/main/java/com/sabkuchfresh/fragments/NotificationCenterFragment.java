@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.MyApplication;
 import com.sabkuchfresh.adapters.NotificationAdapter;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.datastructure.DialogErrorType;
@@ -33,6 +32,7 @@ import com.sabkuchfresh.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -127,13 +127,13 @@ public class NotificationCenterFragment extends Fragment implements DisplayPushH
     @Override
     public void onResume() {
         super.onResume();
-        MyApplication.displayPushHandler = this;
+        //MyApplication.displayPushHandler = this;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MyApplication.displayPushHandler = null;
+        //MyApplication.displayPushHandler = null;
     }
 
 

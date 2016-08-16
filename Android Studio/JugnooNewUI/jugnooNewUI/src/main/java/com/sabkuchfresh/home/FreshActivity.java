@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.MyApplication;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -77,6 +76,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 
 /**
