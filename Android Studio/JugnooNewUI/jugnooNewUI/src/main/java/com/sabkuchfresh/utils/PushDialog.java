@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.datastructure.PopupData;
 
 /**

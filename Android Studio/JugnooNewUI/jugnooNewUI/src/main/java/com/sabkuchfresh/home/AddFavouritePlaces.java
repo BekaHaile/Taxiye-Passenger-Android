@@ -12,7 +12,7 @@
 //import android.widget.LinearLayout;
 //import android.widget.TextView;
 //
-//import com.sabkuchfresh.R;
+//import product.clicklabs.jugnoo.R;
 //import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;
 //import com.sabkuchfresh.datastructure.SPLabels;
 //import com.sabkuchfresh.utils.ASSL;

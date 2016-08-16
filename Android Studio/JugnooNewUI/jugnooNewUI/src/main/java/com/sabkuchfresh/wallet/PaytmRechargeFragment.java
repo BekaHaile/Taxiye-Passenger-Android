@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.config.Config;

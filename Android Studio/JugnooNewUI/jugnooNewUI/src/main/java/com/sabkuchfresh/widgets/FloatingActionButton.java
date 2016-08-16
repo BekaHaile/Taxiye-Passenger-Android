@@ -34,7 +34,7 @@ package com.sabkuchfresh.widgets;//package com.sabkuchfresh.widgets;
 //
 //import com.nineoldandroids.view.ViewHelper;
 //import com.nineoldandroids.view.ViewPropertyAnimator;
-//import com.sabkuchfresh.R;
+//import product.clicklabs.jugnoo.R;
 //import com.sabkuchfresh.utils.Utils;
 //
 //import java.lang.annotation.Retention;

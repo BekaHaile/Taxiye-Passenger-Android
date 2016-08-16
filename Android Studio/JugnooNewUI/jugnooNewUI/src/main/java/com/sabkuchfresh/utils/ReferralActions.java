@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.adapters.ShareIntentListAdapter;
 import com.sabkuchfresh.analytics.BranchMetricsUtils;
 import com.sabkuchfresh.analytics.FlurryEventLogger;

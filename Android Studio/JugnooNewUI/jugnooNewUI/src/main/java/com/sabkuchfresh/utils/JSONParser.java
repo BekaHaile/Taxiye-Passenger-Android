@@ -3,7 +3,7 @@ package com.sabkuchfresh.utils;
 import android.app.Activity;
 import android.content.Context;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.TokenGenerator.AccessTokenGenerator;
 import com.sabkuchfresh.TokenGenerator.SHA256Convertor;
 import com.sabkuchfresh.analytics.FlurryEventNames;

@@ -34,7 +34,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.datastructure.AppPackage;

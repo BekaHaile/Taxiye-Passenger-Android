@@ -19,7 +19,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.datastructure.PaytmPaymentState;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.Log;

@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.TokenGenerator.AccessTokenGenerator;
 import com.sabkuchfresh.datastructure.PaymentOption;
 import com.sabkuchfresh.datastructure.PaytmPaymentState;

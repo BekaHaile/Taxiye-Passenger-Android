@@ -14,7 +14,7 @@
 //import com.google.android.gms.location.places.Places;
 //import com.google.android.gms.maps.model.LatLng;
 //import com.sabkuchfresh.MyApplication;
-//import com.sabkuchfresh.R;
+//import product.clicklabs.jugnoo.R;
 //import com.sabkuchfresh.adapters.SearchListAdapter;
 //import com.sabkuchfresh.datastructure.ApiResponseFlags;
 //import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;

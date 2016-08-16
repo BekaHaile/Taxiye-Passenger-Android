@@ -3,7 +3,7 @@ package com.sabkuchfresh.home;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;

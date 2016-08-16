@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Pair;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.FacebookLoginHelper;

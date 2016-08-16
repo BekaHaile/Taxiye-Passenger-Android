@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by Gurmail S Kang 07/05/2016.

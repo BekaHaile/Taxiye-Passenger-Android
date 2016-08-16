@@ -24,7 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.datastructure.PushFlags;
 import com.sabkuchfresh.utils.Constants;

@@ -12,7 +12,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.sabkuchfresh.R;
+import product.clicklabs.jugnoo.R;
 
 import static com.sabkuchfresh.utils.Constants.KEY_ERROR;
 import static com.sabkuchfresh.utils.Constants.KEY_GOOGLE_PARCEL;
