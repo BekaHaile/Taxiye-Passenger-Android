@@ -18,6 +18,7 @@ import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kochava.android.tracker.Feature;
+import com.squareup.otto.Bus;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,10 @@ public class MyApplication extends Application{
 
     private Feature kTracker;
 
-
+	/**
+	 * Reference to the bus (OTTO By Square)
+	 */
+	private Bus mBus;
 
 	@Override
 	public void onCreate() {

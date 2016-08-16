@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="644px"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_grey_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        >
+
+        <TextView
+            android:id="@+id/textViewSelectDeliverySlot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_sort"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="30px"
+            android:gravity="center"
+            />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:background="@color/text_color_hint"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewDeliverySlots"
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:splitMotionEvents="false"
+            android:background="@color/white"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:paddingTop="20px"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2px"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:orientation="horizontal"
+            android:splitMotionEvents="false"
+            android:background="@color/white"
+            >
+
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="322px"
+                android:layout_height="80px"
+                android:background="@drawable/button_theme_round_selector"
+                android:singleLine="true"
+                android:text="@string/cancel"
+                android:layout_centerInParent="true"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_36"/>
+
+            <!--<ImageView-->
+                <!--android:layout_width="2px"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignLeft="@+id/btnCancel"-->
+                <!--android:background="@color/text_color_hint"/>-->
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/text_color_hint"/>
+
+            <!--<ImageView-->
+                <!--android:layout_width="2px"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignRight="@+id/btnCancel"-->
+                <!--android:background="@color/text_color_hint"/>-->
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

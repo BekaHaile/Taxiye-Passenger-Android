@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutTotalAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45px"
+
+            >
+            <TextView
+                android:id="@+id/textViewTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/total_amount"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_28"
+                android:visibility="visible"
+                android:layout_marginLeft="50px"
+
+
+                />
+
+            <TextView
+                android:id="@+id/textViewTotalAmountValue"
+                android:layout_width="300px"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/rupee_0"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                android:layout_marginRight="50px"
+                android:layout_alignParentRight="true"
+                android:visibility="visible"
+                android:gravity="right"
+
+                />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relativeLayoutDeliveryCharges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+
+            >
+            <TextView
+                android:id="@+id/textViewDeliveryCharges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/delivery_charges"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_28"
+                android:visibility="visible"
+                android:layout_marginLeft="50px"
+
+
+                />
+
+            <TextView
+                android:id="@+id/textViewDeliveryChargesValue"
+                android:layout_width="300px"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/rupee_0"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                android:layout_marginRight="50px"
+                android:layout_alignParentRight="true"
+                android:visibility="visible"
+                android:gravity="right"
+
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            android:layout_marginTop="30px"
+            />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutAmountPayable"
+            android:layout_width="match_parent"
+            android:layout_height="92px"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:id="@+id/textViewAmountPayable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/amount_payable"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                android:visibility="visible"
+                android:layout_marginLeft="50px"
+
+
+                />
+
+            <TextView
+                android:id="@+id/textViewAmountPayableValue"
+                android:layout_width="300px"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/rupee_0"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_32"
+                android:layout_marginRight="50px"
+                android:layout_alignParentRight="true"
+                android:visibility="visible"
+                android:gravity="right"
+
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="66px">
+
+        <TextView
+            android:id="@+id/textViewDeliveryAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="@string/delivery_address"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_28"
+            android:visibility="visible"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewEditAddress"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:padding="15px"
+            android:src="@drawable/edit_icon_selector"
+            android:tag="mwar"
+            android:visibility="visible"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutAddress"
+        android:layout_width="match_parent"
+        android:layout_height="108px"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="10px"
+        android:background="@drawable/background_white_grey_rb_selector"
+        >
+
+        <LinearLayout
+            android:layout_width="600px"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginLeft="30px"
+                >
+
+                <ImageView
+                    android:layout_width="33px"
+                    android:layout_height="27px"
+                    android:src="@drawable/ic_checkout_address"
+                    android:tag="mwar"
+                    />
+
+
+                <TextView
+                    android:id="@+id/textViewAddAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@string/add_address"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28"
+                    android:visibility="visible"
+                    android:layout_marginLeft="10px"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewAddressValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_28"
+                android:visibility="gone"
+                android:layout_marginLeft="30px"
+                android:layout_marginTop="5px"
+                />
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50px">
+        <TextView
+            android:id="@+id/textViewDeliveryDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="@string/delivery_date_time"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_28"
+            android:visibility="visible"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewEditSlot"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:padding="15px"
+            android:src="@drawable/edit_icon_selector"
+            android:tag="mwar"
+            android:visibility="visible"
+            />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutSlot"
+        android:layout_width="match_parent"
+        android:layout_height="108px"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="10px"
+        android:background="@drawable/background_white_grey_rb_selector"
+        >
+
+        <LinearLayout
+            android:layout_width="600px"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="30px"
+                android:gravity="center_vertical"
+                >
+                <ImageView
+                    android:layout_width="24px"
+                    android:layout_height="26px"
+                    android:src="@drawable/ic_checkout_calender"
+                    android:tag="mwar"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@string/no_slots_currently"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28"
+                    android:visibility="visible"
+                    android:layout_marginLeft="10px"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewSlotValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_28"
+                android:visibility="gone"
+                android:layout_marginLeft="30px"
+                android:layout_marginTop="5px"
+                />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="108px"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="66px"
+        android:background="@drawable/background_white_grey_rb_selector"
+        >
+
+        <EditText
+            android:id="@+id/order_note_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="1231564"
+            android:maxLines="3"
+            android:background="@color/transparent"
+            android:textSize="@dimen/text_size_28"
+            style="@style/sabkuchfresh.Text.RobotoRegularSmall_address"
+            />
+
+    </RelativeLayout>
+
+
+
+    <Button
+        android:id="@+id/buttonProceedToPayment"
+        style="@style/ButtonTheme"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="70px"
+        android:layout_marginTop="100px"
+        android:text="@string/proceed_to_payment"
+        android:textSize="@dimen/text_size_30"
+        />
+
+
+</LinearLayout>

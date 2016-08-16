@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="604px"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_grey_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        >
+
+        <ImageView
+            android:id="@+id/imageViewThankyou"
+            android:layout_width="603px"
+            android:layout_height="154px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30px"
+            android:src="@drawable/bg_thankyou_popup"
+            android:tag="mwar"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3px"
+            android:layout_marginRight="3px"
+            android:layout_marginBottom="3px"
+            android:background="@drawable/button_white_br"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/textViewThankYou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40px"
+                android:gravity="center"
+                android:text="@string/thank_you_for_placing_order"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_32"
+                />
+
+            <TextView
+                android:id="@+id/textViewOrderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30px"
+                android:gravity="center"
+                android:text="@string/your_order_id"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_32"
+                />
+
+            <RelativeLayout
+                android:id="@+id/relativeslot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30px"
+                >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_toLeftOf="@+id/textViewOrderDeliverySlot"
+                    android:background="@color/text_color_hint"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewOrderDeliverySlot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="Delivery Slot"
+                    android:textColor="@color/text_color_dark"
+                    android:textSize="@dimen/text_size_34"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_toRightOf="@+id/textViewOrderDeliverySlot"
+                    android:background="@color/text_color_hint"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    />
+
+            </RelativeLayout>
+
+
+
+
+            <Button
+                android:id="@+id/buttonOk"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40px"
+                android:layout_marginBottom="40px"
+                android:text="@string/ok"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

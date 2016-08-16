@@ -976,4 +976,105 @@
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--For fresh Application-->
+
+	<string name="share_link">https://share.lofatafat.com</string>
+
+	<string name="delivery_pop_top">We are not yet delivering at your location.</string>
+	<string name="delivery_pop_text">We are not yet delivering at your location. \n\n We will notify you once we launch there.</string>
+
+	<!--Rating popup-->
+	<string name="play_title">Rate Us</string>
+	<string name="play_message">Loved Fatafat. Would you like to rate us on the Play Store</string>
+	<string name="play_ok">Rate Now</string>
+	<string name="play_cancel">Not Now</string>
+	<string name="meals">Meals</string>
+	<string name="home_f">Fruits &amp; Vegetables</string>
+	<string name="last">Delivery Address</string>
+
+
+
+	<string name="nl_get_fare_estimate">Get fare estimate</string>
+
+	<string name="nl_paytm_wallet">Paytm Wallet</string>
+
+	<string name="nl_login_invalid_email_error">Please enter valid phone number</string>
+
+
+
+
+
+
+	<!-- User Debt-->
+	<string name="user_debt_pay_via_paytm">Pay via Paytm</string>
+	<string name="paytm_cash">Paytm Cash</string>
+	<string name="paytm_error_cash_select_cash">We are not able to connect to Paytm, Please select payment method as Cash</string>
+
+
+
+	<string name="paytm_remove_alert">Are you sure you want to remove this payment method?</string>
+
+
+
+
+
+
+
+
+	<!-- For Fresh created by Gurmail from Here-->
+	<string name="support_fragment">Support</string>
+	<string name="order_fragment">Order History</string>
+	<string name="about_fragment">About Us</string>
+	<string name="notification_fragment">Inbox</string>
+	<string name="share_fragment">Free Orders</string>
+	<string name="feedback_fragment">FeedBack</string>
+	<string name="promo_fragment">Referral code</string>
+
+
+	<!-- strings used in AddToAddressBookActivity -->
+	<string name="add_address_title">ADD ADDRESS</string>
+	<string name="house_flat_no_hint">House/Flat No.</string>
+	<string name="building_street_name_hint">Building/Street Name</string>
+	<string name="area_hint">Area</string>
+	<string name="city_hint">City</string>
+	<string name="pin_code_hint">Pin Code</string>
+	<string name="add_address_to_address_book">ADD ADDRESS</string>
+
+
+	<string name="dialog_sort">SORT</string>
+	<string name="OR">OR</string>
+	<string name="spl_inst">Any special instructions mention it here.</string>
+
 </resources>

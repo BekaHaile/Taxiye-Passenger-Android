@@ -33,4 +33,23 @@
         <attr name="jugLod_backColor" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="FloatingActionButton">
+        <attr name="fab_colorPressed" format="color" />
+        <attr name="fab_colorNormal" format="color" />
+        <attr name="fab_colorRipple" format="color" />
+        <attr name="fab_colorDisabled" format="color" />
+        <attr name="fab_shadow" format="boolean" />
+        <attr name="fab_type" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="mini" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <attr name="fontStyle" format="enum">
+        <enum name="regular" value="0" />
+        <enum name="light" value="1" />
+        <enum name="maven_regular" value="2" />
+        <enum name="maven_light" value="3" />
+    </attr>
+
 </resources>

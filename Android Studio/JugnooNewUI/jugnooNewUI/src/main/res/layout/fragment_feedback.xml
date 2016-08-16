@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/main_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_fresh"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/question_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100px"
+        android:text="how was your experence?"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_30"
+        />
+
+    <LinearLayout
+        android:layout_width="540px"
+        android:layout_height="300px"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginLeft="90px"
+        android:layout_marginRight="90px"
+        >
+
+        <com.like.LikeButton
+            android:id="@+id/dislike_view"
+            android:layout_width="270px"
+            android:layout_height="270px"
+            app:like_drawable="@drawable/thums_down_selected"
+            app:unlike_drawable="@drawable/thums_down_unselected"
+            app:circle_end_color="@color/theme_color"
+            app:circle_start_color="@color/theme_color"
+            app:dots_primary_color="@color/theme_color"
+            app:dots_secondary_color="@color/theme_color"
+            app:icon_size="80dp"
+            app:anim_scale_factor="1.7"
+            app:liked="false"
+            app:is_enabled="true"
+            />
+
+        <com.like.LikeButton
+            android:id="@+id/like_view"
+            android:layout_width="270px"
+            android:layout_height="270px"
+            app:like_drawable="@drawable/thums_up_selected"
+            app:unlike_drawable="@drawable/thums_up_unselected"
+            app:circle_end_color="@color/theme_color"
+            app:circle_start_color="@color/theme_color"
+            app:dots_primary_color="@color/theme_color"
+            app:dots_secondary_color="@color/theme_color"
+            app:icon_size="80dp"
+            app:anim_scale_factor="1.7"
+            app:liked="false"
+            app:is_enabled="true"
+            />
+
+        <!--<ImageView-->
+            <!--android:id="@+id/dislike_view"-->
+            <!--android:layout_width="170px"-->
+            <!--android:layout_height="170px"-->
+            <!--android:tag="mwar"-->
+            <!--android:layout_marginRight="90px"-->
+            <!--android:background="@drawable/thums_down_selected"-->
+            <!--/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/like_view"-->
+            <!--android:layout_width="170px"-->
+            <!--android:layout_height="170px"-->
+            <!--android:tag="mwar"-->
+            <!--android:background="@drawable/thums_up_selected"-->
+            <!--android:layout_weight="1"-->
+            <!--/>-->
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edittext_view"
+        android:layout_width="600px"
+        android:layout_height="200px"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/edittext_background"
+        android:gravity="left|top"
+        android:hint="Leave a comment"
+        android:inputType="textCapSentences|textMultiLine"
+        android:padding="20px"
+        android:text=""
+        android:textSize="@dimen/text_size_30"
+        />
+
+    <!--<TextView-->
+        <!--android:id="@+id/textViewSend"-->
+        <!--android:layout_width="@dimen/button_width"-->
+        <!--android:layout_height="@dimen/button_height"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginBottom="40px"-->
+        <!--android:layout_marginLeft="10px"-->
+        <!--android:layout_marginTop="40px"-->
+        <!--android:background="@drawable/button_theme"-->
+        <!--android:gravity="center"-->
+        <!--android:text="Submit"-->
+        <!--android:textAllCaps="true"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="@dimen/text_size_34"-->
+        <!--/>-->
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        style="@style/ButtonTheme"
+        android:layout_marginTop="50px"
+        android:layout_marginBottom="30px"
+        android:text="Submit"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <TextView
+        android:id="@+id/textView_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text=">> SKIP"
+        android:padding="20px"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_34"
+
+        />
+
+</LinearLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Layer 0-->
+    <!--Layer 1-->
+    <!--Layer 2-->
+    <!--Layer 3-->
+    <!--Layer 4 (content background)-->
+
+    <!-- dropshadow -->
+    <item>
+        <shape>
+            <solid android:color="#07444444" />
+            <padding android:top="0.75dp" android:right="0.75dp" android:bottom="0.75dp" android:left="0.75dp" />
+            <corners android:radius="@dimen/button_corner_radius"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#10444444" />
+            <padding android:top="0.75dp" android:right="0.75dp" android:bottom="0.75dp" android:left="0.75dp" />
+            <corners android:radius="@dimen/button_corner_radius"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#17444444" />
+            <padding android:top="0.75dp" android:right="0.75dp" android:bottom="0.75dp" android:left="0.75dp" />
+            <corners android:radius="@dimen/button_corner_radius"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#20444444" />
+            <padding android:top="0.75dp" android:right="0.75dp" android:bottom="0.75dp" android:left="0.75dp" />
+            <corners android:radius="@dimen/button_corner_radius"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#27444444" />
+            <padding android:top="0.75dp" android:right="0.75dp" android:bottom="0.75dp" android:left="0.75dp" />
+            <corners android:radius="@dimen/button_corner_radius"/>
+        </shape>
+    </item>
+
+    <!-- content background -->
+    <item>
+        <shape>
+            <solid android:color="@color/white" />
+            <corners android:radius="@dimen/button_corner_radius"/>
+        </shape>
+    </item>
+</layer-list>

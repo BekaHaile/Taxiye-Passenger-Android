@@ -168,4 +168,37 @@
     <dimen name="map_padding_request_final_extra">70px</dimen>
 
 
+
+
+    <!--For fresh Application-->
+
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+    <dimen name="fab_shadow_size">12dp</dimen>
+
+    <dimen name="fab_scroll_threshold">4dp</dimen>
+    <dimen name="fab_elevation_lollipop">8dp</dimen>
+    <dimen name="fab_press_translation_z">6dp</dimen>
+
+
+    <dimen name="activity_margin">16dp</dimen>
+    <dimen name="ab_height">48dp</dimen>
+    <dimen name="margin_xxxx_small">1dp</dimen>
+    <dimen name="margin_xxx_small">2dp</dimen>
+    <dimen name="margin_xx_small">4dp</dimen>
+    <dimen name="margin_x_small">8dp</dimen>
+    <dimen name="margin_minimum">12dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_tag_spinner">28dp</dimen>
+    <dimen name="margin_huge">32dp</dimen>
+    <dimen name="bar_height">48dp</dimen>
+    <dimen name="wall_image_height">175dp</dimen>
+    <dimen name="user_post_top_margin">233dp</dimen>
+    <dimen name="post_on_wall_grid_height">100dp</dimen>
+
+    <dimen name="checkout_margin">54px</dimen>
+    <dimen name="payment_hearder_30">30px</dimen>
+    <dimen name="payment_margin">36px</dimen>
+
 </resources>

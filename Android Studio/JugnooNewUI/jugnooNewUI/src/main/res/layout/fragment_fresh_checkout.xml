@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewDeliverySlots"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/buttonProceedToPayment"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:background="@color/transparent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/buttonProceedToPayment"
+            style="@style/ButtonTheme"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="30px"
+            android:text="@string/proceed_to_payment"
+            android:textSize="@dimen/text_size_30"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
