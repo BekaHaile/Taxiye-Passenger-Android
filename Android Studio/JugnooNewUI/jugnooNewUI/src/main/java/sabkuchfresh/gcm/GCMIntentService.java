@@ -22,18 +22,13 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.widget.TextView;
 
-import com.google.android.gms.gcm.GcmListenerService;
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.SplashNewActivity;
-import com.sabkuchfresh.datastructure.PushFlags;
-import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Utils;
-
 import org.json.JSONObject;
 
 import java.net.URL;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import sabkuchfresh.utils.Constants;
 
 public class GCMIntentService extends GcmListenerService implements Constants {
 
