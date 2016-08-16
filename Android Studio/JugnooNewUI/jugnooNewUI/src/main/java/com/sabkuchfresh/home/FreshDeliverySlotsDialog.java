@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.adapters.FreshDeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -21,6 +20,8 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Fonts;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by shankar on 3/4/16.

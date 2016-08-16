@@ -1077,5 +1077,7 @@
 	<string name="OR">OR</string>
 	<string name="spl_inst">Any special instructions mention it here.</string>
 	<string name="your_cart_is_has_available">Your cart contains unavailable item.</string>
+	<string name="sub_total_amount">SubTotal Amount</string>
+	<string name="pay_rupees_using_jc">Paid via Jugnoo cash \u20B9 %s </string>
 
 </resources>
