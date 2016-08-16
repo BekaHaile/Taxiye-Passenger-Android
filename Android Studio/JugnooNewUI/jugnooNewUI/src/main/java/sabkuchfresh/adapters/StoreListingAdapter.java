@@ -1,5 +1,6 @@
 package sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -12,26 +13,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.Store;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Fonts;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
+import sabkuchfresh.retrofit.model.Store;
+
 /**
  * Created by gurmail on 14/07/16.
  */
-public class StoreListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class StoreListingAdapter extends RecyclerView.Adapter<StoreListingAdapter.ViewHolderSlot> {
 
-    private FreshActivity activity;
+    private Activity activity;
     private ArrayList<Store> sortArray;
     private Callback callback;
     private int textColor = Color.parseColor("#FFFFFF");
 
-    public StoreListingAdapter(FreshActivity activity, ArrayList<Store> sortArray, Callback callback) {
+    public StoreListingAdapter(Activity activity, ArrayList<Store> sortArray, Callback callback) {
         this.activity = activity;
         this.sortArray = sortArray;
         this.callback = callback;
@@ -43,7 +44,7 @@ public class StoreListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolderSlot onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.store_list_item, parent, false);
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
@@ -54,7 +55,7 @@ public class StoreListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolderSlot holder, int position) {
         try {
 
             ViewHolderSlot holderSlot = (ViewHolderSlot) holder;

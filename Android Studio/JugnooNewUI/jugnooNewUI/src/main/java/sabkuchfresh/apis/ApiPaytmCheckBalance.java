@@ -3,26 +3,22 @@ package sabkuchfresh.apis;
 import android.app.Activity;
 import android.view.View;
 
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.config.Config;
-import com.sabkuchfresh.datastructure.DialogErrorType;
-import com.sabkuchfresh.retrofit.RestClient;
-import com.sabkuchfresh.retrofit.model.SettleUserDebt;
-import com.sabkuchfresh.utils.AppStatus;
-import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
-import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.JSONParser;
-import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Utils;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import sabkuchfresh.retrofit.RestClient;
 
 /**
  * Created by shankar on 3/20/16.

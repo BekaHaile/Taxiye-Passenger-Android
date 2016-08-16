@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import sabkuchfresh.home.FreshActivity;
 import sabkuchfresh.retrofit.model.Slot;
 

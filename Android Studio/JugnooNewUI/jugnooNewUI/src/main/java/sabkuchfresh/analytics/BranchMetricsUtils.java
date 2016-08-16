@@ -2,17 +2,15 @@ package sabkuchfresh.analytics;
 
 import android.content.Context;
 
-import com.sabkuchfresh.MyApplication;
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
-import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Log;
-
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 
 /**
  * Created by socomo20 on 7/29/15.

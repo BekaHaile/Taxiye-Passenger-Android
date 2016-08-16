@@ -5,8 +5,9 @@ import android.content.Context;
 
 import com.sabkuchfresh.BuildConfig;
 import com.sabkuchfresh.datastructure.SPLabels;
-import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
+
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class Config {

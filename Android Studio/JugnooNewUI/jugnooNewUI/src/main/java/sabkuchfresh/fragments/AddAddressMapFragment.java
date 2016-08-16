@@ -23,6 +23,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +50,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
+import retrofit.RetrofitError;
 import sabkuchfresh.bus.AddressSearch;
 import sabkuchfresh.datastructure.AutoCompleteSearchResult;
 import sabkuchfresh.datastructure.GoogleGeocodeResponse;

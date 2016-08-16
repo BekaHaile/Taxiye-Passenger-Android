@@ -24,21 +24,21 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;
-import com.sabkuchfresh.datastructure.SPLabels;
-import com.sabkuchfresh.datastructure.SearchResult;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.AppStatus;
-import com.sabkuchfresh.utils.Data;
-import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.LocalGson;
-import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
-import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LocalGson;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
+import sabkuchfresh.datastructure.AutoCompleteSearchResult;
 
 
 /**
@@ -262,10 +262,11 @@ public class SearchListAdapter extends BaseAdapter {
 							refreshingAutoComplete = true;
 							autoCompleteSearchResultsForSearch.clear();
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-								String name = autocompletePrediction.getDescription().split(",")[0];
+								String name = autocompletePrediction.getFullText() .getDescription().split(",")[0];
 								autoCompleteSearchResultsForSearch.add(new AutoCompleteSearchResult(name,
 										autocompletePrediction.getDescription(), autocompletePrediction.getPlaceId()));
 							}
+
 							autocompletePredictions.release();
 
                             if(showSavedPlaces) {

@@ -3,7 +3,8 @@ package sabkuchfresh.analytics;
 import android.content.Context;
 
 import com.facebook.appevents.AppEventsLogger;
-import com.sabkuchfresh.utils.Prefs;
+
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 12/14/15.

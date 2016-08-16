@@ -4,12 +4,13 @@ import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.sabkuchfresh.BuildConfig;
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.utils.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import product.clicklabs.jugnoo.BuildConfig;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Log;
 
 
 /**

@@ -15,11 +15,11 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppConstant;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import sabkuchfresh.retrofit.model.OrderHistory;
-import sabkuchfresh.utils.AppConstant;
 
 
 public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

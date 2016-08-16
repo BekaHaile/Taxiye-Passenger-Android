@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.utils;
+package sabkuchfresh.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,9 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import com.sabkuchfresh.R;
+import com.sabkuchfresh.datastructure.DialogErrorType;
 
 
 public class DialogPopup {
@@ -120,7 +119,7 @@ public class DialogPopup {
 				}
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -161,6 +160,63 @@ public class DialogPopup {
 		}
 	}
 
+	public static void alertPopupWithCancellable(Activity activity, String title, String message) {
+		try {
+			if(ifOtherDialog(activity, message, null, null, false)){
+				dismissAlertPopup();
+				if("".equalsIgnoreCase(title)){
+					title = activity.getResources().getString(R.string.alert);
+				}
+
+				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
+				dialog.setContentView(R.layout.dialog_custom_one_button);
+
+				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				new ASSL(activity, frameLayout, 1134, 720, false);
+
+				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+				layoutParams.dimAmount = 0.6f;
+				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				dialog.setCancelable(true);
+				dialog.setCanceledOnTouchOutside(true);
+
+
+				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
+				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
+
+				textMessage.setMovementMethod(new ScrollingMovementMethod());
+				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+				textHead.setText(title);
+				textMessage.setText(message);
+
+				textHead.setVisibility(View.GONE);
+
+				frameLayout.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+
+				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
+
+				btnOk.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+
+				});
+
+				dialog.show();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void alertPopup(Activity activity, String title, String message, boolean showTitle) {
 		try {
 			if(ifOtherDialog(activity, message, null, null, false)){
@@ -170,7 +226,7 @@ public class DialogPopup {
 				}
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -215,14 +271,6 @@ public class DialogPopup {
 		}
 	}
 
-	public static void dialogWithTitleAndDesc(Activity activity, String title, String message){
-		try {
-
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
 	public static void dialogNoInternet(Activity activity, String title, String message,
 										final Utils.AlertCallBackWithButtonsInterface alertCallBackWithButtonsInterface){
 		dialogNoInternet(activity, title, message, alertCallBackWithButtonsInterface, false);
@@ -235,7 +283,7 @@ public class DialogPopup {
 			dismissAlertPopup();
 
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 			dialog.setContentView(R.layout.dialog_no_internet);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -289,7 +337,7 @@ public class DialogPopup {
 				}
 			});
 
-			dialog.findViewById(R.id.linearLayoutInner).setOnClickListener(new View.OnClickListener() {
+			dialog.findViewById(R.id.innerRl).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 
@@ -375,7 +423,7 @@ public class DialogPopup {
 			}
 			
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 			dialog.setContentView(R.layout.dialog_custom_one_button);
 
 			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -445,7 +493,7 @@ public class DialogPopup {
 					dialogI = DialogPopup.dialog;
 				}
 				final Dialog dialog = dialogI;
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -502,19 +550,19 @@ public class DialogPopup {
 
 
 	
-	public static void alertPopupTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext, 
-			final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative, final boolean cancelable, final boolean showTitle) {
+	public static void alertPopupTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
+														 final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative, final boolean cancelable, final boolean showTitle) {
         alertPopupTwoButtonsWithListeners(activity, title, message, okText, canceltext, listenerPositive, listenerNegative, cancelable, showTitle, null);
 	}
 
     public static void alertPopupTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
-                                                         final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative,
-                                                         final boolean cancelable, final boolean showTitle, DialogInterface.OnCancelListener dialogCancelListener) {
+														 final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative,
+														 final boolean cancelable, final boolean showTitle, DialogInterface.OnCancelListener dialogCancelListener) {
         try {
 			if(ifOtherDialog(activity, message, listenerPositive, listenerNegative, cancelable)) {
 				dismissAlertPopup();
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
 				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
@@ -603,97 +651,6 @@ public class DialogPopup {
         }
     }
 
-	public static Dialog uploadContactsTwoButtonsWithListeners(Activity activity, String title, String message, String okText, String canceltext,
-								final boolean cancelable, final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative,
-															   final DialogInterface.OnDismissListener onDismissListener) {
-		try {
-			dismissAlertPopup();
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_upload_contacts);
-
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-			new ASSL(activity, frameLayout, 1134, 720, true);
-
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(cancelable);
-			dialog.setCanceledOnTouchOutside(cancelable);
-
-
-			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
-			textHead.setTypeface(Fonts.mavenRegular(activity));
-			TextView textMessage = (TextView) dialog
-					.findViewById(R.id.textMessage);
-			textMessage.setTypeface(Fonts.mavenLight(activity));
-
-			textMessage.setMovementMethod(new ScrollingMovementMethod());
-			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-
-			textHead.setText(title);
-			textMessage.setText(message);
-
-
-
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-			btnOk.setTypeface(Fonts.mavenRegular(activity));
-			if(!"".equalsIgnoreCase(okText)){
-				btnOk.setText(okText);
-			}
-
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-			btnCancel.setTypeface(Fonts.mavenRegular(activity));
-			if(!"".equalsIgnoreCase(canceltext)){
-				btnCancel.setText(canceltext);
-			}
-
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					listenerPositive.onClick(view);
-				}
-			});
-
-			btnCancel.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    listenerNegative.onClick(v);
-                }
-            });
-
-
-			dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-
-			dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (cancelable) {
-                        dismissAlertPopup();
-                    }
-                }
-            });
-
-			dialog.setOnDismissListener(onDismissListener);
-
-			dialog.show();
-            return dialog;
-		} catch (Exception e) {
-			e.printStackTrace();
-            return null;
-		}
-	}
-	
-	
-	
 	public static void dialogBanner(Activity activity, String message) {
 		dialogBannerWithCancelListener(activity, message, null, 5000);
 	}
@@ -702,8 +659,8 @@ public class DialogPopup {
 		try {
 			dismissAlertPopup();
 
-			final Dialog dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 			dialog.setContentView(R.layout.dialog_banner);
 
 			LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.rv);
@@ -728,10 +685,10 @@ public class DialogPopup {
 
 			dialog.show();
 			new Handler().postDelayed(new Runnable() {
+
 				@Override
 				public void run() {
-					//DialogPopup.dismissAlertPopup();
-					dialog.dismiss();
+					DialogPopup.dismissAlertPopup();
 				}
 			}, timeToDismiss);
 		} catch (Exception e) {
@@ -773,64 +730,64 @@ public class DialogPopup {
             progressDialog.setContentView(R.layout.dialog_loading_box);
             RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
             new ASSL((Activity) context, frameLayout, 1134, 720, false);
-			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
-			animImageView.post(new Runnable() {
-				@Override
-				public void run() {
-					AnimationDrawable frameAnimation =
-							(AnimationDrawable) animImageView.getBackground();
-					frameAnimation.start();
-				}
-			});
+            final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+            animImageView.setBackgroundResource(R.drawable.anim);
+            animImageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    AnimationDrawable frameAnimation =
+                            (AnimationDrawable) animImageView.getBackground();
+                    frameAnimation.start();
+                }
+            });
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 
 
-	/**
-	 * @param context
-	 * @param message
-	 */
-	public static void showLoadingDialogDownwards(Context context, String message) {
-		try {
-			if (isDialogShowing()) {
-				dismissLoadingDialog();
-			}
+    /**
+     * @param context
+     * @param message
+     */
+    public static void showLoadingDialogDownwards(Context context, String message) {
+        try {
+            if (isDialogShowing()) {
+                dismissLoadingDialog();
+            }
 
 
-			if (context instanceof Activity) {
-				Activity activity = (Activity) context;
-				if (activity.isFinishing()) {
-					return;
-				}
-			}
+            if (context instanceof Activity) {
+                Activity activity = (Activity) context;
+                if (activity.isFinishing()) {
+                    return;
+                }
+            }
 
-			progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
-			progressDialog.show();
-			WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
+            progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
+            progressDialog.show();
+            WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.6f;
 
-			progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			progressDialog.setCancelable(false);
-			progressDialog.setContentView(R.layout.dialog_loading_box_downwards);
-			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
-			new ASSL((Activity) context, frameLayout, 1134, 720, false);
-			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
-			animImageView.post(new Runnable() {
-				@Override
-				public void run() {
-					AnimationDrawable frameAnimation =
-							(AnimationDrawable) animImageView.getBackground();
-					frameAnimation.start();
-				}
-			});
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+            progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            progressDialog.setCancelable(false);
+            progressDialog.setContentView(R.layout.dialog_loading_box_downwards);
+            RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
+            new ASSL((Activity) context, frameLayout, 1134, 720, false);
+            final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+            animImageView.setBackgroundResource(R.drawable.anim);
+            animImageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    AnimationDrawable frameAnimation =
+                            (AnimationDrawable) animImageView.getBackground();
+                    frameAnimation.start();
+                }
+            });
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public static boolean isDialogShowing() {
         try {
             if (progressDialog == null) {
@@ -858,41 +815,41 @@ public class DialogPopup {
     }
 
 
-	public static ProgressDialog showLoadingDialogNewInstance(Context context, String message) {
-		try {
-			if (context instanceof Activity) {
-				Activity activity = (Activity) context;
-				if (activity.isFinishing()) {
-					return null;
-				}
-			}
+    public static ProgressDialog showLoadingDialogNewInstance(Context context, String message) {
+        try {
+            if (context instanceof Activity) {
+                Activity activity = (Activity) context;
+                if (activity.isFinishing()) {
+                    return null;
+                }
+            }
 
-			ProgressDialog progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
-			progressDialog.show();
-			WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			progressDialog.setCancelable(false);
-			progressDialog.setContentView(R.layout.dialog_loading_box);
-			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
-			new ASSL((Activity) context, frameLayout, 1134, 720, false);
-			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
-			animImageView.post(new Runnable() {
-				@Override
-				public void run() {
-					AnimationDrawable frameAnimation =
-							(AnimationDrawable) animImageView.getBackground();
-					frameAnimation.start();
-				}
-			});
+            ProgressDialog progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
+            progressDialog.show();
+            WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.6f;
+            progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            progressDialog.setCancelable(false);
+            progressDialog.setContentView(R.layout.dialog_loading_box);
+            RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
+            new ASSL((Activity) context, frameLayout, 1134, 720, false);
+            final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+            animImageView.setBackgroundResource(R.drawable.anim);
+            animImageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    AnimationDrawable frameAnimation =
+                            (AnimationDrawable) animImageView.getBackground();
+                    frameAnimation.start();
+                }
+            });
 
-			return progressDialog;
-		} catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-	}
+            return progressDialog;
+        } catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 	
 	
 	
@@ -917,7 +874,7 @@ public class DialogPopup {
 		 
 		        // On pressing Settings button
 		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog,int which) {
+		            public void onClick(DialogInterface dialog, int which) {
 		            	dialog.dismiss();
                         try {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -983,7 +940,7 @@ public class DialogPopup {
 		 
 		        // On pressing Settings button
 		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog,int which) {
+		            public void onClick(DialogInterface dialog, int which) {
 		            	Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		            	mContext.startActivity(intent);
 		            	dialog.dismiss();
@@ -1019,7 +976,7 @@ public class DialogPopup {
 
                 // On pressing Settings button
                 alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int which) {
+                    public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         mContext.startActivity(intent);
                         dialog.dismiss();
@@ -1036,62 +993,163 @@ public class DialogPopup {
         }
     }
 
-
-	public static void alertPopupWithCancellable(Activity activity, String title, String message) {
-		try {
-			if(ifOtherDialog(activity, message, null, null, false)){
-				dismissAlertPopup();
-				if("".equalsIgnoreCase(title)){
-					title = activity.getResources().getString(R.string.alert);
-				}
-
-				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
-				dialog.setContentView(R.layout.dialog_custom_one_button);
-
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
-				new ASSL(activity, frameLayout, 1134, 720, false);
-
-				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-				layoutParams.dimAmount = 0.6f;
-				dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-				dialog.setCancelable(true);
-				dialog.setCanceledOnTouchOutside(true);
+    //*******
 
 
-				TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
-				TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage); textMessage.setTypeface(Fonts.mavenLight(activity));
+    public static void alertNoDelivery(Activity activity, final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative, final boolean cancelable, final boolean showTitle) {
+        alertNoDeliveryListeners(activity, listenerPositive, listenerNegative, cancelable, showTitle, null);
+    }
 
-				textMessage.setMovementMethod(new ScrollingMovementMethod());
-				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+    public static void alertNoDeliveryListeners(Activity activity,
+												final View.OnClickListener listenerPositive, final View.OnClickListener listenerNegative,
+												final boolean cancelable, final boolean showTitle, DialogInterface.OnCancelListener dialogCancelListener) {
+        try {
 
-				textHead.setText(title);
-				textMessage.setText(message);
+                dismissAlertPopup();
+                dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
+                dialog.setContentView(R.layout.dialog_fresh_not_available);
 
-				textHead.setVisibility(View.GONE);
+                FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+                new ASSL(activity, frameLayout, 1134, 720, true);
 
-				frameLayout.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
+                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                layoutParams.dimAmount = 0.6f;
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                dialog.setCancelable(cancelable);
+                dialog.setCanceledOnTouchOutside(cancelable);
 
-				Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
+                if (dialogCancelListener != null) {
+                    dialog.setOnCancelListener(dialogCancelListener);
+                }
 
-				btnOk.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-					}
+                TextView textHead = (TextView) dialog.findViewById(R.id.textViewtop);
+                textHead.setTypeface(Fonts.mavenRegular(activity));
 
-				});
 
-				dialog.show();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
+                Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+                btnOk.setTypeface(Fonts.mavenRegular(activity));
+
+                ImageView btnCancel = (ImageView) dialog.findViewById(R.id.imageViewClose);
+
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        listenerPositive.onClick(view);
+                    }
+                });
+
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        listenerNegative.onClick(v);
+                    }
+                });
+
+
+                dialog.findViewById(R.id.rl1).setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+
+
+                dialog.findViewById(R.id.rv).setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (cancelable) {
+                            dismissAlertPopup();
+                        }
+                    }
+                });
+
+                dialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void rateusPopup(Activity activity, String buttonText, final View.OnClickListener onClickListener,
+								   final View.OnClickListener listenerNegativeboolean, boolean newInstance) {
+        try {
+            {
+                dismissAlertPopup();
+
+                Dialog dialogI = null;
+                if (newInstance) {
+                    dialogI = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+                } else {
+                    DialogPopup.dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+                    dialogI = DialogPopup.dialog;
+                }
+                final Dialog dialog = dialogI;
+                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
+                dialog.setContentView(R.layout.dialog_rateus);
+
+                RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.relative);
+                new ASSL(activity, frameLayout, 1134, 720, false);
+
+                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                layoutParams.dimAmount = 0.6f;
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+
+
+                TextView textHead = (TextView) dialog.findViewById(R.id.textViewTitle);
+                textHead.setTypeface(Fonts.mavenRegular(activity));
+                TextView textMessage = (TextView) dialog.findViewById(R.id.textViewMessage);
+                textMessage.setTypeface(Fonts.mavenLight(activity));
+
+                textMessage.setMovementMethod(new ScrollingMovementMethod());
+                textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+                Button btnOk = (Button) dialog.findViewById(R.id.button);
+                btnOk.setTypeface(Fonts.mavenRegular(activity));
+
+                Button cancel = (Button) dialog.findViewById(R.id.dismiss);
+                cancel.setTypeface(Fonts.mavenRegular(activity));
+
+                if (buttonText.length() > 0) {
+                    btnOk.setText(buttonText);
+                }
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        if (listenerNegativeboolean != null) {
+                            listenerNegativeboolean.onClick(v);
+                        }
+                    }
+                });
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        if (onClickListener != null) {
+                            onClickListener.onClick(view);
+                        }
+                    }
+
+                });
+
+                dialog.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void rateusPopup(Activity activity, final View.OnClickListener onClickListener, final View.OnClickListener listenerNegative) {
+        rateusPopup(activity, "", onClickListener, listenerNegative, false);
+    }
 	
 }

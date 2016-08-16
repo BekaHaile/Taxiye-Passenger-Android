@@ -1,5 +1,6 @@
 package sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -13,23 +14,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DateOperations;
-import com.sabkuchfresh.utils.Fonts;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppConstant;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Fonts;
+import sabkuchfresh.retrofit.model.SubItem;
 
 /**
  * Created by gurmail on 15/07/16.
  */
 public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private FreshActivity activity;
+    private Activity activity;
     private ArrayList<SubItem> subItems;
     private Callback callback;
 
@@ -38,7 +39,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
 
-    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, Callback callback) {
+    public MealAdapter(Activity activity, ArrayList<SubItem> subItems, Callback callback) {
         this.activity = activity;
         this.subItems = subItems;
         this.callback = callback;
@@ -139,7 +140,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(subItem.getcanOrder() == 0) {
                     mHolder.imageClosed.setVisibility(View.GONE);
                     mHolder.cartLayout.setVisibility(View.GONE);
-                    mHolder.deliveryTime.setText("Order Starts at\n"+DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()));
+                    mHolder.deliveryTime.setText("Order Starts at\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()));
                 } else {
                     if(subItem.getStock() == 0) {
                         mHolder.imageClosed.setVisibility(View.VISIBLE);

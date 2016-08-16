@@ -2,11 +2,12 @@ package sabkuchfresh.analytics;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.sabkuchfresh.MyApplication;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import product.clicklabs.jugnoo.MyApplication;
 
 public class FlurryEventLogger {
 

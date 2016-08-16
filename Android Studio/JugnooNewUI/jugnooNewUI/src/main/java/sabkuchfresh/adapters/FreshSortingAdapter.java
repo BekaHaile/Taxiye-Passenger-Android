@@ -1,5 +1,6 @@
 package sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,24 +10,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.R;
-import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.SortResponseModel;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Fonts;
-
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
+import sabkuchfresh.retrofit.model.SortResponseModel;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.
  */
 public class FreshSortingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private FreshActivity activity;
+    private Activity activity;
     private ArrayList<SortResponseModel> sortArray;
     private Callback callback;
 
-    public FreshSortingAdapter(FreshActivity activity, ArrayList<SortResponseModel> sortArray, Callback callback) {
+    public FreshSortingAdapter(Activity activity, ArrayList<SortResponseModel> sortArray, Callback callback) {
         this.activity = activity;
         this.sortArray = sortArray;
         this.callback = callback;
