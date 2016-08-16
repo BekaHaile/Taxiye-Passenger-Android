@@ -34,8 +34,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
-import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.datastructure.AppPackage;
 import com.sabkuchfresh.smsreceiver.IncomingSmsReceiver;
@@ -59,6 +57,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 
 public class Utils {

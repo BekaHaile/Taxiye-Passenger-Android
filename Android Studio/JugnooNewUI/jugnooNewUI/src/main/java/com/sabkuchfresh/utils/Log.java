@@ -2,10 +2,10 @@ package com.sabkuchfresh.utils;
 
 import android.os.Environment;
 
-import com.sabkuchfresh.BuildConfig;
-
 import java.io.File;
 import java.io.FileWriter;
+
+import product.clicklabs.jugnoo.BuildConfig;
 
 /**
  * Custom log class overrides Android Log

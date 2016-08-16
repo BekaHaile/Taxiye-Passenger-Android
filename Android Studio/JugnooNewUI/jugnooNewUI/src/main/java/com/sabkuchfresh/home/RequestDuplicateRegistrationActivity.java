@@ -17,8 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
@@ -36,6 +34,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

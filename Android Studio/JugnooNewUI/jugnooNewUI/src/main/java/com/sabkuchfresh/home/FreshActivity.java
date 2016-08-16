@@ -33,8 +33,6 @@ import com.sabkuchfresh.apis.ApiPaytmCheckBalance;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
-import com.sabkuchfresh.datastructure.AddPaymentPath;
-import com.sabkuchfresh.datastructure.AppLinkIndex;
 import com.sabkuchfresh.datastructure.PaymentOption;
 import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
@@ -68,7 +66,6 @@ import com.sabkuchfresh.utils.LocationFetcher;
 import com.sabkuchfresh.utils.Log;
 import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
-import com.sabkuchfresh.wallet.PaymentActivity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -79,13 +76,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.MenuBar;
 
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseFragmentActivity implements LocationFetcher.LocationUpdate, MenuBar.Buttonclicked, FlurryEventNames {
+public class FreshActivity extends BaseFragmentActivity implements LocationFetcher.LocationUpdate, FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -97,6 +94,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 //    private FloatingActionButton relativeLayoutCartRound;
     private LinearLayout linearLayoutCheckout;
     private TextView textViewCartItemsCountRound, textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount;
+
 
     private MenuBar menuBar;
     private TopBar topBar;
@@ -171,7 +169,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
         topView = (View) findViewById(R.id.topBarMain);
 
-        menuBar = new MenuBar(this, drawerLayout, this);
+        menuBar = new MenuBar(this, drawerLayout);
         topBar = new TopBar(this, drawerLayout);
 
 //        if(BuildConfig.DEBUG_MODE)
@@ -340,7 +338,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
         mBus.register(this);
         if (!HomeUtil.checkIfUserDataNull(this)) {
             menuBar.setUserData();
-            menuBar.dismissPaytmLoading();
             topBar.setUserData();
 
 
@@ -352,56 +349,55 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
                 locationFetcher.connect();
             }
 
-            openDeepLink();
+            //openDeepLink();
         }
 
     }
 
-    private void openDeepLink(){
-        try{
-            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.REFER);
-            }
-            else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.WALLET);
-            }
-            else if(AppLinkIndex.HISTORY.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.HISTORY);
-            }
-            else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.SUPPORT);
-            }
-            else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.USERINFO);
-            }
-            else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
-            }
-            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
-                Utils.openPlayStore(FreshActivity.this);
-            }
-            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
-                FreshFragment frag = getFreshFragment();
-                if(frag == null && Data.userData.stores.size() > 1) {
-                    addFreshFragment1(new FreshFragment(), true);
-                }
-            }
-            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
-                MealFragment mealFragment = getMealFragment();
-                if(mealFragment == null && Data.userData.stores.size() > 1) {
-                    addMealFragment(new MealFragment(), true);
-                }
-            }
-
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        Data.deepLinkIndex = -1;
-    }
+//    private void openDeepLink(){
+//        try{
+//            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
+//                //onitemClicked(AppConstant.MenuClick.REFER);
+//            }
+//            else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
+//                onitemClicked(AppConstant.MenuClick.WALLET);
+//            }
+//            else if(AppLinkIndex.HISTORY.getOrdinal() == Data.deepLinkIndex){
+//                onitemClicked(AppConstant.MenuClick.HISTORY);
+//            }
+//            else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
+//                onitemClicked(AppConstant.MenuClick.SUPPORT);
+//            }
+//            else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
+//                onitemClicked(AppConstant.MenuClick.USERINFO);
+//            }
+//            else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
+//                onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
+//            }
+//            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
+//                Utils.openPlayStore(FreshActivity.this);
+//            }
+//            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
+//                FreshFragment frag = getFreshFragment();
+//                if(frag == null && Data.userData.stores.size() > 1) {
+//                    addFreshFragment1(new FreshFragment(), true);
+//                }
+//            }
+//            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
+//                MealFragment mealFragment = getMealFragment();
+//                if(mealFragment == null && Data.userData.stores.size() > 1) {
+//                    addMealFragment(new MealFragment(), true);
+//                }
+//            }
+//
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        Data.deepLinkIndex = -1;
+//    }
 
     public void resumeMethod() {
         menuBar.setUserData();
-        menuBar.dismissPaytmLoading();
         topBar.setUserData();
 
         getPaytmBalance(this);
@@ -594,7 +590,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
                 relativeLayoutCartRound.setVisibility(View.VISIBLE);
             }
 
-            menuBar.relativeLayoutfatafat.setPressed(true);
+            //menuBar.relativeLayoutfatafat.setPressed(true);
             topBar.imageViewNotification.setImageResource(R.drawable.ic_meals);
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
@@ -929,7 +925,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
                         try {
                             JSONParser.setPaytmErrorCase();
                             setUserData();
-                            menuBar.dismissPaytmLoading();
+                            //menuBar.dismissPaytmLoading();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -938,7 +934,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
                     @Override
                     public void onFinish() {
-                        menuBar.dismissPaytmLoading();
+                        //menuBar.dismissPaytmLoading();
 
                     }
 
@@ -1229,112 +1225,112 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
         Data.latitude = location.getLatitude();
         Data.longitude = location.getLongitude();
     }
-
-    @Override
-    public void onitemClicked(int position) {
-        switch (position) {
-            case 0: {
-//                FlurryEventLogger.event(, CART_BUTTON_CLICKED);
-                startActivity(new Intent(FreshActivity.this, AccountActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 1: {
-                Intent intent = new Intent(FreshActivity.this, PaymentActivity.class);
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
-                break;
-            }
-            case 2: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.HISTORY);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 3: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.SUPPORT);
-                intent.putExtra(Constants.ORDER_CONTACT, mContactNo);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 4: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.ABOUT);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 5: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.NOTIFICATION);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 6: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.SHARE);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 7: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
-                intent.putExtra(Constants.QUESTION, Data.userData.question);
-                intent.putExtra(Constants.QUESTION_TYPE, ""+Data.userData.questionType);
-                intent.putExtra(Constants.ORDER_ID, Data.userData.orderId);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                break;
-            }
-            case 8: {
-                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.PROMO);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }
-            case 11:
-                if(Prefs.with(this).getInt(Constants.APP_TYPE, 0) == AppConstant.ApplicationType.MEALS) {
-                    FreshFragment frag = getFreshFragment();
-                    MealFragment mealFragment = getMealFragment();
-                    if (mealFragment != null && !mealFragment.isHidden() && frag == null)
-                        addFreshFragment1(mealFragment, true);
-
-                } else {
-                    HomeFragment homeFragment = getHomeFragment();
-                    if (homeFragment != null && !homeFragment.isHidden()) {
-                        addFreshFragment1(homeFragment, false);
-                    }
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-                break;
-            case 12:
-                if(Prefs.with(this).getInt(Constants.APP_TYPE, 0) == AppConstant.ApplicationType.FRESH) {
-                    FreshFragment frag = getFreshFragment();
-                    MealFragment mealFragment = getMealFragment();
-                    if (frag != null && !frag.isHidden() && mealFragment == null) {
-                        addMealFragment(frag, true);
-                    }
-                } else {
-                    HomeFragment homeFragment = getHomeFragment();
-                    if (homeFragment != null && !homeFragment.isHidden()) {
-                        addMealFragment(homeFragment, false);
-                    }
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-                break;
-
-            default:
-
-                break;
-        }
-    }
+//
+//    @Override
+//    public void onitemClicked(int position) {
+//        switch (position) {
+//            case 0: {
+////                FlurryEventLogger.event(, CART_BUTTON_CLICKED);
+//                startActivity(new Intent(FreshActivity.this, AccountActivity.class));
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 1: {
+//                Intent intent = new Intent(FreshActivity.this, PaymentActivity.class);
+//                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
+//                break;
+//            }
+//            case 2: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.HISTORY);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 3: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.SUPPORT);
+//                intent.putExtra(Constants.ORDER_CONTACT, mContactNo);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 4: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.ABOUT);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 5: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.NOTIFICATION);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 6: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.SHARE);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 7: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
+//                intent.putExtra(Constants.QUESTION, Data.userData.question);
+//                intent.putExtra(Constants.QUESTION_TYPE, ""+Data.userData.questionType);
+//                intent.putExtra(Constants.ORDER_ID, Data.userData.orderId);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                break;
+//            }
+//            case 8: {
+//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
+//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.PROMO);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//            }
+//            case 11:
+//                if(Prefs.with(this).getInt(Constants.APP_TYPE, 0) == AppConstant.ApplicationType.MEALS) {
+//                    FreshFragment frag = getFreshFragment();
+//                    MealFragment mealFragment = getMealFragment();
+//                    if (mealFragment != null && !mealFragment.isHidden() && frag == null)
+//                        addFreshFragment1(mealFragment, true);
+//
+//                } else {
+//                    HomeFragment homeFragment = getHomeFragment();
+//                    if (homeFragment != null && !homeFragment.isHidden()) {
+//                        addFreshFragment1(homeFragment, false);
+//                    }
+//                }
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//                break;
+//            case 12:
+//                if(Prefs.with(this).getInt(Constants.APP_TYPE, 0) == AppConstant.ApplicationType.FRESH) {
+//                    FreshFragment frag = getFreshFragment();
+//                    MealFragment mealFragment = getMealFragment();
+//                    if (frag != null && !frag.isHidden() && mealFragment == null) {
+//                        addMealFragment(frag, true);
+//                    }
+//                } else {
+//                    HomeFragment homeFragment = getHomeFragment();
+//                    if (homeFragment != null && !homeFragment.isHidden()) {
+//                        addMealFragment(homeFragment, false);
+//                    }
+//                }
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//                break;
+//
+//            default:
+//
+//                break;
+//        }
+//    }
 
 
     public void addFreshFragment1(Fragment fragment, boolean swipeFlag) {
