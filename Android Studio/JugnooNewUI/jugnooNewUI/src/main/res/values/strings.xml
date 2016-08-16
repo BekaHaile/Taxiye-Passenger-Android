@@ -1076,5 +1076,6 @@
 	<string name="dialog_sort">SORT</string>
 	<string name="OR">OR</string>
 	<string name="spl_inst">Any special instructions mention it here.</string>
+	<string name="your_cart_is_has_available">Your cart contains unavailable item.</string>
 
 </resources>

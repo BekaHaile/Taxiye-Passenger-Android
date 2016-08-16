@@ -172,6 +172,8 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
             @Override
             public void onMapReady(GoogleMap map) {
                 googleMap = map;
+                moveCamera();
+                initializeMap();
 
             }
         });
@@ -282,9 +284,8 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
         listViewSearch.setAdapter(searchListAdapter);
 
 
-        initializeMap();
 
-        moveCamera();
+
 
         getMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override

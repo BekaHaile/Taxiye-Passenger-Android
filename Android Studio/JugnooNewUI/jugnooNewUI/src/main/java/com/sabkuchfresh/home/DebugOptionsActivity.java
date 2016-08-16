@@ -17,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sabkuchfresh.R;
 import com.sabkuchfresh.SplashNewActivity;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.config.Config;
@@ -26,6 +25,8 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Prefs;
+
+import product.clicklabs.jugnoo.R;
 
 
 public class DebugOptionsActivity extends BaseActivity {
@@ -109,7 +110,7 @@ public class DebugOptionsActivity extends BaseActivity {
 		((TextView) findViewById(R.id.textViewTest8014)).setTypeface(Fonts.mavenLight(this));
 		((TextView) findViewById(R.id.textViewTest8015)).setTypeface(Fonts.mavenLight(this));
 		editTextCustom = (EditText) findViewById(R.id.editTextCustom); editTextCustom.setTypeface(Fonts.latoRegular(this));
-        editTextFreshCustom = (EditText) findViewById(R.id.editTextFreshCustom); editTextFreshCustom.setTypeface(Fonts.latoRegular(this));
+        editTextFreshCustom = (EditText) findViewById(R.id.editTextCustom); editTextFreshCustom.setTypeface(Fonts.latoRegular(this));
 
         buttonSave = (Button) findViewById(R.id.buttonSave); buttonSave.setTypeface(Fonts.mavenRegular(this));
         buttonCancel = (Button) findViewById(R.id.buttonCancel); buttonCancel.setTypeface(Fonts.mavenRegular(this));
@@ -427,23 +428,23 @@ public class DebugOptionsActivity extends BaseActivity {
 
 		}
     }
-    
 
 
 
-	
+
+
 	public void performBackPressed(){
         startActivity(new Intent(this, SplashNewActivity.class));
 		finish();
 		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
 	}
-	
-	
+
+
 	@Override
 	protected void onDestroy() {
         ASSL.closeActivity(relative);
@@ -476,5 +477,5 @@ public class DebugOptionsActivity extends BaseActivity {
 		}
 	}
 
-	
+
 }
