@@ -26,12 +26,9 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
-import com.sabkuchfresh.apis.ApiPaytmCheckBalance;
 import com.sabkuchfresh.datastructure.AddPaymentPath;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.datastructure.DialogErrorType;
-import com.sabkuchfresh.datastructure.PaymentOption;
-import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshPaytmBalanceLowDialog;
@@ -43,17 +40,11 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DateOperations;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
-import com.sabkuchfresh.wallet.PaymentActivity;
-import com.sabkuchfresh.wallet.UserDebtDialog;
-import com.sabkuchfresh.widgets.ProgressWheel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,8 +54,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -89,7 +89,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private RelativeLayout relativeLayoutPaytm;
     private ImageView imageViewPaytmRadio;
     private TextView textViewPaytm, textViewPaytmValue;
-    private ProgressWheel progressBarPaytm;
     private Button buttonPlaceOrder, applyButton;
 
     private View rootView;
@@ -198,8 +197,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         textViewPaytm.setTypeface(Fonts.mavenLight(activity));
         textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
         textViewPaytmValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-        progressBarPaytm = (ProgressWheel) rootView.findViewById(R.id.progressBarPaytm);
-        progressBarPaytm.setVisibility(View.GONE);
         buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder);
         buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
@@ -252,7 +249,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         setPaymentOptionUI();
                         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PAYTM_CLICKED, null);
 
-                    } else if (Data.userData.getPaytmError() == 1) {
+                    } else if (Data.userData.getPaytmBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
 
                     } else {
@@ -286,46 +283,10 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
 
 
-//        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
-//        textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
-//        linearLayoutRoot.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutRoot, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-//            @Override
-//            public void keyboardOpened() {
-//                if (!scrolled) {
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                                scrollView.smoothScrollTo(0, applyButton.getTop());
-//
-//                        }
-//                    }, 100);
-//                    scrolled = true;
-//                }
-//            }
-//
-//            @Override
-//            public void keyBoardClosed() {
-//                scrolled = false;
-//            }
-//        }));
-
-//		textViewPayForItems.setText(String.format(activity.getResources().getString(R.string.pay_rupees_using_format),
-//                Utils.getMoneyDecimalFormat().format(getTotalPriceWithDeliveryCharges())));
-//
-//        double paidViajc = getTotalJCPaid();
-//        if(paidViajc>0) {
-//            textViewPayFromjc.setVisibility(View.VISIBLE);
-//            textViewPayFromjc.setText(String.format(activity.getResources().getString(R.string.pay_rupees_using_jc),
-//                    Utils.getMoneyDecimalFormat().format(paidViajc)));
-//        } else {
-//            textViewPayFromjc.setVisibility(View.GONE);
-//        }
-
         updateUI();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
-        getBalance();
+        fetchWalletBalance();
 
 
         return rootView;
@@ -392,83 +353,68 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         setPaymentOptionUI();
     }
 
-    private ApiPaytmCheckBalance apiPaytmCheckBalance;
 
-    public ApiPaytmCheckBalance getApiPaytmCheckBalance() {
-        if (apiPaytmCheckBalance == null) {
-            apiPaytmCheckBalance = new ApiPaytmCheckBalance(activity, new ApiPaytmCheckBalance.Callback() {
-                @Override
-                public void onSuccess() {
-                    activity.setPaymentOption(PaymentOption.PAYTM);
-                    setPaymentOptionUI();
-                }
-
-                @Override
-                public void onFailure() {
-                    activity.setPaymentOption(PaymentOption.CASH);
-                    setPaymentOptionUI();
-                }
-
-                @Override
-                public void onFinish() {
-
-                }
-
-                @Override
-                public void onRetry(View view) {
-                    getBalance();
-                }
-
-                @Override
-                public void onNoRetry(View view) {
-
-                }
-            });
-        }
-        return apiPaytmCheckBalance;
-    }
-
-    private void getBalance() {
+    private ApiFetchWalletBalance apiFetchWalletBalance = null;
+    private void fetchWalletBalance() {
         try {
-            getApiPaytmCheckBalance().getBalance(Data.userData.paytmEnabled, true);
+            if(apiFetchWalletBalance == null){
+                apiFetchWalletBalance = new ApiFetchWalletBalance(activity, new ApiFetchWalletBalance.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        try {
+                            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            setPaymentOptionUI();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        try {
+                            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            setPaymentOptionUI();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onRetry(View view) {
+                    }
+
+                    @Override
+                    public void onNoRetry(View view) {
+                    }
+                });
+            }
+            apiFetchWalletBalance.getBalance(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+
     private void setPaymentOptionUI() {
         try {
-            if (PaymentOption.PAYTM == activity.getPaymentOption()) {
-                if (Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
-                    progressBarPaytm.setVisibility(View.GONE);
-                } else if (Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_INACTIVE)) {
-                    activity.setPaymentOption(PaymentOption.CASH);
-                    progressBarPaytm.setVisibility(View.GONE);
-                } else {
-                    activity.setPaymentOption(PaymentOption.CASH);
-                    progressBarPaytm.setVisibility(View.VISIBLE);
-                }
-            } else {
-                activity.setPaymentOption(PaymentOption.CASH);
-                progressBarPaytm.setVisibility(View.GONE);
-            }
+            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(
+                    MyApplication.getInstance().getWalletCore().getPaymentOptionAccAvailability(activity.getPaymentOption().getOrdinal())));
+
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
             textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
 
-            if (Data.userData.paytmEnabled == 1 && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+            if(Data.userData.getPaytmEnabled() == 1){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
-                textViewPaytm.setText(activity.getResources().getString(R.string.nl_paytm_wallet));
-            } else {
+                textViewPaytm.setText(activity.getResources().getString(R.string.paytm_wallet));
+            } else{
                 textViewPaytmValue.setVisibility(View.GONE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
-            }
-
-            if (Data.userData.getPaytmError() == 1) {
-                activity.setPaymentOption(PaymentOption.CASH);
-                relativeLayoutPaytm.setVisibility(View.GONE);
-            } else {
-                relativeLayoutPaytm.setVisibility(View.VISIBLE);
             }
 
             if (activity.getPaymentOption() == null
@@ -488,7 +434,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         boolean goAhead = true;
         if (activity.getPaymentOption().getOrdinal() == PaymentOption.PAYTM.getOrdinal()) {
             if (Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
-                if (Data.userData.getPaytmError() == 1) {
+                if (Data.userData.getPaytmBalance() < 0) {
                     DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                 } else {
                     showPaytmBalanceLowDialog();
@@ -680,7 +626,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     long time = 0L;
-                                    Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, time);
+                                    Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
                                     activity.resumeMethod();
                                     ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
                                             .setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
@@ -736,7 +682,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                                             activity.updateMenu();
                                                         }
 
-                                                    }).showUserDebtDialog(userDebt, message1, true);
+                                                    }).showUserDebtDialog(userDebt, message1);
                                         }
                                     });
                                 } else {
@@ -794,8 +740,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
     private void showPaytmBalanceLowDialog() {
         try {
-            if (Data.userData.paytmEnabled == 1
-                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+            if (Data.userData.getPaytmEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges());
                 new FreshPaytmBalanceLowDialog(activity, amount, new FreshPaytmBalanceLowDialog.Callback() {
                     @Override
@@ -822,8 +767,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private void intentToPaytm() {
         try {
             Intent intent = new Intent(activity, PaymentActivity.class);
-            if (Data.userData.paytmEnabled == 1
-                    && Data.userData.getPaytmStatus().equalsIgnoreCase(Data.PAYTM_STATUS_ACTIVE)) {
+            if (Data.userData.getPaytmEnabled() == 1) {
                 DecimalFormat df = new DecimalFormat("#");
                 intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
 //                intent.putExtra(Constants.KEY_PAYMENT_PATH, 1);

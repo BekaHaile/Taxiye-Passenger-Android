@@ -15,12 +15,12 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.Prefs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Gurmail S. Kang on 5/13/16.

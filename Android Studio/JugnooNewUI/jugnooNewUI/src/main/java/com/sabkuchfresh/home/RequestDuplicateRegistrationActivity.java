@@ -24,16 +24,17 @@ import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.retrofit.model.SettleUserDebt;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppStatus;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.Log;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.OTPConfirmScreen;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import retrofit.Callback;

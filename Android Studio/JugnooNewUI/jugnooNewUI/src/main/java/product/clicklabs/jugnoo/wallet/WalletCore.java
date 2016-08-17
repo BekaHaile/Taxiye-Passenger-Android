@@ -520,9 +520,20 @@ public class WalletCore {
 
 	public void setDefaultPaymentOption(){
 		try{
+			Data.pickupPaymentOption = getDefaultPaymentOption().getOrdinal();
+			Log.e("pickupPaymentOption", ">"+Data.pickupPaymentOption);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+	public PaymentOption getDefaultPaymentOption() {
+		PaymentOption paymentOption = PaymentOption.CASH;
+		try {
 			PaymentModeConfigData paymentModeConfigDataDefault = null;
-			for(PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas(Data.userData)){
-				if(paymentModeConfigData.getEnabled() == 1) {
+			for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas(Data.userData)) {
+				if (paymentModeConfigData.getEnabled() == 1) {
 					if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 							&& Data.userData.getPaytmEnabled() == 1
 							&& Data.userData.getPaytmBalance() >= 1) {
@@ -536,17 +547,24 @@ public class WalletCore {
 					}
 				}
 			}
-			if(paymentModeConfigDataDefault != null){
-				Data.pickupPaymentOption = paymentModeConfigDataDefault.getPaymentOption();
-			} else{
-				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+			if (paymentModeConfigDataDefault != null) {
+				paymentOption = getPaymentOptionFromInt(paymentModeConfigDataDefault.getPaymentOption());
 			}
-			Log.e("pickupPaymentOption", ">"+Data.pickupPaymentOption);
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return paymentOption;
 	}
 
+	public PaymentOption getPaymentOptionFromInt(int paymentOption){
+		if(PaymentOption.PAYTM.getOrdinal() == paymentOption){
+			return PaymentOption.PAYTM;
+		} else if(PaymentOption.MOBIKWIK.getOrdinal() == paymentOption){
+			return PaymentOption.MOBIKWIK;
+		} else{
+			return PaymentOption.CASH;
+		}
+	}
 
 
 	public void paymentOptionSelectionBeforeRequestRide(final HomeActivity activity, PaymentOption paymentOption){

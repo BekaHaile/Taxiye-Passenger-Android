@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Pair;
 
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.FacebookLoginHelper;
 import com.sabkuchfresh.utils.Log;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 import io.branch.referral.Branch;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 

@@ -76,7 +76,7 @@
 //import com.sabkuchfresh.utils.ASSL;
 //import com.sabkuchfresh.utils.AppStatus;
 //import com.sabkuchfresh.utils.Constants;
-//import com.sabkuchfresh.utils.Data;
+//import product.clicklabs.jugnoo.Data;
 //import com.sabkuchfresh.utils.DeviceTokenGenerator;
 //import com.sabkuchfresh.utils.DialogPopup;
 //import com.sabkuchfresh.utils.FacebookLoginCallback;

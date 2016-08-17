@@ -18,8 +18,6 @@ import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.datastructure.DialogErrorType;
-import com.sabkuchfresh.datastructure.PaymentOption;
-import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
@@ -29,13 +27,10 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DateOperations;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -43,7 +38,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -391,7 +391,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         Log.i(TAG, "Fresh order cancel response = " + responseStr);
                         DialogPopup.dismissLoadingDialog();
                         long time = 0L;
-                        Prefs.with(activity).save(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, time);
+                        Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
 //                        activity.resumeMethod();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);

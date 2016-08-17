@@ -8,9 +8,10 @@ import android.os.Bundle;
 import com.google.android.gms.analytics.CampaignTrackingReceiver;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 
 import java.util.Set;
+
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by gurmail on 23/05/16.

@@ -21,12 +21,12 @@ import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
-import com.sabkuchfresh.utils.Prefs;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 @SuppressLint("ValidFragment")

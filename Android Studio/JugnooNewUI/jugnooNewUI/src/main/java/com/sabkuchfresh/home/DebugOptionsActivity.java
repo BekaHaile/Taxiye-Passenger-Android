@@ -19,14 +19,14 @@ import android.widget.Toast;
 
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.config.Config;
-import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.Prefs;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class DebugOptionsActivity extends BaseActivity {

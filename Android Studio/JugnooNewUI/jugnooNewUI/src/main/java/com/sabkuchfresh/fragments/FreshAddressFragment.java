@@ -19,11 +19,11 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Prefs;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class FreshAddressFragment extends Fragment implements View.OnClickListener, FlurryEventNames, FreshAddressAdapter.Callback {

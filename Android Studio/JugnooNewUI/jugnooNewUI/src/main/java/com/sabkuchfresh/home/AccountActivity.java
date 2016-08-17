@@ -29,7 +29,7 @@
 //import com.sabkuchfresh.retrofit.model.SettleUserDebt;
 //import com.sabkuchfresh.utils.ASSL;
 //import com.sabkuchfresh.utils.AppStatus;
-//import com.sabkuchfresh.utils.Data;
+//import product.clicklabs.jugnoo.Data;
 //import com.sabkuchfresh.utils.DialogPopup;
 //import com.sabkuchfresh.utils.FacebookLoginHelper;
 //import com.sabkuchfresh.utils.Fonts;

@@ -23,7 +23,7 @@ import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Data;
+import product.clicklabs.jugnoo.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Log;

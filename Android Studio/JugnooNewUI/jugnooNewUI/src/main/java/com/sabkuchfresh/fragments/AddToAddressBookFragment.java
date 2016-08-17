@@ -37,7 +37,6 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.KeyboardLayoutListener;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 import com.squareup.otto.Bus;
 
 import org.apache.http.HttpEntity;
@@ -54,6 +53,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.

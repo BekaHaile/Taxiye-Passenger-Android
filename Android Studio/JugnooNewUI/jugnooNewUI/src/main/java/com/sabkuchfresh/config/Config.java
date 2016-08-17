@@ -3,9 +3,10 @@ package com.sabkuchfresh.config;
 
 import android.content.Context;
 
-import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
+
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class Config {

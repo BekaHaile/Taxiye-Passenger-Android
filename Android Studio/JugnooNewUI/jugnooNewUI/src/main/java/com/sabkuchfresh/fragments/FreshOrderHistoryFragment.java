@@ -22,9 +22,7 @@ import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.Log;
 import com.sabkuchfresh.utils.Utils;
 
@@ -33,6 +31,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import retrofit.Callback;

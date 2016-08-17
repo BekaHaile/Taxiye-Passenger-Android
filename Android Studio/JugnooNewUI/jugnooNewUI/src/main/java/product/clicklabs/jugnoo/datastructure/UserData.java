@@ -4,9 +4,9 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -55,6 +55,8 @@ public class UserData {
 	private double mobikwikBalance = -1;
 
 	private int notificationPreferenceEnabled = 0;
+
+	private FatafatUserData fatafatUserData;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
@@ -671,4 +673,11 @@ public class UserData {
 		this.notificationPreferenceEnabled = isSettingEnabled;
 	}
 
+	public FatafatUserData getFatafatUserData() {
+		return fatafatUserData;
+	}
+
+	public void setFatafatUserData(FatafatUserData fatafatUserData) {
+		this.fatafatUserData = fatafatUserData;
+	}
 }

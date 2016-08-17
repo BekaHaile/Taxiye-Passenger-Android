@@ -5,6 +5,9 @@ package product.clicklabs.jugnoo.datastructure;
  */
 public class SPLabels {
 
+
+
+
     public static final String SETTINGS_SP = "settingsPref",
         SHOW_ALL_DRIVERS = "showAllDrivers",
         SHOW_DRIVER_INFO = "showDriverInfo",

@@ -25,21 +25,21 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;
-import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.datastructure.SearchResult;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppStatus;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.LocalGson;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 /**

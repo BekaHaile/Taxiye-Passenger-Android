@@ -9,12 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Utils;
 import com.sabkuchfresh.widgets.ProgressWheel;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -235,11 +235,11 @@ public class MenuBar {
 
     private void setupShareMenu() {
         try {
-            if (!TextUtils.isEmpty(Data.userData.shateName))
-                textViewRefer.setText(Data.userData.shateName);
+            if (!TextUtils.isEmpty(Data.userData.getFatafatUserData().shareName))
+                textViewRefer.setText(Data.userData.getFatafatUserData().shareName);
 
             try {
-                Picasso.with(activity).load(Data.userData.shareImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewRefer);
+                Picasso.with(activity).load(Data.userData.getFatafatUserData().shareImage).skipMemoryCache().transform(new CircleTransform()).into(imageViewRefer);
             } catch (Exception e) {
                 e.printStackTrace();
             }

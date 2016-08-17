@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
+import product.clicklabs.jugnoo.Data;
 import com.sabkuchfresh.utils.EnglishNumberToWords;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Utils;

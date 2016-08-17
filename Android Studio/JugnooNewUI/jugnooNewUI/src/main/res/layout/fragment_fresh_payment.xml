@@ -469,20 +469,6 @@
                     android:textColor="@color/theme_green_color"
                     android:textSize="@dimen/text_size_36"/>
 
-                <com.sabkuchfresh.widgets.ProgressWheel
-                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/progressBarPaytm"
-                    android:layout_width="70px"
-                    android:layout_height="70px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:tag="mwar"
-                    wheel:matProg_barColor="@color/theme_color"
-                    wheel:matProg_barWidth="3dp"
-                    wheel:matProg_fillRadius="true"
-                    wheel:matProg_progressIndeterminate="true"/>
-
 
             </RelativeLayout>
 

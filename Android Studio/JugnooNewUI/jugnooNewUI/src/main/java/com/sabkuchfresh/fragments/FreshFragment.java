@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import product.clicklabs.jugnoo.MyApplication;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -29,11 +28,8 @@ import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
@@ -45,8 +41,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -160,9 +160,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         setSortingList();
         getAllProducts(true);
 
-        if(Data.userData.pendingFeedback == 1) {
+        if(Data.userData.getFatafatUserData().pendingFeedback == 1) {
             activity.onitemClicked(7);
-            Data.userData.pendingFeedback = 0;
+            Data.userData.getFatafatUserData().pendingFeedback = 0;
         }
 
         if(Data.userData.getPromoSuccess() == 0) {
@@ -170,9 +170,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         } else if(Data.isfatafat == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
             Data.isfatafat = AppConstant.IsFatafatEnabled.ENABLED;
             showPopup();
-        } else if(Data.userData.getPopupData() != null) {
+        } else if(Data.userData.getFatafatUserData().getPopupData() != null) {
             pushDialog = new PushDialog(activity, this);
-            pushDialog.show(Data.userData.getPopupData());
+            pushDialog.show(Data.userData.getFatafatUserData().getPopupData());
         }
 
 		return rootView;

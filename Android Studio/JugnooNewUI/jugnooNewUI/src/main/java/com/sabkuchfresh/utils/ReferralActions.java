@@ -10,16 +10,19 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.adapters.ShareIntentListAdapter;
 import com.sabkuchfresh.analytics.BranchMetricsUtils;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.datastructure.AppPackage;
-import com.sabkuchfresh.datastructure.SPLabels;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 /**
@@ -47,15 +50,15 @@ public class ReferralActions implements FlurryEventNames{
                                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                                         intent.setPackage("com.facebook.orca");
                                         intent.setType("text/plain");
-                                        intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralShareMessage() + "\n" + link);
+                                        intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getFatafatUserData().getReferralShareMessage() + "\n" + link);
                                         activity.startActivity(intent);
                                     } else {
 
-                                        facebookLoginHelper.publishFeedDialog(Data.userData.referralShareTitle,
-                                                Data.userData.referralShareTitle,
-                                                Data.userData.referralShareText,
+                                        facebookLoginHelper.publishFeedDialog(Data.userData.getFatafatUserData().referralShareTitle,
+                                                Data.userData.getFatafatUserData().referralShareTitle,
+                                                Data.userData.getFatafatUserData().referralShareText,
                                                 link,
-                                                Data.userData.referralShareImage);
+                                                Data.userData.getFatafatUserData().referralShareImage);
                                         //30.707810, 76.761957
                                         // ?pickup_lat=30.707810&pickup_lng=76.761957
                                         //http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
@@ -70,7 +73,7 @@ public class ReferralActions implements FlurryEventNames{
                         }).getBranchLinkForChannel(channel,
                                 channelLinkSP,
                                 Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                                Data.userData.referralShareText, Data.userData.jugnooFbBanner,
+                                Data.userData.getFatafatUserData().referralShareText, Data.userData.jugnooFbBanner,
                                 Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                                 Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
                     }
@@ -98,11 +101,11 @@ public class ReferralActions implements FlurryEventNames{
             }
         });
 		if(Data.userData != null && Data.userData != null) {
-			facebookLoginHelper.publishFeedDialog(Data.userData.referralShareTitle,
-                    Data.userData.referralShareTitle,
-                    Data.userData.referralShareText,
+			facebookLoginHelper.publishFeedDialog(Data.userData.getFatafatUserData().referralShareTitle,
+                    Data.userData.getFatafatUserData().referralShareTitle,
+                    Data.userData.getFatafatUserData().referralShareText,
 					link,
-					Data.userData.referralShareImage);
+					Data.userData.getFatafatUserData().referralShareImage);
 		}
     }
 
@@ -134,7 +137,7 @@ public class ReferralActions implements FlurryEventNames{
                         for(ResolveInfo info : activities){
                             if(info.activityInfo.packageName.contains("com.whatsapp")){
                                 intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralShareMessage() + "\n"
+                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getFatafatUserData().getReferralShareMessage() + "\n"
                                         + link);
                                 activity.startActivity(intent);
                                 break;
@@ -153,7 +156,7 @@ public class ReferralActions implements FlurryEventNames{
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
                     SPLabels.BRANCH_WHATSAPP_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.userData.referralShareText, Data.userData.jugnooFbBanner,
+                    Data.userData.getFatafatUserData().referralShareText, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {
@@ -170,7 +173,7 @@ public class ReferralActions implements FlurryEventNames{
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-                    sms_intent.putExtra("sms_body", Data.userData.referralShareText + "\n"
+                    sms_intent.putExtra("sms_body", Data.userData.getFatafatUserData().referralShareText + "\n"
                             + link);
                     activity.startActivity(sms_intent);
                 }
@@ -182,7 +185,7 @@ public class ReferralActions implements FlurryEventNames{
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
                     SPLabels.BRANCH_SMS_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.userData.getReferralShareMessage(), Data.userData.jugnooFbBanner,
+                    Data.userData.getFatafatUserData().getReferralShareMessage(), Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {
@@ -199,8 +202,8 @@ public class ReferralActions implements FlurryEventNames{
                 public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-                    email.putExtra(Intent.EXTRA_SUBJECT, Data.userData.referralShareTitle);
-                    email.putExtra(Intent.EXTRA_TEXT, Data.userData.referralShareText + "\n"
+                    email.putExtra(Intent.EXTRA_SUBJECT, Data.userData.getFatafatUserData().referralShareTitle);
+                    email.putExtra(Intent.EXTRA_TEXT, Data.userData.getFatafatUserData().referralShareText + "\n"
                             + link); //
                     email.setType("message/rfc822");
                     activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
@@ -213,7 +216,7 @@ public class ReferralActions implements FlurryEventNames{
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
                     SPLabels.BRANCH_EMAIL_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.userData.referralShareText, Data.userData.jugnooFbBanner,
+                    Data.userData.getFatafatUserData().referralShareText, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {
@@ -228,8 +231,8 @@ public class ReferralActions implements FlurryEventNames{
                 public void onBranchLinkCreated(String link) {
 
                     shareGeneric(activity, callbackManager,
-                            Data.userData.referralShareTitle,
-                            Data.userData.getReferralShareMessage() + "\n" + link,
+                            Data.userData.getFatafatUserData().referralShareTitle,
+                            Data.userData.getFatafatUserData().getReferralShareMessage() + "\n" + link,
                             link);
                 }
 
@@ -240,7 +243,7 @@ public class ReferralActions implements FlurryEventNames{
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
                     SPLabels.BRANCH_GENERIC_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.userData.referralShareText, Data.userData.jugnooFbBanner,
+                    Data.userData.getFatafatUserData().referralShareText, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {

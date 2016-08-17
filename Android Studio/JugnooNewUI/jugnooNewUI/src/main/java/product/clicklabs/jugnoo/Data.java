@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.datastructure.PaytmPaymentState;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class Data {
 	public static String country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
 	public static int appVersion;
 
-	
+
 	public static String cEngagementId = "", cDriverId = "", cSessionId = "";
 	public static DriverInfo assignedDriverInfo;
 
@@ -188,8 +189,6 @@ public class Data {
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 
-//	public static String knowlarityMissedCallNumber = "";
-//	public static int otpViaCallEnabled = 1;
 
 	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
@@ -221,7 +220,7 @@ public class Data {
 			
 			AccessTokenGenerator.saveLogoutToken(context);
 			clearSPLabelPrefs(context);
-			
+
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -285,12 +284,62 @@ public class Data {
 			Prefs.with(context).remove(Constants.SP_LAST_MONEY_ADDED_WALLET);
             Prefs.with(context).remove(Constants.SP_POKESTOP_ENABLED_BY_USER);
 
+			Prefs.with(context).remove(SPLabels.REFERRAL_OPEN_DATE_MILLIS);
+			Prefs.with(context).remove(SPLabels.REFERRAL_TRANSACTION_COUNT);
+			Prefs.with(context).remove(SPLabels.REFERRAL_APP_OPEN_COUNT);
+			Prefs.with(context).remove(SPLabels.USER_IDENTIFIER);
+			Prefs.with(context).remove(SPLabels.BRANCH_LINK_DESCRIPTION);
+			Prefs.with(context).remove(SPLabels.BRANCH_LINK_IMAGE);
+			Prefs.with(context).remove(SPLabels.BRANCH_SMS_LINK);
+			Prefs.with(context).remove(SPLabels.BRANCH_WHATSAPP_LINK);
+			Prefs.with(context).remove(SPLabels.BRANCH_FACEBOOK_LINK);
+			Prefs.with(context).remove(SPLabels.BRANCH_EMAIL_LINK);
+			Prefs.with(context).remove(SPLabels.ADD_HOME);
+			Prefs.with(context).remove(SPLabels.ADD_WORK);
+			Prefs.with(context).remove(SPLabels.ADD_GYM);
+			Prefs.with(context).remove(SPLabels.ADD_FRIEND);
+			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_EMERGENCY_MODE_ENABLED);
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_USER_ID);
+
+			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
+			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
+			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACTS_ERROR);
+			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE);
+			Prefs.with(context).remove(SPLabels.LOGIN_UNVERIFIED_DATA);
+
+			Prefs.with(context).remove(SPLabels.BRANCH_DESKTOP_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_ANDROID_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);
+			Prefs.with(context).remove(SPLabels.BRANCH_FALLBACK_URL);
+
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_EMERGENCY_MODE_ENABLED);
+
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.KEY_SP_T20_WC_SCHEDULE_VERSION);
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_T20_DIALOG_BEFORE_START_CROSSED);
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
+
+
+			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_FRESH_CART);
+			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
+			Prefs.with(context).remove(context.getResources().getString(R.string.pref_local_address));
+			Prefs.with(context).remove(context.getResources().getString(R.string.pref_loc_lati));
+			Prefs.with(context).remove(context.getResources().getString(R.string.pref_loc_longi));
+
+
+//            TODO ask gurmail if(!BuildConfig.DEBUG_MODE)
+//			Prefs.with(context).removeAll();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
+
+
 
 
 
@@ -374,5 +423,48 @@ public class Data {
 		Log.e("deepLinkReferralCode =", "=" + Data.deepLinkReferralCode);
 	}
 
-	
+
+
+
+	public static final String LOCAL_BROADCAST  = "fatafat-cart-broadcast";
+	public static final String LATLNG = "latlng";
+	public static String PAYTM_STATUS_ACTIVE = "ACTIVE",
+			PAYTM_STATUS_INACTIVE = "INACTIVE";
+
+
+	public static int isfatafat = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public static PaytmPaymentState paytmPaymentState;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public static int tabLinkIndex = 0;
+
 }

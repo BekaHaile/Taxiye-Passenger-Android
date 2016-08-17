@@ -28,13 +28,10 @@ import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
-import com.sabkuchfresh.apis.ApiPaytmCheckBalance;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.datastructure.AppLinkIndex;
-import com.sabkuchfresh.datastructure.PaymentOption;
-import com.sabkuchfresh.datastructure.SPLabels;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutFragment;
@@ -58,13 +55,10 @@ import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.JSONParser;
 import com.sabkuchfresh.utils.LocationFetcher;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -76,8 +70,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 4/6/16.
@@ -257,33 +256,36 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
         Data.longitude = Data.loginLongitude;
 
 
-
-        if(Data.userData.getDefaultStoreId() > 0){
-            if(Data.userData.getDefaultStoreId() == 1){
-                addFreshFragment();
-            } else{
-                addMealFragment();
-            }
-        }else {
-            if (Data.userData.stores.size() > 1) {
-                int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
-                if (fragMentType == AppConstant.ApplicationType.FRESH) {
-                    addFreshFragment();
-                } else if (fragMentType == AppConstant.ApplicationType.MEALS) {
-                    addMealFragment();
-                } else {
-                    addNewFreshFragment();
-                }
-            } else if (Data.userData.stores.size() == 1) {
-                int appType = Data.userData.stores.get(0).getStoreId();
-                if (appType == AppConstant.ApplicationType.FRESH) {
-                    addFreshFragment();
-                } else {
-                    addMealFragment();
-                }
-            } else {
-                addFreshFragment();
-            }
+        try {
+            if(Data.userData.getFatafatUserData().getDefaultStoreId() > 0){
+				if(Data.userData.getFatafatUserData().getDefaultStoreId() == 1){
+					addFreshFragment();
+				} else{
+					addMealFragment();
+				}
+			}else {
+				if (Data.userData.getFatafatUserData().stores.size() > 1) {
+					int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
+					if (fragMentType == AppConstant.ApplicationType.FRESH) {
+						addFreshFragment();
+					} else if (fragMentType == AppConstant.ApplicationType.MEALS) {
+						addMealFragment();
+					} else {
+						addNewFreshFragment();
+					}
+				} else if (Data.userData.getFatafatUserData().stores.size() == 1) {
+					int appType = Data.userData.getFatafatUserData().stores.get(0).getStoreId();
+					if (appType == AppConstant.ApplicationType.FRESH) {
+						addFreshFragment();
+					} else {
+						addMealFragment();
+					}
+				} else {
+					addFreshFragment();
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -341,7 +343,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
             topBar.setUserData();
 
 
-            getPaytmBalance(this);
+            fetchWalletBalance(this);
 
             if (locationFetcher == null) {
                 locationFetcher = new LocationFetcher(this, 60000l, 1);
@@ -379,13 +381,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
             }
             else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
                 FreshFragment frag = getFreshFragment();
-                if(frag == null && Data.userData.stores.size() > 1) {
+                if(frag == null && Data.userData.getFatafatUserData().stores.size() > 1) {
                     addFreshFragment1(new FreshFragment(), true);
                 }
             }
             else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
                 MealFragment mealFragment = getMealFragment();
-                if(mealFragment == null && Data.userData.stores.size() > 1) {
+                if(mealFragment == null && Data.userData.getFatafatUserData().stores.size() > 1) {
                     addMealFragment(new MealFragment(), true);
                 }
             }
@@ -400,7 +402,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
         menuBar.setUserData();
         topBar.setUserData();
 
-        getPaytmBalance(this);
+        fetchWalletBalance(this);
     }
 
     public void toggle() {
@@ -572,7 +574,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
         if (fragment instanceof FreshFragment) {
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
             topBar.getImageViewSearch().setVisibility(View.VISIBLE);
-            if(Data.userData.stores.size()>1) {
+            if(Data.userData.getFatafatUserData().stores.size()>1) {
                 topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
             } else {
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -598,7 +600,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
         } else if(fragment instanceof MealFragment){
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            if(Data.userData.stores.size()>1) {
+            if(Data.userData.getFatafatUserData().stores.size()>1) {
                 topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
             } else {
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -908,25 +910,26 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
 
 
-    public static final long PAYTM_CHECK_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
-    private ApiPaytmCheckBalance apiPaytmCheckBalance = null;
-    private void getPaytmBalance(final Activity activity) {
+    public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
+    private ApiFetchWalletBalance apiFetchWalletBalance = null;
+    private void fetchWalletBalance(final Activity activity) {
         try {
-            if(apiPaytmCheckBalance == null){
-                apiPaytmCheckBalance = new ApiPaytmCheckBalance(this, new ApiPaytmCheckBalance.Callback() {
+            if(apiFetchWalletBalance == null){
+                apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
                     @Override
                     public void onSuccess() {
-                        Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-                        setUserData();
+                        try {
+                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            setUserData();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
                     public void onFailure() {
                         try {
-                            JSONParser.setPaytmErrorCase();
                             setUserData();
-                            //menuBar.dismissPaytmLoading();
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -934,8 +937,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
                     @Override
                     public void onFinish() {
-                        //menuBar.dismissPaytmLoading();
-
                     }
 
                     @Override
@@ -947,15 +948,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
                     }
                 });
             }
-            long lastPaytmBalanceCall = Prefs.with(activity).getLong(SPLabels.PAYTM_CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * PAYTM_CHECK_BALANCE_REFRESH_TIME)));
-            long lastCallDiff = System.currentTimeMillis() - lastPaytmBalanceCall;
-            if(lastCallDiff >= PAYTM_CHECK_BALANCE_REFRESH_TIME) {
-                apiPaytmCheckBalance.getBalance(Data.userData.paytmEnabled, false);
+            long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+            long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
+            if(lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
+                apiFetchWalletBalance.getBalance(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     public void setUserData() {
         try {

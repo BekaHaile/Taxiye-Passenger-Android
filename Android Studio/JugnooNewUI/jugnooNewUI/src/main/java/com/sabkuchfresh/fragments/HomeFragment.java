@@ -16,9 +16,9 @@ import com.sabkuchfresh.adapters.StoreListingAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Fonts;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
         recyclerViewStore.setHasFixedSize(false);
 
 
-        listingAdapter = new StoreListingAdapter(activity, Data.userData.stores, new StoreListingAdapter.Callback() {
+        listingAdapter = new StoreListingAdapter(activity, Data.userData.getFatafatUserData().stores, new StoreListingAdapter.Callback() {
             @Override
             public void onSlotSelected(int storeId) {
                 if(storeId == AppConstant.ApplicationType.FRESH) {

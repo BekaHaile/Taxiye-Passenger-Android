@@ -26,7 +26,7 @@ package com.sabkuchfresh.fragments;//package com.sabkuchfresh.fragments;
 //import com.google.android.gms.maps.model.CameraPosition;
 //import com.google.android.gms.maps.model.LatLng;
 //import com.google.android.gms.maps.model.MarkerOptions;
-//import com.sabkuchfresh.utils.Data;
+//import product.clicklabs.jugnoo.Data;
 //import com.sabkuchfresh.utils.LocationFetcher;
 //import product.clicklabs.jugnoo.R;
 //import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;

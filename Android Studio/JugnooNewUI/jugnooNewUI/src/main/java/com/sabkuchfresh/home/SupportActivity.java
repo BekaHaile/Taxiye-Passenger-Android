@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.fragments.AboutUsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshOrderHistoryFragment;
@@ -26,12 +25,14 @@ import com.sabkuchfresh.retrofit.model.OrderItem;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.Prefs;
 
 import org.json.JSONObject;
+
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Gurmail S. Kang on 5/3/16.

@@ -2,9 +2,7 @@ package com.sabkuchfresh.analytics;
 
 import android.content.Context;
 
-import product.clicklabs.jugnoo.MyApplication;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Log;
 
@@ -12,6 +10,8 @@ import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.util.LinkProperties;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -56,9 +56,9 @@ public class BranchMetricsUtils {
                 .setCanonicalUrl("https://lofatafat.com")
 
                 // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
-                .setTitle(Data.userData.referralShareTitle)
-                .setContentDescription(Data.userData.referralShareText)
-                .setContentImageUrl(Data.userData.getReferralShareImage())
+                .setTitle(Data.userData.getFatafatUserData().referralShareTitle)
+                .setContentDescription(Data.userData.getFatafatUserData().referralShareText)
+                .setContentImageUrl(Data.userData.getFatafatUserData().getReferralShareImage())
 
                 // You use this to specify whether this content can be discovered publicly - default is public
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)

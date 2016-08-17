@@ -15,12 +15,12 @@ import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.config.Config;
-import com.sabkuchfresh.datastructure.SPLabels;
-import com.sabkuchfresh.utils.Data;
 import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.Prefs;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 4/8/16.
@@ -90,7 +90,7 @@ public class TopBar implements FlurryEventNames {
 		}
 
         try {
-            if(Data.userData.stores.size()>1) {
+            if(Data.userData.getFatafatUserData().stores.size()>1) {
                 relativeLayoutNotification.setVisibility(View.GONE);
             } else {
                 relativeLayoutNotification.setVisibility(View.VISIBLE);
