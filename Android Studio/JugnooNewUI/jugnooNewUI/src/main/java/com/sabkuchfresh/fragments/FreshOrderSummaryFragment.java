@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.datastructure.ApiResponseFlags;
-import com.sabkuchfresh.datastructure.DialogErrorType;
 import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
@@ -41,6 +39,8 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.Prefs;

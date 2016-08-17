@@ -33,16 +33,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.sabkuchfresh.adapters.SearchListAdapter;
 import com.sabkuchfresh.bus.AddressSearch;
-import com.sabkuchfresh.datastructure.AutoCompleteSearchResult;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
-import com.sabkuchfresh.datastructure.SearchResult;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppStatus;
-import product.clicklabs.jugnoo.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.LocationFetcher;
@@ -58,7 +54,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -214,6 +214,7 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
 
 
         searchListAdapter = new SearchListAdapter(homeActivity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+                PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
                     @Override
@@ -245,7 +246,7 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
                     }
 
                     @Override
-                    public void onPlaceClick(AutoCompleteSearchResult autoCompleteSearchResult) {
+                    public void onPlaceClick(SearchResult autoCompleteSearchResult) {
 //                        searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                     }
 
@@ -262,7 +263,7 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
                         editTextSearch.setText("");
                         linearLayoutSearch.setVisibility(View.GONE);
                         homeActivity.locationSearchShown = false;
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.latLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
 
 //                        searchListActionsHandler.onPlaceSearchPost(searchResult);
 //                        getActivity().getSupportFragmentManager().popBackStack();
@@ -278,7 +279,7 @@ public class AddAddressMapFragment extends Fragment implements LocationFetcher.L
                     public void onPlaceSaved() {
                     }
 
-                });
+                }, true);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);

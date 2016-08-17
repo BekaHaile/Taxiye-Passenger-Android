@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.retrofit.model.ReferralResponse;
@@ -38,6 +37,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

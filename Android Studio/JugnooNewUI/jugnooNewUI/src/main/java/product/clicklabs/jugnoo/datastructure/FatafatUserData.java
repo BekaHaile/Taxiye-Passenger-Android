@@ -10,7 +10,6 @@ import java.util.ArrayList;
  */
 public class FatafatUserData {
 	public String shareImage, shareName;
-	private int defaultStoreId;
 	public String referralBanner, referralShortDesc, referralDescription, referralShareTitle,
 			referralShareText, referralShareImage, question, orderId, referralShareMessage;
 	public int questionType;
@@ -18,13 +17,12 @@ public class FatafatUserData {
 	public ArrayList<Store> stores;
 	private PopupData popupData;
 
-	public FatafatUserData(String shareImage, String shareName, int defaultStoreId, String referralBanner, String referralShortDesc,
+	public FatafatUserData(String shareImage, String shareName, String referralBanner, String referralShortDesc,
 						   String referralDescription, String referralShareTitle, String referralShareText, String referralShareImage,
 						   String question, String orderId, String referralShareMessage, int questionType, int pendingFeedback,
 						   ArrayList<Store> stores, PopupData popupData) {
 		this.shareImage = shareImage;
 		this.shareName = shareName;
-		this.defaultStoreId = defaultStoreId;
 		this.referralBanner = referralBanner;
 		this.referralShortDesc = referralShortDesc;
 		this.referralDescription = referralDescription;
@@ -54,14 +52,6 @@ public class FatafatUserData {
 
 	public void setShareName(String shareName) {
 		this.shareName = shareName;
-	}
-
-	public int getDefaultStoreId() {
-		return defaultStoreId;
-	}
-
-	public void setDefaultStoreId(int defaultStoreId) {
-		this.defaultStoreId = defaultStoreId;
 	}
 
 	public String getReferralBanner() {

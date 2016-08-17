@@ -26,9 +26,6 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
-import com.sabkuchfresh.datastructure.AddPaymentPath;
-import com.sabkuchfresh.datastructure.ApiResponseFlags;
-import com.sabkuchfresh.datastructure.DialogErrorType;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshPaytmBalanceLowDialog;
@@ -60,11 +57,14 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -769,14 +769,14 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             Intent intent = new Intent(activity, PaymentActivity.class);
             if (Data.userData.getPaytmEnabled() == 1) {
                 DecimalFormat df = new DecimalFormat("#");
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.PAYTM_RECHARGE.getOrdinal());
+                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
 //                intent.putExtra(Constants.KEY_PAYMENT_PATH, 1);
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
                         df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
                                 - Data.userData.getPaytmBalance())));
             } else {
                 intent.putExtra(Constants.KEY_PAYMENT_PATH, 1);
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.ADD_PAYTM.getOrdinal());
+                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
             }
             activity.startActivity(intent);
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

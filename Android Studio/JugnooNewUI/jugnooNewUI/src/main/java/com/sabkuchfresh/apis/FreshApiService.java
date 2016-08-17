@@ -1,7 +1,6 @@
 package com.sabkuchfresh.apis;
 
 import com.sabkuchfresh.retrofit.model.LoginResponse;
-import com.sabkuchfresh.retrofit.model.NotificationInboxResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -89,11 +88,6 @@ public interface FreshApiService {
 	@POST("/cancel_order")
 	void cancelOrder(@FieldMap Map<String, String> params,
                      Callback<OrderHistoryResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/fetch_pushes")
-    void notificationInbox(@FieldMap Map<String, String> params,
-                           Callback<NotificationInboxResponse> callback);
 
     @FormUrlEncoded
     @GET("/v1/customer/fetch_code")

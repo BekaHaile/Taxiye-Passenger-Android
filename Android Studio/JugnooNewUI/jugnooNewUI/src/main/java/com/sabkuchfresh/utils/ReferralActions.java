@@ -10,18 +10,18 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.sabkuchfresh.adapters.ShareIntentListAdapter;
 import com.sabkuchfresh.analytics.BranchMetricsUtils;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.datastructure.AppPackage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.promotion.adapters.ShareIntentListAdapter;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 

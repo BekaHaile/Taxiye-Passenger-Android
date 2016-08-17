@@ -12,7 +12,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.sabkuchfresh.datastructure.GAPIAddress;
 import com.sabkuchfresh.retrofit.RestClient;
 
 import org.json.JSONArray;
@@ -22,6 +21,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 

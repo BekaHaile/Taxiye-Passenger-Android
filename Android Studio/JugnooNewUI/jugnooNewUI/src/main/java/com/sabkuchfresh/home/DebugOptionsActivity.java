@@ -18,13 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
-import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.Fonts;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.Prefs;
 

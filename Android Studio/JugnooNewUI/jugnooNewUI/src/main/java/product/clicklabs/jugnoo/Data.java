@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.datastructure.PaytmPaymentState;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -449,7 +448,6 @@ public class Data {
 
 
 
-	public static PaytmPaymentState paytmPaymentState;
 
 
 

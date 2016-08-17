@@ -6,7 +6,6 @@ import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.GoogleAPIServices;
 import com.sabkuchfresh.apis.GoogleApi;
 import com.sabkuchfresh.apis.StringAPIService;
-import com.sabkuchfresh.config.Config;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
+import product.clicklabs.jugnoo.config.Config;
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;

@@ -14,13 +14,10 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.sabkuchfresh.TokenGenerator.HomeUtil;
-import com.sabkuchfresh.config.Config;
-import com.sabkuchfresh.datastructure.ApiResponseFlags;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.retrofit.model.SettleUserDebt;
 import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppStatus;
-import product.clicklabs.jugnoo.Data;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Log;
@@ -29,8 +26,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -262,7 +262,7 @@ public class ChangePasswordActivity extends BaseActivity {
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 			
 			HashMap<String, String> params = new HashMap<>();
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getFreshClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("old_password", oldPassword);

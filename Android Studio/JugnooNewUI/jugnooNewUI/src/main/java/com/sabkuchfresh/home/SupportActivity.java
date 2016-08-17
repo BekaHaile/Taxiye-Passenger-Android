@@ -17,7 +17,6 @@ import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshOrderHistoryFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
-import com.sabkuchfresh.fragments.NotificationCenterFragment;
 import com.sabkuchfresh.fragments.PromotionsFragment;
 import com.sabkuchfresh.fragments.ReferralsFragment;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
@@ -87,7 +86,6 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
         } else if (fragmentValue == AppConstant.SupportType.ABOUT) {
             openAboutFragment();
         } else if (fragmentValue == AppConstant.SupportType.NOTIFICATION) {
-            openNotificationFragment();
         } else if (fragmentValue == AppConstant.SupportType.SHARE) {
             openShareFragment();
         } else if (fragmentValue == AppConstant.SupportType.FEED_BACK) {
@@ -210,14 +208,6 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
                 .commitAllowingStateLoss();
     }
 
-    public void openNotificationFragment() {
-        textViewTitle.setText(getResources().getString(R.string.notification_fragment));
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new NotificationCenterFragment(),
-                        NotificationCenterFragment.class.getName())
-                .addToBackStack(NotificationCenterFragment.class.getName())
-                .commitAllowingStateLoss();
-    }
 
     public void openOrderFeedback() {
         textViewTitle.setText(getResources().getString(R.string.feedback_fragment));

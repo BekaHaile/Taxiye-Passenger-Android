@@ -31,7 +31,6 @@ import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
-import com.sabkuchfresh.datastructure.AppLinkIndex;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutFragment;
@@ -74,6 +73,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -257,13 +257,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
 
         try {
-            if(Data.userData.getFatafatUserData().getDefaultStoreId() > 0){
-				if(Data.userData.getFatafatUserData().getDefaultStoreId() == 1){
-					addFreshFragment();
-				} else{
-					addMealFragment();
-				}
-			}else {
+//            if(Data.userData.getFatafatUserData().getDefaultStoreId() > 0){
+//				if(Data.userData.getFatafatUserData().getDefaultStoreId() == 1){
+//					addFreshFragment();
+//				} else{
+//					addMealFragment();
+//				}
+//			}else {
 				if (Data.userData.getFatafatUserData().stores.size() > 1) {
 					int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
 					if (fragMentType == AppConstant.ApplicationType.FRESH) {
@@ -283,9 +283,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 				} else {
 					addFreshFragment();
 				}
-			}
+//			}
         } catch (Exception e) {
             e.printStackTrace();
+            addFreshFragment();
         }
 
 
@@ -364,7 +365,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
             else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
                 onitemClicked(AppConstant.MenuClick.WALLET);
             }
-            else if(AppLinkIndex.HISTORY.getOrdinal() == Data.deepLinkIndex){
+            else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
                 onitemClicked(AppConstant.MenuClick.HISTORY);
             }
             else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
@@ -376,21 +377,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
             else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
                 onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
             }
-            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
-                Utils.openPlayStore(FreshActivity.this);
-            }
-            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
-                FreshFragment frag = getFreshFragment();
-                if(frag == null && Data.userData.getFatafatUserData().stores.size() > 1) {
-                    addFreshFragment1(new FreshFragment(), true);
-                }
-            }
-            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
-                MealFragment mealFragment = getMealFragment();
-                if(mealFragment == null && Data.userData.getFatafatUserData().stores.size() > 1) {
-                    addMealFragment(new MealFragment(), true);
-                }
-            }
+//            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
+//                Utils.openPlayStore(FreshActivity.this);
+//            }
+//            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
+//                FreshFragment frag = getFreshFragment();
+//                if(frag == null && Data.userData.getFatafatUserData().stores.size() > 1) {
+//                    addFreshFragment1(new FreshFragment(), true);
+//                }
+//            }
+//            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
+//                MealFragment mealFragment = getMealFragment();
+//                if(mealFragment == null && Data.userData.getFatafatUserData().stores.size() > 1) {
+//                    addMealFragment(new MealFragment(), true);
+//                }
+//            }
 
         } catch(Exception e){
             e.printStackTrace();

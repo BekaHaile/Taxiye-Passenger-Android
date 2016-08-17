@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Pair;
 
-import com.sabkuchfresh.config.Config;
 import com.sabkuchfresh.utils.Utils;
+
+import product.clicklabs.jugnoo.config.Config;
 
 public class AccessTokenGenerator {
 
