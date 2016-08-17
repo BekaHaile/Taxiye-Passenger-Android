@@ -18,14 +18,14 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.DateOperations;
-import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.Log;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 /**
  * Created by gurmail on 19/05/16.

@@ -23,12 +23,10 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
-import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Log;
+import product.clicklabs.jugnoo.utils.Log;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
@@ -46,6 +44,9 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -161,7 +162,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         getAllProducts(true);
 
         if(Data.userData.getFatafatUserData().pendingFeedback == 1) {
-            activity.onitemClicked(7);
+			//TODO fresh feedback fragment open here
             Data.userData.getFatafatUserData().pendingFeedback = 0;
         }
 
@@ -190,9 +191,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                activity.onitemClicked(8);
-                                //menuBar.menuAdapter.onClickAction(MenuInfoTags.PROMOTIONS.getTag());
-                                //123
+                                activity.getMenuBar().menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
                             }
                         });
                 Data.userData.setPromoSuccess(1);
@@ -402,38 +401,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     @Override
     public void onButtonClicked(int deepIndex) {
-        switch (deepIndex) {
-            case 0:
-
-                break;
-            case 1:
-                activity.onitemClicked(AppConstant.MenuClick.HISTORY);
-                break;
-            case 2:
-                activity.onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
-                break;
-            case 3:
-                activity.onitemClicked(AppConstant.MenuClick.REFER);
-                break;
-            case 4:
-                activity.onitemClicked(AppConstant.MenuClick.WALLET);
-                break;
-            case 5:
-                Utils.openPlayStore(activity);
-                break;
-            case 6:
-                activity.onitemClicked(AppConstant.MenuClick.USERINFO);
-                break;
-            case 7:
-
-                break;
-            case 8:
-
-                break;
-            case 9:
-
-                break;
-        }
+		//TOD implement deep links
 
 
     }

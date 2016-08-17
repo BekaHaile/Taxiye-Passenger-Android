@@ -11,6 +11,7 @@ import java.util.Locale;
  * Utility class for reading items from {@link org.json.JSONObject}s or {@link org.json.JSONArray}
  * s
  */
+//TODO ask gurmail for its use
 public class JsonUtils {
 
     /** Tag used to print logs for debugging. */

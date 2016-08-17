@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.sabkuchfresh.utils.Log;
+import product.clicklabs.jugnoo.utils.Log;
 
 import java.util.HashMap;
 import java.util.Map;

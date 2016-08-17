@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
-import com.sabkuchfresh.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;

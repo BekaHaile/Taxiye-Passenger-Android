@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import product.clicklabs.jugnoo.utils.Log;
 
 public class MapUtils {
 

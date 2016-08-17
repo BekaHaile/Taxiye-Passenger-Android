@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**

@@ -14,12 +14,12 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.StoreListingAdapter;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
  * Created by gurmail on 13/07/16.

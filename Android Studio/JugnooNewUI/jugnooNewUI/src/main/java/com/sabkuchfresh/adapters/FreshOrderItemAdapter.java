@@ -9,13 +9,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.retrofit.model.OrderItem;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Fonts;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 
 
 public class FreshOrderItemAdapter extends RecyclerView.Adapter<FreshOrderItemAdapter.ViewHolder> {

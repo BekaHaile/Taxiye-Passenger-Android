@@ -2,8 +2,6 @@ package com.sabkuchfresh.home;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.sabkuchfresh.TokenGenerator.HomeUtil;
-
 /**
  * Created by clicklabs on 7/3/15.
  */

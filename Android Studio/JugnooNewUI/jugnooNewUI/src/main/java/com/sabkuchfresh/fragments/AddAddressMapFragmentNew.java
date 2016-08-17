@@ -34,8 +34,8 @@ package com.sabkuchfresh.fragments;//package com.sabkuchfresh.fragments;
 //import com.sabkuchfresh.utils.ASSL;
 //import product.clicklabs.jugnoo.utils.AppConstant;
 //import com.sabkuchfresh.utils.DialogPopup;
-//import com.sabkuchfresh.utils.Fonts;
-//import com.sabkuchfresh.utils.Log;
+//import product.clicklabs.jugnoo.utils.Fonts;
+//import product.clicklabs.jugnoo.utils.Log;
 //
 //import org.apache.http.HttpEntity;
 //import org.apache.http.HttpResponse;

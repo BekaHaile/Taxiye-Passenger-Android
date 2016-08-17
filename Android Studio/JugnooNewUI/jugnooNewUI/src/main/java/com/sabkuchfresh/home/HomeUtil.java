@@ -1,4 +1,4 @@
-package com.sabkuchfresh.TokenGenerator;
+package com.sabkuchfresh.home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,15 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Pair;
 
-import com.sabkuchfresh.utils.FacebookLoginHelper;
-import com.sabkuchfresh.utils.Log;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 import io.branch.referral.Branch;
+import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.Log;
 
 /**
  * Created by shankar on 4/25/16.

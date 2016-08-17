@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.analytics.CampaignTrackingReceiver;
 import com.sabkuchfresh.utils.Constants;
-import com.sabkuchfresh.utils.Log;
+import product.clicklabs.jugnoo.utils.Log;
 
 import java.util.Set;
 

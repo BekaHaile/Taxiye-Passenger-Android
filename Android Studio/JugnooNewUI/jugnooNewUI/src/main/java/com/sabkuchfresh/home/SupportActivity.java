@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
-import com.sabkuchfresh.fragments.AboutUsFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshOrderHistoryFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
@@ -21,16 +20,16 @@ import com.sabkuchfresh.fragments.PromotionsFragment;
 import com.sabkuchfresh.fragments.ReferralsFragment;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
 import com.sabkuchfresh.retrofit.model.OrderItem;
-import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Log;
 
 import org.json.JSONObject;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -84,7 +83,6 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
         } else if (fragmentValue == AppConstant.SupportType.HISTORY) {
             openOrderHistory();
         } else if (fragmentValue == AppConstant.SupportType.ABOUT) {
-            openAboutFragment();
         } else if (fragmentValue == AppConstant.SupportType.NOTIFICATION) {
         } else if (fragmentValue == AppConstant.SupportType.SHARE) {
             openShareFragment();
@@ -181,14 +179,6 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
                 .commitAllowingStateLoss();
     }
 
-    public void openAboutFragment() {
-        textViewTitle.setText(getResources().getString(R.string.about_fragment));
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new AboutUsFragment(),
-                        AboutUsFragment.class.getName())
-                .addToBackStack(AboutUsFragment.class.getName())
-                .commitAllowingStateLoss();
-    }
 
     public void openShareFragment() {
         textViewTitle.setText(getResources().getString(R.string.share_fragment));

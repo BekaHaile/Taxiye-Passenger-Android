@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.TokenGenerator.HomeUtil;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
@@ -51,13 +50,9 @@ import com.sabkuchfresh.retrofit.model.SubItemCompare;
 import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
-import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.LocationFetcher;
-import com.sabkuchfresh.utils.Log;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -70,18 +65,23 @@ import java.util.Comparator;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.LocationFetcher;
+import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
-import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseFragmentActivity implements LocationFetcher.LocationUpdate, MenuBar.Buttonclicked, FlurryEventNames {
+public class FreshActivity extends BaseFragmentActivity implements LocationUpdate, FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -168,7 +168,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
         topView = (View) findViewById(R.id.topBarMain);
 
-        menuBar = new MenuBar(this, drawerLayout, this);
+        menuBar = new MenuBar(this, drawerLayout);
         topBar = new TopBar(this, drawerLayout);
 
 //        if(BuildConfig.DEBUG_MODE)
@@ -352,52 +352,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
                 locationFetcher.connect();
             }
 
-            openDeepLink();
         }
 
     }
 
-    private void openDeepLink(){
-        try{
-            if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
-                //onitemClicked(AppConstant.MenuClick.REFER);
-            }
-            else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.WALLET);
-            }
-            else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.HISTORY);
-            }
-            else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.SUPPORT);
-            }
-            else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.USERINFO);
-            }
-            else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-                onitemClicked(AppConstant.MenuClick.NOTIFICATION_CENTER);
-            }
-//            else if(AppLinkIndex.PLAY_STORE.getOrdinal() == Data.deepLinkIndex){
-//                Utils.openPlayStore(FreshActivity.this);
-//            }
-//            else if(AppLinkIndex.FATAFAT_PAGE.getOrdinal() == Data.deepLinkIndex){
-//                FreshFragment frag = getFreshFragment();
-//                if(frag == null && Data.userData.getFatafatUserData().stores.size() > 1) {
-//                    addFreshFragment1(new FreshFragment(), true);
-//                }
-//            }
-//            else if(AppLinkIndex.MEALS_PAGE.getOrdinal() == Data.deepLinkIndex){
-//                MealFragment mealFragment = getMealFragment();
-//                if(mealFragment == null && Data.userData.getFatafatUserData().stores.size() > 1) {
-//                    addMealFragment(new MealFragment(), true);
-//                }
-//            }
-
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        Data.deepLinkIndex = -1;
-    }
 
     public void resumeMethod() {
         menuBar.setUserData();
@@ -1400,8 +1358,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationFetch
 
     }
 
-    @Override
-    public void onitemClicked(int position) {
-
+    public MenuBar getMenuBar(){
+        return menuBar;
     }
+
 }

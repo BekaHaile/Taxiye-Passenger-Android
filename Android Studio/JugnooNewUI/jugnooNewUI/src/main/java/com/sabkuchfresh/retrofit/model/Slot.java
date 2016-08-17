@@ -3,7 +3,8 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
-import com.sabkuchfresh.utils.DateOperations;
+
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 /**
  * Created by shankar on 4/9/16.

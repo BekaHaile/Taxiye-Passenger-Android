@@ -12,15 +12,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.retrofit.model.OrderHistory;
-import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DateOperations;
-import com.sabkuchfresh.utils.Fonts;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 
 public class FreshOrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

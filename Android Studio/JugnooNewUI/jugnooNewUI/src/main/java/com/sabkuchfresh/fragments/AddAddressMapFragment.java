@@ -37,14 +37,7 @@ import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.RestClient;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.AppStatus;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.LocationFetcher;
-import com.sabkuchfresh.utils.Log;
-import com.sabkuchfresh.utils.MapStateListener;
-import com.sabkuchfresh.utils.TouchableMapFragment;
 import com.sabkuchfresh.widgets.NonScrollListView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -55,10 +48,17 @@ import java.util.Locale;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapStateListener;
+import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -66,7 +66,7 @@ import retrofit.client.Response;
 /**
  * Created by Gurmail S. Kang on 5/4/16.
  */
-public class AddAddressMapFragment extends Fragment implements LocationFetcher.LocationUpdate,
+public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String TAG = "AddAddressMapFragment";

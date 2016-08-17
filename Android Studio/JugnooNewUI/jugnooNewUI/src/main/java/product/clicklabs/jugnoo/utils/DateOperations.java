@@ -20,7 +20,7 @@ public class DateOperations {
 	public DateOperations(){
 		
 	}
-	
+
 	/**
 	 * Converts UTC time to local time
 	 * @param utcTime UTC time String

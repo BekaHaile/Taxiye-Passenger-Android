@@ -47,14 +47,14 @@ public class Fonts {
 
     public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
         if (latoRegular == null) {
-            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_regular.ttf");
+            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
         }
         return latoRegular;
     }
 
     public static Typeface latoLight(Context appContext) {											// accessing fonts functions
         if (latoLight == null) {
-            latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/lato_light.ttf");
+            latoLight = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_light_300.otf");
         }
         return latoLight;
     }

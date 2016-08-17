@@ -15,6 +15,8 @@ import com.sabkuchfresh.datastructure.PopupData;
 import com.squareup.picasso.Picasso;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by shankar on 5/2/16.

@@ -18,11 +18,11 @@ import com.sabkuchfresh.bus.AddPlacesModel;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.utils.ASSL;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 

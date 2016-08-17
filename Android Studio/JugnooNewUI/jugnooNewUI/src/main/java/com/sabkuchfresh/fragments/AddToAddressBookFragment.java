@@ -32,11 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.utils.ASSL;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Fonts;
-import com.sabkuchfresh.utils.KeyboardLayoutListener;
-import com.sabkuchfresh.utils.Log;
 import com.squareup.otto.Bus;
 
 import org.apache.http.HttpEntity;
@@ -53,6 +49,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**

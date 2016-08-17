@@ -39,10 +39,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.utils.ASSL;
-
 import java.util.Locale;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 

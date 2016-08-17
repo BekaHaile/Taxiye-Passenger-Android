@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Log;
+import product.clicklabs.jugnoo.utils.Log;
 
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;

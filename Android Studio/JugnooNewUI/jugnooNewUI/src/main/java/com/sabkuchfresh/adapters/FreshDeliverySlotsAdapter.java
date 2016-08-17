@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.DateOperations;
-import com.sabkuchfresh.utils.Fonts;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**

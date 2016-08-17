@@ -9,9 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.utils.Fonts;
+
 import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.utils.ASSL;
-import com.sabkuchfresh.utils.Fonts;
+import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
  * Created by shankar on 3/4/16.

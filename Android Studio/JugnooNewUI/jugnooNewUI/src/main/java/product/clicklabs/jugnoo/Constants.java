@@ -18,17 +18,10 @@ public interface Constants {
 	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
-	String KEY_DRIVER_CAR_NO = "driver_car_no";
-	String KEY_END_RIDE_DATA = "end_ride_data";
 	String KEY_APP_MONITORING_TIME_TO_SAVE = "app_monitoring_time";
-	String KEY_GOOGLE_NAME = "google_name";
-	String KEY_GOOGLE_EMAIL = "google_email";
-	String KEY_GOOGLE_ID = "google_id";
-	String KEY_GOOGLE_IMAGE = "google_image";
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
 	int ADD_HOME = 2, ADD_WORK = 3;
-	String COMMA = ", ";
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 
@@ -70,7 +63,6 @@ public interface Constants {
 	String KEY_REFERRAL_CODE_ENTERED = "referral_code_entered";
 	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
 	String FB_LINK_SHARE_NAME = "Jugnoo";
-//	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
 
 
 	String DOMAIN_SHARE_JUGNOO_IN = "share.jugnoo.in";
@@ -97,7 +89,6 @@ public interface Constants {
 	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
 
 
-	String FIRST_TIME_DB= "first_time_db";
 	String SECOND_TIME_DB= "second_time_db";
 
 
@@ -218,29 +209,10 @@ public interface Constants {
 	String KEY_ICON_SET = "icon_set";
 
 	int VEHICLE_AUTO = 1;
-	int POOL_RIDE = 2;
 
 	String KEY_GIVEN_RATING = "given_rating";
-	String KEY_COUPONS = "coupons";
 
-	String KEY_SIGNED_UP_AT = "signed_up_at";
-	String KEY_CONTACTS = "contacts";
-	String KEY_CONTACT_TYPE = "contact_type";
-	String KEY_CONTACT_VALUE = "contact_value";
-	String KEY_SUBSCRIPTION_STATUS = "subscription_status";
-	String KEY_ACTIVE = "active";
-	String KEY_PHONE = "phone";
-
-	String KEY_PAYMENT_MODE = "payment_mode";
-	String KEY_DELIVERY_SLOT_ID = "delivery_slot_id";
-	String KEY_DELIVERY_ADDRESS = "delivery_address";
-	String KEY_CART = "cart";
-	String KEY_SUB_ITEM_ID = "sub_item_id";
-	String KEY_QUANTITY = "quantity";
-	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
-	String SP_FRESH_CART= "fresh_cart";
 	String EMPTY_JSON_OBJECT = "{}";
-	String KEY_CATEGORY_POSITION = "category_position";
 
 	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
 	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";
