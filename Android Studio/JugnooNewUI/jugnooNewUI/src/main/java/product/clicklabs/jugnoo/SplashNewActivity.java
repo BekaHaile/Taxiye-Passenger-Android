@@ -48,13 +48,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.ContainerHolder;
-import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -64,7 +57,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -86,7 +78,6 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.ContainerHolderSingleton;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
@@ -1437,7 +1428,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				Log.e("params login_using_access_token", "=" + params);
 
 				final long startTime = System.currentTimeMillis();
-				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<LoginResponse>() {
+				RestClient.getApiServices().loginUsingAccessTokenV3(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 
@@ -1485,7 +1476,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					DialogPopup.alertPopup(activity, "", error);
 					DialogPopup.dismissLoadingDialog();
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("user_data"), activity)) {
 						accessTokenDataParseAsync(activity, response, loginResponse);
 
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);

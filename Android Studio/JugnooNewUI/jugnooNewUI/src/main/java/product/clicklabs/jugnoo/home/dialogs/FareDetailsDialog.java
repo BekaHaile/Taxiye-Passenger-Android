@@ -116,9 +116,9 @@ public class FareDetailsDialog {
 			}
 
 			if(region.getRideType() == RideTypeValue.POOL.getOrdinal()
-					&& !"".equalsIgnoreCase(Data.userData.getBaseFarePoolText())){
+					&& !"".equalsIgnoreCase(Data.autoData.getBaseFarePoolText())){
 				textViewPoolMessage.setVisibility(View.VISIBLE);
-				textViewPoolMessage.setText(Data.userData.getBaseFarePoolText());
+				textViewPoolMessage.setText(Data.autoData.getBaseFarePoolText());
 			} else{
 				textViewPoolMessage.setVisibility(View.GONE);
 			}

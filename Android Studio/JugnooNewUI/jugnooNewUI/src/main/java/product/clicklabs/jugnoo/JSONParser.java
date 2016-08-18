@@ -20,6 +20,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -202,21 +203,12 @@ public class JSONParser implements Constants {
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
-        String destinationHelpText = userData.optString("destination_help_text", "");
-        String rideSummaryBadText = userData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
-        String cancellationChargesPopupTextLine1 = userData.optString("cancellation_charges_popup_text_line1", "");
-        String cancellationChargesPopupTextLine2 = userData.optString("cancellation_charges_popup_text_line2", "");
-        String inRideSendInviteTextBold = userData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
-        String inRideSendInviteTextNormal = userData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
+
+
+
         String fatafatUrlLink = userData.optString("fatafat_url_link", "");
-        String confirmScreenFareEstimateEnable = userData.optString("confirm_screen_fare_estimate_enabled", "0");
-        String poolDestinationPopupText1 = userData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
-        String poolDestinationPopupText2 = userData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
-        String poolDestinationPopupText3 = userData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
-        int inviteFriendButton = userData.optInt("invite_friend_button", 0);
-        int rideEndGoodFeedbackViewType = userData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-        String rideEndGoodFeedbackText = userData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
-        String baseFarePoolText = userData.optString("base_fare_pool_text", "");
+
+
         int notificationPreferenceEnabled = userData.optInt(KEY_NOTIFICATION_PREFERENCE_ENABLED, 0);
 
         try {
@@ -251,7 +243,7 @@ public class JSONParser implements Constants {
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
 
-        Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, userData.optInt(KEY_SHOW_POKEMON_DATA, 0));
+
 
         UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
@@ -263,18 +255,42 @@ public class JSONParser implements Constants {
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
-                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled, destinationHelpText,
-                cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText,
-                inRideSendInviteTextBold, inRideSendInviteTextNormal, fatafatUrlLink, confirmScreenFareEstimateEnable,
-                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
-                inviteFriendButton, rideEndGoodFeedbackViewType, rideEndGoodFeedbackText, baseFarePoolText,
-                paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled);
+                city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
+                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled);
+
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, userDataObj);
 
         return userDataObj;
+    }
+
+    public AutoData parseAutoData(Context context, JSONObject autoData) throws Exception{
+
+        String destinationHelpText = autoData.optString("destination_help_text", "");
+        String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
+        String cancellationChargesPopupTextLine1 = autoData.optString("cancellation_charges_popup_text_line1", "");
+        String cancellationChargesPopupTextLine2 = autoData.optString("cancellation_charges_popup_text_line2", "");
+        String inRideSendInviteTextBold = autoData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
+        String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
+        String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
+        String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
+        String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
+        String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
+        int inviteFriendButton = autoData.optInt("invite_friend_button", 0);
+        int rideEndGoodFeedbackViewType = autoData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+        String rideEndGoodFeedbackText = autoData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+        String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
+
+        Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
+
+        AutoData autoDataObj = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
+                , cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, inviteFriendButton, rideEndGoodFeedbackViewType,
+                rideEndGoodFeedbackText, baseFarePoolText);
+
+        return autoDataObj;
     }
 
 
@@ -284,9 +300,11 @@ public class JSONParser implements Constants {
         JSONObject jObj = new JSONObject(response);
 
         //Fetching login data
-        JSONObject jLoginObject = jObj.getJSONObject("login");
+        JSONObject jLoginObject = jObj.getJSONObject("user_data");
+        JSONObject jAutosObject = jObj.getJSONObject("autos");
 
         Data.userData = parseUserData(context, jLoginObject);
+        Data.autoData = parseAutoData(context, jAutosObject);
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
@@ -300,15 +318,15 @@ public class JSONParser implements Constants {
         parseFindDriverResp(loginResponse);
         parsePromoCoupons(loginResponse);
         Data.menuInfoList = new ArrayList<>();
-        Data.menuInfoList.addAll(loginResponse.getLogin().getMenuInfoList());
+        Data.menuInfoList.addAll(loginResponse.getUserData().getMenuInfoList());
 
-		if(loginResponse.getLogin().getSupportNumber() != null){
-			Config.saveSupportNumber(context, loginResponse.getLogin().getSupportNumber());
+		if(loginResponse.getUserData().getSupportNumber() != null){
+			Config.saveSupportNumber(context, loginResponse.getUserData().getSupportNumber());
 		}
 
         //Fetching user current status
-        JSONObject jUserStatusObject = jObj.getJSONObject(KEY_STATUS);
-        String resp = parseCurrentUserStatus(context, loginResponse.getLogin().getCurrentUserStatus(), jUserStatusObject);
+        JSONObject jUserStatusObject = jObj.getJSONObject("autos").getJSONObject(KEY_STATUS);
+        String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
 
         parseCancellationReasons(loginResponse);
         parseFeedbackReasonArrayList(loginResponse);
@@ -390,34 +408,34 @@ public class JSONParser implements Constants {
     private void parseFindDriverResp(LoginResponse loginResponse){
         try {
             //current_user_status = 1 driver or 2 user
-            parseDriversToShow(loginResponse.getDrivers());
+            parseDriversToShow(loginResponse.getAutos().getDrivers());
 
             Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
-            if (loginResponse.getLogin().getPriorityTipCategory() != null) {
-				Data.priorityTipCategory = loginResponse.getLogin().getPriorityTipCategory();
+            if (loginResponse.getAutos().getPriorityTipCategory() != null) {
+				Data.priorityTipCategory = loginResponse.getAutos().getPriorityTipCategory();
 			}
-            if(loginResponse.getLogin().getFareFactor() != null) {
-                Data.userData.fareFactor = loginResponse.getLogin().getFareFactor();
+            if(loginResponse.getAutos().getFareFactor() != null) {
+                Data.userData.fareFactor = loginResponse.getAutos().getFareFactor();
             }
-            if(loginResponse.getLogin().getDriverFareFactor() != null) {
-                Data.userData.setDriverFareFactor(loginResponse.getLogin().getDriverFareFactor());
+            if(loginResponse.getAutos().getDriverFareFactor() != null) {
+                Data.userData.setDriverFareFactor(loginResponse.getAutos().getDriverFareFactor());
             } else{
                 Data.userData.setDriverFareFactor(1);
             }
-            if (loginResponse.getLogin().getFarAwayCity() == null) {
+            if (loginResponse.getAutos().getFarAwayCity() == null) {
 				Data.farAwayCity = "";
 			} else {
-				Data.farAwayCity = loginResponse.getLogin().getFarAwayCity();
+				Data.farAwayCity = loginResponse.getAutos().getFarAwayCity();
 			}
 
-            if (loginResponse.getLogin().getFreshAvailable() == null) {
+            if (loginResponse.getAutos().getFreshAvailable() == null) {
                 Data.freshAvailable = 0;
             } else {
-                Data.freshAvailable = loginResponse.getLogin().getFreshAvailable();
+                Data.freshAvailable = loginResponse.getAutos().getFreshAvailable();
             }
-            Data.campaigns = loginResponse.getLogin().getCampaigns();
+            Data.campaigns = loginResponse.getAutos().getCampaigns();
 
-            if(loginResponse.getLogin().getCityId() != null){
+            if(loginResponse.getUserData().getCityId() != null){
                 Data.currentCity = loginResponse.getLogin().getCityId();
             }
         } catch (Exception e) {
@@ -432,9 +450,9 @@ public class JSONParser implements Constants {
             } else{
                 Data.regions.clear();
             }
-            if(loginResponse.getLogin().getRegions() != null) {
+            if(loginResponse.getAutos().getRegions() != null) {
                 HomeUtil homeUtil = new HomeUtil();
-                for (Region region : loginResponse.getLogin().getRegions()) {
+                for (Region region : loginResponse.getAutos().getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
                     Data.regions.add(region);
@@ -449,8 +467,8 @@ public class JSONParser implements Constants {
             } else{
                 Data.promoCoupons.clear();
             }
-            if(loginResponse.getLogin().getCoupons() != null) {
-                for (Coupon coupon : loginResponse.getLogin().getCoupons()) {
+            if(loginResponse.getUserData().getCoupons() != null) {
+                for (Coupon coupon : loginResponse.getUserData().getCoupons()) {
                     Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
                             coupon.getCouponType(),
                             coupon.getStatus(),
@@ -462,17 +480,17 @@ public class JSONParser implements Constants {
                             coupon.getExpiryDate(), "", ""));
                 }
             }
-            if(loginResponse.getLogin().getPromotions() != null) {
-                for (Promotion promotion : loginResponse.getLogin().getPromotions()) {
+            if(loginResponse.getUserData().getPromotions() != null) {
+                for (Promotion promotion : loginResponse.getUserData().getPromotions()) {
                     Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
                             promotion.getTitle(),
                             promotion.getTermsNConds()));
                 }
             }
 
-            if(loginResponse.getLogin().getFareStructure() != null) {
+            if(loginResponse.getAutos().getFareStructure() != null) {
                 Data.fareStructure = null;
-                for (FareStructure fareStructure : loginResponse.getLogin().getFareStructure()) {
+                for (FareStructure fareStructure : loginResponse.getAutos().getFareStructure()) {
                     String startTime = fareStructure.getStartTime();
                     String endTime = fareStructure.getEndTime();
                     String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);

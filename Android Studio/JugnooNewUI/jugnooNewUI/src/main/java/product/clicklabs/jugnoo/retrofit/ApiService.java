@@ -86,8 +86,18 @@ public interface ApiService {
                    Callback<LoginResponse> callback);
 
     @FormUrlEncoded
+    @POST("/v3/customer/login_using_access_token")
+    void loginUsingAccessTokenV3(@FieldMap Map<String, String> params,
+                               Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
     @POST("/v2/customer/login_using_email_or_phone_no")
     void loginUsingEmailOrPhoneNo(@FieldMap Map<String, String> params,
+                                  Callback<LoginResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/v3/customer/login_using_email_or_phone_no")
+    void loginUsingEmailOrPhoneNoV3(@FieldMap Map<String, String> params,
                                   Callback<LoginResponse> callback);
 
     @FormUrlEncoded

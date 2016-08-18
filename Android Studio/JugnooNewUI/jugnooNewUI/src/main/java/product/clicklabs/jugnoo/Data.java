@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -138,6 +139,7 @@ public class Data {
 	
 	
 	public static UserData userData;
+	public static AutoData autoData;
     public static ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	
 	public static LocationFetcher locationFetcher;

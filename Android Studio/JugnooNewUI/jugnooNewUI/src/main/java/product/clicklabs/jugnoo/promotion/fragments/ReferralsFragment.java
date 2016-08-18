@@ -140,7 +140,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 		});
 
 		try {
-			if(Data.userData.getInviteFriendButton() == 1){
+			if(Data.autoData.getInviteFriendButton() == 1){
                 buttonInvite.setVisibility(View.VISIBLE);
             } else{
                 buttonInvite.setVisibility(View.GONE);

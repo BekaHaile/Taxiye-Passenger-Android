@@ -102,7 +102,7 @@ public class ReferralsFragment extends Fragment implements Constants, FlurryEven
         imageViewEmail = (ImageView) rootView.findViewById(R.id.imageViewEmail);
 
         try {
-            if(Data.userData.getInviteFriendButton() == 1){
+            if(Data.autoData.getInviteFriendButton() == 1){
                 buttonInvite.setVisibility(View.VISIBLE);
             } else{
                 buttonInvite.setVisibility(View.GONE);

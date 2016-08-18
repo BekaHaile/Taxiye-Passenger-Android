@@ -111,6 +111,12 @@ public class LoginResponse {
 	@SerializedName("referral_sharing_message")
 	@Expose
 	private String referralSharingMessage;
+	@SerializedName("autos")
+	@Expose
+	private Autos autos;
+	@SerializedName("user_data")
+	@Expose
+	private UserData userData;
 
 	/**
 	 * @return The flag
@@ -306,6 +312,22 @@ public class LoginResponse {
 	 */
 	public void setReferralSharingMessage(String referralSharingMessage) {
 		this.referralSharingMessage = referralSharingMessage;
+	}
+
+	public Autos getAutos() {
+		return autos;
+	}
+
+	public void setAutos(Autos autos) {
+		this.autos = autos;
+	}
+
+	public UserData getUserData() {
+		return userData;
+	}
+
+	public void setUserData(UserData userData) {
+		this.userData = userData;
 	}
 
 	public class Login {
@@ -508,4 +530,177 @@ public class LoginResponse {
             this.cityId = cityId;
         }
     }
+
+	public class Autos{
+		@SerializedName("drivers")
+		@Expose
+		private List<Driver> drivers = new ArrayList<>();
+		@SerializedName("regions")
+		@Expose
+		private List<Region> regions = new ArrayList<>();
+
+		@SerializedName("priority_tip_category")
+		@Expose
+		private Integer priorityTipCategory;
+		@SerializedName("fare_factor")
+		@Expose
+		private Double fareFactor;
+		@SerializedName("driver_fare_factor")
+		@Expose
+		private Double driverFareFactor;
+		@SerializedName("far_away_city")
+		@Expose
+		private String farAwayCity;
+		@SerializedName("campaigns")
+		@Expose
+		private Campaigns campaigns;
+		@SerializedName("fresh_available")
+		@Expose
+		private Integer freshAvailable;
+		@SerializedName("fare_structure")
+		@Expose
+		private List<FareStructure> fareStructure = new ArrayList<>();
+		@SerializedName("current_user_status")
+		@Expose
+		private Integer currentUserStatus;
+
+		public List<Driver> getDrivers() {
+			return drivers;
+		}
+
+		public void setDrivers(List<Driver> drivers) {
+			this.drivers = drivers;
+		}
+
+		public List<Region> getRegions() {
+			return regions;
+		}
+
+		public void setRegions(List<Region> regions) {
+			this.regions = regions;
+		}
+
+		public Integer getPriorityTipCategory() {
+			return priorityTipCategory;
+		}
+
+		public void setPriorityTipCategory(Integer priorityTipCategory) {
+			this.priorityTipCategory = priorityTipCategory;
+		}
+
+		public Double getFareFactor() {
+			return fareFactor;
+		}
+
+		public void setFareFactor(Double fareFactor) {
+			this.fareFactor = fareFactor;
+		}
+
+		public Double getDriverFareFactor() {
+			return driverFareFactor;
+		}
+
+		public void setDriverFareFactor(Double driverFareFactor) {
+			this.driverFareFactor = driverFareFactor;
+		}
+
+		public String getFarAwayCity() {
+			return farAwayCity;
+		}
+
+		public void setFarAwayCity(String farAwayCity) {
+			this.farAwayCity = farAwayCity;
+		}
+
+		public Campaigns getCampaigns() {
+			return campaigns;
+		}
+
+		public void setCampaigns(Campaigns campaigns) {
+			this.campaigns = campaigns;
+		}
+
+		public Integer getFreshAvailable() {
+			return freshAvailable;
+		}
+
+		public void setFreshAvailable(Integer freshAvailable) {
+			this.freshAvailable = freshAvailable;
+		}
+
+		public List<FareStructure> getFareStructure() {
+			return fareStructure;
+		}
+
+		public void setFareStructure(List<FareStructure> fareStructure) {
+			this.fareStructure = fareStructure;
+		}
+
+		public Integer getCurrentUserStatus() {
+			return currentUserStatus;
+		}
+
+		public void setCurrentUserStatus(Integer currentUserStatus) {
+			this.currentUserStatus = currentUserStatus;
+		}
+	}
+
+	public class UserData{
+		@SerializedName("menu")
+		@Expose
+		private List<MenuInfo> menuInfoList;
+		@SerializedName("promotions")
+		@Expose
+		private List<Promotion> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<Coupon> coupons = new ArrayList<>();
+		@SerializedName("city_id")
+		@Expose
+		private Integer cityId;
+		@SerializedName("support_number")
+		@Expose
+		private String supportNumber;
+
+		public List<MenuInfo> getMenuInfoList() {
+			return menuInfoList;
+		}
+
+		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
+			this.menuInfoList = menuInfoList;
+		}
+
+		public List<Promotion> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<Promotion> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<Coupon> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<Coupon> coupons) {
+			this.coupons = coupons;
+		}
+
+		public Integer getCityId() {
+			return cityId;
+		}
+
+		public void setCityId(Integer cityId) {
+			this.cityId = cityId;
+		}
+
+		public String getSupportNumber() {
+			return supportNumber;
+		}
+
+		public void setSupportNumber(String supportNumber) {
+			this.supportNumber = supportNumber;
+		}
+	}
+
 }

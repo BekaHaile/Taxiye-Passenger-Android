@@ -67,6 +67,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
@@ -437,6 +439,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
     private Bundle bundle;
 
+    private FloatingActionMenu menuLabelsRight;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+    private FloatingActionButton fab3;
+    private FloatingActionButton fab4;
+    private View fabExtra;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -754,9 +763,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         if(Data.userData != null){
-            textViewSendInvites.setText(Data.userData.getInRideSendInviteTextBold());
-            textViewSendInvites2.setText(Data.userData.getInRideSendInviteTextNormal());
-            if(Data.userData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
+            textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBold());
+            textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormal());
+            if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
                 textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
             } else{
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
@@ -770,6 +779,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
+        menuLabelsRight = (FloatingActionMenu) findViewById(R.id.menu_labels_right);
+        menuLabelsRight.setIconAnimated(false);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab4 = (FloatingActionButton) findViewById(R.id.fab4);
+        fabExtra = (View) findViewById(R.id.fabExtra);
+        //fabExtra.setVisibility(View.GONE);
+
+        fab1.setOnClickListener(clickListener);
+        fab2.setOnClickListener(clickListener);
+        fab3.setOnClickListener(clickListener);
+        fab4.setOnClickListener(clickListener);
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -1167,7 +1189,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             public void onNo() {
 
                             }
-                        }).showCancellationChargesDialog(Data.userData.getCancellationChargesPopupTextLine1(), Data.userData.getCancellationChargesPopupTextLine2());
+                        }).showCancellationChargesDialog(Data.autoData.getCancellationChargesPopupTextLine1(), Data.autoData.getCancellationChargesPopupTextLine2());
                     } else {
                         startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1470,15 +1492,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.cEngagementId, Data.cDriverId,
                             rating, "", "");
                     if(Data.userData != null){
-                        if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
+                        if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
                             endRideWithImages(R.drawable.ride_end_image_1);
-                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
+                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
                             endRideWithImages(R.drawable.ride_end_image_2);
-                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
+                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
                             endRideWithImages(R.drawable.ride_end_image_3);
-                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
+                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
                             endRideWithImages(R.drawable.ride_end_image_4);
-                        } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
                             endRideWithGif();
                         }
                     }
@@ -1744,7 +1766,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             startUIAfterGettingUserStatus();
 
-            if(Data.userData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
+            if(Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
                 textViewCancellation.setVisibility(View.GONE);
             }
 
@@ -1798,7 +1820,61 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        menuLabelsRight.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
+            @Override
+            public void onMenuToggle(boolean opened) {
+                String text;
+                if (opened) {
+                    text = "Menu opened";
+                    fabExtra.setVisibility(View.VISIBLE);
+                } else {
+                    text = "Menu closed";
+                    fabExtra.setVisibility(View.GONE);
+                }
+                //Toast.makeText(FreshActivity.this, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        fabExtra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(menuLabelsRight.isOpened()){
+                    menuLabelsRight.close(true);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fabExtra.setVisibility(View.GONE);
+                        }
+                    }, 300);
+                }else{
+                    //menuLabelsRight.open(true);
+                    //fabExtra.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    Toast.makeText(HomeActivity.this, "fab1", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.fab2:
+                    Toast.makeText(HomeActivity.this, "fab2", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.fab3:
+                    Toast.makeText(HomeActivity.this, "fab3", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.fab4:
+                    Toast.makeText(HomeActivity.this, "fab4", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     private void endRideWithGif(){
         relativeLayoutGreat.setVisibility(View.VISIBLE);
@@ -2438,7 +2514,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             updateInRideAddMoneyToWalletButtonText();
             setPaymentOptionInRide();
-            textViewRideEndWithImage.setText(Data.userData.getRideEndGoodFeedbackText());
+            textViewRideEndWithImage.setText(Data.autoData.getRideEndGoodFeedbackText());
 
             slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
         } catch (Exception e) {
@@ -3327,8 +3403,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     relativeLayoutAssigningDropLocationClick.clearAnimation();
-                                    if(Data.userData != null && (!Data.userData.getDestinationHelpText().equalsIgnoreCase(""))){
-                                        textViewDestHelp.setText(Data.userData.getDestinationHelpText());
+                                    if(Data.userData != null && (!Data.autoData.getDestinationHelpText().equalsIgnoreCase(""))){
+                                        textViewDestHelp.setText(Data.autoData.getDestinationHelpText());
                                         relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
                                     }
                                 }
@@ -7523,14 +7599,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-                                    if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                                    if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 submitFeedbackToInitial(givenRating);
                                             }
                                         }, 3000);
-                                    } else if(Data.userData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
+                                    } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             || givenRating == 1) {
                                         submitFeedbackToInitial(givenRating);
                                     }
@@ -8318,7 +8394,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 padding = padding + 80f;
             } else{
                 relativeLayoutTotalFare.setVisibility(View.GONE);
-                if(Data.userData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
+                if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
                     textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
                     padding = padding + 80f;
                 } else{

@@ -14,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sabkuchfresh.home.FreshActivity;
-
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -119,7 +117,7 @@ public class TopBar implements FirebaseEvents {
                     break;
 
                 case R.id.imageViewMenu:
-                    activity.startActivity(new Intent(activity, FreshActivity.class));
+                    //activity.startActivity(new Intent(activity, FreshActivity.class));
                     drawerLayout.openDrawer(GravityCompat.START);
                     FlurryEventLogger.event(FlurryEventNames.MENU_LOOKUP);
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
