@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -52,6 +51,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -528,7 +528,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                 params.put("language", Locale.getDefault().getCountry());
                 params.put("sensor", "false");
 
-                RestClient.getGoogleRestClient().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+                RestClient.getGoogleApiServices().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
                     @Override
                     public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
 //                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.retrofit;
 
 import com.jakewharton.retrofit.Ok3Client;
+import com.sabkuchfresh.apis.FreshApiService;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -21,10 +22,12 @@ import retrofit.RetrofitError;
 public class RestClient {
     private static ApiService API_SERVICES = null;
     private static GoogleAPIServices GOOGLE_API_SERVICES = null;
+    private static FreshApiService FRESH_API_SERVICE = null;
 
     static {
         setupRestClient();
         setupGoogleAPIRestClient();
+        setupFreshApiRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(){
@@ -88,6 +91,7 @@ public class RestClient {
 
     public static void clearRestClient(){
         API_SERVICES = null;
+        FRESH_API_SERVICE = null;
     }
 
 
@@ -132,6 +136,31 @@ public class RestClient {
 
     public static GoogleAPIServices getGoogleApiServices() {
         return GOOGLE_API_SERVICES;
+    }
+
+
+
+    public static void setupFreshApiRestClient() {
+        if(FRESH_API_SERVICE == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
+
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getFreshServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+
+            RestAdapter restAdapter = builder.build();
+            FRESH_API_SERVICE = restAdapter.create(FreshApiService.class);
+        }
+    }
+
+    public static FreshApiService getFreshApiService() {
+        return FRESH_API_SERVICE;
     }
 
 }

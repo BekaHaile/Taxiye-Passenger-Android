@@ -17,12 +17,8 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.HomeUtil;
 import com.sabkuchfresh.home.SupportActivity;
-import com.sabkuchfresh.retrofit.RestClient;
-import com.sabkuchfresh.retrofit.model.SettleUserDebt;
 import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -32,8 +28,12 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
