@@ -26,15 +26,15 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
-import product.clicklabs.jugnoo.utils.Fonts;
 import com.sabkuchfresh.utils.Utils;
-import com.sabkuchfresh.widgets.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 
 
 @SuppressLint("ValidFragment")

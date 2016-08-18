@@ -38,7 +38,6 @@ import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.RestClient;
 import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.widgets.NonScrollListView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -58,6 +57,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import retrofit.Callback;
 import retrofit.RetrofitError;
