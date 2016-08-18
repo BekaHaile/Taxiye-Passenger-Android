@@ -51,7 +51,7 @@ public class UserData {
 	private int mobikwikEnabled;
 	private double mobikwikBalance = -1;
 
-	private int notificationPreferenceEnabled = 0;
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled;
 
 	private FatafatUserData fatafatUserData;
 
@@ -69,7 +69,7 @@ public class UserData {
 					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled){
+					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,int mealsEnabled, int freshEnabled, int deliveryEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -135,6 +135,9 @@ public class UserData {
 
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
+		this.mealsEnabled = mealsEnabled;
+		this.freshEnabled = freshEnabled;
+		this.deliveryEnabled = deliveryEnabled;
 	}
 
 	private void checkUserImage(){
@@ -547,5 +550,29 @@ public class UserData {
 
 	public void setFatafatUserData(FatafatUserData fatafatUserData) {
 		this.fatafatUserData = fatafatUserData;
+	}
+
+	public int getMealsEnabled() {
+		return mealsEnabled;
+	}
+
+	public void setMealsEnabled(int mealsEnabled) {
+		this.mealsEnabled = mealsEnabled;
+	}
+
+	public int getFreshEnabled() {
+		return freshEnabled;
+	}
+
+	public void setFreshEnabled(int freshEnabled) {
+		this.freshEnabled = freshEnabled;
+	}
+
+	public int getDeliveryEnabled() {
+		return deliveryEnabled;
+	}
+
+	public void setDeliveryEnabled(int deliveryEnabled) {
+		this.deliveryEnabled = deliveryEnabled;
 	}
 }

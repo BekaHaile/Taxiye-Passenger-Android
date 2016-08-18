@@ -661,6 +661,15 @@ public class LoginResponse {
 		@SerializedName("support_number")
 		@Expose
 		private String supportNumber;
+		@SerializedName("meals_enabled")
+		@Expose
+		private Integer mealsEnabled;
+		@SerializedName("fresh_enabled")
+		@Expose
+		private Integer freshEnabled;
+		@SerializedName("delivery_enabled")
+		@Expose
+		private Integer deliveryEnabled;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -700,6 +709,30 @@ public class LoginResponse {
 
 		public void setSupportNumber(String supportNumber) {
 			this.supportNumber = supportNumber;
+		}
+
+		public Integer getMealsEnabled() {
+			return mealsEnabled;
+		}
+
+		public void setMealsEnabled(Integer mealsEnabled) {
+			this.mealsEnabled = mealsEnabled;
+		}
+
+		public Integer getFreshEnabled() {
+			return freshEnabled;
+		}
+
+		public void setFreshEnabled(Integer freshEnabled) {
+			this.freshEnabled = freshEnabled;
+		}
+
+		public Integer getDeliveryEnabled() {
+			return deliveryEnabled;
+		}
+
+		public void setDeliveryEnabled(Integer deliveryEnabled) {
+			this.deliveryEnabled = deliveryEnabled;
 		}
 	}
 

@@ -242,6 +242,9 @@ public class JSONParser implements Constants {
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
+        int mealsEnabled = userData.optInt("meals_enabled", 0);
+        int freshEnabled = userData.optInt("fresh_enabled", 0);
+        int deliveryEnabled = userData.optInt("delivery_enabled", 0);
 
 
 
@@ -256,7 +259,7 @@ public class JSONParser implements Constants {
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
-                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled);
+                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled, mealsEnabled, freshEnabled, deliveryEnabled);
 
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);

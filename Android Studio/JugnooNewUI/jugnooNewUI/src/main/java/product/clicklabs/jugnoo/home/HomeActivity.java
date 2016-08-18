@@ -439,11 +439,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
     private Bundle bundle;
 
+    private RelativeLayout relativeLayoutFAB;
     private FloatingActionMenu menuLabelsRight;
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
-    private FloatingActionButton fab3;
-    private FloatingActionButton fab4;
+    private FloatingActionButton fabDelivery;
+    private FloatingActionButton fabMeals;
+    private FloatingActionButton fabFresh;
+    private FloatingActionButton fabAutos;
     private View fabExtra;
 
     @Override
@@ -779,19 +780,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
+        relativeLayoutFAB = (RelativeLayout) findViewById(R.id.relativeLayoutFAB);
         menuLabelsRight = (FloatingActionMenu) findViewById(R.id.menu_labels_right);
         menuLabelsRight.setIconAnimated(false);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
-        fab4 = (FloatingActionButton) findViewById(R.id.fab4);
+        fabDelivery = (FloatingActionButton) findViewById(R.id.fabDelivery);
+        fabMeals = (FloatingActionButton) findViewById(R.id.fabMeals);
+        fabFresh = (FloatingActionButton) findViewById(R.id.fabFresh);
+        fabAutos = (FloatingActionButton) findViewById(R.id.fabAutos);
         fabExtra = (View) findViewById(R.id.fabExtra);
         //fabExtra.setVisibility(View.GONE);
 
-        fab1.setOnClickListener(clickListener);
-        fab2.setOnClickListener(clickListener);
-        fab3.setOnClickListener(clickListener);
-        fab4.setOnClickListener(clickListener);
+        fabDelivery.setOnClickListener(clickListener);
+        fabMeals.setOnClickListener(clickListener);
+        fabFresh.setOnClickListener(clickListener);
+        fabAutos.setOnClickListener(clickListener);
+        setFABButtons();
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -1856,21 +1859,46 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
     }
 
+    private void setFABButtons(){
+        if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
+            relativeLayoutFAB.setVisibility(View.GONE);
+        } else {
+            relativeLayoutFAB.setVisibility(View.VISIBLE);
+            if (Data.userData.getFreshEnabled() == 1) {
+                fabFresh.setVisibility(View.VISIBLE);
+            } else {
+                fabFresh.setVisibility(View.GONE);
+            }
+
+            if (Data.userData.getMealsEnabled() == 1) {
+                fabMeals.setVisibility(View.VISIBLE);
+            } else {
+                fabMeals.setVisibility(View.GONE);
+            }
+
+            if (Data.userData.getDeliveryEnabled() == 1) {
+                fabDelivery.setVisibility(View.VISIBLE);
+            } else {
+                fabDelivery.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.fab1:
-                    Toast.makeText(HomeActivity.this, "fab1", Toast.LENGTH_SHORT).show();
+                case R.id.fabDelivery:
+                    Toast.makeText(HomeActivity.this, "Delivery", Toast.LENGTH_SHORT).show();
                     break;
-                case R.id.fab2:
-                    Toast.makeText(HomeActivity.this, "fab2", Toast.LENGTH_SHORT).show();
+                case R.id.fabMeals:
+                    Toast.makeText(HomeActivity.this, "Meals", Toast.LENGTH_SHORT).show();
                     break;
-                case R.id.fab3:
-                    Toast.makeText(HomeActivity.this, "fab3", Toast.LENGTH_SHORT).show();
+                case R.id.fabFresh:
+                    Toast.makeText(HomeActivity.this, "Fresh", Toast.LENGTH_SHORT).show();
                     break;
-                case R.id.fab4:
-                    Toast.makeText(HomeActivity.this, "fab4", Toast.LENGTH_SHORT).show();
+                case R.id.fabAutos:
+                    Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
