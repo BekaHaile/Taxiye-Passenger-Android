@@ -1476,7 +1476,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					DialogPopup.alertPopup(activity, "", error);
 					DialogPopup.dismissLoadingDialog();
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("user_data"), activity)) {
+					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject(KEY_USER_DATA), activity)) {
 						accessTokenDataParseAsync(activity, response, loginResponse);
 
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);

@@ -170,12 +170,6 @@ public class ApiFindADriver {
 				Data.farAwayCity = findADriverResponse.getFarAwayCity();
 			}
 
-			if (findADriverResponse.getFreshAvailable() == null) {
-				Data.freshAvailable = 0;
-			} else {
-				Data.freshAvailable = findADriverResponse.getFreshAvailable();
-			}
-
 			Data.campaigns = findADriverResponse.getCampaigns();
 
             if(findADriverResponse.getCityId() != null){

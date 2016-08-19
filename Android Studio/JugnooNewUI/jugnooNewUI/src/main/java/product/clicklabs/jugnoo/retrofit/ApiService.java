@@ -10,7 +10,6 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
@@ -48,11 +47,6 @@ public interface ApiService {
     @POST("/v2/customer/find_a_driver")
     void findADriverCall(@FieldMap Map<String, String> params,
                                        Callback<FindADriverResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/show_available_promotions")
-    void showAvailablePromotionsCall(@FieldMap Map<String, String> params,
-                         Callback<ShowPromotionsResponse> callback);
 
     @FormUrlEncoded
     @POST("/paytm/wallet/adjust_money")

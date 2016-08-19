@@ -227,11 +227,11 @@ public class TopBar implements FirebaseEvents {
 
     public void setupFreshUI() {
         try {
-            if (1 == Data.freshAvailable) {
-                imageViewAppToggle.setVisibility(View.VISIBLE);
-            } else {
+//            if (1 == Data.freshAvailable) {
+//                imageViewAppToggle.setVisibility(View.VISIBLE);
+//            } else {
                 imageViewAppToggle.setVisibility(View.GONE);
-            }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

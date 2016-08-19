@@ -175,7 +175,6 @@ public class Data {
 	public static ArrayList<MenuInfo> menuInfoList;
 	public static String farAwayCity = "";
 	public static int priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
-	public static int freshAvailable = 0;
 	public static Campaigns campaigns;
 
 	public static CancelOptionsList cancelOptionsList;
