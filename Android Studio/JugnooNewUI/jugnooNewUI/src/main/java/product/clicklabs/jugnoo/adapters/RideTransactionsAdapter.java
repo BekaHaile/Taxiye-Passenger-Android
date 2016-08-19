@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.RideInfo;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -26,14 +26,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final int TYPE_ITEM = 1;
     private Activity activity;
     private int rowLayout;
-    private ArrayList<RideInfo> rideInfosList;
+    private ArrayList<HistoryResponse.Datum> rideInfosList;
     private int totalRides;
     private Callback callback;
 
     private DecimalFormat decimalFormat = new DecimalFormat("#.#");
     private DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
 
-    public RideTransactionsAdapter(ArrayList<RideInfo> rideInfosList, Activity activity, int rowLayout, Callback callback,
+    public RideTransactionsAdapter(ArrayList<HistoryResponse.Datum> rideInfosList, Activity activity, int rowLayout, Callback callback,
                                    int totalRides) {
         this.rideInfosList = rideInfosList;
         this.activity = activity;
@@ -72,7 +72,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
         if(viewholder instanceof ViewHolder) {
-            RideInfo rideInfo = getItem(position);
+            HistoryResponse.Datum rideInfo = getItem(position);
             ViewHolder holder = (ViewHolder) viewholder;
             holder.relative.setTag(position);
             holder.relativeLayoutRateRide.setTag(position);
@@ -80,23 +80,23 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.textViewPickupAt.setVisibility(View.GONE);
             holder.textViewAmount.setVisibility(View.VISIBLE);
 
-            holder.textViewIdValue.setText("" + rideInfo.engagementId);
-            holder.textViewFromValue.setText(rideInfo.pickupAddress);
-            holder.textViewToValue.setText(rideInfo.dropAddress);
+            holder.textViewIdValue.setText("" + rideInfo.getEngagementId());
+            holder.textViewFromValue.setText(rideInfo.getPickupAddress());
+            holder.textViewToValue.setText(rideInfo.getDropAddress());
             holder.textViewDetails.setText("Details: ");
 
-            if (0 == rideInfo.isCancelledRide) {
-                if (rideInfo.rideTime == 1) {
-                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                            + decimalFormatNoDec.format(rideInfo.rideTime) + " minute, " + rideInfo.date);
+            if (0 == rideInfo.getIsCancelledRide()) {
+                if (rideInfo.getRideTime() == 1) {
+                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.getDistance()) + " km, "
+                            + decimalFormatNoDec.format(rideInfo.getRideTime()) + " minute, " + rideInfo.getDate());
                 } else {
-                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.distance) + " km, "
-                            + decimalFormatNoDec.format(rideInfo.rideTime) + " minutes, " + rideInfo.date);
+                    holder.textViewDetailsValue.setText(decimalFormat.format(rideInfo.getDistance()) + " km, "
+                            + decimalFormatNoDec.format(rideInfo.getRideTime()) + " minutes, " + rideInfo.getDate());
                 }
-                holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+                holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.getAmount())));
                 holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.theme_color));
 
-                if (1 != rideInfo.isRatedBefore) {
+                if (1 != rideInfo.getIsRatedBefore()) {
                     holder.relativeLayoutRateRide.setVisibility(View.VISIBLE);
                 } else {
                     holder.relativeLayoutRateRide.setVisibility(View.GONE);
@@ -105,8 +105,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewRideCancelled.setVisibility(View.GONE);
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
             } else {
-                holder.textViewDetailsValue.setText(rideInfo.date + ",");
-                holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.amount)));
+                holder.textViewDetailsValue.setText(rideInfo.getDate() + ",");
+                holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(rideInfo.getAmount())));
                 holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.red));
                 holder.relativeLayoutRateRide.setVisibility(View.GONE);
                 holder.linearLayoutRideReceipt.setVisibility(View.GONE);
@@ -178,7 +178,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
         return position == rideInfosList.size();
     }
 
-    private RideInfo getItem(int position){
+    private HistoryResponse.Datum getItem(int position){
         if(isPositionFooter(position)){
             return null;
         }
@@ -231,9 +231,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface Callback{
-        void onClick(int position, RideInfo rideInfo);
+        void onClick(int position, HistoryResponse.Datum rideInfo);
         void onShowMoreClick();
-        void onRateRideClick(int position, RideInfo rideInfo);
+        void onRateRideClick(int position, HistoryResponse.Datum rideInfo);
     }
 
 }
