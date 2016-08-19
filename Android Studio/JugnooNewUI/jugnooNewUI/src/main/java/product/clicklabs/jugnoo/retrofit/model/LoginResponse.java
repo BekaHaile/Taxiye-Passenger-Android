@@ -75,33 +75,6 @@ public class LoginResponse {
 	@SerializedName("drivers")
 	@Expose
 	private List<Driver> drivers = new ArrayList<>();
-	@SerializedName("referral_message")
-	@Expose
-	private String referralMessage;
-	@SerializedName("fb_share_caption")
-	@Expose
-	private String fbShareCaption;
-	@SerializedName("fb_share_description")
-	@Expose
-	private String fbShareDescription;
-	@SerializedName("referral_caption")
-	@Expose
-	private String referralCaption;
-	@SerializedName("referral_email_subject")
-	@Expose
-	private String referralEmailSubject;
-	@SerializedName("referral_popup_text")
-	@Expose
-	private String referralPopupText;
-	@SerializedName("invite_earn_short_msg")
-	@Expose
-	private String inviteEarnShortMsg;
-	@SerializedName("invite_earn_more_info")
-	@Expose
-	private String inviteEarnMoreInfo;
-	@SerializedName("referral_sharing_message")
-	@Expose
-	private String referralSharingMessage;
 	@SerializedName("autos")
 	@Expose
 	private Autos autos;
@@ -135,132 +108,6 @@ public class LoginResponse {
 	 */
 	public void setDrivers(List<Driver> drivers) {
 		this.drivers = drivers;
-	}
-
-	/**
-	 * @return The referralMessage
-	 */
-	public String getReferralMessage() {
-		return referralMessage;
-	}
-
-	/**
-	 * @param referralMessage The referral_message
-	 */
-	public void setReferralMessage(String referralMessage) {
-		this.referralMessage = referralMessage;
-	}
-
-	/**
-	 * @return The fbShareCaption
-	 */
-	public String getFbShareCaption() {
-		return fbShareCaption;
-	}
-
-	/**
-	 * @param fbShareCaption The fb_share_caption
-	 */
-	public void setFbShareCaption(String fbShareCaption) {
-		this.fbShareCaption = fbShareCaption;
-	}
-
-	/**
-	 * @return The fbShareDescription
-	 */
-	public String getFbShareDescription() {
-		return fbShareDescription;
-	}
-
-	/**
-	 * @param fbShareDescription The fb_share_description
-	 */
-	public void setFbShareDescription(String fbShareDescription) {
-		this.fbShareDescription = fbShareDescription;
-	}
-
-	/**
-	 * @return The referralCaption
-	 */
-	public String getReferralCaption() {
-		return referralCaption;
-	}
-
-	/**
-	 * @param referralCaption The referral_caption
-	 */
-	public void setReferralCaption(String referralCaption) {
-		this.referralCaption = referralCaption;
-	}
-
-	/**
-	 * @return The referralEmailSubject
-	 */
-	public String getReferralEmailSubject() {
-		return referralEmailSubject;
-	}
-
-	/**
-	 * @param referralEmailSubject The referral_email_subject
-	 */
-	public void setReferralEmailSubject(String referralEmailSubject) {
-		this.referralEmailSubject = referralEmailSubject;
-	}
-
-	/**
-	 * @return The referralPopupText
-	 */
-	public String getReferralPopupText() {
-		return referralPopupText;
-	}
-
-	/**
-	 * @param referralPopupText The referral_popup_text
-	 */
-	public void setReferralPopupText(String referralPopupText) {
-		this.referralPopupText = referralPopupText;
-	}
-
-	/**
-	 * @return The inviteEarnShortMsg
-	 */
-	public String getInviteEarnShortMsg() {
-		return inviteEarnShortMsg;
-	}
-
-	/**
-	 * @param inviteEarnShortMsg The invite_earn_short_msg
-	 */
-	public void setInviteEarnShortMsg(String inviteEarnShortMsg) {
-		this.inviteEarnShortMsg = inviteEarnShortMsg;
-	}
-
-	/**
-	 * @return The inviteEarnMoreInfo
-	 */
-	public String getInviteEarnMoreInfo() {
-		return inviteEarnMoreInfo;
-	}
-
-	/**
-	 * @param inviteEarnMoreInfo The invite_earn_more_info
-	 */
-	public void setInviteEarnMoreInfo(String inviteEarnMoreInfo) {
-		this.inviteEarnMoreInfo = inviteEarnMoreInfo;
-	}
-
-	/**
-	 * @return The referralSharingMessage
-	 */
-	public String getReferralSharingMessage() {
-		return referralSharingMessage;
-	}
-
-	/**
-	 * @param referralSharingMessage The referral_sharing_message
-	 */
-	public void setReferralSharingMessage(String referralSharingMessage) {
-		this.referralSharingMessage = referralSharingMessage;
 	}
 
 	public Autos getAutos() {
@@ -429,6 +276,33 @@ public class LoginResponse {
 		@SerializedName("delivery_enabled")
 		@Expose
 		private Integer deliveryEnabled;
+		@SerializedName("referral_message")
+		@Expose
+		private String referralMessage;
+		@SerializedName("fb_share_caption")
+		@Expose
+		private String fbShareCaption;
+		@SerializedName("fb_share_description")
+		@Expose
+		private String fbShareDescription;
+		@SerializedName("referral_caption")
+		@Expose
+		private String referralCaption;
+		@SerializedName("referral_email_subject")
+		@Expose
+		private String referralEmailSubject;
+		@SerializedName("referral_popup_text")
+		@Expose
+		private String referralPopupText;
+		@SerializedName("invite_earn_short_msg")
+		@Expose
+		private String inviteEarnShortMsg;
+		@SerializedName("invite_earn_more_info")
+		@Expose
+		private String inviteEarnMoreInfo;
+		@SerializedName("referral_sharing_message")
+		@Expose
+		private String referralSharingMessage;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -492,6 +366,78 @@ public class LoginResponse {
 
 		public void setDeliveryEnabled(Integer deliveryEnabled) {
 			this.deliveryEnabled = deliveryEnabled;
+		}
+
+		public String getReferralMessage() {
+			return referralMessage;
+		}
+
+		public void setReferralMessage(String referralMessage) {
+			this.referralMessage = referralMessage;
+		}
+
+		public String getFbShareCaption() {
+			return fbShareCaption;
+		}
+
+		public void setFbShareCaption(String fbShareCaption) {
+			this.fbShareCaption = fbShareCaption;
+		}
+
+		public String getFbShareDescription() {
+			return fbShareDescription;
+		}
+
+		public void setFbShareDescription(String fbShareDescription) {
+			this.fbShareDescription = fbShareDescription;
+		}
+
+		public String getReferralCaption() {
+			return referralCaption;
+		}
+
+		public void setReferralCaption(String referralCaption) {
+			this.referralCaption = referralCaption;
+		}
+
+		public String getReferralEmailSubject() {
+			return referralEmailSubject;
+		}
+
+		public void setReferralEmailSubject(String referralEmailSubject) {
+			this.referralEmailSubject = referralEmailSubject;
+		}
+
+		public String getReferralPopupText() {
+			return referralPopupText;
+		}
+
+		public void setReferralPopupText(String referralPopupText) {
+			this.referralPopupText = referralPopupText;
+		}
+
+		public String getInviteEarnShortMsg() {
+			return inviteEarnShortMsg;
+		}
+
+		public void setInviteEarnShortMsg(String inviteEarnShortMsg) {
+			this.inviteEarnShortMsg = inviteEarnShortMsg;
+		}
+
+		public String getInviteEarnMoreInfo() {
+			return inviteEarnMoreInfo;
+		}
+
+		public void setInviteEarnMoreInfo(String inviteEarnMoreInfo) {
+			this.inviteEarnMoreInfo = inviteEarnMoreInfo;
+		}
+
+		public String getReferralSharingMessage() {
+			return referralSharingMessage;
+		}
+
+		public void setReferralSharingMessage(String referralSharingMessage) {
+			this.referralSharingMessage = referralSharingMessage;
 		}
 	}
 

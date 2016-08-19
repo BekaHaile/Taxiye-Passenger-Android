@@ -195,7 +195,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     try {
                         if(Data.userData.numCouponsAvaliable > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
-                            holder.textViewValue.setText(String.valueOf(Data.promoCoupons.size()));
+                            holder.textViewValue.setText(String.valueOf(Data.userData.getPromoCoupons().size()));
                             holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
                             setLayoutParamsForValue(holder.textViewValue);
 						}

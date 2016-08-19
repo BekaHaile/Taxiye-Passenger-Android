@@ -155,10 +155,9 @@ public class SlidingBottomPanelV4 {
     public void update() {
         try {
             updatePannelHeight();
-            if (Data.promoCoupons != null) {
-                if (Data.promoCoupons.size() > 0) {
-//                    nudgeCouponsEvent();
-                    textViewOffersValue.setText(String.valueOf(Data.promoCoupons.size()));
+            if (Data.userData.getPromoCoupons() != null) {
+                if (Data.userData.getPromoCoupons().size() > 0) {
+                    textViewOffersValue.setText(String.valueOf(Data.userData.getPromoCoupons().size()));
                 } else {
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
                     textViewOffersValue.setText("-");
@@ -210,7 +209,7 @@ public class SlidingBottomPanelV4 {
 
     public void updateFareFactorUI(int supplyCount){
         if(supplyCount == 1) {
-            if (Data.userData.fareFactor > 1 || Data.userData.fareFactor < 1) {
+            if (Data.autoData.getFareFactor() > 1 || Data.autoData.getFareFactor() < 1) {
                 imageViewPriorityTip.setVisibility(View.VISIBLE);
             } else {
                 imageViewPriorityTip.setVisibility(View.GONE);

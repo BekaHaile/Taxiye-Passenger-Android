@@ -339,7 +339,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Data.userData = null;
 			Data.autoData = null;
-			Data.setFatafatData(null);
+			Data.setFreshData(null);
 
 			initializeServerURL(this);
 

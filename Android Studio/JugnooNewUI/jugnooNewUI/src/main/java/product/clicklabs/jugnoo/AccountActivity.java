@@ -660,7 +660,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 		reloadProfileAPI(this);
         textViewEmergencyContact.setText(getResources()
-                .getString(Data.emergencyContactsList != null && Data.emergencyContactsList.size() > 0 ?
+                .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
                         R.string.emergency_contacts : R.string.add_emergency_contacts));
 
 		scrollView.scrollTo(0, 0);

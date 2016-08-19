@@ -9,7 +9,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -137,7 +137,7 @@ public class ApiFindADriver {
 
 	public void parseFindADriverResponse(FindADriverResponse findADriverResponse){
 		try {
-			Data.driverInfos.clear();
+			Data.autoData.getDriverInfos().clear();
 			if(findADriverResponse.getDrivers() != null) {
 				for (Driver driver : findADriverResponse.getDrivers()) {
 					double bearing = 0;
@@ -145,24 +145,20 @@ public class ApiFindADriver {
 						bearing = driver.getBearing();
 					}
 					int vehicleType = driver.getVehicleType() == null ? Constants.VEHICLE_AUTO : driver.getVehicleType();
-					Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
+					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
 							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds()));
 				}
 			}
-			Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
-			if (findADriverResponse.getPriorityTipCategory() != null) {
-				Data.priorityTipCategory = findADriverResponse.getPriorityTipCategory();
+
+			Data.autoData.setFareFactor(1);
+			if(findADriverResponse.getFareFactor() != null) {
+				Data.autoData.setFareFactor(findADriverResponse.getFareFactor());
+			}
+			Data.autoData.setDriverFareFactor(1);
+			if(findADriverResponse.getDriverFareFactor() != null) {
+				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
 			}
 
-			Data.userData.fareFactor = 1d;
-			if(findADriverResponse.getFareFactor() != null) {
-				Data.userData.fareFactor = findADriverResponse.getFareFactor();
-			}
-			if(findADriverResponse.getDriverFareFactor() != null) {
-				Data.userData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
-			} else{
-				Data.userData.setDriverFareFactor(1);
-			}
 			Data.farAwayCity = "";
 			if (findADriverResponse.getFarAwayCity() == null) {
 				Data.farAwayCity = "";
@@ -170,10 +166,10 @@ public class ApiFindADriver {
 				Data.farAwayCity = findADriverResponse.getFarAwayCity();
 			}
 
-			Data.campaigns = findADriverResponse.getCampaigns();
+			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
 
             if(findADriverResponse.getCityId() != null){
-                Data.currentCity = findADriverResponse.getCityId();
+                Data.userData.setCurrentCity(findADriverResponse.getCityId());
             }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -198,14 +194,14 @@ public class ApiFindADriver {
 		}
 
 		try {
-			if(Data.promoCoupons == null){
-				Data.promoCoupons = new ArrayList<>();
+			if(Data.userData.getPromoCoupons() == null){
+				Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
 			} else{
-				Data.promoCoupons.clear();
+				Data.userData.getPromoCoupons().clear();
 			}
 			if(findADriverResponse.getCoupons() != null) {
 				for (Coupon coupon : findADriverResponse.getCoupons()) {
-					Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
+					Data.userData.getPromoCoupons().add(new CouponInfo(coupon.getAccountId(),
 							coupon.getCouponType(),
 							coupon.getStatus(),
 							coupon.getTitle(),
@@ -218,7 +214,7 @@ public class ApiFindADriver {
 			}
 			if(findADriverResponse.getPromotions() != null) {
 				for (Promotion promotion : findADriverResponse.getPromotions()) {
-					Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
+					Data.userData.getPromoCoupons().add(new PromotionInfo(promotion.getPromoId(),
 							promotion.getTitle(),
 							promotion.getTermsNConds()));
 				}

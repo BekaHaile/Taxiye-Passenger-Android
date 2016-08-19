@@ -250,9 +250,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updateOffersCount(){
         try {
-            if(Data.promoCoupons.size() > 0) {
-                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
-                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.promoCoupons.size());
+            if(Data.userData.getPromoCoupons().size() > 0) {
+                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getPromoCoupons().size());
+                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getPromoCoupons().size());
             } else{
                 textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
                 textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
@@ -438,7 +438,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void initSelectedCoupon(){
         try {
             if(selectedCoupon == null) {
-                if (Data.promoCoupons.size() > 0) {
+                if (Data.userData.getPromoCoupons().size() > 0) {
                     selectedCoupon = noSelectionCoupon;
                 } else {
                     selectedCoupon = new CouponInfo(0, "");
@@ -456,8 +456,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
-        if (position > -1 && position < Data.promoCoupons.size()) {
-            promoCoupon = Data.promoCoupons.get(position);
+        if (position > -1 && position < Data.userData.getPromoCoupons().size()) {
+            promoCoupon = Data.userData.getPromoCoupons().get(position);
         } else {
             promoCoupon = noSelectionCoupon;
         }
@@ -584,7 +584,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void setSurgeImageVisibility(){
         try {
             if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
-                    && Data.userData.fareFactor > 1.0
+                    && Data.autoData.getFareFactor() > 1.0
                     && Data.regions.size() == 1){
                 activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.VISIBLE);
             } else{

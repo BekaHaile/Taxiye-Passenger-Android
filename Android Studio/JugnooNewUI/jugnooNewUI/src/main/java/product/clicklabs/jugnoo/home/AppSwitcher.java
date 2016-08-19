@@ -31,7 +31,7 @@ public class AppSwitcher {
 
 		}
 		else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)){
-			if(Data.getFatafatData() == null){
+			if(Data.getFreshData() == null){
 				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
 						new ApiLoginUsingAccessToken.Callback() {
 							@Override

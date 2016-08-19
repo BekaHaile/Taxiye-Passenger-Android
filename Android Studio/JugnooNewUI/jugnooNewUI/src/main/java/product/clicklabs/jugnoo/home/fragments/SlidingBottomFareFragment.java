@@ -100,9 +100,9 @@ public class SlidingBottomFareFragment extends Fragment{
             }
 
 
-            if(Data.userData.fareFactor > 1.0){
+            if(Data.autoData.getFareFactor() > 1.0){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
-                textViewPriorityTipValue.setText(Data.userData.fareFactor+"X");
+                textViewPriorityTipValue.setText(Data.autoData.getFareFactor()+"X");
             } else{
                 relativeLayoutPriorityTip.setVisibility(View.GONE);
             }

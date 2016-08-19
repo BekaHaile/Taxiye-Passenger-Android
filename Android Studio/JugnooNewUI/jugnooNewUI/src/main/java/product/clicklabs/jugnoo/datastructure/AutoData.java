@@ -1,5 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.retrofit.model.Campaigns;
+
 /**
  * Created by gurmail on 18/08/16.
  */
@@ -15,6 +19,9 @@ public class AutoData {
     private int referAllStatusLogin;
     private String referAllTextLogin, referAllTitleLogin;
 
+    private ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
+    private double fareFactor, driverFareFactor;
+    private Campaigns campaigns;
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -193,5 +200,37 @@ public class AutoData {
 
     public void setReferAllTitleLogin(String referAllTitleLogin) {
         this.referAllTitleLogin = referAllTitleLogin;
+    }
+
+    public ArrayList<DriverInfo> getDriverInfos() {
+        return driverInfos;
+    }
+
+    public void setDriverInfos(ArrayList<DriverInfo> driverInfos) {
+        this.driverInfos = driverInfos;
+    }
+
+    public double getFareFactor() {
+        return fareFactor;
+    }
+
+    public void setFareFactor(double fareFactor) {
+        this.fareFactor = fareFactor;
+    }
+
+    public double getDriverFareFactor() {
+        return driverFareFactor;
+    }
+
+    public void setDriverFareFactor(double driverFareFactor) {
+        this.driverFareFactor = driverFareFactor;
+    }
+
+    public Campaigns getCampaigns() {
+        return campaigns;
+    }
+
+    public void setCampaigns(Campaigns campaigns) {
+        this.campaigns = campaigns;
     }
 }

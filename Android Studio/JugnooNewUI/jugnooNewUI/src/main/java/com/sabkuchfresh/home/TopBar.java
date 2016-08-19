@@ -90,7 +90,7 @@ public class TopBar implements FlurryEventNames {
 		}
 
         try {
-            if(Data.getFatafatData().stores.size()>1) {
+            if(Data.getFreshData().stores.size()>1) {
                 relativeLayoutNotification.setVisibility(View.GONE);
             } else {
                 relativeLayoutNotification.setVisibility(View.VISIBLE);

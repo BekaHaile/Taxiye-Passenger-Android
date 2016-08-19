@@ -91,8 +91,8 @@ public class EmergencyActivity extends BaseFragmentActivity {
     }
 
     public static void setEmergencyContactsAllowedToAdd(){
-        if(Data.emergencyContactsList != null){
-            EMERGENCY_CONTACTS_ALLOWED_TO_ADD = MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD - Data.emergencyContactsList.size();
+        if(Data.userData.getEmergencyContactsList() != null){
+            EMERGENCY_CONTACTS_ALLOWED_TO_ADD = MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD - Data.userData.getEmergencyContactsList().size();
             if(EMERGENCY_CONTACTS_ALLOWED_TO_ADD < 0){
                 EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 0;
             }

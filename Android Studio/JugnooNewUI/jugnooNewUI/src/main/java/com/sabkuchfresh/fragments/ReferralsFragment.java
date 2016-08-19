@@ -116,7 +116,7 @@
 //            public void onClick(View view) {
 //                try {
 //					FlurryEventLogger.event(REFER_SCREEN, INVITE, "Details");
-//                    DialogPopup.alertPopupWithListener(activity, "", ""+Data.getFatafatData().referralDescription, new View.OnClickListener() {
+//                    DialogPopup.alertPopupWithListener(activity, "", ""+Data.getFreshData().referralDescription, new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
 //
@@ -192,9 +192,9 @@
 //        try {
 //            textViewCode.setText(Data.userData.referralCode);
 //            //textViewDesc.setText(Data.userData.referralShortDesc);
-//            textViewDesc.setText(Data.getFatafatData().referralShortDesc+ "Details");
+//            textViewDesc.setText(Data.getFreshData().referralShortDesc+ "Details");
 //
-//            SpannableString ss = new SpannableString(Data.getFatafatData().referralShortDesc+" Details");
+//            SpannableString ss = new SpannableString(Data.getFreshData().referralShortDesc+" Details");
 //            ClickableSpan clickableSpan = new ClickableSpan() {
 //                @Override
 //                public void onClick(View textView) {
@@ -206,8 +206,8 @@
 //            textViewDesc.setText(ss);
 //            textViewDesc.setMovementMethod(LinkMovementMethod.getInstance());
 //
-//            if (!"".equalsIgnoreCase(Data.getFatafatData().referralBanner)) {
-//                Picasso.with(activity).load(Data.getFatafatData().referralBanner)
+//            if (!"".equalsIgnoreCase(Data.getFreshData().referralBanner)) {
+//                Picasso.with(activity).load(Data.getFreshData().referralBanner)
 //                        .placeholder(R.drawable.ic_promotions_friend_refer)
 //                        .error(R.drawable.ic_promotions_friend_refer)
 //                        .into(imageViewLogo);

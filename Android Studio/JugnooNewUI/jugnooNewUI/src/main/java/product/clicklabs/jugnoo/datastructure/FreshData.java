@@ -8,15 +8,15 @@ import java.util.ArrayList;
 /**
  * Created by shankar on 8/17/16.
  */
-public class FatafatData {
+public class FreshData {
 	public String question, orderId;
 	public int questionType;
 	public int pendingFeedback;
 	public ArrayList<Store> stores;
 	private PopupData popupData;
 
-	public FatafatData(String question, String orderId, int questionType, int pendingFeedback,
-					   ArrayList<Store> stores, PopupData popupData) {
+	public FreshData(String question, String orderId, int questionType, int pendingFeedback,
+					 ArrayList<Store> stores, PopupData popupData) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;

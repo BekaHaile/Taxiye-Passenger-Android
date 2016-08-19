@@ -434,7 +434,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                                     RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
                                 }
                                 try {
-                                    Data.driverInfos.clear();
+                                    Data.autoData.getDriverInfos().clear();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -471,7 +471,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 			params.put("access_token", Data.userData.accessToken);
 			params.put("engagement_id", engagementId);
 
-			try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+			try { Data.autoData.getDriverInfos().clear(); } catch (Exception e) { e.printStackTrace(); }
 
 			HomeActivity.feedbackSkipped = true;
 			HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0);
