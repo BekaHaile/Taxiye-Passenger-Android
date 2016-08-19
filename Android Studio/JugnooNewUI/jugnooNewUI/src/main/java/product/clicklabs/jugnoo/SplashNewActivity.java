@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -61,6 +59,7 @@ import java.util.Map;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.fabric.sdk.android.Fabric;
+import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -339,6 +338,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.locationSettingsNoPressed = false;
 
 			Data.userData = null;
+			Data.autoData = null;
+			Data.setFatafatData(null);
 
 			initializeServerURL(this);
 
@@ -1379,6 +1380,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
+	private ApiLoginUsingAccessToken apiLoginUsingAccessToken;
+	private ApiLoginUsingAccessToken getApiLoginUsingAccessToken(){
+		if(apiLoginUsingAccessToken == null){
+			apiLoginUsingAccessToken = new ApiLoginUsingAccessToken(this);
+		}
+		return apiLoginUsingAccessToken;
+	}
+
 	/**
 	 * ASync for access token login from server
 	 */
@@ -1386,69 +1395,28 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		if (!"".equalsIgnoreCase(pair.first)) {
 			String accessToken = pair.first;
-
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-
-				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
-
-				if (Data.locationFetcher != null) {
-					Data.loginLatitude = Data.locationFetcher.getLatitude();
-					Data.loginLongitude = Data.locationFetcher.getLongitude();
-				}
-
-				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", accessToken);
-				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-
-
-				params.put("latitude", "" + Data.loginLatitude);
-				params.put("longitude", "" + Data.loginLongitude);
-
-
-				params.put("app_version", "" + Data.appVersion);
-				params.put("device_type", Data.DEVICE_TYPE);
-				params.put("unique_device_id", Data.uniqueDeviceId);
-				params.put("client_id", Config.getAutosClientId());
-				params.put("is_access_token_new", "" + pair.second);
-
-				if (Utils.isDeviceRooted()) {
-					params.put("device_rooted", "1");
-				} else {
-					params.put("device_rooted", "0");
-				}
-
-				new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
-				String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
-				if(links != null){
-					if(!"[]".equalsIgnoreCase(links)) {
-						params.put(KEY_BRANCH_REFERRING_LINKS, links);
-					}
-				}
-				params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
-
-				Log.e("params login_using_access_token", "=" + params);
-
-				final long startTime = System.currentTimeMillis();
-				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<LoginResponse>() {
-					@Override
-					public void success(LoginResponse loginResponse, Response response) {
-
-						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
-						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-						Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
-						performLoginSuccess(activity, responseStr, loginResponse);
-					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e(TAG, "loginUsingAccessToken error="+error.toString());
-						performLoginFailure(activity);
-					}
-				});
-
-			} else {
-				changeUIState(State.SPLASH_NO_NET);
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
+			getApiLoginUsingAccessToken().hit(accessToken, Data.loginLatitude, Data.loginLongitude, null,
+					new ApiLoginUsingAccessToken.Callback() {
+				@Override
+				public void noNet() {
+					changeUIState(State.SPLASH_NO_NET);
+				}
+
+				@Override
+				public void success() {
+					loginDataFetched = true;
+				}
+
+				@Override
+				public void failure() {
+					loginDataFetched = false;
+				}
+			});
+
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 				changeUIState(State.SPLASH_LS);
@@ -1457,48 +1425,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				changeUIState(State.SPLASH_NO_NET);
 			}
 			sendToRegisterThroughSms(Data.deepLinkReferralCode);
-		}
-	}
-
-
-	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse) {
-		try {
-			JSONObject jObj = new JSONObject(response);
-
-			int flag = jObj.getInt("flag");
-
-			if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-				if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-					String error = jObj.getString("error");
-					DialogPopup.alertPopup(activity, "", error);
-					DialogPopup.dismissLoadingDialog();
-				} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-					String error = jObj.getString("error");
-					DialogPopup.alertPopup(activity, "", error);
-					DialogPopup.dismissLoadingDialog();
-				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-					if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-						accessTokenDataParseAsync(activity, response, loginResponse);
-
-						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-						Editor editor = pref1.edit();
-						editor.putString(Data.SP_ACCESS_TOKEN_KEY, "");
-						editor.commit();
-					} else {
-						DialogPopup.dismissLoadingDialog();
-					}
-				} else {
-					DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-					DialogPopup.dismissLoadingDialog();
-				}
-			} else {
-				DialogPopup.dismissLoadingDialog();
-			}
-
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-			DialogPopup.dismissLoadingDialog();
 		}
 	}
 
@@ -1575,32 +1501,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		} else {
 			changeUIState(State.SPLASH_NO_NET);
 		}
-	}
-
-	public void performLoginFailure(Activity activity) {
-		DialogPopup.dismissLoadingDialog();
-		DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
-		DialogPopup.dismissLoadingDialog();
-		changeUIState(State.SPLASH_NO_NET);
-	}
-
-	public void accessTokenDataParseAsync(Activity activity, String response, LoginResponse loginResponse){
-		String resp;
-		try {
-			resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS);
-			Log.e("AccessTokenDataParseAsync resp", "=" + resp);
-		} catch (Exception e) {
-			e.printStackTrace();
-			resp = Constants.SERVER_TIMEOUT;
-		}
-		if (resp.contains(Constants.SERVER_TIMEOUT)) {
-			loginDataFetched = false;
-			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-		} else {
-			loginDataFetched = true;
-		}
-		DialogPopup.dismissLoadingDialog();
-
 	}
 
 

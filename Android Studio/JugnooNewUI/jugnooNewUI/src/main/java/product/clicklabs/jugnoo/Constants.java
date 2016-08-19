@@ -354,5 +354,10 @@ public interface Constants {
 	String KEY_QUESTION = "question";
 	String KEY_QUESTION_TYPE = "question_type";
 	String KEY_PENDING_FEEDBACK = "pending_feedback";
+	String KEY_APP_VERSION = "app_version";
+	String KEY_DEVICE_TYPE = "device_type";
+	String KEY_UNIQUE_DEVICE_ID = "unique_device_id";
+	String KEY_DEVICE_ROOTED = "device_rooted";
+	String KEY_UPDATED_CLIENT_ID = "updated_client_id";
 
 }

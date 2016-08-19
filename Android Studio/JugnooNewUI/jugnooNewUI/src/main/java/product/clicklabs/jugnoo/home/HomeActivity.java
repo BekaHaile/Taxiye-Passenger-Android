@@ -1896,6 +1896,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
                 case R.id.fabFresh:
                     Toast.makeText(HomeActivity.this, "Fresh", Toast.LENGTH_SHORT).show();
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId());
                     break;
                 case R.id.fabAutos:
                     Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();
@@ -4257,7 +4258,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static void logoutIntent(Activity cont) {
         try {
             FacebookLoginHelper.logoutFacebook();
-            Data.userData = null;
+            Data.clearDataOnLogout(cont);
             Intent intent = new Intent(cont, SplashNewActivity.class);
             cont.startActivity(intent);
             cont.finish();

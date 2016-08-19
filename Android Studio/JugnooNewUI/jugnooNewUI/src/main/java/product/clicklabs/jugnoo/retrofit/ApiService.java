@@ -446,4 +446,9 @@ public interface ApiService {
     @POST("/update_push_preference")
     void updateNotificationPreference(@FieldMap Map<String, String> params,
                            Callback<NotificationInboxResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/update_client_id")
+    void updateClientId(@FieldMap Map<String, String> params,
+                        Callback<SettleUserDebt> callback);
 }

@@ -209,6 +209,8 @@ public class Data {
 			driverInfos = new ArrayList<DriverInfo>();
             emergencyContactsList = new ArrayList<>();
 			userData = null;
+			autoData = null;
+			fatafatData = null;
             endRideData = null;
             customerRateAppFlag = 0;
 			locationFetcher = null;

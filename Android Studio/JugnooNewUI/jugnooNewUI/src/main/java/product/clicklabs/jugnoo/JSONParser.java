@@ -263,7 +263,7 @@ public class JSONParser implements Constants {
         return userDataObj;
     }
 
-    public AutoData parseAutoData(Context context, JSONObject autoData) throws Exception{
+    public AutoData parseAutoData(Context context, JSONObject autoData, AutoData autoDataFallback) throws Exception{
         AutoData autoDataObj = null;
         try {
             String destinationHelpText = autoData.optString("destination_help_text", "");
@@ -300,10 +300,13 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if(autoDataObj == null){
+            autoDataObj = autoDataFallback;
+        }
         return autoDataObj;
     }
 
-    public FatafatData parseFatafatData(JSONObject jFatafatData){
+    public FatafatData parseFatafatData(JSONObject jFatafatData, FatafatData fatafatDataFallback){
         FatafatData fatafatData = null;
         try{
             String orderId = jFatafatData.optString(KEY_FEEDBACK_ORDER_ID, "");
@@ -354,6 +357,9 @@ public class JSONParser implements Constants {
         } catch (Exception e){
             e.printStackTrace();
         }
+        if(fatafatData == null){
+            fatafatData = fatafatDataFallback;
+        }
         return fatafatData;
     }
 
@@ -369,8 +375,8 @@ public class JSONParser implements Constants {
         JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
 
         Data.userData = parseUserData(context, jUserDataObject);
-        Data.autoData = parseAutoData(context, jAutosObject);
-        Data.setFatafatData(parseFatafatData(jFreshObject));
+        Data.autoData = parseAutoData(context, jAutosObject, Data.autoData);
+        Data.setFatafatData(parseFatafatData(jFreshObject, Data.getFatafatData()));
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
