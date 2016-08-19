@@ -3695,14 +3695,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 //******** If return 0 then show popup, contact not saved in database.
-                if (Data.userData.contactSaved == 0
+                if (Data.autoData.getReferAllStatus() == 0
                         && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
                         && dialogUploadContacts == null
                         && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.assignedDriverInfo.promoName)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-                            Data.userData.referAllTitle,
-                            Data.userData.referAllText,
+                            Data.autoData.getReferAllTitle(),
+                            Data.autoData.getReferAllText(),
                             getResources().getString(R.string.upload_contact_yes),
                             getResources().getString(R.string.upload_contact_no_thanks),
                             false,
@@ -3780,12 +3780,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             });
                 }
             } else if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                if (Data.userData.getReferAllStatusLogin() == 0
+                if (Data.autoData.getReferAllStatusLogin() == 0
                         && dialogUploadContacts == null) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-                            Data.userData.getReferAllTitleLogin(),
-                            Data.userData.getReferAllTextLogin(),
+                            Data.autoData.getReferAllTitleLogin(),
+                            Data.autoData.getReferAllTextLogin(),
                             getResources().getString(R.string.upload_contact_yes),
                             getResources().getString(R.string.upload_contact_no_thanks),
                             false,
@@ -3798,8 +3798,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+YES, bundle);
                                         //DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
-                                        Data.userData.contactSaved = 1;
-                                        Data.userData.setReferAllStatusLogin(1);
+                                        Data.autoData.setReferAllStatus(1);
+                                        Data.autoData.setReferAllStatusLogin(1);
                                         Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
                                         syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
                                         syncContactsIntent.putExtra("session_id", "");
@@ -3835,8 +3835,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "no thanks");
                                         bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+NO_THANKS, bundle);
-                                        Data.userData.contactSaved = 0;
-                                        Data.userData.setReferAllStatusLogin(-1);
+                                        Data.autoData.setReferAllStatus(0);
+                                        Data.autoData.setReferAllStatusLogin(-1);
                                         uploadContactsApi(true);
                                         dismissReferAllDialog();
                                     } else{
@@ -4537,12 +4537,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void setupFreshUI(){
         try{
-            if(1 == Data.freshAvailable){
+//            if(1 == Data.freshAvailable){
                 /*Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
                 if(locD != null){
                     freshIntroDialog = locD;
                 }*/
-            }
+//            }
             menuBar.setupFreshUI();
             topBar.setupFreshUI();
         } catch (Exception e){
@@ -7529,7 +7529,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Log.e("message=", "=" + message);
                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                             if (!fromLogin) {
-                                Data.userData.contactSaved = -1;
+                                Data.autoData.setReferAllStatus(-1);
                             }
                         } else {
                             //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);

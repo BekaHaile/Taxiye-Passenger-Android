@@ -126,10 +126,6 @@ public class JSONParser implements Constants {
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
 
 
-        int contactSaved = userData.optInt("refer_all_status"); // if 0 show popup, else not show
-        String referAllText = userData.optString("refer_all_text", context.getResources().getString(R.string.upload_contact_message));
-		String referAllTitle = userData.optString("refer_all_title", context.getResources().getString(R.string.upload_contact_title));
-
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
         int cToDReferralEnabled = userData.optInt("c2d_referral_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
@@ -196,9 +192,6 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL, userData.optLong(KEY_SP_DEVICE_TOKEN_REFRESH_INTERVAL,
                 DEFAULT_DEVICE_TOKEN_REFRESH_INTERVAL));
 
-        Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, userData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
-                LOCATION_UPDATE_INTERVAL));
-
 
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
         String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
@@ -230,10 +223,6 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(SP_FIRST_LOGIN_COMPLETE, 1);
         }
 
-        int referAllStatusLogin = userData.optInt(KEY_REFER_ALL_STATUS_LOGIN, 1);
-        String referAllTextLogin = userData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
-        String referAllTitleLogin = userData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
-
         String city = userData.optString(KEY_CITY, "");
         String cityReg = userData.optString(KEY_CITY_REG, "");
 
@@ -246,20 +235,22 @@ public class JSONParser implements Constants {
         int freshEnabled = userData.optInt("fresh_enabled", 0);
         int deliveryEnabled = userData.optInt("delivery_enabled", 0);
 
+        int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
+
 
 
         UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance, fareFactor,
                 jugnooFbBanner, numCouponsAvailable,
-                contactSaved, referAllText, referAllTitle,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,
                 t20WCEnable, t20WCScheduleVersion, t20WCInfoText, publicAccessToken,
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
-                referAllStatusLogin, referAllTextLogin, referAllTitleLogin, cToDReferralEnabled,
+                cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
-                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled, mealsEnabled, freshEnabled, deliveryEnabled);
+                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled,
+                mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton);
 
 
         userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
@@ -281,17 +272,27 @@ public class JSONParser implements Constants {
         String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
         String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
         String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
-        int inviteFriendButton = autoData.optInt("invite_friend_button", 0);
         int rideEndGoodFeedbackViewType = autoData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
         String rideEndGoodFeedbackText = autoData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
         String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
 
         Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
+        Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
+                LOCATION_UPDATE_INTERVAL));
+
+        int referAllStatus = autoData.optInt(KEY_REFER_ALL_STATUS); // if 0 show popup, else not show
+        String referAllText = autoData.optString(KEY_REFER_ALL_TEXT, context.getResources().getString(R.string.upload_contact_message));
+        String referAllTitle = autoData.optString(KEY_REFER_ALL_TITLE, context.getResources().getString(R.string.upload_contact_title));
+
+        int referAllStatusLogin = autoData.optInt(KEY_REFER_ALL_STATUS_LOGIN, 1);
+        String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
+        String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
         AutoData autoDataObj = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
                 , cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
-                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, inviteFriendButton, rideEndGoodFeedbackViewType,
-                rideEndGoodFeedbackText, baseFarePoolText);
+                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
+                rideEndGoodFeedbackText, baseFarePoolText,
+                referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
 
         return autoDataObj;
     }
@@ -303,10 +304,10 @@ public class JSONParser implements Constants {
         JSONObject jObj = new JSONObject(response);
 
         //Fetching login data
-        JSONObject jLoginObject = jObj.getJSONObject("user_data");
-        JSONObject jAutosObject = jObj.getJSONObject("autos");
+        JSONObject jUserDataObject = jObj.getJSONObject(KEY_USER_DATA);
+        JSONObject jAutosObject = jObj.getJSONObject(KEY_AUTOS);
 
-        Data.userData = parseUserData(context, jLoginObject);
+        Data.userData = parseUserData(context, jUserDataObject);
         Data.autoData = parseAutoData(context, jAutosObject);
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -316,7 +317,7 @@ public class JSONParser implements Constants {
             Data.emergencyContactsList = new ArrayList<>();
         }
         Data.emergencyContactsList.clear();
-        Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jLoginObject));
+        Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jUserDataObject));
 
         parseFindDriverResp(loginResponse);
         parsePromoCoupons(loginResponse);
@@ -328,7 +329,7 @@ public class JSONParser implements Constants {
 		}
 
         //Fetching user current status
-        JSONObject jUserStatusObject = jObj.getJSONObject("autos").getJSONObject(KEY_STATUS);
+        JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
         String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
 
         parseCancellationReasons(loginResponse);
@@ -336,46 +337,9 @@ public class JSONParser implements Constants {
 
         Data.referralMessages = parseReferralMessages(loginResponse);
 
-        int userAppMonitoring = jLoginObject.optInt(KEY_USER_APP_MONITORING, 0);
-        if(userAppMonitoring == 1){
-			double serverTimeInDays = jLoginObject.optDouble(KEY_USER_APP_MONITORING_DURATION, 1.0);
-			long serverTimeInMillis = (long)(serverTimeInDays * (double)(24 * 60 * 60 * 1000));
-            long currentTime = System.currentTimeMillis();
-            long savedTime = Prefs.with(context).getLong(SPLabels.APP_MONITORING_TRIGGER_TIME, currentTime);
+        performUserAppMonitoring(context, jUserDataObject);
 
-			if(savedTime <= currentTime){
-				Intent intent = new Intent(context, FetchAppDataService.class);
-				intent.putExtra(KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
-				context.startService(intent);
-			}
-        }
-
-        try {
-            FlurryEventLogger.setGAUserId(Data.userData.getUserId());
-            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
-                    Data.userData.userEmail, Data.userData.phoneNo,
-                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
-            if(loginVia == LoginVia.EMAIL_OTP
-                    || loginVia == LoginVia.FACEBOOK_OTP
-                    || loginVia == LoginVia.GOOGLE_OTP) {
-                MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_REG_KEY, ""+loginVia);
-                couponsEvent(context);
-                String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
-                Prefs.with(context).save(SP_REFERRAL_CODE, "");
-                nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
-                        Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
-                BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
-                FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
-                FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
-            }
-            JSONObject map = new JSONObject();
-            map.put(KEY_SOURCE, getAppSource(context));
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        loginAnalyticEvents(context, loginVia);
 
         return resp;
     }
@@ -431,11 +395,6 @@ public class JSONParser implements Constants {
 				Data.farAwayCity = loginResponse.getAutos().getFarAwayCity();
 			}
 
-            if (loginResponse.getAutos().getFreshAvailable() == null) {
-                Data.freshAvailable = 0;
-            } else {
-                Data.freshAvailable = loginResponse.getAutos().getFreshAvailable();
-            }
             Data.campaigns = loginResponse.getAutos().getCampaigns();
 
             if(loginResponse.getUserData().getCityId() != null){
@@ -1328,5 +1287,53 @@ public class JSONParser implements Constants {
     }
 
 
+    public void performUserAppMonitoring(Context context, JSONObject jObj){
+        try {
+            int userAppMonitoring = jObj.optInt(KEY_USER_APP_MONITORING, 0);
+            if(userAppMonitoring == 1){
+				double serverTimeInDays = jObj.optDouble(KEY_USER_APP_MONITORING_DURATION, 1.0);
+				long serverTimeInMillis = (long)(serverTimeInDays * (double)(24 * 60 * 60 * 1000));
+				long currentTime = System.currentTimeMillis();
+				long savedTime = Prefs.with(context).getLong(SPLabels.APP_MONITORING_TRIGGER_TIME, currentTime);
+
+				if(savedTime <= currentTime){
+					Intent intent = new Intent(context, FetchAppDataService.class);
+					intent.putExtra(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+					intent.putExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (currentTime + serverTimeInMillis));
+					context.startService(intent);
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loginAnalyticEvents(Context context, LoginVia loginVia){
+        try {
+            FlurryEventLogger.setGAUserId(Data.userData.getUserId());
+            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
+                    Data.userData.userEmail, Data.userData.phoneNo,
+                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
+            if(loginVia == LoginVia.EMAIL_OTP
+                    || loginVia == LoginVia.FACEBOOK_OTP
+                    || loginVia == LoginVia.GOOGLE_OTP) {
+                MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_REG_KEY, ""+loginVia);
+                couponsEvent(context);
+                String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
+                Prefs.with(context).save(SP_REFERRAL_CODE, "");
+                nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
+                        Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
+                BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
+                FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
+                FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+            }
+            JSONObject map = new JSONObject();
+            map.put(KEY_SOURCE, getAppSource(context));
+            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

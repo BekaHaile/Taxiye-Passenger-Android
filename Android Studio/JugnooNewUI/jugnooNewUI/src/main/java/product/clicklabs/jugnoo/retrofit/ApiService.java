@@ -11,7 +11,6 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.retrofit.model.ShowPromotionsResponse;
 import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
@@ -51,11 +50,6 @@ public interface ApiService {
                                        Callback<FindADriverResponse> callback);
 
     @FormUrlEncoded
-    @POST("/show_available_promotions")
-    void showAvailablePromotionsCall(@FieldMap Map<String, String> params,
-                         Callback<ShowPromotionsResponse> callback);
-
-    @FormUrlEncoded
     @POST("/paytm/wallet/adjust_money")
     void settleUserDebt(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
@@ -82,19 +76,9 @@ public interface ApiService {
                                Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/v2/customer/login_using_access_token")
-    void loginUsingAccessToken(@FieldMap Map<String, String> params,
-                   Callback<LoginResponse> callback);
-
-    @FormUrlEncoded
     @POST("/v3/customer/login_using_access_token")
     void loginUsingAccessTokenV3(@FieldMap Map<String, String> params,
                                Callback<LoginResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/v2/customer/login_using_email_or_phone_no")
-    void loginUsingEmailOrPhoneNo(@FieldMap Map<String, String> params,
-                                  Callback<LoginResponse> callback);
 
     @FormUrlEncoded
     @POST("/v3/customer/login_using_email_or_phone_no")

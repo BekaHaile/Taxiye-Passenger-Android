@@ -362,9 +362,6 @@ public class LoginResponse {
 		@SerializedName("regions")
 		@Expose
 		private List<Region> regions = new ArrayList<>();
-		@SerializedName("fresh_available")
-		@Expose
-		private Integer freshAvailable;
 		@SerializedName("menu")
 		@Expose
 		private List<MenuInfo> menuInfoList;
@@ -498,14 +495,6 @@ public class LoginResponse {
 			this.regions = regions;
 		}
 
-		public Integer getFreshAvailable() {
-			return freshAvailable;
-		}
-
-		public void setFreshAvailable(Integer freshAvailable) {
-			this.freshAvailable = freshAvailable;
-		}
-
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
 		}
@@ -554,9 +543,6 @@ public class LoginResponse {
 		@SerializedName("campaigns")
 		@Expose
 		private Campaigns campaigns;
-		@SerializedName("fresh_available")
-		@Expose
-		private Integer freshAvailable;
 		@SerializedName("fare_structure")
 		@Expose
 		private List<FareStructure> fareStructure = new ArrayList<>();
@@ -618,14 +604,6 @@ public class LoginResponse {
 
 		public void setCampaigns(Campaigns campaigns) {
 			this.campaigns = campaigns;
-		}
-
-		public Integer getFreshAvailable() {
-			return freshAvailable;
-		}
-
-		public void setFreshAvailable(Integer freshAvailable) {
-			this.freshAvailable = freshAvailable;
 		}
 
 		public List<FareStructure> getFareStructure() {

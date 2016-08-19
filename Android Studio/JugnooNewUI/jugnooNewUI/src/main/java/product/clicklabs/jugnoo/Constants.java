@@ -214,6 +214,9 @@ public interface Constants {
 
 	String EMPTY_JSON_OBJECT = "{}";
 
+	String KEY_REFER_ALL_STATUS = "refer_all_status";
+	String KEY_REFER_ALL_TEXT = "refer_all_text";
+	String KEY_REFER_ALL_TITLE = "refer_all_title";
 	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
 	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";
 	String KEY_REFER_ALL_TITLE_LOGIN = "refer_all_title_login";
@@ -338,4 +341,12 @@ public interface Constants {
 	String KEY_PUSH_TYPE = "push_type";
 	String KEY_PUSH_STATUS = "push_status";
 	String KEY_NOTIFICATION_PREFERENCE_ENABLED = "notification_preference_enabled";
+
+	String KEY_INVITE_FRIEND_BUTTON = "invite_friend_button";
+	String KEY_USER_DATA = "user_data";
+	String KEY_AUTOS = "autos";
+
+	String KEY_SP_LAST_LOGIN_CLIENT_ID = "last_login_client_id";
+	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
+
 }

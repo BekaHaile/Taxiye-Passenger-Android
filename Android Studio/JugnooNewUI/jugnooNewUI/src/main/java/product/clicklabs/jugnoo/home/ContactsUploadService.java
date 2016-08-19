@@ -397,7 +397,7 @@ public class ContactsUploadService extends IntentService {
 						int flag = jObj.getInt("flag");
 						String message = JSONParser.getServerMessage(jObj);
 						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-							Data.userData.contactSaved = 1;
+							Data.autoData.setReferAllStatus(1);
 						}
 						else{
 							Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);

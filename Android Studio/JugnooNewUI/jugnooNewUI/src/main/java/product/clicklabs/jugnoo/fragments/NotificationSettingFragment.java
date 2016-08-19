@@ -98,7 +98,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 
                 RestClient.getApiServices().getNotificationPreference(params, new Callback<NotificationSettingResponseModel>() {
                     @Override
@@ -171,7 +171,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_PUSH_TYPE, name);
                 params.put(Constants.KEY_PUSH_STATUS, ""+status);
 

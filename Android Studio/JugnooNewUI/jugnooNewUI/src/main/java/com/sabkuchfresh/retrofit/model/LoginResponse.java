@@ -308,9 +308,6 @@ public class LoginResponse {
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
-		@SerializedName("fresh_available")
-		@Expose
-		private Integer freshAvailable;
 
 		/**
 		 * @return The currentUserStatus
@@ -365,14 +362,6 @@ public class LoginResponse {
 
 		public void setFareFactor(Double fareFactor) {
 			this.fareFactor = fareFactor;
-		}
-
-		public Integer getFreshAvailable() {
-			return freshAvailable;
-		}
-
-		public void setFreshAvailable(Integer freshAvailable) {
-			this.freshAvailable = freshAvailable;
 		}
 	}
 }
