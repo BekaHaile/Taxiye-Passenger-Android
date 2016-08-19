@@ -1424,12 +1424,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						params.put(KEY_BRANCH_REFERRING_LINKS, links);
 					}
 				}
-				params.put(KEY_SP_LAST_LOGIN_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_LOGIN_CLIENT_ID, Config.getAutosClientId()));
+				params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
 
 				Log.e("params login_using_access_token", "=" + params);
 
 				final long startTime = System.currentTimeMillis();
-				RestClient.getApiServices().loginUsingAccessTokenV3(params, new Callback<LoginResponse>() {
+				RestClient.getApiServices().loginUsingAccessToken(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 
@@ -1613,29 +1613,28 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 //	}
 
 		try {
-			JSONObject jsonObject = jObj.getJSONObject(KEY_USER_DATA);
-			if (!jsonObject.isNull("popup")) {
-				try {
-					JSONObject jupdatePopupInfo = jsonObject.getJSONObject("popup");
-					String title = jupdatePopupInfo.getString("title");
-					String text = jupdatePopupInfo.getString("text");
-					int currentVersion = jupdatePopupInfo.getInt("cur_version");
-					int isForce = jupdatePopupInfo.getInt("is_force");
+			JSONObject jsonObject = jObj;
+			if (jObj.getJSONObject(KEY_USER_DATA).has("popup")) {
+				jsonObject = jObj.getJSONObject(KEY_USER_DATA);
+			}
+			try {
+				JSONObject jupdatePopupInfo = jsonObject.getJSONObject("popup");
+				String title = jupdatePopupInfo.getString("title");
+				String text = jupdatePopupInfo.getString("text");
+				int currentVersion = jupdatePopupInfo.getInt("cur_version");
+				int isForce = jupdatePopupInfo.getInt("is_force");
 
-					if (Data.appVersion >= currentVersion) {
-						return false;
-					} else {
-						SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
-						if (isForce == 1) {
-							return true;
-						} else {
-							return false;
-						}
-					}
-				} catch (Exception e) {
+				if (Data.appVersion >= currentVersion) {
 					return false;
+				} else {
+					SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
+					if (isForce == 1) {
+						return true;
+					} else {
+						return false;
+					}
 				}
-			} else {
+			} catch (Exception e) {
 				return false;
 			}
 		} catch (Exception e) {
@@ -2123,13 +2122,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
 				}
 			}
-			params.put(KEY_SP_LAST_LOGIN_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_LOGIN_CLIENT_ID, Config.getAutosClientId()));
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNoV3(params, new Callback<LoginResponse>() {
+			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2244,6 +2243,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
 				}
 			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
@@ -2357,6 +2357,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
 				}
 			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 

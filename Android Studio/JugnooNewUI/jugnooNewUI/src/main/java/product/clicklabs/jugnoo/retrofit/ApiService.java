@@ -55,7 +55,7 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/v2/customer/verify_otp")
+    @POST("/v3/customer/verify_otp")
     void verifyOtp(@FieldMap Map<String, String> params,
                         Callback<LoginResponse> callback);
 
@@ -76,21 +76,21 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/v3/customer/login_using_access_token")
-    void loginUsingAccessTokenV3(@FieldMap Map<String, String> params,
+    void loginUsingAccessToken(@FieldMap Map<String, String> params,
                                Callback<LoginResponse> callback);
 
     @FormUrlEncoded
     @POST("/v3/customer/login_using_email_or_phone_no")
-    void loginUsingEmailOrPhoneNoV3(@FieldMap Map<String, String> params,
+    void loginUsingEmailOrPhoneNo(@FieldMap Map<String, String> params,
                                   Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/v2/customer/login_using_facebook")
+    @POST("/v3/customer/login_using_facebook")
     void loginUsingFacebook(@FieldMap Map<String, String> params,
                                   Callback<LoginResponse> callback);
 
     @FormUrlEncoded
-    @POST("/v2/customer/login_using_google")
+    @POST("/v3/customer/login_using_google")
     void loginUsingGoogle(@FieldMap Map<String, String> params,
                             Callback<LoginResponse> callback);
 

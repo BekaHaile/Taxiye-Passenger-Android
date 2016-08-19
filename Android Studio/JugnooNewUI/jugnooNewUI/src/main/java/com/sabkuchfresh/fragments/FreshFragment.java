@@ -161,9 +161,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         setSortingList();
         getAllProducts(true);
 
-        if(Data.userData.getFatafatUserData().pendingFeedback == 1) {
+        if(Data.getFatafatData().pendingFeedback == 1) {
 			//TODO fresh feedback fragment open here
-            Data.userData.getFatafatUserData().pendingFeedback = 0;
+            Data.getFatafatData().pendingFeedback = 0;
         }
 
         if(Data.userData.getPromoSuccess() == 0) {
@@ -171,9 +171,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         } else if(Data.isfatafat == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
             Data.isfatafat = AppConstant.IsFatafatEnabled.ENABLED;
             showPopup();
-        } else if(Data.userData.getFatafatUserData().getPopupData() != null) {
+        } else if(Data.getFatafatData().getPopupData() != null) {
             pushDialog = new PushDialog(activity, this);
-            pushDialog.show(Data.userData.getFatafatUserData().getPopupData());
+            pushDialog.show(Data.getFatafatData().getPopupData());
         }
 
 		return rootView;

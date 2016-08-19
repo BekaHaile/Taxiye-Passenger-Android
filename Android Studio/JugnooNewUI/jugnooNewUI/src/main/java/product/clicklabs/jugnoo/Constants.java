@@ -345,8 +345,14 @@ public interface Constants {
 	String KEY_INVITE_FRIEND_BUTTON = "invite_friend_button";
 	String KEY_USER_DATA = "user_data";
 	String KEY_AUTOS = "autos";
+	String KEY_FRESH = "fresh";
 
-	String KEY_SP_LAST_LOGIN_CLIENT_ID = "last_login_client_id";
+	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
+
+	String KEY_FEEDBACK_ORDER_ID = "feedback_order_id";
+	String KEY_QUESTION = "question";
+	String KEY_QUESTION_TYPE = "question_type";
+	String KEY_PENDING_FEEDBACK = "pending_feedback";
 
 }

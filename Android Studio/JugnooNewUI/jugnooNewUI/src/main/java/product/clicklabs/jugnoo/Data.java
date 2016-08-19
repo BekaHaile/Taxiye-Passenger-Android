@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.FatafatData;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
@@ -140,6 +141,7 @@ public class Data {
 	
 	public static UserData userData;
 	public static AutoData autoData;
+	private static FatafatData fatafatData;
     public static ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	
 	public static LocationFetcher locationFetcher;
@@ -465,5 +467,14 @@ public class Data {
 
 
 	public static int tabLinkIndex = 0;
+
+
+	public static FatafatData getFatafatData(){
+		return fatafatData;
+	}
+
+	public static void setFatafatData(FatafatData fatafatData){
+		Data.fatafatData = fatafatData;
+	}
 
 }

@@ -72,15 +72,9 @@ public class LoginResponse {
 	@SerializedName("flag")
 	@Expose
 	private Integer flag;
-	@SerializedName("login")
-	@Expose
-	private Login login;
 	@SerializedName("drivers")
 	@Expose
 	private List<Driver> drivers = new ArrayList<>();
-	@SerializedName("cancellation")
-	@Expose
-	private Cancellation cancellation;
 	@SerializedName("referral_message")
 	@Expose
 	private String referralMessage;
@@ -105,9 +99,6 @@ public class LoginResponse {
 	@SerializedName("invite_earn_more_info")
 	@Expose
 	private String inviteEarnMoreInfo;
-	@SerializedName("bad_rating_reasons")
-	@Expose
-	private List<String> badRatingReasons = new ArrayList<>();
 	@SerializedName("referral_sharing_message")
 	@Expose
 	private String referralSharingMessage;
@@ -133,20 +124,6 @@ public class LoginResponse {
 	}
 
 	/**
-	 * @return The login
-	 */
-	public Login getLogin() {
-		return login;
-	}
-
-	/**
-	 * @param login The login
-	 */
-	public void setLogin(Login login) {
-		this.login = login;
-	}
-
-	/**
 	 * @return The drivers
 	 */
 	public List<Driver> getDrivers() {
@@ -158,20 +135,6 @@ public class LoginResponse {
 	 */
 	public void setDrivers(List<Driver> drivers) {
 		this.drivers = drivers;
-	}
-
-	/**
-	 * @return The cancellation
-	 */
-	public Cancellation getCancellation() {
-		return cancellation;
-	}
-
-	/**
-	 * @param cancellation The cancellation
-	 */
-	public void setCancellation(Cancellation cancellation) {
-		this.cancellation = cancellation;
 	}
 
 	/**
@@ -287,20 +250,6 @@ public class LoginResponse {
 	}
 
 	/**
-	 * @return The badRatingReasons
-	 */
-	public List<String> getBadRatingReasons() {
-		return badRatingReasons;
-	}
-
-	/**
-	 * @param badRatingReasons The bad_rating_reasons
-	 */
-	public void setBadRatingReasons(List<String> badRatingReasons) {
-		this.badRatingReasons = badRatingReasons;
-	}
-
-	/**
 	 * @return The referralSharingMessage
 	 */
 	public String getReferralSharingMessage() {
@@ -329,196 +278,6 @@ public class LoginResponse {
 	public void setUserData(UserData userData) {
 		this.userData = userData;
 	}
-
-	public class Login {
-
-		@SerializedName("current_user_status")
-		@Expose
-		private Integer currentUserStatus;
-		@SerializedName("support_number")
-		@Expose
-		private String supportNumber;
-		@SerializedName("priority_tip_category")
-		@Expose
-		private Integer priorityTipCategory;
-		@SerializedName("promotions")
-		@Expose
-		private List<Promotion> promotions = new ArrayList<>();
-		@SerializedName("coupons")
-		@Expose
-		private List<Coupon> coupons = new ArrayList<>();
-		@SerializedName("fare_structure")
-		@Expose
-		private List<FareStructure> fareStructure = new ArrayList<>();
-		@SerializedName("far_away_city")
-		@Expose
-		private String farAwayCity;
-		@SerializedName("fare_factor")
-		@Expose
-		private Double fareFactor;
-		@SerializedName("driver_fare_factor")
-		@Expose
-		private Double driverFareFactor;
-		@SerializedName("regions")
-		@Expose
-		private List<Region> regions = new ArrayList<>();
-		@SerializedName("menu")
-		@Expose
-		private List<MenuInfo> menuInfoList;
-
-		@SerializedName("campaigns")
-		@Expose
-		private Campaigns campaigns;
-        @SerializedName("city_id")
-        @Expose
-        private Integer cityId;
-
-
-
-		/**
-		 *
-		 * @return
-		 * The campaigns
-		 */
-		public Campaigns getCampaigns() {
-			return campaigns;
-		}
-
-		/**
-		 *
-		 * @param campaigns
-		 * The campaigns
-		 */
-		public void setCampaigns(Campaigns campaigns) {
-			this.campaigns = campaigns;
-		}
-
-		/**
-		 * @return The currentUserStatus
-		 */
-		public Integer getCurrentUserStatus() {
-			return currentUserStatus;
-		}
-
-		/**
-		 * @param currentUserStatus The current_user_status
-		 */
-		public void setCurrentUserStatus(Integer currentUserStatus) {
-			this.currentUserStatus = currentUserStatus;
-		}
-
-		/**
-		 * @return The priorityTipCategory
-		 */
-		public Integer getPriorityTipCategory() {
-			return priorityTipCategory;
-		}
-
-		/**
-		 * @param priorityTipCategory The priority_tip_category
-		 */
-		public void setPriorityTipCategory(Integer priorityTipCategory) {
-			this.priorityTipCategory = priorityTipCategory;
-		}
-
-		/**
-		 * @return The promotions
-		 */
-		public List<Promotion> getPromotions() {
-			return promotions;
-		}
-
-		/**
-		 * @param promotions The promotions
-		 */
-		public void setPromotions(List<Promotion> promotions) {
-			this.promotions = promotions;
-		}
-
-		/**
-		 * @return The coupons
-		 */
-		public List<Coupon> getCoupons() {
-			return coupons;
-		}
-
-		/**
-		 * @param coupons The coupons
-		 */
-		public void setCoupons(List<Coupon> coupons) {
-			this.coupons = coupons;
-		}
-
-		/**
-		 * @return The fareStructure
-		 */
-		public List<FareStructure> getFareStructure() {
-			return fareStructure;
-		}
-
-		/**
-		 * @param fareStructure The fare_structure
-		 */
-		public void setFareStructure(List<FareStructure> fareStructure) {
-			this.fareStructure = fareStructure;
-		}
-
-		public String getFarAwayCity() {
-			return farAwayCity;
-		}
-
-		public void setFarAwayCity(String farAwayCity) {
-			this.farAwayCity = farAwayCity;
-		}
-
-		public String getSupportNumber() {
-			return supportNumber;
-		}
-
-		public void setSupportNumber(String supportNumber) {
-			this.supportNumber = supportNumber;
-		}
-
-		public Double getFareFactor() {
-			return fareFactor;
-		}
-
-		public void setFareFactor(Double fareFactor) {
-			this.fareFactor = fareFactor;
-		}
-
-		public List<Region> getRegions() {
-			return regions;
-		}
-
-		public void setRegions(List<Region> regions) {
-			this.regions = regions;
-		}
-
-		public List<MenuInfo> getMenuInfoList() {
-			return menuInfoList;
-		}
-
-		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
-			this.menuInfoList = menuInfoList;
-		}
-
-		public Double getDriverFareFactor() {
-			return driverFareFactor;
-		}
-
-		public void setDriverFareFactor(Double driverFareFactor) {
-			this.driverFareFactor = driverFareFactor;
-		}
-
-        public Integer getCityId() {
-            return cityId;
-        }
-
-        public void setCityId(Integer cityId) {
-            this.cityId = cityId;
-        }
-    }
 
 	public class Autos{
 		@SerializedName("drivers")
@@ -549,6 +308,12 @@ public class LoginResponse {
 		@SerializedName("current_user_status")
 		@Expose
 		private Integer currentUserStatus;
+		@SerializedName("cancellation")
+		@Expose
+		private Cancellation cancellation;
+		@SerializedName("bad_rating_reasons")
+		@Expose
+		private List<String> badRatingReasons = new ArrayList<>();
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -620,6 +385,22 @@ public class LoginResponse {
 
 		public void setCurrentUserStatus(Integer currentUserStatus) {
 			this.currentUserStatus = currentUserStatus;
+		}
+
+		public Cancellation getCancellation() {
+			return cancellation;
+		}
+
+		public void setCancellation(Cancellation cancellation) {
+			this.cancellation = cancellation;
+		}
+
+		public List<String> getBadRatingReasons() {
+			return badRatingReasons;
+		}
+
+		public void setBadRatingReasons(List<String> badRatingReasons) {
+			this.badRatingReasons = badRatingReasons;
 		}
 	}
 

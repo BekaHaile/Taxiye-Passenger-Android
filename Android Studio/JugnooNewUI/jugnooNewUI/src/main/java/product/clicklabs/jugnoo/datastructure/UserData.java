@@ -49,8 +49,6 @@ public class UserData {
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
 
-	private FatafatUserData fatafatUserData;
-
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
 					String jugnooFbBanner, int numCouponsAvaliable,
@@ -510,14 +508,6 @@ public class UserData {
 
 	public void setNotificationSettingEnabled(int isSettingEnabled) {
 		this.notificationPreferenceEnabled = isSettingEnabled;
-	}
-
-	public FatafatUserData getFatafatUserData() {
-		return fatafatUserData;
-	}
-
-	public void setFatafatUserData(FatafatUserData fatafatUserData) {
-		this.fatafatUserData = fatafatUserData;
 	}
 
 	public int getMealsEnabled() {

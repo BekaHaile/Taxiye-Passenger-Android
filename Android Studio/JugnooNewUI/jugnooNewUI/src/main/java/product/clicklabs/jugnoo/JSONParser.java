@@ -8,6 +8,8 @@ import android.content.SharedPreferences.Editor;
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.sabkuchfresh.datastructure.PopupData;
+import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.FatafatData;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -261,40 +264,97 @@ public class JSONParser implements Constants {
     }
 
     public AutoData parseAutoData(Context context, JSONObject autoData) throws Exception{
+        AutoData autoDataObj = null;
+        try {
+            String destinationHelpText = autoData.optString("destination_help_text", "");
+            String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
+            String cancellationChargesPopupTextLine1 = autoData.optString("cancellation_charges_popup_text_line1", "");
+            String cancellationChargesPopupTextLine2 = autoData.optString("cancellation_charges_popup_text_line2", "");
+            String inRideSendInviteTextBold = autoData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
+            String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
+            String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
+            String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
+            String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
+            String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
+            int rideEndGoodFeedbackViewType = autoData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+            String rideEndGoodFeedbackText = autoData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
 
-        String destinationHelpText = autoData.optString("destination_help_text", "");
-        String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
-        String cancellationChargesPopupTextLine1 = autoData.optString("cancellation_charges_popup_text_line1", "");
-        String cancellationChargesPopupTextLine2 = autoData.optString("cancellation_charges_popup_text_line2", "");
-        String inRideSendInviteTextBold = autoData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
-        String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
-        String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
-        String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
-        String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
-        String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
-        int rideEndGoodFeedbackViewType = autoData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-        String rideEndGoodFeedbackText = autoData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
-        String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
+            Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
+            Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
+					LOCATION_UPDATE_INTERVAL));
 
-        Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
-        Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
-                LOCATION_UPDATE_INTERVAL));
+            int referAllStatus = autoData.optInt(KEY_REFER_ALL_STATUS); // if 0 show popup, else not show
+            String referAllText = autoData.optString(KEY_REFER_ALL_TEXT, context.getResources().getString(R.string.upload_contact_message));
+            String referAllTitle = autoData.optString(KEY_REFER_ALL_TITLE, context.getResources().getString(R.string.upload_contact_title));
 
-        int referAllStatus = autoData.optInt(KEY_REFER_ALL_STATUS); // if 0 show popup, else not show
-        String referAllText = autoData.optString(KEY_REFER_ALL_TEXT, context.getResources().getString(R.string.upload_contact_message));
-        String referAllTitle = autoData.optString(KEY_REFER_ALL_TITLE, context.getResources().getString(R.string.upload_contact_title));
+            int referAllStatusLogin = autoData.optInt(KEY_REFER_ALL_STATUS_LOGIN, 1);
+            String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
+            String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
-        int referAllStatusLogin = autoData.optInt(KEY_REFER_ALL_STATUS_LOGIN, 1);
-        String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
-        String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
-
-        AutoData autoDataObj = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
-                , cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
-                poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
-                rideEndGoodFeedbackText, baseFarePoolText,
-                referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
-
+            autoDataObj = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
+					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
+					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
+					rideEndGoodFeedbackText, baseFarePoolText,
+					referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return autoDataObj;
+    }
+
+    public FatafatData parseFatafatData(JSONObject jFatafatData){
+        FatafatData fatafatData = null;
+        try{
+            String orderId = jFatafatData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            String question = jFatafatData.optString(KEY_QUESTION, "");
+            int questionType = jFatafatData.optInt(KEY_QUESTION_TYPE, 0);
+            int pendingFeedback = jFatafatData.optInt(KEY_PENDING_FEEDBACK, 0);
+
+            PopupData popupData = null;
+            try {
+                if (jFatafatData.has("popup_data")) {
+                    popupData = new PopupData();
+                    popupData.popup_id = jFatafatData.getJSONObject("popup_data").optInt("popup_id", 0);
+                    popupData.title_text = jFatafatData.getJSONObject("popup_data").optString("title_text", "");
+                    popupData.desc_text = jFatafatData.getJSONObject("popup_data").optString("desc_text", "");
+                    popupData.image_url = jFatafatData.getJSONObject("popup_data").optString("image_url", "");
+                    popupData.cancel_title = jFatafatData.getJSONObject("popup_data").optString("cancel_title", "");
+                    popupData.ok_title = jFatafatData.getJSONObject("popup_data").optString("ok_title", "OK");
+                    popupData.is_cancellable = jFatafatData.getJSONObject("popup_data").optInt("is_cancellable", 1);
+                    popupData.deep_index = jFatafatData.getJSONObject("popup_data").optInt("deep_index", 0);
+                    popupData.ext_url = jFatafatData.getJSONObject("popup_data").optString("ext_url", "");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<Store> stores = new ArrayList<>();
+            Store store = null;
+            try {
+                if(jFatafatData.has("stores")) {
+                    JSONArray storesArr = jFatafatData.getJSONArray("stores");
+                    for(int i=0;i<storesArr.length();i++) {
+                        JSONObject jsonObject = storesArr.getJSONObject(i);
+                        store = new Store();
+                        store.setStoreId(jsonObject.optInt("store_id"));
+                        store.setTitle(jsonObject.optString("title"));
+                        store.setDescription(jsonObject.optString("description"));
+                        store.setImage(jsonObject.optString("image"));
+                        store.setTextColor(jsonObject.optString("text_color"));
+
+                        stores.add(store);
+
+                    }
+                }
+            } catch (Exception e){ e.printStackTrace(); }
+
+            fatafatData = new FatafatData(question, orderId, questionType, pendingFeedback, stores, popupData);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return fatafatData;
     }
 
 
@@ -305,10 +365,12 @@ public class JSONParser implements Constants {
 
         //Fetching login data
         JSONObject jUserDataObject = jObj.getJSONObject(KEY_USER_DATA);
-        JSONObject jAutosObject = jObj.getJSONObject(KEY_AUTOS);
+        JSONObject jAutosObject = jObj.optJSONObject(KEY_AUTOS);
+        JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
 
         Data.userData = parseUserData(context, jUserDataObject);
         Data.autoData = parseAutoData(context, jAutosObject);
+        Data.setFatafatData(parseFatafatData(jFreshObject));
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
@@ -319,8 +381,8 @@ public class JSONParser implements Constants {
         Data.emergencyContactsList.clear();
         Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jUserDataObject));
 
-        parseFindDriverResp(loginResponse);
-        parsePromoCoupons(loginResponse);
+        parseFindDriverResp(loginResponse.getAutos());
+        parsePromoCoupons(loginResponse.getUserData());
         Data.menuInfoList = new ArrayList<>();
         Data.menuInfoList.addAll(loginResponse.getUserData().getMenuInfoList());
 
@@ -332,8 +394,8 @@ public class JSONParser implements Constants {
         JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
         String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
 
-        parseCancellationReasons(loginResponse);
-        parseFeedbackReasonArrayList(loginResponse);
+        parseCancellationReasons(loginResponse.getAutos());
+        parseFeedbackReasonArrayList(loginResponse.getAutos());
 
         Data.referralMessages = parseReferralMessages(loginResponse);
 
@@ -372,49 +434,42 @@ public class JSONParser implements Constants {
     }
 
 
-    private void parseFindDriverResp(LoginResponse loginResponse){
+    private void parseFindDriverResp(LoginResponse.Autos autos){
         try {
             //current_user_status = 1 driver or 2 user
-            parseDriversToShow(loginResponse.getAutos().getDrivers());
+            parseDriversToShow(autos.getDrivers());
 
             Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
-            if (loginResponse.getAutos().getPriorityTipCategory() != null) {
-				Data.priorityTipCategory = loginResponse.getAutos().getPriorityTipCategory();
+            if (autos.getPriorityTipCategory() != null) {
+				Data.priorityTipCategory = autos.getPriorityTipCategory();
 			}
-            if(loginResponse.getAutos().getFareFactor() != null) {
-                Data.userData.fareFactor = loginResponse.getAutos().getFareFactor();
+            if(autos.getFareFactor() != null) {
+                Data.userData.fareFactor = autos.getFareFactor();
             }
-            if(loginResponse.getAutos().getDriverFareFactor() != null) {
-                Data.userData.setDriverFareFactor(loginResponse.getAutos().getDriverFareFactor());
+            if(autos.getDriverFareFactor() != null) {
+                Data.userData.setDriverFareFactor(autos.getDriverFareFactor());
             } else{
                 Data.userData.setDriverFareFactor(1);
             }
-            if (loginResponse.getAutos().getFarAwayCity() == null) {
+            if (autos.getFarAwayCity() == null) {
 				Data.farAwayCity = "";
 			} else {
-				Data.farAwayCity = loginResponse.getAutos().getFarAwayCity();
+				Data.farAwayCity = autos.getFarAwayCity();
 			}
 
-            Data.campaigns = loginResponse.getAutos().getCampaigns();
-
-            if(loginResponse.getUserData().getCityId() != null){
-                Data.currentCity = loginResponse.getLogin().getCityId();
-            }
+            Data.campaigns = autos.getCampaigns();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void parsePromoCoupons(LoginResponse loginResponse){
         try{
             if(Data.regions == null){
                 Data.regions = new ArrayList<>();
             } else{
                 Data.regions.clear();
             }
-            if(loginResponse.getAutos().getRegions() != null) {
+            if(autos.getRegions() != null) {
                 HomeUtil homeUtil = new HomeUtil();
-                for (Region region : loginResponse.getAutos().getRegions()) {
+                for (Region region : autos.getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
                     Data.regions.add(region);
@@ -423,14 +478,67 @@ public class JSONParser implements Constants {
         } catch(Exception e){
             e.printStackTrace();
         }
+
+        try {
+            if(autos.getFareStructure() != null) {
+				Data.fareStructure = null;
+				for (FareStructure fareStructure : autos.getFareStructure()) {
+					String startTime = fareStructure.getStartTime();
+					String endTime = fareStructure.getEndTime();
+					String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
+					String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
+					long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
+					long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
+					double convenienceCharges = 0;
+					if (fareStructure.getConvenienceCharge() != null) {
+						convenienceCharges = fareStructure.getConvenienceCharge();
+					}
+					if (diffStart >= 0 && diffEnd <= 0) {
+						product.clicklabs.jugnoo.datastructure.FareStructure fareStructure1 = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
+								fareStructure.getFareThresholdDistance(),
+								fareStructure.getFarePerKm(),
+								fareStructure.getFarePerMin(),
+								fareStructure.getFareThresholdTime(),
+								fareStructure.getFarePerWaitingMin(),
+								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
+								fareStructure.getDisplayBaseFare(),
+								fareStructure.getDisplayFareText());
+						for (int i = 0; i < Data.regions.size(); i++) {
+							try {
+								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+										) {
+									Data.regions.get(i).setFareStructure(fareStructure1);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						if (Data.fareStructure == null) {
+							Data.fareStructure = fareStructure1;
+						}
+					}
+				}
+				if(Data.fareStructure == null){
+					Data.fareStructure = getDefaultFareStructure();
+				}
+			}else{
+				Data.fareStructure = getDefaultFareStructure();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parsePromoCoupons(LoginResponse.UserData userData){
         try{
             if(Data.promoCoupons == null){
                 Data.promoCoupons = new ArrayList<>();
             } else{
                 Data.promoCoupons.clear();
             }
-            if(loginResponse.getUserData().getCoupons() != null) {
-                for (Coupon coupon : loginResponse.getUserData().getCoupons()) {
+            if(userData.getCoupons() != null) {
+                for (Coupon coupon : userData.getCoupons()) {
                     Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
                             coupon.getCouponType(),
                             coupon.getStatus(),
@@ -442,58 +550,15 @@ public class JSONParser implements Constants {
                             coupon.getExpiryDate(), "", ""));
                 }
             }
-            if(loginResponse.getUserData().getPromotions() != null) {
-                for (Promotion promotion : loginResponse.getUserData().getPromotions()) {
+            if(userData.getPromotions() != null) {
+                for (Promotion promotion : userData.getPromotions()) {
                     Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
                             promotion.getTitle(),
                             promotion.getTermsNConds()));
                 }
             }
-
-            if(loginResponse.getAutos().getFareStructure() != null) {
-                Data.fareStructure = null;
-                for (FareStructure fareStructure : loginResponse.getAutos().getFareStructure()) {
-                    String startTime = fareStructure.getStartTime();
-                    String endTime = fareStructure.getEndTime();
-                    String localStartTime = DateOperations.getUTCTimeInLocalTimeStamp(startTime);
-                    String localEndTime = DateOperations.getUTCTimeInLocalTimeStamp(endTime);
-                    long diffStart = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localStartTime);
-                    long diffEnd = DateOperations.getTimeDifference(DateOperations.getCurrentTime(), localEndTime);
-                    double convenienceCharges = 0;
-                    if (fareStructure.getConvenienceCharge() != null) {
-                        convenienceCharges = fareStructure.getConvenienceCharge();
-                    }
-                    if (diffStart >= 0 && diffEnd <= 0) {
-                        product.clicklabs.jugnoo.datastructure.FareStructure fareStructure1 = new product.clicklabs.jugnoo.datastructure.FareStructure(fareStructure.getFareFixed(),
-                                fareStructure.getFareThresholdDistance(),
-                                fareStructure.getFarePerKm(),
-                                fareStructure.getFarePerMin(),
-                                fareStructure.getFareThresholdTime(),
-                                fareStructure.getFarePerWaitingMin(),
-                                fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
-                                fareStructure.getDisplayBaseFare(),
-                                fareStructure.getDisplayFareText());
-                        for (int i = 0; i < Data.regions.size(); i++) {
-                            try {
-                                if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-                                        && Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
-                                        ) {
-                                    Data.regions.get(i).setFareStructure(fareStructure1);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (Data.fareStructure == null) {
-                            Data.fareStructure = fareStructure1;
-                        }
-                    }
-                }
-                if(Data.fareStructure == null){
-                    Data.fareStructure = getDefaultFareStructure();
-                }
-            }else{
-                Data.fareStructure = getDefaultFareStructure();
+            if(userData.getCityId() != null){
+                Data.currentCity = userData.getCityId();
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -1040,7 +1105,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public static void parseCancellationReasons(LoginResponse loginResponse) {
+    public static void parseCancellationReasons(LoginResponse.Autos autos) {
         try {
             ArrayList<CancelOption> options = new ArrayList<CancelOption>();
             options.add(new CancelOption("Driver is late"));
@@ -1051,7 +1116,7 @@ public class JSONParser implements Constants {
             Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
                     "will lead to cancellation charges of Rs. 20", "");
 
-            LoginResponse.Cancellation jCancellation = loginResponse.getCancellation();
+            LoginResponse.Cancellation jCancellation = autos.getCancellation();
             String message = jCancellation.getMessage();
             String additionalReason = jCancellation.getAddnReason();
             options.clear();
@@ -1067,13 +1132,13 @@ public class JSONParser implements Constants {
     }
 
 
-    public static void parseFeedbackReasonArrayList(LoginResponse loginResponse){
+    public static void parseFeedbackReasonArrayList(LoginResponse.Autos autos){
         if(Data.feedbackReasons == null) {
             Data.feedbackReasons = new ArrayList<>();
         }
         try{
             Data.feedbackReasons.clear();
-            for(String resason : loginResponse.getBadRatingReasons()){
+            for(String resason : autos.getBadRatingReasons()){
                 Data.feedbackReasons.add(new FeedbackReason(resason));
             }
         } catch(Exception e){
