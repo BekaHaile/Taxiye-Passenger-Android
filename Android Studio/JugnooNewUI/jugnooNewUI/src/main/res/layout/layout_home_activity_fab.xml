@@ -16,7 +16,7 @@
         android:visibility="gone"
         android:background="@color/transparent"/>
 
-    <com.github.clans.fab.FloatingActionMenu
+    <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
         android:id="@+id/menu_labels_right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +32,7 @@
         fab:menu_backgroundColor="#ccffffff"
         fab:menu_labels_position="right">
 
-        <com.github.clans.fab.FloatingActionButton
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabDelivery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             fab:fab_colorNormal="@color/transparent"
             fab:fab_label="Delivery" />
 
-        <com.github.clans.fab.FloatingActionButton
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabMeals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             fab:fab_size="mini"
             fab:fab_label="Meals" />
 
-        <com.github.clans.fab.FloatingActionButton
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabFresh"
             android:layout_width="76px"
             android:layout_height="76px"
@@ -63,7 +63,7 @@
             fab:fab_size="mini"
             fab:fab_label="Fresh" />
 
-        <com.github.clans.fab.FloatingActionButton
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabAutos"
             android:layout_width="76px"
             android:layout_height="76px"
@@ -72,6 +72,6 @@
             fab:fab_size="mini"
             fab:fab_label="Autos" />
 
-    </com.github.clans.fab.FloatingActionMenu>
+    </product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu>
 
 </RelativeLayout>
