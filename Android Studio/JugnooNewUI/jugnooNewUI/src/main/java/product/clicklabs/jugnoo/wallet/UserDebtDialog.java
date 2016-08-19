@@ -89,7 +89,7 @@ public class UserDebtDialog {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, userData.accessToken);
-				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_IP_ADDRESS, Utils.getLocalIpAddress());
 				Log.i("params", "=" + params);
 

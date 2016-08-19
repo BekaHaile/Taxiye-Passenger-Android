@@ -346,4 +346,7 @@ public interface Constants {
 	String KEY_USER_DATA = "user_data";
 	String KEY_AUTOS = "autos";
 
+	String KEY_SP_LAST_LOGIN_CLIENT_ID = "last_login_client_id";
+	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
+
 }

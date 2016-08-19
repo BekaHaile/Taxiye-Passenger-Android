@@ -1408,7 +1408,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("app_version", "" + Data.appVersion);
 				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("unique_device_id", Data.uniqueDeviceId);
-				params.put("client_id", Config.getClientId());
+				params.put("client_id", Config.getAutosClientId());
 				params.put("is_access_token_new", "" + pair.second);
 
 				if (Utils.isDeviceRooted()) {
@@ -1424,6 +1424,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						params.put(KEY_BRANCH_REFERRING_LINKS, links);
 					}
 				}
+				params.put(KEY_SP_LAST_LOGIN_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_LOGIN_CLIENT_ID, Config.getAutosClientId()));
 
 				Log.e("params login_using_access_token", "=" + params);
 
@@ -1476,7 +1477,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					DialogPopup.alertPopup(activity, "", error);
 					DialogPopup.dismissLoadingDialog();
 				} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-					if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject(KEY_USER_DATA), activity)) {
+					if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 						accessTokenDataParseAsync(activity, response, loginResponse);
 
 						SharedPreferences pref1 = activity.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
@@ -1610,28 +1611,35 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 //	        "cur_version": 116,			// could be used for local check
 //	        "is_force": 1				// 1 for forced, 0 for not forced
 //	}
-		if (!jObj.isNull("popup")) {
-			try {
-				JSONObject jupdatePopupInfo = jObj.getJSONObject("popup");
-				String title = jupdatePopupInfo.getString("title");
-				String text = jupdatePopupInfo.getString("text");
-				int currentVersion = jupdatePopupInfo.getInt("cur_version");
-				int isForce = jupdatePopupInfo.getInt("is_force");
 
-				if (Data.appVersion >= currentVersion) {
-					return false;
-				} else {
-					SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
-					if (isForce == 1) {
-						return true;
-					} else {
+		try {
+			JSONObject jsonObject = jObj.getJSONObject(KEY_USER_DATA);
+			if (!jsonObject.isNull("popup")) {
+				try {
+					JSONObject jupdatePopupInfo = jsonObject.getJSONObject("popup");
+					String title = jupdatePopupInfo.getString("title");
+					String text = jupdatePopupInfo.getString("text");
+					int currentVersion = jupdatePopupInfo.getInt("cur_version");
+					int isForce = jupdatePopupInfo.getInt("is_force");
+
+					if (Data.appVersion >= currentVersion) {
 						return false;
+					} else {
+						SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
+						if (isForce == 1) {
+							return true;
+						} else {
+							return false;
+						}
 					}
+				} catch (Exception e) {
+					return false;
 				}
-			} catch (Exception e) {
+			} else {
 				return false;
 			}
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -2101,7 +2109,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getAutosClientId());
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2115,12 +2123,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
 				}
 			}
+			params.put(KEY_SP_LAST_LOGIN_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_LOGIN_CLIENT_ID, Config.getAutosClientId()));
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
+			RestClient.getApiServices().loginUsingEmailOrPhoneNoV3(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2156,7 +2165,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL);
@@ -2221,7 +2230,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getAutosClientId());
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2273,7 +2282,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								if (!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)) {
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK);
@@ -2334,7 +2343,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getAutosClientId());
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -2390,7 +2399,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								sendToOtpScreen = true;
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
-								if(!SplashNewActivity.checkIfUpdate(jObj.getJSONObject("login"), activity)){
+								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.GOOGLE);
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
@@ -2734,7 +2743,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("os_version", Data.osVersion);
             params.put("country", Data.country);
 
-            params.put("client_id", Config.getClientId());
+            params.put("client_id", Config.getAutosClientId());
             params.put(KEY_REFERRAL_CODE, referralCode);
 
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
@@ -2867,7 +2876,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("os_version", Data.osVersion);
             params.put("country", Data.country);
             params.put("unique_device_id", Data.uniqueDeviceId);
-            params.put("client_id", Config.getClientId());
+            params.put("client_id", Config.getAutosClientId());
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
             if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
                 NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
@@ -2983,7 +2992,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("os_version", Data.osVersion);
             params.put("country", Data.country);
             params.put("unique_device_id", Data.uniqueDeviceId);
-            params.put("client_id", Config.getClientId());
+            params.put("client_id", Config.getAutosClientId());
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
             if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
                 NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
@@ -3161,7 +3170,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("unique_device_id", Data.uniqueDeviceId);
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
-            params.put("client_id", Config.getClientId());
+            params.put("client_id", Config.getAutosClientId());
             params.put("otp", otp);
 
             if (Utils.isDeviceRooted()) {

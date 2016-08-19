@@ -627,7 +627,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("unique_device_id", Data.uniqueDeviceId);
                 params.put("latitude", "" + Data.loginLatitude);
                 params.put("longitude", "" + Data.loginLongitude);
-                params.put("client_id", Config.getClientId());
+                params.put("client_id", Config.getAutosClientId());
                 params.put("otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -732,7 +732,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("unique_device_id", Data.uniqueDeviceId);
                 params.put("latitude", "" + Data.loginLatitude);
                 params.put("longitude", "" + Data.loginLongitude);
-                params.put("client_id", Config.getClientId());
+                params.put("client_id", Config.getAutosClientId());
                 params.put("otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -830,7 +830,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("unique_device_id", Data.uniqueDeviceId);
 				params.put("latitude", "" + Data.loginLatitude);
 				params.put("longitude", "" + Data.loginLongitude);
-				params.put("client_id", Config.getClientId());
+				params.put("client_id", Config.getAutosClientId());
 				params.put("otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -1054,7 +1054,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", accessToken);
-				params.put("client_id", Config.getClientId());
+				params.put("client_id", Config.getAutosClientId());
 				params.put("is_access_token_new", "1");
 
 				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
