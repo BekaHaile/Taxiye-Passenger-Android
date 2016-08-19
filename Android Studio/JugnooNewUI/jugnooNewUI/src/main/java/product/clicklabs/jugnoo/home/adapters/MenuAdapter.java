@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -78,7 +80,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_profile_account, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 370);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
@@ -243,7 +245,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
         else if(viewholder instanceof ViewHeaderHolder){
-            ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
+            final ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
@@ -261,6 +263,22 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            holder.textViewCategories.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.linearLayoutCategories.getVisibility() == View.VISIBLE){
+                        holder.linearLayoutCategories.setVisibility(View.GONE);
+                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
+                        //holder.linearLayoutCategories.startAnimation(animation);
+                    } else {
+                        holder.linearLayoutCategories.setVisibility(View.VISIBLE);
+                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
+                        //holder.linearLayoutCategories.startAnimation(animation);
+                    }
+                    //notifyItemChanged(0);
+                }
+            });
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -505,13 +523,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ViewHeaderHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         public ImageView imageViewProfile;
-        public TextView textViewUserName, textViewViewPhone;
+        public TextView textViewUserName, textViewViewPhone, textViewCategories;
+        public LinearLayout linearLayoutCategories;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
             textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.avenirNext(context));
             textViewViewPhone = (TextView) convertView.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.avenirNext(context));
+            textViewCategories = (TextView) convertView.findViewById(R.id.textViewCategories); textViewCategories.setTypeface(Fonts.avenirNext(context));
+            linearLayoutCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutCategories);
         }
     }
 

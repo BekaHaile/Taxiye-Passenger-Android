@@ -789,7 +789,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         fabAutos = (FloatingActionButton) findViewById(R.id.fabAutos);
         fabExtra = (View) findViewById(R.id.fabExtra);
         //fabExtra.setVisibility(View.GONE);
-
+        menuLabelsRight.setIconAnimated(false);
+        fabDelivery.setLabelTextColor(getResources().getColor(R.color.black));
+        fabMeals.setLabelTextColor(getResources().getColor(R.color.black));
+        fabFresh.setLabelTextColor(getResources().getColor(R.color.black));
+        fabAutos.setLabelTextColor(getResources().getColor(R.color.black));
         fabDelivery.setOnClickListener(clickListener);
         fabMeals.setOnClickListener(clickListener);
         fabFresh.setOnClickListener(clickListener);
@@ -801,7 +805,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onDrawerSlide(View drawerView, float slideOffset) {
 
             }
-
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -1844,7 +1847,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 if(menuLabelsRight.isOpened()){
                     menuLabelsRight.close(true);
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

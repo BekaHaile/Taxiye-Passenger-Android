@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -208,6 +209,22 @@ public class FloatingActionMenu extends ViewGroup {
         int showResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_show_animation, R.anim.fab_scale_up);
         this.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(this.getContext(), showResId));
         this.mImageToggleShowAnimation = AnimationUtils.loadAnimation(this.getContext(), showResId);
+        mImageToggleShowAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                Log.d("start animation", "start Animation");
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         int hideResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_hide_animation, R.anim.fab_scale_down);
         this.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(this.getContext(), hideResId));
         this.mImageToggleHideAnimation = AnimationUtils.loadAnimation(this.getContext(), hideResId);
@@ -287,6 +304,7 @@ public class FloatingActionMenu extends ViewGroup {
         this.mCloseAnimatorSet.setInterpolator(this.mCloseInterpolator);
         this.mOpenAnimatorSet.setDuration(300L);
         this.mCloseAnimatorSet.setDuration(300L);
+
     }
 
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -585,7 +603,6 @@ public class FloatingActionMenu extends ViewGroup {
                                 if(label != null && label.isHandleVisibilityChanges()) {
                                     label.show(animate);
                                 }
-
                             }
                         }
                     }, (long)delay);
@@ -599,6 +616,7 @@ public class FloatingActionMenu extends ViewGroup {
                     FloatingActionMenu.this.mMenuOpened = true;
                     if(FloatingActionMenu.this.mToggleListener != null) {
                         FloatingActionMenu.this.mToggleListener.onMenuToggle(true);
+                        mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
                     }
 
                 }
@@ -658,6 +676,7 @@ public class FloatingActionMenu extends ViewGroup {
                     FloatingActionMenu.this.mMenuOpened = false;
                     if(FloatingActionMenu.this.mToggleListener != null) {
                         FloatingActionMenu.this.mToggleListener.onMenuToggle(false);
+                        mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_menu));
                     }
 
                 }

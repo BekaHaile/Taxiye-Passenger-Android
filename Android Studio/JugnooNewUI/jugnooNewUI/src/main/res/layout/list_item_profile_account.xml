@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="585px"
-    android:layout_height="370px"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -61,7 +61,6 @@
                 android:layout_marginTop="10px"
                 android:singleLine="true"
                 android:gravity="center"
-                android:visibility="gone"
                 android:text="View Account"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_30" />
@@ -69,6 +68,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/extraSpace"
         android:layout_width="match_parent"
         android:layout_height="56px"
         android:layout_below="@+id/linearLayout"
@@ -88,5 +88,74 @@
         android:layout_marginTop="120px"
         android:layout_alignParentRight="true"
         android:src="@drawable/back_arrow_white"/>
+
+    <TextView
+        android:id="@+id/textViewCategories"
+        android:layout_width="match_parent"
+        android:layout_height="81px"
+        android:layout_below="@+id/extraSpace"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/menu_text_margin_left"
+        android:text="Categories"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_color_white_theme_selector"
+        android:textSize="@dimen/text_size_38"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCategories"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewAutos"
+            android:layout_width="match_parent"
+            android:layout_height="81px"
+            android:layout_below="@+id/extraSpace"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/menu_text_margin_left_category"
+            android:text="Auto"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_color_white_theme_selector"
+            android:textSize="@dimen/text_size_38"/>
+
+        <TextView
+            android:id="@+id/textViewFresh"
+            android:layout_width="match_parent"
+            android:layout_height="81px"
+            android:layout_below="@+id/extraSpace"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/menu_text_margin_left_category"
+            android:text="Fresh"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_color_white_theme_selector"
+            android:textSize="@dimen/text_size_38"/>
+
+        <TextView
+            android:id="@+id/textViewMeals"
+            android:layout_width="match_parent"
+            android:layout_height="81px"
+            android:layout_below="@+id/extraSpace"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/menu_text_margin_left_category"
+            android:text="Meals"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_color_white_theme_selector"
+            android:textSize="@dimen/text_size_38"/>
+
+        <TextView
+            android:id="@+id/textViewDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="81px"
+            android:layout_below="@+id/extraSpace"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/menu_text_margin_left_category"
+            android:text="Delivery"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_color_white_theme_selector"
+            android:textSize="@dimen/text_size_38"/>
+    </LinearLayout>
 
 </RelativeLayout>

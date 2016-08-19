@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.Animation;
 import android.widget.TextView;
+
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -118,7 +120,7 @@ public class Label extends TextView {
             });
         }
 
-        setBackgroundCompat(layerDrawable);
+        //setBackgroundCompat(layerDrawable);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -180,6 +182,7 @@ public class Label extends TextView {
         } else {
             setBackgroundDrawable(drawable);
         }
+        //setTextColor(getResources().getColor(R.color.text_color));
     }
 
     private void playShowAnimation() {
@@ -246,7 +249,7 @@ public class Label extends TextView {
     }
 
     void setColors(int colorNormal, int colorPressed, int colorRipple) {
-        mColorNormal = colorNormal;
+        mColorNormal = getResources().getColor(R.color.text_color);
         mColorPressed = colorPressed;
         mColorRipple = colorRipple;
     }
