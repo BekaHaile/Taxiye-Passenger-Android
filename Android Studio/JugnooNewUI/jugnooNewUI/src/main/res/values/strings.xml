@@ -856,7 +856,7 @@
 	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
 	<string name="continue_text">Continue</string>
 	<string name="try_now">Try Now</string>
-	<string name="order_status">Order Status:</string>
+	<string name="order_status">Status:</string>
 	<string name="id">ID:</string>
 	<string name="order_date">Order Date:</string>
 	<string name="delivery_address_colon">Delivery Address:</string>

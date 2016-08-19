@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -72,43 +74,67 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
         if (viewholder instanceof ViewHolder) {
-            HistoryResponse.Datum historyItem = getItem(position);
+            HistoryResponse.Datum orderHistory = getItem(position);
             ViewHolder holder = (ViewHolder) viewholder;
             holder.relative.setTag(position);
-            if (historyItem.getProductType() == ProductType.AUTO.getOrdinal()) {
+            if (orderHistory.getProductType() == ProductType.AUTO.getOrdinal()) {
 
-                holder.textViewPickupAt.setVisibility(View.GONE);
-                holder.textViewAmount.setVisibility(View.VISIBLE);
-
-                holder.textViewIdValue.setText("" + historyItem.getEngagementId());
-                holder.textViewFromValue.setText(historyItem.getPickupAddress());
-                holder.textViewToValue.setText(historyItem.getDropAddress());
+                holder.textViewIdValue.setText("" + orderHistory.getEngagementId());
+                holder.textViewFromValue.setText(orderHistory.getPickupAddress());
+                holder.textViewToValue.setText(orderHistory.getDropAddress());
                 holder.textViewDetails.setText("Details: ");
 
-                if (0 == historyItem.getIsCancelledRide()) {
-                    if (historyItem.getRideTime() == 1) {
-                        holder.textViewDetailsValue.setText(decimalFormat.format(historyItem.getDistance()) + " km, "
-                                + decimalFormatNoDec.format(historyItem.getRideTime()) + " minute, " + historyItem.getDate());
+                holder.textViewFrom.setText("From: ");
+                holder.textViewTo.setText("To: ");
+                holder.textViewTo.setVisibility(View.VISIBLE);
+
+                if (0 == orderHistory.getIsCancelledRide()) {
+                    holder.textViewStatusValue.setText("Ride Completed");
+                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.theme_color));
+
+                    if (orderHistory.getRideTime() == 1) {
+                        holder.textViewDetailsValue.setText(decimalFormat.format(orderHistory.getDistance()) + " km, "
+                                + decimalFormatNoDec.format(orderHistory.getRideTime()) + " minute, " + orderHistory.getDate());
                     } else {
-                        holder.textViewDetailsValue.setText(decimalFormat.format(historyItem.getDistance()) + " km, "
-                                + decimalFormatNoDec.format(historyItem.getRideTime()) + " minutes, " + historyItem.getDate());
+                        holder.textViewDetailsValue.setText(decimalFormat.format(orderHistory.getDistance()) + " km, "
+                                + decimalFormatNoDec.format(orderHistory.getRideTime()) + " minutes, " + orderHistory.getDate());
                     }
-                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(historyItem.getAmount())));
+                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                     holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.theme_color));
 
                     holder.textViewRideCancelled.setVisibility(View.GONE);
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                 } else {
-                    holder.textViewDetailsValue.setText(historyItem.getDate() + ",");
-                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(historyItem.getAmount())));
+                    holder.textViewStatusValue.setText("Ride Cancelled");
+                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.red));
+                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ",");
+                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                     holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.red));
                     holder.textViewRideCancelled.setVisibility(View.VISIBLE);
                     holder.relativeLayoutTo.setVisibility(View.GONE);
                 }
 
-            } else if (historyItem.getProductType() == ProductType.FRESH.getOrdinal()) {
+            } else if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal() ||
+                    orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
+                holder.textViewIdValue.setText(String.valueOf(orderHistory.getOrderId()));
+                holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
+                try{
+                    holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
 
-            } else if (historyItem.getProductType() == ProductType.MEALS.getOrdinal()) {
+                holder.textViewFrom.setText("Delivery Address : ");
+                holder.textViewTo.setVisibility(View.GONE);
+
+                holder.textViewFromValue.setText(orderHistory.getDropAddress());
+                holder.textViewDetails.setText("Details: ");
+                holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations
+                        .utcToLocalTZ(orderHistory.getOrderTime())));
+
+                holder.textViewAmount.setText(String.format(activity.getResources()
+                                .getString(R.string.rupees_value_format_without_space),
+                        com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() + orderHistory.getJugnooDeducted())));
 
             }
 
@@ -169,16 +195,15 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewPickupAt, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
+        public TextView textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
                 textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount,
                 textViewRateRide, textViewRideCancelled;
+        public TextView textViewStatus, textViewStatusValue;
         public RelativeLayout relativeLayoutTo;
         public RelativeLayout relative;
 
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
-            textViewPickupAt = (TextView) convertView.findViewById(R.id.textViewPickupAt);
-            textViewPickupAt.setTypeface(Fonts.mavenLight(context));
             ((TextView) convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenMedium(context));
             textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue);
             textViewIdValue.setTypeface(Fonts.mavenMedium(context));
@@ -201,6 +226,10 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             textViewRideCancelled = (TextView) convertView.findViewById(R.id.textViewRideCancelled);
             textViewRideCancelled.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
 
+            textViewStatus = (TextView) convertView.findViewById(R.id.textViewStatus);
+            textViewStatus.setTypeface(Fonts.mavenRegular(context));
+            textViewStatusValue = (TextView) convertView.findViewById(R.id.textViewStatusValue);
+            textViewStatusValue.setTypeface(Fonts.mavenRegular(context));
 
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
