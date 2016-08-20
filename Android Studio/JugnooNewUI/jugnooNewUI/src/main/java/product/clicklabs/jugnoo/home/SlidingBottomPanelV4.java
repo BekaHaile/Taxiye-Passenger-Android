@@ -143,7 +143,7 @@ public class SlidingBottomPanelV4 {
         view.findViewById(R.id.linearLayoutOffers).setOnClickListener(slideOnClickListener);
 
         try {
-            updateBottomPanel(Data.regions.size());
+            updateBottomPanel(Data.autoData.getRegions().size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,7 +182,7 @@ public class SlidingBottomPanelV4 {
 
     public void updatePannelHeight(){
         try {
-            for(Region region : Data.regions){
+            for(Region region : Data.autoData.getRegions()){
                 if(region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
                         (!region.getOfferTexts().getText1().equalsIgnoreCase(""))){
                     //slidingUpPanelLayout.setPanelHeight(heightWithBar);

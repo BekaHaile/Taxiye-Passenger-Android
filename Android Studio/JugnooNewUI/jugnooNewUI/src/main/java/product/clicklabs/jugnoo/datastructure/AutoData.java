@@ -1,7 +1,11 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 
 /**
@@ -22,6 +26,21 @@ public class AutoData {
     private ArrayList<DriverInfo> driverInfos = new ArrayList<DriverInfo>();
     private double fareFactor, driverFareFactor;
     private Campaigns campaigns;
+    private FareStructure fareStructure;
+    private ArrayList<Region> regions;
+    private String farAwayCity = "";
+    private String cEngagementId = "", cDriverId = "", cSessionId = "";
+    private DriverInfo assignedDriverInfo;
+    private EndRideData endRideData;
+    private int customerRateAppFlag = 0;
+    private RateAppDialogContent rateAppDialogContent;
+    private LatLng pickupLatLng, dropLatLng;
+    private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+    private CancelOptionsList cancelOptionsList;
+    private ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
+    private boolean supportFeedbackSubmitted = false;
+    private LatLng lastRefreshLatLng;
+
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -232,5 +251,141 @@ public class AutoData {
 
     public void setCampaigns(Campaigns campaigns) {
         this.campaigns = campaigns;
+    }
+
+    public FareStructure getFareStructure() {
+        return fareStructure;
+    }
+
+    public void setFareStructure(FareStructure fareStructure) {
+        this.fareStructure = fareStructure;
+    }
+
+    public ArrayList<Region> getRegions() {
+        return regions;
+    }
+
+    public void setRegions(ArrayList<Region> regions) {
+        this.regions = regions;
+    }
+
+    public String getFarAwayCity() {
+        return farAwayCity;
+    }
+
+    public void setFarAwayCity(String farAwayCity) {
+        this.farAwayCity = farAwayCity;
+    }
+
+    public String getcEngagementId() {
+        return cEngagementId;
+    }
+
+    public void setcEngagementId(String cEngagementId) {
+        this.cEngagementId = cEngagementId;
+    }
+
+    public String getcDriverId() {
+        return cDriverId;
+    }
+
+    public void setcDriverId(String cDriverId) {
+        this.cDriverId = cDriverId;
+    }
+
+    public String getcSessionId() {
+        return cSessionId;
+    }
+
+    public void setcSessionId(String cSessionId) {
+        this.cSessionId = cSessionId;
+    }
+
+    public DriverInfo getAssignedDriverInfo() {
+        return assignedDriverInfo;
+    }
+
+    public void setAssignedDriverInfo(DriverInfo assignedDriverInfo) {
+        this.assignedDriverInfo = assignedDriverInfo;
+    }
+
+    public EndRideData getEndRideData() {
+        return endRideData;
+    }
+
+    public void setEndRideData(EndRideData endRideData) {
+        this.endRideData = endRideData;
+    }
+
+    public int getCustomerRateAppFlag() {
+        return customerRateAppFlag;
+    }
+
+    public void setCustomerRateAppFlag(int customerRateAppFlag) {
+        this.customerRateAppFlag = customerRateAppFlag;
+    }
+
+    public RateAppDialogContent getRateAppDialogContent() {
+        return rateAppDialogContent;
+    }
+
+    public void setRateAppDialogContent(RateAppDialogContent rateAppDialogContent) {
+        this.rateAppDialogContent = rateAppDialogContent;
+    }
+
+    public LatLng getPickupLatLng() {
+        return pickupLatLng;
+    }
+
+    public void setPickupLatLng(LatLng pickupLatLng) {
+        this.pickupLatLng = pickupLatLng;
+    }
+
+    public LatLng getDropLatLng() {
+        return dropLatLng;
+    }
+
+    public void setDropLatLng(LatLng dropLatLng) {
+        this.dropLatLng = dropLatLng;
+    }
+
+    public int getPickupPaymentOption() {
+        return pickupPaymentOption;
+    }
+
+    public void setPickupPaymentOption(int pickupPaymentOption) {
+        this.pickupPaymentOption = pickupPaymentOption;
+    }
+
+    public CancelOptionsList getCancelOptionsList() {
+        return cancelOptionsList;
+    }
+
+    public void setCancelOptionsList(CancelOptionsList cancelOptionsList) {
+        this.cancelOptionsList = cancelOptionsList;
+    }
+
+    public ArrayList<FeedbackReason> getFeedbackReasons() {
+        return feedbackReasons;
+    }
+
+    public void setFeedbackReasons(ArrayList<FeedbackReason> feedbackReasons) {
+        this.feedbackReasons = feedbackReasons;
+    }
+
+    public boolean isSupportFeedbackSubmitted() {
+        return supportFeedbackSubmitted;
+    }
+
+    public void setSupportFeedbackSubmitted(boolean supportFeedbackSubmitted) {
+        this.supportFeedbackSubmitted = supportFeedbackSubmitted;
+    }
+
+    public LatLng getLastRefreshLatLng() {
+        return lastRefreshLatLng;
+    }
+
+    public void setLastRefreshLatLng(LatLng lastRefreshLatLng) {
+        this.lastRefreshLatLng = lastRefreshLatLng;
     }
 }

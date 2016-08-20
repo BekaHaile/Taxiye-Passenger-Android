@@ -78,7 +78,7 @@ public class BadFeedbackFragment extends Fragment implements FlurryEventNames, C
             @Override
             public void onClick(View v) {
                 int rating = 1;
-                activity.submitFeedbackToDriverAsync(activity, Data.cEngagementId, Data.cDriverId,
+                activity.submitFeedbackToDriverAsync(activity, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                         rating, "", "");
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -89,7 +89,7 @@ public class BadFeedbackFragment extends Fragment implements FlurryEventNames, C
             @Override
             public void onClick(View v) {
                 activity.performBackpressed();
-                activity.skipFeedbackForCustomerAsync(activity, Data.cEngagementId);
+                activity.skipFeedbackForCustomerAsync(activity, Data.autoData.getcEngagementId());
                 FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
                 activity.flurryEventGAForTransaction();

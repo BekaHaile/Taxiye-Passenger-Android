@@ -175,7 +175,7 @@ public class WalletCore {
 			if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
 				if (Data.userData.getPaytmBalance() > 0) {
 					callRequestRide = true;
-					if (Data.fareStructure != null && Data.userData.getPaytmBalance() < Data.fareStructure.getFixedFare()) {
+					if (Data.autoData.getFareStructure() != null && Data.userData.getPaytmBalance() < Data.autoData.getFareStructure().getFixedFare()) {
 						DialogPopup.dialogBanner(activity, context.getResources().getString(R.string.paytm_low_cash));
 					}
 				} else {
@@ -207,7 +207,7 @@ public class WalletCore {
 			else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
 				if (Data.userData.getMobikwikBalance() > 0) {
 					callRequestRide = true;
-					if (Data.fareStructure != null && Data.userData.getMobikwikBalance() < Data.fareStructure.getFixedFare()) {
+					if (Data.autoData.getFareStructure() != null && Data.userData.getMobikwikBalance() < Data.autoData.getFareStructure().getFixedFare()) {
 						DialogPopup.dialogBanner(activity, context.getResources().getString(R.string.mobikwik_low_cash));
 					}
 				} else {
@@ -520,8 +520,8 @@ public class WalletCore {
 
 	public void setDefaultPaymentOption(){
 		try{
-			Data.pickupPaymentOption = getDefaultPaymentOption().getOrdinal();
-			Log.e("pickupPaymentOption", ">"+Data.pickupPaymentOption);
+			Data.autoData.setPickupPaymentOption(getDefaultPaymentOption().getOrdinal());
+			Log.e("pickupPaymentOption", ">"+Data.autoData.getPickupPaymentOption());
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -571,7 +571,7 @@ public class WalletCore {
 		try {
 			if(paymentOption == PaymentOption.PAYTM){
 				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > 0) {
-					Data.pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
+					Data.autoData.setPickupPaymentOption(PaymentOption.PAYTM.getOrdinal());
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 
 					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYTM_METHOD_SELECTED, null);
@@ -610,7 +610,7 @@ public class WalletCore {
 							public void onNegativeClick() {
 								try {
 									if(Data.userData.getMobikwikEnabled() != 1){
-										Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
 										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
 									}
@@ -628,7 +628,7 @@ public class WalletCore {
 			}
 			else if(paymentOption == PaymentOption.MOBIKWIK){
 				if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() > 0) {
-					Data.pickupPaymentOption = PaymentOption.MOBIKWIK.getOrdinal();
+					Data.autoData.setPickupPaymentOption(PaymentOption.MOBIKWIK.getOrdinal());
 					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 //                    Bundle bundle = new Bundle();
 //                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
@@ -668,7 +668,7 @@ public class WalletCore {
 							public void onNegativeClick() {
 								try {
 									if(Data.userData.getPaytmEnabled() != 1){
-										Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
 										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
 									}
@@ -685,10 +685,10 @@ public class WalletCore {
 				}
 			}
 			else if(paymentOption == PaymentOption.CASH){
-				if(Data.pickupPaymentOption == PaymentOption.PAYTM.getOrdinal()){
+				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
 					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
 				}
-				Data.pickupPaymentOption = PaymentOption.CASH.getOrdinal();
+				Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 //                Bundle bundle = new Bundle();
 //                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"

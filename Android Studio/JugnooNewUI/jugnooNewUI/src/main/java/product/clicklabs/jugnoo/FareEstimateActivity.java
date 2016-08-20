@@ -95,12 +95,12 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         }
 
         try {
-            double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.pickupLatLng.latitude);
-            double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.pickupLatLng.longitude);
+            double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
+            double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
             pickupLatLng = new LatLng(latitude, longitude);
         } catch (Exception e) {
             e.printStackTrace();
-            pickupLatLng = Data.pickupLatLng;
+            pickupLatLng = Data.autoData.getPickupLatLng();
         }
 
         mGoogleApiClient = new GoogleApiClient
@@ -207,8 +207,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         });
 
-        if (rideType != RideTypeValue.POOL.getOrdinal() && Data.dropLatLng != null) {
-            getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng);
+        if (rideType != RideTypeValue.POOL.getOrdinal() && Data.autoData.getDropLatLng() != null) {
+            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng());
         } else {
 
             PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
@@ -444,8 +444,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
-        Data.dropLatLng = searchResult.getLatLng();
-        getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.getLatLng());
+        Data.autoData.setDropLatLng(searchResult.getLatLng());
+        getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
         FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
         searchResultGlobal = searchResult;
     }

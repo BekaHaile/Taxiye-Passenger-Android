@@ -88,15 +88,15 @@ public class SlidingBottomFareFragment extends Fragment{
     public void update(){
         try {
             textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
+                    Utils.getMoneyDecimalFormat().format(Data.autoData.getFareStructure().farePerKm)));
             textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
+                    Utils.getMoneyDecimalFormat().format(Data.autoData.getFareStructure().farePerMin)));
 
 
             textViewThreshold.setVisibility(View.GONE);
-            if(!"".equalsIgnoreCase(Data.fareStructure.getDisplayFareText(activity))){
+            if(!"".equalsIgnoreCase(Data.autoData.getFareStructure().getDisplayFareText(activity))){
                 textViewThreshold.setVisibility(View.VISIBLE);
-                textViewThreshold.setText(Data.fareStructure.getDisplayFareText(activity));
+                textViewThreshold.setText(Data.autoData.getFareStructure().getDisplayFareText(activity));
             }
 
 

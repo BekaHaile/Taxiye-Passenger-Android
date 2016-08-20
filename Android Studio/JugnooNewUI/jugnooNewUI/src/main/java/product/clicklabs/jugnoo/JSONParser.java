@@ -449,9 +449,9 @@ public class JSONParser implements Constants {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());
             }
             if (autos.getFarAwayCity() == null) {
-				Data.farAwayCity = "";
+				Data.autoData.setFarAwayCity("");
 			} else {
-				Data.farAwayCity = autos.getFarAwayCity();
+				Data.autoData.setFarAwayCity(autos.getFarAwayCity());
 			}
 
             Data.autoData.setCampaigns(autos.getCampaigns());
@@ -459,17 +459,17 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
         try{
-            if(Data.regions == null){
-                Data.regions = new ArrayList<>();
+            if(Data.autoData.getRegions() == null){
+                Data.autoData.setRegions(new ArrayList<Region>());
             } else{
-                Data.regions.clear();
+                Data.autoData.getRegions().clear();
             }
             if(autos.getRegions() != null) {
                 HomeUtil homeUtil = new HomeUtil();
                 for (Region region : autos.getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
-                    Data.regions.add(region);
+                    Data.autoData.getRegions().add(region);
                 }
             }
         } catch(Exception e){
@@ -478,7 +478,7 @@ public class JSONParser implements Constants {
 
         try {
             if(autos.getFareStructure() != null) {
-				Data.fareStructure = null;
+				Data.autoData.setFareStructure(null);
 				for (FareStructure fareStructure : autos.getFareStructure()) {
 					String startTime = fareStructure.getStartTime();
 					String endTime = fareStructure.getEndTime();
@@ -500,27 +500,27 @@ public class JSONParser implements Constants {
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText());
-						for (int i = 0; i < Data.regions.size(); i++) {
+						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
-								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())
+								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
 										) {
-									Data.regions.get(i).setFareStructure(fareStructure1);
+									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
-						if (Data.fareStructure == null) {
-							Data.fareStructure = fareStructure1;
+						if (Data.autoData.getFareStructure() == null) {
+							Data.autoData.setFareStructure(fareStructure1);
 						}
 					}
 				}
-				if(Data.fareStructure == null){
-					Data.fareStructure = getDefaultFareStructure();
+				if(Data.autoData.getFareStructure() == null){
+					Data.autoData.setFareStructure(getDefaultFareStructure());
 				}
 			}else{
-				Data.fareStructure = getDefaultFareStructure();
+				Data.autoData.setFareStructure(getDefaultFareStructure());
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -567,10 +567,10 @@ public class JSONParser implements Constants {
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
-        if(Data.fareStructure == null) {
+        if(Data.autoData.getFareStructure() == null) {
             return getDefaultFareStructure();
         } else{
-            return Data.fareStructure;
+            return Data.autoData.getFareStructure();
         }
     }
 
@@ -631,28 +631,28 @@ public class JSONParser implements Constants {
     public void parseLastRideData(JSONObject jObj) {
         try {
             JSONObject jLastRideData = jObj.getJSONObject("last_ride");
-            Data.cSessionId = "";
-            Data.cEngagementId = jLastRideData.getString("engagement_id");
+            Data.autoData.setcSessionId("");
+            Data.autoData.setcEngagementId(jLastRideData.getString("engagement_id"));
 
             JSONObject jDriverInfo = jLastRideData.getJSONObject("driver_info");
-            Data.cDriverId = jDriverInfo.getString("id");
+            Data.autoData.setcDriverId(jDriverInfo.getString("id"));
 
-            Data.pickupLatLng = new LatLng(0, 0);
-            Data.dropLatLng = null;
+            Data.autoData.setPickupLatLng(new LatLng(0, 0));
+            Data.autoData.setDropLatLng(null);
 
-            Data.assignedDriverInfo = new DriverInfo(Data.cDriverId, jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
-                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"));
+            Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
+                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
 
             try {
                 if (jLastRideData.has("rate_app")) {
-                    Data.customerRateAppFlag = jLastRideData.getInt("rate_app");
-                    Data.rateAppDialogContent = parseRateAppDialogContent(jLastRideData);
+                    Data.autoData.setCustomerRateAppFlag(jLastRideData.getInt("rate_app"));
+                    Data.autoData.setRateAppDialogContent(parseRateAppDialogContent(jLastRideData));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-			Data.endRideData = parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.fareStructure.getFixedFare());
+			Data.autoData.setEndRideData(parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.autoData.getFareStructure().getFixedFare()));
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
 
@@ -865,7 +865,7 @@ public class JSONParser implements Constants {
                             Log.e("assigningLatitude,assigningLongitude ====@@@", "" + assigningLatitude + "," + assigningLongitude);
                         }
 
-                        Data.pickupLatLng = new LatLng(assigningLatitude, assigningLongitude);
+                        Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
                         parseDropLatLng(jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
@@ -977,19 +977,19 @@ public class JSONParser implements Constants {
                 clearSPData(context);
             } else if (Data.P_ASSIGNING.equalsIgnoreCase(screenMode)) {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
-                Data.cSessionId = sessionId;
+                Data.autoData.setcSessionId(sessionId);
                 clearSPData(context);
             } else {
 
-                Data.cSessionId = sessionId;
-                Data.cEngagementId = engagementId;
-                Data.cDriverId = userId;
+                Data.autoData.setcSessionId(sessionId);
+                Data.autoData.setcEngagementId(engagementId);
+                Data.autoData.setcDriverId(userId);
 
-                Data.pickupLatLng = new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude));
+                Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
-                    Data.dropLatLng = null;
+                    Data.autoData.setDropLatLng(null);
                 } else{
-                    Data.dropLatLng = new LatLng(dropLatitude, dropLongitude);
+                    Data.autoData.setDropLatLng(new LatLng(dropLatitude, dropLongitude));
                 }
 
                 double dLatitude = Double.parseDouble(latitude);
@@ -998,14 +998,14 @@ public class JSONParser implements Constants {
 
 
 
-                Data.assignedDriverInfo = new DriverInfo(userId, dLatitude, dLongitude, driverName,
+                Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing);
+                        isPooledRide, poolStatusString, fellowRiders, bearing));
 
                 Data.autoData.setFareFactor(fareFactor);
 
-                Log.e("Data.assignedDriverInfo on login", "=" + Data.assignedDriverInfo.latLng);
+                Log.e("Data.autoData.getAssignedDriverInfo() on login", "=" + Data.autoData.getAssignedDriverInfo().latLng);
 
 
                 if (Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)) {
@@ -1110,8 +1110,8 @@ public class JSONParser implements Constants {
             options.add(new CancelOption("Changed my mind"));
             options.add(new CancelOption("Booked another auto"));
 
-            Data.cancelOptionsList = new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
-                    "will lead to cancellation charges of Rs. 20", "");
+            Data.autoData.setCancelOptionsList(new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
+                    "will lead to cancellation charges of Rs. 20", ""));
 
             LoginResponse.Cancellation jCancellation = autos.getCancellation();
             String message = jCancellation.getMessage();
@@ -1121,7 +1121,7 @@ public class JSONParser implements Constants {
                 options.add(new CancelOption(reason));
             }
 
-            Data.cancelOptionsList = new CancelOptionsList(options, message, additionalReason);
+            Data.autoData.setCancelOptionsList(new CancelOptionsList(options, message, additionalReason));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1130,13 +1130,13 @@ public class JSONParser implements Constants {
 
 
     public static void parseFeedbackReasonArrayList(LoginResponse.Autos autos){
-        if(Data.feedbackReasons == null) {
-            Data.feedbackReasons = new ArrayList<>();
+        if(Data.autoData.getFeedbackReasons() == null) {
+            Data.autoData.setFeedbackReasons(new ArrayList<FeedbackReason>());
         }
         try{
-            Data.feedbackReasons.clear();
+            Data.autoData.getFeedbackReasons().clear();
             for(String resason : autos.getBadRatingReasons()){
-                Data.feedbackReasons.add(new FeedbackReason(resason));
+                Data.autoData.getFeedbackReasons().add(new FeedbackReason(resason));
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -1305,16 +1305,16 @@ public class JSONParser implements Constants {
                 double dropLatitude = jObject1.getDouble(KEY_OP_DROP_LATITUDE);
                 double dropLongitude = jObject1.getDouble(KEY_OP_DROP_LONGITUDE);
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
-                    Data.dropLatLng = null;
+                    Data.autoData.setDropLatLng(null);
                 } else{
-                    Data.dropLatLng = new LatLng(dropLatitude, dropLongitude);
+                    Data.autoData.setDropLatLng(new LatLng(dropLatitude, dropLongitude));
                 }
 			} else{
-                Data.dropLatLng = null;
+                Data.autoData.setDropLatLng(null);
 			}
         } catch (Exception e) {
             e.printStackTrace();
-            Data.dropLatLng = null;
+            Data.autoData.setDropLatLng(null);
         }
     }
 

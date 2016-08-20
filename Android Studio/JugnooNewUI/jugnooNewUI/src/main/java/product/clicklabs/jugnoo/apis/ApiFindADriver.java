@@ -98,7 +98,7 @@ public class ApiFindADriver {
 
 						if(beforeRequestRide){
 							Region newRegion = null;
-							for (Region region : Data.regions) {
+							for (Region region : Data.autoData.getRegions()) {
 								if(region.getRegionId() == ApiFindADriver.this.regionSelected.getRegionId()){
 									newRegion = region;
 								}
@@ -159,11 +159,11 @@ public class ApiFindADriver {
 				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
 			}
 
-			Data.farAwayCity = "";
+			Data.autoData.setFarAwayCity("");
 			if (findADriverResponse.getFarAwayCity() == null) {
-				Data.farAwayCity = "";
+				Data.autoData.setFarAwayCity("");
 			} else {
-				Data.farAwayCity = findADriverResponse.getFarAwayCity();
+				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
 
 			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
@@ -176,17 +176,17 @@ public class ApiFindADriver {
 		}
 
 		try{
-			if(Data.regions == null){
-				Data.regions = new ArrayList<>();
+			if(Data.autoData.getRegions() == null){
+				Data.autoData.setRegions(new ArrayList<Region>());
 			} else{
-				Data.regions.clear();
+				Data.autoData.getRegions().clear();
 			}
 			if(findADriverResponse.getRegions() != null) {
 				HomeUtil homeUtil = new HomeUtil();
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
-					Data.regions.add(region);
+					Data.autoData.getRegions().add(region);
 				}
 			}
 		} catch(Exception e){
@@ -242,11 +242,11 @@ public class ApiFindADriver {
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText());
-						for (int i = 0; i < Data.regions.size(); i++) {
+						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
-								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())) {
-									Data.regions.get(i).setFareStructure(fareStructure1);
+								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())) {
+									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -255,7 +255,7 @@ public class ApiFindADriver {
 						if (regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
 								&& regionSelected.getRideType().equals(fareStructure.getRideType())
 								) {
-							Data.fareStructure = fareStructure1;
+							Data.autoData.setFareStructure(fareStructure1);
 						}
 					}
 				}

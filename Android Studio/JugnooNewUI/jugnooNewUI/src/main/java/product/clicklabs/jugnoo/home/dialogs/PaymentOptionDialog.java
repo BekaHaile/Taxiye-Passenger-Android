@@ -153,11 +153,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 	private void setSelectedPaymentOptionUI(){
 		try {
-			Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-					.getPaymentOptionAccAvailability(Data.pickupPaymentOption);
-			if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
+			Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
+					.getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
+			if(PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()){
 				paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash);
-			} else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.pickupPaymentOption){
+			} else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()){
 				paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash);
 			} else{
 				paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik);
@@ -180,8 +180,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
 	public void updatePreferredPaymentOptionUI(){
 		try{
-			Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-					.getPaymentOptionAccAvailability(Data.pickupPaymentOption);
+			Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
+					.getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
 
 			textViewPaytmValue.setText(String.format(activity.getResources()
 					.getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));

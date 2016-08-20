@@ -5,24 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.AutoData;
-import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
-import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
-import product.clicklabs.jugnoo.datastructure.FareStructure;
-import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.FreshData;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
-import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
-import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -103,31 +94,12 @@ public class Data {
 	public static int appVersion;
 
 
-	public static String cEngagementId = "", cDriverId = "", cSessionId = "";
-	public static DriverInfo assignedDriverInfo;
-
-	
-	public static EndRideData endRideData;
-	
-	public static int customerRateAppFlag = 0;
-	public static RateAppDialogContent rateAppDialogContent;
-	
-	
-	public static LatLng pickupLatLng, dropLatLng;
-	public static int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
-
 	public static FacebookUserData facebookUserData;
 	public static GoogleSignInAccount googleSignInAccount;
 	public static String webActivityTitle = "";
 	
-	
-	
-	public static FareStructure fareStructure;
-	public static ArrayList<Region> regions;
-	public static String farAwayCity = "";
 
-	public static CancelOptionsList cancelOptionsList;
-    public static ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();;
+
 
 
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
@@ -136,11 +108,10 @@ public class Data {
 	public static int deepLinkIndex;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
+	public static boolean locationSettingsNoPressed = false;
 
 
-	public static boolean supportFeedbackSubmitted = false, locationSettingsNoPressed = false;
 
-	public static LatLng lastRefreshLatLng;
 
 	public static final long BRANCH_LINK_TIME_DIFF = 7 * 24 * 60 * 60 * 1000;
 
@@ -155,15 +126,9 @@ public class Data {
 			userData = null;
 			autoData = null;
 			freshData = null;
-            endRideData = null;
-            customerRateAppFlag = 0;
 			locationFetcher = null;
 			country = ""; deviceName = ""; appVersion = 0; osVersion = "";
-			cEngagementId = ""; cDriverId = ""; cSessionId = "";
-			assignedDriverInfo = null;
-			pickupLatLng = null;
 			facebookUserData = null;
-            fareStructure = null;
             previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 			
 			AccessTokenGenerator.saveLogoutToken(context);
